@@ -48,7 +48,7 @@ const groupByCategory = (projects: Project[]) => {
 }
 
 const AVATAR =
-  "https://www.gravatar.com/avatar/e6eaeaa6da69e804c27c2d4cd55107e0?s=240"
+  "https://www.gravatar.com/avatar/e6eaeaa6da69e804c27c2d4cd55107e0?s=320"
 
 const ProjectsIndex = async () => {
   const projects = await getProjects()
@@ -66,8 +66,8 @@ const ProjectsIndex = async () => {
           <img
             src={AVATAR}
             alt="Erwann Mest"
-            width={76}
-            height={76}
+            width={116}
+            height={116}
             className={styles.avatar}
           />
           <h1 className={styles.title}>Projects</h1>

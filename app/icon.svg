@@ -5,27 +5,24 @@
   fill="none"
   xmlns="http://www.w3.org/2000/svg"
 >
-  <defs>
-    <linearGradient
-      id="kud"
-      x1="3"
-      y1="2"
-      x2="29"
-      y2="30"
-      gradientUnits="userSpaceOnUse"
-    >
-      <stop stop-color="#a78bfa" />
-      <stop offset="1" stop-color="#7c3aed" />
-    </linearGradient>
-  </defs>
-  <rect width="32" height="32" rx="7.5" fill="url(#kud)" />
+  <rect width="32" height="32" rx="7" fill="#0c0c12" />
+  <rect
+    x="0.5"
+    y="0.5"
+    width="31"
+    height="31"
+    rx="6.5"
+    fill="none"
+    stroke="#ffffff"
+    stroke-opacity="0.1"
+  />
   <g
-    stroke="#fff"
-    stroke-width="2.8"
+    stroke="#ffffff"
+    stroke-width="2.4"
     stroke-linecap="round"
     stroke-linejoin="round"
   >
-    <path d="M11 6.5 V25.5" />
-    <path d="M22 8.5 L11.5 17 L22 25.5" />
+    <path d="M11.5 7 V25" />
+    <path d="M21 9.5 L12 16.5 L21 25" />
   </g>
 </svg>

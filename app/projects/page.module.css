@@ -49,12 +49,14 @@
 
 .avatar {
   display: block;
-  margin: 0 auto 22px;
+  width: 116px;
+  height: 116px;
+  margin: 0 auto 24px;
   border-radius: 50%;
   border: 2px solid var(--border);
   box-shadow:
-    0 0 0 4px rgba(124, 58, 237, 0.12),
-    0 16px 36px -16px rgba(0, 0, 0, 0.7);
+    0 0 0 5px rgba(124, 58, 237, 0.12),
+    0 18px 40px -16px rgba(0, 0, 0, 0.7);
 }
 
 .title {

@@ -76,8 +76,9 @@
 }
 
 .back {
-  display: inline-block;
-  margin-bottom: 24px;
+  display: block;
+  width: fit-content;
+  margin: 0 auto 28px;
   color: var(--muted);
   font-size: 14px;
   text-decoration: none;
