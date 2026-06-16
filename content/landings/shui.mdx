@@ -20,6 +20,32 @@ title: shui
   <Stat value="MIT" label="License" />
 </Stats>
 
+<Section
+  eyebrow="Why shui"
+  title="Stop hand-rolling ANSI escapes"
+  sub="Most Zsh scripts scatter raw escape codes everywhere — unreadable, inconsistent, impossible to theme. shui gives you semantic components and a token-based theme engine instead."
+>
+  <Install label="without shui">
+
+```zsh
+echo -e "\033[32m✓\033[0m Deployed"
+echo -e "\033[1;31m✗\033[0m Build failed"
+echo -e "\033[33m⚠\033[0m  Low disk space"
+```
+
+  </Install>
+
+  <Install label="with shui">
+
+```zsh
+shui message success "Deployed"
+shui message error   "Build failed"
+shui message warning "Low disk space"
+```
+
+  </Install>
+</Section>
+
 <Section eyebrow="Quick start" title="Up and running in seconds">
   <Install label="zsh">
 
@@ -33,7 +59,11 @@ shui message success "Deployment complete"
   </Install>
 </Section>
 
-<Section eyebrow="Features" title="Built for real shell scripts">
+<Section
+  eyebrow="Features"
+  title="Built for real shell scripts"
+  sub="Everything you need to give your scripts a consistent, themeable voice."
+>
   <Features>
     <Feature title="Unified message API">
       One consistent command for success, error, warning, info, and muted
@@ -71,8 +101,6 @@ $ shui message error "Connection refused"
 ❌ Connection refused
 $ shui message warning "API key expires in 3 days"
 ⚠️ API key expires in 3 days
-$ shui message info "Running in dry-run mode"
-ℹ️ Running in dry-run mode
 ```
 
   </Install>

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import Link from "next/link"
 import { Reveal } from "./reveal"
 import { Terminal } from "./terminal"
 import styles from "./landing-kit.module.css"
@@ -19,6 +20,9 @@ export const Hero = ({
   <section className={styles.hero}>
     <div className={styles.heroGrid} />
     <div className={styles.heroContent}>
+      <Link href="/projects" className={styles.back}>
+        ← Projects
+      </Link>
       {badge ? (
         <div className={styles.badge}>
           <span className={styles.badgeDot} />
@@ -70,17 +74,20 @@ export const Stat = ({
 export const Section = ({
   eyebrow,
   title,
+  sub,
   children,
 }: {
   eyebrow?: ReactNode
   title?: ReactNode
+  sub?: ReactNode
   children: ReactNode
 }) => (
   <section className={styles.section}>
-    {eyebrow || title ? (
+    {eyebrow || title || sub ? (
       <Reveal className={styles.sectionHeader}>
         {eyebrow ? <span className={styles.eyebrow}>{eyebrow}</span> : null}
         {title ? <h2 className={styles.sectionTitle}>{title}</h2> : null}
+        {sub ? <p className={styles.sectionSub}>{sub}</p> : null}
       </Reveal>
     ) : null}
     {children}

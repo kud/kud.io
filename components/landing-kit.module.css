@@ -75,6 +75,19 @@
   max-width: 760px;
 }
 
+.back {
+  display: inline-block;
+  margin-bottom: 24px;
+  color: var(--muted);
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.18s;
+}
+
+.back:hover {
+  color: var(--text);
+}
+
 .badge,
 .title,
 .tagline,
@@ -246,6 +259,14 @@
   color: var(--text);
   line-height: 1.1;
   margin: 0;
+}
+
+.sectionSub {
+  max-width: 540px;
+  margin: 14px auto 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 /* Terminal ------------------------------------------------------------------*/
