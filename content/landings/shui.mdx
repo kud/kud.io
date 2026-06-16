@@ -21,11 +21,16 @@ title: shui
 </Stats>
 
 <Section eyebrow="Quick start" title="Up and running in seconds">
-  <Install command={`git clone https://github.com/kud/shui ~/.shui
+  <Install label="zsh">
+
+```sh
+git clone https://github.com/kud/shui ~/.shui
 source ~/.shui/shui.zsh
 
-shui message success "Deployment complete"`} />
+shui message success "Deployment complete"
+```
 
+  </Install>
 </Section>
 
 <Section eyebrow="Features" title="Built for real shell scripts">
@@ -57,22 +62,23 @@ shui message success "Deployment complete"`} />
 </Section>
 
 <Section eyebrow="Examples" title="See it in your terminal">
-  <Showcase>
-    <Example
-      command={`shui message success "Deployment complete"
-shui message error   "Build failed"
-shui message warning "Deprecated flag used"`}
-    >{`✅ Deployment complete
+  <Terminal label="zsh session">
+
+```console
+$ shui message success "Deployment complete"
+✅ Deployment complete
+
+$ shui message error "Build failed"
 ❌ Build failed
-⚠️  Deprecated flag used`}</Example>
-    <Example
-      command={`shui badge success "PASS"
-shui badge info "v1.2.4"`}
-    >{`  PASS    v1.2.4 `}</Example>
-    <Example
-      command={`shui progress 60 100`}
-    >{`████████████░░░░░░░░  60%`}</Example>
-  </Showcase>
+
+$ shui badge info "v1.2.4"
+ v1.2.4
+
+$ shui progress 60 100
+████████████░░░░░░░░  60%
+```
+
+  </Terminal>
 </Section>
 
 <CTA

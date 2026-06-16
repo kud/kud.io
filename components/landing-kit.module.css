@@ -307,17 +307,24 @@
 }
 
 .terminalBody {
-  margin: 0;
-  padding: 20px;
   overflow-x: auto;
 }
 
-.terminalBody code {
+.terminalBody :global(pre) {
+  margin: 0;
+  padding: 20px;
+  background: transparent;
+  overflow-x: auto;
+}
+
+.terminalBody :global(code) {
+  display: block;
   font-family: var(--mono);
   font-size: 13.5px;
   line-height: 1.85;
   color: #c7d2fe;
   white-space: pre;
+  background: transparent;
 }
 
 /* Features ------------------------------------------------------------------*/

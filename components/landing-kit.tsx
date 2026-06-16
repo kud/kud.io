@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
-import { CopyButton } from "./copy-button"
 import { Reveal } from "./reveal"
+import { Terminal } from "./terminal"
 import styles from "./landing-kit.module.css"
 
 const isExternal = (href: string) => href.startsWith("http")
@@ -67,29 +67,6 @@ export const Stat = ({
   </div>
 )
 
-export const Install = ({
-  command,
-  label = "terminal",
-}: {
-  command: string
-  label?: string
-}) => (
-  <Reveal className={styles.installWrap}>
-    <div className={styles.terminal}>
-      <div className={styles.terminalBar}>
-        <span className={styles.tdot} />
-        <span className={styles.tdot} />
-        <span className={styles.tdot} />
-        <span className={styles.terminalLabel}>{label}</span>
-        <CopyButton text={command} className={styles.copy} />
-      </div>
-      <pre className={styles.terminalBody}>
-        <code>{command}</code>
-      </pre>
-    </div>
-  </Reveal>
-)
-
 export const Section = ({
   eyebrow,
   title,
@@ -110,6 +87,21 @@ export const Section = ({
   </section>
 )
 
+// Code content comes in as a fenced code block (MDX children), not a prop, so
+// next-mdx-remote renders it reliably. Install centres a single terminal;
+// Terminal can be used directly for examples.
+export const Install = ({
+  children,
+  label = "terminal",
+}: {
+  children: ReactNode
+  label?: string
+}) => (
+  <Reveal className={styles.installWrap}>
+    <Terminal label={label}>{children}</Terminal>
+  </Reveal>
+)
+
 export const Features = ({ children }: { children: ReactNode }) => (
   <div className={styles.features}>{children}</div>
 )
@@ -125,27 +117,6 @@ export const Feature = ({
     <span className={styles.featureMark} />
     <h3>{title}</h3>
     {children ? <div className={styles.featureBody}>{children}</div> : null}
-  </Reveal>
-)
-
-export const Showcase = ({ children }: { children: ReactNode }) => (
-  <div className={styles.showcase}>{children}</div>
-)
-
-export const Example = ({
-  command,
-  children,
-}: {
-  command: string
-  children: ReactNode
-}) => (
-  <Reveal className={styles.example}>
-    <pre className={styles.exampleCommand}>
-      <code>{command}</code>
-    </pre>
-    <pre className={styles.exampleOutput}>
-      <code>{children}</code>
-    </pre>
   </Reveal>
 )
 
@@ -181,11 +152,10 @@ export const landingComponents = {
   Action,
   Stats,
   Stat,
-  Install,
   Section,
+  Install,
+  Terminal,
   Features,
   Feature,
-  Showcase,
-  Example,
   CTA,
 }
