@@ -251,7 +251,7 @@
 /* Terminal ------------------------------------------------------------------*/
 .installWrap {
   max-width: 680px;
-  margin: 0 auto;
+  margin: 0 auto 16px;
 }
 
 .terminal {

@@ -62,28 +62,51 @@ shui message success "Deployment complete"
 </Section>
 
 <Section eyebrow="Examples" title="See it in your terminal">
-  <Terminal label="zsh session">
+  <Install label="messages">
 
 ```console
-$ shui message success "Deployment complete"
-✅ Deployment complete
-
-$ shui message error "Build failed"
-❌ Build failed
-
-$ shui badge info "v1.2.4"
- v1.2.4
-
-$ shui progress 60 100
-████████████░░░░░░░░  60%
+$ shui message success "Deployed to production"
+✅ Deployed to production
+$ shui message error "Connection refused"
+❌ Connection refused
+$ shui message warning "API key expires in 3 days"
+⚠️ API key expires in 3 days
+$ shui message info "Running in dry-run mode"
+ℹ️ Running in dry-run mode
 ```
 
-  </Terminal>
+  </Install>
+
+  <Install label="table">
+
+```console
+$ shui table "Package|Version|Status" "node|20.11.0|OK" "bun|1.1.3|OK" "python|3.12.0|outdated"
+┌─────────┬──────────┬──────────┐
+│ Package │ Version  │ Status   │
+├─────────┼──────────┼──────────┤
+│ node    │ 20.11.0  │  OK      │
+│ bun     │ 1.1.3    │  OK      │
+│ python  │ 3.12.0   │  outdated│
+└─────────┴──────────┴──────────┘
+```
+
+  </Install>
+
+  <Install label="progress">
+
+```console
+$ shui progress 50 100
+████████████████████░░░░░░░░░░░░░░░░░░░░ 50%
+$ shui progress 50 100 --width=30 --label="Downloading "
+Downloading ██████████░░░░░░░░░░░░░░░░░░░░ 50%
+```
+
+  </Install>
 </Section>
 
 <CTA
   href="/projects/shui/docs"
   title="Ready to make your scripts beautiful?"
-  sub="Full component reference, theming guide, and configuration."
+  sub="Full component reference, theming guide, and configuration — in the docs."
   label="Read the documentation →"
 />

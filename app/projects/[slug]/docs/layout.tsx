@@ -11,9 +11,14 @@ const Layout = async ({
   children: ReactNode
 }) => {
   const { slug } = await params
+  const base = baseOptions()
 
   return (
-    <DocsLayout tree={getProjectDocsTree(slug)} {...baseOptions()}>
+    <DocsLayout
+      tree={getProjectDocsTree(slug)}
+      {...base}
+      nav={{ ...base.nav, title: slug, url: `/projects/${slug}` }}
+    >
       {children}
     </DocsLayout>
   )
