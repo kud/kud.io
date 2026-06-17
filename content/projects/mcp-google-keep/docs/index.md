@@ -1,6 +1,6 @@
 ---
 title: "mcp-google-keep"
-description: "MCP server for Google Keep — search, create and manage notes from Claude or any AI assistant"
+description: "📝 Read & write Google Keep notes from Claude — search, create, checklists, labels & colours"
 ---
 
 ```

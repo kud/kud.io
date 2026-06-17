@@ -52,7 +52,9 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
     className={`${lusitana.variable} ${roboto.variable} ${openSans.variable}`}
   >
     <body className="flex min-h-screen flex-col">
-      <RootProvider>{children}</RootProvider>
+      <RootProvider theme={{ defaultTheme: "dark", enableSystem: false }}>
+        {children}
+      </RootProvider>
     </body>
   </html>
 )

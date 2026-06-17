@@ -1,6 +1,6 @@
 ---
 title: "am-i-admin-cli"
-description: "A simple CLI tool that helps you quickly determine whether or not you're an admin on your macOS computer."
+description: "👑 Check whether you're a macOS admin from the terminal — human-readable or raw boolean output"
 ---
 
 `am-i-admin` is a simple CLI tool that helps you quickly determine whether or not you're an admin on your macOS computer.

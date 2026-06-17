@@ -1,6 +1,6 @@
 ---
 title: "modern-cobalt2-vscode"
-description: "A modern take on the Cobalt2 colour scheme for VS Code — deep navy blues, golden accents, and Cobalt2 syntax highlights"
+description: "🎨 A modern take on Cobalt2 for VS Code — deep navy with Palenight syntax colours"
 ---
 
 <img src="https://raw.githubusercontent.com/kud/modern-cobalt2-vscode/HEAD/images/icon.png" alt="Modern Cobalt2 icon" width="128" />

@@ -1,6 +1,6 @@
 ---
 title: "mcp-opencode"
-description: "MCP server for opencode — query any configured model via a persistent opencode server"
+description: "🔮 Query any model configured in opencode from Claude — zero API keys, auto-starts the server"
 ---
 
 ```

@@ -1,6 +1,6 @@
 ---
 title: "revu-cli"
-description: "Interactive terminal diff reviewer — annotate diffs, export reviews to Markdown"
+description: "🔍 Review code diffs in your terminal — annotate lines, export to Markdown for humans & AI"
 ---
 
 <p align="center">

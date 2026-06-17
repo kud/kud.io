@@ -1,6 +1,6 @@
 ---
 title: "mcp-getstream-feeds"
-description: "MCP server for GetStream Feeds — investigate push notification delivery and subscription state."
+description: "🔔 Debug GetStream push delivery from Claude — inspect follows, followers & activity fan-out"
 ---
 
 ```

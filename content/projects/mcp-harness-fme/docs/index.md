@@ -1,6 +1,6 @@
 ---
 title: "mcp-harness-fme"
-description: "MCP server for Harness FME (Split.io) — read and toggle feature flags from your AI assistant"
+description: "🚩 Manage Harness FME (Split.io) feature flags & segments from Claude — list, toggle, kill"
 ---
 
 ```

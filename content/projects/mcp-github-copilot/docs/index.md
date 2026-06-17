@@ -1,6 +1,6 @@
 ---
 title: "mcp-github-copilot"
-description: "MCP server for GitHub Copilot — query any Copilot model from Claude via the official @github/copilot-sdk"
+description: "🤖 Query any GitHub Copilot model from Claude — no extra API key, uses your Copilot login"
 ---
 
 ```

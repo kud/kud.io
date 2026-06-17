@@ -1,6 +1,6 @@
 ---
 title: "claude-dash-cli"
-description: "Terminal dashboard for monitoring Claude Code sessions in real time"
+description: "📊 Pure-Rust terminal dashboard for Claude Code — live sessions, prompts and usage in real time"
 ---
 
 A fast, minimal terminal dashboard for monitoring your [Claude Code](https://claude.ai/code) sessions in real time.

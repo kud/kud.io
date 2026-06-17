@@ -1,6 +1,6 @@
 ---
 title: "mcp-raindrop-io"
-description: "MCP server for Raindrop.io — bookmarks, collections, tags, highlights and more."
+description: "🔖 Connect Claude to Raindrop.io — search, save, organise and audit your bookmarks"
 ---
 
 ```

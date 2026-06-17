@@ -1,41 +1,4 @@
 {
-  "features": [
-    {
-      "title": "Search movies, shows, episodes, and people across Trakt's database",
-      "description": ""
-    },
-    {
-      "title": "Movies — details, trending, popular, related, ratings, and cast",
-      "description": ""
-    },
-    {
-      "title": "Shows & Episodes — full show info, seasons, episode details, cast",
-      "description": ""
-    },
-    {
-      "title": "People — actor/director profiles and filmographies",
-      "description": ""
-    },
-    {
-      "title": "Calendar — your personalised upcoming episodes and movies",
-      "description": ""
-    },
-    {
-      "title": "History — view, add, and remove watch history entries",
-      "description": ""
-    },
-    {
-      "title": "Ratings — get, add, and remove ratings for movies, shows, and episodes",
-      "description": ""
-    },
-    {
-      "title": "Watchlist — full CRUD on your movie/show watchlist",
-      "description": ""
-    },
-    {
-      "title": "Checkin — check into what you're watching right now",
-      "description": ""
-    }
-  ],
+  "features": [],
   "install": "npx @kud/mcp-trakt@latest setup"
 }

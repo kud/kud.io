@@ -1,6 +1,6 @@
 ---
 title: "november-vscode"
-description: "A dark VS Code theme with warm amber accents"
+description: "🌙 Dark VS Code theme with warm amber accents — calm, focused and easy on the eyes"
 ---
 
 <img src="https://raw.githubusercontent.com/kud/november-vscode/main/images/icon.png" alt="November icon" width="128" />

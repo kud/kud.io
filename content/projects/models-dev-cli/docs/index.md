@@ -1,6 +1,6 @@
 ---
 title: "models-dev-cli"
-description: "Explore the models.dev catalogue from your terminal. Fast search, rich TUI, copy-to-clipboard."
+description: "🤖 Explore the models.dev LLM catalogue in your terminal — fuzzy search, rich TUI, copy IDs"
 ---
 
 ---

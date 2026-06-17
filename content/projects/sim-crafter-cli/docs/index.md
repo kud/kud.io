@@ -1,6 +1,6 @@
 ---
 title: "sim-crafter-cli"
-description: "Simplify device simulations: Sim Crafter is a minimal simctl wrapper for quick setup and management."
+description: "📱 Minimal simctl wrapper — list, create, boot and screenshot iOS simulators from your terminal"
 ---
 
 Sim Crafter is a command-line interface tool designed to streamline the management of iOS simulators. With Sim Crafter, users can effortlessly list, create, delete, boot up simulators, and take screenshots directly from the terminal.

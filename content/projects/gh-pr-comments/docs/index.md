@@ -1,6 +1,6 @@
 ---
 title: "gh-pr-comments"
-description: "Browse GitHub PR review discussions."
+description: "💬 Browse and triage unresolved GitHub PR review threads from your terminal with fzf"
 ---
 
 Browse GitHub PR review comments with fzf.

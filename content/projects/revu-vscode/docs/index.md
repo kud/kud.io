@@ -1,6 +1,6 @@
 ---
 title: "revu-vscode"
-description: "Annotate any line of code in VS Code, export your review to Claude, Copilot, ChatGPT, or opencode in one click"
+description: "📝 Annotate any line in VS Code, export your review to Claude, Copilot, ChatGPT or opencode"
 ---
 
 <p align="center">
