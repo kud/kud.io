@@ -78,11 +78,13 @@ const Home = () => (
             I don&apos;t think in tickets and lines of code — I think in systems
             and the people they serve. Starting from empathy for the user and
             the product, I work shoulder-to-shoulder with designers and PMs to
-            guide people through their journey and cut friction. What I love
-            most is architecting and designing the solution, then delegating its
+            reduce cognitive load for everyone — the people using what we build
+            and the engineers building it. That&apos;s why I love optimising and
+            automating workflows: less friction, more clarity. What I love most
+            is architecting and designing the solution, then delegating its
             execution to AI in a deliberate, fine-tuned way — turning years of
-            experience into skills and agents, and pushing the output to get
-            sharper with every pass. Currently on the mobile team at{" "}
+            experience into skills and agents that keep getting sharper.
+            Currently on the mobile team at{" "}
             <a
               href="https://www.sonymusic.com/"
               target="_blank"
