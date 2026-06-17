@@ -20,11 +20,22 @@ const socials = [
   { label: "Email", href: "mailto:m+site@kud.io", Icon: MailIcon },
 ]
 
-const experience = [
+type Experience = {
+  period: string
+  role: string
+  org: string
+  team?: string
+  url: string
+  place: string
+  note: string
+}
+
+const experience: Experience[] = [
   {
     period: "2022 — Present",
     role: "Senior Software Engineer / Tech Lead",
-    org: "Sony Music · Mobile Team",
+    org: "Sony Music",
+    team: "Mobile Team",
     url: "https://www.sonymusic.com/",
     place: "London",
     note: "Mobile architecture, AI-assisted engineering workflows, and developer experience across product, design, and engineering.",
@@ -32,7 +43,7 @@ const experience = [
   {
     period: "2022 — 2023",
     role: "Senior Software Engineer",
-    org: "The Orchard",
+    org: "The Orchard",
     url: "https://www.theorchard.com/",
     place: "London",
     note: "Front-end architecture, performance, and UX for the analytics & metrics platform used by labels, artists, and internal teams.",
@@ -56,7 +67,7 @@ const experience = [
   {
     period: "2013 — 2022",
     role: "Web Trainer",
-    org: "ESG Executive Education",
+    org: "ESG Executive Education",
     url: "https://www.esg.fr/",
     place: "Paris",
     note: "Taught the web, HTML and CSS to career-changers — from zero to their own static site.",
@@ -78,10 +89,10 @@ const Home = () => (
       <div className={styles.content}>
         <div className={styles.inner}>
           <p className={styles.eyebrow}>
-            Senior Engineer &amp; Tech Lead · London
+            Senior&nbsp;Engineer &amp; Tech&nbsp;Lead ·&nbsp;London
           </p>
 
-          <h1 className={styles.name}>Erwann Mest</h1>
+          <h1 className={styles.name}>Erwann&nbsp;Mest</h1>
 
           <p className={styles.tagline}>
             Less friction, more clarity — for the people who use software, and
@@ -104,7 +115,7 @@ const Home = () => (
               target="_blank"
               rel="noreferrer"
             >
-              Sony Music
+              Sony&nbsp;Music
             </a>
             .
           </p>
@@ -150,15 +161,6 @@ const Home = () => (
               Explore my projects
               <span aria-hidden>→</span>
             </Link>
-            <a
-              href="https://linkedin.kud.io/"
-              target="_blank"
-              rel="noreferrer"
-              className={styles.secondary}
-            >
-              LinkedIn
-              <span aria-hidden>↗</span>
-            </a>
           </div>
 
           <ul className={styles.socials}>
@@ -205,22 +207,26 @@ const Home = () => (
                   rel="noreferrer"
                 >
                   {item.org}
-                </a>{" "}
-                <span className={styles.entryPlace}>· {item.place}</span>
+                </a>
+                {item.team ? ` · ${item.team}` : ""}{" "}
+                <span className={styles.entryPlace}>·&nbsp;{item.place}</span>
               </p>
               <p className={styles.entryNote}>{item.note}</p>
             </div>
           ))}
         </div>
 
-        <a
-          className={styles.timelineLink}
-          href="https://linkedin.kud.io/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Full history on LinkedIn ↗
-        </a>
+        <div className={styles.timelineMore}>
+          <a
+            className={styles.timelineButton}
+            href="https://linkedin.kud.io/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Full history on LinkedIn
+            <span aria-hidden>↗</span>
+          </a>
+        </div>
       </div>
     </section>
   </>

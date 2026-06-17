@@ -4,7 +4,7 @@
   min-height: 100vh;
   background: #fdfbf8;
   color: #1f1813;
-  font-family: var(--font-roboto), system-ui, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -196,8 +196,7 @@
   margin-bottom: 40px;
 }
 
-.primary,
-.secondary {
+.primary {
   display: inline-flex;
   align-items: center;
   gap: 9px;
@@ -206,32 +205,16 @@
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;
-  transition:
-    background 0.18s,
-    border-color 0.18s,
-    color 0.18s,
-    transform 0.18s;
-}
-
-.primary {
   background: #141420;
   color: #fff;
   box-shadow: 0 10px 26px -12px rgba(20, 20, 32, 0.6);
+  transition:
+    background 0.18s,
+    transform 0.18s;
 }
 
 .primary:hover {
   background: #c2703d;
-  transform: translateY(-2px);
-}
-
-.secondary {
-  background: #fdfbf8;
-  color: #1f1813;
-  border: 1px solid #e7e0d6;
-}
-
-.secondary:hover {
-  border-color: #141420;
   transform: translateY(-2px);
 }
 
@@ -315,7 +298,7 @@
   background: #faf7f2;
   border-top: 1px solid #ece5db;
   color: #1f1813;
-  font-family: var(--font-roboto), system-ui, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   padding: 96px 28px;
 }
 
@@ -450,20 +433,37 @@
   color: #6a6a74;
 }
 
-.timelineLink {
-  display: inline-block;
-  margin-top: 12px;
-  margin-left: 30px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #c2703d;
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.18s;
+/* The career continues into the past: a dashed segment trails on from the last
+   role's solid line down to a button linking out to the full history. */
+.timelineMore {
+  position: relative;
+  border-left: 2px dashed #d8cfc1;
+  padding: 52px 0 6px 30px;
 }
 
-.timelineLink:hover {
+.timelineButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 11px;
+  border: 1px solid #e2dacd;
+  background: #fdfbf8;
+  color: #1f1813;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    border-color 0.18s,
+    color 0.18s,
+    background 0.18s,
+    transform 0.18s;
+}
+
+.timelineButton:hover {
   border-color: #c2703d;
+  color: #c2703d;
+  transform: translateY(-2px);
 }
 
 /* Responsive ----------------------------------------------------------------*/
@@ -472,14 +472,39 @@
     flex-direction: column;
   }
 
+  /* The full-bleed split crops the face on a narrow screen. Show the portrait
+     as a rounded avatar instead (matching /projects) — the gravatar is square,
+     so a square→circle crop keeps the whole face visible. */
   .photo {
     flex: none;
-    width: 100%;
-    height: 300px;
+    width: 152px;
+    height: 152px;
+    margin: 44px auto 0;
+    border-radius: 50%;
+    border: 2px solid #e7e0d6;
+    background-position: center;
+    box-shadow:
+      0 0 0 5px rgba(194, 112, 61, 0.1),
+      0 16px 34px -16px rgba(0, 0, 0, 0.28);
   }
 
+  /* Centre the hero on mobile so it reads as a balanced profile card — but keep
+     the long bio left-aligned, since centred multi-line body text is hard to
+     read. */
   .inner {
-    padding: 48px 28px 64px;
+    padding: 34px 28px 64px;
+    text-align: center;
+  }
+
+  .eyebrow,
+  .focus,
+  .actions,
+  .socials {
+    justify-content: center;
+  }
+
+  .bio {
+    text-align: left;
   }
 
   .timeline {

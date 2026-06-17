@@ -3,24 +3,15 @@ import type { Metadata } from "next"
 import type { ReactNode } from "react"
 import { RootProvider } from "fumadocs-ui/provider/next"
 import { ViewTransitions } from "next-view-transitions"
-import { Lusitana, Roboto, Open_Sans } from "next/font/google"
+import { Hanken_Grotesk } from "next/font/google"
 
-const lusitana = Lusitana({
+// Hanken Grotesk — a refined, elegant grotesque: subtle squared character with
+// open (not compressed) proportions, less geometric/techy than Sora, and every
+// weight available (incl. a true 800 for the hero name). Exposed as a neutral
+// --font-sans token so swapping the typeface later is a one-line change here.
+const sans = Hanken_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-lusitana",
-})
-
-const roboto = Roboto({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "700"],
-  variable: "--font-roboto",
-})
-
-const openSans = Open_Sans({
-  subsets: ["latin"],
-  weight: ["400", "600"],
-  variable: "--font-open-sans",
+  variable: "--font-sans",
 })
 
 export const metadata: Metadata = {
@@ -48,11 +39,7 @@ export const metadata: Metadata = {
 
 const RootLayout = ({ children }: { children: ReactNode }) => (
   <ViewTransitions>
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${lusitana.variable} ${roboto.variable} ${openSans.variable}`}
-    >
+    <html lang="en" suppressHydrationWarning className={sans.variable}>
       <body className="flex min-h-screen flex-col">
         <RootProvider
           theme={{

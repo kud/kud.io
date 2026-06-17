@@ -37,6 +37,15 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Smooth, consistent glyph rendering everywhere (hero, timeline, dark pages) —
+   grayscale antialiasing + better kerning/ligatures instead of the browser
+   default subpixel smoothing. */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
