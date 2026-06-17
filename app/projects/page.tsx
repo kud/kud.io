@@ -10,52 +10,33 @@ export const metadata: Metadata = {
     "Open-source command-line tools, MCP servers, and terminal design systems designed and maintained by Erwann Mest (kud).",
 }
 
-type Category = {
-  name: string
-  key: string
-  match: (project: Project) => boolean
+// Display names + order for each `kud-site-<key>` topic. Membership is driven
+// entirely by the repo topics on GitHub — this map only labels and orders them.
+const CATEGORY_META: Record<string, { name: string; order: number }> = {
+  cli: { name: "CLIs & Tools", order: 0 },
+  mcp: { name: "MCP Servers", order: 1 },
+  claude: { name: "Claude Code", order: 2 },
+  ui: { name: "UI & Design Systems", order: 3 },
+  vscode: { name: "VS Code", order: 4 },
+  other: { name: "Lists & Resources", order: 5 },
 }
 
-// Match order (catch-all last); display order is controlled separately.
-const CATEGORIES: Category[] = [
-  { name: "MCP Servers", key: "mcp", match: (p) => p.slug.startsWith("mcp-") },
-  {
-    name: "Claude Code",
-    key: "claude",
-    match: (p) => p.slug.startsWith("claude-"),
-  },
-  {
-    name: "UI & Design Systems",
-    key: "ui",
-    match: (p) => p.slug === "shui" || p.slug === "ink-ui",
-  },
-  {
-    name: "VS Code",
-    key: "vscode",
-    match: (p) => p.slug.includes("vscode"),
-  },
-  {
-    name: "Lists & Resources",
-    key: "other",
-    match: (p) =>
-      p.slug === "awesome-terminal-aesthetics" || p.slug === "githuman",
-  },
-  { name: "CLIs & Tools", key: "cli", match: () => true },
-]
-
-const DISPLAY_ORDER = ["cli", "mcp", "claude", "ui", "vscode", "other"]
+const labelFor = (key: string) =>
+  CATEGORY_META[key]?.name ?? key.charAt(0).toUpperCase() + key.slice(1)
 
 const groupByCategory = (projects: Project[]) => {
-  const used = new Set<string>()
-  return CATEGORIES.map((category) => {
-    const items = projects.filter(
-      (project) => !used.has(project.slug) && category.match(project),
+  const keys = [...new Set(projects.map((project) => project.category))]
+  return keys
+    .map((key) => ({
+      key,
+      name: labelFor(key),
+      items: projects.filter((project) => project.category === key),
+    }))
+    .sort(
+      (a, b) =>
+        (CATEGORY_META[a.key]?.order ?? 99) -
+        (CATEGORY_META[b.key]?.order ?? 99),
     )
-    items.forEach((project) => used.add(project.slug))
-    return { ...category, items }
-  })
-    .filter((category) => category.items.length > 0)
-    .sort((a, b) => DISPLAY_ORDER.indexOf(a.key) - DISPLAY_ORDER.indexOf(b.key))
 }
 
 const AVATAR =

@@ -5,6 +5,7 @@ export type Project = {
   slug: string
   name: string
   description: string | null
+  category: string
   topics: string[]
   repoUrl: string
   homepage: string | null
@@ -34,11 +35,21 @@ const ghHeaders = (): HeadersInit => {
   }
 }
 
+// The category lives on the repo as a `kud-site-<category>` topic, so the
+// showcase grouping is driven entirely from GitHub — no slug rules to maintain.
+const categoryFromTopics = (topics: string[]): string => {
+  const tag = topics.find((topic) => topic.startsWith(`${TOPIC}-`))
+  return tag ? tag.slice(TOPIC.length + 1) : "cli"
+}
+
 const toProject = (repo: Repo): Project => ({
   slug: repo.name,
   name: repo.name,
   description: repo.description,
-  topics: (repo.topics ?? []).filter((topic) => topic !== TOPIC),
+  category: categoryFromTopics(repo.topics ?? []),
+  topics: (repo.topics ?? []).filter(
+    (topic) => topic !== TOPIC && !topic.startsWith(`${TOPIC}-`),
+  ),
   repoUrl: repo.html_url,
   homepage: repo.homepage,
   stars: repo.stargazers_count,
