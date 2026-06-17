@@ -174,6 +174,8 @@ const AutoLanding = ({ project }: { project: Project }) => {
 const ReadmeLanding = ({ project }: { project: Project }) => {
   const readme = getProjectReadme(project.slug)
   const Body = readme?.data.body
+  // Section headings (depth 2) drive a simple right-rail TOC.
+  const toc = (readme?.data.toc ?? []).filter((item) => item.depth === 2)
 
   return (
     <>
@@ -187,7 +189,9 @@ const ReadmeLanding = ({ project }: { project: Project }) => {
             <span className={styles.badgeDot} />
             {project.license ? `${project.license} · ` : ""}Curated list
           </div>
-          <h1 className={styles.title}>{project.name}</h1>
+          <h1 className={`${styles.title} ${styles.titleReadme}`}>
+            {project.name}
+          </h1>
           {project.description ? (
             <p className={styles.tagline}>{project.description}</p>
           ) : null}
@@ -205,11 +209,25 @@ const ReadmeLanding = ({ project }: { project: Project }) => {
       </section>
 
       {Body ? (
-        <article className={styles.readme}>
-          <DocsBody>
-            <Body components={getMDXComponents()} />
-          </DocsBody>
-        </article>
+        <div className={styles.readmeLayout}>
+          <article className={styles.readme}>
+            <DocsBody>
+              <Body components={getMDXComponents()} />
+            </DocsBody>
+          </article>
+          {toc.length > 0 ? (
+            <aside className={styles.toc}>
+              <p className={styles.tocTitle}>On this page</p>
+              <ul>
+                {toc.map((item) => (
+                  <li key={item.url}>
+                    <a href={item.url}>{item.title}</a>
+                  </li>
+                ))}
+              </ul>
+            </aside>
+          ) : null}
+        </div>
       ) : null}
     </>
   )

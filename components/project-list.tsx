@@ -37,8 +37,16 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState("")
   const [lang, setLang] = useState<string | null>(null)
+  const [activeTags, setActiveTags] = useState<string[]>([])
   const dropdownRef = useRef<HTMLDivElement>(null)
   const compare = SORTS[sort].fn
+
+  const toggleTag = (tag: string) =>
+    setActiveTags((current) =>
+      current.includes(tag)
+        ? current.filter((value) => value !== tag)
+        : [...current, tag],
+    )
 
   useEffect(() => {
     if (!open) return
@@ -69,9 +77,24 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
     )
   }, [groups])
 
+  // Content tags (kud-site-tag-*), ordered by frequency.
+  const tags = useMemo(() => {
+    const counts = new Map<string, number>()
+    for (const group of groups)
+      for (const project of group.items)
+        for (const tag of project.tags)
+          counts.set(tag, (counts.get(tag) ?? 0) + 1)
+    return [...counts.keys()].sort(
+      (a, b) =>
+        (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || a.localeCompare(b),
+    )
+  }, [groups])
+
   const needle = query.trim().toLowerCase()
   const matches = (project: Project) =>
     (!lang || project.language === lang) &&
+    (activeTags.length === 0 ||
+      project.tags.some((tag) => activeTags.includes(tag))) &&
     (!needle ||
       `${project.name} ${project.description ?? ""}`
         .toLowerCase()
@@ -156,6 +179,31 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
           </div>
         </div>
       </div>
+
+      {tags.length > 0 ? (
+        <div className={styles.tagRow}>
+          {tags.map((tag) => (
+            <button
+              key={tag}
+              type="button"
+              className={styles.tagChip}
+              data-active={activeTags.includes(tag)}
+              onClick={() => toggleTag(tag)}
+            >
+              #{tag}
+            </button>
+          ))}
+          {activeTags.length > 0 ? (
+            <button
+              type="button"
+              className={styles.tagClear}
+              onClick={() => setActiveTags([])}
+            >
+              clear
+            </button>
+          ) : null}
+        </div>
+      ) : null}
 
       {visibleGroups.length === 0 ? (
         <p className={styles.noResults}>

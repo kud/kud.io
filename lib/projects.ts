@@ -7,6 +7,7 @@ export type Project = {
   description: string | null
   category: string
   readmeLanding: boolean
+  tags: string[]
   icon?: string | null
   topics: string[]
   repoUrl: string
@@ -20,10 +21,18 @@ export type Project = {
 // Reserved `kud-site-*` topics that are NOT categories: behaviour flags and the
 // `kud-site-tag-*` content tags. The category detector must skip these.
 const README_TOPIC = `${TOPIC}-readme`
+const TAG_PREFIX = `${TOPIC}-tag-`
 const isCategoryTopic = (topic: string) =>
   topic.startsWith(`${TOPIC}-`) &&
   topic !== README_TOPIC &&
-  !topic.startsWith(`${TOPIC}-tag-`)
+  !topic.startsWith(TAG_PREFIX)
+
+// Content tags come from `kud-site-tag-<tag>` topics — what a project is FOR
+// (ai, productivity…), orthogonal to its language.
+const tagsFromTopics = (topics: string[]): string[] =>
+  topics
+    .filter((topic) => topic.startsWith(TAG_PREFIX))
+    .map((topic) => topic.slice(TAG_PREFIX.length))
 
 type Repo = {
   name: string
@@ -60,6 +69,7 @@ const toProject = (repo: Repo): Project => ({
   // `kud-site-readme`: the README is the whole product (curated lists) — render
   // it on the landing and skip the docs route.
   readmeLanding: (repo.topics ?? []).includes(README_TOPIC),
+  tags: tagsFromTopics(repo.topics ?? []),
   topics: (repo.topics ?? []).filter(
     (topic) => topic !== TOPIC && !topic.startsWith(`${TOPIC}-`),
   ),

@@ -15,7 +15,10 @@
   min-height: 100vh;
   background: var(--bg);
   color: var(--text);
-  overflow: hidden;
+  /* overflow-x only — `overflow: hidden` here would break the sticky TOC, since
+     sticky dies inside any ancestor with a clipped overflow. The hero clips its
+     own background effects. */
+  overflow-x: clip;
 }
 
 @keyframes fadeUp {
@@ -159,6 +162,12 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* README-as-landing titles are often long slugs — keep them to one tidy line. */
+.titleReadme {
+  font-size: clamp(30px, 4.5vw, 52px);
+  letter-spacing: -0.03em;
 }
 
 .tagline {
@@ -478,28 +487,103 @@
 }
 
 /* README-as-landing prose (curated lists) ----------------------------------*/
-.readme {
-  max-width: 900px;
+.readmeLayout {
+  max-width: 1120px;
   margin: 0 auto;
   padding: 24px 24px 88px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 200px;
+  gap: 56px;
+  align-items: start;
 }
 
-/* Section headers, each with a gradient accent bar */
-.readme :global(h2) {
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+@media (max-width: 900px) {
+  .readmeLayout {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+.readme {
+  min-width: 0;
+}
+
+/* Right-rail table of contents */
+.toc {
+  position: sticky;
+  top: 28px;
+  align-self: start;
+}
+
+@media (max-width: 900px) {
+  .toc {
+    display: none;
+  }
+}
+
+.tocTitle {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin: 0 0 12px;
+}
+
+.toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  border-left: 1px solid var(--border);
+}
+
+.toc li {
+  margin: 0;
+}
+
+.toc a {
+  display: block;
+  padding-left: 14px;
+  margin-left: -1px;
+  border-left: 2px solid transparent;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+  text-decoration: none;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+
+.toc a:hover {
   color: var(--text);
-  margin: 64px 0 14px;
+  border-left-color: var(--primary);
+}
+
+/* Section headers — accent dot + uppercase, matching /projects sections */
+.readme :global(h2) {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  margin: 56px 0 16px;
+  scroll-margin-top: 28px;
 }
 .readme :global(h2)::before {
   content: "";
-  display: block;
-  width: 38px;
-  height: 3px;
-  margin-bottom: 16px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--primary-light);
+  box-shadow: 0 0 14px var(--primary-light);
 }
 
 .readme :global(h3) {
@@ -527,30 +611,63 @@
   text-underline-offset: 3px;
 }
 
-/* Each list entry becomes a hover card */
+/* Entries become a ruled two-column card grid, exactly like /projects */
 .readme :global(ul) {
   list-style: none;
   padding: 0;
   margin: 0 0 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
 }
 .readme :global(li) {
-  padding: 12px 16px;
+  position: relative;
+  margin: 0;
+  padding: 16px 18px;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.55;
   color: var(--muted);
-  transition:
-    border-color 0.15s,
-    background 0.15s;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 .readme :global(li:hover) {
-  border-color: var(--primary);
   background: var(--surface-2);
+}
+
+/* The whole card is clickable — the entry's first link (its name → website)
+   is stretched to cover the card. */
+.readme :global(li a:first-of-type)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* Diagonal-hatch filler for the empty trailing cell when a list is odd, like
+   the /projects grid. */
+.readme :global(ul:has(> li:last-child:nth-child(odd)))::after {
+  content: "";
+  background-color: var(--surface);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0,
+    transparent 11px,
+    rgba(255, 255, 255, 0.025) 11px,
+    rgba(255, 255, 255, 0.025) 12px
+  );
+}
+
+@media (max-width: 560px) {
+  .readme :global(ul) {
+    grid-template-columns: 1fr;
+  }
+  .readme :global(ul)::after {
+    display: none;
+  }
 }
 
 /* Inline code (language tags, commands) → neutral pills */
