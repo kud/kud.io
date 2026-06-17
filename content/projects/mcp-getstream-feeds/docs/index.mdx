@@ -1,5 +1,5 @@
 ---
-title: Introduction
+title: 👋 Introduction
 description: An MCP server for investigating GetStream feed subscriptions and push notification delivery state.
 ---
 
@@ -17,7 +17,7 @@ conversation.
 Five tools, ESM + TypeScript, zero stored credentials — the SDK signs every
 request server-side.
 
-## Features
+## ✨ Features
 
 - **Server-side JWT auth** — supply an API key and secret; the official
   `getstream` SDK handles JWT signing automatically. No user tokens, no manual
@@ -31,7 +31,7 @@ request server-side.
   `getstream_feed_unfollow` refuse to run unless called with `confirm: true`.
 - **ESM + TypeScript** — modern module system, fully typed, ES2023 target.
 
-## How push delivery maps to feeds
+## ⚙️ How push delivery maps to feeds
 
 GetStream fans out notifications through follow relationships. A user's
 `notification` feed receives activity only from the feeds it follows. If
@@ -42,7 +42,7 @@ client app is configured.
 This server lets you confirm that subscription state directly, and fix it in
 place when it is wrong.
 
-## Authentication
+## 🔐 Authentication
 
 1. Log in to your GetStream dashboard at https://dashboard.getstream.io
 2. Select your app and open **Overview**

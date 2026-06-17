@@ -1,5 +1,5 @@
 ---
-title: Plugins
+title: 🧩 Plugins
 description: Register custom transform and validate hooks to enforce team conventions or post-process commit candidates.
 ---
 
@@ -30,7 +30,7 @@ interface Plugin {
 - `validateCandidate` — runs per chosen candidate before the commit executes;
   return a string to block with an error message.
 
-## Example — scope normaliser
+## 🛠️ Example — scope normaliser
 
 ```ts
 export default {
@@ -44,7 +44,7 @@ export default {
 };
 ```
 
-## Registering plugins
+## 📌 Registering plugins
 
 Add plugin paths to the `plugins` array in your `.aiccrc`:
 

@@ -1,16 +1,16 @@
 ---
-title: Troubleshooting
+title: 🩺 Troubleshooting
 description: Common issues and fixes when running the Jenkins MCP server.
 ---
 
-## Server Not Showing in Claude
+## 👻 Server Not Showing in Claude
 
 1. ✅ Check path is absolute
 2. ✅ Run `npm install && npm run build`
 3. ✅ Verify environment variables
 4. ✅ Restart Claude completely
 
-## Authentication Errors
+## 🔐 Authentication Errors
 
 ```bash
 # Test your credentials
@@ -19,14 +19,14 @@ curl -u username:token https://your-jenkins.com/api/json
 
 If this returns JSON, your credentials are valid!
 
-## Build Errors
+## 🔨 Build Errors
 
 ```bash
 # Clean rebuild
 npm run clean && npm run build
 ```
 
-## Check Logs
+## 📋 Check Logs
 
 **Claude Desktop logs:**
 
@@ -39,7 +39,7 @@ npm run clean && npm run build
 claude mcp get jenkins
 ```
 
-## Testing with MCP Inspector
+## 🔍 Testing with MCP Inspector
 
 ```bash
 export MCP_JENKINS_URL=https://pipeline.yourcompany.com

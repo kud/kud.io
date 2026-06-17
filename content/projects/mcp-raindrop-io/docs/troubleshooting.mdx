@@ -1,16 +1,16 @@
 ---
-title: Troubleshooting
+title: 🩺 Troubleshooting
 description: Fix common setup problems — missing server, auth errors, and where to find logs.
 ---
 
-## Server not showing in Claude
+## 🔌 Server not showing in Claude
 
 1. Verify `MCP_RAINDROPIO_TOKEN` is set and non-empty.
 2. Run `npm install && npm run build` (for local installations).
 3. Check that the path in your config is absolute.
 4. Restart Claude Desktop completely (Cmd+Q / Alt+F4).
 
-## Authentication errors
+## 🔐 Authentication errors
 
 Test your token directly against the Raindrop.io API:
 
@@ -22,7 +22,7 @@ curl -H "Authorization: Bearer your-token-here" \
 If this returns your user info, the token is valid. If not, regenerate it from
 [app.raindrop.io/settings/integrations](https://app.raindrop.io/settings/integrations).
 
-## Checking logs
+## 📋 Checking logs
 
 **Claude Desktop:**
 
@@ -35,7 +35,7 @@ If this returns your user info, the token is valid. If not, regenerate it from
 claude mcp get raindrop
 ```
 
-## Security best practices
+## 🔒 Security best practices
 
 - Always use the `MCP_RAINDROPIO_TOKEN` env var — never hardcode tokens.
 - Never commit your token to version control.

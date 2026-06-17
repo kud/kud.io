@@ -1,9 +1,9 @@
 ---
-title: Progress & Prompts
+title: ⏳ Progress & Prompts
 description: Progress bars, spinners, loaders, animations, and interactive prompts.
 ---
 
-## Progress
+## 📊 Progress
 
 Adds a newline by default. Use `--inline` for loop-based updates.
 
@@ -27,7 +27,7 @@ Pass `--iterm` (or `--iterm=<state>`) to also update the native macOS progress
 indicator in iTerm2 — `normal`, `success`, `warning`, `error`,
 `indeterminate`, or `clear`. No-op in other terminals.
 
-## Spinner
+## 🔄 Spinner
 
 Runs a command in the background with a spinner. Exits with the command's exit
 code, and in iTerm2 emits an indeterminate badge while running.
@@ -41,7 +41,7 @@ shui spinner \
   "Installing…" -- npm install
 ```
 
-## Loader
+## ⌛ Loader
 
 Indeterminate loading indicator — loops for a fixed duration then clears the
 line. Use when you can't wrap a command in `spinner`.
@@ -58,7 +58,7 @@ shui loader --style=pulse "Connecting"
 | `pulse`   | Bold/dim alternating text          |
 | `spinner` | Braille spinner character          |
 
-## Animation
+## 🎬 Animation
 
 One-shot text effects — play once and exit.
 
@@ -70,7 +70,7 @@ shui fade-in "Welcome"
 shui fade-in --steps=10 "Welcome"
 ```
 
-## Interactive
+## 💬 Interactive
 
 Prompt the user for confirmation, a selection, or free-form input.
 

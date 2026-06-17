@@ -1,5 +1,5 @@
 ---
-title: Introduction
+title: 👋 Introduction
 description: Query any opencode model from your AI assistant — no API key required. A zero-key bridge that delegates all authentication to opencode.
 ---
 
@@ -12,7 +12,7 @@ It acts as a thin bridge: your assistant calls a tool, the server forwards the
 prompt to opencode's local HTTP server, and the response comes back. opencode
 owns the credentials; this server never sees them.
 
-## The zero-key delegation model
+## 🔐 The zero-key delegation model
 
 Most MCP servers that talk to model providers need their own API tokens, stored
 in config or environment variables. mcp-opencode takes a different approach:
@@ -29,7 +29,7 @@ This means you get a second-opinion model, a cheaper model for bulk work, or a
 different provider's flagship — all from inside your assistant, with zero extra
 auth setup.
 
-## Features
+## ✨ Features
 
 - **Query any model** — send prompts to anthropic, github-copilot,
   google-vertex, and any other provider you've configured in opencode.
@@ -44,13 +44,13 @@ auth setup.
 - **Works with any opencode provider** — whatever you've configured, you can
   query.
 
-## Prerequisites
+## ✅ Prerequisites
 
 - [opencode](https://opencode.ai) installed, with at least one provider
   configured.
 - Node.js ≥ 20.
 
-## Install
+## 📦 Install
 
 ```bash
 npm install -g @kud/mcp-opencode
@@ -72,7 +72,7 @@ Then register it with your AI client. For Claude Desktop, edit the config:
 The same `command` / `args` pair works for Cursor, Windsurf, VSCode (Copilot),
 and the Claude Code CLI — only the surrounding config file differs.
 
-## Example conversations
+## 💬 Example conversations
 
 > **"What models do I have access to?"**
 > → Calls `list_models`, returns all configured models grouped by provider.

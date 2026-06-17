@@ -1,12 +1,12 @@
 ---
-title: Tools
+title: 🧰 Tools
 description: The five MCP tools for inspecting and mutating GetStream feed subscriptions, followers, and activities.
 ---
 
 The server registers **five tools** covering the slice of the GetStream Feeds
 API needed to debug push notification delivery.
 
-## Feed subscriptions
+## 🔗 Feed subscriptions
 
 | Tool                       | Description                                                       |
 | -------------------------- | ----------------------------------------------------------------- |
@@ -15,13 +15,13 @@ API needed to debug push notification delivery.
 | `getstream_feed_follow`    | Subscribe a feed to another feed _(requires `confirm: true`)_     |
 | `getstream_feed_unfollow`  | Unsubscribe a feed from another feed _(requires `confirm: true`)_ |
 
-## Feed activities
+## 📋 Feed activities
 
 | Tool                        | Description                                                  |
 | --------------------------- | ------------------------------------------------------------ |
 | `getstream_feed_activities` | Get recent activities on a feed with timestamps and payloads |
 
-## Reference
+## 📖 Reference
 
 ### `getstream_feed_following`
 
@@ -80,7 +80,7 @@ the same safety gate — `confirm` must be `true`.
 | `target_feed_id`   | `string`  | —       | ID of the feed to unfollow from     |
 | `confirm`          | `boolean` | `false` | Must be `true` to execute           |
 
-## Safety gates
+## 🛡️ Safety gates
 
 Both mutation tools refuse to act without an explicit `confirm: true`. Calling
 them without it returns an error and performs no change — a deliberate guard

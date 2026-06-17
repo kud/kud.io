@@ -1,12 +1,12 @@
 ---
-title: Authentication
+title: 🔐 Authentication
 description: Create a Gandi Personal Access Token, scope it, and configure gandi-cli.
 ---
 
 gandi-cli authenticates with **Personal Access Tokens (PATs)** — not legacy API
 keys. PATs let you grant fine-grained, time-limited permissions.
 
-## Create a token
+## 🔑 Create a token
 
 Generate a token at **gandi.net → Account → Partage → Créer un jeton d'accès
 personnel**, granting only the permissions you need.
@@ -18,7 +18,7 @@ personnel**, granting only the permissions you need.
 | Accéder aux enregistrements DNS de vos domaines | `gandi dns list`                    |
 | Gérer les enregistrements DNS de vos domaines   | `gandi dns set`, `gandi dns delete` |
 
-## Configure gandi-cli
+## ⚙️ Configure gandi-cli
 
 ### Via environment variable
 
@@ -36,7 +36,7 @@ Store the token in `~/.config/gandi/config.toml`:
 api_key = "your-token-here"
 ```
 
-## Best practices
+## ✅ Best practices
 
 - ✅ Only grant the permissions each command actually needs.
 - ✅ Set an expiry date on the token.

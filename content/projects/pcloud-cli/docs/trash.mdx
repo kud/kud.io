@@ -1,5 +1,5 @@
 ---
-title: Trash & restore
+title: 🗑️ Trash & restore
 description: List files in your pCloud trash and restore deleted files by file ID.
 ---
 
@@ -7,7 +7,7 @@ pCloud keeps deleted files in a trash bin before they are permanently removed.
 `pcloud` can list what is in the trash and restore individual files by their
 numeric file ID.
 
-## List trash
+## 📋 List trash
 
 ```bash
 pcloud list-trash
@@ -15,7 +15,7 @@ pcloud list-trash
 
 Outputs each file's ID, name, size, and deletion time.
 
-## Restore a file
+## ♻️ Restore a file
 
 Restore a file from trash by its numeric file ID:
 
@@ -29,7 +29,7 @@ Example:
 pcloud restore-trash 12345678
 ```
 
-## OAuth limitation
+## ⚠️ OAuth limitation
 
 > **Trash endpoints require a pCloud session token.** OAuth 2.0 access tokens do
 > **not** grant access to the underlying `trash_list` / `trash_restore` methods.

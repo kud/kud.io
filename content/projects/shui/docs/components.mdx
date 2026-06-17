@@ -1,9 +1,9 @@
 ---
-title: Components
+title: 🧩 Components
 description: Messages, text, layout, badges, pills, boxes, and tables.
 ---
 
-## Messages
+## 💬 Messages
 
 `shui message` is the preferred unified API for inline messages.
 
@@ -34,7 +34,7 @@ shui message warning "API key expires in 3 days"
 The top-level shorthands `shui success`, `shui error`, `shui warning`, and
 `shui info` remain available for quick one-liners.
 
-## Text
+## 📝 Text
 
 Inline text formatting and semantic colour helpers.
 
@@ -51,7 +51,7 @@ shui text --color=muted   "Muted colour"
 Available colour types: `success` `error` `warning` `info` `primary` `muted`
 `accent`.
 
-## Layout
+## 📐 Layout
 
 Structure your script output with sections, headings, and spacing.
 
@@ -63,7 +63,7 @@ shui divider
 shui spacer
 ```
 
-## Screen
+## 🖥️ Screen
 
 Renders a section header, runs a command, then prints elapsed time. Returns the
 command's exit code.
@@ -72,7 +72,7 @@ command's exit code.
 shui screen "Building" -- npm run build
 ```
 
-## Timer
+## ⏱️ Timer
 
 Lightweight per-step timing.
 
@@ -86,7 +86,7 @@ shui timer-end "Plugin index update"
 ⏱ Plugin index update · 2s
 ```
 
-## Badge
+## 🏷️ Badge
 
 Solid background inline label. Writes to stdout **without a newline** — use
 inside `$(...)`.
@@ -98,7 +98,7 @@ echo "Build:   $(shui badge error FAIL)  $(shui badge success PASS)"
 
 Available types: `success` `error` `warning` `info` `primary` `muted`.
 
-## Pill
+## 💊 Pill
 
 Rounded-edge inline tag. Also writes without a newline.
 
@@ -107,7 +107,7 @@ echo "Status: $(shui pill warning beta)"
 shui pill 135 "custom"   # any 256-colour code (0–255)
 ```
 
-## Box
+## 📦 Box
 
 Bordered content block with an optional title.
 
@@ -124,7 +124,7 @@ shui box --title="Summary" "3 installed\n1 skipped\n0 errors"
 └────────────────────────────────────────────┘
 ```
 
-## Table
+## 📊 Table
 
 Pipe-separated (`|`) rows by default. First argument is the header. Column
 widths adjust automatically.

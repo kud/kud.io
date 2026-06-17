@@ -1,12 +1,12 @@
 ---
-title: DNS
+title: 🌐 DNS
 description: List, create, update, and delete LiveDNS records.
 ---
 
 The `gandi dns` group manages **LiveDNS** records for a domain. It supports all
 standard record types and custom TTLs.
 
-## List records
+## 📋 List records
 
 List every DNS record for a domain:
 
@@ -17,7 +17,7 @@ gandi dns list example.com
 **Requires:** the **Accéder aux enregistrements DNS de vos domaines**
 permission on your token.
 
-## Create or update a record
+## ✏️ Create or update a record
 
 `gandi dns set` creates a record, or replaces it if one already exists for the
 same type and name:
@@ -43,7 +43,7 @@ gandi dns set example.com TXT @ "v=spf1 include:_mailcust.gandi.net ~all"
 **Requires:** the **Gérer les enregistrements DNS de vos domaines** permission on
 your token.
 
-## Delete a record
+## 🗑️ Delete a record
 
 Remove a record by type and name:
 
@@ -54,7 +54,7 @@ gandi dns delete example.com A www
 **Requires:** the **Gérer les enregistrements DNS de vos domaines** permission on
 your token.
 
-## Command reference
+## 📖 Command reference
 
 | Command                                                        | Description                       |
 | -------------------------------------------------------------- | --------------------------------- |

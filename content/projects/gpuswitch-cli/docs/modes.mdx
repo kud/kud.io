@@ -1,5 +1,5 @@
 ---
-title: GPU Modes
+title: 🔀 GPU Modes
 description: The three GPU modes — integrated, discrete, and auto — and what each one does under the hood.
 ---
 
@@ -13,7 +13,7 @@ always prompts for your password.
 | `discrete`   | `1`           | Force the discrete dedicated GPU only       |
 | `auto`       | `2`           | Let macOS switch GPUs dynamically (default) |
 
-## Integrated
+## 🔋 Integrated
 
 ```bash
 gpuswitch integrated
@@ -23,7 +23,7 @@ Forces the Intel integrated GPU. The discrete GPU is powered down, which is the
 biggest single win for battery life on long unplugged sessions. Use this when
 you're working untethered and don't need GPU-heavy graphics.
 
-## Discrete
+## 🎮 Discrete
 
 ```bash
 gpuswitch discrete
@@ -33,7 +33,7 @@ Forces the dedicated discrete GPU on permanently for full graphics performance.
 Use this for gaming, rendering, or driving external displays where you want
 maximum throughput and don't mind the extra power draw and heat.
 
-## Auto
+## 🔄 Auto
 
 ```bash
 gpuswitch auto
@@ -43,7 +43,7 @@ Restores the macOS default — the system switches between the integrated and
 discrete GPUs dynamically based on what apps demand. This is the factory
 behaviour; switch back to it when you no longer want a forced mode.
 
-## Checking the current mode
+## 🔍 Checking the current mode
 
 ```bash
 gpuswitch status

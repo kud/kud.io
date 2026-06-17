@@ -1,5 +1,5 @@
 ---
-title: Commands
+title: ⌨️ Commands
 description: Full reference for every sim-crafter subcommand — list, list-remote, create, delete, boot, and screenshot.
 ---
 
@@ -14,7 +14,7 @@ sim-crafter <command>
 Run `sim-crafter --help` to see the command list, or `sim-crafter --version` to
 print the installed version.
 
-## list
+## 📋 list
 
 List all simulators installed on your machine. Results are grouped and sorted by
 iOS runtime (newest first) and rendered as a table showing each device's name,
@@ -27,7 +27,7 @@ sim-crafter list
 If no simulators are found, the tool suggests creating one with the `create`
 command.
 
-## list-remote
+## 📱 list-remote
 
 List every simulator **device type** available to create — the templates you can
 build a new simulator from. The table shows each device type's name, identifier,
@@ -37,7 +37,7 @@ and its minimum and maximum supported runtime versions.
 sim-crafter list-remote
 ```
 
-## create
+## ➕ create
 
 Create a new simulator. The command walks you through two interactive prompts:
 
@@ -54,7 +54,7 @@ sim-crafter create
 If the chosen device type and runtime are incompatible, the tool reports the
 mismatch and asks you to try a different combination.
 
-## delete
+## 🗑️ delete
 
 Delete one or more simulators. You are shown a multi-select checkbox list of
 every simulator (labelled with name, iOS version, and UDID), followed by a
@@ -66,7 +66,7 @@ sim-crafter delete
 
 Deletion is cancelled if you decline the confirmation or select nothing.
 
-## boot
+## ⚡ boot
 
 Boot a simulator. The list is filtered to simulators that are available and not
 already booted; pick one and it starts.
@@ -75,7 +75,7 @@ already booted; pick one and it starts.
 sim-crafter boot
 ```
 
-## screenshot
+## 📸 screenshot
 
 Capture a screenshot from a booted simulator. The list is filtered to simulators
 that are currently **Booted**. After choosing one, you are prompted for the save

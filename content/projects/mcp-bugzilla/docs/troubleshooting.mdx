@@ -1,9 +1,9 @@
 ---
-title: Troubleshooting
+title: 🩺 Troubleshooting
 description: Authentication, security, and common fixes for mcp-bugzilla.
 ---
 
-## Authentication
+## 🔐 Authentication
 
 API key authentication is **optional for reads** and **required for writes**
 (creating bugs, posting comments, uploading attachments, and tagging comments).
@@ -28,7 +28,7 @@ for self-hosted installations). It defaults to
 When no key is set, the server starts in read-only mode and write tools return a
 clear error instead of failing silently.
 
-## Security best practices
+## 🔒 Security best practices
 
 - ✅ Set `MCP_BUGZILLA_API_KEY` as an environment variable — never hardcode it.
 - ✅ Never commit your API key to version control.
@@ -37,14 +37,14 @@ clear error instead of failing silently.
   [Bugzilla preferences](https://bugzilla.mozilla.org/userprefs.cgi?tab=apikey)
   if it is ever exposed.
 
-## Server not showing
+## 🔌 Server not showing
 
 - Ensure Node.js 20+ is installed: `node --version`
 - Check the server key includes the `mcp-` prefix in your config
 - Restart Claude Desktop / reload your editor after config changes
 - Run `claude mcp get mcp-bugzilla` to verify the registration
 
-## Authentication errors
+## 🚫 Authentication errors
 
 Test your key directly:
 
@@ -56,7 +56,7 @@ curl -H "X-BUGZILLA-API-KEY: your-key" \
 A `401`/`403` means the key is missing, mistyped, or revoked. Generate a fresh
 key and update your config.
 
-## Checking logs
+## 📋 Checking logs
 
 - **macOS:** `~/Library/Logs/Claude/mcp-server-mcp-bugzilla.log`
 - **Windows:** `%APPDATA%\Claude\logs\mcp-server-mcp-bugzilla.log`

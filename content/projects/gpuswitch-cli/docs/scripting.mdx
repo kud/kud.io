@@ -1,12 +1,12 @@
 ---
-title: Headless & Scripting
+title: 📜 Headless & Scripting
 description: Use the integrated, discrete, auto, and status subcommands non-interactively from shell scripts and automations.
 ---
 
 Every mode is available as a direct subcommand, so gpuswitch drops cleanly into
 shell scripts, aliases, and automations without opening the TUI.
 
-## CLI Reference
+## 📋 CLI Reference
 
 | Command                | Description                           |
 | ---------------------- | ------------------------------------- |
@@ -17,13 +17,13 @@ shell scripts, aliases, and automations without opening the TUI.
 | `gpuswitch status`     | Print the current GPU mode            |
 | `gpuswitch --help`     | Show usage (`-h` also works)          |
 
-## Exit codes
+## 🚦 Exit codes
 
 - A successful mode switch prints `GPU mode set to: <mode>` and exits `0`.
 - A failed switch prints `error: failed to set GPU mode to <mode>` to stderr and exits `1`.
 - An unknown command prints the usage text to stderr and exits `1`.
 
-## Examples
+## 💡 Examples
 
 Save battery before unplugging:
 
@@ -47,7 +47,7 @@ else
 fi
 ```
 
-## sudo and automations
+## 🔐 sudo and automations
 
 Switching always runs `sudo pmset -a gpuswitch <value>`, which prompts for a
 password. For unattended automations (cron jobs, Raycast scripts, launch

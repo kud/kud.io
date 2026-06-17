@@ -1,5 +1,5 @@
 ---
-title: Debugging push notifications
+title: 🔔 Debugging push notifications
 description: Trace why a user is not receiving GetStream push notifications by inspecting the feed subscription graph.
 ---
 
@@ -7,7 +7,7 @@ This is what the server is for. When a user reports that push notifications have
 stopped arriving in a GetStream-powered app, the cause is almost always a broken
 feed subscription — and this server lets you find and fix it in a conversation.
 
-## The mental model
+## 🧠 The mental model
 
 GetStream delivers notifications by **fan-out through follow relationships**. A
 user's `notification` feed receives an activity only if it follows the feed that
@@ -20,7 +20,7 @@ producing feed  →  (follow relationship)  →  user's notification feed  →  
 Break any link and the push never fires. The most common break is a missing
 follow: `notification:user_123` simply does not follow the feed it should.
 
-## Step-by-step investigation
+## 🔍 Step-by-step investigation
 
 ### 1. Confirm what the user's feed is subscribed to
 
@@ -79,7 +79,7 @@ AI:  Calls getstream_feed_unfollow with
      target_feed_slug=user_activity, target_feed_id=user_456, confirm=true.
 ```
 
-## The one-line diagnosis
+## 💡 The one-line diagnosis
 
 ```
 You: "Why isn't this user receiving notifications?"

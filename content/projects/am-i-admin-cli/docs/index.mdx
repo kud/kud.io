@@ -1,5 +1,5 @@
 ---
-title: am-i-admin-cli
+title: 🛡️ am-i-admin-cli
 description: A tiny macOS CLI that tells you — in plain language or as a raw boolean — whether your user is a member of the admin group.
 ---
 
@@ -12,7 +12,7 @@ The `--raw` flag swaps the prose for a bare `true` / `false`.
 No configuration, no flags to memorise — a single command with one optional
 switch.
 
-## Install
+## 📦 Install
 
 Install globally from npm:
 
@@ -22,7 +22,7 @@ npm install -g @kud/am-i-admin-cli
 
 This adds the `am-i-admin` command to your `PATH`.
 
-## Usage
+## ⚡ Usage
 
 Run the command with no arguments for a human-readable answer:
 
@@ -40,7 +40,7 @@ If you are not in the admin group, you'll see a gentler message instead:
 ✗ erwann, you are sadly not an admin on this computer. 🥹
 ```
 
-## Raw boolean mode
+## 🔢 Raw boolean mode
 
 Pass `--raw` to get a plain boolean with no colour or decoration — ideal for
 piping into shell conditionals or other tooling:
@@ -62,7 +62,7 @@ if [ "$(am-i-admin --raw)" = "true" ]; then
 fi
 ```
 
-## How it works & exit behaviour
+## ⚙️ How it works & exit behaviour
 
 Under the hood the tool reads the local directory service:
 

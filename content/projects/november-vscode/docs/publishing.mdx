@@ -1,14 +1,14 @@
 ---
-title: Publishing
+title: 🚀 Publishing
 description: How November is packaged and released to the VS Code Marketplace.
 ---
 
-## Tooling
+## 🛠️ Tooling
 
 Packaging uses [`@vscode/vsce`](https://github.com/microsoft/vscode-vsce), wired
 up through the `scripts` in `package.json`.
 
-## Package locally
+## 📦 Package locally
 
 Build a `.vsix` into `build/` for local testing:
 
@@ -28,7 +28,7 @@ Check which files will be bundled:
 npm run ls
 ```
 
-## Release
+## 🏷️ Release
 
 The release scripts bump the version, commit, tag, and push in one step:
 
@@ -38,7 +38,7 @@ npm run release:minor   # bumps minor (x.N.0)
 npm run release:major   # bumps major (N.0.0)
 ```
 
-## Marketplace upload
+## 🛒 Marketplace upload
 
 Package and open the publisher management page on the Marketplace:
 

@@ -1,9 +1,9 @@
 ---
-title: Installation
+title: 📦 Installation
 description: Install and register mcp-bugzilla with Claude Code, Claude Desktop, Cursor, Windsurf, or VSCode.
 ---
 
-## Prerequisites
+## ✅ Prerequisites
 
 - Node.js 20+
 - A [Mozilla Bugzilla account](https://bugzilla.mozilla.org/) (optional — for
@@ -12,7 +12,7 @@ description: Install and register mcp-bugzilla with Claude Code, Claude Desktop,
   [User Preferences → API Keys](https://bugzilla.mozilla.org/userprefs.cgi?tab=apikey)
   (optional)
 
-## Install
+## ⚡ Install
 
 Run directly without installing:
 
@@ -28,7 +28,7 @@ cd mcp-bugzilla
 npm install && npm run build
 ```
 
-## Claude Code CLI
+## 🤖 Claude Code CLI
 
 ```bash
 claude mcp add mcp-bugzilla -- npx -y @kud/mcp-bugzilla
@@ -41,7 +41,7 @@ To pass an API key:
 claude mcp add mcp-bugzilla -e MCP_BUGZILLA_API_KEY=your-key -- npx -y @kud/mcp-bugzilla
 ```
 
-## Claude Desktop (macOS + Windows)
+## 🖥️ Claude Desktop (macOS + Windows)
 
 Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or
 `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
@@ -62,7 +62,7 @@ Edit `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) o
 
 Restart Claude Desktop after editing the config.
 
-## Cursor
+## ▶️ Cursor
 
 In Cursor settings → MCP → Add server:
 
@@ -76,7 +76,7 @@ In Cursor settings → MCP → Add server:
 }
 ```
 
-## Windsurf
+## 🏄 Windsurf
 
 In `~/.codeium/windsurf/mcp_config.json`:
 
@@ -92,7 +92,7 @@ In `~/.codeium/windsurf/mcp_config.json`:
 }
 ```
 
-## VSCode
+## 🧩 VSCode
 
 In `.vscode/mcp.json`:
 
@@ -109,7 +109,7 @@ In `.vscode/mcp.json`:
 }
 ```
 
-## Configuration
+## ⚙️ Configuration
 
 The server is configured entirely through environment variables.
 

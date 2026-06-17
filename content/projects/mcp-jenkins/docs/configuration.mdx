@@ -1,9 +1,9 @@
 ---
-title: Configuration
+title: ⚙️ Configuration
 description: Configuration priority, multiple Jenkins instances, and tool filtering.
 ---
 
-## Priority System
+## 🏆 Priority System
 
 The server uses a **2-tier priority system** for configuration (highest to lowest):
 
@@ -19,7 +19,7 @@ The server uses a **2-tier priority system** for configuration (highest to lowes
    - `MCP_JENKINS_API_TOKEN`
    - `MCP_JENKINS_BEARER_TOKEN`
 
-## Multiple Instances
+## 🔀 Multiple Instances
 
 Connect to more than one Jenkins server in a single MCP entry using comma or pipe-separated values.
 
@@ -57,7 +57,7 @@ The first instance is always the default — tools work without `instance` if yo
 
 > **Note:** Use `|` as the delimiter instead of `,` if any value might contain a comma (e.g., unusual URLs).
 
-## Tool Filtering
+## 🧰 Tool Filtering
 
 Control which tools are exposed to the AI using an allowlist or blocklist.
 
@@ -81,7 +81,7 @@ If both are set, `MCP_JENKINS_ALLOW_TOOLS` takes precedence.
 export MCP_JENKINS_BLOCK_TOOLS="jenkins_trigger_build,jenkins_stop_build,jenkins_delete_build,jenkins_cancel_queue,jenkins_enable_job,jenkins_disable_job,jenkins_delete_job,jenkins_create_job,jenkins_update_job_config,jenkins_rename_job,jenkins_copy_job,jenkins_toggle_node_offline,jenkins_quiet_down,jenkins_cancel_quiet_down,jenkins_safe_restart,jenkins_replay_build"
 ```
 
-## Examples
+## 💡 Examples
 
 **All CLI args:**
 
@@ -96,7 +96,7 @@ MCP_JENKINS_USER=dev_user node dist/index.js --url https://jenkins.com --api-tok
 # Uses: URL from CLI, token from CLI, user from env
 ```
 
-## Security Best Practices
+## 🔐 Security Best Practices
 
 - ✅ Use environment variables (never hardcode tokens)
 - ✅ Use bearer tokens over basic auth when possible

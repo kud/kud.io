@@ -1,5 +1,5 @@
 ---
-title: How It Works
+title: ⚙️ How It Works
 description: How the server bridges your assistant and GitHub Copilot via the official SDK.
 ---
 
@@ -11,13 +11,13 @@ This MCP server bridges your AI assistant and GitHub Copilot via the official
 3. `list_models` queries the CLI for available models — results are cached automatically to avoid rate limiting
 4. Authentication is handled entirely by the Copilot CLI — log in once with `gh auth login` and this MCP inherits it
 
-## Security best practices
+## 🔒 Security best practices
 
 - ✅ No extra API keys — the bundled CLI handles auth via browser OAuth or `GITHUB_TOKEN`
 - ✅ Never commit `.mcp.json` (gitignored by default)
 - ✅ Use `GITHUB_TOKEN` in the MCP server env to avoid interactive browser prompts
 
-## Tech stack
+## 🧱 Tech stack
 
 |                   |                                   |
 | ----------------- | --------------------------------- |

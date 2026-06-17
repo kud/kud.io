@@ -1,34 +1,34 @@
 ---
-title: Troubleshooting
+title: 🩺 Troubleshooting
 description: Common issues and fixes when running mcp-opencode.
 ---
 
-## Server not showing in the MCP list
+## 🔌 Server not showing in the MCP list
 
 - Ensure opencode is installed: `which opencode`.
 - Check your Node.js version: `node --version` (must be ≥ 20).
 - Try running the server manually: `npx @kud/mcp-opencode`.
 
-## "failed to create session" error
+## 🚫 "failed to create session" error
 
 - Make sure opencode is installed and at least one provider is configured.
 - Run `opencode models` to verify your setup.
 
-## "The requested model is not supported" error
+## ⚠️ "The requested model is not supported" error
 
 - The model ID exists in opencode's registry but isn't supported by the
   provider's API.
 - Use `list_models` and pick a working model — e.g. `github-copilot/gpt-4.1`
   instead of `github-copilot/claude-sonnet-4`.
 
-## Model not in the list
+## 📋 Model not in the list
 
 - The model list reflects **your** opencode configuration, not the full
   marketplace.
 - Run `opencode models` in your terminal to see the same list the server
   exposes.
 
-## Inspecting tools manually
+## 🔎 Inspecting tools manually
 
 For testing tools without a full AI client, the
 [MCP Inspector](https://github.com/modelcontextprotocol/inspector) runs against

@@ -1,12 +1,12 @@
 ---
-title: Providers & Models
+title: 🤖 Providers & Models
 description: Route through OpenCode-supported models, the Claude CLI with no API key, or the Anthropic SDK directly.
 ---
 
 The CLI is provider-agnostic. A model string takes the form `provider/name`, and
 the provider prefix selects which adapter handles the request.
 
-## Supported providers
+## 🌐 Supported providers
 
 | Provider                       | Example model strings                                      | Auth                        |
 | ------------------------------ | ---------------------------------------------------------- | --------------------------- |
@@ -14,7 +14,7 @@ the provider prefix selects which adapter handles the request.
 | Claude CLI (no API key needed) | `claude/sonnet`, `claude/opus`, `claude/haiku`             | Claude Code auth            |
 | Anthropic SDK (direct API)     | `anthropic/claude-sonnet-4-6`, `anthropic/claude-opus-4-7` | `ANTHROPIC_API_KEY` env var |
 
-## Picking a model
+## 🎯 Picking a model
 
 List, pick, and persist your preferred model interactively:
 
@@ -28,7 +28,7 @@ Override the model for a single run:
 ai-conventional-commit --model claude/sonnet
 ```
 
-## Configuration
+## ⚙️ Configuration
 
 Configuration is resolved via [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig)
 in the following precedence order (later wins):
@@ -67,7 +67,7 @@ in the following precedence order (later wins):
 | `AICC_MAX_TOKENS`   | `512`                              | Token limit for model responses                                     |
 | `ANTHROPIC_API_KEY` | —                                  | Required when using `anthropic/*` models                            |
 
-## OpenCode MCP behaviour
+## 🔌 OpenCode MCP behaviour
 
 On startup, all MCP servers from your global OpenCode config are automatically
 disconnected for the duration of this tool's process. This keeps the model's

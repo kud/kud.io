@@ -1,5 +1,5 @@
 ---
-title: jenkins
+title: 🔨 jenkins
 description: Full Jenkins control from Claude — inspect builds, stream console logs, trigger pipelines, manage queues, and diagnose CI failures.
 ---
 
@@ -8,14 +8,14 @@ The **jenkins** plugin wraps the
 giving Claude full Jenkins control: inspect builds, stream console logs, trigger
 pipelines, manage queues, and diagnose CI failures.
 
-## What it bundles
+## 🧰 What it bundles
 
 | Skill          | Trigger                      | What it does                                                   |
 | -------------- | ---------------------------- | -------------------------------------------------------------- |
 | `/ci-diagnose` | `/ci-diagnose <job> [build]` | Fetch a failing build's console log and explain the root cause |
 | `/build-watch` | `/build-watch <job>`         | Trigger a build and watch it to completion with live status    |
 
-## Install
+## 📦 Install
 
 ```
 /plugin install jenkins@kud --scope project
@@ -24,7 +24,7 @@ pipelines, manage queues, and diagnose CI failures.
 Project scope is recommended so a whole team shares the same Jenkins config via
 `.claude/settings.json`.
 
-## Configuration
+## 🔧 Configuration
 
 Set these environment variables so the server can reach your Jenkins instance:
 
@@ -34,7 +34,7 @@ MCP_JENKINS_USER=your-username
 MCP_JENKINS_API_TOKEN=your-api-token
 ```
 
-## Links
+## 🔗 Links
 
 - npm: [`@kud/mcp-jenkins`](https://www.npmjs.com/package/@kud/mcp-jenkins)
 - GitHub: [kud/mcp-jenkins](https://github.com/kud/mcp-jenkins)

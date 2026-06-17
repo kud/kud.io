@@ -1,24 +1,24 @@
 ---
-title: Troubleshooting
+title: 🩺 Troubleshooting
 description: Common issues and fixes — server visibility, authentication, and model errors.
 ---
 
-## Server not showing in the MCP list
+## 👀 Server not showing in the MCP list
 
 - Ensure the Copilot CLI extension is installed: `gh extension list`
 - Check Node.js version: `node --version` (must be ≥ 20)
 - Try running manually: `npx @kud/mcp-github-copilot`
 
-## Authentication errors
+## 🔐 Authentication errors
 
 - Delete any cached auth state and let the CLI re-authenticate via browser on next run
 - Or set `GITHUB_TOKEN` in your MCP server config to authenticate without a browser prompt
 
-## "Model not found" errors
+## 🚫 "Model not found" errors
 
 - Use `list_models` to see your available models — only models enabled on your subscription will appear
 
-## MCP Inspector logs
+## 🐛 MCP Inspector logs
 
 ```bash
 npm run inspect

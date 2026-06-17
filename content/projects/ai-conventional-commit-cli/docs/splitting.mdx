@@ -1,5 +1,5 @@
 ---
-title: Splitting Commits
+title: ✂️ Splitting Commits
 description: Cluster a large staged diff into multiple atomic commits, each selectively staged and executed.
 ---
 
@@ -7,7 +7,7 @@ When a staged diff spans several unrelated changes, `split` clusters its hunks
 semantically and proposes a series of atomic commits. Each candidate is staged
 selectively and executed in turn.
 
-## Basic usage
+## ⚡ Basic usage
 
 ```bash
 ai-conventional-commit split
@@ -16,7 +16,7 @@ ai-conventional-commit split
 # 3. test(parser): add cases for brace + extglob combos
 ```
 
-## Target a specific number of commits
+## 🎯 Target a specific number of commits
 
 Pass `n` to ask the splitter for that many commits:
 
@@ -24,7 +24,7 @@ Pass `n` to ask the splitter for that many commits:
 ai-conventional-commit split 2
 ```
 
-## How it works
+## ⚙️ How it works
 
 The splitter reads the staged diff, groups related hunks into clusters, and
 generates one Conventional Commit candidate per cluster. On confirmation, each

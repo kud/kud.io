@@ -1,5 +1,5 @@
 ---
-title: How It Works
+title: ⚙️ How It Works
 description: How mcp-opencode bridges your AI assistant to opencode's local HTTP server.
 ---
 
@@ -7,7 +7,7 @@ mcp-opencode is a bridge between your AI assistant and
 [opencode](https://opencode.ai). It speaks MCP to your assistant on one side,
 and opencode's local HTTP API on the other.
 
-## The flow
+## 🔄 The flow
 
 1. On first use, the server checks whether the opencode HTTP server is running
    on `127.0.0.1:4096`.
@@ -18,7 +18,7 @@ and opencode's local HTTP API on the other.
 4. Authentication is handled entirely by opencode — configure your providers
    once in opencode and this MCP inherits them automatically.
 
-## Why a local server
+## 🖥️ Why a local server
 
 opencode already manages provider credentials, model registries, and sessions.
 Rather than re-implement any of that, mcp-opencode talks to opencode's own HTTP
@@ -29,7 +29,7 @@ This is the heart of the
 [zero-key delegation model](/projects/mcp-opencode/docs/) — no credentials are
 stored in or pass through the MCP server.
 
-## Sessions are ephemeral
+## ♻️ Sessions are ephemeral
 
 Every `query` spins up a fresh opencode session and tears it down once the
 response is returned. There's no conversation state carried between calls — each

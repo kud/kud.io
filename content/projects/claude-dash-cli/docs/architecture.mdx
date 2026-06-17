@@ -1,5 +1,5 @@
 ---
-title: Architecture
+title: 🏗️ Architecture
 description: How the TUI, daemon, and Claude Code hooks talk to each other over two Unix sockets.
 ---
 
@@ -7,7 +7,7 @@ claude-dash is split into three cooperating parts: the **TUI** you interact
 with, a background **daemon** that holds session state, and lightweight **hook**
 processes that Claude Code fires on every tool use.
 
-## File tree
+## 🌳 File tree
 
 ```
 claude-dash-cli/
@@ -32,7 +32,7 @@ claude-dash-cli/
         └── overlays.rs     # Permission modal, new session, rename
 ```
 
-## The two sockets
+## 🔌 The two sockets
 
 Two Unix sockets connect the pieces:
 
@@ -41,7 +41,7 @@ Two Unix sockets connect the pieces:
 - **`/tmp/claude-dash-tui.sock`** — the TUI connects here to receive state
   snapshots/deltas and to send permission decisions.
 
-## Event flow
+## ⚙️ Event flow
 
 Claude Code hooks trigger `claude-dash hook` on every tool use. The hook reads
 the event from stdin and forwards it to the daemon over

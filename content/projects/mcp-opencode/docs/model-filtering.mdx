@@ -1,5 +1,5 @@
 ---
-title: Model Filtering
+title: 🔍 Model Filtering
 description: Restrict which models are accessible with allow and block environment variables.
 ---
 
@@ -7,14 +7,14 @@ You can restrict which models mcp-opencode will expose and query using two
 environment variables. This is useful for capping access to a specific provider,
 or blocking expensive models from accidental use.
 
-## Variables
+## 🔧 Variables
 
 | Variable                   | Description                                                  | Example                        |
 | -------------------------- | ------------------------------------------------------------ | ------------------------------ |
 | `MCP_OPENCODE_MODEL_ALLOW` | Comma-separated allowlist (supports `provider/*` wildcards). | `github-copilot/*,anthropic/*` |
 | `MCP_OPENCODE_MODEL_BLOCK` | Comma-separated blocklist (same syntax).                     | `anthropic/claude-opus-4-6`    |
 
-## How matching works
+## ⚙️ How matching works
 
 Each pattern is either:
 
@@ -33,7 +33,7 @@ The rules:
 Both `query` and `list_models` respect these filters: blocked models never
 appear in the list, and querying one returns an error.
 
-## Example
+## 📝 Example
 
 A config that allows only Copilot and Anthropic models, while blocking one
 specific Opus model:

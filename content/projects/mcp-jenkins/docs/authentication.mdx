@@ -1,9 +1,9 @@
 ---
-title: Authentication
+title: 🔐 Authentication
 description: Getting a Jenkins API token and choosing between bearer token and basic auth.
 ---
 
-## Get Your Jenkins API Token
+## 🔑 Get Your Jenkins API Token
 
 Follow these steps to create an API token for the MCP server:
 
@@ -33,7 +33,7 @@ Store the token securely - you'll need it for configuration:
 
 > 💡 **Tip:** You can see all your active tokens in the "Current token(s)" list. Each shows when it was created and last used, helping you manage and rotate tokens regularly.
 
-## Bearer Token vs Basic Auth
+## ⚖️ Bearer Token vs Basic Auth
 
 **Bearer Token (Recommended):**
 
@@ -48,11 +48,11 @@ Store the token securely - you'll need it for configuration:
 --env MCP_JENKINS_API_TOKEN=your_token
 ```
 
-## Anonymous Instances
+## 🕶️ Anonymous Instances
 
 For Jenkins instances with no authentication, pass `--anonymous` (or set
 `MCP_JENKINS_ANONYMOUS=true`) and omit all credentials.
 
-## OAuth Support
+## 🎫 OAuth Support
 
 This server forwards any `Authorization` header to Jenkins. If your Jenkins uses OAuth (via plugins), just pass the OAuth token as `MCP_JENKINS_BEARER_TOKEN`.
