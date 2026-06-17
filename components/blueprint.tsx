@@ -1,6 +1,7 @@
-// Decorative blueprint motif behind the hero — faint technical-drawing marks
-// (dimension lines, a radius callout, construction geometry, registration
-// marks). Purely cosmetic; hidden from assistive tech.
+// Decorative blueprint motif framing the hero — a faint technical-drawing
+// boundary with dimension lines, a radius callout, and registration marks. Kept
+// as a frame (no geometry crossing the content) so it never sits over faces or
+// text. Purely cosmetic; hidden from assistive tech.
 const LINE = "#7db1ff"
 
 export const Blueprint = ({ className }: { className?: string }) => (
@@ -12,26 +13,6 @@ export const Blueprint = ({ className }: { className?: string }) => (
     aria-hidden="true"
     fontFamily="ui-monospace, 'SF Mono', Menlo, monospace"
   >
-    {/* Construction geometry */}
-    <path
-      d="M380 120 V640 M120 380 H640"
-      strokeWidth="0.75"
-      strokeOpacity="0.16"
-    />
-    <path
-      d="M170 170 L590 590 M590 170 L170 590"
-      strokeWidth="0.75"
-      strokeOpacity="0.16"
-    />
-    <circle
-      cx="380"
-      cy="380"
-      r="210"
-      strokeWidth="1"
-      strokeDasharray="3 7"
-      strokeOpacity="0.28"
-    />
-
     {/* Icon boundary */}
     <rect
       x="170"
@@ -78,16 +59,16 @@ export const Blueprint = ({ className }: { className?: string }) => (
       512 px
     </text>
 
-    {/* Radius callout */}
-    <path d="M548 232 L506 274" strokeWidth="1" strokeOpacity="0.4" />
+    {/* Radius callout — points at the top-right rounded corner from outside */}
+    <path d="M598 198 L566 210" strokeWidth="1" strokeOpacity="0.4" />
     <path
-      d="M506 274 l13 -2 m-13 2 l2 -13"
+      d="M566 210 l13 0 m-13 0 l5 -11"
       strokeWidth="1"
       strokeOpacity="0.4"
     />
     <text
-      x="556"
-      y="226"
+      x="606"
+      y="192"
       fill={LINE}
       fillOpacity="0.5"
       stroke="none"

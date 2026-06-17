@@ -65,14 +65,22 @@
 
 .blueprint {
   position: absolute;
-  top: -28px;
+  top: -40px;
   left: 50%;
-  width: min(600px, 92vw);
+  width: min(720px, 94vw);
   height: auto;
   transform: translateX(-50%);
   z-index: 0;
-  opacity: 0.28;
+  opacity: 0.26;
   pointer-events: none;
+  /* Fade the lower half out so no line sits near the paragraph, links, or count. */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 42%,
+    transparent 74%
+  );
+  mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 74%);
 }
 
 @media (max-width: 720px) {
@@ -164,11 +172,18 @@
 }
 
 .social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   color: var(--muted);
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
   transition: color 0.18s;
+}
+
+.social a svg {
+  opacity: 0.85;
 }
 
 .social a:hover {

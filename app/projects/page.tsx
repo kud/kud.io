@@ -3,6 +3,11 @@ import Link from "next/link"
 import { getProjects, type Project } from "@/lib/projects"
 import { getIcons } from "@/lib/icons"
 import { Blueprint } from "@/components/blueprint"
+import {
+  GitHubIcon,
+  LinkedInIcon,
+  BlueskyIcon,
+} from "@/components/social-icons"
 import { ProjectList } from "@/components/project-list"
 import styles from "./page.module.css"
 
@@ -117,14 +122,17 @@ const ProjectsIndex = async () => {
           </p>
           <div className={styles.social}>
             <a href="http://github.kud.io/" target="_blank" rel="noreferrer">
+              <GitHubIcon />
               GitHub
             </a>
             <span className={styles.sep}>·</span>
             <a href="http://linkedin.kud.io/" target="_blank" rel="noreferrer">
+              <LinkedInIcon />
               LinkedIn
             </a>
             <span className={styles.sep}>·</span>
             <a href="https://bsky.kud.io" target="_blank" rel="noreferrer">
+              <BlueskyIcon />
               Bluesky
             </a>
           </div>
