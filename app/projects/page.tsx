@@ -48,7 +48,7 @@ const groupByCategory = (projects: Project[]) => {
 }
 
 const AVATAR =
-  "https://www.gravatar.com/avatar/e6eaeaa6da69e804c27c2d4cd55107e0?s=320"
+  "https://www.gravatar.com/avatar/e6eaeaa6da69e804c27c2d4cd55107e0?s=512"
 
 const ProjectsIndex = async () => {
   const projects = await getProjects()
@@ -81,9 +81,11 @@ const ProjectsIndex = async () => {
             <a href="http://github.kud.io/" target="_blank" rel="noreferrer">
               GitHub
             </a>
+            <span className={styles.sep}>·</span>
             <a href="http://linkedin.kud.io/" target="_blank" rel="noreferrer">
               LinkedIn
             </a>
+            <span className={styles.sep}>·</span>
             <a href="https://bsky.kud.io" target="_blank" rel="noreferrer">
               Bluesky
             </a>

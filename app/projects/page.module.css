@@ -86,9 +86,15 @@
 
 .social {
   display: flex;
-  gap: 22px;
+  gap: 12px;
   justify-content: center;
+  align-items: center;
   margin: 28px 0 0;
+}
+
+.sep {
+  color: var(--dim);
+  font-size: 13px;
 }
 
 .social a {
