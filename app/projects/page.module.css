@@ -145,6 +145,14 @@
   color: transparent;
 }
 
+.titleBy {
+  font-size: 0.42em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  -webkit-text-fill-color: var(--muted);
+}
+
 .intro {
   max-width: 600px;
   margin: 0 auto;

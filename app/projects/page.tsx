@@ -113,7 +113,9 @@ const ProjectsIndex = async () => {
             height={148}
             className={styles.avatar}
           />
-          <h1 className={styles.title}>Projects</h1>
+          <h1 className={styles.title}>
+            Projects <span className={styles.titleBy}>by kud</span>
+          </h1>
           <p className={styles.intro}>
             Open-source tools I design and maintain — command-line apps, MCP
             servers, and terminal design systems. I&apos;m{" "}
