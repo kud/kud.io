@@ -477,9 +477,111 @@
   padding: 5px 13px;
 }
 
-/* README-as-landing prose (curated lists) */
+/* README-as-landing prose (curated lists) ----------------------------------*/
 .readme {
-  max-width: 860px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 16px 24px 64px;
+  padding: 24px 24px 88px;
+}
+
+/* Section headers, each with a gradient accent bar */
+.readme :global(h2) {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 64px 0 14px;
+}
+.readme :global(h2)::before {
+  content: "";
+  display: block;
+  width: 38px;
+  height: 3px;
+  margin-bottom: 16px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-light));
+}
+
+.readme :global(h3) {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 32px 0 10px;
+}
+
+.readme :global(p) {
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0 0 16px;
+}
+
+.readme :global(a) {
+  color: var(--text);
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.readme :global(a:hover) {
+  color: var(--primary-light);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Each list entry becomes a hover card */
+.readme :global(ul) {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.readme :global(li) {
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--muted);
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+.readme :global(li:hover) {
+  border-color: var(--primary);
+  background: var(--surface-2);
+}
+
+/* Inline code (language tags, commands) → neutral pills */
+.readme :global(code) {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 2px 7px;
+  margin: 0 3px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Lead blockquote → callout */
+.readme :global(blockquote) {
+  margin: 0 0 18px;
+  padding: 16px 20px;
+  border-left: 3px solid var(--primary);
+  background: var(--surface);
+  border-radius: 0 12px 12px 0;
+}
+.readme :global(blockquote p) {
+  color: var(--text);
+  margin: 0;
+}
+
+.readme :global(hr) {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 44px 0;
 }
