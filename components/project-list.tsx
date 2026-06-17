@@ -118,29 +118,8 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
           onChange={(event) => setQuery(event.target.value)}
           aria-label="Search projects"
         />
-        <div className={styles.langs}>
-          <button
-            type="button"
-            className={styles.chip}
-            data-active={lang === null}
-            onClick={() => setLang(null)}
-          >
-            All
-          </button>
-          {languages.map((language) => (
-            <button
-              key={language}
-              type="button"
-              className={styles.chip}
-              data-active={lang === language}
-              onClick={() => setLang(lang === language ? null : language)}
-            >
-              {language}
-            </button>
-          ))}
-        </div>
         <div className={styles.sortGroup}>
-          <span className={styles.sortLabel}>Sort by</span>
+          <span className={styles.filterLabel}>Sort</span>
           <div className={styles.dropdown} ref={dropdownRef}>
             <button
               type="button"
@@ -180,30 +159,60 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
         </div>
       </div>
 
-      {tags.length > 0 ? (
-        <div className={styles.tagRow}>
-          {tags.map((tag) => (
-            <button
-              key={tag}
-              type="button"
-              className={styles.tagChip}
-              data-active={activeTags.includes(tag)}
-              onClick={() => toggleTag(tag)}
-            >
-              #{tag}
-            </button>
-          ))}
-          {activeTags.length > 0 ? (
+      <div className={styles.filters}>
+        <div className={styles.filterGroup}>
+          <span className={styles.filterLabel}>Lang</span>
+          <div className={styles.chips}>
             <button
               type="button"
-              className={styles.tagClear}
-              onClick={() => setActiveTags([])}
+              className={styles.chip}
+              data-active={lang === null}
+              onClick={() => setLang(null)}
             >
-              clear
+              All
             </button>
-          ) : null}
+            {languages.map((language) => (
+              <button
+                key={language}
+                type="button"
+                className={styles.chip}
+                data-active={lang === language}
+                onClick={() => setLang(lang === language ? null : language)}
+              >
+                {language}
+              </button>
+            ))}
+          </div>
         </div>
-      ) : null}
+
+        {tags.length > 0 ? (
+          <div className={styles.filterGroup}>
+            <span className={styles.filterLabel}>Tags</span>
+            <div className={styles.chips}>
+              {tags.map((tag) => (
+                <button
+                  key={tag}
+                  type="button"
+                  className={styles.tagChip}
+                  data-active={activeTags.includes(tag)}
+                  onClick={() => toggleTag(tag)}
+                >
+                  #{tag}
+                </button>
+              ))}
+              {activeTags.length > 0 ? (
+                <button
+                  type="button"
+                  className={styles.tagClear}
+                  onClick={() => setActiveTags([])}
+                >
+                  clear
+                </button>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
+      </div>
 
       {visibleGroups.length === 0 ? (
         <p className={styles.noResults}>

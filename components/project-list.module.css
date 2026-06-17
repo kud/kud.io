@@ -30,10 +30,39 @@
   border-color: var(--primary);
 }
 
-.langs {
+/* Filter section: labelled Language + Tags rows below the search/sort bar */
+.filters {
+  max-width: 1040px;
+  margin: 16px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 0 4px;
+  border-top: 1px solid var(--border);
+}
+
+.filterGroup {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filterLabel {
+  flex-shrink: 0;
+  width: 52px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+}
+
+.chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  align-items: center;
 }
 
 .chip {
@@ -64,15 +93,6 @@
 }
 
 /* Content tags (multi-select) */
-.tagRow {
-  max-width: 1040px;
-  margin: 14px auto 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 7px;
-}
-
 .tagChip {
   background: transparent;
   color: var(--muted);
@@ -121,15 +141,6 @@
   align-items: center;
   gap: 12px;
   margin-left: auto;
-}
-
-.sortLabel {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--muted);
-  white-space: nowrap;
 }
 
 .dropdown {
