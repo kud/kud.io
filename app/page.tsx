@@ -65,7 +65,7 @@ const Home = () => (
       <div className={styles.content}>
         <div className={styles.inner}>
           <p className={styles.eyebrow}>
-            Systems Thinking · Product-Minded · AI-Assisted
+            Senior Engineer &amp; Tech Lead · London
           </p>
 
           <h1 className={styles.name}>Erwann Mest</h1>
@@ -75,31 +75,30 @@ const Home = () => (
           </p>
 
           <p className={styles.bio}>
-            Engineer with 18 years of experience at the intersection of
-            engineering, product thinking, and developer experience. I reduce
-            friction, surface the right technical decisions at the right moment,
-            and help teams move through complexity — thinking in workflows,
-            interfaces, and the connections between engineers, systems, and
-            product intent. Right now I&apos;m deep in AI-assisted engineering,
-            exploring how agent-based workflows and orchestration reshape how we
-            build, review, and ship software — currently Senior Engineer / Tech
-            Lead on the mobile team at{" "}
+            I don&apos;t think in tickets and lines of code — I think in systems
+            and the people they serve. Starting from empathy for the user and
+            the product, I work shoulder-to-shoulder with designers and PMs to
+            guide people through their journey and cut friction. What I love
+            most is architecting and designing the solution, then delegating its
+            execution to AI in a deliberate, fine-tuned way — turning years of
+            experience into skills and agents, and pushing the output to get
+            sharper with every pass. Currently on the mobile team at{" "}
             <a
               href="https://www.sonymusic.com/"
               target="_blank"
               rel="noreferrer"
             >
               Sony Music
-            </a>{" "}
-            in London.
+            </a>
+            .
           </p>
 
           <ul className={styles.focus}>
             <li>Systems thinking</li>
-            <li>Workflow orchestration</li>
+            <li>User empathy</li>
+            <li>Design &amp; product partnership</li>
             <li>AI-assisted engineering</li>
             <li>Developer experience</li>
-            <li>Product-minded leadership</li>
           </ul>
 
           <p className={styles.personal}>

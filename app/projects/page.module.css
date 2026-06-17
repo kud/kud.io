@@ -16,10 +16,10 @@
   /* Blueprint graph paper: bold major lines every 140px over a fine 28px grid,
      kept very faint so it reads as a backdrop, not a foreground. */
   background-image:
-    linear-gradient(rgba(99, 140, 230, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(99, 140, 230, 0.035) 1px, transparent 1px),
-    linear-gradient(rgba(99, 140, 230, 0.014) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(99, 140, 230, 0.014) 1px, transparent 1px);
+    linear-gradient(rgba(79, 116, 236, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79, 116, 236, 0.035) 1px, transparent 1px),
+    linear-gradient(rgba(79, 116, 236, 0.014) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(79, 116, 236, 0.014) 1px, transparent 1px);
   background-size:
     140px 140px,
     140px 140px,
@@ -51,7 +51,7 @@
     ),
     radial-gradient(
       ellipse 45% 55% at 80% 10%,
-      rgba(59, 130, 246, 0.16),
+      rgba(79, 116, 236, 0.16),
       transparent 70%
     );
 }
