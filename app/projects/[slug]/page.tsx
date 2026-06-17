@@ -3,13 +3,21 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
+import { DocsBody } from "fumadocs-ui/layouts/docs/page"
 import { getProject, getProjects, type Project } from "@/lib/projects"
 import { getLanding } from "@/lib/landing"
 import { getLandingMdx } from "@/lib/landings"
+import { getProjectReadme } from "@/lib/source"
 import { landingComponents } from "@/components/landing-kit"
+import { getMDXComponents } from "@/components/mdx"
 import { Reveal } from "@/components/reveal"
 import { CopyButton } from "@/components/copy-button"
 import styles from "./page.module.css"
+
+// A repo opts into README-as-landing with the `kud-site-readme` topic — e.g.
+// awesome lists, where the README IS the product. We render it whole on the
+// landing and skip the docs route.
+const isReadmeLanding = (project: Project) => project.readmeLanding
 
 export const generateStaticParams = async () =>
   (await getProjects()).map((project) => ({ slug: project.slug }))
@@ -161,6 +169,52 @@ const AutoLanding = ({ project }: { project: Project }) => {
   )
 }
 
+// README-as-landing — for curated lists, the README is the whole product, so we
+// render it in full under a compact header with no docs link.
+const ReadmeLanding = ({ project }: { project: Project }) => {
+  const readme = getProjectReadme(project.slug)
+  const Body = readme?.data.body
+
+  return (
+    <>
+      <section className={styles.hero}>
+        <div className={styles.heroGrid} />
+        <Link href="/projects" className={styles.back}>
+          ← Projects
+        </Link>
+        <div className={styles.heroContent}>
+          <div className={styles.badge}>
+            <span className={styles.badgeDot} />
+            {project.license ? `${project.license} · ` : ""}Curated list
+          </div>
+          <h1 className={styles.title}>{project.name}</h1>
+          {project.description ? (
+            <p className={styles.tagline}>{project.description}</p>
+          ) : null}
+          <div className={styles.actions}>
+            <a
+              href={project.repoUrl}
+              className={styles.primary}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View on GitHub ↗
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {Body ? (
+        <article className={styles.readme}>
+          <DocsBody>
+            <Body components={getMDXComponents()} />
+          </DocsBody>
+        </article>
+      ) : null}
+    </>
+  )
+}
+
 const ProjectLanding = async ({
   params,
 }: {
@@ -174,7 +228,9 @@ const ProjectLanding = async ({
 
   return (
     <main className={styles.page}>
-      {authored ? (
+      {isReadmeLanding(project) ? (
+        <ReadmeLanding project={project} />
+      ) : authored ? (
         <MDXRemote
           source={authored}
           components={landingComponents}

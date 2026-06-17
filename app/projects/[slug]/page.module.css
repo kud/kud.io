@@ -476,3 +476,10 @@
   border-radius: 999px;
   padding: 5px 13px;
 }
+
+/* README-as-landing prose (curated lists) */
+.readme {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 16px 24px 64px;
+}

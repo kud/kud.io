@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import {
   DocsBody,
   DocsDescription,
@@ -8,6 +8,7 @@ import {
 } from "fumadocs-ui/layouts/docs/page"
 import { createRelativeLink } from "fumadocs-ui/mdx"
 import { source } from "@/lib/source"
+import { getProject } from "@/lib/projects"
 import { getMDXComponents } from "@/components/mdx"
 
 type Params = { slug: string; path?: string[] }
@@ -17,6 +18,9 @@ const resolvePage = (slug: string, path?: string[]) =>
 
 const Page = async ({ params }: { params: Promise<Params> }) => {
   const { slug, path } = await params
+  // README-as-landing projects (kud-site-readme) have no separate docs.
+  const project = await getProject(slug)
+  if (project?.readmeLanding) redirect(`/projects/${slug}`)
   const page = resolvePage(slug, path)
   if (!page) notFound()
 

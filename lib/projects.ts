@@ -6,6 +6,7 @@ export type Project = {
   name: string
   description: string | null
   category: string
+  readmeLanding: boolean
   icon?: string | null
   topics: string[]
   repoUrl: string
@@ -15,6 +16,14 @@ export type Project = {
   license: string | null
   pushedAt: string
 }
+
+// Reserved `kud-site-*` topics that are NOT categories: behaviour flags and the
+// `kud-site-tag-*` content tags. The category detector must skip these.
+const README_TOPIC = `${TOPIC}-readme`
+const isCategoryTopic = (topic: string) =>
+  topic.startsWith(`${TOPIC}-`) &&
+  topic !== README_TOPIC &&
+  !topic.startsWith(`${TOPIC}-tag-`)
 
 type Repo = {
   name: string
@@ -39,7 +48,7 @@ const ghHeaders = (): HeadersInit => {
 // The category lives on the repo as a `kud-site-<category>` topic, so the
 // showcase grouping is driven entirely from GitHub — no slug rules to maintain.
 const categoryFromTopics = (topics: string[]): string => {
-  const tag = topics.find((topic) => topic.startsWith(`${TOPIC}-`))
+  const tag = topics.find(isCategoryTopic)
   return tag ? tag.slice(TOPIC.length + 1) : "cli"
 }
 
@@ -48,6 +57,9 @@ const toProject = (repo: Repo): Project => ({
   name: repo.name,
   description: repo.description,
   category: categoryFromTopics(repo.topics ?? []),
+  // `kud-site-readme`: the README is the whole product (curated lists) — render
+  // it on the landing and skip the docs route.
+  readmeLanding: (repo.topics ?? []).includes(README_TOPIC),
   topics: (repo.topics ?? []).filter(
     (topic) => topic !== TOPIC && !topic.startsWith(`${TOPIC}-`),
   ),

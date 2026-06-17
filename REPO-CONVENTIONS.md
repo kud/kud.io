@@ -15,6 +15,7 @@ repo minimal and let kud.io render it.
 | ------------------ | ----------------------------------------------------------------------------------------- |
 | `kud-site`         | **Required.** Includes the repo on kud.io/projects.                                       |
 | `kud-site-<group>` | Places it in a section. One of: `cli`, `mcp`, `claude`, `ui`, `vscode`, `theme`, `other`. |
+| `kud-site-readme`  | Flag: render the README as the landing page, no docs (see §4).                            |
 
 No category topic → it falls into **CLIs & Tools** by default.
 
@@ -52,6 +53,11 @@ Requirements for the logo to compose well on kud.io's dark tiles:
 - `docs/meta.json` controls sidebar order: `{ "pages": ["index", "..."] }`.
 - Relative links/images are rewritten to absolute GitHub URLs at sync time.
 - No `docs/` folder → the README becomes the single docs page (fallback).
+
+> **README-as-landing (`kud-site-readme`):** add this topic when the README
+> _is_ the product (e.g. an awesome-list). kud.io renders the full README on the
+> landing page and skips the docs route entirely — no `docs/` needed. It's a
+> behaviour flag independent of the category, so any project can opt in.
 
 ## 5. Landing (optional) — `landing.mdx`
 
