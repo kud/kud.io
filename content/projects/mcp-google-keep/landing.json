@@ -1,0 +1,37 @@
+{
+  "features": [
+    {
+      "title": "List & search notes by text, label, colour, or state (pinned/archived/trashed)",
+      "description": ""
+    },
+    {
+      "title": "Create text notes and checklist notes",
+      "description": ""
+    },
+    {
+      "title": "Manage list items — add, check/uncheck, or replace all items",
+      "description": ""
+    },
+    {
+      "title": "Full label support — list, create, delete, assign, and remove labels",
+      "description": ""
+    },
+    {
+      "title": "Colour filters — find all your red, blue, or yellow notes",
+      "description": ""
+    },
+    {
+      "title": "Credentials in macOS Keychain — nothing written to disk",
+      "description": ""
+    },
+    {
+      "title": "Destructive actions require explicit confirm: true",
+      "description": ""
+    },
+    {
+      "title": "11 tools total — covering the full gkeepapi surface",
+      "description": ""
+    }
+  ],
+  "install": "uv tool install git+https://github.com/kud/mcp-google-keep"
+}

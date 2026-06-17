@@ -1,0 +1,41 @@
+{
+  "features": [
+    {
+      "title": "Feature Flag Management",
+      "description": "List, inspect, create, update, kill, archive, and restore flags across any workspace"
+    },
+    {
+      "title": "Rule-Based Segments",
+      "description": "Full lifecycle management of rule-based segments and their environment definitions"
+    },
+    {
+      "title": "Rollout Statuses",
+      "description": "Discover and filter flags by rollout status (Pre-Production, Ramping, etc.)"
+    },
+    {
+      "title": "Simple Authentication",
+      "description": "Single API key, zero config friction"
+    },
+    {
+      "title": "Multi-Workspace Support",
+      "description": "Work across any number of Harness FME workspaces"
+    },
+    {
+      "title": "Environment-Aware",
+      "description": "Target flags in specific environments (staging, production, etc.)"
+    },
+    {
+      "title": "Modern Stack",
+      "description": "TypeScript 5+, ES2023, Native Fetch API, ESM"
+    },
+    {
+      "title": "MCP Protocol",
+      "description": "Native integration with Claude Desktop, Claude Code CLI, Cursor, and more"
+    },
+    {
+      "title": "Safety Guards",
+      "description": "Destructive operations require explicit confirm: true — no accidental kills or deletions"
+    }
+  ],
+  "install": "# No installation needed — just use npx in your MCP config\nnpx --yes @kud/mcp-harness-fme@latest"
+}

@@ -1,0 +1,33 @@
+{
+  "features": [
+    {
+      "title": "Unified experience",
+      "description": "quick one-liners + advanced full-screen explorer."
+    },
+    {
+      "title": "Rich log intelligence",
+      "description": "Docker, Git, JSON, diffs, test summaries, timestamps, levels, artifacts & more."
+    },
+    {
+      "title": "Multi-server profiles",
+      "description": "with salvage of partially corrupted config."
+    },
+    {
+      "title": "Incremental job traversal",
+      "description": "BFS) with a safety cap (5000) for huge Jenkins instances."
+    },
+    {
+      "title": "Smart emoji fallback",
+      "description": "on restricted terminals / CI."
+    },
+    {
+      "title": "Zero heavy deps",
+      "description": "just commander, chalk, neo-blessed, highlight.js."
+    },
+    {
+      "title": "Modern",
+      "description": "Node 22+, native fetch, ESM-first."
+    }
+  ],
+  "install": "npm i -g @kud/jenkins-cli          # Global binary\n# or project-local\nnpm i -D @kud/jenkins-cli"
+}

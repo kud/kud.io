@@ -29,10 +29,21 @@ const CATEGORIES: Category[] = [
     key: "ui",
     match: (p) => p.slug === "shui" || p.slug === "ink-ui",
   },
+  {
+    name: "VS Code",
+    key: "vscode",
+    match: (p) => p.slug.includes("vscode"),
+  },
+  {
+    name: "Lists & Resources",
+    key: "other",
+    match: (p) =>
+      p.slug === "awesome-terminal-aesthetics" || p.slug === "githuman",
+  },
   { name: "CLIs & Tools", key: "cli", match: () => true },
 ]
 
-const DISPLAY_ORDER = ["cli", "ui", "mcp", "claude"]
+const DISPLAY_ORDER = ["cli", "mcp", "claude", "ui", "vscode", "other"]
 
 const groupByCategory = (projects: Project[]) => {
   const used = new Set<string>()
@@ -66,8 +77,8 @@ const ProjectsIndex = async () => {
           <img
             src={AVATAR}
             alt="Erwann Mest"
-            width={116}
-            height={116}
+            width={148}
+            height={148}
             className={styles.avatar}
           />
           <h1 className={styles.title}>Projects</h1>

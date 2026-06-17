@@ -1,0 +1,25 @@
+{
+  "features": [
+    {
+      "title": "List Simulators",
+      "description": "Display all available iOS simulators, including their OS versions, UDIDs, state, and availability."
+    },
+    {
+      "title": "Create Simulators",
+      "description": "Quickly create new simulators by selecting the device type and iOS version."
+    },
+    {
+      "title": "Delete Simulators",
+      "description": "Remove unnecessary simulators with ease."
+    },
+    {
+      "title": "Boot Simulators",
+      "description": "Start up a simulator by choosing from a list of available devices."
+    },
+    {
+      "title": "Take Screenshots",
+      "description": "Capture screenshots from an active simulator."
+    }
+  ],
+  "install": "npm install -g @kud/sim-crafter-cli"
+}

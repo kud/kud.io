@@ -25,5 +25,5 @@
       "description": ""
     }
   ],
-  "install": "# Run directly without installing\nnpx @kud/mcp-bugzilla\n\n# Or clone and build locally\ngit clone https://github.com/kud/mcp-bugzilla.git\ncd mcp-bugzilla\nnpm install && npm run build"
+  "install": "{\n  \"mcpServers\": {\n    \"mcp-bugzilla\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@kud/mcp-bugzilla\"],\n      \"env\": {\n        \"MCP_BUGZILLA_API_KEY\": \"your-api-key-here\"\n      }\n    }\n  }\n}"
 }

@@ -61,6 +61,10 @@ export const getProjects = async (): Promise<Project[]> => {
 }
 
 export const getProject = async (slug: string): Promise<Project | null> => {
+  // Reuse the cached topic search so 32 landings don't each hit the API.
+  const found = (await getProjects()).find((project) => project.slug === slug)
+  if (found) return found
+
   const res = await fetch(`https://api.github.com/repos/${OWNER}/${slug}`, {
     headers: ghHeaders(),
     next: { revalidate: 3600 },

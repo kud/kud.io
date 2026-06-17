@@ -37,5 +37,5 @@
       "description": "View test pass/fail counts and suites"
     }
   ],
-  "install": "# No installation needed! Just use npx in your MCP config\nnpx --yes @kud/mcp-jenkins@latest"
+  "install": "claude mcp add --transport stdio --scope user jenkins \\\n  --env MCP_JENKINS_URL=https://your-jenkins.com \\\n  --env MCP_JENKINS_USER=your_username \\\n  --env MCP_JENKINS_API_TOKEN=your_token \\\n  -- npx --yes @kud/mcp-jenkins@latest"
 }

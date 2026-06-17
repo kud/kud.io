@@ -1,0 +1,29 @@
+{
+  "features": [
+    {
+      "title": "Query any model — send prompts to anthropic, github-copilot, google-vertex, and more",
+      "description": ""
+    },
+    {
+      "title": "Discover models — list all models your opencode is configured for, optionally filtered by provider",
+      "description": ""
+    },
+    {
+      "title": "Zero config auth — no API tokens; delegates authentication entirely to opencode",
+      "description": ""
+    },
+    {
+      "title": "Auto-start — spins up the opencode server automatically if it isn't running",
+      "description": ""
+    },
+    {
+      "title": "Allow/block filters — restrict which models are accessible via MCP_OPENCODE_MODEL_ALLOW / MCP_OPENCODE_MODEL_BLOCK",
+      "description": ""
+    },
+    {
+      "title": "Works with any opencode provider — anthropic, github-copilot, google-vertex, and any others you've configured",
+      "description": ""
+    }
+  ],
+  "install": "npm install -g @kud/mcp-opencode"
+}

@@ -1,0 +1,41 @@
+{
+  "features": [
+    {
+      "title": "Live session list",
+      "description": "see all running Claude Code agents at a glance, grouped by status (waiting for approval → active → idle → ended)"
+    },
+    {
+      "title": "Permission modals",
+      "description": "review and approve/deny tool permission requests (Edit, Write, Bash) without leaving the terminal"
+    },
+    {
+      "title": "Usage panel",
+      "description": "today's cost, monthly spend, all-time totals, 7-day cost chart, token breakdown and model breakdown — all pulled from ccusage"
+    },
+    {
+      "title": "Usage cache",
+      "description": "usage data is persisted locally so it appears instantly on next launch"
+    },
+    {
+      "title": "Animated indicators",
+      "description": "braille spinner ⠋⠙⠹⠸⠼⠴⠦⠧ while agents are thinking, Nerd Font section icons"
+    },
+    {
+      "title": "Session management",
+      "description": "rename sessions, launch new Claude sessions (tmux window, iTerm2 tab, or Terminal.app), clear ended sessions"
+    },
+    {
+      "title": "Auto-spawns daemon",
+      "description": "claude-dash daemon starts automatically on first launch; no separate step needed"
+    },
+    {
+      "title": "Mouse support",
+      "description": "scroll the agent list with the mouse wheel"
+    },
+    {
+      "title": "Pure Rust",
+      "description": "single binary, no Node.js or npm required"
+    }
+  ],
+  "install": "cargo install claude-dash\nclaude-dash install"
+}

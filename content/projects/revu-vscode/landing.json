@@ -1,0 +1,41 @@
+{
+  "features": [
+    {
+      "title": "Annotate any line or selection",
+      "description": "inline comment threads, always visible in the gutter"
+    },
+    {
+      "title": "Sidebar panel",
+      "description": "all your annotations in one place, click to jump to any line"
+    },
+    {
+      "title": "Smart export",
+      "description": "only shows AI tools you actually have installed"
+    },
+    {
+      "title": "Prompt-first",
+      "description": "asks what you want the AI to do before sending"
+    },
+    {
+      "title": "Export destinations",
+      "description": ""
+    },
+    {
+      "title": "Claude Code (native integration)",
+      "description": ""
+    },
+    {
+      "title": "GitHub Copilot Chat",
+      "description": ""
+    },
+    {
+      "title": "Continue",
+      "description": ""
+    },
+    {
+      "title": "ChatGPT (opens browser + clipboard)",
+      "description": ""
+    }
+  ],
+  "install": "code --install-extension kud.revu-vscode"
+}

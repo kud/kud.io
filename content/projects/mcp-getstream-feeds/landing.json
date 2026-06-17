@@ -1,0 +1,25 @@
+{
+  "features": [
+    {
+      "title": "Server-side JWT auth — SDK handles signing automatically via API key + secret",
+      "description": ""
+    },
+    {
+      "title": "5 tools covering feed following, followers, activities, and follow/unfollow mutations",
+      "description": ""
+    },
+    {
+      "title": "ESM + TypeScript — modern module system, fully typed",
+      "description": ""
+    },
+    {
+      "title": "Safety gates on destructive mutations (follow/unfollow require confirm: true)",
+      "description": ""
+    },
+    {
+      "title": "Designed for debugging push notification fan-out in any GetStream-powered application",
+      "description": ""
+    }
+  ],
+  "install": "# Use directly via npx\nnpx @kud/mcp-getstream-feeds\n\n# Or clone locally\ngit clone https://github.com/kud/mcp-getstream-feeds.git\ncd mcp-getstream-feeds\nnpm install && npm run build"
+}

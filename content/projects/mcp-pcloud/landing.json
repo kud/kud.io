@@ -25,5 +25,5 @@
       "description": ""
     }
   ],
-  "install": "npx @kud/mcp-pcloud"
+  "install": "{\n  \"mcpServers\": {\n    \"mcp-pcloud\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@kud/mcp-pcloud\"]\n    }\n  }\n}"
 }

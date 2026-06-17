@@ -26,8 +26,8 @@
     },
     {
       "title": "NO_COLOR aware",
-      "description": "respects the NO_COLOR convention; degrades gracefully to plain ASCII in constrained environments"
+      "description": "respects the NO_COLOR convention; degrades gracefully to plain ASCII"
     }
   ],
-  "install": "git clone https://github.com/kud/shui ~/.shui\nsource ~/.shui/shui.zsh\n\nshui message success \"Deployment complete\"\nshui message error   \"Build failed\"\nshui message warning \"Deprecated flag used\"\nshui message info    \"Running in dry-run mode\"\nshui message muted   \"Skipped (already up-to-date)\""
+  "install": "git clone https://github.com/kud/shui ~/.shui\nsource ~/.shui/shui.zsh\n\nshui message success \"Deployment complete\"\nshui message error   \"Build failed\""
 }

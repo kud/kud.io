@@ -1,0 +1,313 @@
+---
+title: ai-conventional-commit-cli
+description: AI‑assisted, style‑aware Conventional Commit generator & splitter. Opinionated CLI that learns your repo's commit style and produces polished single or multi commits – safely, quickly, repeatably.
+---
+
+## ✨ Features
+
+- 🤖 **AI-generated conventional commits** — reads your staged diff and produces a Conventional Commits-compliant message in one command
+- ✂️ **Smart commit splitting** — clusters hunks semantically and proposes multiple atomic commits, each selectively staged and executed
+- 🎨 **Gitmoji style support** — `standard`, `gitmoji` (emoji + type), and `gitmoji-pure` (emoji only) modes out of the box
+- ✏️ **Refine & reword** — iteratively reshape the last commit's wording or reword any past commit using natural-language instructions
+- 🔌 **Plugin system** — register custom `transform` and `validate` hooks to enforce team conventions or post-process candidates
+- 🔒 **Privacy-aware diff filtering** — three tiers (`low` / `medium` / `high`) control exactly how much code is sent to the model
+- 🌐 **Provider-agnostic** — any OpenCode-supported model, direct Claude CLI with no API key, or the Anthropic SDK with your own key
+
+---
+
+## 🚀 Quick Start
+
+**Install globally:**
+
+```bash
+npm install -g @kud/ai-conventional-commit-cli
+```
+
+Optional shell alias for convenience:
+
+```bash
+alias aicc='ai-conventional-commit'
+```
+
+**Generate a commit from staged changes:**
+
+```bash
+git add .
+ai-conventional-commit
+# ✔ feat(api): add pagination metadata to list endpoint
+```
+
+**Propose and execute multiple commits:**
+
+```bash
+ai-conventional-commit split
+# 1. refactor(parser): simplify token scanning
+# 2. feat(parser): support negated glob segments
+# 3. test(parser): add cases for brace + extglob combos
+```
+
+**Gitmoji style:**
+
+```bash
+AICC_STYLE=gitmoji ai-conventional-commit
+# ✨ feat(ui): add dark mode toggle
+```
+
+**Auto-confirm without prompts (CI / scripting):**
+
+```bash
+AICC_YES=true ai-conventional-commit
+```
+
+**Pick and save your preferred model:**
+
+```bash
+ai-conventional-commit models
+```
+
+---
+
+## 📖 CLI Reference
+
+### Commands
+
+| Command                                           | Description                                                    |
+| ------------------------------------------------- | -------------------------------------------------------------- |
+| `ai-conventional-commit`                          | Generate a single commit suggestion from staged diff (default) |
+| `ai-conventional-commit generate`                 | Explicit alias of the root command                             |
+| `ai-conventional-commit split [n]`                | Cluster staged changes into `n` commits and execute each       |
+| `ai-conventional-commit refine`                   | Refine the last generated commit message                       |
+| `ai-conventional-commit reword [hash]`            | AI-assisted reword of an existing commit                       |
+| `ai-conventional-commit models`                   | List, pick, and save available models                          |
+| `ai-conventional-commit config show`              | Show the merged resolved configuration and its sources         |
+| `ai-conventional-commit config get <key>`         | Read a single configuration value                              |
+| `ai-conventional-commit config set <key> <value>` | Persist a configuration value globally                         |
+
+### Flags
+
+| Flag                                        | Description                                   |
+| ------------------------------------------- | --------------------------------------------- |
+| `--style <standard\|gitmoji\|gitmoji-pure>` | Override the commit style for this run        |
+| `--model <provider/name>`                   | Override the active model for this run        |
+| `-y, --yes`                                 | Skip all confirmation prompts                 |
+| `--shorter`                                 | Ask the model to shorten the message (refine) |
+| `--longer`                                  | Ask the model to expand the message (refine)  |
+| `--scope <scope>`                           | Force a specific scope (refine)               |
+
+### Reword in detail
+
+```bash
+# Interactive picker — last 20 commits
+ai-conventional-commit reword
+
+# Reword HEAD and amend in-place on acceptance
+ai-conventional-commit reword HEAD
+
+# Reword an older commit (prints interactive rebase instructions)
+ai-conventional-commit reword <hash>
+
+# With style and model overrides
+ai-conventional-commit reword <hash> --style gitmoji --model github-copilot/claude-sonnet-4.6
+```
+
+> Merge commits (multiple parents) are rejected. Title formatting — gitmoji, normalisation — matches all other commands.
+
+---
+
+## ⚙️ Configuration
+
+Configuration is resolved via [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig) in the following precedence order (later wins):
+
+1. Built-in defaults (`github-copilot/claude-sonnet-4.6`)
+2. `OPENCODE_FREE_MODEL` env var
+3. Global config — `~/.config/ai-conventional-commit-cli/aicc.json`
+4. Project config — `.aiccrc` / `.aiccrc.json` at the repo root
+5. Environment variables (`AICC_*`)
+6. CLI flags (`--model`, `--style`, …)
+
+### Config file example
+
+```json
+{
+  "model": "github-copilot/claude-sonnet-4.6",
+  "privacy": "low",
+  "style": "gitmoji",
+  "styleSamples": 120,
+  "maxTokens": 512,
+  "maxFileLines": 1000,
+  "skipFilePatterns": ["**/package-lock.json", "**/dist/**", "**/*.d.ts"],
+  "plugins": ["./src/plugins/my-plugin.ts"]
+}
+```
+
+### Environment variables
+
+| Variable            | Default                            | Description                                                         |
+| ------------------- | ---------------------------------- | ------------------------------------------------------------------- |
+| `AICC_MODEL`        | `github-copilot/claude-sonnet-4.6` | Model string, e.g. `claude/sonnet` or `anthropic/claude-sonnet-4-6` |
+| `AICC_STYLE`        | `standard`                         | Commit style: `standard`, `gitmoji`, or `gitmoji-pure`              |
+| `AICC_PRIVACY`      | `low`                              | Diff detail level sent to the model                                 |
+| `AICC_YES`          | —                                  | Set to `true` to skip all confirmation prompts                      |
+| `AICC_DEBUG`        | —                                  | Enable verbose provider logs                                        |
+| `AICC_MAX_TOKENS`   | `512`                              | Token limit for model responses                                     |
+| `ANTHROPIC_API_KEY` | —                                  | Required when using `anthropic/*` models                            |
+
+### Providers and models
+
+| Provider                       | Example model strings                                                                         | Auth                        |
+| ------------------------------ | --------------------------------------------------------------------------------------------- | --------------------------- |
+| OpenCode (any supported model) | `github-copilot/claude-sonnet-4.6`, `github-copilot/claude-sonnet-4.6`, `opencode/big-pickle` | OpenCode session            |
+| Claude CLI (no API key needed) | `claude/sonnet`, `claude/opus`, `claude/haiku`                                                | Claude Code auth            |
+| Anthropic SDK (direct API)     | `anthropic/claude-sonnet-4-6`, `anthropic/claude-opus-4-7`                                    | `ANTHROPIC_API_KEY` env var |
+
+### Gitmoji modes
+
+| Mode           | Example output            | Notes                       |
+| -------------- | ------------------------- | --------------------------- |
+| `standard`     | `feat: add search box`    | No emoji                    |
+| `gitmoji`      | `✨ feat: add search box` | Emoji prefix, type retained |
+| `gitmoji-pure` | `✨: add search box`      | Emoji prefix, type removed  |
+
+### Privacy modes
+
+| Mode     | Data sent to model                                     |
+| -------- | ------------------------------------------------------ |
+| `low`    | Hunk headers + first 40 changed/context lines per hunk |
+| `medium` | File + hunk hash + line counts + function context only |
+| `high`   | File names + aggregate add/remove counts only          |
+
+Higher privacy reduces stylistic richness. Choose based on your repository's sensitivity.
+
+### `skipFilePatterns` defaults
+
+Lock files (`package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `bun.lockb`, `Cargo.lock`, …), TypeScript declarations (`**/*.d.ts`), build output (`dist/**`, `build/**`, `.next/**`), and minified assets (`*.min.js`, `*.min.css`, `*.map`) are excluded from the AI prompt by default but are still committed normally. Override via config; set to `[]` to disable entirely.
+
+### OpenCode MCP behaviour
+
+On startup, all MCP servers from your global OpenCode config are automatically disconnected for the duration of this tool's process. This keeps the model's tool count within provider limits (GitHub Copilot caps at 128), removes MCP initialisation latency, and lets the model focus entirely on commit generation. Your global OpenCode setup is unaffected.
+
+Run with `AICC_DEBUG=true` to see which MCP servers were disconnected.
+
+---
+
+## 🔌 Plugin API
+
+Plugins run in two phases over the list of commit candidates:
+
+```ts
+interface PluginContext {
+  cwd: string;
+  env: NodeJS.ProcessEnv;
+}
+
+interface Plugin {
+  name: string;
+  transformCandidates?(
+    candidates: CommitCandidate[],
+    ctx: PluginContext,
+  ): CommitCandidate[] | Promise<CommitCandidate[]>;
+  validateCandidate?(
+    candidate: CommitCandidate,
+    ctx: PluginContext,
+  ): string | string[] | void | Promise<string | string[] | void>;
+}
+```
+
+- `transformCandidates` — runs once over the full candidate list; use it for normalisation or enrichment
+- `validateCandidate` — runs per chosen candidate before the commit executes; return a string to block with an error message
+
+**Example — scope normaliser:**
+
+```ts
+export default {
+  name: "scope-normaliser",
+  transformCandidates(candidates) {
+    return candidates.map((c) => ({
+      ...c,
+      title: c.title.replace("(UI)", "(ui)"),
+    }));
+  },
+};
+```
+
+Register plugins via the `plugins` array in your `.aiccrc`:
+
+```json
+{
+  "plugins": ["./src/plugins/scope-normaliser.ts"]
+}
+```
+
+---
+
+## 🔧 Development
+
+### Project structure
+
+```
+src/
+├── index.ts          # CLI entry point (clipanion)
+├── workflow/         # generate, split, refine, reword flows
+├── providers/        # OpenCode, Claude CLI, and Anthropic SDK adapters
+├── model/            # Model resolution and listing
+├── config.ts         # Cosmiconfig loader + defaults
+├── git.ts            # simple-git helpers
+├── guardrails.ts     # Title normalisation and length checks
+├── style.ts          # Style fingerprint from recent commits
+├── title-format.ts   # Gitmoji + conventional format helpers
+├── plugins.ts        # Plugin loader and runner
+├── prompt.ts         # AI prompt construction
+├── cluster.ts        # Hunk clustering for split
+├── types.ts          # Shared TypeScript types
+└── sample-plugin/    # Example plugin for reference
+```
+
+### Scripts
+
+| Script               | Description                                       |
+| -------------------- | ------------------------------------------------- |
+| `npm run dev`        | Run from source with `tsx` (no build step needed) |
+| `npm run build`      | Compile ESM bundle via `tsup`                     |
+| `npm test`           | Run test suite with `vitest`                      |
+| `npm run test:watch` | Run tests in watch mode                           |
+| `npm run lint`       | Lint with ESLint                                  |
+| `npm run format`     | Format with Prettier                              |
+
+### Local development workflow
+
+```bash
+git clone https://github.com/kud/ai-conventional-commit-cli.git
+cd ai-conventional-commit-cli
+npm install
+
+# Run without building
+npm run dev -- generate
+
+# Or build and link globally
+npm run build
+npm link
+ai-conventional-commit --help
+```
+
+---
+
+## 🏗 Tech Stack
+
+| Package                                                       | Role                                 |
+| ------------------------------------------------------------- | ------------------------------------ |
+| [TypeScript](https://www.typescriptlang.org)                  | Language (ESM, strict)               |
+| [tsup](https://tsup.egoist.dev)                               | ESM bundle compiler                  |
+| [clipanion](https://mael.dev/clipanion/)                      | CLI framework and command routing    |
+| [@opencode-ai/sdk](https://opencode.ai)                       | OpenCode provider communication      |
+| [@anthropic-ai/sdk](https://github.com/anthropic-ai/sdk-node) | Direct Anthropic API provider        |
+| [@inquirer/prompts](https://github.com/SBoudrias/Inquirer.js) | Interactive terminal prompts         |
+| [simple-git](https://github.com/steveukx/git-js)              | Git operations (diff, stage, commit) |
+| [cosmiconfig](https://github.com/cosmiconfig/cosmiconfig)     | Config file resolution               |
+| [zod](https://zod.dev)                                        | Runtime schema validation            |
+| [ora](https://github.com/sindresorhus/ora)                    | Terminal spinner                     |
+| [chalk](https://github.com/chalk/chalk)                       | Terminal colour output               |
+| [vitest](https://vitest.dev)                                  | Unit testing                         |
+
+---
+
+MIT © [kud](https://github.com/kud) — Made with ❤️

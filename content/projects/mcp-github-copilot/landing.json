@@ -1,0 +1,29 @@
+{
+  "features": [
+    {
+      "title": "Query any Copilot model — Claude, GPT-5, Codex, and more via the official @github/copilot-sdk",
+      "description": ""
+    },
+    {
+      "title": "Discover models — list all available models with capabilities, context limits, and billing multipliers",
+      "description": ""
+    },
+    {
+      "title": "Zero extra config — uses your existing GitHub Copilot CLI credentials automatically",
+      "description": ""
+    },
+    {
+      "title": "Image attachments — attach files or base64 images for vision-capable models",
+      "description": ""
+    },
+    {
+      "title": "Modern Stack — TypeScript 5+, ESM, Zod schemas, MCP 1.27",
+      "description": ""
+    },
+    {
+      "title": "MCP Protocol — native integration with Claude Desktop, Claude Code CLI, Cursor, and more",
+      "description": ""
+    }
+  ],
+  "install": "npm install -g @kud/mcp-github-copilot"
+}

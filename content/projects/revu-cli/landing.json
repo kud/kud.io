@@ -1,0 +1,4 @@
+{
+  "features": [],
+  "install": "npm install -g @kud/revu-cli"
+}

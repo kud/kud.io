@@ -1,0 +1,41 @@
+{
+  "features": [
+    {
+      "title": "Simple Auth",
+      "description": "Single Bearer token via MCP_RAINDROPIO_TOKEN env var"
+    },
+    {
+      "title": "22 Tools",
+      "description": "Full Raindrop.io API coverage"
+    },
+    {
+      "title": "Modern Stack",
+      "description": "TypeScript 5+, ES2023, Native Fetch API"
+    },
+    {
+      "title": "MCP Protocol",
+      "description": "Native integration with Claude Desktop, Claude Code CLI"
+    },
+    {
+      "title": "Bookmark Management",
+      "description": "Create, search, update, delete with advanced filters"
+    },
+    {
+      "title": "Collection Control",
+      "description": "Root, nested, CRUD, cleanup of empty collections"
+    },
+    {
+      "title": "Tag Operations",
+      "description": "List, rename, merge, delete tags"
+    },
+    {
+      "title": "Highlights",
+      "description": "Create and manage text highlights on bookmarks"
+    },
+    {
+      "title": "Smart Search",
+      "description": "Filter by broken links, duplicates, untagged, domain, media type, date"
+    }
+  ],
+  "install": "npx --yes @kud/mcp-raindrop-io@latest"
+}

@@ -1,0 +1,4 @@
+{
+  "features": [],
+  "install": "models-dev --search claude\nmodels-dev --provider openai --sort input-cost\nmodels-dev --tool --reasoning\nmodels-dev --provider anthropic --compact\nmodels-dev --search grok --json"
+}

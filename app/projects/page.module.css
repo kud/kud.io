@@ -49,8 +49,8 @@
 
 .avatar {
   display: block;
-  width: 116px;
-  height: 116px;
+  width: 148px;
+  height: 148px;
   margin: 0 auto 24px;
   border-radius: 50%;
   border: 2px solid var(--border);
@@ -135,6 +135,12 @@
 }
 .section[data-cat="cli"] {
   --accent: #f59e0b;
+}
+.section[data-cat="vscode"] {
+  --accent: #22d3ee;
+}
+.section[data-cat="other"] {
+  --accent: #8892a4;
 }
 
 .sectionTitle {
