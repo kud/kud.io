@@ -17,20 +17,20 @@
   --color-fd-muted: #141428;
   --color-fd-muted-foreground: #8892a4;
   --color-fd-border: #1e1e38;
-  --color-fd-primary: #a78bfa;
+  --color-fd-primary: #c084fc;
   --color-fd-primary-foreground: #08080f;
   --color-fd-secondary: #141428;
   --color-fd-secondary-foreground: #e2e8f0;
   --color-fd-accent: #1a1a35;
   --color-fd-accent-foreground: #f1f5f9;
-  --color-fd-ring: #7c3aed;
+  --color-fd-ring: #9333ea;
 }
 
 ::selection {
-  background: rgba(124, 58, 237, 0.24);
+  background: rgba(147, 51, 234, 0.24);
 }
 ::-moz-selection {
-  background: rgba(124, 58, 237, 0.24);
+  background: rgba(147, 51, 234, 0.24);
 }
 
 html {
