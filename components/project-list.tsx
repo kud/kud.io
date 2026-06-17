@@ -181,35 +181,39 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
                   href={`/projects/${project.slug}`}
                   className={styles.row}
                 >
-                  <div className={styles.rowHead}>
-                    <span className={styles.rowTitle}>
-                      {project.icon ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          className={styles.icon}
-                          src={project.icon}
-                          alt=""
-                          loading="lazy"
-                        />
-                      ) : (
-                        <span className={styles.monogram} aria-hidden>
-                          {project.name.charAt(0).toUpperCase()}
-                        </span>
-                      )}
+                  {project.icon ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      className={styles.icon}
+                      src={project.icon}
+                      alt=""
+                      loading="lazy"
+                    />
+                  ) : (
+                    <span className={styles.monogram} aria-hidden>
+                      {project.name.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  <span className={styles.rowBody}>
+                    <span className={styles.rowHead}>
                       <span className={styles.rowName}>{project.name}</span>
+                      <span className={styles.rowMeta}>
+                        {project.stars > 0 ? (
+                          <span className={styles.stars}>
+                            ★ {project.stars}
+                          </span>
+                        ) : null}
+                        {project.language ? (
+                          <span className={styles.lang}>
+                            {project.language}
+                          </span>
+                        ) : null}
+                      </span>
                     </span>
-                    <span className={styles.rowMeta}>
-                      {project.stars > 0 ? (
-                        <span className={styles.stars}>★ {project.stars}</span>
-                      ) : null}
-                      {project.language ? (
-                        <span className={styles.lang}>{project.language}</span>
-                      ) : null}
-                    </span>
-                  </div>
-                  {project.description ? (
-                    <p className={styles.rowDesc}>{project.description}</p>
-                  ) : null}
+                    {project.description ? (
+                      <p className={styles.rowDesc}>{project.description}</p>
+                    ) : null}
+                  </span>
                 </Link>
               ))}
               {group.items.length % 2 === 1 ? (
