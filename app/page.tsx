@@ -38,8 +38,8 @@ const Name = () => <h1 className={styles.name}>Erwann&nbsp;Mest</h1>
 
 const Tagline = () => (
   <p className={styles.tagline}>
-    Less friction, more clarity — for the people who use software, and the
-    people who build it.
+    Less friction, more clarity, for the people who use software, and the people
+    who build it.
   </p>
 )
 

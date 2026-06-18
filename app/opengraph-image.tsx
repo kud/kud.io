@@ -82,7 +82,7 @@ const Image = () =>
           maxWidth: 1000,
         }}
       >
-        Less friction, more clarity — for the people who use software, and the
+        Less friction, more clarity, for the people who use software, and the
         people who build it.
       </div>
 
