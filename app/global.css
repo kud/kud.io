@@ -110,6 +110,24 @@ body {
   }
 }
 
+@keyframes vt-fade-in-flat {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* On mobile the subtle zoom reads as a layout shove on a narrow screen, so drop
+   the transform entirely — a pure opacity cross-fade keeps the theme swap smooth
+   with zero movement of the layout. */
+@media (max-width: 860px) {
+  ::view-transition-new(root) {
+    animation-name: vt-fade-in-flat;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
   ::view-transition-new(root) {

@@ -509,6 +509,7 @@
     padding: 48px 30px;
     text-align: center;
     scroll-snap-align: start;
+    scroll-snap-stop: always;
     background: #fdfbf8;
     color: #1f1813;
     font-family: var(--font-sans), system-ui, sans-serif;
@@ -628,5 +629,6 @@
     min-height: 100svh;
     padding: 44px 24px 72px;
     scroll-snap-align: start;
+    scroll-snap-stop: always;
   }
 }
