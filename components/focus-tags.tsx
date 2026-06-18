@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import { focus } from "@/lib/focus"
 import styles from "@/app/page.module.css"
 
@@ -10,6 +10,9 @@ import styles from "@/app/page.module.css"
 export const FocusTags = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const dialogRef = useRef<HTMLDialogElement>(null)
+  // Unique per instance — FocusTags renders in both the desktop and mobile hero,
+  // so a static id would collide and mis-point aria-labelledby.
+  const titleId = useId()
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -40,7 +43,7 @@ export const FocusTags = () => {
       <dialog
         ref={dialogRef}
         className={styles.modal}
-        aria-labelledby="focus-modal-title"
+        aria-labelledby={titleId}
         onClose={() => setActiveIndex(null)}
         onClick={(event) => {
           if (event.target === dialogRef.current) setActiveIndex(null)
@@ -57,7 +60,7 @@ export const FocusTags = () => {
               ✕
             </button>
             <p className={styles.modalSectionLabel}>What I mean</p>
-            <h3 id="focus-modal-title" className={styles.modalRole}>
+            <h3 id={titleId} className={styles.modalRole}>
               {active.label}
             </h3>
             <p className={styles.modalSummary}>{active.description}</p>

@@ -12,16 +12,16 @@ const MESSAGES: Record<string, string[]> = {
     "Oh, hi there!",
   ],
   contact: [
-    "Got an idea? Let's build it!",
-    "Let's talk!",
-    "Drop me a line — I reply!",
-    "Say hi, don't be shy!",
+    "Got an idea? Let's build it! 👋",
+    "Let's talk! 👋",
+    "Drop me a line — I reply! 👋",
+    "Say hi, don't be shy! 👋",
   ],
   history: [
     "Psst — the whole story's here!",
     "Curious? It's all on LinkedIn.",
     "Want the full journey?",
-    "18 years, all in one place!",
+    "Every chapter, all in one place!",
   ],
   tickets: [
     "Not a Jira fan either — but the MCP saves it 😅",

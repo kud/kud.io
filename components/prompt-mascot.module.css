@@ -95,6 +95,15 @@
   }
 }
 
+/* Hover-only easter egg: hide it entirely on touch devices. It can't be summoned
+   there, and a fixed off-screen window could otherwise nudge a horizontal
+   scrollbar on very narrow viewports. */
+@media (hover: none) {
+  .term {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .term {
     transition-duration: 0.01ms;

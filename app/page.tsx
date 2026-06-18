@@ -9,13 +9,14 @@ import {
 import { ExperienceTimeline } from "@/components/experience-timeline"
 import { FocusTags } from "@/components/focus-tags"
 import { PromptMascot } from "@/components/prompt-mascot"
+import { ScrollHint } from "@/components/scroll-hint"
 import { yearsOfExperience } from "@/lib/experience"
 import styles from "./page.module.css"
 
 const socials = [
   { label: "GitHub", href: "https://github.kud.io/", Icon: GitHubIcon },
   { label: "LinkedIn", href: "https://linkedin.kud.io/", Icon: LinkedInIcon },
-  { label: "Bluesky", href: "https://bsky.kud.io", Icon: BlueskyIcon },
+  { label: "Bluesky", href: "https://bsky.kud.io/", Icon: BlueskyIcon },
   {
     label: "Instagram",
     href: "https://instagram.kud.io/",
@@ -130,15 +131,6 @@ const SocialLinks = () => (
       </li>
     ))}
   </ul>
-)
-
-const ScrollHint = () => (
-  <a className={styles.scrollHint} href="#experience">
-    Experience
-    <span className={styles.chevron} aria-hidden>
-      ↓
-    </span>
-  </a>
 )
 
 // Desktop: the split-screen hero (photo beside a single column of content).
