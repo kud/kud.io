@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1.2,
     textTransform: "uppercase",
     color: ACCENT,
+    marginBottom: 6,
   },
   name: {
     fontFamily: "Helvetica-Bold",
@@ -122,6 +123,8 @@ const styles = StyleSheet.create({
   },
   intro: {
     marginTop: 14,
+  },
+  introPara: {
     fontSize: 10,
     lineHeight: 1.5,
     color: BODY,
@@ -312,12 +315,9 @@ const Cv = ({ avatar }: { avatar: string | null }) => (
       <View style={styles.header}>
         {avatar ? <Image src={avatar} style={styles.avatar} /> : null}
         <View style={styles.headerText}>
-          <View style={styles.eyebrowRow}>
-            <View style={styles.eyebrowDot} />
-            <Text style={styles.eyebrowText}>
-              Systems Designer & Lead Software Engineer
-            </Text>
-          </View>
+          <Text style={styles.eyebrowText}>
+            Systems Designer & Lead Software Engineer
+          </Text>
           <Text style={styles.name}>Erwann Mest</Text>
           <Contact />
         </View>
@@ -325,12 +325,24 @@ const Cv = ({ avatar }: { avatar: string | null }) => (
 
       <View style={styles.rule} />
 
-      <Text style={styles.intro}>
-        Systems designer and lead software engineer with {yearsOfExperience()}{" "}
-        years across product, design, and engineering. I think in systems and
-        the people they serve, making complex things simpler and more humane,
-        reducing cognitive load, and using AI to amplify what people can do.
-      </Text>
+      <View style={styles.intro}>
+        <Text style={[styles.introPara, { marginBottom: 8 }]}>
+          Systems designer and lead software engineer with {yearsOfExperience()}{" "}
+          years across product, design, and engineering. I think beyond tickets
+          and lines of code: in systems, workflows, and the people they serve.
+          To me, software engineering, technical leadership, and systems design
+          are one job, understanding how a complex system really works and
+          making it simpler and more humane.
+        </Text>
+        <Text style={styles.introPara}>
+          Most of what I do comes down to one question: how can we help people
+          do their best work? I like architecting a solution and handing its
+          execution to AI in a deliberate, fine-tuned way, turning experience
+          into systems, skills, and agents that get sharper the more I use them.
+          The best systems aren&apos;t the cleverest ones; they&apos;re the ones
+          that leave people with clarity, autonomy, and trust.
+        </Text>
+      </View>
 
       <Text style={styles.sectionLabel}>Focus</Text>
       <View style={styles.pillRow}>
