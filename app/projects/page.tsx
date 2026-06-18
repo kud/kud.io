@@ -28,7 +28,7 @@ const CATEGORY_META: Record<
     name: "CLIs & Tools",
     order: 0,
     blurb:
-      "Command-line tools I reach for daily — for files, git, cloud APIs, and the macOS desktop.",
+      "Command-line tools I reach for daily, for files, git, cloud APIs, and the macOS desktop.",
   },
   mcp: {
     name: "MCP Servers",
@@ -40,7 +40,7 @@ const CATEGORY_META: Record<
     name: "Claude Code",
     order: 2,
     blurb:
-      "Companions for Claude Code — session managers, live dashboards, and curated plugin collections.",
+      "Companions for Claude Code: session managers, live dashboards, and curated plugin collections.",
   },
   ui: {
     name: "UI & Design Systems",
@@ -117,10 +117,10 @@ const ProjectsIndex = async () => {
             Projects <span className={styles.titleBy}>by kud</span>
           </h1>
           <p className={styles.intro}>
-            Open-source tools I design and build — command-line apps, MCP
+            Open-source tools I design and build: command-line apps, MCP
             servers, and terminal design systems. Each one is shaped by the same
             care: <strong>developer experience</strong> first, a real passion
-            for polish, and neat, considered interfaces — down to the last
+            for polish, and neat, considered interfaces, down to the last
             detail.
           </p>
           <div className={styles.social}>

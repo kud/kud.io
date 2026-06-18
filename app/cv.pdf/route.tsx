@@ -279,7 +279,7 @@ const Cv = ({ avatar }: { avatar: string | null }) => (
       <Text style={styles.intro}>
         Senior engineer and tech lead with {yearsOfExperience()} years across
         product, design, and engineering. I think in systems and the people they
-        serve — reducing cognitive load for users and engineers alike, and
+        serve, reducing cognitive load for users and engineers alike, and
         architecting solutions I then execute with deliberate, AI-assisted
         workflows.
       </Text>
@@ -312,7 +312,7 @@ const Cv = ({ avatar }: { avatar: string | null }) => (
           <Text style={styles.entryOrg}>Your company?</Text>
           <Text style={styles.entrySummary}>
             Exploring the right next role in systems, developer experience, and
-            AI-assisted engineering — it could be with you.
+            AI-assisted engineering. It could be with you.
           </Text>
         </View>
       </View>

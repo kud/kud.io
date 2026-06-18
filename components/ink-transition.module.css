@@ -1,0 +1,40 @@
+/* Full-screen ink overlay for the desktop home → /projects transition. Because
+   it's a real element (not a view-transition pseudo), clip-path and the #ink-edge
+   SVG turbulence filter render reliably: the dark world spreads out of the
+   pressed button with an organic, inky edge, then fades to reveal /projects.
+   Oversized by 60px so the filter's displacement never bares a screen edge. */
+.overlay {
+  position: fixed;
+  inset: -60px;
+  z-index: 2147483646;
+  background: #08080f;
+  pointer-events: none;
+  opacity: 0;
+  filter: url("#ink-edge");
+  clip-path: circle(0% at var(--x, 50%) var(--y, 50%));
+}
+
+.inking {
+  opacity: 1;
+  will-change: clip-path;
+  /* Accelerate into full cover (ease-in) rather than decelerating — the latter
+     reads as the ink "stopping" just before the page swaps. */
+  animation: inkIn 0.5s cubic-bezier(0.5, 0, 0.85, 1) forwards;
+}
+
+@keyframes inkIn {
+  from {
+    clip-path: circle(0% at var(--x, 50%) var(--y, 50%));
+  }
+  to {
+    clip-path: circle(150% at var(--x, 50%) var(--y, 50%));
+  }
+}
+
+/* Hold full coverage while fading out to reveal the freshly-loaded dark page. */
+.fading {
+  opacity: 0;
+  clip-path: circle(150% at var(--x, 50%) var(--y, 50%));
+  transition: opacity 0.32s ease-out;
+  will-change: opacity;
+}

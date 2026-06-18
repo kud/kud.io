@@ -46,23 +46,23 @@ const Tagline = () => (
 const Bio = () => (
   <>
     <p className={styles.bio}>
-      I think beyond tickets and lines of code — in systems, workflows, and the
+      I think beyond tickets and lines of code: in systems, workflows, and the
       people they serve. Software engineering, technical leadership, systems
-      design: to me that&apos;s one job. I want to understand how a complex
-      system actually works — software, a team, an organisation, the way people
-      deal with each other — and make it simpler and more humane.
+      design. To me, that&apos;s one job. I want to understand how a complex
+      system actually works (software, a team, an organisation, the way people
+      deal with each other) and make it simpler and more humane.
     </p>
     <p className={styles.bio}>
       Most of what I do comes down to one question:{" "}
-      <strong>how can we help people do their best work?</strong> That&apos;s
-      pulled me across a lot of ground — engineering and tech leadership,
+      <strong>how can we help people do their best work?</strong> That question
+      has pulled me across a lot of ground. Engineering and tech leadership,
       hiring, performance, developer experience, even security and how a team is
-      organised — and I&apos;m at my best when I can make something complicated
-      feel clear.
+      organised. I&apos;m at my best when I can make something complicated feel
+      clear.
     </p>
     <p className={styles.bio}>
       I like architecting a solution and then handing its execution to AI, in a
-      deliberate, fine-tuned way — turning {yearsOfExperience()}&nbsp;years of
+      deliberate, fine-tuned way, turning {yearsOfExperience()}&nbsp;years of
       experience into systems, skills, and agents that get sharper the more I
       use them. The point isn&apos;t to replace judgement; it&apos;s to take the
       repetitive work off people so they have room to think.

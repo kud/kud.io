@@ -136,33 +136,17 @@ html[data-vt="back"]::view-transition-new(root) {
   animation-name: vt-fade-in-flat;
 }
 
-/* Forward "ink reveal" (home → /projects via the CTA). RevealLink records the
-   pressed button's centre into --vt-x/--vt-y and flags data-vt="reveal" before
-   the snapshot. The incoming dark page is clipped to a circle expanding from
-   that point — so the dark world pours out of the button — while the outgoing
-   light page is held still beneath it (no fade) for the flood to cover. The
-   #ink-edge SVG turbulence filter displaces the growing boundary so it reads
-   like spreading ink rather than a hard circle. The shared `site-avatar` rides
-   above in its own group and morphs as the ink spreads. */
+/* The home → /projects "ink" transition is handled on desktop by the
+   InkTransition overlay component (a real full-screen element it can filter and
+   clip reliably), not by View Transitions — browsers don't apply SVG filters to
+   ::view-transition pseudo-elements dependably, so there are no root-clip reveal
+   rules here. Mobile keeps the flat cross-fade + avatar morph below. */
+
+/* Desktop: gentle proximity scroll-snap so sections magnetise near their start
+   without trapping the scroll. Mobile uses mandatory snap via .home instead. */
 @media (min-width: 861px) {
-  /* Desktop only — on mobile the existing flat fade + avatar morph is already
-     the right feel, so the ink reveal is scoped above the 860px breakpoint. */
-  html[data-vt="reveal"]::view-transition-old(root) {
-    animation: none;
-  }
-
-  html[data-vt="reveal"]::view-transition-new(root) {
-    animation: vt-ink-reveal 0.62s cubic-bezier(0.22, 1, 0.36, 1) both;
-    filter: url("#ink-edge");
-  }
-}
-
-@keyframes vt-ink-reveal {
-  from {
-    clip-path: circle(0% at var(--vt-x, 50%) var(--vt-y, 50%));
-  }
-  to {
-    clip-path: circle(150% at var(--vt-x, 50%) var(--vt-y, 50%));
+  html {
+    scroll-snap-type: y proximity;
   }
 }
 
@@ -187,11 +171,5 @@ html[data-vt="back"]::view-transition-new(root) {
   ::view-transition-old(site-avatar),
   ::view-transition-new(site-avatar) {
     animation: none;
-  }
-
-  html[data-vt="reveal"]::view-transition-new(root) {
-    animation: none;
-    filter: none;
-    clip-path: none;
   }
 }

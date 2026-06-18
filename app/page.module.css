@@ -1019,3 +1019,13 @@
     transition: none;
   }
 }
+
+/* Desktop: align the hero and experience to the proximity scroll-snap declared
+   on <html> in global.css. Scoped above the mobile slide breakpoint so it never
+   fights mobile's mandatory snap on .home. */
+@media (min-width: 861px) {
+  .hero,
+  .timeline {
+    scroll-snap-align: start;
+  }
+}

@@ -7,7 +7,7 @@ const manifest = (): MetadataRoute.Manifest => ({
   name: "Erwann Mest — kud",
   short_name: "kud.io",
   description:
-    "Senior Software Engineer & Tech Lead in London — systems thinking, developer experience, and AI-assisted engineering.",
+    "Systems designer and lead software engineer in London: systems thinking, developer experience, and AI-assisted engineering.",
   start_url: "/",
   display: "standalone",
   background_color: "#fdfbf8",

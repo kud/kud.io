@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next"
 import type { ReactNode } from "react"
 import { RootProvider } from "fumadocs-ui/provider/next"
 import { ViewTransitions } from "next-view-transitions"
+import { InkTransition } from "@/components/ink-transition"
 import { Hanken_Grotesk } from "next/font/google"
 
 // Hanken Grotesk — a refined, elegant grotesque: subtle squared character with
@@ -16,7 +17,7 @@ const sans = Hanken_Grotesk({
 
 const TITLE = "Erwann Mest — Systems Designer & Lead Software Engineer"
 const DESCRIPTION =
-  "Systems designer and lead software engineer in London. I make complex systems — software, teams, workflows — simpler, more effective, and more humane: reducing cognitive load, improving workflows, and using AI to amplify what people can do. Currently on the mobile team at Sony Music."
+  "Systems designer and lead software engineer in London. I make complex systems (software, teams, workflows) simpler, more effective, and more humane, reducing cognitive load, improving workflows, and using AI to amplify what people can do. Currently on the mobile team at Sony Music."
 
 // The OpenGraph and Twitter share images are supplied by the file-based
 // conventions (app/opengraph-image.tsx + app/twitter-image.tsx), so no images
@@ -66,7 +67,12 @@ export const viewport: Viewport = {
 
 const RootLayout = ({ children }: { children: ReactNode }) => (
   <ViewTransitions>
-    <html lang="en" suppressHydrationWarning className={sans.variable}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+      className={sans.variable}
+    >
       <body className="flex min-h-screen flex-col">
         {/* Off-screen SVG filter: organic turbulence displacement for the home →
             /projects "ink reveal" edge (see vt-ink-reveal in global.css). */}
@@ -95,6 +101,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
             />
           </filter>
         </svg>
+        <InkTransition />
         <RootProvider
           theme={{
             defaultTheme: "dark",

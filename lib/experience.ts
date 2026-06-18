@@ -36,7 +36,7 @@ export const experience: Experience[] = [
     note: "Mobile architecture, AI-assisted engineering workflows, and developer experience across product, design, and engineering.",
     detail: {
       summary:
-        "Working across Sony Music's mobile ecosystem — product delivery, technical architecture, and engineering workflows — collaborating closely with product, design, and backend teams.",
+        "Working across Sony Music's mobile ecosystem: product delivery, technical architecture, and engineering workflows, collaborating closely with product, design, and backend teams.",
       highlights: [
         "Provide technical leadership and architectural guidance for the mobile team.",
         "Build and ship mobile applications across the product ecosystem.",
@@ -61,7 +61,7 @@ export const experience: Experience[] = [
     note: "Front-end architecture, performance, and UX for the analytics & metrics platform used by labels, artists, and internal teams.",
     detail: {
       summary:
-        "Focused on The Orchard's analytics and metrics platform — front-end architecture, performance, and product usability for the data-heavy interfaces labels, artists, and internal teams rely on.",
+        "Focused on The Orchard's analytics and metrics platform: front-end architecture, performance, and product usability for the data-heavy interfaces labels, artists, and internal teams rely on.",
       highlights: [
         "Owned front-end architecture and feature development on the analytics platform.",
         "Optimised performance and rendering across data-dense dashboards.",
@@ -80,7 +80,7 @@ export const experience: Experience[] = [
     note: "Built a PWA from scratch and a company-wide design system for an online public-policy media.",
     detail: {
       summary:
-        "Led front-end for an online media covering public policy — building a complete progressive web app from scratch and a company-wide design system, and lifting the whole team's front-end practice.",
+        "Led front-end for an online media covering public policy, building a complete progressive web app from scratch and a company-wide design system, and lifting the whole team's front-end practice.",
       highlights: [
         "Built a complete progressive web app (PWA) from scratch.",
         "Created a company-wide design system in partnership with designers.",
@@ -106,11 +106,11 @@ export const experience: Experience[] = [
     note: "Taught front-end culture and Next.js to students training to become lead developers and CTOs.",
     detail: {
       summary:
-        "Taught front-end culture to students training to become lead developers and CTOs — a global view of the stack, modern HTML and CSS, and Next.js end to end.",
+        "Taught front-end culture to students training to become lead developers and CTOs: a global view of the stack, modern HTML and CSS, and Next.js end to end.",
       highlights: [
         "Taught front-end culture and a global view of front-end and back-end stacks.",
         "Taught Next.js end to end.",
-        "Covered modern HTML5 and CSS3 — flexbox, grid, and the latest features.",
+        "Covered modern HTML5 and CSS3: flexbox, grid, and the latest features.",
       ],
       stack: ["Next.js", "HTML5", "CSS3"],
     },
@@ -121,14 +121,14 @@ export const experience: Experience[] = [
     org: "ESG Executive Education",
     url: "https://www.esg.fr/",
     place: "Paris",
-    note: "Taught the web, HTML and CSS to career-changers — from zero to their own static site.",
+    note: "Taught the web, HTML and CSS to career-changers, from zero to their own static site.",
     detail: {
       summary:
-        "Taught career-changers how the web works and how to build a site from nothing — over nine years, alongside engineering work.",
+        "Taught career-changers how the web works and how to build a site from nothing, over nine years alongside engineering work.",
       highlights: [
         "Explained the internet and the web from first principles.",
         "Taught HTML5 and CSS3 from the ground up.",
-        "Guided complete beginners to build their own static site by hand — no IDE.",
+        "Guided complete beginners to build their own static site by hand (no IDE).",
         "Ran the oral exams.",
       ],
       stack: ["HTML", "CSS", "Web fundamentals"],
