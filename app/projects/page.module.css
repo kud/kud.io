@@ -84,8 +84,13 @@
 }
 
 @media (max-width: 720px) {
+  /* Keep the blueprint on mobile — it's the hero's signature. Widen it slightly
+     past the viewport so the linework fills behind the avatar, and soften it a
+     touch so it stays a backdrop. */
   .blueprint {
-    display: none;
+    width: min(560px, 128vw);
+    top: -24px;
+    opacity: 0.2;
   }
 }
 

@@ -33,12 +33,11 @@
 /* Filter section: labelled Language + Tags rows below the search/sort bar */
 .filters {
   max-width: 1040px;
-  margin: 16px auto 0;
+  margin: 14px auto 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 14px 0 4px;
-  border-top: 1px solid var(--border);
+  padding: 4px 0;
 }
 
 .filterGroup {
@@ -50,7 +49,7 @@
 
 .filterLabel {
   flex-shrink: 0;
-  width: 52px;
+  width: 84px;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
@@ -463,8 +462,26 @@
     order: -1;
   }
 
+  /* Stack each dropdown as label-above-control, full width and flush-left, so
+     Type/Sort line up on the exact same left edge as the search field and the
+     Lang/Tags rows — one consistent column instead of indented half-width boxes. */
   .sortGroup {
     margin-left: 0;
+    flex-basis: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 7px;
+  }
+
+  .trigger {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .menu {
+    left: 0;
+    right: 0;
+    min-width: 0;
   }
 
   .section {
@@ -503,5 +520,48 @@
   .rowHead {
     flex-wrap: wrap;
     gap: 6px 12px;
+  }
+}
+
+/* Phones: shrink the icon and let the description span the full card width,
+   wrapping below the icon instead of being boxed into the right column. The row
+   becomes a 2-col grid and .rowBody flattens (display: contents) so its head and
+   description place directly — head beside the icon, description across both. */
+@media (max-width: 640px) {
+  .row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 13px;
+    row-gap: 11px;
+    align-items: center;
+    padding: 22px 18px;
+  }
+
+  .rowBody {
+    display: contents;
+  }
+
+  .icon,
+  .monogram {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .monogram {
+    font-size: 16px;
+  }
+
+  .rowHead {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .rowDesc {
+    grid-column: 1 / -1;
+    grid-row: 2;
   }
 }

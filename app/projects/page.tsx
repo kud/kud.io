@@ -119,8 +119,9 @@ const ProjectsIndex = async () => {
           <p className={styles.intro}>
             Open-source tools I design and build — command-line apps, MCP
             servers, and terminal design systems. Each one is shaped by the same
-            care: <strong>developer experience</strong> first, obsessive polish,
-            and neat, considered interfaces — down to the last detail.
+            care: <strong>developer experience</strong> first, a real passion
+            for polish, and neat, considered interfaces — down to the last
+            detail.
           </p>
           <div className={styles.social}>
             <a href="https://github.kud.io/" target="_blank" rel="noreferrer">

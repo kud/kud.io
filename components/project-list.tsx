@@ -207,7 +207,7 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
 
       <div className={styles.filters}>
         <div className={styles.filterGroup}>
-          <span className={styles.filterLabel}>Lang</span>
+          <span className={styles.filterLabel}>Languages</span>
           <div className={styles.chips}>
             <button
               type="button"

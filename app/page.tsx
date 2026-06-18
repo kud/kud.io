@@ -6,6 +6,8 @@ import {
   InstagramIcon,
   MailIcon,
 } from "@/components/social-icons"
+import { ExperienceTimeline } from "@/components/experience-timeline"
+import { yearsOfExperience } from "@/lib/experience"
 import styles from "./page.module.css"
 
 const socials = [
@@ -19,66 +21,6 @@ const socials = [
   },
   { label: "Email", href: "mailto:m+site@kud.io", Icon: MailIcon },
 ]
-
-type Experience = {
-  period: string
-  role: string
-  org: string
-  team?: string
-  url: string
-  place: string
-  note: string
-}
-
-// Proper nouns use a non-breaking space ( ) so the words never wrap apart.
-const experience: Experience[] = [
-  {
-    period: "2022 — Present",
-    role: "Senior Software Engineer / Tech Lead",
-    org: "Sony Music",
-    team: "Mobile Team",
-    url: "https://www.sonymusic.com/",
-    place: "London",
-    note: "Mobile architecture, AI-assisted engineering workflows, and developer experience across product, design, and engineering.",
-  },
-  {
-    period: "2022 — 2023",
-    role: "Senior Software Engineer",
-    org: "The Orchard",
-    url: "https://www.theorchard.com/",
-    place: "London",
-    note: "Front-end architecture, performance, and UX for the analytics & metrics platform used by labels, artists, and internal teams.",
-  },
-  {
-    period: "2017 — 2022",
-    role: "Lead Front-end Developer",
-    org: "Contexte",
-    url: "https://www.contexte.com/",
-    place: "Paris",
-    note: "Built a PWA from scratch and a company-wide design system for an online public-policy media.",
-  },
-  {
-    period: "2020 — 2022",
-    role: "Front-end Trainer",
-    org: "EEMI",
-    url: "https://www.eemi.com/",
-    place: "Paris",
-    note: "Taught front-end culture and Next.js to students training to become lead developers and CTOs.",
-  },
-  {
-    period: "2013 — 2022",
-    role: "Web Trainer",
-    org: "ESG Executive Education",
-    url: "https://www.esg.fr/",
-    place: "Paris",
-    note: "Taught the web, HTML and CSS to career-changers — from zero to their own static site.",
-  },
-]
-
-// Recomputed on every build so the headline figure never goes stale. kud's
-// professional web career began in 2008 (→ 18 years in 2026).
-const CAREER_START_YEAR = 2008
-const yearsOfExperience = new Date().getFullYear() - CAREER_START_YEAR
 
 const isExternal = (href: string) => href.startsWith("http")
 
@@ -108,7 +50,7 @@ const Bio = () => (
     for everyone — the people using what we build and the engineers building it.
     That&apos;s why I love optimising and automating workflows. What I love most
     is architecting and designing the solution, then delegating its execution to
-    AI in a deliberate, fine-tuned way — turning {yearsOfExperience} years of
+    AI in a deliberate, fine-tuned way — turning {yearsOfExperience()} years of
     experience into skills and agents that keep getting sharper. Currently on
     the mobile team at{" "}
     <a href="https://www.sonymusic.com/" target="_blank" rel="noreferrer">
@@ -229,49 +171,6 @@ const HeroMobile = () => (
       <ScrollHint />
     </section>
   </>
-)
-
-const ExperienceTimeline = () => (
-  <section id="experience" className={styles.timeline}>
-    <div className={styles.timelineInner}>
-      <p className={styles.timelineEyebrow}>Career</p>
-      <h2 className={styles.timelineTitle}>Experience</h2>
-
-      <div className={styles.track}>
-        {experience.map((item) => (
-          <div key={`${item.org}-${item.period}`} className={styles.entry}>
-            <div className={styles.entryPeriod}>{item.period}</div>
-            <h3 className={styles.entryRole}>{item.role}</h3>
-            <p className={styles.entryOrg}>
-              <a
-                className={styles.entryOrgLink}
-                href={item.url}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {item.org}
-              </a>
-              {item.team ? ` · ${item.team}` : ""}{" "}
-              <span className={styles.entryPlace}>·&nbsp;{item.place}</span>
-            </p>
-            <p className={styles.entryNote}>{item.note}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className={styles.timelineMore}>
-        <a
-          className={styles.timelineButton}
-          href="https://linkedin.kud.io/"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Full history on LinkedIn
-          <span aria-hidden>↗</span>
-        </a>
-      </div>
-    </div>
-  </section>
 )
 
 const Home = () => (

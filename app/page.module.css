@@ -645,3 +645,285 @@
     scroll-snap-stop: always;
   }
 }
+
+/* Clickable timeline entries ------------------------------------------------*/
+/* The entry is now a button (opens the detail modal). Reset the button chrome
+   and lay its spans out as the old block stack; .entry keeps the padding,
+   timeline dot (::before), and first-child pulse. */
+.entryButton {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.entryButton:hover .entryRole {
+  color: #c2703d;
+}
+
+.entryButton:focus-visible {
+  outline: 2px solid #c2703d;
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+/* A quiet "View details →" hint that surfaces on hover/focus (and stays softly
+   visible on touch, where there is no hover). */
+.entryMore {
+  margin-top: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #c2703d;
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity 0.18s,
+    transform 0.18s;
+}
+
+.entryButton:hover .entryMore,
+.entryButton:focus-visible .entryMore {
+  opacity: 1;
+  transform: none;
+}
+
+@media (hover: none) {
+  .entryMore {
+    opacity: 0.75;
+    transform: none;
+  }
+}
+
+/* Two-button row under the timeline (Download CV + LinkedIn). */
+.timelineButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.timelineButtonPrimary {
+  background: #141420;
+  border-color: #141420;
+  color: #fff;
+}
+
+.timelineButtonPrimary:hover {
+  background: #c2703d;
+  border-color: #c2703d;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Detail modal (native <dialog>) -------------------------------------------*/
+.modal {
+  width: min(560px, 92vw);
+  margin: auto;
+  padding: 0;
+  border: none;
+  border-radius: 18px;
+  background: transparent;
+  overflow: visible;
+}
+
+.modal::backdrop {
+  background: rgba(20, 16, 12, 0.5);
+  backdrop-filter: blur(3px);
+  animation: backdropIn 0.2s ease both;
+}
+
+.modal[open] {
+  animation: modalIn 0.22s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+}
+
+@keyframes backdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.modalCard {
+  position: relative;
+  max-height: 86vh;
+  overflow-y: auto;
+  padding: 34px 32px 30px;
+  border: 1px solid #ece5db;
+  border-radius: 18px;
+  background: #fdfbf8;
+  color: #1f1813;
+  box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.5);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.modalClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #ece5db;
+  border-radius: 9px;
+  background: #faf7f2;
+  color: #8d847a;
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    color 0.18s,
+    border-color 0.18s,
+    background 0.18s;
+}
+
+.modalClose:hover {
+  color: #1f1813;
+  border-color: #d8cfc1;
+  background: #f3ede4;
+}
+
+.modalPeriod {
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #9a9aa3;
+}
+
+.modalRole {
+  margin: 0 0 6px;
+  padding-right: 40px;
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1a1512;
+}
+
+.modalMeta {
+  margin: 0 0 20px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #44444c;
+}
+
+.modalSummary {
+  margin: 0 0 22px;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: #574f47;
+}
+
+.modalSectionLabel {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8d847a;
+}
+
+.modalHighlights {
+  margin: 0 0 22px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.modalHighlights li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: #574f47;
+}
+
+.modalHighlights li::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c2703d;
+}
+
+.modalStack {
+  margin: 0 0 26px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.stackChip {
+  padding: 5px 12px;
+  border: 1px solid #ebe4da;
+  border-radius: 999px;
+  background: #f6f2ec;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #574f47;
+}
+
+.modalActions {
+  display: flex;
+}
+
+.modalVisit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border: 1px solid #e2dacd;
+  border-radius: 11px;
+  background: #fdfbf8;
+  color: #1f1813;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    border-color 0.18s,
+    color 0.18s,
+    transform 0.18s;
+}
+
+.modalVisit:hover {
+  border-color: #c2703d;
+  color: #c2703d;
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal[open],
+  .modal::backdrop {
+    animation: none;
+  }
+
+  .entryMore,
+  .modalVisit,
+  .timelineButtonPrimary {
+    transition: none;
+  }
+}
