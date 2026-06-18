@@ -38,6 +38,7 @@ export const CvDownloadButton = () => {
     <button
       type="button"
       className={`${styles.timelineButton} ${styles.timelineButtonPrimary}`}
+      data-mascot="cv"
       onClick={handleClick}
       disabled={loading}
       aria-busy={loading}

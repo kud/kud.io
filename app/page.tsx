@@ -8,7 +8,7 @@ import {
 } from "@/components/social-icons"
 import { ExperienceTimeline } from "@/components/experience-timeline"
 import { FocusTags } from "@/components/focus-tags"
-import { Duck } from "@/components/duck"
+import { PromptMascot } from "@/components/prompt-mascot"
 import { yearsOfExperience } from "@/lib/experience"
 import styles from "./page.module.css"
 
@@ -35,9 +35,9 @@ const Eyebrow = () => (
   </p>
 )
 
-// data-duck-message summons the easter-egg duck on hover (see components/duck).
+// data-mascot summons the easter-egg terminal mascot on hover (see prompt-mascot).
 const Name = () => (
-  <h1 className={styles.name} data-duck="greeting">
+  <h1 className={styles.name} data-mascot="greeting">
     Erwann&nbsp;Mest
   </h1>
 )
@@ -52,12 +52,12 @@ const Tagline = () => (
 const Bio = () => (
   <>
     <p className={styles.bio}>
-      I think beyond <span data-duck="tickets">tickets</span> and lines of code:
-      in systems, workflows, and the people they serve. Software engineering,
-      technical leadership, systems design. To me, that&apos;s one job. I want
-      to understand how a complex system actually works (software, a team, an
-      organisation, the way people deal with each other) and make it simpler and
-      more humane.
+      I think beyond <span data-mascot="tickets">{"tickets "}</span>and lines of
+      code: in systems, workflows, and the people they serve. Software
+      engineering, technical leadership, systems design. To me, that&apos;s one
+      job. I want to understand how a complex system actually works (software, a
+      team, an organisation, the way people deal with each other) and make it
+      simpler and more humane.
     </p>
     <p className={styles.bio}>
       Most of what I do comes down to one question:{" "}
@@ -122,7 +122,7 @@ const SocialLinks = () => (
         <a
           href={href}
           aria-label={label}
-          data-duck={label === "Email" ? "contact" : undefined}
+          data-mascot={label === "Email" ? "contact" : undefined}
           {...(isExternal(href) ? { target: "_blank", rel: "noreferrer" } : {})}
         >
           <Icon className={styles.socialIcon} />
@@ -195,7 +195,7 @@ const Home = () => (
     <HeroDesktop />
     <HeroMobile />
     <ExperienceTimeline />
-    <Duck />
+    <PromptMascot />
   </div>
 )
 

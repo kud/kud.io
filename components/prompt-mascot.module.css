@@ -1,0 +1,106 @@
+/* Easter-egg terminal mascot: a small window tucked below the bottom-right edge.
+   Any element with [data-mascot="<type>"] summons it on hover — it rises up and
+   types a line out with a blinking cursor, like a tiny shell saying hello. */
+.term {
+  position: fixed;
+  right: 40px;
+  bottom: 34px;
+  z-index: 200;
+  width: 288px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #16131f;
+  border: 1px solid #2b2638;
+  box-shadow: 0 14px 34px rgba(20, 16, 12, 0.28);
+  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  transform: translateY(160%);
+  transition: transform 0.5s cubic-bezier(0.34, 1.4, 0.5, 1);
+  pointer-events: none;
+}
+
+.peek {
+  transform: translateY(0);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 11px;
+  background: #1f1b2b;
+  border-bottom: 1px solid #2b2638;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3a3550;
+}
+.dot:nth-child(1) {
+  background: #ff5f57;
+}
+.dot:nth-child(2) {
+  background: #febc2e;
+}
+.dot:nth-child(3) {
+  background: #28c840;
+}
+
+.title {
+  margin-left: 6px;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  color: #6f6a82;
+}
+
+.body {
+  padding: 13px 14px;
+  min-height: 21px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #f4efe6;
+}
+
+.prompt {
+  margin-right: 7px;
+  color: #28c840;
+  font-weight: 700;
+}
+
+/* Wraps onto as many lines as the line needs; the window grows to fit. */
+.text {
+  word-break: break-word;
+}
+
+/* Blinking block cursor that trails the typed text. */
+.cursor {
+  display: inline-block;
+  width: 7px;
+  height: 14px;
+  margin-left: 3px;
+  vertical-align: text-bottom;
+  background: #f4efe6;
+  animation: cursorBlink 1s steps(1) infinite;
+}
+
+@keyframes cursorBlink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .term {
+    transition-duration: 0.01ms;
+  }
+
+  .cursor {
+    animation: none;
+  }
+}

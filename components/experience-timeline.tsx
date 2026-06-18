@@ -87,7 +87,7 @@ export const ExperienceTimeline = () => {
               href="https://linkedin.kud.io/"
               target="_blank"
               rel="noreferrer"
-              data-duck="history"
+              data-mascot="history"
             >
               Full history on LinkedIn
               <span aria-hidden>↗</span>
