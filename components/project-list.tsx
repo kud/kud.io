@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
-import Link from "next/link"
+import { Link } from "next-view-transitions"
 import type { Project } from "@/lib/projects"
 import styles from "./project-list.module.css"
 
@@ -299,7 +299,14 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
                   )}
                   <span className={styles.rowBody}>
                     <span className={styles.rowHead}>
-                      <span className={styles.rowName}>{project.name}</span>
+                      <span
+                        className={styles.rowName}
+                        style={{
+                          viewTransitionName: `project-${project.slug}`,
+                        }}
+                      >
+                        {project.name}
+                      </span>
                       <span className={styles.rowMeta}>
                         {project.stars > 0 ? (
                           <span className={styles.stars}>

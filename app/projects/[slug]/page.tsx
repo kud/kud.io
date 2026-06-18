@@ -1,6 +1,6 @@
 import { Fragment } from "react"
 import type { Metadata } from "next"
-import Link from "next/link"
+import { Link } from "next-view-transitions"
 import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { DocsBody } from "fumadocs-ui/layouts/docs/page"
@@ -65,7 +65,12 @@ const AutoLanding = ({ project }: { project: Project }) => {
             <span className={styles.badgeDot} />
             {project.license ? `${project.license} · ` : ""}Open source
           </div>
-          <h1 className={styles.title}>{project.name}</h1>
+          <h1
+            className={styles.title}
+            style={{ viewTransitionName: `project-${project.slug}` }}
+          >
+            {project.name}
+          </h1>
           {project.description ? (
             <p className={styles.tagline}>{project.description}</p>
           ) : null}
@@ -222,7 +227,10 @@ const ReadmeLanding = ({ project }: { project: Project }) => {
             <span className={styles.badgeDot} />
             {project.license ? `${project.license} · ` : ""}Curated list
           </div>
-          <h1 className={`${styles.title} ${styles.titleReadme}`}>
+          <h1
+            className={`${styles.title} ${styles.titleReadme}`}
+            style={{ viewTransitionName: `project-${project.slug}` }}
+          >
             {project.name}
           </h1>
           {project.description ? (
