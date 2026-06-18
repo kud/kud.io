@@ -33,11 +33,19 @@
   }
 }
 
-/* Hold full coverage while fading out to reveal the freshly-loaded dark page. */
+.covered,
 .fading {
-  opacity: 0;
   filter: url("#ink-edge");
   clip-path: circle(150% at var(--x, 50%) var(--y, 50%));
+}
+
+.covered {
+  opacity: 1;
+}
+
+/* Hold full coverage until the route has changed, then fade out to reveal it. */
+.fading {
+  opacity: 0;
   transition: opacity 0.32s ease-out;
   will-change: opacity;
 }

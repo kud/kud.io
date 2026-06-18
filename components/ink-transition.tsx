@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import styles from "./ink-transition.module.css"
 
 // The overlay is inset by -60px, so a viewport point maps to element-local
@@ -16,9 +16,12 @@ type RevealDetail = { x: number; y: number; href: string; color: string }
 // freshly-loaded /projects page. Rendered once in the root layout.
 export const InkTransition = () => {
   const router = useRouter()
+  const pathname = usePathname()
   const overlayRef = useRef<HTMLDivElement>(null)
   const hrefRef = useRef<string | null>(null)
-  const [phase, setPhase] = useState<"idle" | "inking" | "fading">("idle")
+  const [phase, setPhase] = useState<"idle" | "inking" | "covered" | "fading">(
+    "idle",
+  )
 
   useEffect(() => {
     const onReveal = (event: Event) => {
@@ -39,12 +42,16 @@ export const InkTransition = () => {
 
   const handleAnimationEnd = () => {
     if (phase !== "inking" || !hrefRef.current) return
-    // The screen is fully covered now — swap the route (prefetched, so it paints
-    // immediately) and reveal on the next two frames. No fixed hold, so there's
-    // no plateau between the ink covering and the page appearing.
+    // The screen is fully covered now — swap the route under it, but keep the
+    // cover visible until the pathname confirms the destination has committed.
     router.push(hrefRef.current)
-    requestAnimationFrame(() => requestAnimationFrame(() => setPhase("fading")))
+    setPhase("covered")
   }
+
+  useEffect(() => {
+    if (phase !== "covered" || pathname !== hrefRef.current) return
+    requestAnimationFrame(() => requestAnimationFrame(() => setPhase("fading")))
+  }, [pathname, phase])
 
   const handleTransitionEnd = () => {
     if (phase === "fading") setPhase("idle")
@@ -57,6 +64,7 @@ export const InkTransition = () => {
       className={[
         styles.overlay,
         phase === "inking" ? styles.inking : "",
+        phase === "covered" ? styles.covered : "",
         phase === "fading" ? styles.fading : "",
       ]
         .filter(Boolean)
