@@ -107,6 +107,16 @@
     top: 18px;
     left: 18px;
   }
+
+  /* Dividers dangle when the stats wrap on a narrow screen — drop them and let
+     the stats wrap cleanly, centred. */
+  .statDivider {
+    display: none;
+  }
+
+  .stats {
+    gap: 18px 28px;
+  }
 }
 
 .badge,
@@ -308,6 +318,16 @@
   color: var(--muted);
   font-size: 16px;
   line-height: 1.6;
+}
+
+/* The README lede — bigger and brighter than a section sub, so it actually
+   invites reading instead of reading like a footnote. */
+.lede {
+  margin: 0 auto;
+  max-width: 620px;
+  color: var(--text);
+  font-size: 21px;
+  line-height: 1.65;
 }
 
 /* Quick-start terminal ------------------------------------------------------*/

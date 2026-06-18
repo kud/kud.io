@@ -107,7 +107,7 @@ const AutoLanding = ({ project }: { project: Project }) => {
       {intro ? (
         <section className={styles.section}>
           <Reveal className={styles.sectionHeader}>
-            <p className={styles.sectionLead}>{intro}</p>
+            <p className={styles.lede}>{intro}</p>
           </Reveal>
         </section>
       ) : null}
