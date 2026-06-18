@@ -1,4 +1,5 @@
 {
+  "intro": "shui = Shell UI. 水 = water in Chinese — fluid, effortless, takes the shape of its container.",
   "features": [
     {
       "title": "Unified message API",
@@ -29,5 +30,6 @@
       "description": "respects the NO_COLOR convention; degrades gracefully to plain ASCII"
     }
   ],
-  "install": "git clone https://github.com/kud/shui ~/.shui\nsource ~/.shui/shui.zsh\n\nshui message success \"Deployment complete\"\nshui message error   \"Build failed\""
+  "install": "git clone https://github.com/kud/shui ~/.shui\nsource ~/.shui/shui.zsh\n\nshui message success \"Deployment complete\"\nshui message error   \"Build failed\"",
+  "examples": []
 }

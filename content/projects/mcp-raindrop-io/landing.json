@@ -1,4 +1,6 @@
 {
+  "intro": null,
   "features": [],
-  "install": "npx --yes @kud/mcp-raindrop-io@latest"
+  "install": "npx --yes @kud/mcp-raindrop-io@latest",
+  "examples": []
 }

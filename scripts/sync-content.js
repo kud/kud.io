@@ -124,20 +124,74 @@ const parseFeatures = (body) => {
   return features
 }
 
-const firstCodeBlock = (body) => {
-  const block = body.match(/```[\w-]*\n([\s\S]*?)```/)
-  return block ? block[1].trim() : null
+const codeBlocks = (body) => {
+  const blocks = []
+  const re = /```[\w-]*\n([\s\S]*?)```/g
+  let match
+  while ((match = re.exec(body)) !== null) blocks.push(match[1].trim())
+  return blocks
 }
 
-const buildLanding = (readme) => {
-  const sections = splitSections(readme)
-  const features = sections.find((s) => /feature/i.test(s.heading))
-  const install = sections.find((s) =>
-    /install|quick.?start|getting.?started|usage/i.test(s.heading),
+const firstCodeBlock = (body) => codeBlocks(body)[0] ?? null
+
+// The lede: the first real prose paragraph of the preamble (before the first
+// heading), skipping separators, leftover badges/images, bare link rows, and
+// the feature bullet list. This is the "how powerful it is" pitch.
+const extractIntro = (preamble) => {
+  for (const para of preamble.split(/\n\s*\n/)) {
+    const text = para.trim()
+    if (!text) continue
+    if (/^(-{3,}|#|<|!\[|\[!\[|>)/.test(text)) continue
+    if (/^[-*]\s/.test(text)) continue
+    if (/^\[[^\]]+\]\([^)]+\)(\s*·\s*\[[^\]]+\]\([^)]+\))*$/.test(text))
+      continue
+    const cleaned = stripInline(text.replace(/\n+/g, " "))
+    if (cleaned.length >= 40) return cleaned
+  }
+  return null
+}
+
+// Authors can wrap any README region in `<!-- landing:skip -->` … `<!-- landing:/skip -->`
+// to keep it off the landing (contributor notes, an FYI block, a section we'd
+// otherwise auto-pull) — no guessing on our side. Everything else is extracted.
+const stripLandingSkips = (markdown) =>
+  markdown.replace(
+    /<!--\s*landing:skip\s*-->[\s\S]*?<!--\s*landing:\/skip\s*-->/gi,
+    "",
   )
+
+// Build the auto-landing data from a cleaned README. Features come from a
+// `## Features` section OR loose bullets in the preamble (some repos list them
+// before any heading). Examples are capped so the landing never rivals /docs.
+const buildLanding = (rawReadme) => {
+  const readme = stripLandingSkips(rawReadme)
+  const firstH2 = readme.search(/^##\s+/m)
+  const preamble = firstH2 === -1 ? readme : readme.slice(0, firstH2)
+  const sections = splitSections(readme)
+
+  const preambleFeatures = parseFeatures(preamble)
+  const featuresSection = sections.find((s) => /feature/i.test(s.heading))
+  const features =
+    preambleFeatures.length >= 2
+      ? preambleFeatures
+      : featuresSection
+        ? parseFeatures(featuresSection.body)
+        : preambleFeatures
+
+  const installSection = sections.find((s) =>
+    /install|quick.?start|getting.?started/i.test(s.heading),
+  )
+  const examplesSection = sections.find((s) =>
+    /usage|example|recipe/i.test(s.heading),
+  )
+
   return {
-    features: features ? parseFeatures(features.body) : [],
-    install: install ? firstCodeBlock(install.body) : null,
+    intro: extractIntro(preamble),
+    features,
+    install: installSection ? firstCodeBlock(installSection.body) : null,
+    examples: examplesSection
+      ? codeBlocks(examplesSection.body).slice(0, 2)
+      : [],
   }
 }
 
@@ -242,7 +296,7 @@ const syncRepo = async (repo) => {
   // landing always shows how to install the project.
   const landingData = cleaned
     ? buildLanding(cleaned)
-    : { features: [], install: null }
+    : { intro: null, features: [], install: null, examples: [] }
   if (!landingData.install) {
     const pkgRaw = await rawFile(slug, "package.json")
     landingData.install = fallbackInstall(pkgRaw, slug, repo.html_url)
@@ -293,8 +347,14 @@ const main = async () => {
   console.log(`[sync] ${Object.keys(icons).length} project(s) with a logo`)
 }
 
-try {
-  await main()
-} catch (error) {
-  console.warn(`[sync] skipped: ${error.message}`)
+export { buildLanding, stripLeadingH1, stripLeadingCenteredHero }
+
+// Only run the sync when executed directly (node scripts/sync-content.js), not
+// when imported (e.g. a test exercising buildLanding against fixture READMEs).
+if (import.meta.url === `file://${process.argv[1]}`) {
+  try {
+    await main()
+  } catch (error) {
+    console.warn(`[sync] skipped: ${error.message}`)
+  }
 }

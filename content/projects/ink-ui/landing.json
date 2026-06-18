@@ -1,4 +1,5 @@
 {
+  "intro": null,
   "features": [
     {
       "title": "Five ready-made components — Banner, Header, Badge, Spinner, and Table, pre-styled and immediately usable",
@@ -13,5 +14,6 @@
       "description": ""
     }
   ],
-  "install": "npm install @kud/ink-ui"
+  "install": "npm install @kud/ink-ui",
+  "examples": []
 }

@@ -17,26 +17,11 @@ description: "🌙 Dark VS Code theme with warm amber accents — calm, focused 
 
 ---
 
-## Palette
+November is a dark colour theme for Visual Studio Code, pairing a deep slate background with warm amber accents. It ships a single variant: **November** (`vs-dark`).
 
-| Role       | Colour                                                                       | Hex       |
-| ---------- | ---------------------------------------------------------------------------- | --------- |
-| Background | ![#21222c](https://img.shields.io/badge/-%2321222c-21222c?style=flat-square) | `#21222c` |
-| Selection  | ![#30364a](https://img.shields.io/badge/-%2330364a-30364a?style=flat-square) | `#30364a` |
-| Borders    | ![#272a38](https://img.shields.io/badge/-%23272a38-272a38?style=flat-square) | `#272a38` |
-| Accent     | ![#ed7249](https://img.shields.io/badge/-%23ed7249-ed7249?style=flat-square) | `#ed7249` |
-| Foreground | ![#c8d5e0](https://img.shields.io/badge/-%23c8d5e0-c8d5e0?style=flat-square) | `#c8d5e0` |
-| Muted      | ![#b8c5d0](https://img.shields.io/badge/-%23b8c5d0-b8c5d0?style=flat-square) | `#b8c5d0` |
+## Install
 
----
-
-## Installation
-
-**Via Marketplace**
-
-1. Open VS Code
-2. `Cmd+Shift+X` → search **November**
-3. Install → `Cmd+Shift+P` → **Preferences: Color Theme** → **November**
+**Via Marketplace** — open the Extensions view (`Cmd+Shift+X`), search **November**, and install. Then `Cmd+Shift+P` → **Preferences: Color Theme** → **November**.
 
 **Via CLI**
 
@@ -46,51 +31,4 @@ code --install-extension kud.november-vscode
 
 ---
 
-## Recommended Settings
-
-```json
-{
-  "workbench.colorTheme": "November",
-  "editor.fontFamily": "'JetBrains Mono', monospace",
-  "editor.fontLigatures": true,
-  "editor.cursorBlinking": "smooth"
-}
-```
-
----
-
-## Development
-
-```sh
-# Install tooling
-npm install
-
-Hello!
-
-# Preview — symlink the repo into your VS Code extensions folder, then reload the window
-ln -s "$(pwd)" ~/.vscode/extensions/november-vscode
-
-# Package a .vsix for local testing
-npm run package
-
-# Check what will be bundled
-npm run ls
-```
-
-### Publishing
-
-```sh
-# Bump version, commit, tag, and push
-npm run release:patch   # bumps patch (x.x.N)
-npm run release:minor   # bumps minor (x.N.0)
-npm run release:major   # bumps major (N.0.0)
-
-# Package and open the marketplace upload page
-npm run marketplace
-```
-
----
-
-## License
-
-MIT © [kud](https://github.com/kud)
+📚 **Full documentation → https://kud.io/projects/november-vscode/docs**

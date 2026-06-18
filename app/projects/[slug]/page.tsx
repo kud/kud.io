@@ -45,7 +45,7 @@ const formatDate = (iso: string) =>
 
 // Auto landing — built from README extraction when a repo has no landing.mdx.
 const AutoLanding = ({ project }: { project: Project }) => {
-  const { features, install } = getLanding(project.slug)
+  const { intro, features, install, examples } = getLanding(project.slug)
   const stats = [
     project.language ? { value: project.language, label: "Language" } : null,
     project.stars > 0 ? { value: `★ ${project.stars}`, label: "Stars" } : null,
@@ -99,6 +99,14 @@ const AutoLanding = ({ project }: { project: Project }) => {
         </div>
       </section>
 
+      {intro ? (
+        <section className={styles.section}>
+          <Reveal className={styles.sectionHeader}>
+            <p className={styles.sectionLead}>{intro}</p>
+          </Reveal>
+        </section>
+      ) : null}
+
       {install ? (
         <section className={styles.section}>
           <Reveal className={styles.sectionHeader}>
@@ -144,6 +152,31 @@ const AutoLanding = ({ project }: { project: Project }) => {
               </Reveal>
             ))}
           </div>
+        </section>
+      ) : null}
+
+      {examples.length > 0 ? (
+        <section className={styles.section}>
+          <Reveal className={styles.sectionHeader}>
+            <span className={styles.eyebrow}>Examples</span>
+            <h2 className={styles.sectionTitle}>See it in action</h2>
+          </Reveal>
+          {examples.map((example, index) => (
+            <Reveal key={index} className={styles.terminalWrap}>
+              <div className={styles.terminal}>
+                <div className={styles.terminalBar}>
+                  <span className={styles.tdot} />
+                  <span className={styles.tdot} />
+                  <span className={styles.tdot} />
+                  <span className={styles.terminalLabel}>example</span>
+                  <CopyButton text={example} className={styles.copy} />
+                </div>
+                <pre className={styles.terminalBody}>
+                  <code>{example}</code>
+                </pre>
+              </div>
+            </Reveal>
+          ))}
         </section>
       ) : null}
 

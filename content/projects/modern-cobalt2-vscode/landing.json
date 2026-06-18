@@ -1,4 +1,6 @@
 {
+  "intro": null,
   "features": [],
-  "install": "code --install-extension kud.modern-cobalt2-vscode"
+  "install": "code --install-extension kud.modern-cobalt2-vscode",
+  "examples": []
 }

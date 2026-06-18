@@ -1,4 +1,6 @@
 {
+  "intro": null,
   "features": [],
-  "install": "npm install -g @kud/soap-cli"
+  "install": "npm install -g @kud/soap-cli",
+  "examples": []
 }
