@@ -30,7 +30,7 @@ const isExternal = (href: string) => href.startsWith("http")
 
 const Eyebrow = () => (
   <p className={styles.eyebrow}>
-    Senior&nbsp;Engineer &amp; Tech&nbsp;Lead ·&nbsp;London
+    Systems&nbsp;Designer &amp; Lead&nbsp;Software&nbsp;Engineer ·&nbsp;London
   </p>
 )
 
@@ -44,21 +44,39 @@ const Tagline = () => (
 )
 
 const Bio = () => (
-  <p className={styles.bio}>
-    I don&apos;t think in tickets and lines of code — I think in systems and the
-    people they serve. Starting from empathy for the user and the product, I
-    work shoulder-to-shoulder with designers and PMs to reduce cognitive load
-    for everyone — the people using what we build and the engineers building it.
-    That&apos;s why I love optimising and automating workflows. What I love most
-    is architecting and designing the solution, then delegating its execution to
-    AI in a deliberate, fine-tuned way — turning {yearsOfExperience()} years of
-    experience into skills and agents that keep getting sharper. Currently on
-    the mobile team at{" "}
-    <a href="https://www.sonymusic.com/" target="_blank" rel="noreferrer">
-      Sony&nbsp;Music
-    </a>
-    .
-  </p>
+  <>
+    <p className={styles.bio}>
+      I think beyond tickets and lines of code — in systems, workflows, and the
+      people they serve. Software engineering, technical leadership, systems
+      design: to me that&apos;s one job. I want to understand how a complex
+      system actually works — software, a team, an organisation, the way people
+      deal with each other — and make it simpler and more humane.
+    </p>
+    <p className={styles.bio}>
+      Most of what I do comes down to one question:{" "}
+      <strong>how can we help people do their best work?</strong> That&apos;s
+      pulled me across a lot of ground — engineering and tech leadership,
+      hiring, performance, developer experience, even security and how a team is
+      organised — and I&apos;m at my best when I can make something complicated
+      feel clear.
+    </p>
+    <p className={styles.bio}>
+      I like architecting a solution and then handing its execution to AI, in a
+      deliberate, fine-tuned way — turning {yearsOfExperience()}&nbsp;years of
+      experience into systems, skills, and agents that get sharper the more I
+      use them. The point isn&apos;t to replace judgement; it&apos;s to take the
+      repetitive work off people so they have room to think.
+    </p>
+    <p className={styles.bio}>
+      The best systems aren&apos;t the cleverest ones. They&apos;re the ones
+      that leave people with clarity, autonomy, and trust. Currently on the
+      mobile team at{" "}
+      <a href="https://www.sonymusic.com/" target="_blank" rel="noreferrer">
+        Sony&nbsp;Music
+      </a>
+      .
+    </p>
+  </>
 )
 
 const Personal = () => (
@@ -75,11 +93,11 @@ const Personal = () => (
     >
       gamer
     </a>
-    , and a{" "}
+    , a{" "}
     <a href="https://trakt.tv/users/_kud" target="_blank" rel="noreferrer">
       cinema lover
     </a>
-    .
+    , and a lifelong student of systems.
   </p>
 )
 

@@ -14,9 +14,9 @@ const sans = Hanken_Grotesk({
   variable: "--font-sans",
 })
 
-const TITLE = "Erwann Mest — Senior Software Engineer & Tech Lead"
+const TITLE = "Erwann Mest — Systems Designer & Lead Software Engineer"
 const DESCRIPTION =
-  "Senior Software Engineer & Tech Lead in London. I turn empathy for users and engineers into clear systems, better developer experience, and AI-assisted engineering — currently on the mobile team at Sony Music."
+  "Systems designer and lead software engineer in London. I make complex systems — software, teams, workflows — simpler, more effective, and more humane: reducing cognitive load, improving workflows, and using AI to amplify what people can do. Currently on the mobile team at Sony Music."
 
 // The OpenGraph and Twitter share images are supplied by the file-based
 // conventions (app/opengraph-image.tsx + app/twitter-image.tsx), so no images
@@ -25,6 +25,24 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://kud.io"),
   title: TITLE,
   description: DESCRIPTION,
+  // The visible headline leads with "Systems Designer", but every title kud
+  // holds stays here so recruiters searching any of them still find the site.
+  keywords: [
+    "Erwann Mest",
+    "kud",
+    "Systems Designer",
+    "Lead Software Engineer",
+    "Senior Software Engineer",
+    "Tech Lead",
+    "Mobile Engineer",
+    "Systems Thinking",
+    "AI Workflows",
+    "Technical Leadership",
+    "Developer Experience",
+    "React Native",
+    "Software Architecture",
+    "Sony Music",
+  ],
   openGraph: {
     type: "website",
     url: "https://kud.io",

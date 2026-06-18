@@ -3,7 +3,8 @@ import { ImageResponse } from "next/og"
 // Branded share card (1200×630) rendered at build time. Inherited by every route
 // that doesn't define its own, so links to kud.io unfurl as a designed card
 // instead of the bare avatar. Twitter reuses this via ./twitter-image.
-export const alt = "Erwann Mest — Senior Engineer & Tech Lead, London"
+export const alt =
+  "Erwann Mest — Systems Designer & Lead Software Engineer, London"
 export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
@@ -64,7 +65,7 @@ const Image = () =>
                 background: "#c2703d",
               }}
             />
-            Senior Engineer &amp; Tech Lead · London
+            Systems Designer · Lead Software Engineer
           </div>
           <div style={{ fontSize: 96, fontWeight: 800, letterSpacing: -3 }}>
             Erwann Mest

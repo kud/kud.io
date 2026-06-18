@@ -37,7 +37,7 @@ export const focus: Focus[] = [
   {
     label: "Developer experience",
     description:
-      "I see developers as users too — that's why I love DX so much: my users are the engineers, and I want to facilitate their work. I believe in reducing cognitive load for everyone — users, engineers, and the PMs and designers around them — with better tooling, conventions, automation, and design systems.",
+      "I see developers as users too — that's why I love DX so much: my users are the engineers, and I want to make their work easier. I believe in reducing cognitive load for everyone — users, engineers, and the PMs and designers around them — with better tooling, conventions, automation, and design systems.",
   },
   {
     label: "AI-assisted engineering",
