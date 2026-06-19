@@ -6,6 +6,14 @@ All notable changes to this project are documented here.
 
 ## Unreleased — 2026-06-19
 
+### Fixes
+
+- Backing out of an app landing page now returns you anchored to the `#apps` section of the projects list (`/projects#apps`) rather than the very top of the page. This means the view-transition morph lands back on the visible launcher tile instead of an off-screen one — the icon morphs correctly in both directions. A `scroll-margin-top` nudge prevents the section header from sitting flush against the viewport edge. ([d4f4ace](https://github.com/kud/website/commit/d4f4aceb12213ae3d295cec994c2140ed014164f))
+
+---
+
+## v5.1.0 — 2026-06-19
+
 ### Highlights
 
 - **Apps showcase with a liquid-glass launcher.** Deployed web apps (Planning Poker, Globetrotter, Brit Ready) now lead the projects page as a dedicated "Apps" group — rendered as large, full-bleed squircle tiles with per-app accent colours and a glass-morphism finish. Each app has its own landing page featuring a hero icon, a prominent "Launch app" button to the live deployment, a why/how story, tech-stack chips, screenshots, and feature highlights. ([f404b0a](https://github.com/kud/website/commit/f404b0ae5ed5cf7e7b619404d52d0755a7ec8b5c))
