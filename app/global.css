@@ -150,6 +150,25 @@ html[data-vt="back"]::view-transition-new(root) {
   }
 }
 
+/* Hold the OUTGOING page fully opaque until the incoming one has begun revealing
+   (45%), then hand off. Without this the old page fades from t=0 while the new one
+   is still hidden, leaving a gap where the dark page background flashes through
+   behind the morphing icon — the "blink". The overlap removes it. */
+@keyframes vt-content-hold {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+html[data-vt="morph"]::view-transition-old(root) {
+  animation-name: vt-content-hold;
+  animation-duration: 0.55s;
+}
+
 html[data-vt="morph"]::view-transition-new(root) {
   animation-name: vt-content-reveal;
   animation-duration: 0.55s;
@@ -186,6 +205,7 @@ html[data-vt="morph"]::view-transition-new(root) {
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
   ::view-transition-new(root),
+  html[data-vt="morph"]::view-transition-old(root),
   html[data-vt="morph"]::view-transition-new(root),
   ::view-transition-group(site-avatar),
   ::view-transition-old(site-avatar),

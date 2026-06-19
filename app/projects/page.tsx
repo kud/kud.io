@@ -3,6 +3,7 @@ import { AvatarImage } from "@/components/avatar-image"
 import { BackLink } from "@/components/back-link"
 import { getProjects, type Project } from "@/lib/projects"
 import { getIcons } from "@/lib/icons"
+import { getApp, appDisplayName } from "@/lib/app"
 import { Blueprint } from "@/components/blueprint"
 import {
   GitHubIcon,
@@ -25,44 +26,50 @@ const CATEGORY_META: Record<
   string,
   { name: string; order: number; blurb: string }
 > = {
+  app: {
+    name: "Apps",
+    order: 0,
+    blurb:
+      "Web apps I design and ship end to end — open them straight from here, or read the story behind each one.",
+  },
   cli: {
     name: "CLIs & Tools",
-    order: 0,
+    order: 1,
     blurb:
       "Command-line tools I reach for daily, for files, git, cloud APIs, and the macOS desktop.",
   },
   mcp: {
     name: "MCP Servers",
-    order: 1,
+    order: 2,
     blurb:
       "Model Context Protocol servers that connect Claude and other AI assistants to the tools you already use.",
   },
   claude: {
     name: "Claude Code",
-    order: 2,
+    order: 3,
     blurb:
       "Companions for Claude Code: session managers, live dashboards, and curated plugin collections.",
   },
   ui: {
     name: "UI & Design Systems",
-    order: 3,
+    order: 4,
     blurb:
       "Design systems and component libraries for building polished, consistent terminal interfaces.",
   },
   vscode: {
     name: "VS Code Extensions",
-    order: 4,
+    order: 5,
     blurb:
       "Extensions that bring code review and AI workflows directly into VS Code.",
   },
   theme: {
     name: "VS Code Themes",
-    order: 5,
+    order: 6,
     blurb: "Colour schemes for VS Code, tuned for long sessions in the dark.",
   },
   other: {
     name: "Lists & Resources",
-    order: 6,
+    order: 7,
     blurb:
       "Curated lists and references for people who love a beautiful terminal.",
   },
@@ -92,10 +99,20 @@ const AVATAR =
 
 const ProjectsIndex = async () => {
   const [projects, icons] = await Promise.all([getProjects(), getIcons()])
-  const withIcons = projects.map((project) => ({
-    ...project,
-    icon: icons[project.slug] ?? null,
-  }))
+  // Apps overlay a curated icon + accent from app.json (their PWA icons live
+  // outside the sync detector's reach); every other project keeps the synced icon.
+  const withIcons = projects.map((project) => {
+    if (project.category === "app") {
+      const app = getApp(project.slug)
+      return {
+        ...project,
+        name: appDisplayName(project.slug, app),
+        icon: app.icon ?? icons[project.slug] ?? null,
+        accent: app.accent ?? null,
+      }
+    }
+    return { ...project, icon: icons[project.slug] ?? null }
+  })
   const groups = groupByCategory(withIcons)
 
   return (

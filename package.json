@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@react-pdf/renderer": "4.5.1",
+    "change-case": "5.4.4",
     "fumadocs-core": "16.10.3",
     "fumadocs-mdx": "15.0.12",
     "fumadocs-ui": "16.10.3",

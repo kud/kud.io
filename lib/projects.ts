@@ -9,6 +9,9 @@ export type Project = {
   readmeLanding: boolean
   tags: string[]
   icon?: string | null
+  // Decorative accent (hex) for the app-launcher tiles, overlaid from app.json
+  // for `kud-site-app` projects. Absent for every other category.
+  accent?: string | null
   topics: string[]
   repoUrl: string
   homepage: string | null

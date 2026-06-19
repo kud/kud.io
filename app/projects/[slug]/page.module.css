@@ -511,6 +511,214 @@
   padding: 5px 13px;
 }
 
+/* App landing (kud-site-app) ------------------------------------------------*/
+/* The whole landing is tinted by the app's own --app-accent (from app.json),
+   falling back to the site primary when an app declares none. */
+.appLanding {
+  --app-accent: var(--primary);
+}
+
+.appHero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 100px 24px 84px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      ellipse 80% 50% at 50% -10%,
+      color-mix(in srgb, var(--app-accent) 22%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 60% 40% at 80% 60%,
+      color-mix(in srgb, var(--app-accent) 8%, transparent) 0%,
+      transparent 60%
+    );
+}
+
+.appHeroContent {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Big glass squircle — the launcher tile morphs into this via the shared
+   view-transition-name (app-icon-<slug>). Mirrors the tile's glass recipe so the
+   morph reads as one continuous object. */
+/* Big glass squircle — structurally identical to the launcher tile so the shared
+   view-transition (app-icon-<slug>) morphs the whole tile up into the hero with no
+   snap. No entrance animation here: the morph IS the entrance. */
+.appIconLarge {
+  position: relative;
+  width: clamp(120px, 16vw, 160px);
+  aspect-ratio: 1;
+  border-radius: 27%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  margin-bottom: 30px;
+  background:
+    radial-gradient(
+      130% 120% at 50% -10%,
+      color-mix(in srgb, var(--app-accent) 42%, transparent),
+      transparent 62%
+    ),
+    var(--surface-2);
+  box-shadow: 0 28px 64px -22px color-mix(in srgb, var(--app-accent) 75%, #000);
+}
+
+.appIconLarge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    133deg,
+    rgba(255, 255, 255, 0.34) 0%,
+    rgba(255, 255, 255, 0.06) 14%,
+    transparent 34%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.appIconLarge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -18px 34px -20px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+
+.appIconImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.appIconImg[data-bleed="false"] {
+  width: 64%;
+  height: 64%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.4));
+}
+
+.appTitle {
+  font-size: clamp(40px, 6vw, 68px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  padding-bottom: 0.14em;
+  margin: 0 0 10px;
+  background: linear-gradient(
+    135deg,
+    #f1f5f9 0%,
+    color-mix(in srgb, var(--app-accent) 65%, #f1f5f9) 55%,
+    var(--app-accent) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: fadeUp 0.6s ease both;
+  animation-delay: 0.06s;
+}
+
+/* Prominent, accent-coloured launch button (distinct from the orange .primary). */
+.launch {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 28px;
+  border-radius: 12px;
+  background: var(--app-accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--app-accent) 80%, #000);
+  transition:
+    transform 0.18s,
+    box-shadow 0.18s,
+    filter 0.18s;
+}
+
+.launch:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 18px 40px -12px color-mix(in srgb, var(--app-accent) 90%, #000);
+}
+
+.stack {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding: 0;
+  margin: 30px 0 0;
+}
+
+.stack li {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--app-accent) 55%, var(--text));
+  background: color-mix(in srgb, var(--app-accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--app-accent) 32%, transparent);
+  border-radius: 999px;
+  padding: 5px 13px;
+}
+
+.prose {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.prose p {
+  color: var(--text);
+  font-size: 18px;
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* Screenshot gallery — one big shot centred, multiple shots in a responsive grid. */
+.shots {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.shots[data-count="1"] {
+  grid-template-columns: minmax(0, 900px);
+  justify-content: center;
+}
+
+.shot {
+  margin: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+}
+
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 /* README-as-landing prose (curated lists) ----------------------------------*/
 .readmeLayout {
   max-width: 1120px;

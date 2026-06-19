@@ -1,0 +1,25 @@
+{
+  "icon": "/apps/brit-ready.png",
+  "accent": "#e11d48",
+  "tagline": "A gamified way to prepare for the Life in the UK Test — and to know when you're actually ready.",
+  "launchUrl": "https://brit-ready.vercel.app",
+  "launchLabel": "Start revising",
+  "why": "Preparing for the Life in the UK Test means memorising a sprawl of facts with no clear sense of when you've done enough. I built Brit Ready to fix both halves of that: make the learning feel like a game rather than a slog, and give an honest readiness signal so you only book the real exam once you'll pass it. It's an unofficial study aid, built by someone who went through it.",
+  "how": "It's a Next.js PWA styled with Tailwind CSS, with Zustand holding the learning and progress state on the client so everything works offline once installed. Questions mirror the real exam format, and a readiness model tracks your accuracy across topics to tell you when you're prepared.",
+  "stack": ["Next.js", "React", "Tailwind CSS", "Zustand", "PWA", "TypeScript"],
+  "features": [
+    {
+      "title": "Learn every fact",
+      "description": "The full body of test material, broken into bite-sized, gamified sessions instead of a wall of text."
+    },
+    {
+      "title": "Real exam format",
+      "description": "Practise under the same question style and timing as the official test, so the real thing feels familiar."
+    },
+    {
+      "title": "Readiness signal",
+      "description": "Tracks your accuracy across topics and tells you, honestly, when you're ready to book."
+    }
+  ],
+  "screenshots": ["/apps/brit-ready-shot.png"]
+}

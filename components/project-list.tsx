@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { MorphLink } from "@/components/morph-link"
 import type { Project } from "@/lib/projects"
 import styles from "./project-list.module.css"
@@ -277,59 +277,101 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
               <span className={styles.count}>{group.items.length}</span>
             </h2>
             {group.blurb ? <p className={styles.blurb}>{group.blurb}</p> : null}
-            <div className={styles.list}>
-              {group.items.map((project) => (
-                <MorphLink
-                  key={project.slug}
-                  href={`/projects/${project.slug}`}
-                  className={styles.row}
-                >
-                  {project.icon ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      className={styles.icon}
-                      src={project.icon}
-                      alt=""
-                      loading="lazy"
-                    />
-                  ) : (
-                    <span className={styles.monogram} aria-hidden>
-                      {project.name.charAt(0).toUpperCase()}
+            {group.key === "app" ? (
+              <div className={styles.appGrid}>
+                {group.items.map((project) => (
+                  <MorphLink
+                    key={project.slug}
+                    href={`/projects/${project.slug}`}
+                    className={styles.appTile}
+                    style={
+                      project.accent
+                        ? ({ "--app-accent": project.accent } as CSSProperties)
+                        : undefined
+                    }
+                  >
+                    <span
+                      className={styles.appIconWrap}
+                      style={{
+                        viewTransitionName: `app-icon-${project.slug}`,
+                      }}
+                    >
+                      {project.icon ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          className={styles.appIconImg}
+                          src={project.icon}
+                          alt=""
+                          loading="lazy"
+                          data-bleed={Boolean(
+                            project.icon && !project.icon.endsWith(".svg"),
+                          )}
+                        />
+                      ) : (
+                        <span className={styles.appMonogram} aria-hidden>
+                          {project.name.charAt(0).toUpperCase()}
+                        </span>
+                      )}
                     </span>
-                  )}
-                  <span className={styles.rowBody}>
-                    <span className={styles.rowHead}>
-                      <span
-                        className={styles.rowName}
-                        style={{
-                          viewTransitionName: `project-${project.slug}`,
-                        }}
-                      >
-                        {project.name}
+                    <span className={styles.appName}>{project.name}</span>
+                  </MorphLink>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.list}>
+                {group.items.map((project) => (
+                  <MorphLink
+                    key={project.slug}
+                    href={`/projects/${project.slug}`}
+                    className={styles.row}
+                  >
+                    {project.icon ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        className={styles.icon}
+                        src={project.icon}
+                        alt=""
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span className={styles.monogram} aria-hidden>
+                        {project.name.charAt(0).toUpperCase()}
                       </span>
-                      <span className={styles.rowMeta}>
-                        {project.stars > 0 ? (
-                          <span className={styles.stars}>
-                            ★ {project.stars}
-                          </span>
-                        ) : null}
-                        {project.language ? (
-                          <span className={styles.lang}>
-                            {project.language}
-                          </span>
-                        ) : null}
+                    )}
+                    <span className={styles.rowBody}>
+                      <span className={styles.rowHead}>
+                        <span
+                          className={styles.rowName}
+                          style={{
+                            viewTransitionName: `project-${project.slug}`,
+                          }}
+                        >
+                          {project.name}
+                        </span>
+                        <span className={styles.rowMeta}>
+                          {project.stars > 0 ? (
+                            <span className={styles.stars}>
+                              ★ {project.stars}
+                            </span>
+                          ) : null}
+                          {project.language ? (
+                            <span className={styles.lang}>
+                              {project.language}
+                            </span>
+                          ) : null}
+                        </span>
                       </span>
+                      {project.description ? (
+                        <p className={styles.rowDesc}>{project.description}</p>
+                      ) : null}
                     </span>
-                    {project.description ? (
-                      <p className={styles.rowDesc}>{project.description}</p>
-                    ) : null}
-                  </span>
-                </MorphLink>
-              ))}
-              {group.items.length % 2 === 1 ? (
-                <div className={styles.filler} aria-hidden />
-              ) : null}
-            </div>
+                  </MorphLink>
+                ))}
+                {group.items.length % 2 === 1 ? (
+                  <div className={styles.filler} aria-hidden />
+                ) : null}
+              </div>
+            )}
           </section>
         ))
       )}
