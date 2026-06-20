@@ -1,8 +1,0 @@
-{
-  "intro": null,
-  "features": [],
-  "install": "npm install -g @kud/am-i-admin-cli",
-  "examples": [
-    "am-i-admin          # human-readable verdict\nam-i-admin --raw    # bare boolean: true / false"
-  ]
-}

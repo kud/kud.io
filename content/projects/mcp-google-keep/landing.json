@@ -1,6 +1,0 @@
-{
-  "intro": null,
-  "features": [],
-  "install": "uv tool install git+https://github.com/kud/mcp-google-keep\nmcp-google-keep-setup\nclaude mcp add google-keep mcp-google-keep",
-  "examples": []
-}

@@ -1,8 +1,0 @@
-{
-  "intro": "Browse and triage unresolved GitHub PR review threads from your terminal with fzf.",
-  "features": [],
-  "install": "gh extension install .",
-  "examples": [
-    "gh pr-comments                 # infer repo and current PR\ngh pr-comments <number>        # browse a specific PR number\ngh pr-comments -R owner/repo   # target a specific repository\ngh pr-comments -f src -a @alice --since 2024-01-01   # pre-filter on launch"
-  ]
-}

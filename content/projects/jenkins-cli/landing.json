@@ -1,6 +1,0 @@
-{
-  "intro": null,
-  "features": [],
-  "install": "npm i -g @kud/jenkins-cli",
-  "examples": []
-}

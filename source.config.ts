@@ -9,6 +9,14 @@ export const docs = defineDocs({
   dir: "content/projects",
 })
 
+// Each repo's README, synced to content/readmes/<slug>.mdx, is rendered as the
+// project's landing page (a nicer version of the README — the repo is the source
+// of truth). Kept in its own collection so it stays out of the docs sidebar, the
+// docs routes, and the docs search index.
+export const readmes = defineDocs({
+  dir: "content/readmes",
+})
+
 // READMEs frequently build their logo/hero with raw HTML (<div align="center">
 // <img>); rehype-raw re-parses that embedded HTML so it renders instead of
 // being stripped. `passThrough` keeps MDX's own nodes intact (rehype-raw

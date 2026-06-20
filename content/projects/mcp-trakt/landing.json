@@ -1,6 +1,0 @@
-{
-  "intro": "A Trakt MCP server with 53 tools for TV show and movie tracking, sync, ratings, watchlists, and checkins — straight from Claude. 🎬📺",
-  "features": [],
-  "install": "npx @kud/mcp-trakt@latest setup",
-  "examples": []
-}

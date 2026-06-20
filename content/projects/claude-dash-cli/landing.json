@@ -1,6 +1,0 @@
-{
-  "intro": "A fast, minimal terminal dashboard for monitoring your Claude Code sessions in real time — built entirely in Rust.",
-  "features": [],
-  "install": "cargo install claude-dash\nclaude-dash install",
-  "examples": []
-}

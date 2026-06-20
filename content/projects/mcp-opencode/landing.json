@@ -1,6 +1,0 @@
-{
-  "intro": "Query any opencode model from your AI assistant — no API key required.",
-  "features": [],
-  "install": "npm install -g @kud/mcp-opencode",
-  "examples": []
-}

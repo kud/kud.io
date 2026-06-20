@@ -84,6 +84,21 @@
   max-width: 760px;
 }
 
+/* Centred project icon at the top of the README-landing hero (when the repo
+   ships assets/icon.*). The README's own leading icon is stripped at sync so it
+   isn't shown twice. */
+.readmeIcon {
+  display: block;
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 22px;
+}
+.readmeIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .back {
   position: absolute;
   top: 28px;
@@ -236,50 +251,6 @@
   background: var(--surface-2);
 }
 
-.stats {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 40px;
-  flex-wrap: wrap;
-}
-
-.stat {
-  text-align: center;
-}
-
-.statValue {
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  /* Same gradient-clip descender guard for values like "JavaScript"/"Python". */
-  padding-bottom: 0.12em;
-  background: linear-gradient(
-    135deg,
-    var(--text) 0%,
-    var(--primary-light) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.statLabel {
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  margin-top: 4px;
-}
-
-.statDivider {
-  width: 1px;
-  height: 36px;
-  background: var(--border);
-}
-
 /* Sections ------------------------------------------------------------------*/
 .section {
   position: relative;
@@ -310,97 +281,6 @@
   color: var(--text);
   line-height: 1.1;
   margin: 0;
-}
-
-.sectionLead {
-  margin: 14px auto 0;
-  max-width: 460px;
-  color: var(--muted);
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-/* The README lede — bigger and brighter than a section sub, so it actually
-   invites reading instead of reading like a footnote. */
-.lede {
-  margin: 0 auto;
-  max-width: 620px;
-  color: var(--text);
-  font-size: 21px;
-  line-height: 1.65;
-}
-
-/* Quick-start terminal ------------------------------------------------------*/
-.terminalWrap {
-  max-width: 680px;
-  margin: 0 auto;
-}
-
-.terminal {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow:
-    0 0 0 1px rgba(194, 112, 61, 0.08),
-    0 28px 60px -28px rgba(0, 0, 0, 0.85);
-}
-
-.terminalBar {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 12px 16px;
-  background: var(--surface-2);
-  border-bottom: 1px solid var(--border);
-}
-
-.tdot {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #2a2a45;
-}
-
-.terminalLabel {
-  margin-left: 10px;
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: var(--muted);
-  font-family: var(--mono);
-}
-
-.copy {
-  margin-left: auto;
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--muted);
-  font-size: 12px;
-  padding: 5px 12px;
-  border-radius: 7px;
-  cursor: pointer;
-  transition:
-    color 0.15s,
-    border-color 0.15s;
-}
-
-.copy:hover {
-  color: var(--text);
-  border-color: var(--primary);
-}
-
-.terminalBody {
-  margin: 0;
-  padding: 20px;
-  overflow-x: auto;
-}
-
-.terminalBody code {
-  font-family: var(--mono);
-  font-size: 13.5px;
-  line-height: 1.85;
-  color: #c7d2fe;
-  white-space: pre;
 }
 
 /* Features ------------------------------------------------------------------*/
@@ -903,8 +783,9 @@
   }
 }
 
-/* Inline code (language tags, commands) → neutral pills */
-.readme :global(code) {
+/* Inline code (language tags, commands) → neutral pills. Scoped to :not(pre) so
+   block code inside Fumadocs' <pre><code> shiki blocks keeps its own styling. */
+.readme :global(:not(pre) > code) {
   font-family: var(--mono);
   font-size: 11.5px;
   font-weight: 600;
@@ -915,6 +796,38 @@
   border: 1px solid var(--border);
   color: var(--muted);
   white-space: nowrap;
+}
+
+/* Code blocks on the README landing get terminal chrome — a title bar with the
+   classic traffic-light dots — so CLI projects read like a terminal. Applies to
+   every fenced block here (the language isn't exposed to target only `console`),
+   which suits these CLI-leaning READMEs; the docs pages are untouched. */
+.readme :global(figure.shiki) {
+  position: relative;
+  padding-top: 38px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.readme :global(figure.shiki)::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 38px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+.readme :global(figure.shiki)::after {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 16px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff5f57;
+  box-shadow:
+    17px 0 0 #febc2e,
+    34px 0 0 #28c840;
 }
 
 /* Lead blockquote → callout */

@@ -1,4 +1,4 @@
-import { docs } from "collections/server"
+import { docs, readmes } from "collections/server"
 import { loader } from "fumadocs-core/source"
 import type { Root, Node, Folder } from "fumadocs-core/page-tree"
 
@@ -8,6 +8,14 @@ import type { Root, Node, Folder } from "fumadocs-core/page-tree"
 export const source = loader({
   baseUrl: "/projects",
   source: docs.toFumadocsSource(),
+})
+
+// Each repo's README, synced to content/readmes/<slug>.md, lives in its own
+// collection so it never appears in the docs sidebar, docs routes, or docs
+// search — it exists purely to be rendered as the project landing page.
+export const readmeSource = loader({
+  baseUrl: "/projects",
+  source: readmes.toFumadocsSource(),
 })
 
 const isFolder = (node: Node): node is Folder => node.type === "folder"
@@ -47,9 +55,10 @@ export const getProjectDocsTree = (slug: string): Root => {
   return { name: docsFolder.name, children }
 }
 
-// The project's README, synced to docs/index — rendered as the landing's
-// product presentation.
-export const getProjectReadme = (slug: string) => source.getPage([slug, "docs"])
+// The project's README, rendered as the landing page (a nicer version of the
+// README). Sourced from the dedicated readmes collection so it works even when a
+// repo also ships its own docs/index.mdx.
+export const getProjectReadme = (slug: string) => readmeSource.getPage([slug])
 
 // True only when a project ships docs beyond the README index (a real docs/
 // folder), which is when the landing should offer a "Read the docs" link.

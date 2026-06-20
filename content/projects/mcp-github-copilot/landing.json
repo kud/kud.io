@@ -1,6 +1,0 @@
-{
-  "intro": "Query any GitHub Copilot model from your AI assistant — no extra API key required.",
-  "features": [],
-  "install": "npm install -g @kud/mcp-github-copilot",
-  "examples": []
-}

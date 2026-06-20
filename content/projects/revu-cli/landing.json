@@ -1,8 +1,0 @@
-{
-  "intro": "Interactive terminal diff reviewer — annotate diffs, export reviews to Markdown.",
-  "features": [],
-  "install": "npm install -g @kud/revu-cli",
-  "examples": [
-    "revu                  # review changes in the current repo\nrevu src/foo.ts       # review a specific file\nrevu --against main   # review commits between a branch and HEAD (PR mode)"
-  ]
-}

@@ -1,6 +1,0 @@
-{
-  "intro": "An MCP server for Harness FME (Split.io) — read, toggle, and manage feature flags and rule-based segments from your AI assistant. 28 tools with a confirm: true safety guard on every destructive operation.",
-  "features": [],
-  "install": "claude mcp add --transport stdio --scope user harness-fme \\\n  --env MCP_HARNESS_FME_API_KEY=your_api_key \\\n  -- npx --yes @kud/mcp-harness-fme@latest",
-  "examples": []
-}

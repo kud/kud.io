@@ -1,6 +1,0 @@
-{
-  "intro": "A Jenkins MCP server with 38 tools for managing jobs, builds, nodes, views, and CI/CD workflows.",
-  "features": [],
-  "install": "claude mcp add --transport stdio --scope user jenkins \\\n  --env MCP_JENKINS_URL=https://your-jenkins.com \\\n  --env MCP_JENKINS_USER=your_username \\\n  --env MCP_JENKINS_API_TOKEN=your_token \\\n  -- npx --yes @kud/mcp-jenkins@latest",
-  "examples": []
-}

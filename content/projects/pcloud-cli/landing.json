@@ -1,6 +1,0 @@
-{
-  "intro": "Restore deleted pCloud files and rewind versions, all from the terminal.",
-  "features": [],
-  "install": "npm install -g @kud/pcloud-cli",
-  "examples": []
-}

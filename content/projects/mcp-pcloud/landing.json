@@ -1,6 +1,0 @@
-{
-  "intro": "An MCP server for pCloud — manage trash, files, sharing, public links, and file rewind recovery from your AI assistant.",
-  "features": [],
-  "install": "{\n  \"mcpServers\": {\n    \"mcp-pcloud\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@kud/mcp-pcloud\"]\n    }\n  }\n}",
-  "examples": []
-}

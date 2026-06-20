@@ -1,6 +1,0 @@
-{
-  "intro": "A thin, scriptable wrapper around macOS pmset for switching your Intel Mac's GPU — with an interactive TUI.",
-  "features": [],
-  "install": "npm install -g @kud/gpuswitch-cli",
-  "examples": []
-}

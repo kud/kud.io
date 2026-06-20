@@ -1,6 +1,0 @@
-{
-  "intro": "A curated collection of Claude Code plugins for kud's MCP servers.",
-  "features": [],
-  "install": "/plugin marketplace add kud/claude-plugins  # registers as @kud",
-  "examples": []
-}

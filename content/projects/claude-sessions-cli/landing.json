@@ -1,6 +1,0 @@
-{
-  "intro": null,
-  "features": [],
-  "install": "npm install -g @kud/claude-sessions-cli@next",
-  "examples": []
-}

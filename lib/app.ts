@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { capitalCase } from "change-case"
-import type { Feature } from "./landing"
+
+export type Feature = { title: string; description: string }
 
 // Curated content for a `kud-site-app` project — the deployed web apps that lead
 // the projects list as big liquid-glass launcher tiles and get their own landing.

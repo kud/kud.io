@@ -1,6 +1,0 @@
-{
-  "intro": "Search, discuss, and manage Mozilla/Firefox bugs via the Bugzilla REST API.",
-  "features": [],
-  "install": "npx @kud/mcp-bugzilla",
-  "examples": []
-}

@@ -1,6 +1,0 @@
-{
-  "intro": "November is a dark colour theme for Visual Studio Code, pairing a deep slate background with warm amber accents. It ships a single variant: November (vs-dark).",
-  "features": [],
-  "install": "code --install-extension kud.november-vscode",
-  "examples": []
-}
