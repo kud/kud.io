@@ -3,13 +3,14 @@ title: "revu-cli"
 description: "🔍 Review code diffs in your terminal — annotate lines, export to Markdown for humans & AI"
 ---
 
-Interactive terminal diff reviewer — annotate diffs, export reviews to Markdown.
+## Features
 
-<p align="center">
-  <a href="https://asciinema.org/a/SitNPy6fQpidFCcH">
-    <img src="https://raw.githubusercontent.com/kud/revu-cli/HEAD/assets/demo.gif" alt="revu demo" />
-  </a>
-</p>
+- **Line and range annotations** — comment on a single line or select a range and annotate the whole block.
+- **Hunk and file navigation** — jump between hunks, annotations, and files without leaving the keyboard.
+- **PR mode** — review every commit between a branch and `HEAD` with `--against`.
+- **Markdown export** — export annotations to `revu-review.md`, with an optional AI context header, by pressing `e`.
+- **Persistent reviews** — annotations autosave to `.revu.json` and survive across sessions.
+- **Themeable** — switch theme and view mode from an in-app settings panel, saved to your user config.
 
 ## Install
 
@@ -19,16 +20,20 @@ npm install -g @kud/revu-cli
 
 ## Usage
 
-```sh
-revu                  # review changes in the current repo
-revu src/foo.ts       # review a specific file
-revu --against main   # review commits between a branch and HEAD (PR mode)
+```console
+$ revu                  # review staged/unstaged changes in the current repo
+$ revu src/foo.ts       # review a specific file
+$ revu --against main   # review all commits between a branch and HEAD (PR mode)
 ```
+
+Inside the reviewer, move with `↑↓` / `j k`, press `↵` to annotate a line, hold `shift` to select a range, and `e` to export to `revu-review.md`.
 
 ## Development
 
 ```sh
-mise run dev          # run in hot-reload mode
-mise run start        # run once
-mise run build        # compile a standalone binary
+git clone https://github.com/kud/revu-cli.git
+cd revu-cli
+mise install
+mise run dev    # run in hot-reload mode
+mise run build  # compile a standalone binary
 ```
