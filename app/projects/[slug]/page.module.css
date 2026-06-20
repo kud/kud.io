@@ -51,7 +51,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 100px 24px 88px;
+  padding: 100px 24px 40px;
   overflow: hidden;
   background:
     radial-gradient(
@@ -603,7 +603,7 @@
 .readmeLayout {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 24px 24px 88px;
+  padding: 8px 24px 88px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 200px;
   gap: 56px;
