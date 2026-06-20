@@ -21,7 +21,7 @@ description: "Brit Ready — a gamified, non-official PWA for the Life in the UK
 
 ## 🔗 Live Demo
 
-**[brit-ready.vercel.app](https://brit-ready.vercel.app)**
+**[brit-ready.kud.io](https://brit-ready.kud.io)**
 
 No sign-up. Open it, start practising. Install it to your home screen for offline access.
 
