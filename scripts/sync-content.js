@@ -342,6 +342,14 @@ const syncRaycastExtension = async (slug) => {
   }
 
   const icon = meta.icons?.dark || meta.icons?.light || null
+  const storeUrl =
+    meta.store_url ?? `https://www.raycast.com/${RAYCAST_AUTHOR}/${slug}`
+  // The Raycast deep link the store's "Install Extension" button uses — opens
+  // the extension straight in the Raycast app (raycast://extensions/<handle>/<name>).
+  const installUrl = `${storeUrl.replace(
+    "https://www.raycast.com/",
+    "raycast://extensions/",
+  )}?source=webstore`
 
   return {
     icon,
@@ -354,8 +362,8 @@ const syncRaycastExtension = async (slug) => {
         category.toLowerCase().replace(/\s+/g, "-"),
       ),
       repoUrl: `https://github.com/${RAYCAST_REPO}/tree/main/${dir}`,
-      storeUrl:
-        meta.store_url ?? `https://www.raycast.com/${RAYCAST_AUTHOR}/${slug}`,
+      storeUrl,
+      installUrl,
       downloads: meta.download_count ?? 0,
       updatedAt: meta.updated_at
         ? new Date(meta.updated_at * 1000).toISOString()

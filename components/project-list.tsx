@@ -357,7 +357,7 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
                           ) : null}
                           {project.downloads ? (
                             <span className={styles.downloads}>
-                              ↓ {project.downloads.toLocaleString()}
+                              {project.downloads.toLocaleString()} installs
                             </span>
                           ) : null}
                           {project.language ? (

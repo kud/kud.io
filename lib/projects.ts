@@ -21,9 +21,11 @@ export type Project = {
   language: string | null
   license: string | null
   pushedAt: string
-  // Raycast extensions only: link to the Raycast store and a download count
-  // shown in place of stars (they have no GitHub repo of their own).
+  // Raycast extensions only: links to the Raycast store + the raycast:// install
+  // deep link, and a download count shown in place of stars (they have no GitHub
+  // repo of their own).
   storeUrl?: string | null
+  installUrl?: string | null
   downloads?: number | null
 }
 

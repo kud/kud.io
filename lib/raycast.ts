@@ -12,6 +12,7 @@ type RaycastRecord = {
   tags: string[]
   repoUrl: string
   storeUrl: string
+  installUrl: string
   downloads: number
   updatedAt: string
 }
@@ -49,6 +50,7 @@ export const getRaycastProjects = (): Project[] => {
     // The store page is the natural "homepage" for an extension.
     homepage: record.storeUrl,
     storeUrl: record.storeUrl,
+    installUrl: record.installUrl,
     downloads: record.downloads,
     // Raycast has no stars/language; the card shows the download count instead.
     stars: 0,

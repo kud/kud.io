@@ -9,6 +9,7 @@
     ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/1loc",
     "storeUrl": "https://www.raycast.com/kud/1loc",
+    "installUrl": "raycast://extensions/kud/1loc?source=webstore",
     "downloads": 1473,
     "updatedAt": "2026-04-03T10:23:38.000Z"
   },
@@ -23,6 +24,7 @@
     ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/nerd-font-picker",
     "storeUrl": "https://www.raycast.com/kud/nerd-font-picker",
+    "installUrl": "raycast://extensions/kud/nerd-font-picker?source=webstore",
     "downloads": 63,
     "updatedAt": "2026-05-13T12:28:26.000Z"
   },
@@ -39,6 +41,7 @@
     ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/whimsical",
     "storeUrl": "https://www.raycast.com/kud/whimsical",
+    "installUrl": "raycast://extensions/kud/whimsical?source=webstore",
     "downloads": 440,
     "updatedAt": "2025-11-03T15:21:54.000Z"
   },
@@ -53,6 +56,7 @@
     ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/thermo-convert",
     "storeUrl": "https://www.raycast.com/kud/thermoconvert",
+    "installUrl": "raycast://extensions/kud/thermoconvert?source=webstore",
     "downloads": 47,
     "updatedAt": "2026-04-24T14:10:48.000Z"
   },
@@ -64,6 +68,7 @@
     "tags": [],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/vlc",
     "storeUrl": "https://www.raycast.com/kud/vlc",
+    "installUrl": "raycast://extensions/kud/vlc?source=webstore",
     "downloads": 410,
     "updatedAt": "2025-11-12T07:27:52.000Z"
   },
@@ -78,6 +83,7 @@
     ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/gandi",
     "storeUrl": "https://www.raycast.com/kud/gandi",
+    "installUrl": "raycast://extensions/kud/gandi?source=webstore",
     "downloads": 34,
     "updatedAt": "2026-04-03T13:13:17.000Z"
   },
@@ -92,6 +98,7 @@
     ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/uk-bank-holidays",
     "storeUrl": "https://www.raycast.com/kud/uk-bank-holidays",
+    "installUrl": "raycast://extensions/kud/uk-bank-holidays?source=webstore",
     "downloads": 128,
     "updatedAt": "2024-05-14T12:16:57.000Z"
   },
@@ -103,6 +110,7 @@
     "tags": [],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/localsend",
     "storeUrl": "https://www.raycast.com/kud/localsend",
+    "installUrl": "raycast://extensions/kud/localsend?source=webstore",
     "downloads": 1654,
     "updatedAt": "2026-04-24T13:11:14.000Z"
   },
@@ -118,6 +126,7 @@
     ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/espanso",
     "storeUrl": "https://www.raycast.com/kud/espanso",
+    "installUrl": "raycast://extensions/kud/espanso?source=webstore",
     "downloads": 1332,
     "updatedAt": "2026-05-28T04:25:05.000Z"
   }

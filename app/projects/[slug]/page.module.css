@@ -740,8 +740,11 @@
   text-underline-offset: 3px;
 }
 
-/* Entries become a ruled two-column card grid, exactly like /projects */
-.readme :global(ul) {
+/* Top-level unordered lists become a ruled two-column card grid, exactly like
+   /projects. Scoped to ul:not(li ul) so ordered lists and nested sub-lists keep
+   normal prose styling (a card box round an <ol>'s items would push its decimal
+   markers out into the gutter, and a nested list would become a stray table). */
+.readme :global(ul:not(li ul)) {
   list-style: none;
   padding: 0;
   margin: 0 0 8px;
@@ -753,7 +756,7 @@
   border-radius: 14px;
   overflow: hidden;
 }
-.readme :global(li) {
+.readme :global(ul:not(li ul) > li) {
   position: relative;
   margin: 0;
   padding: 16px 18px;
@@ -764,13 +767,13 @@
   cursor: pointer;
   transition: background 0.15s;
 }
-.readme :global(li:hover) {
+.readme :global(ul:not(li ul) > li:hover) {
   background: var(--surface-2);
 }
 
 /* The whole card is clickable — the entry's first link (its name → website)
    is stretched to cover the card. */
-.readme :global(li a:first-of-type)::after {
+.readme :global(ul:not(li ul) > li a:first-of-type)::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -778,7 +781,7 @@
 
 /* Diagonal-hatch filler for the empty trailing cell when a list is odd, like
    the /projects grid. */
-.readme :global(ul:has(> li:last-child:nth-child(odd)))::after {
+.readme :global(ul:not(li ul):has(> li:last-child:nth-child(odd)))::after {
   content: "";
   background-color: var(--surface);
   background-image: repeating-linear-gradient(
@@ -791,12 +794,42 @@
 }
 
 @media (max-width: 560px) {
-  .readme :global(ul) {
+  .readme :global(ul:not(li ul)) {
     grid-template-columns: 1fr;
   }
-  .readme :global(ul)::after {
+  .readme :global(ul:not(li ul))::after {
     display: none;
   }
+}
+
+/* Ordered lists and any list nested inside a list item render as ordinary prose
+   lists (markers inline, no card boxes) — the card grid above is only for
+   top-level unordered feature/link lists. */
+.readme :global(ol) {
+  margin: 0 0 16px;
+  padding-left: 24px;
+  list-style: decimal;
+}
+.readme :global(li ul) {
+  margin: 6px 0;
+  padding-left: 22px;
+  list-style: disc;
+}
+.readme :global(li ol) {
+  margin: 6px 0;
+  padding-left: 22px;
+  list-style: decimal;
+}
+.readme :global(ol > li),
+.readme :global(li ul > li),
+.readme :global(li ol > li) {
+  margin: 4px 0;
+  padding: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.65;
+  cursor: auto;
 }
 
 /* Inline code (language tags, commands) → neutral pills. Scoped to :not(pre) so

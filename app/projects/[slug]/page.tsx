@@ -262,9 +262,16 @@ const ReadmeLanding = ({
           <div className={styles.actions}>
             {isRaycast ? (
               <>
+                {project.installUrl ? (
+                  // raycast:// protocol link — opens the extension in the Raycast
+                  // app; no target=_blank so it doesn't leave a blank tab behind.
+                  <a href={project.installUrl} className={styles.primary}>
+                    Install Extension ↓
+                  </a>
+                ) : null}
                 <a
                   href={project.storeUrl ?? project.homepage ?? project.repoUrl}
-                  className={styles.primary}
+                  className={styles.secondary}
                   target="_blank"
                   rel="noreferrer"
                 >
