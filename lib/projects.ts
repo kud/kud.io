@@ -57,7 +57,7 @@ type Repo = {
   pushed_at: string
 }
 
-const ghHeaders = (): HeadersInit => {
+export const ghHeaders = (): HeadersInit => {
   const token = process.env.GITHUB_TOKEN
   return {
     Accept: "application/vnd.github+json",

@@ -12,6 +12,7 @@ import {
   BlueskyIcon,
 } from "@/components/social-icons"
 import { ProjectList } from "@/components/project-list"
+import { Contributions } from "@/components/contributions"
 import styles from "./page.module.css"
 
 export const metadata: Metadata = {
@@ -180,6 +181,8 @@ const ProjectsIndex = async () => {
       ) : (
         <ProjectList groups={groups} />
       )}
+
+      <Contributions />
     </main>
   )
 }
