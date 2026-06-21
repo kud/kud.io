@@ -3,52 +3,46 @@ title: "mcp-github-copilot"
 description: "🤖 Query any GitHub Copilot model from Claude — no extra API key, uses your Copilot login"
 ---
 
-```
- ██████╗ ██╗████████╗██╗  ██╗██╗   ██╗██████╗      ██████╗ ██████╗ ██████╗ ██╗██╗      ██████╗ ████████╗
-██╔════╝ ██║╚══██╔══╝██║  ██║██║   ██║██╔══██╗    ██╔════╝██╔═══██╗██╔══██╗██║██║     ██╔═══██╗╚══██╔══╝
-██║  ███╗██║   ██║   ███████║██║   ██║██████╔╝    ██║     ██║   ██║██████╔╝██║██║     ██║   ██║   ██║
-██║   ██║██║   ██║   ██╔══██║██║   ██║██╔══██╗    ██║     ██║   ██║██╔═══╝ ██║██║     ██║   ██║   ██║
-╚██████╔╝██║   ██║   ██║  ██║╚██████╔╝██████╔╝    ╚██████╗╚██████╔╝██║     ██║███████╗╚██████╔╝   ██║
- ╚═════╝ ╚═╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝      ╚═════╝ ╚═════╝╚═╝     ╚═╝╚══════╝ ╚═════╝    ╚═╝
-```
+## Features
 
-<div align="center">
-
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-20+-green?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![MCP](https://img.shields.io/badge/MCP-1.27-purple?logo=anthropic)](https://modelcontextprotocol.io/)
-[![npm](https://img.shields.io/npm/v/@kud/mcp-github-copilot?color=CB3837&logo=npm)](https://www.npmjs.com/package/@kud/mcp-github-copilot)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-
-**Query any GitHub Copilot model from your AI assistant — no extra API key required.**
-
-</div>
-
----
+- **No extra API key** — uses your existing GitHub Copilot CLI credentials automatically.
+- **Any model** — target GPT-5, Codex, Claude Sonnet, or any model your subscription grants.
+- **File and image attachments** — attach local files or base64 blobs alongside a prompt.
+- **Model discovery** — list available models with context window limits and billing multipliers.
+- **Streaming progress** — sends MCP progress notifications for each streamed chunk.
 
 ## Install
 
-```bash
+```sh
 npm install -g @kud/mcp-github-copilot
 ```
 
+## Usage
+
+Add the server to your MCP client configuration:
+
+```json
+{
+  "mcpServers": {
+    "mcp-github-copilot": {
+      "command": "mcp-github-copilot"
+    }
+  }
+}
+```
+
+### Tools
+
+| Tool          | Description                                                                                                                                         |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `query`       | Send a prompt to a Copilot model and return the response. Accepts an optional `model` name and optional `attachments` (file paths or base64 blobs). |
+| `list_models` | List all available Copilot models with capabilities, context window limits, and billing multipliers.                                                |
+
 ## Development
 
-```bash
+```sh
 git clone https://github.com/kud/mcp-github-copilot.git
 cd mcp-github-copilot
 npm install
-npm run build
-npm test
+npm run dev
 ```
-
-Use the MCP Inspector to test tools interactively:
-
-```bash
-npm run inspect
-# Opens http://localhost:5173
-```
-
----
-
-📚 **Full documentation → https://kud.io/projects/mcp-github-copilot/docs**

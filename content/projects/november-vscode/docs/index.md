@@ -3,25 +3,19 @@ title: "november-vscode"
 description: "🌙 Dark VS Code theme with warm amber accents — calm, focused and easy on the eyes"
 ---
 
-<img src="https://raw.githubusercontent.com/kud/november-vscode/main/images/icon.png" alt="November icon" width="128" />
+## Features
 
-# November
+- **Warm amber accents** — a signature amber palette that keeps highlights visible without eye strain
+- **Deep slate background** — a rich, near-neutral dark base that reduces glare during long sessions
+- **Single focused variant** — one well-tuned `vs-dark` theme rather than a sprawling set of half-finished alternatives
+- **Consistent syntax** — carefully mapped token colours across JavaScript, TypeScript, HTML, CSS, and more
+- **Soft UI chrome** — activity bar, sidebar, and panel tones chosen to recede and let code take centre stage
 
-> A dark VS Code theme with warm amber accents — calm, focused, and easy on the eyes.
-
-![Version](https://img.shields.io/visual-studio-marketplace/v/kud.november-vscode?style=flat-square&color=ed7249&labelColor=21222c)
-![Installs](https://img.shields.io/visual-studio-marketplace/i/kud.november-vscode?style=flat-square&color=ed7249&labelColor=21222c)
-![Rating](https://img.shields.io/visual-studio-marketplace/r/kud.november-vscode?style=flat-square&color=ed7249&labelColor=21222c)
-
-![November theme screenshot](https://raw.githubusercontent.com/kud/november-vscode/main/images/screenshot.png)
-
----
-
-November is a dark colour theme for Visual Studio Code, pairing a deep slate background with warm amber accents. It ships a single variant: **November** (`vs-dark`).
+![November theme screenshot](https://raw.githubusercontent.com/kud/november-vscode/HEAD/images/screenshot.png)
 
 ## Install
 
-**Via Marketplace** — open the Extensions view (`Cmd+Shift+X`), search **November**, and install. Then `Cmd+Shift+P` → **Preferences: Color Theme** → **November**.
+**Via Marketplace** — open the Extensions view (`Cmd+Shift+X`), search **November**, and click Install.
 
 **Via CLI**
 
@@ -29,6 +23,23 @@ November is a dark colour theme for Visual Studio Code, pairing a deep slate bac
 code --install-extension kud.november-vscode
 ```
 
----
+## Usage
 
-📚 **Full documentation → https://kud.io/projects/november-vscode/docs**
+After installing, open the Command Palette (`Cmd+Shift+P`), run **Preferences: Color Theme**, and select **November**.
+
+## Development
+
+```sh
+git clone https://github.com/kud/november-vscode.git
+cd november-vscode
+npm install
+```
+
+Edit `themes/november.json` to adjust colours. Press `F5` in VS Code to open an Extension Development Host and preview changes live.
+
+| Script                  | Description                                 |
+| ----------------------- | ------------------------------------------- |
+| `npm run package`       | Build a `.vsix` package into `build/`       |
+| `npm run install-ext`   | Package and install locally                 |
+| `npm run release:patch` | Bump patch version, tag, and push           |
+| `npm run marketplace`   | Open the VS Code Marketplace publisher page |

@@ -848,8 +848,14 @@
 /* Centre Fumadocs' copy button in the faux terminal bar — it defaults to
    `top-3`, which drops it onto the divider line, misaligned with the dots. */
 .readme :global(figure.shiki button[aria-label="Copy Text"]) {
-  top: 7px;
+  top: 6px;
   right: 12px;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 /* Lead blockquote → callout */

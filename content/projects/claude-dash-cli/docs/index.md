@@ -48,7 +48,3 @@ cd claude-dash-cli
 cargo build
 cargo run
 ```
-
----
-
-📚 **Full documentation → https://kud.io/projects/claude-dash-cli/docs**
