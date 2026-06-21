@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { MorphLink } from "@/components/morph-link"
 import type { Project } from "@/lib/projects"
+import { isAppCategory } from "@/lib/categories"
 import styles from "./project-list.module.css"
 
 type Group = {
@@ -268,7 +269,13 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
         visibleGroups.map((group) => (
           <section
             key={group.key}
-            id={group.key === "app" ? "apps" : undefined}
+            id={
+              group.key === "app"
+                ? "apps"
+                : group.key === "desktop"
+                  ? "desktop"
+                  : undefined
+            }
             className={styles.section}
             data-cat={group.key}
           >
@@ -278,7 +285,7 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
               <span className={styles.count}>{group.items.length}</span>
             </h2>
             {group.blurb ? <p className={styles.blurb}>{group.blurb}</p> : null}
-            {group.key === "app" ? (
+            {isAppCategory(group.key) ? (
               <div className={styles.appGrid}>
                 {group.items.map((project) => (
                   <MorphLink

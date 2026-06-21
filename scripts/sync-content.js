@@ -236,7 +236,22 @@ const syncRepoDocs = async (slug, tree) => {
   const docFiles = tree.filter(
     (node) => node.type === "blob" && /^docs\/.+\.(mdx?|json)$/.test(node.path),
   )
-  for (const file of docFiles) {
+  // Prefer .mdx over a legacy .md sibling (GitHub Pages leftovers): drop any
+  // docs/<name>.md that has a docs/<name>.mdx alongside it, so the stale Pages
+  // index can't shadow the authored docs or collide on the same route.
+  const mdxStems = new Set(
+    docFiles
+      .filter((file) => file.path.endsWith(".mdx"))
+      .map((file) => file.path.slice(0, -".mdx".length)),
+  )
+  const liveDocFiles = docFiles.filter(
+    (file) =>
+      !(
+        file.path.endsWith(".md") &&
+        mdxStems.has(file.path.slice(0, -".md".length))
+      ),
+  )
+  for (const file of liveDocFiles) {
     const text = await rawFile(slug, file.path)
     if (!text) continue
     const rel = file.path.replace(/^docs\//, "")

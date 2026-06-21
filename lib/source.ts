@@ -60,8 +60,10 @@ export const getProjectDocsTree = (slug: string): Root => {
 // repo also ships its own docs/index.mdx.
 export const getProjectReadme = (slug: string) => readmeSource.getPage([slug])
 
-// True only when a project ships docs beyond the README index (a real docs/
-// folder), which is when the landing should offer a "Read the docs" link.
+// True when a project ships authored docs — i.e. .mdx under docs/. A repo with no
+// docs/ gets a generated README fallback (docs/index.md), which must NOT count, or
+// the landing would link to a page that just re-shows the README. So we key off the
+// .mdx extension: authored docs are .mdx, the README fallback is .md.
 export const projectHasExtraDocs = (slug: string): boolean =>
   source
     .getPages()
@@ -69,5 +71,5 @@ export const projectHasExtraDocs = (slug: string): boolean =>
       (page) =>
         page.slugs[0] === slug &&
         page.slugs[1] === "docs" &&
-        page.slugs.length > 2,
+        page.path.endsWith(".mdx"),
     )

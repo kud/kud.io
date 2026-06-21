@@ -13,13 +13,14 @@ documentation lives in `docs/`.
 
 ## 1. Inclusion & category — GitHub topics
 
-| Topic              | Effect                                                                                               |
-| ------------------ | ---------------------------------------------------------------------------------------------------- |
-| `kud-site`         | **Required.** Includes the repo on kud.io/projects.                                                  |
-| `kud-site-<group>` | Section. One of: `app`, `cli`, `mcp`, `claude`, `lib`, `ui`, `vscode`, `theme`, `other`.             |
-| `kud-site-app`     | A deployed web app — gets the icon launcher tile + an app landing (uses `app.json`, not the README). |
-| `kud-site-readme`  | Flag: the README **is** the product (curated lists) — rendered in full, no docs route.               |
-| `kud-site-tag-*`   | Content tags (e.g. `kud-site-tag-ai`) — surfaced as filterable chips.                                |
+| Topic              | Effect                                                                                                                                                                                                                                                                                                               |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `kud-site`         | **Required.** Includes the repo on kud.io/projects.                                                                                                                                                                                                                                                                  |
+| `kud-site-<group>` | Section. One of: `app`, `desktop`, `cli`, `mcp`, `claude`, `lib`, `ui`, `vscode`, `theme`, `other`.                                                                                                                                                                                                                  |
+| `kud-site-app`     | A deployed web app — gets the icon launcher tile + an app landing (uses `app.json`, not the README).                                                                                                                                                                                                                 |
+| `kud-site-desktop` | A native desktop app (e.g. Tauri) — shares the launcher tile + app landing with `kud-site-app`. Set `launchLabel`/`launchUrl` (e.g. "Download for macOS") and `ctaSubtitle` in `app.json` so the copy isn't browser-specific. Empty `app.json` → falls back to the README (lets an RFC/vote repo list from day one). |
+| `kud-site-readme`  | Flag: the README **is** the product (curated lists) — rendered in full, no docs route.                                                                                                                                                                                                                               |
+| `kud-site-tag-*`   | Content tags (e.g. `kud-site-tag-ai`) — surfaced as filterable chips.                                                                                                                                                                                                                                                |
 
 No category topic → it falls into **CLIs & Tools** by default. Once tagged, the
 repo appears on kud.io within the hour (and on each push, via the refresh

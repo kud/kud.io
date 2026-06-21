@@ -20,6 +20,8 @@ export type AppMeta = {
   screenshots: string[]
   launchUrl: string | null
   launchLabel: string | null
+  ctaTitle: string | null
+  ctaSubtitle: string | null
 }
 
 const EMPTY: AppMeta = {
@@ -34,6 +36,8 @@ const EMPTY: AppMeta = {
   screenshots: [],
   launchUrl: null,
   launchLabel: null,
+  ctaTitle: null,
+  ctaSubtitle: null,
 }
 
 export const getApp = (slug: string): AppMeta => {
@@ -55,6 +59,8 @@ export const getApp = (slug: string): AppMeta => {
       screenshots: data.screenshots ?? [],
       launchUrl: data.launchUrl ?? null,
       launchLabel: data.launchLabel ?? null,
+      ctaTitle: data.ctaTitle ?? null,
+      ctaSubtitle: data.ctaSubtitle ?? null,
     }
   } catch {
     return EMPTY

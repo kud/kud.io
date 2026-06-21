@@ -4,6 +4,7 @@ import { BackLink } from "@/components/back-link"
 import { getProjects, type Project } from "@/lib/projects"
 import { getIcons } from "@/lib/icons"
 import { getApp, appDisplayName } from "@/lib/app"
+import { isAppCategory } from "@/lib/categories"
 import { Blueprint } from "@/components/blueprint"
 import {
   GitHubIcon,
@@ -28,6 +29,11 @@ const CATEGORY_META: Record<string, { name: string; blurb: string }> = {
     name: "Apps",
     blurb:
       "Web apps I design and ship end to end — open them straight from here, or read the story behind each one.",
+  },
+  desktop: {
+    name: "Desktop Apps",
+    blurb:
+      "Native desktop remotes and tools — the same cores as the CLIs, wrapped in a clickable app, no terminal required.",
   },
   cli: {
     name: "CLIs & Tools",
@@ -105,7 +111,7 @@ const ProjectsIndex = async () => {
   // Apps overlay a curated icon + accent from app.json (their PWA icons live
   // outside the sync detector's reach); every other project keeps the synced icon.
   const withIcons = projects.map((project) => {
-    if (project.category === "app") {
+    if (isAppCategory(project.category)) {
       const app = getApp(project.slug)
       return {
         ...project,

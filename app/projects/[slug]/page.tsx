@@ -6,7 +6,8 @@ import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { DocsBody } from "fumadocs-ui/layouts/docs/page"
 import { getProject, getProjects, type Project } from "@/lib/projects"
-import { getApp, appDisplayName } from "@/lib/app"
+import { getApp, appDisplayName, type AppMeta } from "@/lib/app"
+import { isAppCategory } from "@/lib/categories"
 import { getLandingMdx } from "@/lib/landings"
 import { getProjectReadme, projectHasExtraDocs } from "@/lib/source"
 import { getIcons } from "@/lib/icons"
@@ -26,13 +27,24 @@ export const generateMetadata = async ({
   const { slug } = await params
   const project = await getProject(slug)
   if (!project) return { title: slug }
-  const name =
-    project.category === "app"
-      ? appDisplayName(project.slug, getApp(project.slug))
-      : project.name
+  const name = isAppCategory(project.category)
+    ? appDisplayName(project.slug, getApp(project.slug))
+    : project.name
+  const title = `${name} — Erwann Mest`
+  const description = project.description ?? undefined
+  // The opengraph-image.tsx / twitter-image.tsx in this segment are attached by
+  // Next automatically; here we just override the canonical URL so the share card
+  // points at the project, not the site root inherited from the root metadata.
   return {
-    title: `${name} — Erwann Mest`,
-    description: project.description ?? undefined,
+    title,
+    description,
+    openGraph: {
+      type: "article",
+      url: `https://kud.io/projects/${slug}`,
+      title,
+      description,
+    },
+    twitter: { title, description },
   }
 }
 
@@ -177,9 +189,9 @@ const AppLanding = ({ project }: { project: Project }) => {
       {launchUrl ? (
         <section className={styles.ctaSection}>
           <Reveal>
-            <h2 className={styles.ctaTitle}>Try {name}</h2>
+            <h2 className={styles.ctaTitle}>{app.ctaTitle ?? `Try ${name}`}</h2>
             <p className={styles.ctaSub}>
-              Free, and runs right in your browser.
+              {app.ctaSubtitle ?? "Free, and runs right in your browser."}
             </p>
             <a
               href={launchUrl}
@@ -335,6 +347,13 @@ const ReadmeLanding = ({
   )
 }
 
+// An app.json with a launch URL or any why/how/features content is worth the rich
+// AppLanding hero. An app-like project with an empty (or missing) app.json — e.g. a
+// desktop app still in its RFC/vote stage — falls back to its README instead of a
+// sparse app shell, so it can be tagged kud-site-desktop from day one.
+const appHasContent = (app: AppMeta): boolean =>
+  Boolean(app.launchUrl || app.why || app.how || app.features.length > 0)
+
 const ProjectLanding = async ({
   params,
 }: {
@@ -345,14 +364,17 @@ const ProjectLanding = async ({
   if (!project) notFound()
 
   const authored = getLandingMdx(slug)
-  const icon =
-    project.category === "app"
-      ? null
-      : ((await getIcons())[slug] ?? project.icon ?? null)
+  const app = isAppCategory(project.category) ? getApp(slug) : null
+  const showAppLanding = app !== null && appHasContent(app)
+  // The AppLanding hero shows the app icon itself, so the README icon is hidden
+  // there; an app-like project that falls back to the README still gets its icon.
+  const icon = showAppLanding
+    ? null
+    : ((await getIcons())[slug] ?? project.icon ?? null)
 
   return (
     <main className={styles.page}>
-      {project.category === "app" ? (
+      {showAppLanding ? (
         <AppLanding project={project} />
       ) : authored ? (
         <MDXRemote
