@@ -1,0 +1,53 @@
+---
+title: "gtv-cli"
+description: "Control your Google TV from the CLI via the Android TV Remote protocol"
+---
+
+## 🚀 Getting started
+
+Install globally via npm:
+
+```sh
+npm install -g @kud/gtv-cli
+```
+
+Requires Node.js ≥ 22.
+
+On first launch, `gtv` will prompt you to pair with a Google TV on your local network. Subsequent launches open the interactive remote directly.
+
+```sh
+gtv
+```
+
+## ✨ Features
+
+- **Fullscreen TUI remote** — pair on first run; subsequent launches open an interactive Ink remote directly, no extra steps.
+- **Keyboard typing** — press `Tab` to enter keyboard mode and type directly into TV text fields (e.g. YouTube search) via IME text injection.
+- **Multiple TVs** — pair as many devices as you like and switch between them with `gtv switch` or browse with `gtv devices`.
+- **Responsive layout** — the two-column remote adapts automatically to your terminal width.
+- **Icon styles** — choose between text, Nerd Font, or emoji icons via an in-app Preferences modal (press `o`).
+- **One-shot commands** — send individual key presses, media controls, or deep-link app launches straight from the shell without opening the TUI.
+- **Network discovery** — find Google TV devices on your local network via mDNS; check device health with `gtv status` or `gtv doctor`.
+
+## ⌨️ TUI keybindings
+
+| Key | Action |
+|-----|--------|
+| Arrow keys / `h j k l` | Navigate remote buttons |
+| `Enter` | Press the selected button |
+| `Tab` | Toggle keyboard mode (type into TV text fields) |
+| `o` | Open Preferences modal (icon style, active device) |
+| `q` / `Ctrl+C` | Quit |
+
+## 🛠️ Development
+
+```sh
+git clone https://github.com/kud/gtv-cli.git
+cd gtv-cli
+npm install
+npm run dev          # run from source with tsx
+npm run typecheck    # type-check without emitting
+npm run build        # compile to dist/ via tsup
+```
+
+📚 **Full documentation → [gtv-cli/docs](https://kud.io/projects/gtv-cli/docs)**

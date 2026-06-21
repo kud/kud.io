@@ -1,0 +1,103 @@
+---
+title: "Commands"
+description: "Full CLI reference for gtv-cli"
+---
+
+## `gtv`
+
+Open the fullscreen TUI remote. Pairs on first run.
+
+```console
+$ gtv
+```
+
+## `gtv pair`
+
+Pair with a Google TV on your local network. Launches mDNS discovery and prompts you to select a device.
+
+```console
+$ gtv pair
+$ gtv unpair
+```
+
+## `gtv discover`
+
+Discover Google TV devices on the local network via mDNS.
+
+```console
+$ gtv discover           # list discovered devices
+$ gtv discover --select  # discover and interactively select one to pair
+```
+
+## `gtv switch`
+
+Switch the active device. Without an argument, shows an interactive picker.
+
+```console
+$ gtv switch             # interactive picker
+$ gtv switch living-room # switch by name
+```
+
+## `gtv devices`
+
+List all paired devices and show which one is active.
+
+```console
+$ gtv devices
+```
+
+## `gtv status`
+
+Show connection status for the active device.
+
+```console
+$ gtv status
+```
+
+## `gtv doctor`
+
+Run a health check on the active device connection.
+
+```console
+$ gtv doctor
+```
+
+## Navigation keys
+
+Send individual navigation key presses without opening the TUI.
+
+```console
+$ gtv home
+$ gtv back
+$ gtv up
+$ gtv down
+$ gtv left
+$ gtv right
+$ gtv select
+```
+
+## Volume
+
+```console
+$ gtv vol up
+$ gtv vol down
+$ gtv vol mute
+```
+
+## `gtv key`
+
+Send any Android TV key by name.
+
+```console
+$ gtv key KEYCODE_POWER
+$ gtv key KEYCODE_MEDIA_PLAY_PAUSE
+```
+
+## `gtv app`
+
+Deep-link launch an app by URL.
+
+```console
+$ gtv app https://www.netflix.com/
+$ gtv app https://www.youtube.com/
+```
