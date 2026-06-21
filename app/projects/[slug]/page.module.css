@@ -880,9 +880,11 @@
 }
 /* Centre Fumadocs' copy button wrapper in the faux terminal bar.
    The wrapper div gets `absolute top-3 right-2` from Fumadocs (top-3 = 12px).
-   The bar is 38px tall, the button is 26px (p-1 + icon-4), so centre = (38 - 26) / 2 = 6px. */
+   The bar is 38px tall, the button is 26px (p-1 + icon-4), so geometric centre is
+   (38 - 26) / 2 = 6px — but the clipboard glyph reads low against the tight dot
+   cluster, so nudge it up 3px for optical balance. */
 .readme :global(figure.shiki > div.absolute) {
-  top: 6px;
+  top: 3px;
   right: 12px;
 }
 
