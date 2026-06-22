@@ -5,7 +5,7 @@
 // the README, with the repo as the single source of truth. When a repo ships no
 // docs/index, its README also serves as the fallback docs page. Runs as part of
 // `npm run build` and never fails the build.
-import { mkdir, readFile, writeFile } from "node:fs/promises"
+import { mkdir, readFile, unlink, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
 import ora from "ora"
 
@@ -258,10 +258,10 @@ const syncRepoDocs = async (slug, tree) => {
       ),
   )
   for (const file of liveDocFiles) {
-    const text = await rawFile(slug, file.path)
-    if (!text) continue
     const rel = file.path.replace(/^docs\//, "")
     if (/^index\.mdx?$/i.test(rel)) hasIndex = true
+    const text = await rawFile(slug, file.path)
+    if (!text) continue
     await writeDoc(
       slug,
       rel,
@@ -284,7 +284,11 @@ const syncRepo = async (repo) => {
     : null
 
   // README is the docs first page only when the repo ships no docs/index.
-  if (cleaned && !hasDocsIndex) {
+  // If a real docs/index now exists, remove any stale README-fallback index.md.
+  if (hasDocsIndex) {
+    const stale = join(CONTENT_DIR, slug, "docs", "index.md")
+    await unlink(stale).catch(() => {})
+  } else if (cleaned) {
     await writeDoc(
       slug,
       "index.md",
