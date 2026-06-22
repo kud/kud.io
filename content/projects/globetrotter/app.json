@@ -1,32 +1,32 @@
 {
   "icon": "/apps/globetrotter.png",
   "accent": "#3b82f6",
-  "tagline": "Your personal atlas — track where you've been, learn as you go, dream about where's next.",
+  "tagline": "Your personal atlas. Track where you've been, learn as you go, plan what's next.",
   "launchUrl": "https://globetrotter-map.vercel.app",
   "launchLabel": "Open Globetrotter",
-  "why": "Travel and curiosity are the same impulse. I wanted one place to hold both — somewhere to mark the countries you've lived, log what you found there, and wander the ones you haven't reached yet. Part travel diary, part interactive atlas.",
-  "how": "Built on Next.js with a D3-powered SVG flat map and a WebGL 3D globe via react-globe.gl and Three.js. Country data, travel journal, and status tracking all live in Zustand and persist locally — nothing ever leaves your device.",
+  "why": "Travel and curiosity are the same impulse. I wanted one place to hold both: mark the countries you've lived, log what you found there, wander the ones you haven't reached yet. Part travel diary, part interactive atlas.",
+  "how": "Built on Next.js with a D3-powered SVG flat map and a WebGL 3D globe via react-globe.gl and Three.js. Country data, journal, and status all live in Zustand, persisted to localStorage. No account, no server.",
   "stack": ["Next.js", "React", "Three.js", "D3", "TypeScript"],
   "features": [
     {
       "title": "Track your travels",
-      "description": "Mark countries as Visited, Wishlist, or Blocked with a single click. A progress bar counts your tally against all 195 sovereign nations."
+      "description": "Mark countries Visited, Wishlist, or Blocked. A progress bar counts your tally against all 195 sovereign nations."
     },
     {
       "title": "Travel journal",
-      "description": "Per-country notes, star ratings, a would-return toggle, best time to visit, and a month-picker for logging visit dates."
+      "description": "Notes, star ratings, a would-return toggle, best time to visit, and a month-picker for logging visit dates. Per country."
     },
     {
-      "title": "Globe & flat map",
-      "description": "Switch between a pannable Mercator map and an interactive 3D globe. Both views, same data."
+      "title": "Globe and flat map",
+      "description": "Switch between a pannable Mercator map and a 3D globe. Same data, two views."
     },
     {
-      "title": "Live advisories & flights",
-      "description": "Blended US and Canada safety advisories on every country. A real aircraft rotates every minute with photo, route, and airport links."
+      "title": "Live advisories and flights",
+      "description": "Blended US and Canada safety ratings on every country. A real aircraft updates every minute, with photo, route, and airport links."
     },
     {
-      "title": "Privacy-first",
-      "description": "Everything stays in your browser. No account, no server, no tracking. Export or import your data anytime."
+      "title": "Stays on your device",
+      "description": "No account. No tracking. Export or import your data anytime as JSON."
     }
   ],
   "screenshots": ["/apps/globetrotter-shot.png"]
