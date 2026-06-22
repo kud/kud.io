@@ -2,7 +2,7 @@
   "icon": "/apps/globetrotter.png",
   "accent": "#3b82f6",
   "tagline": "An interactive 3D globe for exploring geographic data — spin it, zoom it, watch it move.",
-  "launchUrl": "https://globetrotter-map.vercel.app",
+  "launchUrl": "https://globetrotter.kud.io",
   "launchLabel": "Explore the globe",
   "why": "Flat maps quietly lie about the world — distances, sizes, and routes all warp the moment you project a sphere onto a rectangle. I wanted a playground where geographic data sits on an actual globe you can grab and turn, so the relationships between places read the way they really are.",
   "how": "The globe is rendered with Three.js for the 3D scene and D3 for the geographic projections and data binding, wired together inside a Next.js app. Interaction and animation are tuned to stay smooth at 60fps even while panning across dense datasets.",
