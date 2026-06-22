@@ -1,24 +1,32 @@
 {
   "icon": "/apps/globetrotter.png",
   "accent": "#3b82f6",
-  "tagline": "An interactive 3D globe for exploring geographic data — spin it, zoom it, watch it move.",
-  "launchUrl": "https://globetrotter.kud.io",
-  "launchLabel": "Explore the globe",
-  "why": "Flat maps quietly lie about the world — distances, sizes, and routes all warp the moment you project a sphere onto a rectangle. I wanted a playground where geographic data sits on an actual globe you can grab and turn, so the relationships between places read the way they really are.",
-  "how": "The globe is rendered with Three.js for the 3D scene and D3 for the geographic projections and data binding, wired together inside a Next.js app. Interaction and animation are tuned to stay smooth at 60fps even while panning across dense datasets.",
+  "tagline": "Your personal atlas — track where you've been, learn as you go, dream about where's next.",
+  "launchUrl": "https://globetrotter-map.vercel.app",
+  "launchLabel": "Open Globetrotter",
+  "why": "Travel and curiosity are the same impulse. I wanted one place to hold both — somewhere to mark the countries you've lived, log what you found there, and wander the ones you haven't reached yet. Part travel diary, part interactive atlas.",
+  "how": "Built on Next.js with a D3-powered SVG flat map and a WebGL 3D globe via react-globe.gl and Three.js. Country data, travel journal, and status tracking all live in Zustand and persist locally — nothing ever leaves your device.",
   "stack": ["Next.js", "React", "Three.js", "D3", "TypeScript"],
   "features": [
     {
-      "title": "True 3D globe",
-      "description": "Geographic data mapped onto a real sphere with Three.js — no flat-projection distortion."
+      "title": "Track your travels",
+      "description": "Mark countries as Visited, Wishlist, or Blocked with a single click. A progress bar counts your tally against all 195 sovereign nations."
     },
     {
-      "title": "Smooth interactivity",
-      "description": "Grab, spin, and zoom with fluid 60fps animation, even across dense datasets."
+      "title": "Travel journal",
+      "description": "Per-country notes, star ratings, a would-return toggle, best time to visit, and a month-picker for logging visit dates."
     },
     {
-      "title": "Data-driven",
-      "description": "D3 handles the projections and binding, so new geographic layers drop straight in."
+      "title": "Globe & flat map",
+      "description": "Switch between a pannable Mercator map and an interactive 3D globe. Both views, same data."
+    },
+    {
+      "title": "Live advisories & flights",
+      "description": "Blended US and Canada safety advisories on every country. A real aircraft rotates every minute with photo, route, and airport links."
+    },
+    {
+      "title": "Privacy-first",
+      "description": "Everything stays in your browser. No account, no server, no tracking. Export or import your data anytime."
     }
   ],
   "screenshots": ["/apps/globetrotter-shot.png"]
