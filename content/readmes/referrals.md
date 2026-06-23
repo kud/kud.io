@@ -3,89 +3,58 @@ title: "referrals"
 description: "All my referrals codes. Powered by next.js on @vercel and @makenotion as API. 🙌🏻"
 ---
 
-A premium, animated referral codes platform that turns every click into cash! Built with [Next.js](https://nextjs.org) and powered by [Notion](https://notion.so) as a headless CMS.
+## Features
 
-## ✨ Features
+- **Payment-card tiles** — each referral is displayed as a premium card with a chip, contactless icon, and the code formatted as a card number, with muted per-category colour gradients.
+- **One-click copy and redirect** — clicking a card copies the code to the clipboard, triggers a celebratory toast and coin-burst animation, then redirects to the referral link after a 3-second countdown.
+- **Category pill filtering** — filter by finance, food, home, ride-hailing, tech, or travel using pill buttons; the grid reflows fluidly.
+- **Notion as a headless CMS** — referral data lives in a Notion database; adding or updating a code requires no code change or redeploy.
+- **Server-side ISR** — the homepage is a Next.js App Router Server Component with a 1-hour revalidation window, so pages load instantly with no client-side fetch.
+- **Money-themed UI** — floating bill animations, a coin-burst on copy, and a full-screen animated hero set the mood.
 
-- 💰 **Epic Money-Themed Hero**: Full-screen animated hero with ASCII art and floating money
-- 🤑 **Custom Money Cursors**: Star-struck (🤩) default + money-face (🤑) on buttons
-- 💸 **Floating Money Animation**: Gentle floating money bills across the screen
-- 🎯 **Smart Filtering**: Active referrals first, disabled ones shown in grey
-- 📋 **One-Click Copy & Redirect**: Copy codes instantly + 3-second countdown redirect
-- 🎨 **Smooth Animations**: Cards rearrange fluidly when filtering
-- 🌙 **Premium Dark Theme**: Sleek black design with gradient accents
-- 📱 **Fully Responsive**: Optimized for all screen sizes
-- 🔒 **Secure Server-Side API**: Environment variables protected from client exposure
-- 📊 **Dynamic Stats**: Real-time counts of codes and categories
+## Install
 
-## Setup
-
-1. **Clone and install dependencies:**
-   ```bash
-   npm install
-   ```
-
-2. **Environment Configuration:**
-   Copy `.env.sample` to `.env` and fill in your Notion credentials:
-   ```bash
-   cp .env.sample .env
-   ```
-   
-   Update the following variables in `.env`:
-   - `NOTION_API_KEY`: Your Notion integration API key
-   - `NOTION_DATABASE_ID`: Your Notion database ID
-
-3. **Notion Database Setup:**
-   Create a Notion database with these properties:
-   - `name` (Title) - The service/platform name
-   - `code` (Text) - The referral code (optional for direct links)
-   - `url` (URL) - The referral link
-   - `type` (Select) - Category (Finance, Food, Home, Tech, Travel, etc.)
-
-## 🚀 Getting Started
-
-```bash
-# Install dependencies
+```sh
+git clone https://github.com/kud/referrals.git
+cd referrals
 npm install
-
-# Start development server with Turbopack
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
+cp .env.sample .env
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see the money-themed magic! 💰
+Edit `.env` and set your Notion credentials:
 
-## 🎮 How It Works
+```
+NOTION_API_KEY=your_notion_integration_api_key
+NOTION_DATABASE_ID=your_notion_database_id
+```
 
-1. **Browse**: Scroll through categories or use "All" to see everything
-2. **Filter**: Click the dropdown to focus on specific categories (Finance, Food, etc.)
-3. **Click**: Tap any card to copy the code and start the 3-second redirect countdown
-4. **Earn**: Get redirected to the platform and start earning cashback! 🤑
+### Notion database schema
 
-## 🎨 Design Highlights
+Create a Notion database with these properties:
 
-- **Money Cursor System**: Different emoji cursors for different interactions
-- **Floating Animations**: Subtle money bills float across the screen
-- **Smart Card States**: Active vs disabled visual feedback
-- **Premium Typography**: "MONEY" ASCII art + gradient text effects
-- **Responsive Grid**: Adapts beautifully from mobile to desktop
+| Property | Type   | Description                 |
+| -------- | ------ | --------------------------- |
+| `name`   | Title  | Service or platform name    |
+| `code`   | Text   | Referral code               |
+| `url`    | URL    | Referral link               |
+| `type`   | Select | Category (finance, food, …) |
 
-## Learn More
+## Usage
 
-To learn more about Next.js, take a look at the following resources:
+```sh
+npm run dev    # development server with Turbopack
+npm run build  # production build
+npm run start  # start production server
+npm run lint   # lint
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Development
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```sh
+git clone https://github.com/kud/referrals.git
+cd referrals
+npm install
+npm run dev
+```
