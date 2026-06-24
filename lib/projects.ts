@@ -1,4 +1,5 @@
 import { getRaycastProjects } from "@/lib/raycast"
+import { getApp } from "@/lib/app"
 
 const OWNER = "kud"
 const TOPIC = "kud-site"
@@ -83,7 +84,9 @@ const stripLeadingEmoji = (text: string | null): string | null =>
 
 const toProject = (repo: Repo): Project => ({
   slug: repo.name,
-  name: repo.name,
+  // Display name defaults to the repo slug; any project may override it with a
+  // `name` in content/projects/<slug>/app.json (e.g. "foxhop" → "Fox Hop").
+  name: getApp(repo.name).name ?? repo.name,
   description: stripLeadingEmoji(repo.description),
   category: categoryFromTopics(repo.topics ?? []),
   // `kud-site-readme`: the README is the whole product (curated lists) — render
