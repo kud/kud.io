@@ -2,7 +2,7 @@
   "icon": "/apps/globetrotter.png",
   "accent": "#3b82f6",
   "tagline": "Your personal atlas. Track where you've been, learn as you go, plan what's next.",
-  "launchUrl": "https://globetrotter-map.vercel.app",
+  "launchUrl": "https://globetrotter.kud.io",
   "launchLabel": "Open Globetrotter",
   "why": "Travel and curiosity are the same impulse. I wanted one place to hold both: mark the countries you've lived, log what you found there, wander the ones you haven't reached yet. Part travel diary, part interactive atlas.",
   "how": "Built on Next.js with a D3-powered SVG flat map and a WebGL 3D globe via react-globe.gl and Three.js. Country data, journal, and status all live in Zustand, persisted to localStorage. No account, no server.",

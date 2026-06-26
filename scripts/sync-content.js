@@ -31,6 +31,7 @@ const RAYCAST_SLUGS = [
   "uk-bank-holidays",
   "localsend",
   "espanso",
+  "foxhop",
 ]
 const RAYCAST_REPO = "raycast/extensions"
 const RAYCAST_FILE = "content/raycast.json"
