@@ -3,6 +3,16 @@ title: "foxhop"
 description: "Focus a specific Firefox tab from anywhere on macOS — CLI, Raycast, and a Firefox extension."
 ---
 
+## Ecosystem
+
+foxhop isn't a single CLI — it's one product with three surfaces, all sharing the same targets in `~/.config/foxhop/tabs.json`:
+
+- **CLI + native host** (`@kud/foxhop-cli`) — the engine: focuses tabs, manages targets, and bridges macOS to Firefox over native messaging.
+- **Firefox extension** — the in-browser half of the bridge; it receives a request from the native host and switches to the matching tab.
+- **Raycast extension** — a launcher-native way to search, add, edit, and focus targets, plus generated per-tab hotkeys via `foxhop sync`.
+
+Reach for whichever surface fits the moment — a global hotkey, a Raycast command, or the terminal — they all drive the same configuration.
+
 ## Features
 
 - **Global hotkey focus** — jump to a specific Firefox tab from a global hotkey, Raycast command, or the terminal without touching the mouse
