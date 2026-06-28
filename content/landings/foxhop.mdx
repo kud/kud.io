@@ -1,0 +1,97 @@
+---
+title: Fox Hop
+---
+
+<Hero
+  badge="MIT · macOS · Firefox · Raycast"
+  title="Fox Hop"
+  tagline="Focus a specific Firefox tab from anywhere on macOS — one product across the terminal, Raycast, and the browser, all driving the same configuration."
+>
+  <Action href="/projects/foxhop/docs" primary>
+    Documentation →
+  </Action>
+  <Action href="https://github.com/kud/foxhop">GitHub ↗</Action>
+  <Action href="https://www.npmjs.com/package/@kud/foxhop-cli">npm ↗</Action>
+  <Action href="https://www.raycast.com/kud/foxhop">Raycast ↗</Action>
+</Hero>
+
+<Stats>
+  <Stat value="3" label="Surfaces" />
+  <Stat value="1" label="Shared config" />
+  <Stat value="macOS" label="Platform" />
+  <Stat value="MIT" label="License" />
+</Stats>
+
+<Section
+  eyebrow="The ecosystem"
+  title="One product, three surfaces"
+  sub="Fox Hop isn't a single CLI — it's a small ecosystem, and every surface reads the same targets from ~/.config/foxhop/tabs.json. Reach for whichever fits the moment; they all drive the same configuration."
+>
+  <Features>
+    <Feature title="CLI + native host">
+      The engine. `@kud/foxhop-cli` focuses tabs, manages targets, and bridges
+      macOS to Firefox over native messaging — scriptable from the terminal or
+      bound to any global hotkey.
+
+      [View on npm ↗](https://www.npmjs.com/package/@kud/foxhop-cli)
+    </Feature>
+    <Feature title="Firefox extension">
+      The in-browser half of the bridge. It receives a request from the native
+      host and switches to the matching tab — opening it at the configured URL
+      when it isn't already there.
+
+      [Get the add-on ↗](https://addons.mozilla.org/firefox/addon/foxhop/)
+    </Feature>
+    <Feature title="Raycast extension">
+      A launcher-native way to search, add, edit, and focus targets — plus
+      generated per-tab hotkey scripts via `foxhop sync`.
+
+      [Open in Raycast ↗](https://www.raycast.com/kud/foxhop)
+    </Feature>
+
+  </Features>
+</Section>
+
+<Section eyebrow="Quick start" title="Up and running in two steps">
+  <Install label="1 · install the CLI + native host">
+
+```text
+npm install -g @kud/foxhop-cli
+foxhop install
+```
+
+  </Install>
+
+  <Install label="2 · focus a tab from anywhere">
+
+```text
+foxhop focus chatgpt
+```
+
+  </Install>
+</Section>
+
+<Section
+  eyebrow="How it fits together"
+  title="One request, any entry point"
+  sub="Every surface speaks to the same native host, which talks to the Firefox extension — so a hotkey, a Raycast command, and a terminal call all end the same way: the tab you wanted, in front of you."
+>
+  <Install label="the flow">
+
+```text
+hotkey / Raycast / terminal
+   → foxhop CLI
+   → native messaging host
+   → Firefox extension
+   → your tab, focused
+```
+
+  </Install>
+</Section>
+
+<CTA
+  href="/projects/foxhop/docs"
+  title="Configure once, focus everywhere"
+  sub="Targets, matching strategies, per-tab hotkeys, and the full CLI reference live in the docs."
+  label="Open documentation →"
+/>
