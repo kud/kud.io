@@ -11,6 +11,6 @@ caller ──► foxhop CLI ──► unix socket ──► native host ──�
                                                           fallback: tabs.create
 ```
 
-The **CLI and the Firefox extension are one inseparable unit** (the bridge), so they live in the same repo (`cli/` + `extension/`). The **Raycast extension is a separate client** on top, published in the `raycast/extensions` monorepo.
+The **CLI and the Firefox extension are one inseparable unit** (the bridge), so they live in the same repo (`cli/` + `webextension/`). The **Raycast extension is a separate client** on top, published in the `raycast/extensions` monorepo.
 
 Because a WebExtension can raise its own window but not its whole app, the CLI foregrounds Firefox via `open -a "$FOXHOP_BROWSER"` after a successful focus.

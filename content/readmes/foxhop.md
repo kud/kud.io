@@ -30,8 +30,8 @@ foxhop install        # register the native messaging host with Firefox
 
 Then install the Firefox extension:
 
-- **Permanent** — download the signed [`foxhop-1.0.1.xpi`](https://github.com/kud/foxhop/releases/download/extension-v1.0.1/foxhop-1.0.1.xpi) and open it in Firefox (or drag it onto a Firefox window).
-- **Temporary (development)** — open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on**, and select `extension/manifest.json` from this repo.
+- **Permanent** — install from [addons.mozilla.org](https://addons.mozilla.org/firefox/addon/foxhop/) — the signed, auto-updating listing.
+- **Temporary (development)** — open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on**, and select `webextension/manifest.json` from this repo.
 
 ## Usage
 
@@ -56,6 +56,6 @@ cd cli && npm run dev        # run from source via tsx
 cd cli && npm test           # vitest suite
 
 # Extension
-cd extension && npm run dev  # launch Firefox Nightly with the extension loaded
-cd extension && npm run lint # web-ext lint
+cd webextension && npm run dev  # launch Firefox Nightly with the extension loaded
+cd webextension && npm run lint # web-ext lint
 ```
