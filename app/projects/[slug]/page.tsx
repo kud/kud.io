@@ -226,7 +226,7 @@ const ReadmeLanding = ({
   project: Project
   icon: string | null
 }) => {
-  const readme = getProjectReadme(project.slug)
+  const readme = getProjectReadme(project.readmeSlug ?? project.slug)
   const Body = readme?.data.body
   // Section headings (depth 2) drive a simple right-rail TOC.
   const toc = (readme?.data.toc ?? []).filter((item) => item.depth === 2)

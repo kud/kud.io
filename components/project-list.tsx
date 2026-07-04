@@ -43,6 +43,15 @@ const SORTS: Record<
 
 type Option = { value: string | null; label: string }
 
+const LANGUAGE_ICONS: Record<string, string> = {
+  JavaScript: "https://cdn.simpleicons.org/javascript/F7DF1E",
+  Python: "https://cdn.simpleicons.org/python/3776AB",
+  Rust: "https://cdn.simpleicons.org/rust/FFFFFF",
+  Shell: "https://cdn.simpleicons.org/gnubash/4EAA25",
+  Swift: "https://cdn.simpleicons.org/swift/F05138",
+  TypeScript: "https://cdn.simpleicons.org/typescript/3178C6",
+}
+
 // A self-contained select dropdown (used for both Type and Sort).
 const Dropdown = ({
   label,
@@ -135,17 +144,22 @@ export const ProjectList = ({
   const [category, setCategory] = useState<string | null>(null)
   const [lang, setLang] = useState<string | null>(null)
   const [activeTags, setActiveTags] = useState<string[]>([])
+  const [hasFilterInteraction, setHasFilterInteraction] = useState(false)
   // Ecosystem is single-select (unlike tags): you're looking at one family at a
   // time. Clicking the active tile again clears it.
   const [activeEcosystem, setActiveEcosystem] = useState<string | null>(null)
   const compare = SORTS[sort].fn
 
-  const toggleTag = (tag: string) =>
+  const markFilterInteraction = () => setHasFilterInteraction(true)
+
+  const toggleTag = (tag: string) => {
+    markFilterInteraction()
     setActiveTags((current) =>
       current.includes(tag)
         ? current.filter((value) => value !== tag)
         : [...current, tag],
     )
+  }
 
   // Languages ordered by how many projects use them, so the common ones lead.
   const languages = useMemo(() => {
@@ -206,285 +220,316 @@ export const ProjectList = ({
   const isFiltered = Boolean(
     needle || category || lang || activeTags.length > 0 || activeEcosystem,
   )
+  const filterKey = [
+    needle,
+    category ?? "all-types",
+    lang ?? "all-languages",
+    activeEcosystem ?? "all-ecosystems",
+    activeTags.join(","),
+    sort,
+  ].join("|")
 
   return (
     <>
-      <div className={styles.toolbar}>
-        <input
-          type="search"
-          className={styles.search}
-          placeholder="Search projects…"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          aria-label="Search projects"
-        />
-        <Dropdown
-          label="Type"
-          value={category}
-          options={categoryOptions}
-          onChange={setCategory}
-        />
-        <Dropdown
-          label="Sort"
-          value={sort}
-          options={sortOptions}
-          onChange={(value) => setSort((value ?? "updated") as SortKey)}
-        />
-      </div>
-
-      <div className={styles.filters}>
-        <div className={styles.filterGroup}>
-          <span className={styles.filterLabel}>Languages</span>
-          <div className={styles.chips}>
-            <button
-              type="button"
-              className={styles.chip}
-              data-active={lang === null}
-              onClick={() => setLang(null)}
-            >
-              All
-            </button>
-            {languages.map((language) => (
-              <button
-                key={language}
-                type="button"
-                className={styles.chip}
-                data-active={lang === language}
-                onClick={() => setLang(lang === language ? null : language)}
-              >
-                {language}
-              </button>
-            ))}
+      <div className={styles.layout}>
+        <div className={styles.main}>
+          <div
+            key={filterKey}
+            className={`${styles.results} ${hasFilterInteraction ? styles.resultsAnimated : ""}`}
+          >
+            {visibleGroups.length === 0 ? (
+              <p className={styles.noResults}>
+                No projects match “{query.trim()}”{lang ? ` in ${lang}` : ""}.
+              </p>
+            ) : (
+              visibleGroups.map((group) => (
+                <section
+                  key={group.key}
+                  id={
+                    group.key === "app"
+                      ? "apps"
+                      : group.key === "desktop"
+                        ? "desktop"
+                        : undefined
+                  }
+                  className={styles.section}
+                  data-cat={group.key}
+                >
+                  <h2 className={styles.sectionTitle}>
+                    <span className={styles.dot} />
+                    {group.name}
+                    <span className={styles.count}>{group.items.length}</span>
+                  </h2>
+                  {group.blurb ? (
+                    <p className={styles.blurb}>{group.blurb}</p>
+                  ) : null}
+                  {isAppCategory(group.key) ? (
+                    <div className={styles.appGrid}>
+                      {group.items.map((project) => (
+                        <MorphLink
+                          key={project.slug}
+                          href={`/projects/${project.slug}`}
+                          className={styles.appTile}
+                          style={
+                            project.accent
+                              ? ({
+                                  "--app-accent": project.accent,
+                                } as CSSProperties)
+                              : undefined
+                          }
+                        >
+                          <span
+                            className={styles.appIconWrap}
+                            style={{
+                              viewTransitionName: `app-icon-${project.slug}`,
+                            }}
+                          >
+                            {project.icon ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                className={styles.appIconImg}
+                                src={project.icon}
+                                alt=""
+                                loading="lazy"
+                                data-bleed={Boolean(
+                                  project.icon && !project.icon.endsWith(".svg"),
+                                )}
+                              />
+                            ) : (
+                              <span className={styles.appMonogram} aria-hidden>
+                                {project.name.charAt(0).toUpperCase()}
+                              </span>
+                            )}
+                          </span>
+                          <span className={styles.appName}>{project.name}</span>
+                        </MorphLink>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className={styles.list}>
+                      {group.items.map((project) => (
+                        <MorphLink
+                          key={project.slug}
+                          href={`/projects/${project.slug}`}
+                          className={styles.row}
+                        >
+                          {project.icon ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              className={styles.icon}
+                              src={project.icon}
+                              alt=""
+                              loading="lazy"
+                            />
+                          ) : (
+                            <span className={styles.monogram} aria-hidden>
+                              {project.name.charAt(0).toUpperCase()}
+                            </span>
+                          )}
+                          <span className={styles.rowBody}>
+                            <span className={styles.rowHead}>
+                              <span
+                                className={styles.rowName}
+                                style={{
+                                  viewTransitionName: `project-${project.slug}`,
+                                }}
+                              >
+                                {project.name}
+                              </span>
+                              <span className={styles.rowMeta}>
+                                {project.stars > 0 ? (
+                                  <span className={styles.stars}>
+                                    ★ {project.stars}
+                                  </span>
+                                ) : null}
+                                {project.downloads ? (
+                                  <span className={styles.downloads}>
+                                    {project.downloads.toLocaleString()} installs
+                                  </span>
+                                ) : null}
+                                {project.users ? (
+                                  <span className={styles.downloads}>
+                                    {project.users.toLocaleString()} user
+                                    {project.users === 1 ? "" : "s"}
+                                  </span>
+                                ) : null}
+                                {project.language ? (
+                                  <span className={styles.lang}>
+                                    {project.language}
+                                  </span>
+                                ) : null}
+                              </span>
+                            </span>
+                            {project.description ? (
+                              <p className={styles.rowDesc}>
+                                {project.description}
+                              </p>
+                            ) : null}
+                          </span>
+                        </MorphLink>
+                      ))}
+                      {group.items.length % 2 === 1 ? (
+                        <div className={styles.filler} aria-hidden />
+                      ) : null}
+                    </div>
+                  )}
+                </section>
+              ))
+            )}
           </div>
         </div>
 
-        {tags.length > 0 ? (
-          <div className={styles.filterGroup}>
-            <span className={styles.filterLabel}>Tags</span>
-            <div className={styles.chips}>
-              {tags.map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  className={styles.tagChip}
-                  data-active={activeTags.includes(tag)}
-                  onClick={() => toggleTag(tag)}
-                >
-                  #{tag}
-                </button>
-              ))}
-              {activeTags.length > 0 ? (
-                <button
-                  type="button"
-                  className={styles.tagClear}
-                  onClick={() => setActiveTags([])}
-                >
-                  clear
-                </button>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
-      </div>
+        <aside className={styles.sidebar}>
+          <input
+            type="search"
+            className={styles.search}
+            placeholder="Search projects…"
+            value={query}
+            onChange={(event) => {
+              markFilterInteraction()
+              setQuery(event.target.value)
+            }}
+            aria-label="Search projects"
+          />
+          <Dropdown
+            label="Type"
+            value={category}
+            options={categoryOptions}
+            onChange={(value) => {
+              markFilterInteraction()
+              setCategory(value)
+            }}
+          />
+          <Dropdown
+            label="Sort"
+            value={sort}
+            options={sortOptions}
+            onChange={(value) => {
+              markFilterInteraction()
+              setSort((value ?? "updated") as SortKey)
+            }}
+          />
 
-      {ecosystems.length > 0 ? (
-        <section className={styles.ecoSection}>
-          <div className={styles.ecoHead}>
-            <h2 className={styles.ecoTitle}>Ecosystems</h2>
-            <p className={styles.ecoBlurb}>
-              Some tools aren&apos;t a single app but a whole ecosystem —
-              several surfaces over one shared core, so you reach the same thing
-              from wherever you are. Pick one to see it across the grid.
-            </p>
-          </div>
-          <div className={styles.ecoGrid}>
-            {ecosystems.map((eco) => (
-              <button
-                key={eco.key}
-                type="button"
-                className={styles.ecoTile}
-                data-active={activeEcosystem === eco.key}
-                aria-pressed={activeEcosystem === eco.key}
-                onClick={() =>
-                  setActiveEcosystem((current) =>
-                    current === eco.key ? null : eco.key,
-                  )
-                }
-              >
-                <span className={styles.ecoIconWrap}>
-                  {eco.icon ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      className={styles.ecoIcon}
-                      src={eco.icon}
-                      alt=""
-                      loading="lazy"
-                      data-bleed={Boolean(
-                        eco.icon && !eco.icon.endsWith(".svg"),
-                      )}
-                    />
-                  ) : (
-                    <span className={styles.ecoMonogram} aria-hidden>
-                      {eco.name.charAt(0)}
-                    </span>
-                  )}
-                </span>
-                <span className={styles.ecoName}>{eco.name}</span>
-                <span className={styles.ecoCount}>
-                  {eco.count} surface{eco.count === 1 ? "" : "s"}
-                </span>
-              </button>
-            ))}
-          </div>
-          {activeEcosystem ? (
-            <button
-              type="button"
-              className={styles.ecoClear}
-              onClick={() => setActiveEcosystem(null)}
-            >
-              Showing{" "}
-              <strong>
-                {ecosystems.find((eco) => eco.key === activeEcosystem)?.name}
-              </strong>{" "}
-              only — show everything ✕
-            </button>
-          ) : null}
-        </section>
-      ) : null}
-
-      {visibleGroups.length === 0 ? (
-        <p className={styles.noResults}>
-          No projects match “{query.trim()}”{lang ? ` in ${lang}` : ""}.
-        </p>
-      ) : (
-        visibleGroups.map((group) => (
-          <section
-            key={group.key}
-            id={
-              group.key === "app"
-                ? "apps"
-                : group.key === "desktop"
-                  ? "desktop"
-                  : undefined
-            }
-            className={styles.section}
-            data-cat={group.key}
-          >
-            <h2 className={styles.sectionTitle}>
-              <span className={styles.dot} />
-              {group.name}
-              <span className={styles.count}>{group.items.length}</span>
-            </h2>
-            {group.blurb ? <p className={styles.blurb}>{group.blurb}</p> : null}
-            {isAppCategory(group.key) ? (
-              <div className={styles.appGrid}>
-                {group.items.map((project) => (
-                  <MorphLink
-                    key={project.slug}
-                    href={`/projects/${project.slug}`}
-                    className={styles.appTile}
-                    style={
-                      project.accent
-                        ? ({ "--app-accent": project.accent } as CSSProperties)
-                        : undefined
-                    }
+          {ecosystems.length > 0 ? (
+            <div className={styles.filterGroup}>
+              <span className={styles.filterLabel}>Ecosystems</span>
+              <div className={styles.chips}>
+                <button
+                  type="button"
+                  className={styles.chip}
+                  data-active={activeEcosystem === null}
+                  onClick={() => {
+                    markFilterInteraction()
+                    setActiveEcosystem(null)
+                  }}
+                >
+                  All
+                </button>
+                {ecosystems.map((ecosystem) => (
+                  <button
+                    key={ecosystem.key}
+                    type="button"
+                    className={styles.ecosystemChip}
+                    data-active={activeEcosystem === ecosystem.key}
+                    onClick={() => {
+                      markFilterInteraction()
+                      setActiveEcosystem(
+                        activeEcosystem === ecosystem.key ? null : ecosystem.key,
+                      )
+                    }}
                   >
-                    <span
-                      className={styles.appIconWrap}
-                      style={{
-                        viewTransitionName: `app-icon-${project.slug}`,
-                      }}
-                    >
-                      {project.icon ? (
+                    <span className={styles.chipIcon} aria-hidden>
+                      {ecosystem.icon ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
-                          className={styles.appIconImg}
-                          src={project.icon}
+                          src={ecosystem.icon}
                           alt=""
                           loading="lazy"
                           data-bleed={Boolean(
-                            project.icon && !project.icon.endsWith(".svg"),
+                            ecosystem.icon && !ecosystem.icon.endsWith(".svg"),
                           )}
                         />
                       ) : (
-                        <span className={styles.appMonogram} aria-hidden>
-                          {project.name.charAt(0).toUpperCase()}
-                        </span>
+                        ecosystem.name.charAt(0)
                       )}
                     </span>
-                    <span className={styles.appName}>{project.name}</span>
-                  </MorphLink>
+                    {ecosystem.name}
+                    <span className={styles.chipCount}>{ecosystem.count}</span>
+                  </button>
                 ))}
               </div>
-            ) : (
-              <div className={styles.list}>
-                {group.items.map((project) => (
-                  <MorphLink
-                    key={project.slug}
-                    href={`/projects/${project.slug}`}
-                    className={styles.row}
-                  >
-                    {project.icon ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        className={styles.icon}
-                        src={project.icon}
-                        alt=""
-                        loading="lazy"
-                      />
-                    ) : (
-                      <span className={styles.monogram} aria-hidden>
-                        {project.name.charAt(0).toUpperCase()}
-                      </span>
-                    )}
-                    <span className={styles.rowBody}>
-                      <span className={styles.rowHead}>
-                        <span
-                          className={styles.rowName}
-                          style={{
-                            viewTransitionName: `project-${project.slug}`,
-                          }}
-                        >
-                          {project.name}
-                        </span>
-                        <span className={styles.rowMeta}>
-                          {project.stars > 0 ? (
-                            <span className={styles.stars}>
-                              ★ {project.stars}
-                            </span>
-                          ) : null}
-                          {project.downloads ? (
-                            <span className={styles.downloads}>
-                              {project.downloads.toLocaleString()} installs
-                            </span>
-                          ) : null}
-                          {project.users ? (
-                            <span className={styles.downloads}>
-                              {project.users.toLocaleString()} user
-                              {project.users === 1 ? "" : "s"}
-                            </span>
-                          ) : null}
-                          {project.language ? (
-                            <span className={styles.lang}>
-                              {project.language}
-                            </span>
-                          ) : null}
-                        </span>
-                      </span>
-                      {project.description ? (
-                        <p className={styles.rowDesc}>{project.description}</p>
-                      ) : null}
+            </div>
+          ) : null}
+
+          <div className={styles.filterGroup}>
+            <span className={styles.filterLabel}>Languages</span>
+            <div className={styles.chips}>
+              <button
+                type="button"
+                className={styles.chip}
+                data-active={lang === null}
+                onClick={() => {
+                  markFilterInteraction()
+                  setLang(null)
+                }}
+              >
+                All
+              </button>
+              {languages.map((language) => (
+                <button
+                  key={language}
+                  type="button"
+                  className={styles.languageChip}
+                  data-active={lang === language}
+                  onClick={() => {
+                    markFilterInteraction()
+                    setLang(lang === language ? null : language)
+                  }}
+                >
+                  {LANGUAGE_ICONS[language] ? (
+                    <span className={styles.languageIcon} aria-hidden>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={LANGUAGE_ICONS[language]} alt="" loading="lazy" />
                     </span>
-                  </MorphLink>
+                  ) : null}
+                  {language}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {tags.length > 0 ? (
+            <div className={styles.filterGroup}>
+              <span className={styles.filterLabel}>Tags</span>
+              <div className={styles.chips}>
+                {tags.map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    className={styles.tagChip}
+                    data-active={activeTags.includes(tag)}
+                    onClick={() => toggleTag(tag)}
+                  >
+                    #{tag}
+                  </button>
                 ))}
-                {group.items.length % 2 === 1 ? (
-                  <div className={styles.filler} aria-hidden />
+                {activeTags.length > 0 ? (
+                  <button
+                    type="button"
+                    className={styles.tagClear}
+                    onClick={() => {
+                      markFilterInteraction()
+                      setActiveTags([])
+                    }}
+                  >
+                    clear
+                  </button>
                 ) : null}
               </div>
-            )}
-          </section>
-        ))
-      )}
+            </div>
+          ) : null}
+        </aside>
+      </div>
 
       {isFiltered ? null : children}
     </>

@@ -1,0 +1,10 @@
+{
+  "ecosystem": "qobuz",
+  "surfaces": [
+    { "slug": "qobuz", "category": "lib" },
+    { "slug": "qobuz-cli", "category": "cli" },
+    { "slug": "mcp-qobuz", "category": "mcp" },
+    { "slug": "qobuz-bridge", "category": "cli" },
+    { "slug": "qobuz-bridge-cli", "category": "cli" }
+  ]
+}

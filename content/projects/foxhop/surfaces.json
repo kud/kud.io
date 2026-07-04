@@ -1,0 +1,14 @@
+{
+  "ecosystem": "foxhop",
+  "surfaces": [
+    { "slug": "foxhop", "category": "webext" },
+    { "slug": "raycast-foxhop", "category": "raycast" },
+    {
+      "slug": "foxhop-cli",
+      "from": "foxhop",
+      "category": "cli",
+      "name": "Fox Hop CLI",
+      "description": "Focus a specific Firefox tab straight from your terminal — the command-line surface of Fox Hop."
+    }
+  ]
+}

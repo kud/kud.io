@@ -1,5 +1,6 @@
 import { getRaycastProjects } from "@/lib/raycast"
 import { enrichWebextProjects } from "@/lib/webext"
+import { applyMonorepos } from "@/lib/monorepo"
 import { getApp } from "@/lib/app"
 
 const OWNER = "kud"
@@ -14,6 +15,9 @@ export type Project = {
   // category. A project belongs to at most one ecosystem (e.g. "qobuz" unites
   // the qobuz lib, CLI, and MCP server); null for standalone projects.
   ecosystem: string | null
+  // A synthesised monorepo surface (e.g. foxhop-cli) borrows the parent repo's
+  // README for its landing; absent for ordinary projects, which use their own.
+  readmeSlug?: string
   readmeLanding: boolean
   tags: string[]
   icon?: string | null
@@ -138,7 +142,9 @@ export const getProjects = async (): Promise<Project[]> => {
   // Firefox add-ons need a live AMO lookup (listing URL + user count) layered on
   // top of their GitHub metadata; every other category passes through untouched.
   const items = await enrichWebextProjects((data.items ?? []).map(toProject))
-  return [...items, ...raycast]
+  // Expand monorepos into their per-surface cards + stamp shared ecosystems.
+  // Runs last, so it can see both repo cards and synthesised Raycast cards.
+  return applyMonorepos([...items, ...raycast])
 }
 
 export const getProject = async (slug: string): Promise<Project | null> => {

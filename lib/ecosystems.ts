@@ -13,6 +13,7 @@ const ECOSYSTEM_META: Record<string, { name: string }> = {
   revu: { name: "Revu" },
   pcloud: { name: "pCloud" },
   "macos-media-keys": { name: "macOS Media Keys" },
+  foxhop: { name: "Fox Hop" },
 }
 
 export const ecosystemName = (key: string): string =>

@@ -27,7 +27,7 @@
     28px 28px;
   color: var(--text);
   padding: 0 24px 96px;
-  overflow: hidden;
+  overflow-x: clip;
 }
 
 @media (max-width: 720px) {

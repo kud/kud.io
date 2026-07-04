@@ -30,6 +30,152 @@
   border-color: var(--primary);
 }
 
+/* Two-column browse: grid in the main column, sticky filter rail on the right --*/
+.layout {
+  --content-max: 1180px;
+  --rail-width: clamp(280px, 18vw, 340px);
+
+  max-width: calc(var(--content-max) + (var(--rail-width) * 2) + 80px);
+  margin: 12px auto 0;
+  padding: 0 24px;
+  display: grid;
+  gap: 40px;
+  grid-template-columns: 1fr;
+  /* Mobile: filters stack above the grid so they stay reachable. */
+  grid-template-areas: "filters" "main";
+}
+
+@media (min-width: 1100px) {
+  .layout {
+    /* An empty left spacer mirrors the right rail, so the main column stays
+       centred on the page (aligned with the hero) while the filters live in
+       the right gutter — rather than the whole block sliding left. */
+    grid-template-columns:
+      minmax(0, var(--rail-width)) minmax(0, var(--content-max))
+      minmax(0, var(--rail-width));
+    grid-template-areas: "spacer main filters";
+    align-items: start;
+  }
+}
+
+.main {
+  grid-area: main;
+  min-width: 0;
+}
+
+/* Inside the two-column layout the sections fill the main column, so drop the
+   full-width era's own centering (max-width + auto side margins). */
+.main .section,
+.main .ecoSection,
+.main .noResults {
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.sidebar {
+  --sidebar-top: clamp(16px, 4vh, 40px);
+  grid-area: filters;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: fit-content;
+}
+
+@media (min-width: 1100px) {
+  .sidebar {
+    align-self: start;
+    position: sticky;
+    top: var(--sidebar-top);
+    max-height: calc(100svh - var(--sidebar-top) * 2);
+    overflow: auto;
+    overscroll-behavior: contain;
+    margin-top: 60px;
+    padding-bottom: 20px;
+  }
+}
+
+.results {
+  min-width: 0;
+}
+
+.resultsAnimated {
+  animation: resultsIn 0.22s ease-out both;
+}
+
+.resultsAnimated .section,
+.resultsAnimated .noResults {
+  animation: resultItemIn 0.28s ease-out both;
+}
+
+.resultsAnimated .appTile,
+.resultsAnimated .row {
+  animation: resultItemIn 0.24s ease-out both;
+}
+
+@keyframes resultsIn {
+  from {
+    opacity: 0.72;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes resultItemIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resultsAnimated,
+  .resultsAnimated .section,
+  .resultsAnimated .noResults,
+  .resultsAnimated .appTile,
+  .resultsAnimated .row {
+    animation: none;
+  }
+}
+
+/* The reused search / Dropdown / filter atoms go full-width in the rail. */
+.sidebar .search {
+  flex: none;
+  width: 100%;
+}
+
+.sidebar .sortGroup {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 9px;
+}
+
+.sidebar .trigger {
+  width: 100%;
+  min-width: 0;
+}
+
+.sidebar .menu {
+  left: 0;
+  right: auto;
+  min-width: 100%;
+}
+
+.sidebar .filterGroup {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 11px;
+}
+
+.sidebar .filterLabel {
+  width: auto;
+}
+
 /* Filter section: labelled Language + Tags rows below the search/sort bar */
 .filters {
   max-width: 1040px;
@@ -89,6 +235,133 @@
   background: var(--primary);
   border-color: var(--primary);
   color: #fff;
+}
+
+.languageChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 15px 7px 10px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    color 0.14s,
+    background 0.14s,
+    border-color 0.14s;
+}
+
+.languageChip:hover {
+  color: var(--text);
+  border-color: var(--primary);
+}
+
+.languageChip[data-active="true"] {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.languageIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.languageIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
+}
+
+.ecosystemChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 5px 10px 5px 5px;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    color 0.14s,
+    background 0.14s,
+    border-color 0.14s;
+}
+
+.ecosystemChip:hover {
+  color: var(--text);
+  border-color: var(--primary);
+}
+
+.ecosystemChip[data-active="true"] {
+  background: rgba(194, 112, 61, 0.16);
+  border-color: var(--primary);
+  color: var(--primary-light);
+}
+
+.chipIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 999px;
+  background:
+    radial-gradient(
+      110% 110% at 50% 0%,
+      rgba(255, 255, 255, 0.12),
+      transparent 58%
+    ),
+    var(--surface-2);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.chipIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chipIcon img[data-bleed="false"] {
+  width: 64%;
+  height: 64%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
+}
+
+.chipCount {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1;
+}
+
+.ecosystemChip[data-active="true"] .chipCount {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text);
 }
 
 /* Content tags (multi-select) */
