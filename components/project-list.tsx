@@ -377,6 +377,8 @@ export const ProjectList = ({
               ))
             )}
           </div>
+
+          {isFiltered ? null : children}
         </div>
 
         <aside className={styles.sidebar}>
@@ -530,8 +532,6 @@ export const ProjectList = ({
           ) : null}
         </aside>
       </div>
-
-      {isFiltered ? null : children}
     </>
   )
 }
