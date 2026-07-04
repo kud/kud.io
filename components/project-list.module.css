@@ -714,7 +714,7 @@
    a toggle control rather than a launcher. */
 .ecoSection {
   max-width: 1040px;
-  margin: 8px auto 4px;
+  margin: 30px auto 8px;
 }
 
 .ecoHead {
@@ -830,6 +830,9 @@
   color: var(--text);
   letter-spacing: -0.01em;
   line-height: 1.2;
+  /* Reserve two lines so a wrapping name (macOS Media Keys) keeps its surface
+     count aligned with the single-line tiles beside it. */
+  min-height: calc(2 * 1.2 * 13.5px);
 }
 
 .ecoCount {

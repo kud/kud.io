@@ -189,10 +189,10 @@ const ProjectsIndex = async () => {
           No projects tagged <code>kud-site</code> yet.
         </p>
       ) : (
-        <ProjectList groups={groups} ecosystems={ecosystems} />
+        <ProjectList groups={groups} ecosystems={ecosystems}>
+          <Contributions />
+        </ProjectList>
       )}
-
-      <Contributions />
     </main>
   )
 }

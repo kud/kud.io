@@ -1,6 +1,13 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react"
 import { MorphLink } from "@/components/morph-link"
 import type { Project } from "@/lib/projects"
 import type { Ecosystem } from "@/lib/ecosystems"
@@ -115,9 +122,13 @@ const Dropdown = ({
 export const ProjectList = ({
   groups,
   ecosystems,
+  children,
 }: {
   groups: Group[]
   ecosystems: Ecosystem[]
+  // Footer content (the Contributions graph) rendered on the server and hidden
+  // once the grid is narrowed to a filtered subset.
+  children?: ReactNode
 }) => {
   const [sort, setSort] = useState<SortKey>("updated")
   const [query, setQuery] = useState("")
@@ -192,73 +203,12 @@ export const ProjectList = ({
     }),
   )
 
+  const isFiltered = Boolean(
+    needle || category || lang || activeTags.length > 0 || activeEcosystem,
+  )
+
   return (
     <>
-      {ecosystems.length > 0 ? (
-        <section className={styles.ecoSection}>
-          <div className={styles.ecoHead}>
-            <h2 className={styles.ecoTitle}>Ecosystems</h2>
-            <p className={styles.ecoBlurb}>
-              Some tools aren&apos;t a single app but a whole ecosystem —
-              several surfaces over one shared core, so you reach the same thing
-              from wherever you are. Pick one to see it across the grid.
-            </p>
-          </div>
-          <div className={styles.ecoGrid}>
-            {ecosystems.map((eco) => (
-              <button
-                key={eco.key}
-                type="button"
-                className={styles.ecoTile}
-                data-active={activeEcosystem === eco.key}
-                aria-pressed={activeEcosystem === eco.key}
-                onClick={() =>
-                  setActiveEcosystem((current) =>
-                    current === eco.key ? null : eco.key,
-                  )
-                }
-              >
-                <span className={styles.ecoIconWrap}>
-                  {eco.icon ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      className={styles.ecoIcon}
-                      src={eco.icon}
-                      alt=""
-                      loading="lazy"
-                      data-bleed={Boolean(
-                        eco.icon && !eco.icon.endsWith(".svg"),
-                      )}
-                    />
-                  ) : (
-                    <span className={styles.ecoMonogram} aria-hidden>
-                      {eco.name.charAt(0)}
-                    </span>
-                  )}
-                </span>
-                <span className={styles.ecoName}>{eco.name}</span>
-                <span className={styles.ecoCount}>
-                  {eco.count} surface{eco.count === 1 ? "" : "s"}
-                </span>
-              </button>
-            ))}
-          </div>
-          {activeEcosystem ? (
-            <button
-              type="button"
-              className={styles.ecoClear}
-              onClick={() => setActiveEcosystem(null)}
-            >
-              Showing{" "}
-              <strong>
-                {ecosystems.find((eco) => eco.key === activeEcosystem)?.name}
-              </strong>{" "}
-              only — show everything ✕
-            </button>
-          ) : null}
-        </section>
-      ) : null}
-
       <div className={styles.toolbar}>
         <input
           type="search"
@@ -336,6 +286,71 @@ export const ProjectList = ({
           </div>
         ) : null}
       </div>
+
+      {ecosystems.length > 0 ? (
+        <section className={styles.ecoSection}>
+          <div className={styles.ecoHead}>
+            <h2 className={styles.ecoTitle}>Ecosystems</h2>
+            <p className={styles.ecoBlurb}>
+              Some tools aren&apos;t a single app but a whole ecosystem —
+              several surfaces over one shared core, so you reach the same thing
+              from wherever you are. Pick one to see it across the grid.
+            </p>
+          </div>
+          <div className={styles.ecoGrid}>
+            {ecosystems.map((eco) => (
+              <button
+                key={eco.key}
+                type="button"
+                className={styles.ecoTile}
+                data-active={activeEcosystem === eco.key}
+                aria-pressed={activeEcosystem === eco.key}
+                onClick={() =>
+                  setActiveEcosystem((current) =>
+                    current === eco.key ? null : eco.key,
+                  )
+                }
+              >
+                <span className={styles.ecoIconWrap}>
+                  {eco.icon ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      className={styles.ecoIcon}
+                      src={eco.icon}
+                      alt=""
+                      loading="lazy"
+                      data-bleed={Boolean(
+                        eco.icon && !eco.icon.endsWith(".svg"),
+                      )}
+                    />
+                  ) : (
+                    <span className={styles.ecoMonogram} aria-hidden>
+                      {eco.name.charAt(0)}
+                    </span>
+                  )}
+                </span>
+                <span className={styles.ecoName}>{eco.name}</span>
+                <span className={styles.ecoCount}>
+                  {eco.count} surface{eco.count === 1 ? "" : "s"}
+                </span>
+              </button>
+            ))}
+          </div>
+          {activeEcosystem ? (
+            <button
+              type="button"
+              className={styles.ecoClear}
+              onClick={() => setActiveEcosystem(null)}
+            >
+              Showing{" "}
+              <strong>
+                {ecosystems.find((eco) => eco.key === activeEcosystem)?.name}
+              </strong>{" "}
+              only — show everything ✕
+            </button>
+          ) : null}
+        </section>
+      ) : null}
 
       {visibleGroups.length === 0 ? (
         <p className={styles.noResults}>
@@ -470,6 +485,8 @@ export const ProjectList = ({
           </section>
         ))
       )}
+
+      {isFiltered ? null : children}
     </>
   )
 }
