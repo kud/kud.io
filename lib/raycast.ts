@@ -41,6 +41,7 @@ export const getRaycastProjects = (): Project[] => {
     name: record.name,
     description: record.description,
     category: RAYCAST_CATEGORY,
+    ecosystem: null,
     readmeLanding: false,
     tags: record.tags ?? [],
     icon: record.icon,

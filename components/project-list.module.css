@@ -707,3 +707,179 @@
     grid-row: 2;
   }
 }
+
+/* Ecosystems ----------------------------------------------------------------*/
+/* A facet, not a category: tiles that filter the whole grid to one product
+   family. They share the Apps liquid-glass squircle but sit smaller and act as
+   a toggle control rather than a launcher. */
+.ecoSection {
+  max-width: 1040px;
+  margin: 8px auto 4px;
+}
+
+.ecoHead {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.ecoTitle {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.ecoBlurb {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 62ch;
+}
+
+.ecoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: clamp(12px, 2vw, 22px);
+}
+
+.ecoTile {
+  --eco-accent: var(--primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 9px;
+  padding: 10px 6px;
+  background: none;
+  border: none;
+  border-radius: 14px;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.ecoIconWrap {
+  position: relative;
+  width: clamp(64px, 8vw, 82px);
+  aspect-ratio: 1;
+  border-radius: 27%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(
+      130% 120% at 50% -10%,
+      color-mix(in srgb, var(--eco-accent) 40%, transparent),
+      transparent 62%
+    ),
+    var(--surface-2);
+  box-shadow: 0 14px 30px -16px color-mix(in srgb, var(--eco-accent) 70%, #000);
+  transition:
+    transform 0.26s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glass rim, matched to the Apps tiles but a touch softer for the smaller size. */
+.ecoIconWrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -14px 26px -16px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+}
+
+.ecoTile:hover .ecoIconWrap {
+  transform: translateY(-4px) scale(1.04);
+}
+
+.ecoIcon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* SVG glyphs aren't full icon art — contain them on the tinted glass. */
+.ecoIcon[data-bleed="false"] {
+  width: 62%;
+  height: 62%;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.4));
+}
+
+.ecoMonogram {
+  z-index: 1;
+  font-size: 30px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.ecoName {
+  font-size: 13.5px;
+  font-weight: 640;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.ecoCount {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* Active family: bright ring + lift; the rest dim to push it forward. */
+.ecoTile[data-active="true"] .ecoIconWrap {
+  box-shadow:
+    0 16px 34px -14px color-mix(in srgb, var(--eco-accent) 85%, #000),
+    0 0 0 2px var(--primary);
+}
+
+.ecoTile[data-active="true"] .ecoName {
+  color: var(--primary-light);
+}
+
+.ecoSection:has(.ecoTile[data-active="true"])
+  .ecoTile:not([data-active="true"]) {
+  opacity: 0.5;
+}
+
+.ecoClear {
+  margin-top: 16px;
+  background: var(--surface);
+  border: 1px dashed var(--border);
+  border-radius: 999px;
+  padding: 7px 15px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    border-color 0.15s,
+    color 0.15s;
+}
+
+.ecoClear:hover {
+  border-color: var(--primary);
+  color: var(--text);
+}
+
+.ecoClear strong {
+  color: var(--primary-light);
+  font-weight: 650;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ecoTile:hover .ecoIconWrap {
+    transform: none;
+  }
+}

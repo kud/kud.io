@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { MorphLink } from "@/components/morph-link"
 import type { Project } from "@/lib/projects"
+import type { Ecosystem } from "@/lib/ecosystems"
 import { isAppCategory } from "@/lib/categories"
 import styles from "./project-list.module.css"
 
@@ -111,12 +112,21 @@ const Dropdown = ({
   )
 }
 
-export const ProjectList = ({ groups }: { groups: Group[] }) => {
+export const ProjectList = ({
+  groups,
+  ecosystems,
+}: {
+  groups: Group[]
+  ecosystems: Ecosystem[]
+}) => {
   const [sort, setSort] = useState<SortKey>("updated")
   const [query, setQuery] = useState("")
   const [category, setCategory] = useState<string | null>(null)
   const [lang, setLang] = useState<string | null>(null)
   const [activeTags, setActiveTags] = useState<string[]>([])
+  // Ecosystem is single-select (unlike tags): you're looking at one family at a
+  // time. Clicking the active tile again clears it.
+  const [activeEcosystem, setActiveEcosystem] = useState<string | null>(null)
   const compare = SORTS[sort].fn
 
   const toggleTag = (tag: string) =>
@@ -155,6 +165,7 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
   const needle = query.trim().toLowerCase()
   const matches = (project: Project) =>
     (!lang || project.language === lang) &&
+    (!activeEcosystem || project.ecosystem === activeEcosystem) &&
     (activeTags.length === 0 ||
       project.tags.some((tag) => activeTags.includes(tag))) &&
     (!needle ||
@@ -183,6 +194,71 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
 
   return (
     <>
+      {ecosystems.length > 0 ? (
+        <section className={styles.ecoSection}>
+          <div className={styles.ecoHead}>
+            <h2 className={styles.ecoTitle}>Ecosystems</h2>
+            <p className={styles.ecoBlurb}>
+              Some tools aren&apos;t a single app but a whole ecosystem —
+              several surfaces over one shared core, so you reach the same thing
+              from wherever you are. Pick one to see it across the grid.
+            </p>
+          </div>
+          <div className={styles.ecoGrid}>
+            {ecosystems.map((eco) => (
+              <button
+                key={eco.key}
+                type="button"
+                className={styles.ecoTile}
+                data-active={activeEcosystem === eco.key}
+                aria-pressed={activeEcosystem === eco.key}
+                onClick={() =>
+                  setActiveEcosystem((current) =>
+                    current === eco.key ? null : eco.key,
+                  )
+                }
+              >
+                <span className={styles.ecoIconWrap}>
+                  {eco.icon ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      className={styles.ecoIcon}
+                      src={eco.icon}
+                      alt=""
+                      loading="lazy"
+                      data-bleed={Boolean(
+                        eco.icon && !eco.icon.endsWith(".svg"),
+                      )}
+                    />
+                  ) : (
+                    <span className={styles.ecoMonogram} aria-hidden>
+                      {eco.name.charAt(0)}
+                    </span>
+                  )}
+                </span>
+                <span className={styles.ecoName}>{eco.name}</span>
+                <span className={styles.ecoCount}>
+                  {eco.count} surface{eco.count === 1 ? "" : "s"}
+                </span>
+              </button>
+            ))}
+          </div>
+          {activeEcosystem ? (
+            <button
+              type="button"
+              className={styles.ecoClear}
+              onClick={() => setActiveEcosystem(null)}
+            >
+              Showing{" "}
+              <strong>
+                {ecosystems.find((eco) => eco.key === activeEcosystem)?.name}
+              </strong>{" "}
+              only — show everything ✕
+            </button>
+          ) : null}
+        </section>
+      ) : null}
+
       <div className={styles.toolbar}>
         <input
           type="search"

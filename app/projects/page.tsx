@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { AvatarImage } from "@/components/avatar-image"
 import { BackLink } from "@/components/back-link"
 import { getProjects, type Project } from "@/lib/projects"
+import { getEcosystems } from "@/lib/ecosystems"
 import { getIcons } from "@/lib/icons"
 import { getApp, appDisplayName } from "@/lib/app"
 import { isAppCategory } from "@/lib/categories"
@@ -30,11 +31,6 @@ const CATEGORY_META: Record<string, { name: string; blurb: string }> = {
     name: "Apps",
     blurb:
       "Web apps I design and ship end to end — open them straight from here, or read the story behind each one.",
-  },
-  ecosystem: {
-    name: "Ecosystems",
-    blurb:
-      "Tools that aren't a single app but a whole ecosystem — several surfaces over one shared core, so you reach the same thing from wherever you are.",
   },
   desktop: {
     name: "Desktop Apps",
@@ -134,6 +130,10 @@ const ProjectsIndex = async () => {
     return { ...project, icon: icons[project.slug] ?? project.icon ?? null }
   })
   const groups = groupByCategory(withIcons)
+  // Ecosystems are an orthogonal facet: families spanning several categories
+  // (qobuz lib + CLI + MCP). Derived from the same projects, surfaced as tiles
+  // that filter the grid rather than as their own section.
+  const ecosystems = getEcosystems(withIcons, icons)
 
   return (
     <main className={styles.page}>
@@ -189,7 +189,7 @@ const ProjectsIndex = async () => {
           No projects tagged <code>kud-site</code> yet.
         </p>
       ) : (
-        <ProjectList groups={groups} />
+        <ProjectList groups={groups} ecosystems={ecosystems} />
       )}
 
       <Contributions />

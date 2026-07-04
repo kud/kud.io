@@ -10,6 +10,10 @@ export type Project = {
   name: string
   description: string | null
   category: string
+  // Cross-cutting product family (`kud-site-eco-<name>`) — orthogonal to
+  // category. A project belongs to at most one ecosystem (e.g. "qobuz" unites
+  // the qobuz lib, CLI, and MCP server); null for standalone projects.
+  ecosystem: string | null
   readmeLanding: boolean
   tags: string[]
   icon?: string | null
@@ -38,10 +42,12 @@ export type Project = {
 // `kud-site-tag-*` content tags. The category detector must skip these.
 const README_TOPIC = `${TOPIC}-readme`
 const TAG_PREFIX = `${TOPIC}-tag-`
+const ECO_PREFIX = `${TOPIC}-eco-`
 const isCategoryTopic = (topic: string) =>
   topic.startsWith(`${TOPIC}-`) &&
   topic !== README_TOPIC &&
-  !topic.startsWith(TAG_PREFIX)
+  !topic.startsWith(TAG_PREFIX) &&
+  !topic.startsWith(ECO_PREFIX)
 
 // Content tags come from `kud-site-tag-<tag>` topics — what a project is FOR
 // (ai, productivity…), orthogonal to its language.
@@ -49,6 +55,13 @@ const tagsFromTopics = (topics: string[]): string[] =>
   topics
     .filter((topic) => topic.startsWith(TAG_PREFIX))
     .map((topic) => topic.slice(TAG_PREFIX.length))
+
+// The product family from a `kud-site-eco-<name>` topic. Orthogonal to category:
+// a repo keeps its own category (CLI, MCP…) and optionally joins one ecosystem.
+const ecoFromTopics = (topics: string[]): string | null => {
+  const topic = topics.find((item) => item.startsWith(ECO_PREFIX))
+  return topic ? topic.slice(ECO_PREFIX.length) : null
+}
 
 type Repo = {
   name: string
@@ -93,6 +106,7 @@ const toProject = (repo: Repo): Project => ({
   name: getApp(repo.name).name ?? repo.name,
   description: stripLeadingEmoji(repo.description),
   category: categoryFromTopics(repo.topics ?? []),
+  ecosystem: ecoFromTopics(repo.topics ?? []),
   // `kud-site-readme`: the README is the whole product (curated lists) — render
   // it on the landing and skip the docs route.
   readmeLanding: (repo.topics ?? []).includes(README_TOPIC),
