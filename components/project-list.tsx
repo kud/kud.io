@@ -367,6 +367,12 @@ export const ProjectList = ({ groups }: { groups: Group[] }) => {
                               {project.downloads.toLocaleString()} installs
                             </span>
                           ) : null}
+                          {project.users ? (
+                            <span className={styles.downloads}>
+                              {project.users.toLocaleString()} user
+                              {project.users === 1 ? "" : "s"}
+                            </span>
+                          ) : null}
                           {project.language ? (
                             <span className={styles.lang}>
                               {project.language}

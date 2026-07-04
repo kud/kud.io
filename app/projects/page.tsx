@@ -80,6 +80,11 @@ const CATEGORY_META: Record<string, { name: string; blurb: string }> = {
     blurb:
       "Extensions for Raycast that bring file sharing, domains, fonts, and more into the launcher — published to the Raycast Store.",
   },
+  webext: {
+    name: "Firefox Add-ons",
+    blurb:
+      "Browser extensions I build for Firefox — small, focused add-ons that smooth over the rough edges of the sites I use every day, published on addons.mozilla.org.",
+  },
   other: {
     name: "Lists & Resources",
     blurb:
