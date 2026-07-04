@@ -3,24 +3,29 @@
     "slug": "raycast-1loc",
     "name": "1 LOC - JavaScript Utilities in Single Line of Code",
     "description": "Browse JavaScript Utilities from 1loc.dev",
-    "icon": "https://files.raycast.com/cvw0ejinx1q1hle097zcidqt8ail",
-    "tags": ["developer-tools"],
+    "icon": "https://files.raycast.com/8dlr8133o0v7jvtcpt1e7qxes697",
+    "tags": [
+      "developer-tools"
+    ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/1loc",
     "storeUrl": "https://www.raycast.com/kud/1loc",
     "installUrl": "raycast://extensions/kud/1loc?source=webstore",
-    "downloads": 1473,
-    "updatedAt": "2026-04-03T10:23:38.000Z"
+    "downloads": 1481,
+    "updatedAt": "2026-06-26T07:21:50.000Z"
   },
   {
     "slug": "raycast-nerd-font-picker",
     "name": "Nerd Font Picker",
     "description": "Browse and copy Nerd Font glyphs from your installed fonts",
     "icon": "https://files.raycast.com/dya54k0dot6nbei9p2sfnog1gb8v",
-    "tags": ["developer-tools", "design-tools"],
+    "tags": [
+      "developer-tools",
+      "design-tools"
+    ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/nerd-font-picker",
     "storeUrl": "https://www.raycast.com/kud/nerd-font-picker",
     "installUrl": "raycast://extensions/kud/nerd-font-picker?source=webstore",
-    "downloads": 63,
+    "downloads": 73,
     "updatedAt": "2026-05-13T12:28:26.000Z"
   },
   {
@@ -37,7 +42,7 @@
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/whimsical",
     "storeUrl": "https://www.raycast.com/kud/whimsical",
     "installUrl": "raycast://extensions/kud/whimsical?source=webstore",
-    "downloads": 440,
+    "downloads": 454,
     "updatedAt": "2025-11-03T15:21:54.000Z"
   },
   {
@@ -45,11 +50,14 @@
     "name": "ThermoConvert",
     "description": "Instantly convert between all major temperature scales",
     "icon": "https://files.raycast.com/5vxjj1bwneujkycsop8vrqrjl8rn",
-    "tags": ["developer-tools", "productivity"],
+    "tags": [
+      "developer-tools",
+      "productivity"
+    ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/thermo-convert",
     "storeUrl": "https://www.raycast.com/kud/thermoconvert",
     "installUrl": "raycast://extensions/kud/thermoconvert?source=webstore",
-    "downloads": 47,
+    "downloads": 50,
     "updatedAt": "2026-04-24T14:10:48.000Z"
   },
   {
@@ -61,7 +69,7 @@
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/vlc",
     "storeUrl": "https://www.raycast.com/kud/vlc",
     "installUrl": "raycast://extensions/kud/vlc?source=webstore",
-    "downloads": 410,
+    "downloads": 415,
     "updatedAt": "2025-11-12T07:27:52.000Z"
   },
   {
@@ -69,7 +77,10 @@
     "name": "Gandi",
     "description": "Manage your Gandi domains, DNS records, and check domain availability",
     "icon": "https://files.raycast.com/k0rjkyznrlyr6pyv3vca0w4wbh2c",
-    "tags": ["developer-tools", "web"],
+    "tags": [
+      "developer-tools",
+      "web"
+    ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/gandi",
     "storeUrl": "https://www.raycast.com/kud/gandi",
     "installUrl": "raycast://extensions/kud/gandi?source=webstore",
@@ -81,7 +92,10 @@
     "name": "UK Bank Holidays",
     "description": "Display the upcoming bank holiday information for England and Wales.",
     "icon": "https://files.raycast.com/isjghrj854mx231c9zrycz7lloqf",
-    "tags": ["other", "fun"],
+    "tags": [
+      "other",
+      "fun"
+    ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/uk-bank-holidays",
     "storeUrl": "https://www.raycast.com/kud/uk-bank-holidays",
     "installUrl": "raycast://extensions/kud/uk-bank-holidays?source=webstore",
@@ -97,7 +111,7 @@
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/localsend",
     "storeUrl": "https://www.raycast.com/kud/localsend",
     "installUrl": "raycast://extensions/kud/localsend?source=webstore",
-    "downloads": 1654,
+    "downloads": 1693,
     "updatedAt": "2026-04-24T13:11:14.000Z"
   },
   {
@@ -105,11 +119,15 @@
     "name": "Espanso",
     "description": "The Raycast version of Espanso Search Bar",
     "icon": "https://files.raycast.com/h7amma1v9ri9r8lv8vga0gf0n54g",
-    "tags": ["applications", "system", "productivity"],
+    "tags": [
+      "applications",
+      "system",
+      "productivity"
+    ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/espanso",
     "storeUrl": "https://www.raycast.com/kud/espanso",
     "installUrl": "raycast://extensions/kud/espanso?source=webstore",
-    "downloads": 1332,
+    "downloads": 1344,
     "updatedAt": "2026-05-28T04:25:05.000Z"
   },
   {
@@ -117,11 +135,13 @@
     "name": "Fox Hop",
     "description": "Focus a specific Firefox tab from anywhere — manage your tab targets and generate per-tab hotkey scripts.",
     "icon": "https://files.raycast.com/mqixmokssu9nj7nd95sr68jqp5w8",
-    "tags": ["productivity"],
+    "tags": [
+      "productivity"
+    ],
     "repoUrl": "https://github.com/raycast/extensions/tree/main/extensions/foxhop",
     "storeUrl": "https://www.raycast.com/kud/foxhop",
     "installUrl": "raycast://extensions/kud/foxhop?source=webstore",
-    "downloads": 2,
+    "downloads": 3,
     "updatedAt": "2026-06-25T06:20:42.000Z"
   }
 ]

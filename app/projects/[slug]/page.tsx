@@ -234,14 +234,22 @@ const ReadmeLanding = ({
   // Raycast extensions live in the raycast/extensions monorepo, so the hero links
   // to the Raycast Store + the monorepo source rather than a docs route.
   const isRaycast = project.category === "raycast"
-  const hasDocs = !isList && !isRaycast && projectHasExtraDocs(project.slug)
+  // Firefox add-ons link out to AMO for the install, so — like Raycast — they
+  // skip the docs route and show a store CTA in the hero instead.
+  const isWebext = project.category === "webext"
+  const hasDocs =
+    !isList && !isRaycast && !isWebext && projectHasExtraDocs(project.slug)
   const badgeLabel = isRaycast
     ? project.downloads
       ? `${project.downloads.toLocaleString()} installs`
       : "Raycast extension"
-    : isList
-      ? "Curated list"
-      : "Open source"
+    : isWebext
+      ? project.users
+        ? `${project.users.toLocaleString()} user${project.users === 1 ? "" : "s"}`
+        : "Firefox add-on"
+      : isList
+        ? "Curated list"
+        : "Open source"
 
   return (
     <>
@@ -292,6 +300,29 @@ const ReadmeLanding = ({
                 <a
                   href={project.repoUrl}
                   className={styles.secondary}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View source ↗
+                </a>
+              </>
+            ) : isWebext ? (
+              <>
+                {project.storeUrl ? (
+                  <a
+                    href={project.storeUrl}
+                    className={styles.primary}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Add to Firefox ↗
+                  </a>
+                ) : null}
+                <a
+                  href={project.repoUrl}
+                  className={
+                    project.storeUrl ? styles.secondary : styles.primary
+                  }
                   target="_blank"
                   rel="noreferrer"
                 >

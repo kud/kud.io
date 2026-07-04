@@ -3,6 +3,16 @@ title: "foxhop"
 description: "Focus a specific Firefox tab from anywhere on macOS — CLI, Raycast, and a Firefox extension."
 ---
 
+## Ecosystem
+
+foxhop isn't a single CLI — it's one product with three surfaces, all sharing the same targets in `~/.config/foxhop/tabs.json`:
+
+- **CLI + native host** (`@kud/foxhop-cli`) — the engine: focuses tabs, manages targets, and bridges macOS to Firefox over native messaging.
+- **Firefox extension** — the in-browser half of the bridge; it receives a request from the native host and switches to the matching tab.
+- **Raycast extension** — a launcher-native way to search, add, edit, and focus targets, plus generated per-tab hotkeys via `foxhop sync`.
+
+Reach for whichever surface fits the moment — a global hotkey, a Raycast command, or the terminal — they all drive the same configuration.
+
 ## Features
 
 - **Global hotkey focus** — jump to a specific Firefox tab from a global hotkey, Raycast command, or the terminal without touching the mouse
@@ -20,8 +30,8 @@ foxhop install        # register the native messaging host with Firefox
 
 Then install the Firefox extension:
 
-- **Permanent** — download the signed [`foxhop-1.0.1.xpi`](https://github.com/kud/foxhop/releases/download/extension-v1.0.1/foxhop-1.0.1.xpi) and open it in Firefox (or drag it onto a Firefox window).
-- **Temporary (development)** — open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on**, and select `extension/manifest.json` from this repo.
+- **Permanent** — install from [addons.mozilla.org](https://addons.mozilla.org/firefox/addon/foxhop/) — the signed, auto-updating listing.
+- **Temporary (development)** — open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on**, and select `webextension/manifest.json` from this repo.
 
 ## Usage
 
@@ -46,6 +56,6 @@ cd cli && npm run dev        # run from source via tsx
 cd cli && npm test           # vitest suite
 
 # Extension
-cd extension && npm run dev  # launch Firefox Nightly with the extension loaded
-cd extension && npm run lint # web-ext lint
+cd webextension && npm run dev  # launch Firefox Nightly with the extension loaded
+cd webextension && npm run lint # web-ext lint
 ```

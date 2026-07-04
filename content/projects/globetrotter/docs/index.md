@@ -16,7 +16,7 @@ description: "Interactive 3D globe visualization built with Next.js, React, Thre
 
 ## 🔗 Live Demo
 
-**[globetrotter-map.vercel.app](https://globetrotter-map.vercel.app)**
+**[globetrotter.kud.io](https://globetrotter.kud.io)**
 
 ## 🚀 Quick Start
 

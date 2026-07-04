@@ -9,8 +9,18 @@ foxhop does nothing until the Firefox extension is loaded and connected. Without
 
 ## Firefox Nightly is the default
 
-`npm run dev` uses `--firefox=nightly`. Temporary add-ons (loaded via `about:debugging`) must be **reloaded** after changing `extension/src/background.js`, and they unload when you restart Firefox. For a permanent install, install the signed `.xpi` from addons.mozilla.org.
+`npm run dev` uses `--firefox=nightly`. Temporary add-ons (loaded via `about:debugging`) must be **reloaded** after changing `webextension/src/background.js`, and they unload when you restart Firefox. For a permanent install, install the signed `.xpi` from addons.mozilla.org.
+
+## Hotkeys keep opening new tabs instead of focusing
+
+If pressing a hotkey opens a fresh tab every time rather than focusing the one that's already open, the native host isn't reachable and `foxhop focus` is falling back to _opening_ the URL.
+
+The usual cause is **Node not being on Firefox's PATH**. When Firefox is launched from the Dock (rather than a terminal) it gets a stripped PATH that excludes version-managed Node (mise, nvm, asdf) and Homebrew, so the host can't start. `foxhop install` fixes this by writing a launcher that hard-codes the absolute Node path — so if you hit this, **run `foxhop install` and restart Firefox**.
+
+## After a Node upgrade
+
+`foxhop install` bakes the absolute path of the Node that ran it into the host launcher. After upgrading Node (e.g. a new mise LTS), that path moves — **re-run `foxhop install`** to refresh it. (Generated hotkey scripts use the mise Node shim instead, so they already survive Node upgrades.)
 
 ## Moving the repo
 
-The native-messaging manifest's `path` is absolute — if you move the repo (when running from source), re-run `foxhop install`. Generated hotkey scripts embed the mise Node shim, so they survive Node upgrades.
+The native-messaging manifest's `path` is absolute — if you move the repo (when running from source), re-run `foxhop install`.

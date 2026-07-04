@@ -1,4 +1,5 @@
 import { getRaycastProjects } from "@/lib/raycast"
+import { enrichWebextProjects } from "@/lib/webext"
 import { getApp } from "@/lib/app"
 
 const OWNER = "kud"
@@ -28,6 +29,9 @@ export type Project = {
   storeUrl?: string | null
   installUrl?: string | null
   downloads?: number | null
+  // Firefox add-ons (`kud-site-webext`) only: the live "average daily users"
+  // figure from AMO, shown in place of stars/installs.
+  users?: number | null
 }
 
 // Reserved `kud-site-*` topics that are NOT categories: behaviour flags and the
@@ -117,7 +121,10 @@ export const getProjects = async (): Promise<Project[]> => {
   const raycast = getRaycastProjects()
   if (!res.ok) return raycast
   const data = (await res.json()) as { items?: Repo[] }
-  return [...(data.items ?? []).map(toProject), ...raycast]
+  // Firefox add-ons need a live AMO lookup (listing URL + user count) layered on
+  // top of their GitHub metadata; every other category passes through untouched.
+  const items = await enrichWebextProjects((data.items ?? []).map(toProject))
+  return [...items, ...raycast]
 }
 
 export const getProject = async (slug: string): Promise<Project | null> => {
