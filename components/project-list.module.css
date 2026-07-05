@@ -113,8 +113,8 @@
   }
 }
 
-/* A zero-height marker at the top of the browse area; the IntersectionObserver
-   watches it to decide when to reveal the filter rail. */
+/* A zero-height marker at the top of the browse area; the scroll listener reads
+   its position each frame to decide when to reveal the filter rail. */
 .revealSentinel {
   height: 0;
   scroll-margin: 0;

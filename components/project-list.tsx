@@ -159,12 +159,13 @@ export const ProjectList = ({
 
   const markFilterInteraction = () => setHasFilterInteraction(true)
 
-  // Reveal the rail once the top of the browse area has scrolled up past a line
-  // ~40% from the bottom of the viewport, and keep it revealed however far down
-  // you go — the sentinel's top only gets more negative, so the test stays true.
-  // It recedes only when you scroll back up toward the hero. Read on every scroll
-  // frame (rAF-throttled) rather than on observer crossings, so it can't get
-  // stuck revealed/hidden between boundaries.
+  // Keep the rail hidden over the hero, then reveal it once the top of the
+  // browse area has climbed near the top of the viewport — i.e. the hero has
+  // scrolled away and you're into the Apps grid. The sentinel sits at the top of
+  // `.main`, so its `top` starts at the hero's height and shrinks as you scroll;
+  // once it drops below ~15% of the viewport the hero is essentially gone. It
+  // recedes again on the way back up. Read on every scroll frame (rAF-throttled)
+  // rather than on observer crossings, so it can't get stuck between boundaries.
   useEffect(() => {
     setScrollReveal(true)
     const sentinel = revealSentinelRef.current
@@ -173,7 +174,7 @@ export const ProjectList = ({
     const update = () => {
       frame = 0
       setFiltersRevealed(
-        sentinel.getBoundingClientRect().top <= window.innerHeight * 0.6,
+        sentinel.getBoundingClientRect().top <= window.innerHeight * 0.15,
       )
     }
     const onScroll = () => {
