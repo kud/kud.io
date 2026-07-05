@@ -159,20 +159,34 @@ export const ProjectList = ({
 
   const markFilterInteraction = () => setHasFilterInteraction(true)
 
-  // Reveal the rail once the top of the browse area enters the viewport, and let
-  // it recede again on the way back up to the hero. The negative bottom margin
-  // trips the observer a little before the sentinel reaches centre, so the rail
-  // is already in place by the time the first section is comfortably in view.
+  // Reveal the rail once the top of the browse area has scrolled up past a line
+  // ~40% from the bottom of the viewport, and keep it revealed however far down
+  // you go — the sentinel's top only gets more negative, so the test stays true.
+  // It recedes only when you scroll back up toward the hero. Read on every scroll
+  // frame (rAF-throttled) rather than on observer crossings, so it can't get
+  // stuck revealed/hidden between boundaries.
   useEffect(() => {
     setScrollReveal(true)
     const sentinel = revealSentinelRef.current
     if (!sentinel) return
-    const observer = new IntersectionObserver(
-      ([entry]) => setFiltersRevealed(entry.isIntersecting),
-      { rootMargin: "0px 0px -40% 0px" },
-    )
-    observer.observe(sentinel)
-    return () => observer.disconnect()
+    let frame = 0
+    const update = () => {
+      frame = 0
+      setFiltersRevealed(
+        sentinel.getBoundingClientRect().top <= window.innerHeight * 0.6,
+      )
+    }
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    window.addEventListener("resize", onScroll)
+    return () => {
+      window.removeEventListener("scroll", onScroll)
+      window.removeEventListener("resize", onScroll)
+      if (frame) cancelAnimationFrame(frame)
+    }
   }, [])
 
   const toggleTag = (tag: string) => {
