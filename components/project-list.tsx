@@ -145,12 +145,35 @@ export const ProjectList = ({
   const [lang, setLang] = useState<string | null>(null)
   const [activeTags, setActiveTags] = useState<string[]>([])
   const [hasFilterInteraction, setHasFilterInteraction] = useState(false)
+  // The filter rail stays out of the way while the hero is in view, then fades
+  // in once the browse area scrolls up. `scrollReveal` is only switched on after
+  // mount, so with JS disabled the rail renders visible (progressive
+  // enhancement) rather than being stranded hidden.
+  const [scrollReveal, setScrollReveal] = useState(false)
+  const [filtersRevealed, setFiltersRevealed] = useState(false)
+  const revealSentinelRef = useRef<HTMLDivElement>(null)
   // Ecosystem is single-select (unlike tags): you're looking at one family at a
   // time. Clicking the active tile again clears it.
   const [activeEcosystem, setActiveEcosystem] = useState<string | null>(null)
   const compare = SORTS[sort].fn
 
   const markFilterInteraction = () => setHasFilterInteraction(true)
+
+  // Reveal the rail once the top of the browse area enters the viewport, and let
+  // it recede again on the way back up to the hero. The negative bottom margin
+  // trips the observer a little before the sentinel reaches centre, so the rail
+  // is already in place by the time the first section is comfortably in view.
+  useEffect(() => {
+    setScrollReveal(true)
+    const sentinel = revealSentinelRef.current
+    if (!sentinel) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setFiltersRevealed(entry.isIntersecting),
+      { rootMargin: "0px 0px -40% 0px" },
+    )
+    observer.observe(sentinel)
+    return () => observer.disconnect()
+  }, [])
 
   const toggleTag = (tag: string) => {
     markFilterInteraction()
@@ -231,8 +254,15 @@ export const ProjectList = ({
 
   return (
     <>
-      <div className={styles.layout}>
+      <div
+        className={`${styles.layout} ${scrollReveal ? styles.scrollReveal : ""}`}
+      >
         <div className={styles.main}>
+          <div
+            ref={revealSentinelRef}
+            className={styles.revealSentinel}
+            aria-hidden
+          />
           <div
             key={filterKey}
             className={`${styles.results} ${hasFilterInteraction ? styles.resultsAnimated : ""}`}
@@ -292,7 +322,8 @@ export const ProjectList = ({
                                 alt=""
                                 loading="lazy"
                                 data-bleed={Boolean(
-                                  project.icon && !project.icon.endsWith(".svg"),
+                                  project.icon &&
+                                  !project.icon.endsWith(".svg"),
                                 )}
                               />
                             ) : (
@@ -344,7 +375,8 @@ export const ProjectList = ({
                                 ) : null}
                                 {project.downloads ? (
                                   <span className={styles.downloads}>
-                                    {project.downloads.toLocaleString()} installs
+                                    {project.downloads.toLocaleString()}{" "}
+                                    installs
                                   </span>
                                 ) : null}
                                 {project.users ? (
@@ -381,7 +413,7 @@ export const ProjectList = ({
           {isFiltered ? null : children}
         </div>
 
-        <aside className={styles.sidebar}>
+        <aside className={styles.sidebar} data-revealed={filtersRevealed}>
           <input
             type="search"
             className={styles.search}
@@ -436,7 +468,9 @@ export const ProjectList = ({
                     onClick={() => {
                       markFilterInteraction()
                       setActiveEcosystem(
-                        activeEcosystem === ecosystem.key ? null : ecosystem.key,
+                        activeEcosystem === ecosystem.key
+                          ? null
+                          : ecosystem.key,
                       )
                     }}
                   >
@@ -491,7 +525,11 @@ export const ProjectList = ({
                   {LANGUAGE_ICONS[language] ? (
                     <span className={styles.languageIcon} aria-hidden>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={LANGUAGE_ICONS[language]} alt="" loading="lazy" />
+                      <img
+                        src={LANGUAGE_ICONS[language]}
+                        alt=""
+                        loading="lazy"
+                      />
                     </span>
                   ) : null}
                   {language}

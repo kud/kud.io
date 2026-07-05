@@ -93,6 +93,38 @@
     margin-top: 60px;
     padding-bottom: 20px;
   }
+
+  /* Scroll-reveal (desktop only): keep the hero clean by holding the rail back
+     until the browse area scrolls into view, then fade it in. Only armed once
+     JS has mounted (.scrollReveal) — without it the rail stays visible. */
+  .scrollReveal .sidebar {
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition:
+      opacity 0.4s ease,
+      transform 0.4s ease;
+  }
+
+  .scrollReveal .sidebar[data-revealed="true"] {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}
+
+/* A zero-height marker at the top of the browse area; the IntersectionObserver
+   watches it to decide when to reveal the filter rail. */
+.revealSentinel {
+  height: 0;
+  scroll-margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrollReveal .sidebar {
+    transform: none;
+    transition: opacity 0.4s ease;
+  }
 }
 
 .results {
