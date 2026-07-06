@@ -1,0 +1,20 @@
+---
+title: 🖱️ Usage
+description: How to hide and show the Google Meet presentation tile with the floating button or the keyboard shortcut.
+---
+
+Once installed, open any Google Meet call at `meet.google.com` and share your whole screen as usual. The extension activates automatically — there's no setup or configuration.
+
+## The floating toggle button
+
+A **Hide presentation** button appears in the bottom-right corner of the Meet page as soon as the content script loads. Click it to hide the presentation tile and replace it with a small placeholder reading "Presentation hidden — unmirror". The button's label flips to **Show presentation**, and clicking it again restores the tile.
+
+## The keyboard shortcut
+
+Press **`Alt+Shift+H`** to toggle the tile without reaching for the mouse. The shortcut is bound at the document level and checks the event target before acting: if focus is inside a text input, a textarea, or any `contenteditable` element (for example, the Meet chat box), the shortcut is inert so it never interferes with typing.
+
+## What gets hidden
+
+Only the presentation tile is affected. The participant grid and your own self-view thumbnail are left exactly as they are — see [How it works](/projects/webext-gmeet-unmirror/docs/how-it-works) for how the extension tells the two apart.
+
+Toggling also interacts with [auto-hide](/projects/webext-gmeet-unmirror/docs/auto-hide): a manual toggle always takes priority over the automatic behaviour for the rest of that presentation.

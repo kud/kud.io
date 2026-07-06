@@ -1,0 +1,16 @@
+---
+title: 🪞 Auto-hide
+description: How gmeet-unmirror detects an active screen share and hides the presentation tile automatically, and how manual overrides take priority.
+---
+
+Clicking the toggle button or pressing `Alt+Shift+H` every time you start sharing gets old fast, so gmeet-unmirror also hides the presentation tile on its own as soon as it detects a share is dominating the call.
+
+## How detection works
+
+A `MutationObserver` watches the page for DOM changes (debounced by 400ms so it doesn't fire on every frame) and, on each pass, checks whether the current presentation video's on-screen area covers at least a quarter of the viewport. That threshold is deliberately conservative: a small or partially visible tile doesn't trigger auto-hide, only a share that's genuinely dominating the layout the way a full presentation would.
+
+## Manual override wins
+
+If you bring a hidden tile back manually — via the button or the shortcut — that choice sticks. Auto-hide won't re-hide it again until the current presentation ends and a new one starts. The extension tracks this with a simple flag: a manual "show" sets it, a manual "hide" clears it, and auto-hide always checks it before acting. This means you're never fighting the extension to keep something visible that you explicitly asked to see.
+
+Once the presentation ends (the video shrinks back below the viewport-ratio threshold), the override flag resets, so the next share is auto-hidden fresh.

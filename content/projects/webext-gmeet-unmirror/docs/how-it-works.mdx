@@ -1,0 +1,29 @@
+---
+title: 🔍 How it works
+description: The detection heuristic gmeet-unmirror uses to find the presentation tile, and the safety guarantee that keeps everything else on the call untouched.
+---
+
+## The hall-of-mirrors problem
+
+When you share your entire screen in Google Meet, Meet renders your shared screen back into its own presentation tile on that same screen — which is now part of what you're sharing. The result is a recursive, ever-receding copy of the copy, distracting for you and for everyone watching. gmeet-unmirror's only job is to hide that one tile so the loop never renders.
+
+## Finding the presentation tile
+
+Google Meet's class names are randomised per build, so nothing in the extension is pinned to a class name. Instead, detection relies on two signals, tried in order:
+
+1. **An `aria-label` backstop** — if a `<video>`'s closest labelled ancestor has an `aria-label` matching `/presenting|presentation|screen\s*share/i`, that video is treated as the presentation feed directly.
+2. **Largest visible video** — when no such label is found, the extension falls back to the largest visible `<video>` element on the page. When someone is presenting, the presentation fills the spotlighted main stage, making it the largest video on screen; your self-view is a small thumbnail and other participants' tiles are smaller too.
+
+From the matched `<video>`, the extension walks up the DOM to find its tile container — stopping as soon as an ancestor's bounding box grows past 1.6x the video's own area, since that jump means it has stepped out of the tile and into the surrounding grid that must stay visible.
+
+## Only the presentation tile is ever touched
+
+The extension hides content by adding `visibility: hidden` to the tile container it identified (not `display: none`, so layout doesn't jump) and overlays a small placeholder in its place. Nothing else is touched:
+
+- The participant grid stays visible.
+- Your own self-view thumbnail stays visible.
+- Meet's controls, chat, and every other tile render exactly as normal.
+
+## Permissions and footprint
+
+gmeet-unmirror requests a single host permission, `*://meet.google.com/*`, and nothing else. There's no background worker and no network requests — the entire extension is one content script (`src/content.js`) injected at `document_idle` into the Meet tab, and it only ever reads and modifies the DOM of that tab.
