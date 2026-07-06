@@ -5,7 +5,7 @@
 // the README, with the repo as the single source of truth. When a repo ships no
 // docs/index, its README also serves as the fallback docs page. Runs as part of
 // `npm run build` and never fails the build.
-import { mkdir, readFile, unlink, writeFile } from "node:fs/promises"
+import { mkdir, readdir, readFile, rm, unlink, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
 import ora from "ora"
 
@@ -420,6 +420,41 @@ const syncRaycast = async (spinner) => {
   return icons
 }
 
+// A repo renamed or untagged since the last run leaves its old content/projects/<slug>/,
+// content/readmes/<slug>.md and content/landings/<slug>.mdx behind. Left in place, a stale
+// content/projects/<slug>/docs/ keeps generateStaticParams emitting the dead slug, so its
+// /projects/<slug>/docs page prerenders 200 forever. Prune any slug this run didn't produce.
+// The caller guards on a non-empty repo search so a transient GitHub failure can't wipe
+// everything; Raycast readmes are validated against the curated slug list, not this run's
+// successes, so a transient store-API failure can't prune a good page. icons.json (a file at
+// the CONTENT_DIR root) is untouched — only <slug>/ directories are pruned there.
+const pruneOrphans = async ({ projects, readmes, landings }) => {
+  const removed = []
+  const listing = async (dir) => {
+    try {
+      return await readdir(dir, { withFileTypes: true })
+    } catch {
+      return []
+    }
+  }
+  for (const entry of await listing(CONTENT_DIR)) {
+    if (!entry.isDirectory() || projects.has(entry.name)) continue
+    await rm(join(CONTENT_DIR, entry.name), { recursive: true, force: true })
+    removed.push(`${CONTENT_DIR}/${entry.name}`)
+  }
+  const pruneFiles = async (dir, valid, ext) => {
+    for (const entry of await listing(dir)) {
+      if (!entry.isFile() || !entry.name.endsWith(ext)) continue
+      if (valid.has(entry.name.slice(0, -ext.length))) continue
+      await unlink(join(dir, entry.name))
+      removed.push(`${dir}/${entry.name}`)
+    }
+  }
+  await pruneFiles(README_DIR, readmes, ".md")
+  await pruneFiles(LANDINGS_DIR, landings, ".mdx")
+  return removed
+}
+
 const main = async () => {
   const start = Date.now()
   const spinner = ora("fetching repos…").start()
@@ -446,6 +481,20 @@ const main = async () => {
   const raycastIcons = await syncRaycast(spinner)
   Object.assign(icons, raycastIcons)
 
+  // Drop content for slugs no longer live (e.g. a repo renamed away). Guarded on a non-empty
+  // search so a transient GitHub outage (repos: []) can't prune every project at once.
+  const pruned =
+    repos.length > 0
+      ? await pruneOrphans({
+          projects: new Set(synced),
+          readmes: new Set([
+            ...synced,
+            ...RAYCAST_SLUGS.map((slug) => `raycast-${slug}`),
+          ]),
+          landings: new Set(synced),
+        })
+      : []
+
   // Sorted keys keep icons.json diffs stable across runs (the GitHub search
   // returns repos in a non-deterministic order otherwise).
   const sorted = Object.fromEntries(
@@ -460,7 +509,7 @@ const main = async () => {
 
   const elapsed = ((Date.now() - start) / 1000).toFixed(1)
   spinner.succeed(
-    `synced ${synced.length} repos, ${Object.keys(raycastIcons).length} extensions, ${Object.keys(sorted).length} icons in ${elapsed}s`,
+    `synced ${synced.length} repos, ${Object.keys(raycastIcons).length} extensions, ${Object.keys(sorted).length} icons, ${pruned.length} pruned in ${elapsed}s`,
   )
 }
 
