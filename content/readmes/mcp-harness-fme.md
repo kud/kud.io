@@ -1,6 +1,6 @@
 ---
 title: "mcp-harness-fme"
-description: "🚩 Manage Harness FME (Split.io) feature flags & segments from Claude — list, toggle, kill"
+description: "🚩 Manage Harness FME (Split.io) feature flags & segments from any MCP client — list, toggle, kill"
 ---
 
 ## Features
@@ -24,7 +24,7 @@ Set the environment variable `MCP_HARNESS_FME_API_KEY` to your Harness FME API k
 
 ## Usage
 
-### Claude Desktop / Claude Code
+This is a standard stdio MCP server — it works with any MCP client (Claude Desktop, Claude Code, Cursor, Windsurf, Cline, Zed, …). Add it to your client's MCP config:
 
 ```json
 {
@@ -40,13 +40,25 @@ Set the environment variable `MCP_HARNESS_FME_API_KEY` to your Harness FME API k
 }
 ```
 
-For Claude Code, add via the CLI:
+Most clients read this `mcpServers` shape — Claude Desktop's config file, Cursor's `.cursor/mcp.json`, Windsurf, Cline, and so on. For **Claude Code**, there's a CLI shortcut:
 
 ```sh
 claude mcp add --transport stdio --scope user harness-fme \
   --env MCP_HARNESS_FME_API_KEY=your_api_key \
   -- npx --yes @kud/mcp-harness-fme@latest
 ```
+
+To enable the `get_flag_url` deep-link tool, also set two optional keys — add them to the `env` block above (or as extra `--env` flags for the CLI). See [Configuration](#configuration) for where to find their values.
+
+```json
+"env": {
+  "MCP_HARNESS_FME_API_KEY": "your_api_key",
+  "MCP_HARNESS_FME_ACCOUNT_ID": "your_account_id",
+  "MCP_HARNESS_FME_ORG_GUID": "your_org_guid"
+}
+```
+
+Leave them out and every other tool still works — `get_flag_url` just reports what's missing.
 
 ### Available tools
 
