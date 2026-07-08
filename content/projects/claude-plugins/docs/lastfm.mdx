@@ -1,0 +1,35 @@
+---
+title: 🎵 lastfm
+description: Discover artists, albums and tracks on Last.fm, and browse scrobble history, top charts, and personal listening stats.
+---
+
+The **lastfm** plugin wraps the
+[`@kud/mcp-lastfm`](https://www.npmjs.com/package/@kud/mcp-lastfm) MCP server.
+Discover artists, albums and tracks, browse global and tag charts, and pull a
+Last.fm user's scrobble history and personal top stats.
+
+## 🧰 What it bundles
+
+| Skill              | Trigger                     | What it does                                                |
+| ------------------ | --------------------------- | ----------------------------------------------------------- |
+| `/lastfm-recent`   | `/lastfm-recent <username>` | Show a user's recent scrobbles and what's currently playing |
+| `/lastfm-discover` | `/lastfm-discover <artist>` | Find similar artists and their most popular tracks          |
+
+## 📦 Install
+
+```
+/plugin install lastfm@kud --scope user
+```
+
+## 🔧 Configuration
+
+Get a free API key at https://www.last.fm/api/account/create and export it:
+
+```
+export MCP_LASTFM_API_KEY="your-key-here"
+```
+
+## 🔗 Links
+
+- npm: [`@kud/mcp-lastfm`](https://www.npmjs.com/package/@kud/mcp-lastfm)
+- GitHub: [kud/mcp-lastfm](https://github.com/kud/mcp-lastfm)
