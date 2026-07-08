@@ -1,0 +1,51 @@
+---
+title: 🐞 bugzilla
+description: Search, triage and comment on Firefox/Mozilla bugs from Claude via the Bugzilla REST API.
+---
+
+The **bugzilla** plugin wraps the
+[`@kud/mcp-bugzilla`](https://www.npmjs.com/package/@kud/mcp-bugzilla) MCP
+server — search, triage, and comment on Firefox/Mozilla bugs from Claude via
+the Bugzilla REST API. Read-only lookups (bugs, comments, products, users)
+need no credentials; filing, commenting, and updating are gated behind an
+optional API key.
+
+## 🧰 What it bundles
+
+| Skill         | Trigger                      | What it does                                                                                           |
+| ------------- | ---------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `/bugzilla-search` | `/bugzilla-search <query>`        | Find bugs by product, component, status, severity, or free-text query                                  |
+| `/bugzilla-triage` | `/bugzilla-triage <scope or IDs>` | Summarise a batch of bugs' state and activity, then propose and (on confirmation) apply triage actions |
+
+## 📦 Install
+
+```
+/plugin install bugzilla@kud --scope user
+```
+
+## 🔧 Configuration
+
+No credentials are required for read-only use — searching bugs, reading
+comments, and looking up products/users all work out of the box against
+`https://bugzilla.mozilla.org/rest`.
+
+For write access (filing bugs, posting comments, tagging, updating status),
+get an API key from your
+[Bugzilla API Keys](https://bugzilla.mozilla.org/userprefs.cgi?tab=apikey)
+preferences page and set it as an environment variable:
+
+```
+MCP_BUGZILLA_API_KEY=your-api-key-here
+```
+
+To point the server at a self-hosted Bugzilla instance instead of
+bugzilla.mozilla.org, also set:
+
+```
+MCP_BUGZILLA_BASE_URL=https://bugzilla.example.com/rest
+```
+
+## 🔗 Links
+
+- npm: [`@kud/mcp-bugzilla`](https://www.npmjs.com/package/@kud/mcp-bugzilla)
+- GitHub: [kud/mcp-bugzilla](https://github.com/kud/mcp-bugzilla)

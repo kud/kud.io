@@ -1,0 +1,47 @@
+---
+title: 🔔 getstream-feeds
+description: Debug and inspect GetStream feed subscriptions and activities from Claude — check who follows what, inspect activity fan-out, and repair missing notifications.
+---
+
+The **getstream-feeds** plugin wraps the
+[`@kud/mcp-getstream-feeds`](https://www.npmjs.com/package/@kud/mcp-getstream-feeds)
+MCP server. Debug GetStream push delivery from Claude: inspect follows,
+followers, and activity fan-out, and repair broken feed subscriptions.
+
+## 🧰 What it bundles
+
+| Skill           | Trigger                        | What it does                                                                            |
+| --------------- | ------------------------------ | --------------------------------------------------------------------------------------- |
+| `/feed-inspect` | `/feed-inspect <feed>`         | Read-only debug view of a feed — recent activities, what it follows, and who follows it |
+| `/feed-follow`  | `/feed-follow <feed> <target>` | Follow or unfollow one feed from another to repair fan-out or clean up subscriptions    |
+
+## 📦 Install
+
+```
+/plugin install getstream-feeds@kud --scope user
+```
+
+## 🔧 Configuration
+
+The server authenticates with your GetStream app credentials, passed via the
+server's `env` block in `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "mcp-getstream-feeds": {
+      "command": "npx",
+      "args": ["-y", "@kud/mcp-getstream-feeds@latest"],
+      "env": {
+        "MCP_GETSTREAM_API_KEY": "your-api-key",
+        "MCP_GETSTREAM_API_SECRET": "your-api-secret"
+      }
+    }
+  }
+}
+```
+
+## 🔗 Links
+
+- npm: [`@kud/mcp-getstream-feeds`](https://www.npmjs.com/package/@kud/mcp-getstream-feeds)
+- GitHub: [kud/mcp-getstream-feeds](https://github.com/kud/mcp-getstream-feeds)

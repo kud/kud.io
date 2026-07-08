@@ -1,0 +1,39 @@
+---
+title: 📺 gtv
+description: Control your Google TV from Claude — list paired devices, read live state, send remote keys, type into search fields, and launch apps.
+---
+
+The **gtv** plugin wraps the
+[`@kud/mcp-gtv`](https://www.npmjs.com/package/@kud/mcp-gtv) MCP server —
+control paired Google TV devices from Claude: launch apps, send remote keys,
+type into search fields, and check what's currently on screen.
+
+## 🧰 What it bundles
+
+| Skill          | Trigger                                                              | What it does                                                                   |
+| -------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `/gtv-control` | "open Netflix on the TV", "turn up the volume", "type X into the TV" | Launches apps, sends remote keys, types text, and confirms the resulting state |
+
+## 📦 Install
+
+```
+/plugin install gtv@kud --scope user
+```
+
+## 🔧 Configuration
+
+The server is zero-credential — it reads paired devices from
+`~/.config/gtv/config.json`, the shared config store written by `gtv-cli`.
+Pair your TV once:
+
+```
+npx @kud/gtv-cli@latest pair
+```
+
+Follow the PIN prompt shown on the TV. You only need to do this once per
+device; `mcp-gtv` picks up the paired device automatically after that.
+
+## 🔗 Links
+
+- npm: [`@kud/mcp-gtv`](https://www.npmjs.com/package/@kud/mcp-gtv)
+- GitHub: [kud/mcp-gtv](https://github.com/kud/mcp-gtv)

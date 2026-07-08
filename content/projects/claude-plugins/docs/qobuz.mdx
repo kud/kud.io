@@ -1,0 +1,39 @@
+---
+title: 🎵 qobuz
+description: Explore your Qobuz music from Claude — search albums, artists, and tracks, browse your favourites and playlists, see what's playing, and get personalised listening recommendations.
+---
+
+The **qobuz** plugin wraps the
+[`@kud/mcp-qobuz`](https://www.npmjs.com/package/@kud/mcp-qobuz) MCP server.
+Explore your Qobuz music from Claude: search albums, artists, and tracks, browse
+your favourites and playlists, see what's playing, and get personalised
+listening recommendations.
+
+## 🧰 What it bundles
+
+| Skill              | Trigger                           | What it does                                                                                  |
+| ------------------ | --------------------------------- | --------------------------------------------------------------------------------------------- |
+| `/qobuz-recommend` | `/qobuz-recommend <vibe or seed>` | Recommend music to play, grounded in your favourites and resolved against the Qobuz catalogue |
+
+## 📦 Install
+
+```
+/plugin install qobuz@kud --scope user
+```
+
+## 🔧 Configuration
+
+The server reads your Qobuz session from the macOS Keychain — the same entry
+`@kud/qobuz-cli` writes. Log in once:
+
+```
+npx @kud/qobuz-cli@latest login
+```
+
+For headless or non-macOS hosts, pass `QOBUZ_TOKEN` and `QOBUZ_APP_ID` via the
+server's `env` block instead. The `now-playing` tool is macOS-only.
+
+## 🔗 Links
+
+- npm: [`@kud/mcp-qobuz`](https://www.npmjs.com/package/@kud/mcp-qobuz)
+- GitHub: [kud/mcp-qobuz](https://github.com/kud/mcp-qobuz)

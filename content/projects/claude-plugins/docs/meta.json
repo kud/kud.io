@@ -9,6 +9,11 @@
     "trakt",
     "raindrop-io",
     "google-keep",
-    "gandi"
+    "gandi",
+    "qobuz",
+    "bsky",
+    "bugzilla",
+    "gtv",
+    "getstream-feeds"
   ]
 }

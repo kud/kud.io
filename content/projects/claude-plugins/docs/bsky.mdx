@@ -1,0 +1,42 @@
+---
+title: 🦋 bsky
+description: Search, read, and post to Bluesky from Claude — browse your timeline and notifications, read profiles and threads, and publish posts, replies, and threads with a confirmation gate before anything goes live.
+---
+
+The **bsky** plugin wraps the
+[`@kud/mcp-bsky`](https://www.npmjs.com/package/@kud/mcp-bsky) MCP server —
+search, read, and post to Bluesky from Claude. Every write (posting, replying,
+liking, reposting, following) requires an explicit `confirm: true`, so Claude
+can never publish by accident.
+
+## 🧰 What it bundles
+
+| Skill            | Trigger                     | What it does                                                         |
+| ---------------- | --------------------------- | -------------------------------------------------------------------- |
+| `/bsky-post`     | `/bsky-post <what to post>` | Compose a post, reply, or thread, preview it, and publish on confirm |
+| `/bsky-timeline` | `/bsky-timeline`            | See your home timeline and recent notifications                      |
+
+## 📦 Install
+
+```
+/plugin install bsky@kud --scope user
+```
+
+## 🔧 Configuration
+
+This server authenticates with a Bluesky **App Password** rather than your
+main account password:
+
+1. Sign in at [bsky.app](https://bsky.app) → **Settings → App Passwords → Add App Password**.
+2. Set two environment variables — shared with `@kud/bsky-cli`, so they are
+   intentionally not `MCP_`-prefixed:
+
+```
+BLUESKY_HANDLE=you.bsky.social
+BLUESKY_APP_PASSWORD=xxxx-xxxx-xxxx-xxxx
+```
+
+## 🔗 Links
+
+- npm: [`@kud/mcp-bsky`](https://www.npmjs.com/package/@kud/mcp-bsky)
+- GitHub: [kud/mcp-bsky](https://github.com/kud/mcp-bsky)
