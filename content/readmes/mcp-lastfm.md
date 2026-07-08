@@ -68,21 +68,86 @@ Once connected, ask your MCP client things like:
 
 ### Tools
 
-**Search** — `search_artists` · `search_albums` · `search_tracks`
+#### Search
 
-**Artist** — `get_artist` · `get_similar_artists` · `get_artist_top_tracks` · `get_artist_top_albums` · `get_artist_top_tags` · `correct_artist`
+| Tool             | Description                                               |
+| ---------------- | --------------------------------------------------------- |
+| `search_artists` | Search for artists by name                                |
+| `search_albums`  | Search for albums by name                                 |
+| `search_tracks`  | Search for tracks by name, optionally scoped to an artist |
 
-**Album & Track** — `get_album` · `get_album_top_tags` · `get_track` · `get_similar_tracks` · `get_track_top_tags` · `correct_track`
+#### Artist
 
-**User** — `get_user_info` · `get_user_recent_tracks` · `get_user_top_artists` · `get_user_top_tracks` · `get_user_top_albums` · `get_user_loved_tracks` · `get_user_friends` · `get_user_personal_tags` · `get_user_top_tags` · `get_user_weekly_album_chart` · `get_user_weekly_artist_chart` · `get_user_weekly_track_chart` · `get_user_weekly_chart_list`
+| Tool                    | Description                                               |
+| ----------------------- | --------------------------------------------------------- |
+| `get_artist`            | Artist bio, listener/play stats, and tags                 |
+| `get_similar_artists`   | Artists similar to a given one, with match scores         |
+| `get_artist_top_tracks` | An artist's most-played tracks                            |
+| `get_artist_top_albums` | An artist's most-played albums                            |
+| `get_artist_top_tags`   | The tags most applied to an artist                        |
+| `correct_artist`        | Last.fm's canonical spelling for a misspelled artist name |
 
-**Chart** — `get_chart_top_artists` · `get_chart_top_tracks` · `get_chart_top_tags`
+#### Album & Track
 
-**Tag** — `get_tag_top_artists` · `get_tag_top_tracks` · `get_tag_info` · `get_similar_tags` · `get_tag_top_albums` · `get_top_tags` · `get_tag_weekly_chart_list`
+| Tool                 | Description                                                |
+| -------------------- | ---------------------------------------------------------- |
+| `get_album`          | Album info, tracklist, and tags                            |
+| `get_album_top_tags` | The tags most applied to an album                          |
+| `get_track`          | Track info, stats, and tags                                |
+| `get_similar_tracks` | Tracks similar to a given one                              |
+| `get_track_top_tags` | The tags most applied to a track                           |
+| `correct_track`      | Last.fm's canonical spelling for a misspelled track/artist |
 
-**Geo** — `get_geo_top_artists` · `get_geo_top_tracks`
+#### User
 
-**Library** — `get_library_artists`
+| Tool                           | Description                                             |
+| ------------------------------ | ------------------------------------------------------- |
+| `get_user_info`                | A user's profile and listening stats                    |
+| `get_user_recent_tracks`       | Recent scrobbles, including the currently playing track |
+| `get_user_top_artists`         | Most-played artists over a time period                  |
+| `get_user_top_tracks`          | Most-played tracks over a time period                   |
+| `get_user_top_albums`          | Most-played albums over a time period                   |
+| `get_user_loved_tracks`        | Tracks the user has marked as loved                     |
+| `get_user_friends`             | The user's Last.fm friends                              |
+| `get_user_personal_tags`       | Items the user has tagged with a given tag              |
+| `get_user_top_tags`            | The user's most-used tags                               |
+| `get_user_weekly_album_chart`  | Album play chart for a given week                       |
+| `get_user_weekly_artist_chart` | Artist play chart for a given week                      |
+| `get_user_weekly_track_chart`  | Track play chart for a given week                       |
+| `get_user_weekly_chart_list`   | Available weekly-chart date ranges                      |
+
+#### Chart
+
+| Tool                    | Description                                   |
+| ----------------------- | --------------------------------------------- |
+| `get_chart_top_artists` | The most popular artists on Last.fm right now |
+| `get_chart_top_tracks`  | The most popular tracks on Last.fm right now  |
+| `get_chart_top_tags`    | The most popular tags on Last.fm right now    |
+
+#### Tag
+
+| Tool                        | Description                                  |
+| --------------------------- | -------------------------------------------- |
+| `get_tag_top_artists`       | Top artists for a tag                        |
+| `get_tag_top_tracks`        | Top tracks for a tag                         |
+| `get_tag_info`              | A tag's description and usage stats          |
+| `get_similar_tags`          | Tags similar to a given one                  |
+| `get_tag_top_albums`        | Top albums for a tag                         |
+| `get_top_tags`              | The most popular tags globally               |
+| `get_tag_weekly_chart_list` | Available weekly-chart date ranges for a tag |
+
+#### Geo
+
+| Tool                  | Description                    |
+| --------------------- | ------------------------------ |
+| `get_geo_top_artists` | Top artists in a given country |
+| `get_geo_top_tracks`  | Top tracks in a given country  |
+
+#### Library
+
+| Tool                  | Description                                   |
+| --------------------- | --------------------------------------------- |
+| `get_library_artists` | Artists in a user's library, with play counts |
 
 ## Development
 

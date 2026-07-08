@@ -1,0 +1,43 @@
+---
+title: 🔍 Discovery
+description: Search Last.fm and look up artists, albums, and tracks — similarity, name corrections, and tags.
+---
+
+Fifteen tools cover finding and inspecting the catalogue itself, independent of any listener's history.
+
+## Search
+
+| Tool             | Description                                               |
+| ---------------- | --------------------------------------------------------- |
+| `search_artists` | Search for artists by name                                |
+| `search_albums`  | Search for albums by name                                 |
+| `search_tracks`  | Search for tracks by name, optionally scoped to an artist |
+
+## Artist
+
+| Tool                    | Description                                               |
+| ----------------------- | --------------------------------------------------------- |
+| `get_artist`            | Artist bio, listener/play stats, and tags                 |
+| `get_similar_artists`   | Artists similar to a given one, with match scores         |
+| `get_artist_top_tracks` | An artist's most-played tracks                            |
+| `get_artist_top_albums` | An artist's most-played albums                            |
+| `get_artist_top_tags`   | The tags most applied to an artist                        |
+| `correct_artist`        | Last.fm's canonical spelling for a misspelled artist name |
+
+## Album & track
+
+| Tool                 | Description                                                     |
+| -------------------- | --------------------------------------------------------------- |
+| `get_album`          | Album info, tracklist, and tags                                 |
+| `get_album_top_tags` | The tags most applied to an album                               |
+| `get_track`          | Track info, stats, and tags                                     |
+| `get_similar_tracks` | Tracks similar to a given one                                   |
+| `get_track_top_tags` | The tags most applied to a track                                |
+| `correct_track`      | Last.fm's canonical spelling for a misspelled track/artist name |
+
+## Name corrections
+
+`correct_artist` and `correct_track` surface Last.fm's canonical-name correction
+data — useful when a user's spelling doesn't quite match the catalogue (e.g.
+"Radio Head" → "Radiohead") before feeding the result into another tool that
+expects an exact name.

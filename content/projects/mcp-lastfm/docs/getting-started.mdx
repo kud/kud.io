@@ -1,0 +1,58 @@
+---
+title: 🚀 Getting started
+description: Install mcp-lastfm, get a Last.fm API key, and configure your MCP client.
+---
+
+## Install
+
+```sh
+npm install -g @kud/mcp-lastfm
+```
+
+Or install as a Claude plugin from the kud marketplace:
+
+```
+/plugin install lastfm@kud
+```
+
+## Getting an API key
+
+mcp-lastfm authenticates with a single API key — no OAuth flow, no session handshake.
+
+1. Go to [last.fm/api/account/create](https://www.last.fm/api/account/create) (you'll need to be signed in to a Last.fm account).
+2. Fill in **Application name** (e.g. `mcp-lastfm`) and a short **description**. Leave **Callback URL** blank — it's only used for the web login flow, which this read-only server doesn't need.
+3. Submit. Last.fm shows you an **API key** and a **shared secret** — you only need the **API key**. (The shared secret is for signed write calls like scrobbling, which aren't supported here.)
+
+## Configuration
+
+Add it to your MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "lastfm": {
+      "command": "mcp-lastfm",
+      "env": {
+        "MCP_LASTFM_API_KEY": "your-api-key",
+        "MCP_LASTFM_USERNAME": "your-lastfm-username"
+      }
+    }
+  }
+}
+```
+
+| Variable              | Required | Purpose                                                                                                                                                                                                                                                   |
+| --------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MCP_LASTFM_API_KEY`  | yes      | Authenticates every request                                                                                                                                                                                                                               |
+| `MCP_LASTFM_USERNAME` | no       | Default account for the `get_user_*` tools, so you can ask "what have I been listening to?" without repeating your username. An explicit `user` argument on any tool still overrides it, so looking up someone else's public profile works the same call. |
+
+## Try it
+
+Once connected, ask your MCP client things like:
+
+```console
+> Search for the artist "Slowdive"
+> What are Radiohead's top tracks?
+> Show me my recent scrobbles
+> What's trending on the shoegaze tag right now?
+```

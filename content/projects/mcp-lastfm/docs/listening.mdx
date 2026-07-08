@@ -1,0 +1,37 @@
+---
+title: 🎧 Listening data
+description: A Last.fm user's scrobbles, top artists/tracks/albums, loved tracks, friends, tags, and weekly charts.
+---
+
+Thirteen tools cover a listener's personal history on Last.fm — their own, or
+anyone else's public profile.
+
+| Tool                           | Description                                             |
+| ------------------------------ | ------------------------------------------------------- |
+| `get_user_info`                | A user's profile and listening stats                    |
+| `get_user_recent_tracks`       | Recent scrobbles, including the currently playing track |
+| `get_user_top_artists`         | Most-played artists over a time period                  |
+| `get_user_top_tracks`          | Most-played tracks over a time period                   |
+| `get_user_top_albums`          | Most-played albums over a time period                   |
+| `get_user_loved_tracks`        | Tracks the user has marked as loved                     |
+| `get_user_friends`             | The user's Last.fm friends                              |
+| `get_user_personal_tags`       | Items the user has tagged with a given tag              |
+| `get_user_top_tags`            | The user's most-used tags                               |
+| `get_user_weekly_album_chart`  | Album play chart for a given week                       |
+| `get_user_weekly_artist_chart` | Artist play chart for a given week                      |
+| `get_user_weekly_track_chart`  | Track play chart for a given week                       |
+| `get_user_weekly_chart_list`   | Available weekly-chart date ranges                      |
+
+## Whose account?
+
+Every `get_user_*` tool takes an optional `user` argument. If you set
+`MCP_LASTFM_USERNAME`, omitting `user` resolves to your own account — so "what
+have I been listening to?" just works. Pass `user` explicitly to look up
+anyone's public profile instead; it always overrides the default.
+
+## Weekly charts
+
+`get_user_weekly_album_chart`, `get_user_weekly_artist_chart`, and
+`get_user_weekly_track_chart` each need a valid week range. Call
+`get_user_weekly_chart_list` first to get the date ranges Last.fm actually has
+data for, then pass one of those into the chart tool.

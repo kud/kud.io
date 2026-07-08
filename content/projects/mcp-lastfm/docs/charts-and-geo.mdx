@@ -1,0 +1,50 @@
+---
+title: 📊 Charts, tags & geo
+description: Global and country trending charts, tag exploration, and a user's library.
+---
+
+Thirteen tools cover what's trending beyond a single listener's history —
+site-wide charts, tag-scoped browsing, country charts, and library lookups.
+
+## Chart
+
+What's popular on Last.fm right now, unfiltered.
+
+| Tool                    | Description                                   |
+| ----------------------- | --------------------------------------------- |
+| `get_chart_top_artists` | The most popular artists on Last.fm right now |
+| `get_chart_top_tracks`  | The most popular tracks on Last.fm right now  |
+| `get_chart_top_tags`    | The most popular tags on Last.fm right now    |
+
+## Tag
+
+Browse the catalogue through a tag (e.g. `shoegaze`, `90s`, `french`).
+
+| Tool                        | Description                                  |
+| --------------------------- | -------------------------------------------- |
+| `get_tag_top_artists`       | Top artists for a tag                        |
+| `get_tag_top_tracks`        | Top tracks for a tag                         |
+| `get_tag_info`              | A tag's description and usage stats          |
+| `get_similar_tags`          | Tags similar to a given one                  |
+| `get_tag_top_albums`        | Top albums for a tag                         |
+| `get_top_tags`              | The most popular tags globally               |
+| `get_tag_weekly_chart_list` | Available weekly-chart date ranges for a tag |
+
+## Geo
+
+Top artists and tracks by country.
+
+| Tool                  | Description                    |
+| --------------------- | ------------------------------ |
+| `get_geo_top_artists` | Top artists in a given country |
+| `get_geo_top_tracks`  | Top tracks in a given country  |
+
+## Library
+
+| Tool                  | Description                                   |
+| --------------------- | --------------------------------------------- |
+| `get_library_artists` | Artists in a user's library, with play counts |
+
+`get_library_artists` respects the same `MCP_LASTFM_USERNAME` default and
+`user` override as the [listening data](/projects/mcp-lastfm/docs/listening)
+tools.
