@@ -1,14 +1,19 @@
 ---
 title: 👋 Introduction
-description: mcp-youtube is an MCP server that lets you search, create, and clean up YouTube playlists conversationally from Claude.
+description: mcp-youtube is an MCP server that lets you search, create, and clean up YouTube playlists conversationally from any MCP client.
 ---
 
-mcp-youtube is a Model Context Protocol server that wraps the YouTube Data API v3, giving Claude eight tools for the full playlist lifecycle — search, list, read, create, add to, prune, and delete. Every tool reports its quota cost up front, and the two irreversible ones refuse to run without an explicit `confirm: true`.
+mcp-youtube is a Model Context Protocol server that wraps the full read/write surface of the YouTube Data API v3 reachable under the `youtube.force-ssl` scope — 52 tools spanning playlists, videos, channels, community (comments, subscriptions), captions, thumbnails, watermarks, and reference data. Every tool reports its quota cost up front, and every destructive or outward-irreversible tool refuses to run without an explicit `confirm: true`.
 
 ## What's here
 
 - [🔑 Setup](/projects/mcp-youtube/docs/setup) — OAuth authorisation, credential storage, and environment variable overrides
 - [🔍 Searching](/projects/mcp-youtube/docs/searching) — `search`, `list-playlists`, `get-playlist`
-- [➕ Creating & Adding](/projects/mcp-youtube/docs/creating-and-adding) — `create-playlist`, `add-to-playlist`
+- [➕ Creating & Adding](/projects/mcp-youtube/docs/creating-and-adding) — `create-playlist`, `update-playlist`, `add-to-playlist`, `update-playlist-item`
 - [🧹 Cleaning Playlists](/projects/mcp-youtube/docs/cleaning-playlists) — `clean-playlist`'s tombstone, duplicate, and channel-prune scan
 - [🗑️ Deleting & Pruning](/projects/mcp-youtube/docs/deleting-and-pruning) — `remove-from-playlist`, `delete-playlist`, and the confirm requirement
+- [🎬 Videos](/projects/mcp-youtube/docs/videos) — list, update, rate, delete, upload, and report videos
+- [📺 Channels & Sections](/projects/mcp-youtube/docs/channels-and-sections) — brand your channel and manage homepage shelves
+- [💬 Community](/projects/mcp-youtube/docs/community) — subscriptions, comments, and comment threads
+- [📝 Captions & Media](/projects/mcp-youtube/docs/captions-and-media) — caption tracks, thumbnails, watermarks, and playlist cover images
+- [📚 Reference Data](/projects/mcp-youtube/docs/reference-data) — activities and the read-only lookup lists (categories, languages, regions, abuse reasons, memberships)
