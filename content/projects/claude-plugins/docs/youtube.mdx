@@ -1,0 +1,52 @@
+---
+title: ▶️ youtube
+description: Manage your YouTube playlists from Claude — search videos, create and edit playlists, and clean up duplicate or deleted-video entries with a dry-run-safe cleanup tool.
+---
+
+The **youtube** plugin wraps the
+[`@kud/mcp-youtube`](https://www.npmjs.com/package/@kud/mcp-youtube) MCP server —
+
+manage your YouTube playlists conversationally: search for videos, list and
+inspect playlists, create new ones, add or remove entries, delete playlists,
+and prune duplicates or tombstoned (deleted) videos. The cleanup tool defaults
+to a dry run — it only reports what it would remove until you explicitly pass
+`dryRun: false`, so a stray "clean up my playlist" request never silently
+deletes anything.
+
+## 📦 Install
+
+```
+/plugin install youtube@kud --scope user
+```
+
+## 🔧 Configuration
+
+The server authenticates via OAuth 2.0 against your Google account and needs
+a Desktop-app OAuth client with the YouTube Data API v3 enabled:
+
+1. Create an OAuth client ID (type: **Desktop app**) at the
+   [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+   and enable the **YouTube Data API v3** for that project.
+2. Clone the repo and run the interactive setup once — it opens a browser
+   consent flow and saves your client ID, client secret, and refresh token to
+   `~/.config/youtube.json`:
+
+   ```
+   git clone https://github.com/kud/mcp-youtube
+   cd mcp-youtube
+   npm install
+   npm run setup
+   ```
+
+No further configuration is needed — the server reads `clientId`,
+`clientSecret`, and `refreshToken` from that config file at startup. To run
+the server without the config file (e.g. on a headless host), set
+`MCP_YOUTUBE_CLIENT_ID`, `MCP_YOUTUBE_CLIENT_SECRET`, and
+`MCP_YOUTUBE_REFRESH_TOKEN` in the plugin's `env` block instead — each falls
+back to the config file value when unset, but all three are required
+together since there's no single bearer token.
+
+## 🔗 Links
+
+- npm: [`@kud/mcp-youtube`](https://www.npmjs.com/package/@kud/mcp-youtube)
+- GitHub: [kud/mcp-youtube](https://github.com/kud/mcp-youtube)
