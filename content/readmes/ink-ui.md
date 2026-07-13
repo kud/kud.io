@@ -5,11 +5,18 @@ description: "🧱 Opinionated design system for Ink CLIs — pre-styled compone
 
 ## Features
 
-- **Ten ready-made components** — Banner, Header, Badge, Spinner, Table, Tabs, FooterHints, LoadingScreen, KeyValue, and SelectableRow, pre-styled and ready to drop in
+- **25 ready-made components**, pre-styled and ready to drop in:
+  - **Inputs** — `TextInput`, `EmailInput` (domain completion), `PasswordInput` (masked), `ConfirmInput`
+  - **Lists** — `UnorderedList`, `OrderedList` (both nestable), `Table`
+  - **Selection & navigation** — `Select`, `MultiSelect`, `Tabs`, `Switch`, `Toggle`, `SelectableRow`
+  - **Status & feedback** — `Spinner`, `ProgressBar`, `StatusMessage`, `Alert`, `Badge`, `Toast`
+  - **Layout & chrome** — `Banner`, `Header`, `FooterHints`, `KeyValue`, `LoadingScreen`, `ScrollView`
+- **Full [@inkjs/ui](https://github.com/vadimdemedes/ink-ui) parity** — every upstream component has an equivalent, plus a dozen more the design system adds on top
+- **Colourblind-safe by design** — state is signalled by shape, case, and glyph, never colour alone
 - **Design tokens included** — a shared colour palette (`colors`) and spacing scale (`spacing`) to keep every screen consistent
 - **Full TypeScript support** — ships compiled output with `.d.ts` declarations for every component and token type
 - **ESM only, zero config** — no runtime bundling step; just import and render
-- **Peer-dependency light** — only requires `ink ≥ 4` and `react ≥ 18`; `ink-spinner` is the sole production dependency
+- **Peer-dependency light** — only requires `ink ≥ 7` and `react ≥ 19`
 
 ## Install
 
@@ -40,6 +47,33 @@ const App = () => (
 )
 
 render(<App />)
+```
+
+Inputs report their value through `onChange`/`onSubmit`, and lists nest with a shape-distinct marker per level:
+
+```tsx
+import { Text } from "ink"
+import { EmailInput, PasswordInput, UnorderedList } from "@kud/ink-ui"
+
+const SignUp = () => (
+  <>
+    <EmailInput placeholder="you@example.com" onSubmit={setEmail} />
+    <PasswordInput placeholder="Password" onSubmit={setPassword} />
+    <UnorderedList>
+      <UnorderedList.Item>
+        <Text>Choose a plan</Text>
+        <UnorderedList>
+          <UnorderedList.Item>
+            <Text>Free</Text>
+          </UnorderedList.Item>
+          <UnorderedList.Item>
+            <Text>Pro</Text>
+          </UnorderedList.Item>
+        </UnorderedList>
+      </UnorderedList.Item>
+    </UnorderedList>
+  </>
+)
 ```
 
 All components accept only the props they need — no theme provider or context required. Design tokens are plain objects:
