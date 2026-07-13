@@ -1,0 +1,24 @@
+---
+title: 👋 Introduction
+description: A high-performance Markdown/code/diff rendering engine for Ink 7 — what it is, why it exists, and its current build status.
+---
+
+`ink-markdown` is a rendering engine for large, code-heavy, streaming documents in [Ink 7](https://github.com/vadimdemedes/ink) terminal applications — AI responses, code review, Git diffs, and source files. It exists because the common approach (parse the whole document into a React tree, run Yoga layout over all of it, re-diff the entire output every frame) scales with document size, and a 10,000-line document or a 20fps streaming feed makes that approach unusable.
+
+The engine keeps rendering cost bounded to the viewport instead of the document: parse into stable blocks, cache layout per block, and hand Ink only the visible slice.
+
+## Status & roadmap
+
+**Early development.** `ink-markdown` is scaffolded and its performance thesis has been validated by a throwaway benchmark spike (`spike/step1-bench/`), but the core engine — PRD Milestone 1, the renderer-independent document model — is not yet implemented. Nothing in this documentation is installable as a working renderer today.
+
+- The [API preview](/projects/ink-markdown/docs/api-preview) shows the intended, designed shape of the public surface from the project's PRD and plan — not a shipped API.
+- The [architecture](/projects/ink-markdown/docs/architecture) described here is the design the spike validated, not yet the built package.
+- The [performance](/projects/ink-markdown/docs/performance) numbers are honest spike results from a benchmark harness, not measurements of the final package.
+
+Milestones run in order: core document model → terminal layout engine → Ink viewport renderer → code rendering → streaming Markdown → diff support → public package. The spike de-risked the performance bet ahead of Milestone 1; it did not build any of the milestones themselves.
+
+## What's here
+
+- [🏗️ Architecture](/projects/ink-markdown/docs/architecture) — the renderer-independent core, the block model, cached layout, viewport virtualisation, and the streaming mutable tail.
+- [📊 Performance](/projects/ink-markdown/docs/performance) — the validated spike numbers behind the performance thesis, and what they do and don't prove.
+- [🔍 API preview](/projects/ink-markdown/docs/api-preview) — the designed public API surface from the PRD/plan, shown as a preview of where the package is heading.

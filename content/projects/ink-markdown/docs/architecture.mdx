@@ -1,0 +1,95 @@
+---
+title: 🏗️ Architecture
+description: The renderer-independent core, the block model, cached layout, viewport virtualisation, and the streaming mutable tail behind ink-markdown's design.
+---
+
+This describes the architecture `ink-markdown` is designed around, as fixed by the project's PRD and plan and de-risked by a benchmark spike. It is the target shape for Milestone 1 onward, not a description of code that ships today — see [Status & roadmap](/projects/ink-markdown/docs/index) on the introduction page.
+
+## Renderer-independent core + Ink view
+
+The engine splits into two layers:
+
+- **A core document/layout model** that parses Markdown into blocks and computes terminal-oriented layouts, with no React or Ink dependency at all.
+- **An Ink view** that mounts only the visible slice of that layout as Ink elements.
+
+Keeping the core renderer-independent means a future renderer (OpenTUI, say) could reuse the same parsing and layout engine without a redesign — but the first, and only currently planned, view implementation targets Ink specifically.
+
+## Block model
+
+Markdown is segmented into top-level blocks with stable identity rather than parsed into one big tree:
+
+```ts
+interface MarkdownBlock {
+  id: string
+  type: MarkdownBlockType
+  sourceStart: number
+  sourceEnd: number
+  sourceHash: string
+}
+```
+
+A cheap line-scan segmenter finds block boundaries first; each block is then parsed independently with `markdown-it`, cached by its source hash. Block identity stays stable when unrelated parts of the document change, so editing one paragraph doesn't invalidate every block around it. `remark`/mdast was considered and rejected for this layer — more correct, but heavier and harder to reparse incrementally.
+
+## Cached, width-aware layout
+
+Blocks are converted into wrapped terminal lines of styled spans:
+
+```ts
+interface BlockLayout {
+  blockId: string
+  width: number
+  height: number
+  lines: readonly LayoutLine[]
+}
+```
+
+Layout accounts for terminal width, ANSI styling, Unicode/wide-character width, indentation, list markers, quote prefixes, and diff prefixes. Results are cached by at least block identity, source hash, available width, and theme identity — conceptually `blockId:sourceHash:width:themeId:optionsHash` — so a terminal resize only invalidates width-dependent layouts, and scrolling or selection changes invalidate nothing. Highlighting runs on the _logical_ line first (full token context), then the styled spans get wrapped by measured display width — wrapping first would break multiline tokens at wrap points.
+
+## Viewport virtualisation
+
+The Ink renderer mounts only the lines actually visible plus a configurable overscan above and below:
+
+```ts
+interface ViewportOptions {
+  offset: number
+  height: number
+  overscan?: number
+}
+```
+
+React node count scales with viewport size, not document size. A cumulative index maps document line offsets to block layouts so the first visible block can be located in better than linear time.
+
+### Render path: hybrid, path A as the fast path
+
+The spike compared three ways to hand Ink the visible slice:
+
+- **A — one pre-composed ANSI string.** Text/code/diff blocks compose to a single string rendered as one `<Text>` — one Yoga node, one diff, per frame.
+- **B — one `<Text>` per visible line.** Retained as an escape hatch: blocks with a registered custom component render as real React elements so custom renderers keep working.
+- **C — a full React tree per block, no virtualisation.** Rejected outright as the baseline to beat.
+
+A and B were performance-equivalent on compose cost, so the design is a **hybrid**: path A by default for the hot paths (prose, code, diff), with custom-component blocks escaping into path B for flexibility. See [Performance](/projects/ink-markdown/docs/performance) for the numbers behind this call.
+
+## Streaming with a mutable tail
+
+For content arriving in fragments (an AI response, for example), the engine distinguishes:
+
+```text
+completed blocks → immutable
+open final block  → mutable
+incoming buffer   → pending
+```
+
+```ts
+const stream = createMarkdownStream()
+
+stream.append(fragment)
+stream.complete()
+```
+
+Only the open tail block is reparsed and relaid out on each append; completed blocks are never touched again. This is what keeps a 20fps streaming feed from reparsing or relaying out the whole document on every chunk.
+
+## Highlighting and diffs
+
+Fenced code blocks use a configurable, cache-by-`(codeHash, lang, theme)` highlighter behind a `SyntaxHighlighter` interface, run lazily on visible-plus-overscan lines only — unsupported languages degrade to plain text rather than failing. The v1 highlighter is a synchronous one (in the `cli-highlight` family) rather than an async/worker-based one, to avoid worker complexity before it's justified by benchmarks.
+
+Git diffs are parsed into a structured model — additions, deletions, hunks, file headers — rather than treated as coloured text, so diff-specific rendering (line numbers, collapsed context, selected lines) has real structure to work from. Code and diff content defaults to horizontal clip rather than wrap, matching the code-review norm; this is configurable.

@@ -1,0 +1,110 @@
+---
+title: 🔍 API preview
+description: The designed public API surface for ink-markdown, shown as a preview of where the package is heading — not a shipped, functional API.
+---
+
+Everything on this page is the intended, designed shape of the API from the project's PRD and plan. **None of it is functional yet.** It's shown so consumers can see the surface the engine is heading towards, ahead of Milestone 1 (the core document model) actually landing. Treat this as a preview, not documentation of current behaviour.
+
+## Basic rendering
+
+The primary component renders a Markdown source string into a bounded viewport:
+
+```tsx
+import { MarkdownViewport } from "@kud/ink-markdown"
+
+const App = () => (
+  <MarkdownViewport
+    source={content}
+    width={width}
+    height={height}
+    scrollOffset={scrollOffset}
+  />
+)
+```
+
+Scrolling is designed to be controlled by the consumer:
+
+```tsx
+<MarkdownViewport
+  source={content}
+  width={width}
+  height={height}
+  scrollOffset={offset}
+  onScrollOffsetChange={setOffset}
+/>
+```
+
+## Streaming
+
+For content arriving in fragments — an AI response streamed token by token, for example — a hook is planned to manage the mutable-tail document and hand it to the viewport directly:
+
+```tsx
+import { useMarkdownStream } from "@kud/ink-markdown"
+
+const App = () => {
+  const stream = useMarkdownStream()
+
+  useEffect(() => {
+    stream.append(chunk)
+  }, [chunk])
+
+  return (
+    <MarkdownViewport
+      document={stream.document}
+      width={width}
+      height={height}
+    />
+  )
+}
+```
+
+See [Architecture — streaming with a mutable tail](/projects/ink-markdown/docs/architecture) for what happens underneath: only the open block gets reparsed on each append.
+
+## Document preparation (planned)
+
+The PRD also proposes lower-level, renderer-independent entry points for preparing a document and its layout ahead of rendering — useful for measuring or pre-computing outside the render cycle:
+
+```ts
+import { createMarkdownDocument, createMarkdownLayout } from "@kud/ink-markdown"
+
+const document = createMarkdownDocument(source)
+const layout = createMarkdownLayout(document, { width, theme })
+```
+
+## Custom block renderers (planned)
+
+Applications are designed to be able to override individual block renderers without losing virtualisation:
+
+```tsx
+<MarkdownViewport
+  source={source}
+  components={{
+    heading: CustomHeading,
+    code: ProductCodeBlock,
+    diff: ReviewDiffBlock,
+    link: ProductLink,
+  }}
+/>
+```
+
+## Instrumentation (planned)
+
+The engine is designed to expose development metrics — parse/layout durations, cache-hit ratios, and mounted-line counts — through callbacks or dev tooling, so consuming applications can verify the viewport-only behaviour rather than take it on faith:
+
+```ts
+interface MarkdownMetrics {
+  parseDurationMs: number
+  layoutDurationMs: number
+  visibleRenderDurationMs: number
+  blocksParsed: number
+  blocksReused: number
+  layoutsCalculated: number
+  layoutsReused: number
+  mountedLines: number
+  totalDocumentLines: number
+}
+```
+
+## What's explicitly out of scope for v1
+
+Full CommonMark edge-case parity, embedded HTML, editing, mouse-based text selection, images, LaTeX, an OpenTUI renderer, and identical visual output across renderers are all non-goals for the first version. `ink-markdown` v1 is a document _viewer_, not an editor.

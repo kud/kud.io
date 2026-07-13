@@ -1,0 +1,41 @@
+---
+title: 📊 Performance
+description: The benchmark spike's validated numbers behind ink-markdown's performance thesis, and what they do and don't prove.
+---
+
+`ink-markdown`'s whole bet is that Ink's per-node overhead doesn't need to beat a native renderer like OpenTUI — it just needs to stop scaling with document size. Before building the real package, a throwaway benchmark spike (`spike/step1-bench/`, not the shipped engine) tested that bet directly. These are that spike's results, honestly reported: they validate the architecture, they are not a performance report on a finished product, because the product doesn't exist yet.
+
+## What was measured
+
+The spike harness ran `segment → cached layout (sync highlighting, coloured unified diff, ANSI-safe clip) → renderers A/B/C`, driven through `ink-testing-library`, against fixtures including a 10,000-line document and a 5,000-line diff.
+
+| Metric                                    | Result                                                                        | Target (PRD §13)         |
+| ----------------------------------------- | ----------------------------------------------------------------------------- | ------------------------ |
+| Parse, 10k-line doc                       | **6.9ms**                                                                     | under 100ms              |
+| Engine compose/frame (path A, no Ink)     | **~1.6µs, constant** regardless of document size (1k→10k identical)           | —                        |
+| Mounted Ink nodes, 10k-line doc           | Path A: **1** · Path B: **56** · naive full-tree (C): **9,167**               | ≈ viewport + overscan    |
+| Naive full-tree first paint, 10k-line doc | **1.7s**, scroll unmeasurable                                                 | —                        |
+| Streaming reparse cost, 330 appends       | **~1.65 blocks reparsed per append** vs 219 for a full reparse (~99% avoided) | no full-document reparse |
+
+The naive full-tree baseline (render path C — no virtualisation) exists specifically to confirm the failure mode the whole architecture is designed to avoid: without virtualisation, a 10k-line document is unusable.
+
+## Latency: a real-TTY probe, not the harness's wall-clock
+
+`ink-testing-library` carries a fixed ~26ms per-rerender floor and rebuilds the whole frame on every render, so its wall-clock numbers are floor-inflated and useless for latency measurement. The spike sidestepped this with `live-tty-probe.js`, which drives a real Ink instance against a fake-TTY sink and measures **CPU time per frame** via `process.cpuUsage` — a metric that excludes Ink's throttle idle time entirely.
+
+Result: path A measured **7.7ms CPU/frame** on the 10k-line document and **4.1ms CPU/frame** on the 5k-line diff — a CPU-bound ceiling around 130fps. Since 7.7ms is well under Ink's ~26ms repaint throttle, scroll latency in this regime is **throttle-bound, not compute-bound** — comfortably under the project's 50ms p95 target. This is the spike's kill criterion, and it passed: _"if neither render path gets scroll p95 under ~50ms on the 10k-line and 5k-line-diff fixtures with bounded mounted lines, the thesis is wrong."_ It didn't fail.
+
+## What this doesn't cover
+
+The passing verdict above is specifically for **document scrolling and streaming** — low event rate, virtualised, bounded work per frame. A separate probe (`anim-probe.js`) measured a different workload, continuous animation, and found a sharper limit:
+
+- **Localised motion** (spinners, progress indicators, moving highlights): ~2.97ms CPU/frame, ~337fps ceiling — cheap and smooth on Ink, because only the changed cells get diffed and written.
+- **Full-screen fade or translucent overlay** (every cell recoloured every frame): ~20.7ms CPU/frame, ~21fps sustained, ~75KB of ANSI written per frame — visibly below 60fps and janky. A follow-up probe (`smart-anim-probe.js`) confirmed the bottleneck isn't React re-render discipline; a bounded panel that only recomputed 12 of 40 rows still had to _write_ nearly as many bytes as a full-screen fade, because the cost lives in producing and emitting ANSI, below React entirely.
+
+That regime — dense, layered, translucent motion — is squarely OpenTUI's turf (a real per-cell compositor in native code), and is a separate decision from Markdown/diff rendering. `ink-markdown`'s numbers say nothing about it either way.
+
+## Caveats
+
+- These are spike numbers from a throwaway benchmark harness (`spike/step1-bench/`), run once against a fixed set of fixtures on one development machine — not a continuously tracked benchmark suite against the shipped package, which doesn't exist yet.
+- Real-terminal writes add async I/O on top of the CPU cost measured here; the probe treats that as cheap and off the CPU path, but it wasn't independently verified against a real terminal emulator.
+- Render path A and B were found performance-equivalent in the harness — the choice between them (see [Architecture](/projects/ink-markdown/docs/architecture)) is about flexibility for custom renderers, not a speed difference.
