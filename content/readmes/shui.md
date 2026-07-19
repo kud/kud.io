@@ -34,6 +34,18 @@ Or source it inline at the top of any script:
 source "${0:A:h}/lib/shui/shui.zsh"
 ```
 
+### Completion
+
+`shui <TAB>` completes subcommands (with descriptions) and their values —
+types, `theme` subcommands, `input --validate` rules, and more. Sourcing
+`shui.zsh` in an interactive shell registers it automatically. For the
+canonical setup, add the completions directory to `$fpath` before `compinit`:
+
+```zsh
+fpath+=(~/.shui/completions)
+autoload -Uz compinit && compinit
+```
+
 ## Usage
 
 ```console
