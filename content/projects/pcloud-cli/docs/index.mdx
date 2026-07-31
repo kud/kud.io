@@ -7,9 +7,8 @@ description: A terminal-first CLI for pCloud — list folders, restore deleted f
 manage files, recover what you deleted from the trash, and roll a file back to a
 previous version — all without leaving the command line.
 
-It authenticates with pCloud over OAuth 2.0, storing a token locally so you only
-log in once. A single `PCLOUD_ACCESS_TOKEN` environment variable lets you bypass
-stored credentials entirely for CI and scripted contexts.
+It authenticates once and stores the token locally. A single environment variable
+lets you bypass stored credentials entirely for CI and scripted contexts.
 
 ## ✨ Features
 
@@ -18,11 +17,15 @@ stored credentials entirely for CI and scripted contexts.
 - **Trash recovery** — list deleted files and restore them by file ID.
 - **Rewind & revisions** — browse a file's version history and restore an earlier
   version to any destination.
-- **OAuth 2.0 authentication** — browser-based login; the token is stored locally
-  at `~/.config/pcloud/tokens.json` (mode `0600`). The CLI never sees your
-  password.
-- **CI-friendly** — set `PCLOUD_ACCESS_TOKEN` to skip the credential store
-  entirely.
+- **Local sync inspection** — read the pCloud Drive daemon's own database to find
+  broken sync pairs, and prune orphaned ones the desktop app reports only as a
+  bogus permissions error.
+- **Two ways to log in** — email and password by default (no setup, full API
+  access), or browser-based OAuth 2.0 if you would rather the CLI never handled
+  your password. Tokens are stored at `~/.config/pcloud/tokens.json` (mode
+  `0600`).
+- **CI-friendly** — set `PCLOUD_AUTH` or `PCLOUD_ACCESS_TOKEN` to skip the
+  credential store entirely.
 - **Regional endpoints** — targets the EU API by default; switch with
   `PCLOUD_REGION=us`.
 
@@ -32,7 +35,7 @@ stored credentials entirely for CI and scripted contexts.
 npm install -g @kud/pcloud-cli
 ```
 
-Requires Node.js 20 or newer. The binary is exposed as `pcloud`.
+Requires Node.js 24 or newer (the sync commands use the built-in `node:sqlite`). The binary is exposed as `pcloud`.
 
 ## 🚀 Quick start
 
@@ -44,17 +47,22 @@ pcloud ls /
 pcloud list-rewind /Documents/report.pdf
 ```
 
-See [Authentication](/projects/pcloud-cli/docs/authentication) for the one-time
-OAuth setup, then [Trash & restore](/projects/pcloud-cli/docs/trash) and
-[Rewind & versions](/projects/pcloud-cli/docs/rewind) for recovery workflows.
+See [Authentication](/projects/pcloud-cli/docs/authentication) for both login
+methods and when to choose each, [Trash & restore](/projects/pcloud-cli/docs/trash)
+and [Rewind & versions](/projects/pcloud-cli/docs/rewind) for recovery workflows,
+and [Local sync inspection](/projects/pcloud-cli/docs/sync) for diagnosing the
+desktop app's sync pairs.
 
 ## ⚙️ Configuration
 
-| Variable               | Required         | Description                                       |
-| ---------------------- | ---------------- | ------------------------------------------------- |
-| `PCLOUD_CLIENT_ID`     | For `login` only | OAuth application client ID                       |
-| `PCLOUD_CLIENT_SECRET` | For `login` only | OAuth application client secret                   |
-| `PCLOUD_ACCESS_TOKEN`  | Optional         | Bypasses `~/.config/pcloud/tokens.json` entirely  |
-| `PCLOUD_REGION`        | Optional         | `eu` (default) or `us` — selects the API endpoint |
+| Variable               | Required            | Description                                       |
+| ---------------------- | ------------------- | ------------------------------------------------- |
+| `PCLOUD_CLIENT_ID`     | For `login --oauth` | OAuth application client ID                       |
+| `PCLOUD_CLIENT_SECRET` | For `login --oauth` | OAuth application client secret                   |
+| `PCLOUD_AUTH`          | Optional            | Session token — bypasses the credential store     |
+| `PCLOUD_ACCESS_TOKEN`  | Optional            | OAuth token — bypasses the credential store       |
+| `PCLOUD_REGION`        | Optional            | `eu` (default) or `us` — selects the API endpoint |
 
-When `PCLOUD_ACCESS_TOKEN` is set, no stored credentials are read or written.
+Neither client variable is needed for the default `pcloud login`. When either
+token variable is set, no stored credentials are read or written; `PCLOUD_AUTH`
+takes precedence, since a session token reaches more of the API.

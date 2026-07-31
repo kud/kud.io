@@ -5,7 +5,7 @@ description: "☁️ Restore deleted pCloud files and rewind versions from the t
 
 ## Features
 
-- **OAuth login** — authenticate once via browser; credentials are stored securely and reused across sessions.
+- **Two ways to log in** — email and password by default, needing no setup and reaching the whole API; or `--oauth` for a browser flow that never handles your password. Credentials are stored securely and reused across sessions.
 - **File & folder management** — list, stat, copy, move, rename, and delete files and folders from the terminal.
 - **Revision history** — inspect every saved revision of a file and revert to any earlier version in one command.
 - **Trash recovery** — list deleted files and restore them by file ID.

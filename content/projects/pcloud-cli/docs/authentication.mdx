@@ -1,22 +1,20 @@
 ---
 title: 🔐 Authentication
-description: One-time OAuth 2.0 setup — log in through the browser and store a token locally.
+description: Log in with email and password for a session token, or through the browser with OAuth 2.0.
 ---
 
-Every command needs an authenticated pCloud session. `pcloud login` runs a
-browser-based OAuth 2.0 flow once and stores the resulting token locally; after
-that, commands just work.
+Every command needs an authenticated pCloud session. There are two ways to get
+one, and they are not equivalent — pick deliberately.
 
-## 🛠️ Create an OAuth application
+|                                  | `pcloud login` (session)  | `pcloud login --oauth`              |
+| -------------------------------- | ------------------------- | ----------------------------------- |
+| Setup                            | none                      | register an OAuth application first |
+| You type your password           | yes, once                 | never                               |
+| Revisions, trash, zip, downloads | ✅                        | ❌ not reachable                    |
+| Expiry                           | 30 days, or 7 days unused | no fixed expiry                     |
 
-You need a pCloud OAuth application to obtain a client ID and secret. Create one
-from the [pCloud OAuth 2.0 documentation](https://docs.pcloud.com/methods/oauth_2.0/),
-then expose the credentials in your shell or a `.env` file:
-
-```bash
-export PCLOUD_CLIENT_ID=your_client_id
-export PCLOUD_CLIENT_SECRET=your_client_secret
-```
+Session login is the default because it needs no setup and reaches the whole API.
+OAuth exists for when you would rather the CLI never handled your password.
 
 ## 🔑 Log in
 
@@ -24,12 +22,12 @@ export PCLOUD_CLIENT_SECRET=your_client_secret
 pcloud login
 ```
 
-This opens your browser to the pCloud authorisation page. After you approve
-access, pCloud redirects back to a local callback server and the token is saved
-to `~/.config/pcloud/tokens.json` (mode `0600`). The CLI never sees your pCloud
-password.
+You are asked for your email and password, and for a two-factor code if your
+account uses one. The password is sent to pCloud over HTTPS and is never written
+to disk — only the returned token is stored, at `~/.config/pcloud/tokens.json`
+(mode `0600`).
 
-Once logged in, confirm the session:
+Confirm it worked:
 
 ```bash
 pcloud whoami
@@ -37,23 +35,71 @@ pcloud whoami
 
 This prints the account email, plan, and quota usage.
 
-## 🚪 Log out
+## 🌐 Log in through the browser instead
 
-Remove the stored credentials at any time:
+OAuth 2.0 keeps your password out of the CLI entirely, at the cost of a one-time
+setup and a narrower API surface.
+
+First create a pCloud OAuth application from the
+[pCloud OAuth 2.0 documentation](https://docs.pcloud.com/methods/oauth_2.0/) and
+expose its credentials:
+
+```bash
+export PCLOUD_CLIENT_ID=your_client_id
+export PCLOUD_CLIENT_SECRET=your_client_secret
+```
+
+Then:
+
+```bash
+pcloud login --oauth
+```
+
+This opens your browser to the pCloud authorisation page. After you approve
+access, pCloud redirects back to a local callback server and the token is saved
+to the same place.
+
+> **OAuth cannot reach everything.** pCloud's access tokens do not grant access to
+> `trash_list` / `trash_restore`, and the same applies to revisions, zip and
+> downloads. This is a limitation of the pCloud API, not of this CLI — there is no
+> workaround. If you need those commands, use session login.
+
+If both are stored, the session token wins: it is the strictly more capable tier.
+
+## 🚪 Log out
 
 ```bash
 pcloud logout
 ```
 
-## 🤖 Bypassing the credential store
+This revokes the session token with pCloud before removing the local file, so the
+token is dead on their side too — deleting the file alone would leave it live
+until it expired.
 
-For CI or scripted contexts, set `PCLOUD_ACCESS_TOKEN` directly. When present, no
-stored credentials are read or written and `login` / `logout` are unnecessary:
+## 🩺 Check what your credential can reach
 
 ```bash
-export PCLOUD_ACCESS_TOKEN=your_access_token
+pcloud doctor
+```
+
+Probes every command against your current credential and reports which are
+reachable, which need a session token, and which call endpoints pCloud does not
+expose. It also reports local sync-daemon health — see
+[Local sync inspection](/projects/pcloud-cli/docs/sync).
+
+## 🤖 Bypassing the credential store
+
+For CI or scripted contexts, set a token directly in the environment. When
+present, no stored credentials are read or written and `login` / `logout` are
+unnecessary:
+
+```bash
+export PCLOUD_ACCESS_TOKEN=your_access_token   # OAuth tier
+export PCLOUD_AUTH=your_session_token          # session tier
 pcloud ls /
 ```
+
+`PCLOUD_AUTH` takes precedence, matching the stored-credential rule above.
 
 ## 🌍 Choosing a region
 
