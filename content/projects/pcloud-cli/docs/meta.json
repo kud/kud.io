@@ -1,4 +1,4 @@
 {
   "title": "pcloud-cli",
-  "pages": ["index", "authentication", "trash", "rewind"]
+  "pages": ["index", "authentication", "trash", "rewind", "sync"]
 }

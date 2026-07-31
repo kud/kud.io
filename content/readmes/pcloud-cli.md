@@ -12,6 +12,7 @@ description: "☁️ Restore deleted pCloud files and rewind versions from the t
 - **Rewind restore** — browse rewind events for any path and recover a file to an arbitrary destination.
 - **Public links** — create, list, and delete public download links for files and folders, with optional expiry and download caps.
 - **Interactive browser** — a full-screen terminal file browser for exploring your pCloud drive without memorising IDs.
+- **Local sync inspection** — read the pCloud Drive daemon's own database to find broken sync pairs, and prune orphaned ones the desktop app reports only as a bogus permissions error.
 
 ## Install
 
@@ -50,6 +51,18 @@ File ID     Name                                    Size        Deleted
 
 $ pcloud restore-trash 555001
 ✓ File 555001 restored successfully.
+
+$ pcloud sync
+pCloud Drive   running
+Database       ~/.pcloud/data.db · 3.13 MB
+
+   Local                 Remote        Files   Queue
+✓  ~/pCloud/Lib          /Lib          883     –
+🔥 ~/pCloud/Appdata      — orphaned    2066    1
+
+🔥 #3  ~/pCloud/Appdata
+   no remote folder — pCloud shows this pair as "/"
+   → pcloud sync prune 3
 
 $ pcloud browse
 ```

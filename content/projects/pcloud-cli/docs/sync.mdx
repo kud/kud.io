@@ -1,0 +1,109 @@
+---
+title: 🔄 Local sync inspection
+description: Inspect the pCloud Drive sync daemon, diagnose broken sync pairs, and prune orphaned ones.
+---
+
+Every other command in `pcloud` talks to the pCloud **API** — your files as the
+server sees them. This one reads the **local** database that the pCloud Drive
+desktop app keeps at `~/.pcloud/data.db`, which is where sync pairs live.
+
+That distinction matters because a sync pair can break in ways the API cannot
+see. The symptom you actually get is a dialog reading _"pCloud doesn't have
+permissions to upload this item"_ against a folder shown as `/` — which is
+neither a permissions problem nor a folder called `/`.
+
+## 📋 Show sync pairs
+
+```bash
+pcloud sync
+```
+
+```console
+pCloud Drive   running
+Database       ~/.pcloud/data.db · 3.13 MB
+
+   Local                 Remote        Files   Queue
+✓  ~/pCloud/Lib          /Lib          883     –
+✓  ~/pCloud/Share        /Share        172     –
+🔥 ~/pCloud/Appdata      — orphaned    2066    1
+✓  ~/pCloud/Home         /Home         40      –
+
+🔥 #3  ~/pCloud/Appdata
+   no remote folder — pCloud shows this pair as "/"
+   a second sync pair claims the same local folder
+   1 queued operation(s) with no destination
+   → pcloud sync prune 3
+```
+
+Add an id for a single pair, or `--json` for machine-readable output:
+
+```bash
+pcloud sync 3
+pcloud sync --json
+```
+
+## 🔍 What it checks
+
+| Check            | Meaning                                                   |
+| ---------------- | --------------------------------------------------------- |
+| `orphaned`       | The pair's remote folder is `NULL` — nothing to sync into |
+| `remote-missing` | The remote folder id is no longer in the local index      |
+| `duplicate`      | Two pairs claim the same local folder                     |
+| `local-missing`  | The local folder no longer exists on disk                 |
+| `stuck`          | Queued operations with no destination folder to act on    |
+
+`orphaned` is the interesting one. `syncfolder.folderid` is declared
+`ON DELETE SET NULL`, so when a remote folder is deleted, SQLite blanks the
+reference instead of removing the sync pair. The pair survives as a zombie
+pointing at nothing, and every upload it attempts fails.
+
+## 🧹 Prune an orphaned pair
+
+```bash
+pcloud sync prune 3          # dry run — shows what would be deleted
+pcloud sync prune 3 --apply  # perform it
+```
+
+The dry run is the default. `--apply` backs up `data.db` first, and **refuses to
+run while pCloud Drive is open** — the daemon holds its own copy of the sync set
+in memory and would either overwrite the edit or corrupt the write-ahead log.
+Quit pCloud Drive, apply, then start it again.
+
+Pruning removes only the local index rows for that pair. It touches no files, on
+disk or in the cloud.
+
+## 🔬 Debug view
+
+```bash
+pcloud sync --debug
+```
+
+Shows daemon state, database size, write-ahead-log status, and row counts per
+table.
+
+> **On privacy:** the same database holds `setting`, `cryptofilekey` and
+> `cryptofolderkey` — your auth token and crypto key material. The debug view
+> works from an **allowlist** of tables it may read, never an exclusion list, so
+> a table pCloud adds in a future release is withheld by default rather than
+> leaked. Withheld tables are named, never read.
+
+## 🩺 In `doctor`
+
+`pcloud doctor` runs these checks as a second section after its credential
+report, and prints a one-line verdict per fault class:
+
+```console
+Local daemon
+  7 sync pair(s) · pCloud Drive running
+✓ no local sync faults
+```
+
+The local half needs no credential, so it still runs when you are logged out.
+
+## 🔒 Read-only, and lock-safe
+
+pCloud Drive holds the database under an exclusive lock while it runs, so
+`pcloud sync` copies the database and its write-ahead log to a temporary
+directory and reads the copy. Your live database is only ever copied, never
+opened by SQLite — `prune --apply` is the sole exception, and it requires the
+daemon to be stopped.
