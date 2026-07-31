@@ -1,0 +1,121 @@
+---
+title: 🏠 Local control
+description: Duux's cloud blocks fan control on most accounts. Run a broker on your own network instead, and the fan talks to you directly.
+---
+
+If `duux status` reports **`Not_Allowed`**, your account can see the fan but
+can't drive it. This page is the way round that — and the result is better than
+the cloud anyway: no round-trip to the Netherlands, no token to expire, and it
+keeps working if Duux ever retires the service.
+
+## Why the cloud refuses
+
+Discovery works: `duux discover`, `devices` and `switch` all read from an
+endpoint your account is allowed to use. Control doesn't — both of these answer
+HTTP 200 with `{"data":null,"errorMessage":"Not_Allowed"}`:
+
+- `GET  v5/data/{id}/status`
+- `POST v5/sensor/{id}/commands`
+
+Authenticating to Duux's own MQTT broker isn't an alternative either: the TLS
+handshake succeeds, but the login is rejected and the credentials aren't
+obtainable from the API.
+
+## The idea
+
+Your fan is an **MQTT client**. There's no server on it — nothing to connect
+_to_. On power-up it dials outward to `collector3.cloudgarden.nl:443` and holds
+that connection open, publishing its state and listening for commands:
+
+```
+fan ──publishes──> sensor/{id}/in        state: on, speed 12, sweeping
+fan <─subscribes── sensor/{id}/command   "tune set speed 20"
+```
+
+That outbound connection is the fan's only route to the world, which is exactly
+why Duux could refuse you: they own the thing at the other end.
+
+But the fan finds that broker **by hostname**, and hostnames are resolved by
+DNS — which you control on your own network. Point the name somewhere else and
+the fan follows:
+
+```
+before   fan ──> collector3.cloudgarden.nl ──> Duux      (they can refuse)
+after    fan ──> collector3.cloudgarden.nl ──> your Mac  (nobody can)
+```
+
+The fan has no CA store and sends no credentials, so it accepts a self-signed
+certificate and an anonymous broker. That trust is what made Duux the sole
+gatekeeper, and it's what removes them.
+
+## Setting it up
+
+```console
+$ duux broker setup
+```
+
+The guided setup detects your machine's network address, generates a
+certificate for `collector3.cloudgarden.nl` (with the hostname correctly in its
+SAN list, so `duux-cli` verifies it normally), writes a Mosquitto config, and
+prints the three steps only you can do:
+
+1. **Start the broker.** `brew install mosquitto`, then
+   `sudo mosquitto -c ~/.config/duux/broker/mosquitto.conf -v`. The `sudo` is
+   only because 443 is a privileged port.
+2. **Redirect the hostname** on your router, Pi-hole or AdGuard —
+   `collector3.cloudgarden.nl → your.machine.ip`. This has to apply to the
+   _fan's_ DNS, not just your Mac's.
+3. **Power-cycle the fan.** It only resolves the hostname when it connects.
+
+Then check the whole chain:
+
+```console
+$ duux broker check
+
+Duux · broker check
+
+  ● Broker configured         192.168.1.50:443
+  ● Certificate               ~/.config/duux/broker/ca.crt
+  ● Mosquitto installed
+  ● Broker reachable
+  ● DNS redirect              collector3.cloudgarden.nl → 192.168.1.50
+```
+
+Each line is a step the fan itself has to complete, in order, so the first ✗ is
+the thing actually blocking you.
+
+## Everyday use
+
+Once it's running, nothing changes — `duux`, `duux status` and `duux debug` all
+route through the broker automatically.
+
+| Command                  | What it does                      |
+| ------------------------ | --------------------------------- |
+| `duux broker`            | Show the current setting          |
+| `duux broker setup`      | Guided setup                      |
+| `duux broker check`      | Test the path to the fan          |
+| `duux broker set <host>` | Point at a broker you already run |
+| `duux broker clear`      | Go back to the cloud              |
+
+## If it doesn't connect
+
+**Nothing in the broker log.** The fan isn't reaching you. Confirm the DNS
+rewrite applies to the fan's network, and that you power-cycled it after making
+the change.
+
+**Connected, but every row still reads `n/a`.** The fan is publishing to a
+topic the CLI isn't watching. Subscribe to everything and see what arrives:
+
+```console
+$ mosquitto_sub -h <your-ip> -p 443 --cafile ~/.config/duux/broker/ca.crt -t 'sensor/#' -v
+```
+
+`duux-cli` listens on the numeric sensor id (`duux devices` shows it). If the
+fan publishes under its MAC address instead, that's worth
+[opening an issue](https://github.com/kud/duux-cli/issues) with the topic you
+saw — it's a one-line fix.
+
+**A static address matters.** If your machine's IP changes, the DNS rewrite
+points at nothing. Reserve it by DHCP on your router, and re-run
+`duux broker setup` if it does change — the address is baked into the
+certificate.

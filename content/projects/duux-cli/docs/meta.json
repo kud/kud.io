@@ -5,6 +5,7 @@
     "tui",
     "commands",
     "preferences",
+    "local-control",
     "troubleshooting"
   ]
 }
