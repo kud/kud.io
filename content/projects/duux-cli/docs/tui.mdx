@@ -1,0 +1,46 @@
+---
+title: 🎛️ The TUI
+description: Every row in the control panel, the keybindings, and what the (unconfirmed) indicator means.
+---
+
+Running `duux` with no arguments opens a full-screen Ink control panel for the active fan. The panel needs at least 46 terminal columns — narrower than that, it shows a resize notice instead of the controls.
+
+## Layout
+
+- **Status bar** — fan name, connection state (`● connected` / `○ connecting`), current power and speed, the last action taken, and any session error.
+- **Control panel** — one row per adjustable parameter, with the currently selected row highlighted.
+- **Hotkey legend** — a footer reminding you of the keys below.
+
+## Rows
+
+| Row           | Kind        | What it controls                           |
+| ------------- | ----------- | ------------------------------------------ |
+| Power         | boolean     | On/off                                     |
+| Speed         | range 1–30  | Fan speed                                  |
+| Mode          | enum        | `normal` / `natural` / `night`             |
+| H-Oscillation | boolean     | Horizontal sweep                           |
+| V-Oscillation | boolean     | Vertical tilt                              |
+| Night mode    | boolean     | Night mode — always shows `n/a`, see below |
+| Timer         | range 0–24h | Auto-off timer                             |
+
+## Keybindings
+
+| Key               | Action                                                             |
+| ----------------- | ------------------------------------------------------------------ |
+| `↑` / `↓`         | Move the row cursor                                                |
+| `←` / `→`         | Adjust the selected row (step for range rows, cycle for enum rows) |
+| `Shift + ←/→`     | Adjust a range row by its larger step (speed: ±5, timer: ±3h)      |
+| `Enter` / `Space` | Toggle a boolean row, or cycle an enum row forward                 |
+| `o`               | Open preferences                                                   |
+| `q`               | Quit                                                               |
+| `Ctrl+C`          | Quit from anywhere, including inside preferences                   |
+
+While the preferences panel is open (`o`), it owns all input — the control panel's keys are inactive until you close it with `Esc`.
+
+## Optimistic updates and `(unconfirmed)`
+
+Pressing a key sends the change immediately and updates the row locally before the fan confirms it. That row is marked `(unconfirmed)` until the value you see reported back matches what you set — the session only refreshes fan state on a poll (every 30 seconds) or an MQTT push, never on the setter call itself, so there's a real window where the display is ahead of the fan's own state. This is deliberate: it makes the panel feel responsive rather than freezing on every keypress, while still being honest that the value hasn't round-tripped yet.
+
+## Night mode always reads `n/a`
+
+The Night mode row can be **set** (`Enter`/`Space` toggles it, and the command is sent), but it always displays `n/a` as its value. The fan's reported status has no field for night mode — `@kud/duux` exposes a command to set it but nothing to read it back, so the TUI shows the honest "unknown" state rather than guessing. See [Troubleshooting & API notes](/projects/duux-cli/docs/troubleshooting) for the full list of what's confirmed versus assumed.

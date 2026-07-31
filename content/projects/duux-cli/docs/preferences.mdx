@@ -1,0 +1,29 @@
+---
+title: 🎨 Preferences
+description: Icon style options and where duux-cli stores its configuration on disk.
+---
+
+## Icon style
+
+duux-cli has one user preference: whether the control panel shows Nerd Font glyphs next to each row label.
+
+| Style                   | Behaviour                                                                                        |
+| ----------------------- | ------------------------------------------------------------------------------------------------ |
+| **Text only** (default) | Labels only, no icons — the most portable, works in any terminal font                            |
+| **Nerd Font**           | A single-width glyph before each label — needs a Nerd Font installed and active in your terminal |
+
+Change it from either place:
+
+- Inside the TUI, press `o` to open preferences, `↑`/`↓` to pick a style, `Enter` to save, `Esc` to close.
+- From a shell, run `duux prefs` to open the same panel standalone — no sign-in or active fan required.
+
+The saved style takes effect immediately in the running session and persists for future launches.
+
+## Where config lives
+
+Everything duux-cli and its core library persist is local:
+
+- **Account, device list, active device, and icon preference** — `~/.config/duux/config.json`. `duux status` prints this path if it can't reach the fan, so you always know where to look.
+- **Auth tokens** — the macOS Keychain, keyed by your Duux account email. Nothing about the token itself is written to `config.json`, only the account name and its expiry.
+
+There's no separate preferences file — icon style lives in the same `config.json` as everything else, under an opaque preferences bag that the CLI reads a typed `iconStyle` field from.

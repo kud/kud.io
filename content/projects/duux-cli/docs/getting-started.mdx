@@ -1,0 +1,48 @@
+---
+title: 🚀 Getting started
+description: Sign in to Duux, discover your fan, and what the CLI does on a bare `duux` run.
+---
+
+## Requirements
+
+duux-cli needs Node.js 22 or later, and talks to your fan through the Duux cloud API (with an experimental local MQTT transport in the underlying `@kud/duux` core). There's nothing to configure before your first sign-in — auth and device discovery both happen interactively the first time you need them.
+
+## Sign in
+
+```
+duux auth
+```
+
+This runs Duux's passwordless email flow:
+
+1. Enter the email address on your Duux account.
+2. Duux emails you a one-time code.
+3. Enter the code to complete the sign-in.
+
+`auth` is aliased as `login`, so `duux login` works identically. Tokens are stored in the macOS Keychain; the account and expiry live in the local config file (see [Preferences](/projects/duux-cli/docs/preferences) for the exact path). If you're already signed in, running `auth` again asks for confirmation before replacing the session.
+
+## Discover a fan
+
+```
+duux discover
+```
+
+Fetches the fans registered to your Duux account and saves them locally. If discovery finds:
+
+- **No fans** — you're told the account has none registered.
+- **One fan** — it's selected automatically.
+- **Multiple fans** — you're prompted to pick one, unless you already have a fan selected, in which case discovery leaves it alone. Pass `--select` to force the picker even when a fan is already active.
+
+Run `duux switch` afterwards if you want to change which fan is active.
+
+## First run
+
+Launch the TUI with no arguments:
+
+```
+duux
+```
+
+Before rendering, the CLI checks that you're signed in and have an active fan. If either is missing, it asks you interactively — "Not signed in to Duux yet. Sign in now?", then "No fan selected yet. Discover fans now?" — and runs `auth`/`discover` inline rather than making you restart. Decline either prompt and the CLI exits cleanly without opening the TUI.
+
+Once both checks pass, the full-screen control panel opens. See [The TUI](/projects/duux-cli/docs/tui) for what you can do there.
