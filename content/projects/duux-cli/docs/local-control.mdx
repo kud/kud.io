@@ -1,25 +1,23 @@
 ---
 title: 🏠 Local control
-description: Duux's cloud blocks fan control on most accounts. Run a broker on your own network instead, and the fan talks to you directly.
+description: Optional — run duux-cli against a broker on your own network instead of Duux's cloud, for control that works offline and outlives the service.
 ---
 
-If `duux status` reports **`Not_Allowed`**, your account can see the fan but
-can't drive it. This page is the way round that — and the result is better than
-the cloud anyway: no round-trip to the Netherlands, no token to expire, and it
-keeps working if Duux ever retires the service.
+**You don't need any of this.** `duux` works out of the box against Duux's
+cloud — sign in, discover, done. This page is for running _without_ the cloud
+at all.
 
-## Why the cloud refuses
+Worth doing if you want:
 
-Discovery works: `duux discover`, `devices` and `switch` all read from an
-endpoint your account is allowed to use. Control doesn't — both of these answer
-HTTP 200 with `{"data":null,"errorMessage":"Not_Allowed"}`:
+- **Offline control.** Your internet can be down; the fan and the CLI are both
+  on your network.
+- **No round-trip.** Commands go straight across the LAN rather than to the
+  Netherlands and back.
+- **Independence.** If Duux ever retires the API or your account, the fan keeps
+  answering.
 
-- `GET  v5/data/{id}/status`
-- `POST v5/sensor/{id}/commands`
-
-Authenticating to Duux's own MQTT broker isn't an alternative either: the TLS
-handshake succeeds, but the login is rejected and the credentials aren't
-obtainable from the API.
+The trade is real: a broker to run, a DNS change on your router, and a
+power-cycle. If none of the above appeals, close this page and carry on.
 
 ## The idea
 

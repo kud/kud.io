@@ -10,7 +10,7 @@ description: "Control your Duux Whisper Flex 2 smart fan from the CLI"
 - **Multi-fan aware** — discover fans from the Duux cloud, list them, and switch the active one
 - **Scriptable status** — `duux status` prints a one-shot state readout and sets a non-zero exit code when the fan is unreachable
 - **Raw command passthrough** — `duux debug "tune set horosc 3"` sends an arbitrary command and prints the fan's response, for probing undocumented parameters
-- **Local control** — Duux's cloud blocks fan control on most accounts; `duux broker setup` runs a broker on your own network so the fan talks to you directly
+- **Optional local control** — `duux broker setup` runs the fan through a broker on your own network instead of the cloud, for control that works offline
 - **Accessible by default** — every state is a glyph plus a word (● on / ○ off); colour only ever reinforces, it never carries meaning alone
 
 Built on [`@kud/duux`](https://github.com/kud/duux), which owns auth, discovery, and the cloud/MQTT transports — this CLI is the terminal surface over it.
@@ -42,7 +42,6 @@ $ duux switch
 $ duux status
 ● on · speed 3 · mode normal · night off
 
-$ duux prefs
 # edit preferences (icon style: text or Nerd Font)
 
 $ duux debug "tune set horosc 3"

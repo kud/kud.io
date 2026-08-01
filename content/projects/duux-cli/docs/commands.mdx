@@ -1,6 +1,6 @@
 ---
 title: ⌨️ Commands
-description: Full reference for every duux-cli subcommand — auth, discover, devices, switch, status, prefs, and debug.
+description: Full reference for every duux-cli subcommand — auth, discover, devices, switch, status, broker, doctor, and debug.
 ---
 
 Running `duux` with no arguments opens the [TUI](/projects/duux-cli/docs/tui). Every subcommand below runs headless instead, for scripting or quick checks.
@@ -49,7 +49,6 @@ Prints the active fan's current state: connection, power, speed, mode, both osci
 
 Takes no arguments.
 
-## `duux prefs`
 
 Opens the same preferences panel as pressing `o` inside the TUI, as a standalone screen. See [Preferences](/projects/duux-cli/docs/preferences) for what it controls. Unlike every other command, it doesn't require you to be signed in or have a fan selected — every change here is a local config write.
 
