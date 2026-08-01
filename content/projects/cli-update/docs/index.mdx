@@ -1,0 +1,13 @@
+---
+title: 👋 Introduction
+description: A shared library that tells @kud CLI users when an update is available, without ever blocking startup or corrupting piped output.
+---
+
+`@kud/cli-update` is the library every `@kud` CLI imports to show the same "an update is available, upgrade now?" banner. It never delays startup, stays silent whenever output isn't going to a human, and can never break the CLI that calls it.
+
+## What's here
+
+- [🚀 Usage](/projects/cli-update/docs/usage) — the one call every CLI makes, plus the lower-level pieces for a custom flow.
+- [⚙️ Configuration](/projects/cli-update/docs/configuration) — opting out globally or per package, and where state lives on disk.
+- [🧩 How it works](/projects/cli-update/docs/how-it-works) — the design decisions behind the never-blocking, TTY-aware, child-process banner.
+- [📖 API reference](/projects/cli-update/docs/api) — every exported function and type.

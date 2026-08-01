@@ -1,0 +1,99 @@
+---
+title: 📖 API reference
+description: Every function and type exported by @kud/cli-update.
+---
+
+`@kud/cli-update` publishes compiled JS plus `.d.ts` — plain JavaScript projects get full type information without needing TypeScript themselves.
+
+## Functions
+
+### `notify(options)`
+
+```ts
+notify(options: CheckForUpdateOptions): Promise<void>
+```
+
+The one call a CLI makes. Checks for an update and, if one exists, spawns the shared Ink banner in a child process and offers to upgrade. Resolves once that child closes. Never throws.
+
+### `checkForUpdate(options)`
+
+```ts
+checkForUpdate(options: CheckForUpdateOptions): Promise<UpdateNotice | null>
+```
+
+Reads the cached "latest version" answer and returns immediately — the network is never awaited. Triggers a detached background refresh when the cache is missing or stale. Returns `null` when there's no update, when output is suppressed, or when notices are disabled for `name`. Never throws, never rejects.
+
+### `formatNotice(notice)`
+
+```ts
+formatNotice(notice: UpdateNotice): string
+```
+
+Turns a notice into a single line:
+
+```console
+Update available: @kud/duux-cli 1.2.0 -> 1.3.0. Run `npm i -g @kud/duux-cli` to upgrade.
+```
+
+### `promptUpgrade(notice)`
+
+```ts
+promptUpgrade(notice: UpdateNotice): Promise<UpgradeOutcome>
+```
+
+Writes the plain-text banner to stderr, asks "Upgrade now? (Y/n)", and runs the upgrade on a yes answer. Returns rather than exiting, so the caller decides what happens next. Ctrl-C or a closed stdin resolves as `"declined"`, not a rejection.
+
+### `upgrade(notice, options?)`
+
+```ts
+upgrade(
+  notice: UpdateNotice,
+  options?: { onOutput?: (line: string) => void },
+): Promise<boolean>
+```
+
+Runs `notice.command` (`npm i -g <name>`). Without `onOutput`, npm's stdio is inherited straight to the terminal. With it, stdout and stderr are captured and emitted line by line instead — what the Ink banner uses to show upgrade progress without npm's raw output colliding with the render. Resolves `true` on a zero exit code.
+
+### `banner(notice)`
+
+```ts
+banner(notice: UpdateNotice): string
+```
+
+Renders the boxed plain-text banner (package name, `current → latest`, upgrade command) used as the non-interactive fallback and inside `promptUpgrade`.
+
+### `disableNotices(scope?)` / `enableNotices(scope?)`
+
+```ts
+disableNotices(scope?: string): void
+enableNotices(scope?: string): void
+```
+
+Write `~/.config/kud/cli.json`. No `scope` sets the global `updateNotifier` flag; a package name scopes the change to `packages[scope]`, which wins over the global flag. Fails silently on a read-only home directory.
+
+### `noticesEnabled(name)`
+
+```ts
+noticesEnabled(name: string): boolean
+```
+
+Reads the current effective state for `name` — its per-package override if set, otherwise the global flag, otherwise `true`.
+
+## Types
+
+```ts
+type UpdateNotice = {
+  name: string
+  current: string
+  latest: string
+  command: string
+}
+
+type CheckForUpdateOptions = {
+  name: string
+  version: string
+  cacheHours?: number // default 24
+}
+
+type UpgradeOutcome = "upgraded" | "declined" | "failed"
+```

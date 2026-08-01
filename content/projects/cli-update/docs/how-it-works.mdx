@@ -1,0 +1,26 @@
+---
+title: 🧩 How it works
+description: The design decisions behind cli-update's never-blocking, TTY-aware, child-process banner.
+---
+
+Five decisions shape everything this library does. Each one exists because the alternative would make a CLI worse, not better, at telling users about an update.
+
+## It never blocks startup
+
+`checkForUpdate` reads a cached answer from disk and returns — measured at 1–4ms, network never awaited. If the cache is missing or older than `cacheHours` (default 24h), it spawns a **detached, `unref`'d** child process (`check-child.ts`) that hits the npm registry with a 5-second timeout and writes the fresh result to `~/.config/kud/update-cache.json`. That child outlives the parent CLI's exit without holding its event loop open. The fresh answer appears on the _next_ run — a CLI that pauses on the network is worse than one that's a day late about an update.
+
+## It's silent unless stdout is a TTY
+
+One check — `!process.stdout.isTTY`, plus `CI`/`NO_UPDATE_NOTIFIER` — covers piping, redirects, `--json` output, cron, and CI simultaneously, without the library needing to understand any CLI's own flags. It's what makes `duux status --json | jq` safe: the banner logic never runs at all when output isn't going to a human.
+
+## The banner renders in a separate process
+
+`notify()` doesn't render anything itself — it spawns `banner-child.js` as its own process and waits for it to close. Ink and React load _only_ inside that child. A plain commander CLI with no interest in Ink still gets an Ink-rendered banner, and never pulls React into its own module graph. This is the entire reason the rendering is a child process rather than a function call: the alternative would make every `@kud` CLI depend on Ink just to show a one-line banner.
+
+## stdin and stdout are checked separately
+
+`echo x | duux` has a TTY stdout but a piped stdin. Ink's `useInput` needs raw mode on stdin, and throws without it. The banner child checks `process.stdin.isTTY` on its own — if it's false, there's nobody to answer a prompt, so it writes the plain-text `banner()` to stderr and exits immediately rather than attempting to render an interactive prompt.
+
+## It can never break the CLI it advises
+
+No exported function throws. `checkForUpdate` wraps its entire body in try/catch and resolves `null` on any failure. `notify()` wraps its child spawn the same way. Config and cache reads/writes degrade to an empty object or a silent no-op rather than propagating an error — a broken network, a missing registry, an unreadable home directory, or a failed spawn all resolve to "no notice", never an exception. The banner itself writes to **stderr**, not stdout, so it can never land inside a CLI's piped output even if the TTY check upstream were somehow bypassed.

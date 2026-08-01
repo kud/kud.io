@@ -1,0 +1,56 @@
+---
+title: ⚙️ Configuration
+description: Where cli-update stores its state, and every way a user or CLI can silence it.
+---
+
+## Opt-out precedence
+
+A notice is suppressed the moment any of these is true, checked in this order:
+
+1. **stdout isn't a TTY** — piping, redirects, `--json` output, cron, CI logs. This alone covers most of the list below without `cli-update` needing to understand any CLI's own flags.
+2. **`NO_UPDATE_NOTIFIER` or `CI` is set** — the ecosystem's usual opt-outs.
+3. **`~/.config/kud/cli.json`** — a per-package `packages["<name>"]` entry beats the global `updateNotifier` flag.
+4. Otherwise, notices are **on by default**.
+
+## The config file
+
+`~/.config/kud/cli.json`:
+
+```json
+{
+  "updateNotifier": false,
+  "packages": {
+    "@kud/duux-cli": true
+  }
+}
+```
+
+`updateNotifier` sets the global default; `packages` overrides it per package. In the example above, every `@kud` CLI stays quiet except `@kud/duux-cli`. The file is corrupt-tolerant — invalid JSON is treated as an empty config rather than thrown.
+
+## Managing it programmatically
+
+A CLI can expose its own subcommand on top of the same file instead of asking users to edit JSON by hand:
+
+```ts
+import { disableNotices, enableNotices, noticesEnabled } from "@kud/cli-update"
+
+disableNotices() // turns off notices for every @kud CLI
+disableNotices("@kud/duux-cli") // scopes it to just this package
+enableNotices("@kud/duux-cli") // reverses either
+
+noticesEnabled("@kud/duux-cli") // reads the current effective state
+```
+
+Calling any of these with no `scope` argument writes the global `updateNotifier` flag; passing a package name writes only that package's entry in `packages`, which — per the precedence above — wins over the global setting. A write to a read-only home directory fails silently rather than throwing.
+
+## The cache
+
+`~/.config/kud/update-cache.json` holds the last known "latest version" per package:
+
+```json
+{
+  "@kud/duux-cli": { "latest": "1.3.0", "checkedAt": 1770000000000 }
+}
+```
+
+`checkForUpdate`'s `cacheHours` option (default `24`) controls how old an entry can be before it's considered stale and a background refresh is triggered. Like the config file, the cache is corrupt-tolerant — a malformed file is treated as empty rather than thrown, and a failed write never breaks the calling CLI.

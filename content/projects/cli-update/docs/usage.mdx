@@ -1,0 +1,74 @@
+---
+title: 🚀 Usage
+description: Wire notify() into a CLI's startup, or use the lower-level pieces to build a custom flow.
+---
+
+## The one call
+
+Every `@kud` CLI calls `notify()` once, near the top of its entry point:
+
+```ts
+import { notify } from "@kud/cli-update"
+import pkg from "../package.json" with { type: "json" }
+
+await notify({ name: pkg.name, version: pkg.version })
+```
+
+`name` and `version` are the only things that differ between CLIs — `latest` is discovered from npm by the library itself. `notify()`:
+
+1. Reads a cached "latest version" answer from disk and returns almost instantly (1–4ms) if there's nothing to say.
+2. If the cache is missing or stale, kicks off a background refresh — the fresh answer shows up on the _next_ run, not this one.
+3. If the cached version is newer than the one passed in, spawns a separate process that renders the Ink banner and, on a TTY, offers to upgrade there and then.
+
+It resolves once that child process closes (or immediately if there's no update to show), and it never throws — see [How it works](/projects/cli-update/docs/how-it-works) for why.
+
+## Printing the notice yourself
+
+If a CLI would rather print its own line than hand off to the interactive banner, skip `notify()` and call the two pieces it's built from:
+
+```ts
+import { checkForUpdate, formatNotice } from "@kud/cli-update"
+import pkg from "../package.json" with { type: "json" }
+
+const notice = await checkForUpdate({ name: pkg.name, version: pkg.version })
+if (notice) console.error(formatNotice(notice))
+```
+
+`formatNotice` turns a notice into a single line:
+
+```console
+Update available: @kud/duux-cli 1.2.0 -> 1.3.0. Run `npm i -g @kud/duux-cli` to upgrade.
+```
+
+`checkForUpdate` accepts an optional `cacheHours` (default `24`) controlling how long a cached answer is trusted before a background refresh is triggered — see the full signature on the [API reference](/projects/cli-update/docs/api).
+
+## Building a custom prompt
+
+`notify()`'s child process is built from three more pieces, all exported in case a CLI wants its own interactive flow instead of the default Ink banner:
+
+```ts
+import { promptUpgrade, upgrade, banner } from "@kud/cli-update"
+
+// prints the plain-text banner, asks "Upgrade now? (Y/n)", and runs the
+// upgrade command on yes — returns rather than exiting
+const outcome = await promptUpgrade(notice) // "upgraded" | "declined" | "failed"
+
+// just the boxed banner text, if you want to render it inside your own UI
+console.error(banner(notice))
+
+// just the upgrade itself — runs `npm i -g <name>`, optionally streaming
+// npm's output line by line instead of inheriting the terminal directly
+const ok = await upgrade(notice, { onOutput: (line) => console.error(line) })
+```
+
+`onOutput` matters for anything drawing its own UI while the install runs (Ink included) — without it, `upgrade()` inherits npm's stdio directly, which would overwrite whatever's on screen.
+
+## Try it
+
+`examples/demo.js` runs against the built output and walks through TTY detection, cache timing, and every opt-out path:
+
+```sh
+npm run demo
+```
+
+Try it piped (`npm run demo | cat`), with `CI=1`, and with `NO_UPDATE_NOTIFIER=1` to see each silencing path fire.
