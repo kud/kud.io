@@ -3,35 +3,42 @@ title: 🔧 Troubleshooting & API notes
 description: Which fan parameters are confirmed against the API versus provisional assumptions, and how to probe the rest with `duux debug`.
 ---
 
-The Duux Whisper Flex 2's cloud API isn't fully documented. duux-cli's parameter ranges (`src/lib/params.ts`) are pinned as a single source of truth, but not every one of them is verified against a physical fan — this page is an honest account of which is which, and how to move an assumption into "confirmed" yourself.
+The Duux Whisper Flex 2's cloud API isn't fully documented. duux-cli's parameter model (`src/lib/params.ts`) is pinned as a single source of truth, and most of it is now confirmed against a physical fan — this page is an honest account of what's settled versus what's still an assumption, and how to move the rest into "confirmed" yourself.
 
 ## What's confirmed
 
 - **Speed: 1–30.** Confirmed by the API spec, and enforced by `@kud/duux`'s own command builder — sending a speed outside that range throws a `RangeError` before a request is even made.
-- **Mode: `normal` / `natural` / `night`.** Driven directly from `@kud/duux`'s own mode enumeration, not guessed in the CLI. If the core library widens its mode list, duux-cli picks it up with no changes needed here.
+- **Mode: `normal` / `natural`. Nothing else.** The fan has exactly two modes; night is a separate toggle, not a third mode (see below). Driven directly from `@kud/duux`'s own mode enumeration, so widening it there flows through here with no CLI change needed.
+- **Horizontal oscillation (`horosc`) is a 0–3 sweep-angle preset, not a boolean.** `0` off, `1` = 30°, `2` = 60°, `3` = 90°. It was modelled as a plain toggle until this was confirmed, which made presets 2 and 3 unreachable.
+- **Vertical oscillation (`verosc`) is a 0–2 tilt preset.** `0` off, `1` = 45°, `2` = 100°.
+- **Night mode (`night`) is readable, not write-only.** The fan reports a `night` field in its state alongside everything else, so both the TUI's Night mode row and `duux status` show its real value rather than an unknown placeholder.
+- **Child lock (`lock`) is readable and settable.** It has its own row in the TUI and its own line in `duux status`.
+- **Commands are addressed by the fan's MAC address, not its numeric sensor id.** `duux discover` records the MAC for exactly this reason; a fan saved before this was fixed will fail obscurely until you run `duux discover` again.
+- **State comes from `v5/smarthome/sensors`, read as each device's `latestData.fullData`.** There's no working per-device status endpoint — this is the one place `getStatus()` and the session both read from.
+- **Battery level and charging state** are reported when the optional battery pack is fitted; otherwise `duux status` shows no battery line at all.
 
-## What's provisional
+## What's still provisional
 
-- **Horizontal and vertical oscillation (`horosc` / `verosc`) are modelled as booleans.** That's all `@kud/duux`'s `setOscillation` currently accepts, and it's what the control panel and `duux status` both show — but the API spec flags this as unverified. It's plausible these are really 0–3 sweep-angle presets rather than a plain on/off, in which case the boolean model is throwing away information the fan actually supports.
-- **The timer's 24-hour ceiling is a UI assumption, not an API limit.** The spec only says "hours" as a non-negative integer, with no documented upper bound. 24 was picked as a sane default for the range control — it is not a value the API is known to reject above.
-- **Night mode can be set but not read back.** The fan accepts a command to turn night mode on or off, but its reported status has no corresponding field. Both the TUI's Night mode row and `duux status` intentionally show this as unknown (`n/a`) rather than inferring a value from something else — see [The TUI](/projects/duux-cli/docs/tui#night-mode-always-reads-na).
+- **The timer's 24-hour ceiling is a UI assumption, not an API limit.** The spec only says "hours" as a non-negative integer, with no documented upper bound. 24 was picked as a sane default for the range control's maximum — it is not a value the API is known to reject above.
 
 ## Probing an assumption with `duux debug`
 
-`duux debug` exists specifically to test the provisional cases above. It sends a raw command string straight to the fan, bypassing the CLI's typed builders — so it can send a value the normal controls would refuse, like a horosc setting above `1`:
+`duux debug` exists specifically to test cases like the one above. It sends a raw command string straight to the fan, bypassing the CLI's typed builders — so it can send a value the normal controls would refuse, like a timer past the current ceiling:
 
 ```
-duux debug "tune set horosc 3"
+duux debug "tune set timer 30"
 ```
 
-The fan's full reported state is printed immediately after, so you can see directly whether it accepted the value, clamped it, or rejected it. If you confirm one of these assumptions against your own fan — that horosc really does take 0–3, or that the timer accepts more than 24 — the fix is a one-line change to the relevant constant in `src/lib/params.ts`, with the comment above it updated from provisional to confirmed.
+The fan's full reported state is printed immediately after, so you can see directly whether it accepted the value, clamped it, or rejected it. If you confirm the timer accepts more than 24 hours, the fix is a one-line change to `TIMER.max` in `src/lib/params.ts`, with the comment above it updated from provisional to confirmed.
 
 ## Common issues
 
-**"Not signed in to Duux. Run `duux auth` first."** — no stored auth metadata. Run `duux auth`.
+**"Not signed in to Duux. Run the login flow first."** — no stored auth metadata. Run `duux auth`.
 
-**"No Duux credentials found in the Keychain for `<email>`. Run `duux auth` again."** — the config file references an account, but its token isn't in the Keychain (e.g. after a Keychain reset or migrating machines). Sign in again.
+**"No Duux credentials found in the Keychain for `<email>`. Run the login flow again."** — the config file references an account, but its token isn't in the Keychain (e.g. after a Keychain reset or migrating machines). Run `duux auth` to sign in again.
 
-**"Duux session has expired. Run `duux auth` again."** — the stored token's expiry has passed. Sign in again to refresh it.
+**"Duux session has expired. Run the login flow again."** — the stored token's expiry has passed. Run `duux auth` to refresh it.
 
-**`duux status` reports a connection failure** — it prints the config file path (`~/.config/duux/config.json`) alongside the error so you can confirm which account and device are active before digging further.
+**"Not_Allowed" from the cloud.** The old blanket refusal from Cloudgarden's status and command endpoints. Rare now that commands are addressed by MAC correctly, but if it does show up, run `duux discover` to refresh the fan's address, or `duux doctor` to check your whole setup.
+
+**`duux status` reports a connection failure** — it prints the config file path (`~/.config/duux/config.json`) alongside the error so you can confirm which account and device are active before digging further. `duux doctor` walks the same account/fan/control-path chain and names the single next thing to fix.

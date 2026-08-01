@@ -1,6 +1,6 @@
 ---
 title: 🎛️ The TUI
-description: Every row in the control panel, the keybindings, and what the (unconfirmed) indicator means.
+description: Every row in the control panel, the keybindings, the presets picker, and what the `·pending` marker means.
 ---
 
 Running `duux` with no arguments opens a full-screen Ink control panel for the active fan. The panel needs at least 46 terminal columns — narrower than that, it shows a resize notice instead of the controls.
@@ -8,39 +8,46 @@ Running `duux` with no arguments opens a full-screen Ink control panel for the a
 ## Layout
 
 - **Status bar** — fan name, connection state (`● connected` / `○ connecting`), current power and speed, the last action taken, and any session error.
-- **Control panel** — one row per adjustable parameter, with the currently selected row highlighted.
-- **Hotkey legend** — a footer reminding you of the keys below.
+- **Control panel** — one row per adjustable parameter, with the currently selected row highlighted by a yellow `❯`.
+- **Footer** — a hint bar reminding you of the keys below.
+
+Every row carries a Nerd Font icon — always on, now that the icon-style preference (the old `duux prefs` command) is gone.
 
 ## Rows
 
-| Row           | Kind        | What it controls                           |
-| ------------- | ----------- | ------------------------------------------ |
-| Power         | boolean     | On/off                                     |
-| Speed         | range 1–30  | Fan speed                                  |
-| Mode          | enum        | `normal` / `natural` / `night`             |
-| H-Oscillation | boolean     | Horizontal sweep                           |
-| V-Oscillation | boolean     | Vertical tilt                              |
-| Night mode    | boolean     | Night mode — always shows `n/a`, see below |
-| Timer         | range 0–24h | Auto-off timer                             |
+| Row           | Kind                      | Shown as                            |
+| ------------- | ------------------------- | ----------------------------------- |
+| Power         | boolean                   | toggle switch                       |
+| Speed         | range 1–30                | progress bar, e.g. `15/30`          |
+| Mode          | enum (`normal`/`natural`) | segmented pills                     |
+| H-Oscillation | range 0–3, sweep preset   | segmented pills — `off 30° 60° 90°` |
+| V-Oscillation | range 0–2, tilt preset    | segmented pills — `off 45° 100°`    |
+| Night mode    | boolean                   | toggle switch                       |
+| Child lock    | boolean                   | toggle switch                       |
+| Timer         | range 0–24h               | progress bar, e.g. `8h/24h`         |
+
+Options render as segmented pills with a filled background for the selected one — never `[brackets]` — and booleans render as a two-position toggle switch, so the state carries as contrast rather than colour alone. Oscillation shows the real angle the fan will sweep to, not the raw preset number.
+
+## Presets picker
+
+Press `p` to open a list of saved presets over the control panel — the four built-ins (`sleep`, `quiet`, `boost`, `away`) plus anything you've saved yourself with `duux preset save <name>`, marked `yours`. `↑`/`↓` moves the selection, `↵` applies it and closes the picker, `Esc` closes without applying.
+
+Applying a preset from here goes through the same session as a keypress, so the panel's values and the status bar's "last" line update exactly as they would for a manual change. While the picker is open it owns all input — the control panel's own keys are inactive until you close it.
 
 ## Keybindings
 
-| Key               | Action                                                             |
-| ----------------- | ------------------------------------------------------------------ |
-| `↑` / `↓`         | Move the row cursor                                                |
-| `←` / `→`         | Adjust the selected row (step for range rows, cycle for enum rows) |
-| `Shift + ←/→`     | Adjust a range row by its larger step (speed: ±5, timer: ±3h)      |
-| `Enter` / `Space` | Toggle a boolean row, or cycle an enum row forward                 |
-| `o`               | Open preferences                                                   |
-| `q`               | Quit                                                               |
-| `Ctrl+C`          | Quit from anywhere, including inside preferences                   |
+| Key               | Action                                                                          |
+| ----------------- | ------------------------------------------------------------------------------- |
+| `↑` / `↓`         | Move the row cursor                                                             |
+| `←` / `→`         | Adjust the selected row (step for range rows, cycle for enum rows)              |
+| `Shift + ←/→`     | Adjust a range row by its larger step (speed ±5, H-osc ±3, V-osc ±2, timer ±3h) |
+| `Enter` / `Space` | Toggle a boolean row, or cycle an enum row forward                              |
+| `p`               | Open the presets picker                                                         |
+| `q`               | Quit                                                                            |
+| `Ctrl+C`          | Quit from anywhere, including inside the presets picker                         |
 
-While the preferences panel is open (`o`), it owns all input — the control panel's keys are inactive until you close it with `Esc`.
+## Optimistic updates and `·pending`
 
-## Optimistic updates and `(unconfirmed)`
+Pressing a key updates the row locally right away — the display never waits on the fan. The actual command is debounced by about a second, so holding an arrow to ramp speed sends only the value you settle on rather than every intermediate step along the way.
 
-Pressing a key sends the change immediately and updates the row locally before the fan confirms it. That row is marked `(unconfirmed)` until the value you see reported back matches what you set — the session only refreshes fan state on a poll (every 30 seconds) or an MQTT push, never on the setter call itself, so there's a real window where the display is ahead of the fan's own state. This is deliberate: it makes the panel feel responsive rather than freezing on every keypress, while still being honest that the value hasn't round-tripped yet.
-
-## Night mode always reads `n/a`
-
-The Night mode row can be **set** (`Enter`/`Space` toggles it, and the command is sent), but it always displays `n/a` as its value. The fan's reported status has no field for night mode — `@kud/duux` exposes a command to set it but nothing to read it back, so the TUI shows the honest "unknown" state rather than guessing. See [Troubleshooting & API notes](/projects/duux-cli/docs/troubleshooting) for the full list of what's confirmed versus assumed.
+Until the fan's own reported value catches up with what you set, the row carries a grey `·pending` marker. That's usually brief: the session re-checks state shortly after sending a command rather than waiting for its regular 30-second poll (or, with a local broker, an MQTT push can confirm it sooner still). See [Troubleshooting & API notes](/projects/duux-cli/docs/troubleshooting) for what's confirmed about each of these parameters versus still provisional.

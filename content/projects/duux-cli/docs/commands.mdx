@@ -1,6 +1,6 @@
 ---
 title: ⌨️ Commands
-description: Full reference for every duux-cli subcommand — auth, discover, devices, switch, status, broker, doctor, and debug.
+description: Full reference for every duux-cli subcommand — auth, discover, devices, switch, status, watch, preset, broker, doctor, and debug.
 ---
 
 Running `duux` with no arguments opens the [TUI](/projects/duux-cli/docs/tui). Every subcommand below runs headless instead, for scripting or quick checks.
@@ -45,25 +45,69 @@ duux switch [device]
 
 ## `duux status`
 
-Prints the active fan's current state: connection, power, speed, mode, both oscillation axes, and the timer. Exits non-zero and prints the config file location if no fan is selected or the fan can't be reached.
+```
+duux status [--json]
+```
 
-Takes no arguments.
+Prints the active fan's current state: connection, power, speed, mode, both oscillation axes as their real sweep/tilt angles, night mode, child lock, battery (when the optional pack is fitted), and the timer. Exits non-zero and prints the config file location if no fan is selected or the fan can't be reached.
 
+`--json` prints one JSON object instead — device name, id, MAC, and every fan field — for piping into `jq` or a script. See [Automation](/projects/duux-cli/docs/automation#json-output) for an example.
 
-Opens the same preferences panel as pressing `o` inside the TUI, as a standalone screen. See [Preferences](/projects/duux-cli/docs/preferences) for what it controls. Unlike every other command, it doesn't require you to be signed in or have a fan selected — every change here is a local config write.
+## `duux watch`
+
+```
+duux watch [--json]
+```
+
+Streams state changes as they happen, printing only what actually changed. Polls every 3 seconds rather than the TUI's 30, and picks up changes made from the Duux app too. Runs until you press Ctrl-C. `--json` emits one object per line instead of a formatted log line. See [Automation](/projects/duux-cli/docs/automation#watch-mode) for output examples.
+
+## `duux preset`
+
+```
+duux preset [name]
+```
+
+Applies a named combination of settings in one go. With no name, it lists the available presets — the same as `duux preset list`. Four presets are built in (`sleep`, `quiet`, `boost`, `away`); anything you save under the same name overrides a built-in rather than being rejected.
+
+- `duux preset list` — list every preset, yours marked `(yours)`.
+- `duux preset save <name>` — capture the fan's current state as a preset.
+- `duux preset delete <name>` — remove a preset you saved. Built-ins can't be deleted.
+
+See [Automation](/projects/duux-cli/docs/automation#presets) for the full built-in list and example output.
+
+## `duux broker`
+
+```
+duux broker
+```
+
+Shows whether a local broker is configured, or that you're on the Duux cloud. Entirely optional — see [Local control](/projects/duux-cli/docs/local-control) for why you'd want one and how setup works.
+
+- `duux broker setup` — guided setup: detects this machine's LAN address, generates a certificate, writes a Mosquitto config, and prints the steps left for you to do by hand.
+- `duux broker check` — tests the whole path from this machine to the fan (certificate, Mosquitto, reachability, DNS redirect), in the order the fan itself has to complete them.
+- `duux broker set <host>` — point the CLI at a broker you already run. `-p, --port <port>` sets the port (default `443`).
+- `duux broker clear` — go back to using the Duux cloud.
+
+## `duux doctor`
+
+```
+duux doctor
+```
+
+Checks your whole setup — account, fan, and control path — in the order they actually depend on each other, and names the single next thing to fix rather than a wall of output. `duux broker check` is the same report, narrowed to just the control-path section.
 
 ## `duux debug`
-
-Sends a raw command string to the active fan and prints the resulting state.
 
 ```
 duux debug "<command>"
 ```
 
+Sends a raw command string to the active fan and prints its full reported state immediately after.
+
 Example:
 
 ```
-duux debug "tune set horosc 3"
+duux debug "tune set timer 30"
 ```
 
-This bypasses the CLI's typed builders entirely, so it can send values the normal controls would reject — which is the point. See [Troubleshooting & API notes](/projects/duux-cli/docs/troubleshooting) for why this command exists and what it's used to probe.
+This bypasses the CLI's typed builders entirely, so it can send a value the normal controls would refuse — which is the point. See [Troubleshooting & API notes](/projects/duux-cli/docs/troubleshooting) for what it's used to probe and what's still unverified.

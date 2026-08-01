@@ -41,9 +41,28 @@ $ duux switch
 # switch the active fan
 
 $ duux status
-● on · speed 3 · mode normal · night off
+  Fan            Whisper
+  Connection     reachable ●
+  Power          on
+  Speed          15/30
+  Mode           natural
+  H-oscillation  30°
+  V-oscillation  45°
+  Night mode     off
+  Child lock     off
+  Timer          off
 
-# edit preferences (icon style: text or Nerd Font)
+$ duux status --json
+# same state as one line of JSON, for scripting
+
+$ duux preset sleep
+# apply a named combination; `duux preset` lists them
+
+$ duux watch
+# stream state changes as they happen
+
+$ duux doctor
+# check the whole setup and name the next thing to fix
 
 $ duux debug "tune set horosc 3"
 # send a raw command and print the resulting state
