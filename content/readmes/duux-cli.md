@@ -10,6 +10,7 @@ description: "Control your Duux Whisper Flex 2 smart fan from the CLI"
 - **Multi-fan aware** — discover fans from the Duux cloud, list them, and switch the active one
 - **Scriptable status** — `duux status` prints a one-shot state readout and sets a non-zero exit code when the fan is unreachable
 - **Raw command passthrough** — `duux debug "tune set horosc 3"` sends an arbitrary command and prints the fan's response, for probing undocumented parameters
+- **Scriptable** — `duux preset sleep` applies a named combination, `duux status --json` pipes state anywhere, and `duux watch` streams changes as they happen
 - **Optional local control** — `duux broker setup` runs the fan through a broker on your own network instead of the cloud, for control that works offline
 - **Accessible by default** — every state is a glyph plus a word (● on / ○ off); colour only ever reinforces, it never carries meaning alone
 

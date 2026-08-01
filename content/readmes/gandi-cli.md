@@ -7,7 +7,7 @@ description: "🌐 Manage Gandi domains & LiveDNS from your terminal — list, r
 
 - **Domain management** — list registered domains with expiry dates and statuses, renew them for one or more years, and toggle auto-renew.
 - **Full DNS control** — list, create, update, and delete LiveDNS records with custom TTLs and every standard record type.
-- **Web redirects** — manage Gandi web forwarding with 301/302 rules straight from the terminal.
+- **Web redirects** — manage Gandi web forwarding with 301/302 rules straight from the terminal, including in-place updates that keep the existing certificate. Sources may be written as a bare label (`www`) or fully qualified (`www.example.com`).
 - **Permission doctor** — `gandi doctor` reports your token's name, expiry, and scopes, and shows which commands each scope unlocks.
 - **PAT authentication** — fine-grained, least-privilege Gandi Personal Access Tokens, with graceful guidance when a token is missing or rejected.
 - **Script & AI friendly** — add `--json` to any command for structured output, non-zero exit codes on failure, and `--yes` to skip confirmations.
@@ -35,6 +35,7 @@ gandi dns add example.com A www 5.6.7.8
 ```sh
 # Redirects
 gandi redirect add example.com www https://example.org
+gandi redirect update example.com www https://example.net --type http302
 
 # Doctor & scripting
 gandi doctor

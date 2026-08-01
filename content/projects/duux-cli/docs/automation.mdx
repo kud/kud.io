@@ -1,0 +1,105 @@
+---
+title: 🤖 Automation
+description: Presets, JSON output and watch mode — the things a terminal can do with your fan that a phone app can't.
+---
+
+The CLI and the Duux app send the same commands, so neither can outreach the
+other on raw capability. The difference is **what can trigger a command**: the
+app needs a finger, while `duux` can be run by anything your machine knows —
+the time, your calendar, a temperature reading, a shell alias, an SSH session
+from the other side of the world.
+
+These three features exist to make that practical.
+
+## Presets
+
+A named combination applied in one go.
+
+```console
+$ duux preset
+  sleep     power true, speed 3, mode natural, night true, horosc 0, timer 8
+  quiet     power true, speed 5, mode natural, night false, horosc 1
+  boost     power true, speed 30, mode normal, night false, horosc 2
+  away      power false
+
+$ duux preset sleep
+✔ Applied sleep — power true, speed 3, mode natural, night true, horosc 0, timer 8
+```
+
+Build your own by getting the fan how you like it and naming that:
+
+```console
+$ duux preset save reading
+✔ Saved reading — power true, speed 8, mode natural, horosc 1, verosc 0
+```
+
+Yours override built-ins of the same name; `duux preset delete <name>` removes
+them. Commands are ordered so the fan powers on before anything is set on it,
+and the timer is applied last.
+
+## JSON output
+
+```console
+$ duux status --json
+{"device":"Whisper","id":373883,"mac":"28:05:a5:43:1f:c0","mode":"natural",
+ "power":true,"speed":15,"horosc":1,"verosc":1,"night":false,"lock":false,
+ "battery":null,"timer":0,"sensor":"28:05:a5:43:1f:c0"}
+```
+
+Pipe it anywhere:
+
+```sh
+# Is the fan on?
+duux status --json | jq -e '.power' >/dev/null && echo "running"
+
+# Log speed every minute
+* * * * * duux status --json | jq -r '[now, .speed] | @csv' >> ~/fan.csv
+```
+
+`battery` is `null` unless the optional battery pack is fitted, in which case
+it reports `{ "level": 80, "charging": true }`.
+
+## Watch mode
+
+Streams changes as they happen, printing only what actually changed:
+
+```console
+$ duux watch
+Watching Whisper — Ctrl-C to stop.
+
+19:16:20  connected  on
+19:16:26  mode       normal
+19:16:26  speed      30
+19:16:29  horosc     2
+```
+
+With `--json` it emits one object per line, so it can be consumed
+incrementally:
+
+```sh
+duux watch --json | while read -r line; do
+  echo "$line" | jq -r 'select(.changes.power == false) | "fan turned off"'
+done
+```
+
+Watch polls every 3 seconds rather than the 30 the TUI uses — it trades API
+calls for seeing things promptly. Changes made from the Duux app show up here
+too, so it's a way to observe the fan regardless of what drove it.
+
+## Ideas
+
+The point is the trigger, not the command:
+
+```sh
+# Wind down with your evening
+0 23 * * *  duux preset sleep
+
+# Cool the room when the Mac is working hard
+[ "$(osx-cpu-temp | tr -dc '0-9.')" \> 80 ] && duux preset boost
+
+# Off when you leave the house, via whatever knows that
+duux preset away
+```
+
+None of these are things the app can do, and none of them needed a new feature
+in the fan — only somewhere to hang a command.
