@@ -75,6 +75,22 @@ Applies a named combination of settings in one go. With no name, it lists the av
 
 See [Automation](/projects/duux-cli/docs/automation#presets) for the full built-in list and example output.
 
+## `duux rename`
+
+Renames the fan on Duux's side, so the new name shows in the Duux app as well
+as here.
+
+```console
+$ duux rename "Bedroom fan"
+✔ Renamed Whisper to Bedroom fan
+```
+
+The local device store is updated from what the API actually recorded rather
+than from what was asked for, so `duux devices` can never disagree with Duux.
+
+A fan has no name at all until you give it one — before that, `duux` falls back
+to the factory identifier (`DUUX.1.356505`).
+
 ## `duux broker`
 
 ```

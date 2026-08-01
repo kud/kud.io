@@ -16,6 +16,19 @@ description: "☁️ Restore deleted pCloud files and rewind versions from the t
 - **Client settings** — manage what pCloud Drive refuses to sync. These live in each machine's own database rather than your account, which is how a `node_modules` tree ends up in the cloud with no machine considering itself responsible for it.
 - **`pcloud doctor`** — one command that says what is wrong and which command fixes it.
 
+## Screenshots and demos
+
+```sh
+pcloud --mock
+```
+
+The full browser, driven entirely from fixtures — an invented account with
+invented folders, shares and sync pairs. No credential required, and nothing
+touches the network.
+
+It exists because a folder listing says more about someone than they usually
+intend, and the alternative is screenshotting a real drive.
+
 ## Install
 
 ```sh
