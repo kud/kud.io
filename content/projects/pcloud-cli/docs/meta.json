@@ -1,4 +1,14 @@
 {
   "title": "pcloud-cli",
-  "pages": ["index", "authentication", "trash", "rewind", "sync"]
+  "pages": [
+    "index",
+    "authentication",
+    "browse",
+    "rewind",
+    "trash",
+    "shares",
+    "sync",
+    "settings",
+    "doctor"
+  ]
 }

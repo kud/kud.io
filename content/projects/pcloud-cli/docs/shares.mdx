@@ -1,0 +1,81 @@
+---
+title: 🤝 Shares
+description: See what you have shared out and what has been shared with you, and revoke either.
+---
+
+pCloud folder shares come in two directions and two states, and the four
+combinations take three different numeric ids. Getting them confused is why
+`remove-share` silently did nothing for a long time — so the CLI keeps them
+apart deliberately.
+
+```bash
+pcloud list-shares
+```
+
+```console
+Shared with others
+   225308    Documents/               someone@example.com    rwcd  09 Oct 2022
+   366831    Photos/                  someone@example.com    rwcd  21 Sep 2023
+
+Shared with you
+   216051    Recipes/                 owner@example.com      rwcd  21 Sep 2023
+```
+
+## Reading the rights
+
+Permissions render positionally, never as a list of what was granted:
+
+| Letter | Means  |
+| ------ | ------ |
+| `r`    | read   |
+| `w`    | modify |
+| `c`    | create |
+| `d`    | delete |
+
+`rw--` and `r--d` both grant two rights. Written as "read, modify" and "read,
+delete" they look similarly sized; written positionally you can see at a glance
+which is which, and a `-` is as meaningful as a letter.
+
+## Accepted shares and pending requests
+
+They are separate tables in the output because they are separate things:
+
+|                     | Id it carries    | What ends it                            |
+| ------------------- | ---------------- | --------------------------------------- |
+| **Accepted share**  | `shareid`        | `pcloud remove-share <shareid>`         |
+| **Pending request** | `sharerequestid` | `pcloud decline-share <sharerequestid>` |
+
+Both ids are numbers, so nothing in a type system can catch sending the wrong
+one — pCloud simply answers _"Please provide 'shareid'."_ and nothing happens.
+The `Share ID` column in `list-shares` is the one `remove-share` takes.
+
+## Sharing a folder
+
+```bash
+pcloud share-folder /Documents someone@example.com 7
+```
+
+The last argument is a permissions bitmask — `1` create, `2` modify, `4` delete,
+added together, with read implied. `7` is full access.
+
+Note this is the one place a bitmask appears: an accepted share reports its
+rights as four booleans instead, which is why `list-shares` shows letters rather
+than a number.
+
+## Incoming shares
+
+```bash
+pcloud accept-share <sharerequestid>
+pcloud decline-share <sharerequestid>
+```
+
+You cannot `remove-share` a folder someone shared with you — that id belongs to
+them. Declining is only possible while the request is pending; once accepted,
+removing it is the owner's to do.
+
+## In the browser
+
+The **Shares** tab lists both directions, and `enter` on an outgoing share
+offers to revoke it behind a confirmation naming the recipient. Shared folders
+are also marked in the **Files** tab with an arrow showing which way access
+runs — a share is a property of a folder, not a separate place.

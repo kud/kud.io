@@ -1,0 +1,79 @@
+---
+title: 🖥️ The browser
+description: A full-screen terminal client for pCloud — files, change history, trash, shares, sync health and settings.
+---
+
+Run `pcloud` with no arguments and you get the browser. `pcloud browse` still
+works, and every subcommand is untouched — only the bare command changed, from
+printing usage to opening the interface.
+
+```bash
+pcloud
+```
+
+## Tabs
+
+`tab` cycles them, `shift+tab` goes back.
+
+| Tab          | What it shows                                                                                                                    |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------- |
+| **Files**    | Your drive, with inline previews for images and Markdown. Shared folders are marked with an arrow showing which way access runs. |
+| **Rewind**   | Change history, folded into one row per file per day.                                                                            |
+| **Trash**    | Deleted items, with whichever id restores them.                                                                                  |
+| **Shares**   | What you have shared out and what has been shared with you.                                                                      |
+| **Sync**     | Local sync pair health. Only appears when a pCloud Drive database is present.                                                    |
+| **Settings** | The ignore rules. Only appears when a database is present.                                                                       |
+
+Sync and Settings read a database on your machine rather than your account, so
+they are absent on a host that has no pCloud Drive installed — there is nothing
+for them to show.
+
+## Files
+
+| Key     | Does                              |
+| ------- | --------------------------------- |
+| `↑` `↓` | move                              |
+| `→`     | open folder                       |
+| `←`     | go back                           |
+| `u`     | upload into the folder you are in |
+| `enter` | actions for the selected item     |
+| `d`     | delete                            |
+| `l`     | copy a download link              |
+| `r`     | reload                            |
+
+Upload is an action rather than a destination picker: the cursor has already
+answered which folder, so the prompt asks only for a local path.
+
+The action menu describes whatever is under the cursor in a fixed slot at the
+bottom, so the list does not shift as you move through it.
+
+## Rewind
+
+A day's events on one file collapse into a single row with a count and a span,
+under a day heading. `→` opens a run into its individual saves; `←` closes it.
+
+Two things are offered on any row:
+
+- **Recovery** — restore that one deletion, or revert that one file. Acts on
+  the run's most recent save.
+- **Rewind the whole account to that moment** — the bulk undo, starting from
+  the run's _oldest_ event so choosing a run undoes the run rather than its
+  final moment. You see the counts before anything moves.
+
+## Shares
+
+Outgoing shares can be revoked; incoming ones cannot. Leaving a share you were
+given is a different operation on an id that no longer exists once the share has
+been accepted, so the browser does not pretend to offer it.
+
+## Settings
+
+Removing an ignore rule goes through the same guard as the command line: it
+refuses while pCloud Drive is running, because the daemon rewrites its own
+settings from memory when it quits and would undo the change silently.
+
+## Image previews
+
+Terminals with native image support — iTerm2, Kitty, WezTerm — render real
+images. Everything else falls back to half-block characters. The protocol is
+detected rather than configured.

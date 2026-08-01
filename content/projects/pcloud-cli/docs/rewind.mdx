@@ -1,61 +1,106 @@
 ---
 title: ⏪ Rewind & versions
-description: Browse a file's version history and restore an earlier version from the terminal.
+description: Undo a period rather than a file, or roll a single file back to an earlier version.
 ---
 
-pCloud retains previous versions of your files. `pcloud` exposes two related
-ways to recover them: **rewind**, which works from a file path, and
-**revisions**, which works from a file ID.
+There are two ways to go backwards, and they answer different questions.
 
-## ⏪ Rewind by path
+**Revisions** answer _"what did this file look like before?"_ — one file, many
+saved versions.
 
-List the rewind events recorded for a path:
+**Rewind** answers _"put everything back to how it was at 3pm"_ — one moment,
+however many files were touched since.
 
-```bash
-pcloud list-rewind <path>
-```
-
-Example:
+## 🕰️ Revisions, for one file
 
 ```bash
-pcloud list-rewind /Documents/report.pdf
+pcloud list-revisions /Documents/report.pdf
 ```
 
-Each event shows a file ID, name, and timestamp.
+```console
+   98765        latest    3.2 MB       14 May 2026 09:12
+   91234                  3.1 MB       06 May 2026 18:40
+```
 
-Restore a specific version to a destination path:
+The newest is marked `latest` and the list is ordered by revision id — pCloud
+promises no order of its own, and taking whichever arrived first rolls back
+further than you asked for.
+
+Roll the file back in place:
 
 ```bash
-pcloud restore-rewind <fileid> <topath>
+pcloud revert-revision /Documents/report.pdf 91234
 ```
 
-Example:
+Both commands take a path or an id, so nothing needs looking up first.
+
+## ⏪ Rewind, for a moment in time
 
 ```bash
-pcloud restore-rewind 12345678 /Documents/report-restored.pdf
+pcloud rewind --to "2026-07-30 20:30"
 ```
 
-## 🕰️ Revisions by file ID
+This plans an undo of everything since that moment and prints it without
+touching anything:
 
-If you already know a file's ID, list its revisions directly:
+```console
+Rewinding to 30/07/2026, 20:30:00
+Scanned 634 events.
+
+Restore from trash (12):
+  /Documents/quarterly.pdf
+  ...
+
+Revert to an earlier version (41):
+  /Reports/summary.tsv
+  ...
+
+This was a dry run. Re-run with --apply to perform it.
+```
+
+Narrow it to part of your drive:
 
 ```bash
-pcloud list-revisions <fileid>
+pcloud rewind --to "2026-07-30 20:30" --path /Documents
 ```
 
-This prints each revision ID alongside its size and modification time.
-
-Revert the file to an earlier revision in place:
+And when the plan looks right:
 
 ```bash
-pcloud revert-revision <fileid> <revisionid>
+pcloud rewind --to "2026-07-30 20:30" --apply
 ```
 
-Example:
+### What it undoes, and what it will not
 
-```bash
-pcloud revert-revision 12345678 98765432
-```
+| Event                  | Undone by                                               | Why                                                                                                                 |
+| ---------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| A file was deleted     | restoring it from trash                                 | The copy is still there                                                                                             |
+| A file was edited      | reverting to the newest revision from before the cutoff | Earlier versions are retained                                                                                       |
+| A file was **created** | nothing — reported only                                 | The only way to undo a creation is to delete real data, which is indistinguishable from the accident being repaired |
 
-Unlike `restore-rewind`, which writes the recovered version to a new path,
-`revert-revision` rolls the existing file back to the chosen revision.
+That asymmetry is deliberate. A rewind that quietly removed files would be the
+same shape as the mistake you are trying to fix.
+
+### Why this is reconstructed rather than called
+
+pCloud's web app has a Rewind feature, but no public API behind it —
+`listrewindevents` returns a 404 under every spelling, which is why
+`pcloud doctor` lists it under _"Not offered by pCloud"_.
+
+What the API does expose are the three pieces Rewind is built from: the change
+log says what happened and when, the trash holds deletions that have not been
+purged, and revisions hold prior versions of modified files. Replaying the
+change log backwards over those two recovery paths reaches the same outcome.
+
+One consequence worth knowing: it reaches only as far back as the trash and the
+revision history do. If the window you ask for extends past the most recent
+5,000 events, it refuses rather than silently undoing part of it.
+
+## In the browser
+
+The **Rewind** tab folds a day's events on one file into a single row, so a file
+saved every few minutes is one line with a count rather than forty. `→` opens a
+run into its individual saves.
+
+Each row offers both scales: recover that one file, or rewind the whole account
+to just before that run began.

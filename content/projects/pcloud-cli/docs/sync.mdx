@@ -23,16 +23,24 @@ pCloud Drive   running
 Database       ~/.pcloud/data.db · 3.13 MB
 
    Local                 Remote        Files   Queue
-✓  ~/pCloud/Lib          /Lib          883     –
-✓  ~/pCloud/Share        /Share        172     –
-🔥 ~/pCloud/Appdata      — orphaned    2066    1
-✓  ~/pCloud/Home         /Home         40      –
+✓  ~/pCloud/Documents    /Documents    883     –
+✓  ~/pCloud/Photos       /Photos       172     –
+🔥 ~/pCloud/Archive      — orphaned    2066    1
+✓  ~/pCloud/Notes        /Notes        40      –
 
-🔥 #3  ~/pCloud/Appdata
+🔥 #3  ~/pCloud/Archive
    no remote folder — pCloud shows this pair as "/"
    a second sync pair claims the same local folder
-   1 queued operation(s) with no destination
+   1 queued operation with no destination
    → pcloud sync prune 3
+```
+
+A stuck queue is a different fault from an orphaned pair, and takes a
+different remedy — `prune` unpairs the folder entirely, which is right for a
+pair pointing at a deleted remote and wrong for a healthy one:
+
+```bash
+pcloud sync clear-tasks 3
 ```
 
 Add an id for a single pair, or `--json` for machine-readable output:

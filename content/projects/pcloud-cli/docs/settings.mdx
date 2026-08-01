@@ -1,0 +1,94 @@
+---
+title: ⚙️ Client settings
+description: Manage what pCloud Drive refuses to sync — rules that live on each machine rather than in your account.
+---
+
+pCloud Drive keeps its client settings in a database on **this machine**, at
+`~/.pcloud/data.db`. They never travel with your account.
+
+That is the whole reason this command exists. A folder you ignore on one laptop
+is not ignored on another, so a `node_modules` tree can upload freely from a
+machine whose ignore list was cleared — and then sit in the cloud with no
+machine considering itself responsible for it, because a machine that ignores a
+path will not delete it either.
+
+```bash
+pcloud settings
+```
+
+```console
+Setting     Value
+Ignored names       21 · .ds_store, .ds_store?, .appledouble …
+Ignored paths       8 · /Applications, /Library, /private …
+Language            en
+Min free space      2 GB
+Start at login      on
+Drive mounted       on
+```
+
+## Ignore rules
+
+```bash
+pcloud settings ignore                    # names never synced
+pcloud settings ignore --paths            # absolute paths never synced
+```
+
+Three ways to change them:
+
+```bash
+pcloud settings ignore add node_modules .git
+pcloud settings ignore remove "*.log"
+pcloud settings ignore set <the complete list>
+```
+
+`add` and `remove` nudge one entry. `set` replaces the list outright — it is
+declarative and idempotent, which is what config management wants: run it twice
+and the second run reports that nothing changed rather than rewriting an
+identical list.
+
+## Nothing is written without `--apply`
+
+Every write is a dry run first, the same as `pcloud sync prune`:
+
+```console
+$ pcloud settings ignore add "*.log"
+ignorepatterns:
+  + *.log
+
+Dry run. Re-run with --apply to write.
+```
+
+## Writes refuse while pCloud Drive is running
+
+The daemon holds its settings in memory and rewrites them when it quits, so a
+change made underneath it is undone silently — long after the command reported
+success. Rather than erroring and leaving you to do it by hand, the command
+offers:
+
+```console
+! pCloud Drive is running and holds this database.
+
+Quit pCloud Drive, apply, and restart it? [y/N] y
+  Quitting pCloud Drive…
+  Restarting pCloud Drive…
+✓ ignorepatterns updated
+```
+
+`--yes` skips the question for scripting. `--force` writes anyway, and says what
+that costs. The database is backed up before every write.
+
+## What can be read and written
+
+Two keys are writable and six readable, by allowlist rather than deny-list. The
+same table holds your session token, and a deny-list would leak whatever
+sensitive key pCloud adds in a future release; naming what may be shown cannot.
+
+## Useful patterns
+
+`node_modules` and `.git` are the two worth adding on every machine.
+
+`.git` in particular: a git directory is hundreds of interdependent files, and
+pCloud syncs files independently and in no fixed order — so another machine can
+see a ref pointing at a commit whose objects have not landed yet. That is a
+corrupt repository with nobody at fault. Sync a `git bundle` instead: one file,
+which either arrived or did not.

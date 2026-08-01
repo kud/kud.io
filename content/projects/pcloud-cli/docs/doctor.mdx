@@ -1,0 +1,80 @@
+---
+title: 🩺 doctor
+description: One command that says what is wrong and which command fixes it.
+---
+
+```bash
+pcloud doctor
+```
+
+```console
+pCloud doctor
+
+  ✗ 1 problem found
+
+  Sync        pair #1 · stuck
+              → pcloud sync clear-tasks 1
+
+  Credential  session token · 28 days left
+  API         21 of 22 endpoints reachable
+  Sync        5 pairs · daemon running
+
+Sync — 1 pair needs attention
+  ✗ #1  ~/pCloud/Documents → /Documents
+  ✗     1 queued operation with no destination
+  ·       report.tsv                        local id 9524
+
+Not offered by pCloud
+  · list-rewind / restore-rewind
+  Expected — `pcloud rewind` reconstructs it instead.
+```
+
+## What it checks
+
+**Your credential** — which tier you are on, and how long a session token has
+left. Session tokens expire after 30 days, or 7 unused.
+
+**Every endpoint the CLI calls** — by probing each without arguments. A method
+that exists gets far enough to complain about a missing parameter; one that does
+not 404s at the router first. So the error distinguishes "wrong call" from "no
+such thing", and nothing is performed.
+
+**The local sync daemon** — pair health read from pCloud Drive's own database,
+including the individual files stuck in a queue.
+
+## The verdict comes first
+
+What is wrong opens the report, with the command that fixes it. Everything below
+is evidence for that. Passing endpoints are a count rather than twenty lines of
+green ticks — `--verbose` lists them all.
+
+## Rewind is not a fault
+
+`list-rewind` and `restore-rewind` call `listrewindevents`, which pCloud has
+never exposed. It is reported under **Not offered by pCloud** rather than as a
+failure, because `pcloud rewind` already reconstructs the same outcome from the
+change log, the trash and per-file revisions.
+
+Flagging a permanent, worked-around limitation as a fire on every single run
+teaches you to ignore the glyph that matters.
+
+## The remedy differs by fault
+
+doctor names the specific command, because picking the wrong one is expensive:
+
+| Fault                             | Remedy                                                |
+| --------------------------------- | ----------------------------------------------------- |
+| Pair pointing at a deleted remote | `pcloud sync prune <id>` — unpairs the folder         |
+| Healthy pair with a stuck queue   | `pcloud sync clear-tasks <id>` — clears the rows only |
+| Endpoints needing a session token | `pcloud login --session`                              |
+
+`prune` deletes around a thousand rows and unpairs the folder outright. That is
+right for a zombie pair and catastrophic for a working one carrying two stale
+queue entries, which is why doctor tells you which you have rather than leaving
+you to guess.
+
+## No credential required
+
+The local half runs without logging in — a broken sync pair is exactly the kind
+of fault you hit before getting round to authenticating, so only the API half is
+given up on.
