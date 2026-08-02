@@ -1,0 +1,66 @@
+---
+title: 🔍 Discovery & Devices
+description: List the fans on a Duux account, and the MAC-vs-id distinction that every command depends on getting right.
+---
+
+## `discover()`
+
+```ts
+import { discover } from "@kud/duux"
+
+const { devices } = await discover(accessToken)
+```
+
+`discover` lists every fan (sensor, in Duux's terms) on the account by calling `fetchSensors`, which hits `v5/smarthome/sensors` — not `/sensor`. Both endpoints list the account's devices, but only `/smarthome/sensors` carries `latestData.fullData`, which is where a fan's live state actually lives. **There is no separate per-device status endpoint** — `/data/{id}/status` is refused for every account tested. `discover` is pure: it never writes to local config, so persisting the result is the caller's job (`upsertDevice`, `setCurrentDevice` — see [Getting Started](/projects/duux/docs/getting-started)).
+
+## The MAC-vs-id trap
+
+This is the single most important thing to get right, and it cost real debugging time to work out:
+
+> **Commands are addressed by the fan's MAC address, not its numeric sensor id.** Posting a command to the id is refused with `Not_Allowed` — an error that reads exactly like a permissions problem, and is actually just the wrong identifier.
+
+`SensorSummary` carries both:
+
+```ts
+type SensorSummary = {
+  id: number // identifies the record only
+  type: string
+  name: string
+  displayName: string | null
+  deviceId: string // the MAC address — commands are addressed by this
+  latestData?: { fullData: RawFanData } | null
+}
+```
+
+Every transport (`Transport.sendCommand`, `Transport.getStatus`) takes `deviceId` as its address parameter, and `deviceId` means MAC throughout the library — never the numeric `id`. The `Device` type persisted in local config carries an optional `mac` field for the same reason: a store written before this field existed has no `mac`, and calling a command against such a device fails fast with a message telling you to re-run discovery, rather than sending a request that would be refused with a misleading permissions error.
+
+## Labelling a fan
+
+```ts
+import { sensorLabel } from "@kud/duux"
+
+sensorLabel(sensor) // sensor.displayName?.trim() || sensor.name
+```
+
+`displayName` is `null` until the owner renames the fan in the Duux app, so it can never be the only label — `name` (the factory identifier, e.g. `DUUX.1.356505`) is always present. Use `sensorLabel` rather than reading `displayName` directly.
+
+## Renaming a fan
+
+```ts
+import { renameSensor } from "@kud/duux"
+
+await renameSensor(accessToken, sensor.id, "Bedroom")
+```
+
+Unlike commands, `renameSensor` is addressed by the **numeric sensor id**, not the MAC — `PATCH /sensor/{sensorId}`. The id identifies the record and the MAC identifies the hardware, so metadata edits and commands go to different places. This is what the Duux app's own rename does.
+
+## The current user and tenant permissions
+
+```ts
+import { fetchCurrentUser } from "@kud/duux"
+
+const user = await fetchCurrentUser(accessToken)
+user.permissions // TenantPermission[] — { tenantId, role }
+```
+
+Cloudgarden's v4 tenant-scoped paths are effectively retired: `/users/current` no longer carries a `tenants` array at all, `/tenants` lists nothing (it reports a `totalCount` but an empty page), and `/tenants/{id}/sensors` answers 403 for every tenant the account holds — including the one it owns. v5 is flat, so discovery no longer resolves or needs a tenant. The account's tenant memberships still exist, under `permissions` on `/users/current`, but nothing in this library requires them any more.

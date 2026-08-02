@@ -1,0 +1,75 @@
+---
+title: 🔌 Transports
+description: Cloud vs local MQTT — the shared Transport interface, and the protocol quirks specific to each.
+---
+
+## The `Transport` interface
+
+```ts
+interface Transport {
+  readonly name: "cloud" | "mqtt"
+  sendCommand(deviceId: string, command: string): Promise<void>
+  getStatus(deviceId: string): Promise<FanState>
+  subscribe?(deviceId: string, onUpdate: (state: FanState) => void): () => void
+}
+```
+
+This is the seam: the cloud transport POSTs `{"command": "tune set speed 10"}` to REST, the local MQTT transport publishes the identical string to `sensor/{mac}/command` — same grammar (see [Commands](/projects/duux/docs/commands)), different pipe. Nothing in the domain model (`client.ts`, `session.ts`) knows or cares which implementation it holds.
+
+`deviceId` is the fan's **MAC address** throughout, not the numeric sensor id — the cloud addresses commands by MAC and the MQTT topics are keyed the same way. Posting to the numeric id instead is refused with `Not_Allowed`, which reads like a permissions problem and is actually just the wrong identifier. See [Discovery & Devices](/projects/duux/docs/discovery) for the full story.
+
+`subscribe` is optional and only meaningful for transports with a persistent connection. Cloud has no push channel and is polled instead (see [Sessions](/projects/duux/docs/sessions)); MQTT pushes.
+
+## Cloud transport
+
+```ts
+import { createCloudTransport } from "@kud/duux"
+
+const transport = createCloudTransport({ getAccessToken })
+```
+
+v5 is the default API version (`https://v5.api.cloudgarden.nl`). v4 (`https://v4.api.cloudgarden.nl`) is retained because the command grammar is identical and older accounts may still answer on it, but nothing reaches for it unprompted — v4's tenant-scoped paths answer 403 on a real account, and its discovery endpoint no longer returns the tenants it would need. v4 also requires a `tenantId` option; v5 does not.
+
+| API version | Command path                                |
+| ----------- | ------------------------------------------- |
+| v4          | `/tenants/{tenantId}/sensors/{mac}/command` |
+| v5          | `/sensor/{mac}/commands`                    |
+
+There is no per-device status endpoint on either version. `getStatus` lists every sensor on the account (`GET v5/smarthome/sensors`), finds the one whose `deviceId` matches the requested MAC, and maps its `latestData.fullData` through `toFanState`.
+
+### The HTTP 200 refusal
+
+This is the sharpest edge in the whole API: **a refused request comes back as HTTP `200`, with the reason in an `errorMessage` field** rather than as an error status. Checking `response.ok` alone is not enough — it silently turns a rejection like `Not_Allowed` into a `null` with no explanation.
+
+`unwrap()` exists specifically to handle this:
+
+```ts
+import { unwrap } from "@kud/duux"
+
+const sensors = unwrap<SensorSummary[]>(await response.json(), path)
+```
+
+It inspects the response shape — v5 is inconsistent about envelopes, since `/users/current` and `/data/{id}/status` wrap their payload as `{ data, errorMessage }` while `/sensor` answers with a bare array — and, for the enveloped shape, throws whenever `errorMessage` is populated, even though the HTTP status was `200`. Every cloud transport call and every discovery call routes through it, so a refusal always surfaces as a thrown `Error`, never a silent `null`.
+
+## MQTT transport
+
+```ts
+import { createMqttTransport } from "@kud/duux"
+
+const transport = createMqttTransport({
+  host: "your-broker.example.com",
+  ca: yourBrokerCertificate,
+})
+```
+
+The MQTT transport exists for running without the cloud at all. Duux's fans connect to `collector3.cloudgarden.nl:443` by default; point that hostname at a broker of your own by DNS and the fan connects there instead, publishing to `sensor/{mac}/in` and accepting the same `tune set …` commands on `sensor/{mac}/command`.
+
+**Connecting to Cloudgarden's own broker doesn't actually work.** The TLS handshake succeeds only because Cloudgarden's certificate is pinned directly in the source — its SAN list omits its own hostname entirely (it lists `localhost`, an empty DNS entry, and two private IPs), so ordinary hostname verification can never succeed against it no matter which CA store is used. Pinning the exact certificate and skipping only the hostname check keeps the connection meaningful — an impostor still needs Cloudgarden's private key. But even with that handshake working, the subsequent `CONNECT` is refused with "Bad username or password", and no credentials the REST API exposes are accepted. This transport is intended for a broker you control, not Cloudgarden's.
+
+Supply `host`/`port`/`ca`/`username`/`password` for your own broker. When a custom `host` or `ca` is given, normal certificate verification applies — the hostname-check bypass is scoped only to the default Cloudgarden host with no custom `ca`.
+
+`getStatus` on this transport is a one-shot wait: the fan publishes state on its own schedule rather than answering a request/response call, so `getStatus` subscribes and waits for the next publish, bounded by `statusTimeoutMs` (10 seconds by default). Without that deadline, a broker the fan has never connected to would leave the caller hanging indefinitely with no output at all. `subscribe` uses the same topic for ongoing updates instead of a one-shot wait.
+
+### Unverified: the topic identifier
+
+The transport publishes and subscribes using `sensor/{deviceId}/*`, where `deviceId` is assumed to be the MAC address — consistent with the cloud transport and the `Transport` contract. **This has not been confirmed against a real fan**, because no fan has yet connected to a broker under this library's control to observe which identifier it actually uses in its topics (`sensor/{id}` vs `sensor/{mac}`). Treat this as the one part of the MQTT transport still resting on an assumption rather than a confirmed observation.

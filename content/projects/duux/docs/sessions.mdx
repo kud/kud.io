@@ -1,0 +1,65 @@
+---
+title: 🔁 Sessions
+description: A long-lived, transport-agnostic connection to a fan that emits change events as its state updates.
+---
+
+## `createSession()`
+
+```ts
+import { createSession } from "@kud/duux"
+
+const session = createSession()
+
+session.on("change", (state) => {
+  console.log(state.fan?.power, state.fan?.speed)
+})
+
+await session.setSpeed(20)
+```
+
+`createSession(options?)` returns a `Session` — an `EventEmitter` with a live `state: FanSessionState` (`{ deviceId, connected, fan, error }`) and one method per command (`setPower`, `setSpeed`, `setMode`, `setOscillation`, `setNightMode`, `setChildLock`, `setTimer`), plus `refresh()` and `stop()`. It defaults to the current device (`getCurrentDevice()`) and the cloud transport, but both are overridable via `CreateSessionOptions`:
+
+```ts
+type CreateSessionOptions = {
+  device?: Device
+  transport?: Transport
+  pollIntervalMs?: number
+}
+```
+
+Use a one-shot helper (`setPower`, `getStatus`, … from [Getting Started](/projects/duux/docs/getting-started)) for a single command-and-done. Reach for a session when you want a live `state` object and `change` events over time — a status dashboard, a TUI, anything that reacts to the fan changing outside of your own commands.
+
+## The `change` event
+
+Every state update — from a command, a refresh, or a push — is applied with `Object.assign` onto the same `state` object and then emitted as `"change"`. There's also an `"error"` event for transport failures that don't clear `connected`. Both are typed on the `Session` interface, so `session.on("change", ...)` and `session.on("error", ...)` get proper types without a cast.
+
+## Polling vs push
+
+Cloud transports have no push channel, so a session polls on an interval — 30 seconds by default, matching the `ha-duux` Home Assistant integration this protocol was reverse-engineered against. MQTT transports do push (see [Transports](/projects/duux/docs/transports)), so when `transport.subscribe` exists, the session subscribes instead of polling:
+
+```ts
+if (transport?.subscribe) {
+  unsubscribe = transport.subscribe(deviceAddress(device), (fan) =>
+    update({ connected: true, fan, error: null }),
+  )
+} else if (transport) {
+  void refresh()
+  pollTimer = setInterval(() => void refresh(), pollIntervalMs ?? 30_000)
+}
+```
+
+Either way, the caller only ever sees `"change"` events on the one observable `state` — which transport is behind it is invisible from the outside.
+
+## The confirm-refresh after a command
+
+Every command method (`setPower`, `setSpeed`, …) does the same thing after sending: wait 1.5 seconds, then call `refresh()`.
+
+This exists because the fan takes a moment to apply a command and the cloud takes a moment more to report it — a `getStatus()` call made immediately after a write still returns the _old_ value. Without the delayed re-read, a caller's optimistic UI update would sit unconfirmed until the next scheduled poll, up to 30 seconds later. The 1.5-second confirm-refresh turns that into a confirmed value almost immediately instead.
+
+## Stopping a session
+
+```ts
+session.stop()
+```
+
+Clears the poll timer if one is running, or unsubscribes from the MQTT topic if one is active. Always call this when you're done with a session — nothing else does it for you.

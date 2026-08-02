@@ -1,0 +1,68 @@
+---
+title: 🚀 Getting Started
+description: Install the library, sign in with a passwordless code, and discover your fans.
+---
+
+## Install
+
+```bash
+npm install @kud/duux
+```
+
+The package is ESM-only and requires Node 22 or later. Auth tokens are stored in the macOS Keychain (see [Discovery & Devices](/projects/duux/docs/discovery) and the API reference for `readToken`/`writeToken`), which makes the library **darwin-only** — a deliberate trade-off, not an oversight, since every consumer of this library today runs on macOS.
+
+## Sign in
+
+Duux's own app uses a passwordless flow: request a one-time code by email, then exchange it for an OAuth2 token pair over PKCE.
+
+```ts
+import { requestLoginCode, exchangeLoginCode } from "@kud/duux"
+
+await requestLoginCode("you@example.com")
+// → check your inbox for the code
+
+const token = await exchangeLoginCode("123456")
+```
+
+`exchangeLoginCode` does more than trade a code for a token:
+
+1. It exchanges the code for an access/refresh token pair over PKCE, using a `code_verifier`/`code_challenge` pair that is **not** generated per request — it's baked into the Duux app binary and reused for every login, so the library reproduces it verbatim. A freshly generated pair is rejected by the server; only this one is recognised.
+2. The token endpoint doesn't return the account's email, so it makes one extra call to `/users/current` with the fresh token purely to learn which identity it authenticates as.
+3. It persists the result itself: the token pair goes to the macOS Keychain, and the account email plus expiry go to `~/.config/duux/config.json`. Nothing else in the library reads or writes credentials directly — see `getAccessToken` in the API reference.
+
+Once signed in, calls like `discover()`, `getStatus()`, and `createSession()` resolve the access token for you automatically.
+
+## Discover your fans
+
+```ts
+import { discover, upsertDevice, setCurrentDevice } from "@kud/duux"
+import { readToken, readAuthMeta } from "@kud/duux"
+
+const auth = readAuthMeta()!
+const { accessToken } = readToken(auth.account)!
+
+const { devices } = await discover(accessToken)
+
+for (const device of devices) {
+  upsertDevice({
+    id: device.id,
+    type: device.type,
+    displayName: device.displayName ?? device.name,
+    mac: device.deviceId,
+  })
+}
+
+setCurrentDevice(devices[0]!.id)
+```
+
+`discover()` is pure — it only lists the fans on the account and never touches local config. Persisting the result (`upsertDevice`, `setCurrentDevice`) is left to the caller, which is why the snippet above does it explicitly. See [Discovery & Devices](/projects/duux/docs/discovery) for the full shape of a discovered fan, and why the `mac` field matters more than the `id`.
+
+With a device selected, the one-shot helpers and `createSession()` need nothing else:
+
+```ts
+import { setPower, setSpeed, getStatus } from "@kud/duux"
+
+await setPower(true)
+await setSpeed(12)
+console.log(await getStatus())
+```

@@ -1,0 +1,121 @@
+---
+title: 📚 API Reference
+description: The full export surface of @kud/duux, grouped by module.
+---
+
+All exports below come from the package root (`import { ... } from "@kud/duux"`).
+
+## Auth
+
+| Export                    | Description                                                                 |
+| ------------------------- | --------------------------------------------------------------------------- |
+| `requestLoginCode(email)` | Requests a one-time passwordless login code by email                        |
+| `exchangeLoginCode(code)` | Exchanges the code for a token pair; persists it to the Keychain and config |
+| `LoginCodeResult` (type)  | `{ success, message }`                                                      |
+
+## Config & device store (`~/.config/duux/config.json`)
+
+| Export                                               | Description                                                         |
+| ---------------------------------------------------- | ------------------------------------------------------------------- |
+| `readStore()`                                        | Reads the full local store                                          |
+| `listDevices()`                                      | Lists all persisted devices                                         |
+| `getCurrentDevice()`                                 | The selected device, falling back to the first one                  |
+| `findDevice(query)`                                  | Finds a device by numeric id or display name                        |
+| `upsertDevice(device, opts?)`                        | Inserts or merges a device; `makeCurrent` defaults to `true`        |
+| `setCurrentDevice(id)`                               | Selects a device by id; returns `false` if unknown                  |
+| `removeDevices(ids)`                                 | Removes devices; deletes the whole store if none remain             |
+| `readTenantId()` / `writeTenantId(id)`               | Legacy v4 tenant id, no longer required for discovery               |
+| `readAuthMeta()` / `writeAuthMeta(meta)`             | The signed-in account email and token expiry (not the token itself) |
+| `clearAuthMeta()`                                    | Forgets the signed-in account and its Keychain entry, keeps devices |
+| `deleteConfig()`                                     | Deletes the whole store and any Keychain entry it points at         |
+| `readPreferences()` / `writePreferences(partial)`    | An opaque bag the core persists but does not interpret              |
+| `CONFIG_PATH`                                        | Absolute path to `config.json`                                      |
+| `Device`, `AuthMeta`, `Store`, `Preferences` (types) |                                                                     |
+
+## Keychain (macOS only)
+
+| Export                       | Description                                |
+| ---------------------------- | ------------------------------------------ |
+| `readToken(account)`         | Reads a token pair from the macOS Keychain |
+| `writeToken(account, token)` | Writes a token pair to the Keychain        |
+| `deleteToken(account)`       | Removes a Keychain entry                   |
+| `TokenPair` (type)           | `{ accessToken, refreshToken }`            |
+
+## Commands
+
+| Export                                | Description                                                                 |
+| ------------------------------------- | --------------------------------------------------------------------------- |
+| `buildCommand(command)`               | Low-level builder from a `Command` union; validates and throws `RangeError` |
+| `powerCommand(on)`                    | `tune set power 0\|1`                                                       |
+| `speedCommand(speed)`                 | `tune set speed <1-30>`                                                     |
+| `modeCommand(mode)`                   | `tune set mode <0\|1>`                                                      |
+| `horizontalOscillationCommand(level)` | `tune set horosc <0-3>`                                                     |
+| `verticalOscillationCommand(level)`   | `tune set verosc <0-2>`                                                     |
+| `nightModeCommand(on)`                | `tune set night 0\|1`                                                       |
+| `childLockCommand(on)`                | `tune set lock 0\|1`                                                        |
+| `timerCommand(hours)`                 | `tune set timer <hours>`                                                    |
+| `Command` (type)                      | The discriminated union all builders construct                              |
+
+See [Commands](/projects/duux/docs/commands) for valid ranges and the reasoning behind each.
+
+## Discovery
+
+| Export                                                  | Description                                                                     |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `discover(accessToken)`                                 | Lists the account's fans; pure, does not touch config                           |
+| `fetchCurrentUser(accessToken)`                         | The signed-in user, including tenant permissions                                |
+| `fetchSensors(accessToken)`                             | The raw sensor list backing `discover`                                          |
+| `renameSensor(accessToken, sensorId, displayName)`      | Renames a fan; addressed by numeric id, not MAC                                 |
+| `unwrap(body, path)`                                    | Unwraps the `{ data, errorMessage }` envelope and throws on a 200-coded refusal |
+| `Discovered`, `CurrentUser`, `TenantPermission` (types) |                                                                                 |
+
+## Transports
+
+| Export                          | Description                                                                                     |
+| ------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `createCloudTransport(options)` | Cloud transport over Cloudgarden's REST API (v5 default, v4 legacy)                             |
+| `V4_BASE_URL`, `V5_BASE_URL`    | `https://v4.api.cloudgarden.nl`, `https://v5.api.cloudgarden.nl`                                |
+| `CloudTransportOptions` (type)  | `{ getAccessToken, tenantId?, apiVersion?, baseUrl? }`                                          |
+| `createMqttTransport(options?)` | MQTT transport for Cloudgarden's collector or a broker of your own                              |
+| `MqttTransportOptions` (type)   | `{ host?, port?, clientId?, username?, password?, ca?, rejectUnauthorized?, statusTimeoutMs? }` |
+| `Transport` (type)              | The shared interface both transports implement                                                  |
+
+See [Transports](/projects/duux/docs/transports) for the protocol quirks behind each.
+
+## One-shot commands
+
+| Export                                 | Description                                      |
+| -------------------------------------- | ------------------------------------------------ |
+| `sendCommand(command, transport?)`     | Sends a raw command string to the current device |
+| `setPower(on, transport?)`             |                                                  |
+| `setSpeed(speed, transport?)`          |                                                  |
+| `setMode(mode, transport?)`            |                                                  |
+| `setOscillation(axis, on, transport?)` | `axis` is `"horizontal"` \| `"vertical"`         |
+| `setNightMode(on, transport?)`         |                                                  |
+| `setTimer(hours, transport?)`          |                                                  |
+| `getStatus(transport?)`                | Fetches `FanState` for the current device        |
+
+Each resolves the current device and defaults to a fresh cloud transport when none is passed.
+
+## Session
+
+| Export                        | Description                                                                             |
+| ----------------------------- | --------------------------------------------------------------------------------------- |
+| `createSession(options?)`     | A live, event-driven connection to a fan — see [Sessions](/projects/duux/docs/sessions) |
+| `Session` (type)              | `EventEmitter` with `state`, per-command methods, `refresh()`, `stop()`                 |
+| `CreateSessionOptions` (type) | `{ device?, transport?, pollIntervalMs? }`                                              |
+
+## Domain types
+
+| Export                   | Description                                                                                                          |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `toFanState(raw)`        | Maps `RawFanData` (wire shape) to `FanState` (typed, mapped)                                                         |
+| `sensorLabel(sensor)`    | `displayName?.trim() \|\| name`                                                                                      |
+| `FAN_MODE_VALUES`        | `{ normal: 0, natural: 1 }`                                                                                          |
+| `FAN_MODE_BY_VALUE`      | The reverse lookup                                                                                                   |
+| `FanMode` (type)         | `"normal" \| "natural"`                                                                                              |
+| `FanState` (type)        | The mapped device state: `mode`, `power`, `speed`, `horosc`, `verosc`, `night`, `lock`, `battery`, `timer`, `sensor` |
+| `RawFanData` (type)      | The wire shape before mapping                                                                                        |
+| `SensorSummary` (type)   | `id`, `type`, `name`, `displayName`, `deviceId` (MAC), `latestData`                                                  |
+| `FanSessionState` (type) | `{ deviceId, connected, fan, error }`                                                                                |
+| `ApiVersion` (type)      | `"v4" \| "v5"`                                                                                                       |

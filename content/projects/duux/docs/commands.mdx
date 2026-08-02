@@ -1,0 +1,50 @@
+---
+title: 🎛️ Commands
+description: The tune set command grammar, every builder function, and the valid range for each parameter.
+---
+
+## The grammar
+
+Every fan command is a plain text string — `tune set <param> <value>` — sent verbatim over whichever transport is active: the cloud transport POSTs it as `{"command": "..."}`, the MQTT transport publishes it as-is to `sensor/{mac}/command`. Neither transport invents its own encoding; both defer to the builders below, so a consumer only ever has to know this one grammar regardless of which transport is in use.
+
+```ts
+import { buildCommand } from "@kud/duux"
+
+buildCommand({ param: "speed", value: 10 }) // "tune set speed 10"
+```
+
+## Builders
+
+Each builder validates its input and throws a `RangeError` on an invalid value.
+
+| Builder                               | Parameter | Valid range               | Notes                             |
+| ------------------------------------- | --------- | ------------------------- | --------------------------------- |
+| `powerCommand(on)`                    | `power`   | `boolean`                 | Encoded as `0`/`1`                |
+| `speedCommand(speed)`                 | `speed`   | integer `1`–`30`          |                                   |
+| `modeCommand(mode)`                   | `mode`    | `"normal"` \| `"natural"` | Encoded as `0`/`1` — see below    |
+| `horizontalOscillationCommand(level)` | `horosc`  | integer `0`–`3`           | Sweep-angle preset, not a toggle  |
+| `verticalOscillationCommand(level)`   | `verosc`  | integer `0`–`2`           | Tilt preset, not a toggle         |
+| `nightModeCommand(on)`                | `night`   | `boolean`                 | Independent of `mode` — see below |
+| `childLockCommand(on)`                | `lock`    | `boolean`                 | The app's "Child lock" toggle     |
+| `timerCommand(hours)`                 | `timer`   | non-negative integer      | See the caveat below              |
+
+### Fan modes: exactly two
+
+The fan has exactly two modes — `normal` and `natural` — matching the Duux app's own control, which offers exactly "Normal" and "Natural Wind". An earlier version of this library guessed a third mode, `"night"`, taken from a reference client's labels — but night mode is not a mode. It's a separate, independently readable toggle (`night`), reported alongside `mode` rather than as a value of it, and `2` is not a value the `mode` field ever takes.
+
+### `horosc` and `verosc` are presets, not toggles
+
+Both are confirmed against a real fan, corroborated by the Home Assistant integrations built on this same protocol (which document `tune set horosc X (X: 0-3)` and `tune set verosc X (X: 0-2)`) and by a real state payload reporting both as plain integers:
+
+- **`horosc`** — horizontal sweep angle: `0` off, `1` = 30°, `2` = 60°, `3` = 90°
+- **`verosc`** — vertical tilt: `0` off, `1` = 45°, `2` = 100°
+
+`horizontalOscillationCommand` and `verticalOscillationCommand` also accept a `boolean` so existing callers keep working: `true` maps to preset `1`, the narrowest sweep, which is what "on" used to mean before the presets were understood.
+
+### Timer
+
+`timerCommand(hours)` accepts any non-negative integer — the library itself imposes no upper bound. A 24-hour ceiling shows up in some consuming UIs (like the CLI), but that's a UI-level assumption, **not a confirmed API limit** — it has not been verified against the fan or the API spec.
+
+### Child lock and battery
+
+Child lock (`lock`) is both readable (in `FanState.lock`) and settable (`childLockCommand`). Battery level and charging state are reported only when the optional battery pack is fitted — `FanState.battery` is `null` otherwise, including when a fitted pack reports `0`, which is indistinguishable from no pack at all.
