@@ -1,0 +1,30 @@
+---
+title: 📝 The contract
+description: The three flags a CLI must implement for cli-shot to be able to shoot it.
+---
+
+cli-shot doesn't know anything about the CLI it's driving — it asks. A CLI is shootable once it implements three flags:
+
+| flag              |                                                        |
+| ----------------- | ------------------------------------------------------ |
+| `--mock`          | swap **every** data source to fixtures, all or nothing |
+| `--screen <name>` | open directly on that screen                           |
+| `--screen list`   | print the screen names, one per line                   |
+
+## `--screen list` is the discovery hook
+
+This is what keeps cli-shot generic. Instead of a table somewhere mapping screen names to keystrokes — one that needs editing every time a tab is added, renamed, or removed — cli-shot asks the CLI what screens it has and shoots exactly those. Add a tab to your app and it appears in the next run's output without cli-shot being touched. A tab nobody ever wired up to `--screen` stays invisible instead of silently going stale.
+
+`listScreens()` runs the driven command with `--screen list` appended and parses stdout as one screen name per line, trimming blanks.
+
+## `--mock` is all-or-nothing
+
+There's no partial mock mode in the contract — `--mock` swaps every data source to fixtures, or none of them. This is deliberate on two counts. First, it keeps cli-shot from needing to know which parts of a given screen are "real" versus "fixture" — the CLI owns that entirely. Second, mock is the default cli-shot drives with (`--no-mock` opts out): a folder listing or a real dataset says more about the person running the tool than they usually intend, and a screenshot outlives the moment it was taken.
+
+## `--screen <name>` addresses the screen, not the state
+
+`--screen` gets a CLI to the right tab. It can't express scroll position, an open dialog, or a filtered view — that's what [`--keys`](/projects/cli-shot/docs/usage) is for, layered on top once the named screen has drawn.
+
+## Related
+
+[@kud/cli-testing](https://github.com/kud/cli-testing) is the test-side sibling — same three-flag app contract, no dependency between the two packages.

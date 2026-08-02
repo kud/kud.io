@@ -1,0 +1,48 @@
+---
+title: 🚀 Usage
+description: The cli-shot binary, its flags, and how the -- separator keeps flags from colliding.
+---
+
+## Install
+
+```sh
+npm install --global @kud/cli-shot
+brew install charmbracelet/tap/freeze   # the renderer — see below
+```
+
+`freeze` is a separate binary and is not bundled — cli-shot shells out to it to turn ANSI into a PNG. Without it on `PATH`, rendering fails.
+
+## Basic invocation
+
+```sh
+cli-shot --out assets/screenshots -- pcloud
+```
+
+Everything after `--` is the command being driven, split off before cli-shot's own flag parser ever sees it. That separation is deliberate: it lets the driven CLI have its own `--mock` or `--screen` without colliding with cli-shot's flags of the same name. Without the `--`, cli-shot would swallow the driven CLI's flags as its own.
+
+By default this shoots every screen the driven CLI reports (see [The contract](/projects/cli-shot/docs/contract)) and writes one PNG per screen into the output directory.
+
+## Flags
+
+| flag                  |                                                                      |
+| --------------------- | -------------------------------------------------------------------- |
+| `-o, --out <dir>`     | directory to write PNGs into (required)                              |
+| `-s, --screen <name>` | shoot one screen instead of every screen                             |
+| `--list`              | print the screens the command offers, and stop                       |
+| `--cols` / `--rows`   | terminal size — default 110×32                                       |
+| `--settle <ms>`       | milliseconds of silence that count as finished drawing — default 800 |
+| `--keys <sequence>`   | keystrokes sent once the screen has drawn                            |
+| `--no-mock`           | drive real data instead of fixtures                                  |
+
+## Examples
+
+```sh
+cli-shot --out shots --screen sync -- pcloud      # one screen only
+cli-shot --out shots --list -- pcloud             # what screens exist
+cli-shot --out shots --keys $'jjj\r' -- pcloud    # drive deeper first
+cli-shot --out shots --no-mock -- pcloud          # real data (careful)
+```
+
+`--keys` is the escape hatch for state a screen name can't address on its own — scroll position, an open dialog, a filtered view. It sends the given sequence once the first draw has settled, then waits for the terminal to settle again before capturing.
+
+`--no-mock` turns off fixtures and drives the CLI's real data sources. Mock is on by default deliberately: a folder listing or real dataset says more about the person running it than they usually intend, and a screenshot outlives the moment it was taken.

@@ -1,0 +1,27 @@
+---
+title: ⚙️ How it works
+description: The capture pipeline, why terminal emulation is the step that isn't obvious, and where the approach can't help.
+---
+
+## The pipeline
+
+```
+node-pty  →  @xterm/headless  →  serialize  →  freeze  →  png
+```
+
+1. **node-pty** spawns the driven command inside a real pseudo-terminal and streams its raw output.
+2. **@xterm/headless** consumes that stream through an actual terminal emulator (no window, no rendering — just the state machine).
+3. **serialize** (`@xterm/addon-serialize`) reads back the resolved character grid as ANSI.
+4. **freeze** turns that ANSI into a PNG.
+
+## Why the emulation step exists
+
+This is the part that isn't obvious. A pty hands back **every redraw in order**, not a picture of the screen. Write that stream straight to a renderer and you get the whole animation concatenated — cursor moves, screen clears, repaints, and the alternate-screen escape sequence all laid on top of each other — which reads as noise, not a screenshot.
+
+So the stream is fed through a real terminal emulator first. It resolves cursor moves, clears, and repaints into the grid a user would actually be looking at at that moment. Only that final grid gets serialised and handed to `freeze`. This is also why cli-shot waits for the terminal to go quiet (`--settle`) before it decides a screen has finished drawing, rather than capturing on a fixed delay: silence alone can't distinguish "finished drawing" from "hasn't started yet" — a CLI booted through something like `tsx` can emit a few bytes, then go quiet for seconds while it compiles. cli-shot requires something visible on screen before it will treat silence as "done".
+
+## Limits
+
+**Terminal graphics protocols don't survive.** Inline images (iTerm2's protocol, sixel) are escape sequences carrying base64 image payloads, not character-grid content — no ANSI renderer, including `freeze`, can rasterise them. A CLI that draws thumbnails or images needs a real terminal and a window capture for those specific screens; cli-shot can't help there.
+
+**Compound state needs `--keys`.** `--screen` addresses _which_ screen to open, but scroll position, an open dialog, or a filtered view are states beyond what a screen name alone can carry. Reach for [`--keys`](/projects/cli-shot/docs/usage) to drive further once the named screen has drawn.
