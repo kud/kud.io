@@ -16,15 +16,42 @@ description: "☁️ Restore deleted pCloud files and rewind versions from the t
 - **Client settings** — manage what pCloud Drive refuses to sync. These live in each machine's own database rather than your account, which is how a `node_modules` tree ends up in the cloud with no machine considering itself responsible for it.
 - **`pcloud doctor`** — one command that says what is wrong and which command fixes it.
 
-## Screenshots and demos
+## Screenshots
+
+<img src="https://raw.githubusercontent.com/kud/pcloud-cli/HEAD/assets/screenshots/files.png" width="900" alt="The Files tab: a folder listing with shared folders marked, and a preview pane on the right" />
+
+<details>
+<summary>Rewind, Trash, Sync and Settings</summary>
+
+<br />
+
+**Rewind** — the change log, grouped by day, with repeated edits to one file
+collapsed into a single run.
+
+<img src="https://raw.githubusercontent.com/kud/pcloud-cli/HEAD/assets/screenshots/rewind.png" width="900" alt="The Rewind tab: changes grouped by day, newest first" />
+
+**Trash** — what pCloud is still holding, and how long ago you deleted it.
+
+<img src="https://raw.githubusercontent.com/kud/pcloud-cli/HEAD/assets/screenshots/trash.png" width="900" alt="The Trash tab: deleted files with their deletion dates" />
+
+**Sync** — every local pair, with the unhealthy one named and the reason spelled
+out. The desktop app reports this as a permissions error.
+
+<img src="https://raw.githubusercontent.com/kud/pcloud-cli/HEAD/assets/screenshots/sync.png" width="900" alt="The Sync tab: three sync pairs, one flagged with queued operations" />
+
+**Settings** — what this machine refuses to sync. Per machine, not per account.
+
+<img src="https://raw.githubusercontent.com/kud/pcloud-cli/HEAD/assets/screenshots/settings.png" width="900" alt="The Settings tab: ignored names and ignored paths" />
+
+</details>
+
+Every screenshot above is `pcloud --mock`: an invented account with invented
+folders, shares and sync pairs. No credential required, and nothing touches the
+network.
 
 ```sh
 pcloud --mock
 ```
-
-The full browser, driven entirely from fixtures — an invented account with
-invented folders, shares and sync pairs. No credential required, and nothing
-touches the network.
 
 It exists because a folder listing says more about someone than they usually
 intend, and the alternative is screenshotting a real drive.
