@@ -28,28 +28,38 @@ brew install charmbracelet/tap/freeze   # the renderer
 cli-shot --out assets/screenshots -- pcloud
 ```
 
-Everything after `--` is the command being driven. That separation matters: it
-lets the driven CLI have its own `--mock` or `--screen` without colliding with
-cli-shot's flags.
+Everything after `--` is the command being driven, so its own flags stay clear
+of cli-shot's.
+
+cli-shot adds `--mock` and `--screen` to that command, but only where you
+haven't. Anything you pass wins:
 
 ```sh
-cli-shot --out shots --screen sync -- pcloud      # one screen
+cli-shot --out shots -- pcloud --screen sync    # shoots Sync, writes sync.png
+cli-shot --out shots --only sync -- pcloud      # the same thing, said from here
+```
+
+Naming a screen yourself is already an answer to "which one", so cli-shot skips
+the discovery loop and takes the filename from your value.
+
+```sh
+cli-shot --out shots --only sync -- pcloud        # one screen
 cli-shot --out shots --list -- pcloud             # what screens exist
 cli-shot --out shots --keys $'jjj\r' -- pcloud    # drive deeper first
 cli-shot --out shots --no-mock -- pcloud          # real data (careful)
 ```
 
-| flag                  |                                                       |
-| --------------------- | ----------------------------------------------------- |
-| `-o, --out <dir>`     | directory to write PNGs into                          |
-| `-s, --screen <name>` | shoot one screen instead of every screen              |
-| `--list`              | print the screens the command offers, and stop        |
-| `--cols` / `--rows`   | terminal size (default 110×32)                        |
-| `--settle <ms>`       | how long the screen must hold still (default 350)     |
-| `--jobs <n>`          | screens shot at once; defaults to the core count      |
-| `--keys <sequence>`   | keystrokes sent once the screen has drawn             |
-| `--font <family>`     | font to render with; defaults to a Nerd Font          |
-| `--no-mock`           | drive real data instead of fixtures                   |
+| flag                |                                                   |
+| ------------------- | ------------------------------------------------- |
+| `-o, --out <dir>`   | directory to write PNGs into                      |
+| `--only <screen>`   | shoot one screen instead of every screen          |
+| `--list`            | print the screens the command offers, and stop    |
+| `--cols` / `--rows` | terminal size (default 110×32)                    |
+| `--settle <ms>`     | how long the screen must hold still (default 350) |
+| `--jobs <n>`        | screens shot at once; defaults to the core count  |
+| `--keys <sequence>` | keystrokes sent once the screen has drawn         |
+| `--font <family>`   | font to render with; defaults to a Nerd Font      |
+| `--no-mock`         | drive real data instead of fixtures               |
 
 ## The contract
 
