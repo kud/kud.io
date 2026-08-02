@@ -1,5 +1,7 @@
 {
   "ai-conventional-commit-cli": "https://raw.githubusercontent.com/kud/ai-conventional-commit-cli/HEAD/assets/icon.png",
+  "cli-shot": "https://raw.githubusercontent.com/kud/cli-shot/HEAD/assets/icon.svg",
+  "cli-testing": "https://raw.githubusercontent.com/kud/cli-testing/HEAD/assets/icon.svg",
   "duux": "https://raw.githubusercontent.com/kud/duux/HEAD/assets/icon.svg",
   "duux-cli": "https://raw.githubusercontent.com/kud/duux-cli/HEAD/assets/icon.svg",
   "foxhop": "https://raw.githubusercontent.com/kud/foxhop/HEAD/assets/icon.svg",
