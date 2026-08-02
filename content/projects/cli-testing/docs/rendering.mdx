@@ -1,0 +1,73 @@
+---
+title: 🖼️ Rendering components
+description: Drive an Ink component in process with renderFrames and read its frame history, not just its last frame
+---
+
+## renderFrames(element)
+
+```ts
+import { renderFrames } from "@kud/cli-testing"
+
+const ui = renderFrames(<DnsList domain="example.com" />)
+
+await ui.waitFor("1 record")
+expect(ui.output()).toContain("1.2.3.4")
+
+ui.write("j") // send input, as a user would
+ui.unmount()
+```
+
+`renderFrames` wraps `ink-testing-library`'s `render` and returns:
+
+| method                   |                                                           |
+| ------------------------ | --------------------------------------------------------- |
+| `output()`               | every frame so far, joined — what assertions want         |
+| `lastFrame()`            | the most recent frame alone                               |
+| `waitFor(needle, opts?)` | resolves with the output once a string or pattern appears |
+| `write(input)`           | send keystrokes                                           |
+| `unmount()`              | tear down                                                 |
+
+## `output()` vs `lastFrame()`
+
+An Ink command that renders, fetches, then exits unmounts itself the moment
+its data lands — and an unmounted component's last frame is empty. Asserting
+on `lastFrame()` therefore races the unmount: it fails on exactly the
+commands that work, and passes on ones that hang, because a hanging command
+never unmounts and its last frame stays populated.
+
+`output()` reads the frame history instead — every frame ink has ever
+produced, joined — which persists after unmount. It's what assertions want by
+default. `lastFrame()` is still exposed, because a test that genuinely wants
+to know what the user is left looking at should reach for it. It's the
+default that was wrong, not the capability.
+
+## waitFor
+
+```ts
+export type WaitOptions = {
+  /** Milliseconds before giving up. */
+  timeout?: number
+  /** Milliseconds between checks. */
+  interval?: number
+}
+```
+
+`waitFor(needle, options?)` polls `output()` — the history, not the last
+frame — until `needle` (a string or a `RegExp`) appears, then resolves with
+the output at that point. Defaults are `timeout: 2_000` and `interval: 10`.
+
+It's a poll rather than a hook into Ink's render cycle: the frame that
+satisfies the wait is usually produced by a promise the test never holds a
+reference to, so there's nothing to `await` except the output itself.
+
+On timeout it throws with the frames that _were_ drawn:
+
+```
+Timed out after 2000ms waiting for 1 record.
+Frames so far:
+Loading…
+```
+
+That's usually enough to spot the actual cause — the text rendered, just
+spelled differently than the needle expects — without reaching for a
+debugger.

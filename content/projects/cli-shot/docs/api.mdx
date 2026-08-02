@@ -58,7 +58,7 @@ Runs `command` with `--screen list` appended and returns the screen names as a s
 
 ## `capture(command, args?, options?)`
 
-The lower-level primitive: spawns `command` in a pty, feeds the output through a headless `@xterm` terminal, waits for it to settle, and resolves with the serialised ANSI for the final screen — without writing an image. Useful if you want the ANSI yourself rather than a PNG. Defaults to `cols: 120, rows: 36, settle: 700, timeout: 15_000` when called directly (the CLI binary passes its own `110×32`/`800`ms defaults instead).
+The lower-level primitive: spawns `command` in a pty, feeds the output through a headless `@xterm` terminal, waits for it to settle, and resolves with the serialised ANSI for the final screen — without writing an image. Useful if you want the ANSI yourself rather than a PNG. Defaults to `cols: 110, rows: 32, settle: 800, timeout: 15_000` — the same values the CLI binary uses, so a library call and a `cli-shot` run produce the same image.
 
 ## `toImage(ansi, output, options?)`
 

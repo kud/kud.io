@@ -1,0 +1,65 @@
+---
+title: ⚙️ Running the CLI
+description: Spawn the real binary with runCli in a fresh, credential-free HOME and cwd
+---
+
+## runCli(command, args, options?)
+
+```ts
+import { runCli } from "@kud/cli-testing"
+
+const run = runCli("tsx", ["src/cli.ts", "browse"], {
+  scrub: ["PCLOUD_AUTH", "PCLOUD_ACCESS_TOKEN"],
+})
+
+expect(run.status).toBe(1)
+expect(run.stderr).toMatch(/Not authenticated/)
+```
+
+`runCli` spawns the actual entry point via `spawnSync` — not a mocked
+module — and returns:
+
+```ts
+type RunResult = {
+  status: number | null
+  stdout: string
+  stderr: string
+}
+```
+
+## Two isolations, both load-bearing
+
+Each run gets a fresh temporary `HOME` (via `mkdtempSync`), removed
+afterwards. Anything reading `os.homedir()` — a token store, a config file —
+finds nothing, deterministically, rather than depending on whose machine is
+running.
+
+`cwd` is pointed at that same temporary directory, which is the isolation
+that gets missed: a CLI calling `dotenv.config()` reads the `.env` beside its
+own source, not beside `HOME` — and would be handed back exactly the
+credentials `scrub` withheld. Scrubbing the environment isn't enough on its
+own when the file granting it back is still sitting on disk next to the
+binary.
+
+## Options
+
+```ts
+type RunOptions = {
+  scrub?: readonly string[]
+  env?: NodeJS.ProcessEnv
+  timeout?: number
+  input?: string
+}
+```
+
+| option    |                                                            |
+| --------- | ---------------------------------------------------------- |
+| `scrub`   | environment variable names to withhold; wins over `env`    |
+| `env`     | extra environment for the child, applied before `scrub`    |
+| `timeout` | milliseconds before the child is killed (default `60_000`) |
+| `input`   | written to the child's stdin                               |
+
+`scrub` winning over `env` means you can build the child's environment with
+`env` and still be certain that anything named in `scrub` never reaches the
+process — even if it's also present in `env` or inherited from
+`process.env`.

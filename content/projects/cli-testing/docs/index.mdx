@@ -1,0 +1,16 @@
+---
+title: 👋 Introduction
+description: Test helpers for Ink CLIs — frame-history rendering and isolated subprocess runs
+---
+
+cli-testing gives Ink CLIs two ways to be tested against the two ways they go
+wrong: the component renders the wrong thing, or the binary behaves wrongly
+when actually run. `renderFrames` drives a component in process and reads its
+history of frames; `runCli` spawns the real binary in an environment that owns
+none of the developer's credentials or config.
+
+## What's here
+
+- [🖼️ Rendering components](/projects/cli-testing/docs/rendering) — `renderFrames`, why `output()` beats `lastFrame()`, and how `waitFor` reports its own timeouts
+- [⚙️ Running the CLI](/projects/cli-testing/docs/running) — `runCli`, the fresh-`HOME`-and-`cwd` isolation, and the options that control it
+- [🔧 Peer dependencies](/projects/cli-testing/docs/configuration) — why `ink`, `react`, and `ink-testing-library` must be peers, plus how this relates to `@kud/cli-shot`

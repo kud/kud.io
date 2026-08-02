@@ -1,0 +1,53 @@
+---
+title: 🔧 Peer dependencies
+description: Why ink, react, and ink-testing-library are peer dependencies, and how cli-testing relates to cli-shot
+---
+
+## Install
+
+```sh
+npm install --save-dev @kud/cli-testing
+```
+
+`ink` (>=7) and `react` (>=19) are peer dependencies of your project already,
+if you're testing an Ink CLI — `cli-testing` binds to those copies rather
+than shipping its own.
+
+## Why peer, not direct, dependencies
+
+```json
+"peerDependencies": {
+  "ink": ">=7",
+  "ink-testing-library": ">=4",
+  "react": ">=19"
+}
+```
+
+A test helper has to render _your_ components with _your_ React runtime. If
+`ink`, `react`, and `ink-testing-library` were declared as plain
+dependencies instead, npm would be free to install a second copy of each
+alongside your project's own — and every hook call inside the component
+under test would fail with "more than one copy of React", because React's
+hook state is keyed to a single module instance.
+
+Declaring them as peers means `cli-testing` resolves whichever copies your
+project already has installed, so there's exactly one `react` and one `ink`
+in the tree. Install them yourself if they aren't already there:
+
+```sh
+npm install --save-dev ink react ink-testing-library
+```
+
+## Relationship to @kud/cli-shot
+
+[`@kud/cli-shot`](https://github.com/kud/cli-shot) takes screenshots of Ink
+CLIs. It's a sibling to `cli-testing`, not a dependent in either direction:
+the two share an app contract (`--mock`, `--screen`) so the same CLI can be
+driven by both tools, but neither imports the other's code. `runCli`'s
+isolation — fresh `HOME`, fresh `cwd`, scrubbed environment — is exactly
+what a functional test wants and exactly what would get in a screenshot's
+way, where the point is usually to capture the CLI's _real_ environment
+rendering real data.
+
+Use `cli-testing` to assert behaviour; reach for `cli-shot` when the thing
+under test is what the terminal looks like.
