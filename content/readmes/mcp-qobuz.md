@@ -88,3 +88,8 @@ npm run dev
 | `npm run build`       | Compile TypeScript to `dist/`                 |
 | `npm test`            | Run the Vitest test suite                     |
 | `npm run inspect:dev` | Open the MCP Inspector against the dev server |
+
+📚 **Full documentation → [mcp-qobuz/docs](https://kud.io/projects/mcp-qobuz/docs)**
+## Disclaimer
+
+This is an independent, unofficial project — not affiliated with, endorsed by, or sponsored by Qobuz. "Qobuz", the Qobuz logo, and any icons derived from it are trademarks of Qobuz Music, used here only to indicate compatibility.

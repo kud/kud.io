@@ -12,6 +12,73 @@ see. The symptom you actually get is a dialog reading _"pCloud doesn't have
 permissions to upload this item"_ against a folder shown as `/` — which is
 neither a permissions problem nor a folder called `/`.
 
+## ➕ Add a sync pair
+
+```bash
+pcloud sync add Memory          # dry run
+pcloud sync add Memory --apply
+```
+
+Creates the remote folder and the local folder, then tells you the two paths to
+pair in pCloud Drive → Sync. It does the halves that are unambiguous and hands
+you the one that is not.
+
+### Why it does not create the pair itself
+
+Because it was tried, and it fails in the worst available way.
+
+Inserting a row into `syncfolder` directly — with `folderid`, `inode` and
+`deviceid` all copied correctly from working pairs — **is accepted by the
+daemon**. It watches the folder and indexes new files into `localfile`. But
+`syncedfolder` and `localfolder` stay at `0`, where a working pair carries
+dozens each. The daemon ends up holding a file it knows about and no remote
+folder to put it in, so nothing uploads.
+
+Worse, `pcloud sync` reports the pair **healthy** throughout: its checks look
+for an orphaned `folderid`, not for an index the daemon never built. A sync that
+will not start announces itself; this one reports fine indefinitely while moving
+nothing.
+
+pCloud Drive builds that index when it creates a pair, so pairing is left to it.
+
+### What it does not do
+
+A pCloud sync pair can bind **any** local folder to **any** remote folder — the
+two need not share a name, and nothing requires them to sit under a common
+parent. `add` deliberately covers only the mirrored case, `<root>/name ↔ /name`,
+because that is the layout worth a shortcut. Pair anything else in pCloud
+Drive's preferences, then `pcloud sync` will report on it like any other.
+
+### Where the local folder goes
+
+Four rungs, most specific first:
+
+| Rung                         | Source                                    |
+| ---------------------------- | ----------------------------------------- |
+| `--root <path>`              | This run only                             |
+| `PCLOUD_SYNC_ROOT`           | This machine                              |
+| Inferred from existing pairs | The parent every current pair shares      |
+| `~/pCloud`                   | The client's own conventional folder name |
+
+Inference abstains when existing pairs live under different parents — a
+scattered layout is a legitimate way to use pCloud, not a fault, so it falls
+through to the default rather than picking a winner.
+
+### Guards
+
+`add` refuses before creating anything, so a rejected run leaves no folders
+behind:
+
+| Check          | Why                                                                       |
+| -------------- | ------------------------------------------------------------------------- |
+| Duplicate pair | The local folder is already synced                                        |
+| Nesting        | pCloud syncs pairs independently — an overlap uploads the same file twice |
+| Root missing   | The derived root does not exist on disk                                   |
+
+Unlike `prune` and `settings`, `add` never opens `data.db` for writing, so it
+needs no backup, no daemon guard and no `--yes`. It reads the sync table to
+derive the root and check for conflicts, and writes only to the filesystem.
+
 ## 📋 Show sync pairs
 
 ```bash
