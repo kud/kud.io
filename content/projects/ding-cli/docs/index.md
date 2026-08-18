@@ -14,6 +14,7 @@ Originally built to remember when Claude's usage quota resets — `ding 5h "quot
 - 🔊 **Built-in alarm presets** — six synthesised sounds (`beep`, `digital`, `radar`, `bell`, `siren`, `chime`), macOS Clock ringtones (e.g. `Radial`, `Daybreak`, `Arpeggio`), macOS system sounds, or any audio file via `afplay`
 - 🧙 **Interactive wizard** — `ding` with no arguments launches a tabbed TUI (When · Message · Sound · Notify · Mode · Review); press Space on the Sound step to preview before choosing
 - 🔗 **Click-to-open notifications** — `--open https://claude.ai` makes the notification banner a shortcut to any URL
+- ⚡ **Run a command when it fires** — `--exec 'npm run build'` acts without waiting for a human to notice; output is logged, and a non-zero exit sounds a distinct alarm and becomes `ding`'s own exit status
 - 🖥 **Foreground and detached modes** — live countdown with progress bar by default; `--detach` backgrounds the process and returns the prompt immediately
 
 ---
@@ -76,6 +77,8 @@ ding <time> [message] [options]
 | `--icon <path>`         |       | Absolute path to a custom notification icon image                                                                                                                                                                                          |
 | `--open <url>`          |       | URL to open when the notification banner is clicked                                                                                                                                                                                        |
 | `--notify-sound <name>` |       | Notification banner sound (e.g. `Glass`, `Ping`) — distinct from `--sound`, which plays via `afplay`                                                                                                                                       |
+| `--exec <command>`      |       | Shell command to run when the timer fires, via `/bin/sh -c`, inheriting `ding`'s environment. Output is appended to `~/Library/Logs/ding/exec.log` (override with `DING_EXEC_LOG`). Does not imply `--detach`                              |
+| `--exec-fail-sound <v>` |       | Sound played when `--exec` exits non-zero (default: `siren`). Same values as `--sound`; silenced by `--no-sound`                                                                                                                            |
 | `--icons <mode>`        |       | Icon set: `nerd` (default, requires Nerd Font), `emoji`, or `ascii`. Also set via `DING_ICONS` env var                                                                                                                                     |
 | `-i` / `--interactive`  |       | Force-launch the interactive wizard                                                                                                                                                                                                        |
 | `--help`                | `-h`  | Show help                                                                                                                                                                                                                                  |
@@ -101,6 +104,12 @@ ding 5h "quota is back" --detach
 
 # Silent notification (no alarm sound)
 ding 30m "check the oven" --no-sound
+
+# Run a command when the timer fires
+ding 25m --exec 'npm run build'
+
+# Fire-and-forget: no banner, no countdown, just the command
+ding 21:40 --detach --no-notify --exec 'say "quota is back"'
 
 # macOS Clock alarm ringtone (played locally via afplay; quote names with spaces)
 ding 5h "wake" --sound Daybreak
