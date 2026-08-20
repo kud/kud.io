@@ -1,45 +1,78 @@
 ---
 title: 📊 Table
-description: Structured data grid with bold muted column headers and truncating values.
+description: Structured data grid that measures its own columns, wraps or truncates cells, and aligns them per column.
 ---
 
-`<Table>` renders a structured data grid with bold, muted column headers. It supports optional fixed column widths and truncates long values cleanly with an ellipsis.
+`<Table>` renders a structured data grid with bold, muted column headers. Columns size themselves to their content, shrink to fit the terminal when the table is too wide, and either wrap or truncate whatever still does not fit.
 
 ```tsx
-import { Table } from "@kud/ink-ui";
-import type { Column } from "@kud/ink-ui";
+import { Table } from "@kud/ink-ui"
+import type { Column } from "@kud/ink-ui"
 ```
 
 ## 🔧 Props
 
-| Prop      | Type          | Description                    |
-| --------- | ------------- | ------------------------------ |
-| `data`    | `T[]`         | Array of row objects           |
-| `columns` | `Column<T>[]` | Column definitions (see below) |
+| Prop          | Type          | Default        | Description                    |
+| ------------- | ------------- | -------------- | ------------------------------ |
+| `data`        | `T[]`         | —              | Array of row objects           |
+| `columns`     | `Column<T>[]` | —              | Column definitions (see below) |
+| `gap`         | `number`      | `2`            | Characters between columns     |
+| `maxWidth`    | `number`      | terminal width | Width the table shrinks to fit |
+| `headerColor` | `string`      | `colors.muted` | Colour of the header row       |
 
 The table is generic over the row type `T`, so column `key`s are checked against your data shape.
 
 ### `Column<T>` shape
 
-| Field    | Type               | Description                        |
-| -------- | ------------------ | ---------------------------------- |
-| `key`    | `keyof T & string` | Object key to read for this column |
-| `header` | `string`           | Column heading text                |
-| `width`  | `number`           | Optional fixed character width     |
+| Field      | Type                            | Default      | Description                                   |
+| ---------- | ------------------------------- | ------------ | --------------------------------------------- |
+| `key`      | `keyof T & string`              | —            | Object key to read for this column            |
+| `header`   | `string`                        | —            | Column heading text                           |
+| `width`    | `number`                        | measured     | Fixed character width — never shrunk          |
+| `minWidth` | `number`                        | `3`          | Floor a measured column shrinks to            |
+| `align`    | `"left" \| "center" \| "right"` | `"left"`     | Horizontal alignment of header and cells      |
+| `overflow` | `"wrap" \| "truncate"`          | `"truncate"` | What happens to content wider than the column |
 
-Missing or nullish cell values render as an empty string. Columns without a `width` size to their content; columns with a `width` are fixed and truncate overflow.
+Missing or nullish cell values render as an empty string.
+
+## 📐 How columns are sized
+
+A column without a `width` is measured: it takes the widest of its header and its cells, counting display columns, so wide glyphs and CJK text are not undercounted. A cell holding newlines is measured by its widest line.
+
+If the measured columns plus their gaps come to more than `maxWidth`, the widest column gives up characters first, one at a time, until the table fits or every measured column has reached its `minWidth`. Columns you gave an explicit `width` are never touched — an over-wide table you asked for stays over-wide rather than quietly disagreeing with you.
+
+## 🎨 Overflow and alignment
+
+`overflow: "wrap"` wraps a cell inside its column and grows the row to suit; the neighbouring cells stay top-aligned beside it. The default, `overflow: "truncate"`, keeps every row one line tall and ends a clipped cell with `…`.
+
+`align` positions a cell within its column. A cell that wraps to the full column width has nowhere left to move, so alignment shows on cells that are narrower than their column.
 
 ## 💡 Examples
+
+A measured table — no widths at all:
 
 ```tsx
 <Table
   columns={[
-    { key: "name", header: "Name", width: 16 },
+    { key: "name", header: "Name" },
     { key: "status", header: "Status" },
   ]}
   data={[
     { name: "api", status: "ok" },
     { name: "db", status: "degraded" },
   ]}
+/>
+```
+
+A wide, wrapping column beside fixed ones:
+
+```tsx
+<Table
+  columns={[
+    { key: "file", header: "File", width: 32 },
+    { key: "program", header: "Program", overflow: "wrap" },
+    { key: "source", header: "Source", align: "right" },
+  ]}
+  data={items}
 />
 ```
