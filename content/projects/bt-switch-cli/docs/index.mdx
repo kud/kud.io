@@ -1,0 +1,17 @@
+---
+title: 👋 Introduction
+description: Switch your Bluetooth Magic peripherals between Macs by name.
+---
+
+bt-switch hands your Bluetooth peripherals — Magic Trackpad, Magic Keyboard, mouse — between Macs with a single named command. It wraps [`blueutil`](https://github.com/toy/blueutil) so you never have to dig through System Settings or copy MAC addresses by hand.
+
+It is built for people who switch Macs often (work + personal, desktop + laptop) and share the same peripherals across them.
+
+## What's here
+
+- [⚡ Usage](/projects/bt-switch-cli/docs/usage) — the day-to-day commands
+- [⚙️ Configuration](/projects/bt-switch-cli/docs/configuration) — the device config file and defaults
+
+## The one hardware limit
+
+Apple Magic peripherals bond to a single host — they are not multipoint. Moving a device from one Mac to another therefore requires putting it back into pairing mode (hold the power button until the LED blinks). No software can remove that physical step. bt-switch makes everything _around_ it one command, and reconnects silently when a device is already bonded to the current Mac.

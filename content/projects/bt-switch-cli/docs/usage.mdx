@@ -1,0 +1,46 @@
+---
+title: ⚡ Usage
+description: The day-to-day bt-switch commands.
+---
+
+bt-switch refers to devices by the friendly names you give them, so you never type a MAC address.
+
+## Register devices
+
+```sh
+bt-switch add
+```
+
+Scans your paired devices, lets you multi-select with the arrow keys and space, then prompts a name for each (pre-filled with a sensible default — press Enter to accept, or type to rename). Saved to `~/.config/bt-switch/devices.json`.
+
+## Connect
+
+```sh
+bt-switch connect trackpad
+```
+
+Smart by design: if the device is already bonded to this Mac it reconnects instantly. If it is not bonded yet, bt-switch prompts you to put it into pairing mode and runs the pairing flow.
+
+## Switch (hand off to another Mac)
+
+```sh
+bt-switch switch trackpad
+```
+
+Unpairs the device on this Mac and re-pairs it, so it can be claimed by another machine. Use this when moving a peripheral between computers.
+
+## Forget (release)
+
+```sh
+bt-switch forget trackpad
+```
+
+Unpairs the device so another Mac can claim it, without re-pairing here.
+
+## List
+
+```sh
+bt-switch list   # alias: ls
+```
+
+Shows every configured device with its live paired / connected status.

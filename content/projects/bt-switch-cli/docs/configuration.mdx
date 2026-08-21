@@ -1,0 +1,32 @@
+---
+title: ⚙️ Configuration
+description: The bt-switch device config file and defaults.
+---
+
+## Device config
+
+bt-switch stores your devices as a simple name → MAC map:
+
+```json
+{
+  "trackpad": "64:c7:53:ee:d7:2f",
+  "keyboard": "df:35:bd:d3:3d:03"
+}
+```
+
+The file lives at:
+
+```
+$XDG_CONFIG_HOME/bt-switch/devices.json
+```
+
+falling back to `~/.config/bt-switch/devices.json` when `XDG_CONFIG_HOME` is not set. It is created automatically the first time you run `bt-switch add`.
+
+## Default names
+
+When you run `add`, each device's name is pre-filled from its Bluetooth name: the device-type token for `owner · type · place`-style names (`mest002 · trackpad · home` → `trackpad`), or a slug of the full name otherwise (`Xbox Wireless Controller` → `xbox-wireless-controller`). Duplicate names are auto-suffixed (`-2`, `-3`) so identically-named devices never overwrite each other.
+
+## Requirements
+
+- macOS with [`blueutil`](https://github.com/toy/blueutil) installed (`brew install blueutil`).
+- Each device must have been paired with this Mac at least once for the silent reconnect path; the first time on a given Mac requires pairing mode.
