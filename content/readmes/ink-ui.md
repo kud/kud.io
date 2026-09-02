@@ -31,6 +31,14 @@ npm install @kud/ink-ui
 npm install ink react
 ```
 
+### Building with an AI agent
+
+The package ships `AGENTS.md`, a short brief covering the composition rules and house conventions that the type definitions cannot express — which components own the keyboard, what to compose for a given screen, and the traps. Point your agent at it:
+
+```
+node_modules/@kud/ink-ui/AGENTS.md
+```
+
 ## Usage
 
 ```tsx
