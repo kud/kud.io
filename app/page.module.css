@@ -292,6 +292,28 @@
   transform: translateX(3px) translateY(-1px);
 }
 
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 21px;
+  border: 1px solid rgba(20, 20, 32, 0.22);
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #141420;
+  transition:
+    color 0.18s,
+    border-color 0.18s,
+    transform 0.18s;
+}
+
+.secondary:hover {
+  color: #c2703d;
+  border-color: #c2703d;
+  transform: translateY(-2px);
+}
+
 /* Socials -------------------------------------------------------------------*/
 .socials {
   display: flex;

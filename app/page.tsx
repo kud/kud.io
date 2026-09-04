@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { RevealLink } from "@/components/reveal-link"
 import { AvatarImage } from "@/components/avatar-image"
 import {
@@ -123,6 +124,12 @@ const Cta = () => (
   </RevealLink>
 )
 
+const Writing = () => (
+  <Link href="/blog" className={styles.secondary}>
+    Writing
+  </Link>
+)
+
 const SocialLinks = () => (
   <ul className={styles.socials}>
     {socials.map(({ label, href, Icon }) => (
@@ -162,6 +169,7 @@ const HeroDesktop = () => (
         <Personal />
         <div className={styles.actions}>
           <Cta />
+          <Writing />
         </div>
         <SocialLinks />
         <ScrollHint />
@@ -188,6 +196,7 @@ const HeroMobile = () => (
       <div className={styles.cardLinks}>
         <div className={styles.actions}>
           <Cta />
+          <Writing />
         </div>
         <SocialLinks />
       </div>
