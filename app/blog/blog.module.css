@@ -38,6 +38,11 @@
   --c-tag: #ff5572;
   --c-att: #c49a3c;
   --c-gold: #ffc600;
+  /* Card ground lifted toward --c-mut, ~1.6:1 against --c-bg. Deliberately not
+   * terminal.tsx's #2a2a45: that is a desaturated blue-purple drawn against
+   * that component's own ground, and on #062335 it casts purple, which nothing
+   * else in this palette does. */
+  --c-dot: #16394f;
   --c-add: #14351f;
   --c-del: #3a1b21;
 

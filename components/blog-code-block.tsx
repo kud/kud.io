@@ -28,6 +28,13 @@ export const BlogCodeBlock = ({
 }) => (
   <div className={styles.card}>
     <div className={styles.cardHead}>
+      {/* Decoration, and announced as nothing: three dots carry no information
+          a screen reader can use. */}
+      <span className={styles.dots} aria-hidden="true">
+        <i />
+        <i />
+        <i />
+      </span>
       <span>{language ?? "code"}</span>
       <CopyButton text={toText(children)} className={styles.copy} />
     </div>

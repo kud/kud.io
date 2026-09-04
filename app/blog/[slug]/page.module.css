@@ -140,8 +140,8 @@
 
 /* Code card ---------------------------------------------------------------- */
 /* One dark ground, a filename, the code. No header fill, no divider, no border,
- * no line numbers, no window ornaments — every one of those is chrome arguing
- * with the code it frames. */
+ * no line numbers — every one of those is chrome arguing with the code it
+ * frames. The three dots are the one ornament kept on purpose. */
 
 .card {
   margin: 1.75em 0;
@@ -153,13 +153,32 @@
 
 .cardHead {
   display: flex;
-  align-items: baseline;
-  gap: 12px;
+  /* center, not baseline — a dot has no baseline to sit on. */
+  align-items: center;
+  gap: 18px;
   padding: 15px 22px 2px;
   font-family: var(--mono);
   font-size: 12.5px;
   letter-spacing: 0.01em;
   color: var(--c-mut);
+}
+
+/* 8px against the header's 12.5px type, whose cap height is about 9px, so
+ * the cluster sits under the caps and reads as part of the line; 7px makes one
+ * 38px mark rather than three objects, and the header's 18px keeps that mark
+ * clear of the language label. No hover state — they do nothing, and lifting
+ * them alongside Copy would claim otherwise. */
+.dots {
+  display: flex;
+  gap: 7px;
+  flex: none;
+}
+
+.dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c-dot);
 }
 
 .copy {
