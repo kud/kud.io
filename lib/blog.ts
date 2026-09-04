@@ -1,3 +1,5 @@
+export { postPath } from "./blog-path"
+
 import { readFile, readdir } from "node:fs/promises"
 import { join } from "node:path"
 import { Fragment, jsx, jsxs } from "react/jsx-runtime"

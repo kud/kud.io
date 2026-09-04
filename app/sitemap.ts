@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next"
-import { getAllPosts } from "@/lib/blog"
+import { getAllPosts, postPath } from "@/lib/blog"
 import { getProjects } from "@/lib/projects"
 import { source } from "@/lib/source"
 
@@ -35,7 +35,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
       lastModified: newest(projects.map((project) => project.pushedAt)),
     },
     ...posts.map((post) => ({
-      url: `${SITE}/blog/${post.slug}`,
+      url: `${SITE}${postPath(post)}`,
       lastModified: post.date || undefined,
     })),
     ...projects.map((project) => ({

@@ -1,6 +1,7 @@
 "use client"
 
 import { Link } from "next-view-transitions"
+import { postPath } from "@/lib/blog-path"
 import { useMemo, useState } from "react"
 
 export type IndexEntry = {
@@ -78,7 +79,7 @@ export const BlogIndex = ({
               <li key={post.slug}>
                 <time dateTime={post.date}>{post.date}</time>
                 <h2>
-                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                  <Link href={postPath(post)}>{post.title}</Link>
                 </h2>
               </li>
             ))}

@@ -1,4 +1,4 @@
-import { getAllPosts } from "@/lib/blog"
+import { getAllPosts, postPath } from "@/lib/blog"
 
 // Prerendered at build time and served as a static asset, exactly like /cv.pdf.
 // Nothing here reads a request, so a dynamic route would buy a lambda per poll
@@ -32,7 +32,7 @@ const toItem = (post: {
   description: string
   date: string
 }) => {
-  const url = `${SITE}/blog/${post.slug}`
+  const url = `${SITE}${postPath(post)}`
   return [
     "    <item>",
     `      <title>${escapeXml(post.title)}</title>`,
