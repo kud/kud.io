@@ -1,8 +1,8 @@
 # kud.io — project instructions
 
 **Writing a blog post? Read `WRITING.md` first.** It covers what Erwann has to
-supply, the voice, the tics to avoid, and the length — none of which is
-repeated here.
+supply, the completeness check before handing over a draft, length, and the
+measured tics — none of which is repeated here.
 
 ## Language: British English
 
