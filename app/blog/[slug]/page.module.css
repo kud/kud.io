@@ -1,0 +1,241 @@
+/* Post. Tokens come from #blog-root (app/blog/blog.module.css) — nothing here
+ * declares a colour of its own except the code card's own ground, which is
+ * deliberately outside the theme axis. */
+
+.title {
+  margin: 0 0 9px;
+  font-size: 29px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+
+.meta {
+  margin: 0 0 38px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--fg-3);
+  letter-spacing: 0.01em;
+}
+
+/* Prose ------------------------------------------------------------------- */
+
+/* 660px at 18.5px holds the line near 70 characters. The measure is narrower
+ * than the shell on purpose: the card and the site line may use the full
+ * column, running prose may not. */
+.body {
+  font-size: 18.5px;
+  line-height: 1.6;
+  max-width: 660px;
+}
+
+.body > :first-child {
+  margin-top: 0;
+}
+
+.body p {
+  margin: 0 0 1.05em;
+  text-wrap: pretty;
+}
+
+.body h2 {
+  margin: 2em 0 0.45em;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.006em;
+  line-height: 1.3;
+}
+
+.body h3 {
+  margin: 1.6em 0 0.4em;
+  font-size: 17.5px;
+  font-weight: 600;
+  letter-spacing: -0.004em;
+  line-height: 1.35;
+}
+
+.body ul,
+.body ol {
+  margin: 0 0 1.05em;
+  padding-left: 1.15em;
+}
+
+.body ul {
+  list-style: disc;
+}
+
+.body ol {
+  list-style: decimal;
+}
+
+.body li {
+  margin-bottom: 0.32em;
+}
+
+.body li::marker {
+  color: var(--fg-3);
+}
+
+.body a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--line-2);
+  transition: text-decoration-color 140ms;
+}
+
+.body a:hover {
+  text-decoration-color: var(--c-gold);
+}
+
+.body blockquote {
+  margin: 1.6em 0;
+  padding-left: 22px;
+  border-left: 1px solid var(--line-2);
+  color: var(--fg-2);
+}
+
+.body blockquote p {
+  margin: 0;
+}
+
+.body hr {
+  margin: 2.2em 0;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.75em 0;
+  border-radius: 8px;
+}
+
+.body code {
+  font-family: var(--mono);
+  font-size: 0.855em;
+  background: var(--bg-2);
+  padding: 0.12em 0.34em;
+  border-radius: 3px;
+}
+
+/* Code card ---------------------------------------------------------------- */
+/* One dark ground, a filename, the code. No header fill, no divider, no border,
+ * no line numbers, no window ornaments — every one of those is chrome arguing
+ * with the code it frames. */
+
+.card {
+  margin: 1.75em 0;
+  background: var(--c-bg);
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.045);
+  overflow: hidden;
+}
+
+.cardHead {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 15px 22px 2px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+  color: var(--c-mut);
+}
+
+.copy {
+  margin-left: auto;
+  font: inherit;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--c-mut);
+  opacity: 0.55;
+  cursor: pointer;
+  transition:
+    opacity 140ms,
+    color 140ms;
+}
+
+/* Revealed by hover OR focus — a keyboard user never triggers the first. */
+.card:hover .copy,
+.copy:focus-visible {
+  opacity: 1;
+}
+
+.copy:hover {
+  color: var(--c-gold);
+  opacity: 1;
+}
+
+/* The pre holds no horizontal padding: each line carries it instead, so a diff
+ * ground bleeds to the card's edge rather than stopping short of it. */
+.card pre {
+  margin: 0;
+  padding: 11px 0 19px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--c-txt);
+  tab-size: 2;
+}
+
+.card pre code {
+  display: block;
+  min-width: max-content;
+  padding: 0;
+  background: none;
+  font-size: inherit;
+  color: inherit;
+}
+
+.card pre code [data-line] {
+  display: block;
+  padding: 0 22px;
+}
+
+.card pre code [data-diff="add"] {
+  background: var(--c-add);
+  box-shadow: inset 2px 0 0 var(--c-str);
+}
+
+.card pre code [data-diff="del"] {
+  background: var(--c-del);
+  box-shadow: inset 2px 0 0 var(--c-tag);
+}
+
+/* The sign is a character in its own column, not a colour. Colour reinforces
+ * it; a monochrome printout still reads the diff correctly. */
+.card pre code [data-sign] {
+  display: inline-block;
+  width: 1ch;
+  margin-right: 1ch;
+  font-weight: 500;
+  color: var(--c-mut);
+  opacity: 0.4;
+}
+
+.card pre code [data-diff="add"] [data-sign] {
+  color: var(--c-str);
+  opacity: 1;
+}
+
+.card pre code [data-diff="del"] [data-sign] {
+  color: var(--c-tag);
+  opacity: 1;
+}
+
+@media (max-width: 580px) {
+  .title {
+    font-size: 26px;
+  }
+
+  .body {
+    font-size: 17.5px;
+  }
+}

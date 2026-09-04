@@ -1,0 +1,164 @@
+/* Blog shell — tokens and the chrome both routes share.
+ *
+ * Every colour the blog uses is declared on #blog-root, never on :root and
+ * never keyed on `.dark`. app/layout.tsx forces class="dark" onto <html> for
+ * the whole site; the blog's theme is an independent axis stamped on this
+ * wrapper as [data-theme]. The two selectors sit on two different elements and
+ * never meet — provided nothing here reads a --color-fd-* variable or matches
+ * on .dark. That is the whole reason this file declares its own greys. */
+
+#blog-root {
+  --bg: #f7f8f9;
+  --bg-2: #eef0f2;
+  --fg: #1b2126;
+  --fg-2: #48535b;
+  --fg-3: #6b7780;
+  --line: #e0e4e8;
+  --line-2: #c3cad0;
+
+  /* The card is decided: always dark, in both themes. Declared once, outside
+   * every theme block, so a light body inside a dark frame is not expressible
+   * rather than merely avoided. */
+  --c-bg: #062335;
+  --c-txt: #d6dadd;
+  --c-mut: #7e8fa0;
+  --c-cm: #7e88ac;
+  --c-str: #c3e88d;
+  --c-num: #f78c6c;
+  --c-kw: #c792ea;
+  --c-fn: #82aaff;
+  --c-tag: #ff5572;
+  --c-att: #c49a3c;
+  --c-gold: #ffc600;
+  --c-add: #14351f;
+  --c-del: #3a1b21;
+
+  --sans:
+    var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --mono:
+    var(--font-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    monospace;
+
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+}
+
+/* The dark palette, written flat and twice: once for the OS preference when no
+ * choice has been stamped, once for the explicit stamp. No nesting, no
+ * light-dark() — light is the path that breaks, and it breaks in the nesting. */
+@media (prefers-color-scheme: dark) {
+  #blog-root:not([data-theme="light"]) {
+    --bg: #0e1418;
+    --bg-2: #161e24;
+    --fg: #d6dadd;
+    --fg-2: #abb5c7;
+    --fg-3: #7d8894;
+    --line: #202a32;
+    --line-2: #324858;
+  }
+}
+
+#blog-root[data-theme="dark"] {
+  --bg: #0e1418;
+  --bg-2: #161e24;
+  --fg: #d6dadd;
+  --fg-2: #abb5c7;
+  --fg-3: #7d8894;
+  --line: #202a32;
+  --line-2: #324858;
+}
+
+#blog-root :focus-visible {
+  outline: 2px solid var(--c-fn);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 748px;
+  margin: 0 auto;
+  padding: 42px 18px 92px;
+}
+
+/* Site line ---------------------------------------------------------------- */
+
+.site {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  align-items: center;
+  margin: 0 0 38px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--fg-3);
+}
+
+.site a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.who {
+  color: var(--fg);
+  font-weight: 500;
+}
+
+.who:hover,
+.where:hover {
+  color: var(--fg-2);
+}
+
+/* Theme pill --------------------------------------------------------------- */
+
+.theme {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 1px;
+  margin-left: auto;
+  padding: 2px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: var(--bg);
+}
+
+.theme button {
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 4px 11px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--fg-3);
+  cursor: pointer;
+  transition:
+    color 130ms,
+    background 130ms;
+}
+
+.theme button:hover {
+  color: var(--fg);
+}
+
+/* data-active, not aria-pressed: the button is styled from the state React
+ * holds, and aria-pressed is what announces it. Two attributes, one truth. */
+.theme button[data-active] {
+  background: var(--bg-2);
+  color: var(--fg);
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #blog-root * {
+    transition: none !important;
+  }
+}

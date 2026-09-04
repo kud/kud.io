@@ -62,6 +62,8 @@ export const useBlogTheme = () => {
 }
 
 // Three words rather than two icons — two icons cannot say three things.
+// "Auto" rather than "System": it is shorter, it is what the state actually
+// does, and the stored value stays "system" so nothing downstream shifts.
 // Deliberately unstyled: Iris owns how this looks and where it sits.
 export const BlogThemeControl = ({ className }: { className?: string }) => {
   const { theme, setTheme } = useBlogTheme()
@@ -76,7 +78,7 @@ export const BlogThemeControl = ({ className }: { className?: string }) => {
           aria-pressed={theme === option}
           data-active={theme === option || undefined}
         >
-          {option === "light" ? "Light" : option === "dark" ? "Dark" : "System"}
+          {option === "light" ? "Light" : option === "dark" ? "Dark" : "Auto"}
         </button>
       ))}
     </div>

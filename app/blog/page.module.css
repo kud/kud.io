@@ -1,0 +1,106 @@
+/* Index. Tokens come from #blog-root (app/blog/blog.module.css) — nothing here
+ * declares a colour of its own. */
+
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 34px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+
+.filter button {
+  font: inherit;
+  padding: 3px 0;
+  margin-right: 16px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: none;
+  color: var(--fg-3);
+  cursor: pointer;
+  transition:
+    color 130ms,
+    border-color 130ms;
+}
+
+.filter button:hover {
+  color: var(--fg-2);
+}
+
+.filter button[data-active] {
+  color: var(--fg);
+  border-bottom-color: var(--c-gold);
+}
+
+.year {
+  margin: 26px 0 -1px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  color: var(--fg-3);
+}
+
+/* The first year sits against the filter line's own margin, not on top of it. */
+section:first-of-type .year {
+  margin-top: 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 92px is the width of a date at 12.5px tabular mono plus its gutter — the
+ * column is measured off the content, so no date ever wraps or floats. */
+.list li {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 20px;
+  align-items: baseline;
+}
+
+.list time {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--fg-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.list h2 {
+  margin: 0;
+  font-size: 18.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.008em;
+}
+
+.list h2 a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 130ms;
+}
+
+.list h2 a:hover {
+  border-bottom-color: var(--c-gold);
+}
+
+.empty {
+  margin: 0;
+  font-size: 18.5px;
+  line-height: 1.6;
+  color: var(--fg-2);
+}
+
+@media (max-width: 580px) {
+  .list li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 3px;
+  }
+}
