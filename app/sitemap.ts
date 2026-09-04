@@ -28,7 +28,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
     { url: SITE },
     {
       url: `${SITE}/blog`,
-      lastModified: newest(posts.map((post) => post.updated ?? post.date)),
+      lastModified: newest(posts.map((post) => post.date)),
     },
     {
       url: `${SITE}/projects`,
@@ -36,7 +36,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
     },
     ...posts.map((post) => ({
       url: `${SITE}/blog/${post.slug}`,
-      lastModified: post.updated || post.date || undefined,
+      lastModified: post.date || undefined,
     })),
     ...projects.map((project) => ({
       url: `${SITE}/projects/${project.slug}`,

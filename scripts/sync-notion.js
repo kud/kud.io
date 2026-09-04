@@ -1,5 +1,5 @@
 // Pulls published blog posts from a Notion database into content/blog/<slug>.md,
-// mirroring every Notion-hosted image into public/blog/<slug>/. Notion is the
+// mirroring every Notion-hosted file into public/blog/<slug>/. Notion is the
 // single source of truth; this repo holds a committed cache of it. Runs as part
 // of the refresh workflow and never fails the build.
 //
@@ -7,7 +7,7 @@
 // compiler would only add the stray-brace failure mode without buying anything.
 // Same reasoning as the READMEs in sync-content.js, one step further.
 import { createHash } from "node:crypto"
-import { mkdir, readdir, unlink, writeFile } from "node:fs/promises"
+import { mkdir, readdir, rm, unlink, writeFile } from "node:fs/promises"
 import { join } from "node:path"
 import { Client } from "@notionhq/client"
 import ora from "ora"
@@ -102,7 +102,7 @@ const richText = (nodes = []) =>
     .join("")
 
 // ---------------------------------------------------------------------------
-// Images
+// Mirrored files
 // ---------------------------------------------------------------------------
 
 const EXT_BY_TYPE = {
@@ -112,21 +112,35 @@ const EXT_BY_TYPE = {
   "image/webp": "webp",
   "image/avif": "avif",
   "image/svg+xml": "svg",
+  "video/mp4": "mp4",
+  "video/webm": "webm",
+  "video/quicktime": "mov",
+  "video/ogg": "ogv",
 }
+
+// A signed URL's pathname still ends in the real filename, so it is the fallback
+// when the response carries a content-type we don't map. Anchored and length-
+// bounded because a URL with no extension at all would otherwise hand back the
+// whole final path segment as one.
+const extensionOf = (url, contentType, fallback) =>
+  EXT_BY_TYPE[contentType?.split(";")[0].trim() ?? ""] ??
+  new URL(url).pathname.match(/\.([a-z0-9]{2,5})$/i)?.[1]?.toLowerCase() ??
+  fallback
 
 // Notion serves files as signed S3 URLs carrying X-Amz-Expires=3600, and the
 // signature changes on every fetch. Naming the mirrored file from the URL would
 // therefore produce a new file on every run — an hourly commit and an hourly
 // deploy, forever. The bytes are the only stable identity.
-const mirrorImage = async (url, slug) => {
+//
+// Writing the signed URL itself into the markdown is the same failure with a
+// second edge: the link is dead an hour after the sync that wrote it. Every
+// Notion-hosted file goes through here, whatever the block type.
+const mirrorFile = async (url, slug, fallbackExt) => {
   const res = await fetch(url)
-  if (!res.ok) throw new Error(`${res.status} fetching image`)
+  if (!res.ok) throw new Error(`${res.status} fetching file`)
   const bytes = Buffer.from(await res.arrayBuffer())
   const hash = createHash("sha256").update(bytes).digest("hex").slice(0, 12)
-  const ext =
-    EXT_BY_TYPE[res.headers.get("content-type")?.split(";")[0] ?? ""] ??
-    new URL(url).pathname.split(".").pop()?.toLowerCase() ??
-    "png"
+  const ext = extensionOf(url, res.headers.get("content-type"), fallbackExt)
   await mkdir(join(IMAGE_DIR, slug), { recursive: true })
   await writeFile(join(IMAGE_DIR, slug, `${hash}.${ext}`), bytes)
   return `/blog/${slug}/${hash}.${ext}`
@@ -134,6 +148,11 @@ const mirrorImage = async (url, slug) => {
 
 const fileUrl = (file) =>
   file?.type === "external" ? file.external.url : file?.file?.url
+
+// Only a Notion-hosted file expires and needs mirroring. An external one is
+// someone else's URL — a YouTube page, a CDN image — and fetching it would
+// mirror whatever that host serves, which for a video page is HTML.
+const isNotionHosted = (file) => file?.type === "file"
 
 // ---------------------------------------------------------------------------
 // Code fences
@@ -252,18 +271,28 @@ const renderBlock = async (block, context) => {
       ].join("\n")
     case "divider":
       return "---"
+    // An external image is mirrored too, deliberately: the fetch returns real
+    // image bytes either way, and a hotlink is one more thing that can 404.
     case "image": {
       const url = fileUrl(block.image)
       if (!url) return ""
       const alt = richText(block.image.caption).replace(/[[\]]/g, "")
-      return `![${alt}](${await mirrorImage(url, slug)})`
+      return `![${alt}](${await mirrorFile(url, slug, "png")})`
     }
     case "bookmark":
       return `[${block.bookmark.url}](${block.bookmark.url})`
+    // Always an author-supplied URL to somebody else's page, never a Notion
+    // file — so there is nothing here to expire.
     case "embed":
       return `[${block.embed.url}](${block.embed.url})`
-    case "video":
-      return fileUrl(block.video) ? `[Video](${fileUrl(block.video)})` : ""
+    case "video": {
+      const url = fileUrl(block.video)
+      if (!url) return ""
+      const href = isNotionHosted(block.video)
+        ? await mirrorFile(url, slug, "mp4")
+        : url
+      return `[Video](${href})`
+    }
     case "equation":
       return `\`${block.equation.expression}\``
     case "table":
@@ -376,7 +405,7 @@ const syncPost = async (page) => {
       slug,
       tags: (page.properties.Tags?.multi_select ?? []).map((tag) => tag.name),
       cover: fileUrl(page.cover)
-        ? await mirrorImage(fileUrl(page.cover), slug)
+        ? await mirrorFile(fileUrl(page.cover), slug, "png")
         : undefined,
       updated: page.last_edited_time,
     }) + body,
@@ -388,16 +417,32 @@ const syncPost = async (page) => {
 
 // Only prunes when at least one post synced successfully, so a transient Notion
 // failure can't empty the blog.
+//
+// Both halves of a post are pruned. A rename or an unpublish leaves a stale .md
+// AND a stale mirror directory, and nothing but this function ever looks at
+// public/blog — so pruning only the markdown orphans the images permanently, at
+// a few hundred KB a post.
 const pruneStale = async (kept) => {
   if (!kept.size) return 0
-  const files = await readdir(CONTENT_DIR).catch(() => [])
   let removed = 0
+
+  const files = await readdir(CONTENT_DIR).catch(() => [])
   for (const file of files) {
     if (!file.endsWith(".md")) continue
     if (kept.has(file.replace(/\.md$/, ""))) continue
     await unlink(join(CONTENT_DIR, file)).catch(() => {})
     removed += 1
   }
+
+  const mirrors = await readdir(IMAGE_DIR, { withFileTypes: true }).catch(
+    () => [],
+  )
+  for (const entry of mirrors) {
+    if (!entry.isDirectory() || kept.has(entry.name)) continue
+    await rm(join(IMAGE_DIR, entry.name), { recursive: true, force: true })
+    removed += 1
+  }
+
   return removed
 }
 
