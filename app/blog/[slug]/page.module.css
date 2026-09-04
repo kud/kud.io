@@ -185,6 +185,15 @@
   tab-size: 2;
 }
 
+/* white-space: normal on the code box, pre on each line, is doing real work
+ * here — it is not a tidy-up. Shiki leaves a "\n" text node between every pair
+ * of line spans, and inside an inherited `white-space: pre` those newlines each
+ * generate their own line box on top of the block-level line above them, which
+ * doubles the leading of every code card. Collapsing whitespace at the code
+ * level discards them (whitespace between block boxes is removed); restoring
+ * `pre` on the line keeps the indentation that actually belongs to the code.
+ * Deleting the text nodes instead would work visually and break copy: they are
+ * the line breaks. */
 .card pre code {
   display: block;
   min-width: max-content;
@@ -192,11 +201,13 @@
   background: none;
   font-size: inherit;
   color: inherit;
+  white-space: normal;
 }
 
 .card pre code [data-line] {
   display: block;
   padding: 0 22px;
+  white-space: pre;
 }
 
 .card pre code [data-diff="add"] {

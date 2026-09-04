@@ -1,5 +1,13 @@
 /* Blog shell — tokens and the chrome both routes share.
  *
+ * #blog-root is wrapped in :global() on every rule, and it must stay that way.
+ * CSS Modules scopes ID selectors exactly as it scopes classes, so a bare
+ * `#blog-root` here compiles to `#blog-module__hash__blog-root` and matches
+ * nothing — the id on the element comes from BLOG_ROOT_ID, a shared constant,
+ * and is deliberately global. That failure is silent and total: every token
+ * below goes undefined, so the mono never loads and the theme toggle flips an
+ * attribute no rule is listening to.
+ *
  * Every colour the blog uses is declared on #blog-root, never on :root and
  * never keyed on `.dark`. app/layout.tsx forces class="dark" onto <html> for
  * the whole site; the blog's theme is an independent axis stamped on this
@@ -7,7 +15,7 @@
  * never meet — provided nothing here reads a --color-fd-* variable or matches
  * on .dark. That is the whole reason this file declares its own greys. */
 
-#blog-root {
+:global(#blog-root) {
   --bg: #f7f8f9;
   --bg-2: #eef0f2;
   --fg: #1b2126;
@@ -52,7 +60,7 @@
  * choice has been stamped, once for the explicit stamp. No nesting, no
  * light-dark() — light is the path that breaks, and it breaks in the nesting. */
 @media (prefers-color-scheme: dark) {
-  #blog-root:not([data-theme="light"]) {
+  :global(#blog-root:not([data-theme="light"])) {
     --bg: #0e1418;
     --bg-2: #161e24;
     --fg: #d6dadd;
@@ -63,7 +71,7 @@
   }
 }
 
-#blog-root[data-theme="dark"] {
+:global(#blog-root[data-theme="dark"]) {
   --bg: #0e1418;
   --bg-2: #161e24;
   --fg: #d6dadd;
@@ -73,7 +81,7 @@
   --line-2: #324858;
 }
 
-#blog-root :focus-visible {
+:global(#blog-root) :focus-visible {
   outline: 2px solid var(--c-fn);
   outline-offset: 3px;
   border-radius: 2px;
@@ -158,7 +166,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #blog-root * {
+  :global(#blog-root) * {
     transition: none !important;
   }
 }
