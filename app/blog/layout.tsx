@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import Link from "next/link"
+import { Link } from "next-view-transitions"
 import {
   BLOG_ROOT_ID,
   BLOG_THEME_SCRIPT,
