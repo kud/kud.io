@@ -1,5 +1,9 @@
 # kud.io — project instructions
 
+**Writing a blog post? Read `WRITING.md` first.** It covers what Erwann has to
+supply, the voice, the tics to avoid, and the length — none of which is
+repeated here.
+
 ## Language: British English
 
 All **user-facing copy on this site uses British English** (e.g. _colour_,
