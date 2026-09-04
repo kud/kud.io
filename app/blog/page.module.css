@@ -6,7 +6,7 @@
   flex-wrap: wrap;
   margin: 0 0 34px;
   font-family: var(--mono);
-  font-size: 12.5px;
+  font-size: 12px;
 }
 
 .filter button {
@@ -32,7 +32,7 @@
   border-bottom-color: var(--c-gold);
 }
 
-/* The rule runs the full measure, never the 92px date column: a short rule
+/* The rule runs the full measure, never the 88px date column: a short rule
  * beside the dates reads as an accent rail — decoration — where a full one
  * reads as the structural break the year actually is. */
 .year {
@@ -40,7 +40,7 @@
   padding-top: 1.1em;
   border-top: 1px solid var(--line);
   font-family: var(--mono);
-  font-size: 17px;
+  font-size: 16.5px;
   font-weight: 500;
   letter-spacing: 0.06em;
   color: var(--fg);
@@ -59,24 +59,24 @@ section:first-of-type .year {
 .list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 15px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-/* 92px is the width of a date at 12.5px tabular mono plus its gutter — the
+/* 88px is the width of a date at 12px tabular mono plus its gutter — the
  * column is measured off the content, so no date ever wraps or floats. */
 .list li {
   display: grid;
-  grid-template-columns: 92px minmax(0, 1fr);
+  grid-template-columns: 88px minmax(0, 1fr);
   gap: 20px;
   align-items: baseline;
 }
 
 .list time {
   font-family: var(--mono);
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--fg-3);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -84,7 +84,7 @@ section:first-of-type .year {
 
 .list h2 {
   margin: 0;
-  font-size: 18.5px;
+  font-size: 17.5px;
   font-weight: 600;
   line-height: 1.35;
   letter-spacing: -0.008em;
@@ -103,7 +103,7 @@ section:first-of-type .year {
 
 .empty {
   margin: 0;
-  font-size: 18.5px;
+  font-size: 17.5px;
   line-height: 1.6;
   color: var(--fg-2);
 }

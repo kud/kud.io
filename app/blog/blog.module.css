@@ -15,6 +15,15 @@
  * never meet — provided nothing here reads a --color-fd-* variable or matches
  * on .dark. That is the whole reason this file declares its own greys. */
 
+/* The bare block is light and is also the base. Card GROUNDS live here with the
+ * page tokens and are restated in each dark block below; card INK is declared
+ * once, after all three, and must never move into a theme block.
+ *
+ * The guard is: grounds may vary by theme, ink never does. Frame and body both
+ * read --c-bg, one declaration per theme, so they cannot diverge — a light body
+ * inside a dark frame stays unrepresentable. And because no ink varies, every
+ * ink token has to clear AA against BOTH grounds; that is the regression test,
+ * not a preference. */
 :global(#blog-root) {
   --bg: #f7f8f9;
   --bg-2: #eef0f2;
@@ -24,27 +33,15 @@
   --line: #e0e4e8;
   --line-2: #c3cad0;
 
-  /* The card is decided: always dark, in both themes. Declared once, outside
-   * every theme block, so a light body inside a dark frame is not expressible
-   * rather than merely avoided. */
-  --c-bg: #062335;
-  --c-txt: #d6dadd;
-  --c-mut: #7e8fa0;
-  --c-cm: #7e88ac;
-  --c-str: #c3e88d;
-  --c-num: #f78c6c;
-  --c-kw: #c792ea;
-  --c-fn: #82aaff;
-  --c-tag: #ff5572;
-  --c-att: #c49a3c;
-  --c-gold: #ffc600;
-  /* Card ground lifted toward --c-mut, ~1.6:1 against --c-bg. Deliberately not
-   * terminal.tsx's #2a2a45: that is a desaturated blue-purple drawn against
-   * that component's own ground, and on #062335 it casts purple, which nothing
-   * else in this palette does. */
-  --c-dot: #16394f;
-  --c-add: #14351f;
-  --c-del: #3a1b21;
+  /* Card grounds, light. #062335 on this page was 15.4:1 — a higher-contrast
+   * event than the writing at ~14:1 — so the card read as a slab pasted on.
+   * #223442 brings it to 11.7:1. The other three re-derive off it: the dots
+   * hold their ~1.5:1 whisper, and the diff grounds stay at or above the card
+   * ground so a marked line reads as lifted rather than as a darker patch. */
+  --c-bg: #223442;
+  --c-dot: #3b5064;
+  --c-add: #1e4a2c;
+  --c-del: #5a3039;
 
   --sans:
     var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
@@ -73,6 +70,11 @@
     --fg-3: #7d8894;
     --line: #202a32;
     --line-2: #324858;
+
+    --c-bg: #062335;
+    --c-dot: #16394f;
+    --c-add: #14351f;
+    --c-del: #3a1b21;
   }
 }
 
@@ -84,6 +86,33 @@
   --fg-3: #7d8894;
   --line: #202a32;
   --line-2: #324858;
+
+  --c-bg: #062335;
+  --c-dot: #16394f;
+  --c-add: #14351f;
+  --c-del: #3a1b21;
+}
+
+/* Card ink — Cobalt2, and Erwann's own theme. Declared once, outside all three
+ * theme blocks, and it must stay that way: ink that varies by theme is the
+ * mechanism that broke light mode twice. Moving any line below into a theme
+ * block is the bug, not a refinement.
+ *
+ * --c-cm and --c-mut are lifted off stock Cobalt2 because the comment colour
+ * had no headroom: at #7e88ac it is 4.62:1 on the dark ground, which caps any
+ * lighter light-mode ground. The lift lands in both themes, which is a straight
+ * improvement in dark. */
+:global(#blog-root) {
+  --c-txt: #d6dadd;
+  --c-mut: #94a3b4;
+  --c-cm: #959ec0;
+  --c-str: #c3e88d;
+  --c-num: #f78c6c;
+  --c-kw: #c792ea;
+  --c-fn: #82aaff;
+  --c-tag: #ff5572;
+  --c-att: #c49a3c;
+  --c-gold: #ffc600;
 }
 
 :global(#blog-root) :focus-visible {
@@ -94,7 +123,7 @@
 
 .wrap {
   width: 100%;
-  max-width: 748px;
+  max-width: 720px;
   margin: 0 auto;
   padding: 42px 18px 92px;
 }
@@ -110,7 +139,7 @@
   padding-bottom: 14px;
   border-bottom: 1px solid var(--line);
   font-family: var(--mono);
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--fg-3);
 }
 
@@ -144,7 +173,7 @@
 
 .theme button {
   font-family: var(--sans);
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 500;
   padding: 4px 11px;
   border: 0;

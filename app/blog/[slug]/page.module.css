@@ -1,10 +1,10 @@
 /* Post. Tokens come from #blog-root (app/blog/blog.module.css) — nothing here
- * declares a colour of its own except the code card's own ground, which is
- * deliberately outside the theme axis. */
+ * declares a colour of its own. The card's grounds vary by theme and its ink
+ * does not; both live in blog.module.css, and the guard is explained there. */
 
 .title {
   margin: 0 0 9px;
-  font-size: 31px;
+  font-size: 30px;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.018em;
@@ -14,20 +14,20 @@
 .meta {
   margin: 0 0 38px;
   font-family: var(--mono);
-  font-size: 12.5px;
+  font-size: 12px;
   color: var(--fg-3);
   letter-spacing: 0.01em;
 }
 
 /* Prose ------------------------------------------------------------------- */
 
-/* 660px at 18.5px holds the line near 70 characters. The measure is narrower
+/* 630px at 17.5px holds the line near 71 characters. The measure is narrower
  * than the shell on purpose: the card and the site line may use the full
  * column, running prose may not. */
 .body {
-  font-size: 18.5px;
+  font-size: 17.5px;
   line-height: 1.6;
-  max-width: 660px;
+  max-width: 630px;
 }
 
 .body > :first-child {
@@ -46,7 +46,7 @@
   margin: 2.4em 0 0.75em;
   padding-top: 1.05em;
   border-top: 1px solid var(--line);
-  font-size: 23px;
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.25;
@@ -155,28 +155,28 @@
   display: flex;
   /* center, not baseline — a dot has no baseline to sit on. */
   align-items: center;
-  gap: 18px;
+  gap: 16px;
   padding: 15px 22px 2px;
   font-family: var(--mono);
-  font-size: 12.5px;
+  font-size: 12px;
   letter-spacing: 0.01em;
   color: var(--c-mut);
 }
 
-/* 8px against the header's 12.5px type, whose cap height is about 9px, so
- * the cluster sits under the caps and reads as part of the line; 7px makes one
- * 38px mark rather than three objects, and the header's 18px keeps that mark
- * clear of the language label. No hover state — they do nothing, and lifting
- * them alongside Copy would claim otherwise. */
+/* 7px against the header's 12px type, whose cap height is about 8px, so the
+ * cluster sits under the caps and reads as part of the line; a 6px gap makes
+ * one 33px mark rather than three objects, and the header's 16px keeps that
+ * mark clear of the language label. No hover state — they do nothing, and
+ * lifting them alongside Copy would claim otherwise. */
 .dots {
   display: flex;
-  gap: 7px;
+  gap: 6px;
   flex: none;
 }
 
 .dots i {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--c-dot);
 }
@@ -213,7 +213,7 @@
   padding: 11px 0 19px;
   overflow-x: auto;
   font-family: var(--mono);
-  font-size: 14.5px;
+  font-size: 14px;
   line-height: 1.7;
   color: var(--c-txt);
   tab-size: 2;
@@ -277,10 +277,10 @@
 
 @media (max-width: 580px) {
   .title {
-    font-size: 26px;
+    font-size: 25px;
   }
 
   .body {
-    font-size: 17.5px;
+    font-size: 16.5px;
   }
 }
