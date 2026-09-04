@@ -9,14 +9,31 @@ type Props = {
   href: string
   className?: string
   children: ReactNode
+  resolveCover?: () => string | null
 }
 
-// The home → /projects CTA. On desktop it fires the `ink:reveal` event so the
+// /projects' dark background, and the default for any link that doesn't say
+// otherwise — so omitting resolveCover is exactly today's behaviour.
+const DEFAULT_COVER = "#08080f"
+
+// The home → destination CTA. On desktop it fires the `ink:reveal` event so the
 // InkTransition overlay spreads ink out of the button and navigates under the
-// cover; the cover colour is /projects' dark background so the reveal is seamless.
-// On mobile (and reduced-motion) it keeps the View-Transitions flat cross-fade +
-// shared-avatar morph instead.
-export const RevealLink = ({ href, className, children }: Props) => {
+// cover; the cover colour is the destination's own background so the reveal is
+// seamless. On mobile (and reduced-motion) it keeps the View-Transitions flat
+// cross-fade + shared-avatar morph instead.
+//
+// The ink only ever earns its place when it has a ground change to cover AND
+// the cover colour is known to match: spreading dark ink between two LIGHT
+// pages is a black flash, the precise artefact this effect exists to prevent.
+// A destination whose ground is decided at runtime (the blog, which the visitor
+// themes) therefore supplies resolveCover, and returning null there means
+// "navigate without ink" — never "guess a colour".
+export const RevealLink = ({
+  href,
+  className,
+  children,
+  resolveCover,
+}: Props) => {
   const router = useRouter()
   const vtRouter = useTransitionRouter()
 
@@ -36,7 +53,12 @@ export const RevealLink = ({ href, className, children }: Props) => {
       "(prefers-reduced-motion: reduce)",
     ).matches
 
-    if (desktop && !reducedMotion) {
+    // Resolved here, at click time, so the component renders identically on the
+    // server and the client — the answer depends on localStorage and on the OS
+    // theme, neither of which may be read during render.
+    const cover = resolveCover ? resolveCover() : DEFAULT_COVER
+
+    if (desktop && !reducedMotion && cover) {
       const rect = event.currentTarget.getBoundingClientRect()
       window.dispatchEvent(
         new CustomEvent("ink:reveal", {
@@ -44,7 +66,7 @@ export const RevealLink = ({ href, className, children }: Props) => {
             x: rect.left + rect.width / 2,
             y: rect.top + rect.height / 2,
             href,
-            color: "#08080f",
+            color: cover,
           },
         }),
       )

@@ -1,5 +1,5 @@
-import Link from "next/link"
 import { RevealLink } from "@/components/reveal-link"
+import { blogInkCover } from "@/components/blog-theme"
 import { AvatarImage } from "@/components/avatar-image"
 import {
   GitHubIcon,
@@ -125,9 +125,13 @@ const Cta = () => (
 )
 
 const Writing = () => (
-  <Link href="/blog" className={styles.secondary}>
+  <RevealLink
+    href="/blog"
+    className={styles.secondary}
+    resolveCover={blogInkCover}
+  >
     Writing
-  </Link>
+  </RevealLink>
 )
 
 const SocialLinks = () => (

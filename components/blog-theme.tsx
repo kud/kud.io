@@ -16,6 +16,29 @@ import type { ReactNode } from "react"
 export const BLOG_THEME_KEY = "kud.blog.theme"
 export const BLOG_ROOT_ID = "blog-root"
 
+export const BLOG_INK = "#0e1418"
+
+/* The ground /blog will paint on arrival, but only when it's dark — the one
+   case the ink reveal has something to cover. Returns null for a light
+   destination and for anything we can't determine, both of which mean
+   "navigate plainly" rather than "guess a colour".
+
+   The three branches mirror the CSS above exactly: an explicit stamp wins in
+   either direction, and everything else (including "system") falls to the same
+   prefers-color-scheme query that #blog-root:not([data-theme="light"]) resolves
+   with. Re-derive this from that block if the tokens ever move, and never from
+   memory of what the blog looks like. */
+export const blogInkCover = (): string | null => {
+  try {
+    const stored = localStorage.getItem(BLOG_THEME_KEY)
+    if (stored === "light") return null
+    if (stored === "dark") return BLOG_INK
+    return matchMedia("(prefers-color-scheme: dark)").matches ? BLOG_INK : null
+  } catch {
+    return null
+  }
+}
+
 export type BlogTheme = "light" | "dark" | "system"
 
 const isTheme = (value: unknown): value is BlogTheme =>
