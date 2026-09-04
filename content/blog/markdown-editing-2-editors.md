@@ -2,10 +2,10 @@
 title: "How to edit a markdown in 2020, part 2: the different editors"
 description: "Typora, Mark Text, VSCode, etc."
 date: "2020-05-11"
-slug: "how-to-edit-a-markdown-in-2020-part-2-the-different-editors"
-tags: []
-cover: "/blog/how-to-edit-a-markdown-in-2020-part-2-the-different-editors/33b47ae8e128.png"
-updated: "2026-09-04T11:04:00.000Z"
+slug: "markdown-editing-2-editors"
+tags: ["tools"]
+cover: "/blog/markdown-editing-2-editors/33b47ae8e128.png"
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 [In the previous post](https://www.notion.so/en/posts/2020/05/10/how-to-edit-a-markdown-in-2020-part-1-zmv), I told you a bit about [MDX](https://mdxjs.com/) and what are the consequences of using the default extension (`.mdx`) of this.
@@ -18,7 +18,7 @@ Now, what we want is to know what's the best way to edit markdown or MDX.
 
 [Mark Text](https://github.com/marktext/marktext) is a really great editor for markdown, open source for sure, and available on different platforms.
 
-![](/blog/how-to-edit-a-markdown-in-2020-part-2-the-different-editors/70367b75d445.png)
+![](/blog/markdown-editing-2-editors/70367b75d445.png)
 
 ### Some features
 
@@ -46,7 +46,7 @@ The only issue is, even if it doesn't support the MDX syntax, it doesn't want to
 
 > Typora gives you a seamless experience as both a reader and a writer. It removes the preview window, mode switcher, syntax symbols of markdown source code, and all other unnecessary distractions. Instead, it provides a real live preview feature to help you concentrate on the content itself.
 
-![](/blog/how-to-edit-a-markdown-in-2020-part-2-the-different-editors/42ee63efc5f2.png)
+![](/blog/markdown-editing-2-editors/42ee63efc5f2.png)
 
 It has different themes. Available on different platforms. And yeah, it can open `.mdx` file if you want, but the support isn't there, it'll be in only the markdown way.
 
@@ -56,7 +56,7 @@ For the moment it is free as it is still in beta, but who knows how it'll go.
 
 VS Code, as you probably already know as a modern code editor, gives you a great opportunity here, by supporting [MDX](https://github.com/mdx-js/vscode-mdx) but also giving you [a preview](https://github.com/xyc/vscode-mdx-preview) of you markdown.
 
-![](/blog/how-to-edit-a-markdown-in-2020-part-2-the-different-editors/dc1d0cfe5b84.png)
+![](/blog/markdown-editing-2-editors/dc1d0cfe5b84.png)
 
 As you can see here, I can edit my MDX post and also have a great idea of what it will look like.
 
@@ -66,7 +66,7 @@ That's 👍🏻
 
 And finally, Sublime Text, and [its plugin](https://github.com/jonsuh/mdx-sublime) allowing you to support MDX (but no preview available, I mean in MDX).
 
-![](/blog/how-to-edit-a-markdown-in-2020-part-2-the-different-editors/890ffd58fdcb.png)
+![](/blog/markdown-editing-2-editors/890ffd58fdcb.png)
 
 ---
 

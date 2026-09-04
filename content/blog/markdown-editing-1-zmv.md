@@ -2,10 +2,10 @@
 title: "How to edit a markdown in 2020, part 1: zmv"
 description: "Sorry .mdx but I renamed you."
 date: "2020-05-10"
-slug: "how-to-edit-a-markdown-in-2020-part-1-zmv"
-tags: []
-cover: "/blog/how-to-edit-a-markdown-in-2020-part-1-zmv/33b47ae8e128.png"
-updated: "2026-09-04T11:04:00.000Z"
+slug: "markdown-editing-1-zmv"
+tags: ["tools"]
+cover: "/blog/markdown-editing-1-zmv/33b47ae8e128.png"
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 As you may know, I now use [Next.js](https://nextjs.org/) to compile my website. It allows me to write my layout and pages in [React](https://reactjs.org/) and still have the benefit to use static files in the end.

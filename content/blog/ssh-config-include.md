@@ -1,10 +1,10 @@
 ---
 title: "How to include a file in your SSH config"
 date: "2020-06-08"
-slug: "how-to-include-a-file-in-your-ssh-config"
-tags: []
-cover: "/blog/how-to-include-a-file-in-your-ssh-config/c53c40d84308.jpg"
-updated: "2026-09-04T11:04:00.000Z"
+slug: "ssh-config-include"
+tags: ["tools"]
+cover: "/blog/ssh-config-include/c53c40d84308.jpg"
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 Since the confinement (COVID-19 😷), we all had in my company to work remotely. Even if it was a real experience as human being, technically we were already prepared as we have some colleagues who work full-time remotely.

@@ -1,9 +1,9 @@
 ---
 title: "Composition with styled-components or emotion"
 date: "2019-11-03"
-slug: "composition-with-styled-components-or-emotion"
-tags: []
-updated: "2026-09-04T11:04:00.000Z"
+slug: "composing-styled-components"
+tags: ["engineering","design"]
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 When I use [styled-components](https://www.styled-components.com/) or [emotion](https://emotion.sh/), it often happens that I want to extend more than only one component to another one. But I don't only want to extend, I also want to extend in certain situations directly via props. So I read lots of issues on [styled-components](https://www.styled-components.com/)' github page and I finally found a solution which I find great.

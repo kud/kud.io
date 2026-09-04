@@ -3,9 +3,9 @@ title: "$ git contrib"
 description: "A new command for my git worflow."
 date: "2020-05-15"
 slug: "git-contrib"
-tags: []
+tags: ["tools"]
 cover: "/blog/git-contrib/40786d511775.png"
-updated: "2026-09-04T11:04:00.000Z"
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 You probably don't know me so much but I love when something is perfect, shiny, well designed. Yes, some people could say I'm a maniac. Anyway. 😜

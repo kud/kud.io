@@ -1,10 +1,10 @@
 ---
 title: "Extending your react component with styled-components"
 date: "2019-10-30"
-slug: "extending-your-react-component-with-styled-components"
-tags: []
-cover: "/blog/extending-your-react-component-with-styled-components/1baa23d780df.png"
-updated: "2026-09-04T11:04:00.000Z"
+slug: "extending-styled-components"
+tags: ["engineering","design"]
+cover: "/blog/extending-styled-components/1baa23d780df.png"
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 Yesterday, I was playing with [styled-components](https://www.styled-components.com/) and I wanted to change the style of my `<Layout/>` component injected into another component for a specific case but I didn't understand why it didn't work when I extended it.

@@ -2,9 +2,9 @@
 title: "Every time you want to use ssh, macOS asks you your passphrase? This is the fix."
 date: "2017-12-01"
 slug: "macos-ssh-passphrase-fix"
-tags: []
+tags: ["tools"]
 cover: "/blog/macos-ssh-passphrase-fix/f56bea5a0b0c.png"
-updated: "2026-09-04T11:04:00.000Z"
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 Since Sierra (macOS), I've got this annoying question when I want to connect to a server via ssh:

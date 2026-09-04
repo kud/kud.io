@@ -2,10 +2,10 @@
 title: "How to handle responsive design in React"
 description: "Also works with Next.js"
 date: "2021-01-31"
-slug: "how-to-handle-responsive-design-in-react"
-tags: []
-cover: "/blog/how-to-handle-responsive-design-in-react/fab2ee584405.jpg"
-updated: "2026-09-04T12:47:00.000Z"
+slug: "responsive-design-in-react"
+tags: ["engineering","design"]
+cover: "/blog/responsive-design-in-react/fab2ee584405.jpg"
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 Hello and welcome in 2021 🥳. I didn't write for ages, glad to see you again.

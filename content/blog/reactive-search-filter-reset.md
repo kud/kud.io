@@ -2,16 +2,16 @@
 title: "[Reactive Search] Create a filter reset button"
 description: "“Reset all the things!”"
 date: "2020-03-06"
-slug: "reactive-search-create-a-filter-reset-button"
-tags: []
-updated: "2026-09-04T11:04:00.000Z"
+slug: "reactive-search-filter-reset"
+tags: ["engineering"]
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 Here in this post, I'll explain how to create a button to reset all filters in [Reactive Search](https://docs.appbase.io/docs/reactivesearch/v3/overview/quickstart/).
 
 You already probably know the component [`<SelectedFilters />`](https://docs.appbase.io/docs/reactivesearch/v3/advanced/selectedfilters/) but this one doesn't only display a `clear all` button, it also creates a button on each filter selected.
 
-![](/blog/reactive-search-create-a-filter-reset-button/bffc426ddda1.png)
+![](/blog/reactive-search-filter-reset/bffc426ddda1.png)
 
 To only display a reset button, it is quite easy. Just use the `render` method of [`<SelectedFilters />`](https://github.com/appbaseio/reactivesearch/blob/dev/packages/web/examples/CustomSelectedFilters/src/index.js#L27) which gives you two functions: `clearValues()` and `setValue(component, value)`, and use the one we want (`clearValues`), like that:
 

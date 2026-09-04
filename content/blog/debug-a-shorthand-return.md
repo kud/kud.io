@@ -2,10 +2,10 @@
 title: "How to easily debug a shorthand return"
 description: "like a map()."
 date: "2021-02-01"
-slug: "how-to-easily-debug-a-shorthand-return"
-tags: []
-cover: "/blog/how-to-easily-debug-a-shorthand-return/a283ac973b70.jpg"
-updated: "2026-09-04T11:03:00.000Z"
+slug: "debug-a-shorthand-return"
+tags: ["engineering"]
+cover: "/blog/debug-a-shorthand-return/a283ac973b70.jpg"
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 See this code:

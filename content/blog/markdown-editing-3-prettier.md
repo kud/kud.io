@@ -2,10 +2,10 @@
 title: "How to edit a markdown in 2020, part 3: prettier"
 description: "…or how to force to use mdx parser."
 date: "2020-05-14"
-slug: "how-to-edit-a-markdown-in-2020-part-3-prettier"
-tags: []
-cover: "/blog/how-to-edit-a-markdown-in-2020-part-3-prettier/33b47ae8e128.png"
-updated: "2026-09-04T11:04:00.000Z"
+slug: "markdown-editing-3-prettier"
+tags: ["tools"]
+cover: "/blog/markdown-editing-3-prettier/33b47ae8e128.png"
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 In [this post](https://www.notion.so/en/posts/2020/05/10/how-to-edit-a-markdown-in-2020-part-1-zmv), we changed the default extension `.mdx` to `.md` especially in order to be able to use Markdown Editors which sometimes only allow `.md` files.

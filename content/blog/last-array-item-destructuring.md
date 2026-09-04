@@ -1,10 +1,10 @@
 ---
 title: "How to get the last item of an array with destructuring"
 date: "2020-06-13"
-slug: "how-to-get-the-last-item-of-an-array-with-destructuring"
-tags: []
-cover: "/blog/how-to-get-the-last-item-of-an-array-with-destructuring/a9e8a462b47b.jpg"
-updated: "2026-09-04T11:03:00.000Z"
+slug: "last-array-item-destructuring"
+tags: ["engineering"]
+cover: "/blog/last-array-item-destructuring/a9e8a462b47b.jpg"
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 Today, we'll see a little trick to get the last item of an array with destructuring.

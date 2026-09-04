@@ -1,9 +1,9 @@
 ---
 title: "How to use bck-i-search in your shell"
 date: "2017-09-13"
-slug: "how-to-use-bck-i-search-in-your-shell"
-tags: []
-updated: "2026-09-04T11:04:00.000Z"
+slug: "bck-i-search"
+tags: ["tools"]
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 There's a command I often use in my shell calling `bck-i-search`. It allows you to search in your history a command already executed in your shell.
@@ -16,6 +16,6 @@ You've got two ways:
 
 Just use `ctrl+r` in your terminal and you'll open `bck-i-search`. Type a word and the command will find you one line. If you want to go deeper in history, use again `ctrl-r` and if you want to use the forth way, use `ctrl-s`.
 
-![](/blog/how-to-use-bck-i-search-in-your-shell/2e6085488817.png)
+![](/blog/bck-i-search/2e6085488817.png)
 
 Enjoy.

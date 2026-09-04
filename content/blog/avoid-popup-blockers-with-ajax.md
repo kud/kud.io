@@ -1,10 +1,10 @@
 ---
 title: "How to avoid popup blockers when ajax + event"
 date: "2015-04-03"
-slug: "how-to-avoid-popup-blockers-when-ajax-event"
-tags: []
-cover: "/blog/how-to-avoid-popup-blockers-when-ajax-event/3fedfd034200.gif"
-updated: "2026-09-04T11:04:00.000Z"
+slug: "avoid-popup-blockers-with-ajax"
+tags: ["engineering"]
+cover: "/blog/avoid-popup-blockers-with-ajax/3fedfd034200.gif"
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 Hey there,

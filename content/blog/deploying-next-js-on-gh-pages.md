@@ -3,9 +3,9 @@ title: "Deploying Next.js on gh-pages"
 description: "Oops, Jekyll"
 date: "2020-05-09"
 slug: "deploying-next-js-on-gh-pages"
-tags: []
+tags: ["engineering","tools"]
 cover: "/blog/deploying-next-js-on-gh-pages/38b4dfe4d3cf.png"
-updated: "2026-09-04T11:04:00.000Z"
+updated: "2026-09-04T13:39:00.000Z"
 ---
 
 Wow, this is my first page with [Next.js](https://nextjs.org/). I'm so glad of it! 🙌
