@@ -171,11 +171,18 @@
   background: var(--bg);
 }
 
+/* 9px rather than 11px is load-bearing, not a tidy-up: each button gains 19px
+ * (a 13px mark plus its 6px gap), and at the old padding the pill grows by
+ * ~57px and starts competing with `kud.io /writing` on the same line. The glyph
+ * supplies the breathing room the padding was giving. */
 .theme button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--sans);
   font-size: 12px;
   font-weight: 500;
-  padding: 4px 11px;
+  padding: 4px 9px;
   border: 0;
   border-radius: 999px;
   background: none;
