@@ -1,0 +1,23 @@
+---
+title: "Deploying Next.js on gh-pages"
+description: "Oops, Jekyll"
+date: "2020-05-09"
+slug: "deploying-next-js-on-gh-pages"
+tags: []
+cover: "/blog/deploying-next-js-on-gh-pages/38b4dfe4d3cf.png"
+updated: "2026-09-04T11:04:00.000Z"
+---
+
+Wow, this is my first page with [Next.js](https://nextjs.org/). I'm so glad of it! 🙌
+
+And as it is my first deploy on GitHub too, I had just a little problem with [GitHub Pages](https://pages.github.com/).
+
+Indeed, as you could know, [GitHub Pages](https://pages.github.com/) use [Jekyll](https://jekyllrb.com/) as default, and one of theirs convention is to use `\_` as prefix of any folder which are used for the templating, not the final `dist`. Sounds not bad like that, but [Next.js](https://nextjs.org/) also uses a folder called `\_next` for distributed assets.
+
+So yeah, the first time I deployed my blog, it was so weird, no assets were available. 😱
+
+I finally found [the solution on the GitHub blog](https://github.blog/2009-12-29-bypassing-jekyll-on-github-pages/).
+
+You simply must add an empty file called `.nojekyll` in order that GitHub doesn't think you're in a [Jekyll](https://jekyllrb.com/) environment. Done!
+
+By the way, if you use the excellent command line [gh-pages](https://github.com/tschaub/gh-pages), do not forget to use the parameter `--dotfiles` to also deploy this new file.

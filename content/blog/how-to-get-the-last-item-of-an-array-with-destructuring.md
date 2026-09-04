@@ -1,0 +1,100 @@
+---
+title: "How to get the last item of an array with destructuring"
+date: "2020-06-13"
+slug: "how-to-get-the-last-item-of-an-array-with-destructuring"
+tags: []
+cover: "/blog/how-to-get-the-last-item-of-an-array-with-destructuring/a9e8a462b47b.jpg"
+updated: "2026-09-04T11:03:00.000Z"
+---
+
+Today, we'll see a little trick to get the last item of an array with destructuring.
+
+As you may already know, [destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment) is a way to unpack values from an array. It is really useful to create some variables really quickly.
+
+So let's say we've got an array of numbers like that:
+
+```javascript
+const arr = [10, 20, 30, 40, 50]
+```
+
+## destructuring
+
+In this array, we want the first element that we'll call `a`, so this is where destructuring will be useful:
+
+```javascript
+const [a] = [10, 20, 30, 40, 50]
+```
+
+As you can imagine, `a` will return `10`.
+
+## rest?
+
+Now, we want to take the first one, the second one, but also the rest.
+
+```javascript
+const [a, b, ...rest] = [10, 20, 30, 40, 50]
+```
+
+In this way, you'll get those return values:
+
+```javascript
+const [a, b, ...rest] = [10, 20, 30, 40, 50]
+
+console.log(a) // 10
+console.log(b) // 20
+console.log(rest) // [30, 40, 50]
+```
+
+(By the way, `rest` can be called as you prefer as long as you use `...` before).
+
+## slice
+
+Now, and this is the trick of this post, we want the last item of this array. In other way, we want a variable with the value `50`.
+
+For that, we'll use `slice(-1)`.
+
+```javascript
+const [a] = [10, 20, 30, 40, 50].slice(-1)
+
+console.log(a) // 50
+```
+
+---
+
+A little note, be careful with this way because using `slice(-1)` only keeps the last item, so:
+
+```javascript
+const [a, ...rest] = [10, 20, 30, 40, 50].slice(-1)
+
+console.log(a) // 50
+console.log(rest) // []
+```
+
+## reverse
+
+Another way could be to use `reverse()` like:
+
+```javascript
+const [a, ...rest] = [10, 20, 30, 40, 50].reverse()
+
+console.log(a) // 50
+console.log(rest) // [40, 30, 20, 10]
+```
+
+## 💡 idea
+
+The reason of this post is that I was a bit surprised at first not to be able to do:
+
+```text
+const [a, ...rest, z] = [10, 20, 30, 40, 50]
+
+console.log(a) // 10
+console.log(rest) // [20, 30, 40]
+console.log(z) // [50]
+```
+
+It sounded logical to me. I'd be interested of your point of view about this.
+
+---
+
+Hope you enjoyed the reading and you'll get fun with destructuring, it is really powerful. Bye!
