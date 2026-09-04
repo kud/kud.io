@@ -5,6 +5,8 @@ import { getAllPosts, getPost, readingMinutes, renderMarkdown } from "@/lib/blog
 import { BlogCodeBlock } from "@/components/blog-code-block"
 import styles from "./page.module.css"
 
+const FEED_TITLE = "Writing — kud.io"
+
 type Params = { params: Promise<{ slug: string }> }
 
 export const generateStaticParams = async () =>
@@ -20,7 +22,13 @@ export const generateMetadata = async ({
   return {
     title: `${post.title} — kud.io`,
     description: post.description || undefined,
-    alternates: { canonical: `/blog/${post.slug}` },
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+      // Per-page, not in the blog layout — see app/blog/page.tsx.
+      types: {
+        "application/rss+xml": [{ url: "/blog/feed.xml", title: FEED_TITLE }],
+      },
+    },
     openGraph: {
       type: "article",
       url,

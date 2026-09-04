@@ -4,13 +4,22 @@ import { BlogIndex } from "@/components/blog-index"
 import styles from "./page.module.css"
 
 const TITLE = "Writing"
+const FEED_TITLE = "Writing — kud.io"
 const DESCRIPTION =
   "Notes on systems, tooling, and the trade-offs behind them — by Erwann Mest."
 
 export const metadata: Metadata = {
   title: `${TITLE} — kud.io`,
   description: DESCRIPTION,
-  alternates: { canonical: "/blog" },
+  alternates: {
+    canonical: "/blog",
+    // The autodiscovery link has to sit on each page rather than in the blog
+    // layout: Next merges metadata shallowly, so a page defining `alternates`
+    // at all replaces the layout's copy of it wholesale, feed link included.
+    types: {
+      "application/rss+xml": [{ url: "/blog/feed.xml", title: FEED_TITLE }],
+    },
+  },
   openGraph: {
     type: "website",
     url: "https://kud.io/blog",
