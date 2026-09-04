@@ -54,5 +54,5 @@ jobs:
           git commit -m "📝 docs(content): refresh project content"
           # Humans and agents push to this branch too, so a bare push races the
           # hourly run and rejects. Rebase onto whatever landed since checkout.
-          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
           git push
