@@ -17,7 +17,9 @@ import styles from "./page.module.css"
 
 const FEED_TITLE = "Writing — kud.io"
 
-type Params = { params: Promise<{ date: string; slug: string }> }
+type Params = {
+  params: Promise<{ year: string; month: string; day: string; slug: string }>
+}
 
 // Two rows: the post either side by date, newest first, off the one sorted
 // list getAllPosts already returns — a second sort here could tie-break
@@ -39,13 +41,16 @@ const neighboursOf = (posts: Post[], index: number) => {
     .filter((_, offset) => start + offset !== index)
 }
 
-// Only the date+slug pairs generateStaticParams emits are real. Without this,
-// /blog/1999-01-01/bck-i-search would render the same post at any date anyone
-// typed -- the post is looked up by slug alone.
+// Only the date/slug combinations generateStaticParams emits are real. The
+// post is looked up by slug alone, so without this /blog/1999/01/01/<slug>
+// would render it at any date anyone typed.
 export const dynamicParams = false
 
 export const generateStaticParams = async () =>
-  (await getAllPosts()).map(({ date, slug }) => ({ date, slug }))
+  (await getAllPosts()).map(({ date, slug }) => {
+    const [year, month, day] = date.split("-")
+    return { year, month, day, slug }
+  })
 
 export const generateMetadata = async ({
   params,
