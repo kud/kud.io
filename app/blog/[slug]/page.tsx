@@ -1,6 +1,10 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
+// The same Link the index uses — next/link here would drop the view
+// transition on every in-blog hop.
+import { Link } from "next-view-transitions"
 import type { Components } from "hast-util-to-jsx-runtime"
+import type { Post } from "@/lib/blog"
 import { getAllPosts, getPost, readingMinutes, renderMarkdown } from "@/lib/blog"
 import { BlogCodeBlock } from "@/components/blog-code-block"
 import styles from "./page.module.css"
@@ -8,6 +12,26 @@ import styles from "./page.module.css"
 const FEED_TITLE = "Writing — kud.io"
 
 type Params = { params: Promise<{ slug: string }> }
+
+// Two rows: the post either side by date, newest first, off the one sorted
+// list getAllPosts already returns — a second sort here could tie-break
+// differently and put the index and this block in disagreement.
+//
+// A three-wide window around the post, clamped to the ends, then the post
+// itself removed. The clamp is what handles the edges: the newest post has no
+// newer neighbour, so its window slides down to the two below it, and the
+// oldest slides up to the two above. One post total leaves an empty window.
+const NEIGHBOURS = 2
+
+const neighboursOf = (posts: Post[], index: number) => {
+  const start = Math.min(
+    Math.max(index - 1, 0),
+    Math.max(posts.length - NEIGHBOURS - 1, 0),
+  )
+  return posts
+    .slice(start, start + NEIGHBOURS + 1)
+    .filter((_, offset) => start + offset !== index)
+}
 
 export const generateStaticParams = async () =>
   (await getAllPosts()).map(({ slug }) => ({ slug }))
@@ -79,21 +103,43 @@ const components = {
 } satisfies Partial<Components>
 
 const BlogPostPage = async ({ params }: Params) => {
-  const post = await getPost((await params).slug)
-  if (!post) notFound()
+  const { slug } = await params
+  const posts = await getAllPosts()
+  const index = posts.findIndex((entry) => entry.slug === slug)
+  if (index === -1) notFound()
 
+  const post = posts[index]
+  const neighbours = neighboursOf(posts, index)
   const body = await renderMarkdown(post.body, components)
 
   return (
-    <article>
-      <h1 className={styles.title}>{post.title}</h1>
-      <p className={styles.meta}>
-        {[post.date, `${readingMinutes(post.body)} min`, ...post.tags]
-          .filter(Boolean)
-          .join(" · ")}
-      </p>
-      <div className={styles.body}>{body}</div>
-    </article>
+    <>
+      <article>
+        <h1 className={styles.title}>{post.title}</h1>
+        <p className={styles.meta}>
+          {[post.date, `${readingMinutes(post.body)} min`, ...post.tags]
+            .filter(Boolean)
+            .join(" · ")}
+        </p>
+        <div className={styles.body}>{body}</div>
+      </article>
+
+      {neighbours.length > 0 && (
+        <nav className={styles.more} aria-label="More posts">
+          <p className={styles.moreLabel}>More</p>
+          <ul className={styles.moreList}>
+            {neighbours.map((entry) => (
+              <li key={entry.slug}>
+                <time dateTime={entry.date}>{entry.date}</time>
+                <h2>
+                  <Link href={`/blog/${entry.slug}`}>{entry.title}</Link>
+                </h2>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
+    </>
   )
 }
 

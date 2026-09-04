@@ -35,6 +35,16 @@ const BlogLayout = ({ children }: { children: ReactNode }) => (
       </div>
       {children}
     </div>
+    {/* Outside .wrap, because .footer carries its own max-width and gutters —
+        inside, both would be inert and the footer text would sit 18px in from
+        the body's. The feed link is a plain <a>: feed.xml is a route handler,
+        not a page, so there is no client route for Link to prefetch. */}
+    <footer className={styles.footer}>
+      <a href="/blog/feed.xml">RSS</a>
+      <a href="/">
+        kud.io <span aria-hidden>↗</span>
+      </a>
+    </footer>
   </div>
 )
 

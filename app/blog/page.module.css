@@ -4,32 +4,44 @@
 .filter {
   display: flex;
   flex-wrap: wrap;
+  /* gap replaces the per-button margin-right: a pill wraps as a whole box, so
+   * the trailing margin of a row-final pill would otherwise widen the group. */
+  gap: 8px 7px;
   margin: 0 0 34px;
   font-family: var(--mono);
   font-size: 12px;
 }
 
+/* 4px 10px is a 26px box including borders — the same height as the theme
+ * pill at 4px 9px, so the page's two controls share one scale. */
 .filter button {
   font: inherit;
-  padding: 3px 0;
-  margin-right: 16px;
-  border: 0;
-  border-bottom: 1px solid transparent;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
   background: none;
   color: var(--fg-3);
   cursor: pointer;
   transition:
     color 130ms,
-    border-color 130ms;
+    border-color 130ms,
+    background 130ms;
 }
 
 .filter button:hover {
   color: var(--fg-2);
+  border-color: var(--line-2);
 }
 
+/* The weight is the signal that survives greyscale and colour-vision
+ * differences — it is not redundant with the ground and border. Commit Mono's
+ * 400 and 500 share an advance width, so activating a pill never reflows the
+ * row. */
 .filter button[data-active] {
   color: var(--fg);
-  border-bottom-color: var(--c-gold);
+  border-color: var(--line-2);
+  background: var(--bg-2);
+  font-weight: 500;
 }
 
 /* The rule runs the full measure, never the 88px date column: a short rule
