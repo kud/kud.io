@@ -37,7 +37,7 @@ const MyComponent = () => (
 
 As you can see, you've got here a shorthand return for your `Array.map()`.
 
-But for a reason you want to debug `item` without uncoding this shorthand and code a classic return like `arr.map(item =\> { return ... })`.
+But for a reason you want to debug `item` without uncoding this shorthand and code a classic return like `arr.map(item => { return ... })`.
 
 This is my solution:
 

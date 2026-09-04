@@ -12,7 +12,7 @@ Wow, this is my first page with [Next.js](https://nextjs.org/). I'm so glad of i
 
 And as it is my first deploy on GitHub too, I had just a little problem with [GitHub Pages](https://pages.github.com/).
 
-Indeed, as you could know, [GitHub Pages](https://pages.github.com/) use [Jekyll](https://jekyllrb.com/) as default, and one of theirs convention is to use `\_` as prefix of any folder which are used for the templating, not the final `dist`. Sounds not bad like that, but [Next.js](https://nextjs.org/) also uses a folder called `\_next` for distributed assets.
+Indeed, as you could know, [GitHub Pages](https://pages.github.com/) use [Jekyll](https://jekyllrb.com/) as default, and one of theirs convention is to use `_` as prefix of any folder which are used for the templating, not the final `dist`. Sounds not bad like that, but [Next.js](https://nextjs.org/) also uses a folder called `_next` for distributed assets.
 
 So yeah, the first time I deployed my blog, it was so weird, no assets were available. 😱
 

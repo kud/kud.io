@@ -69,7 +69,7 @@ Taaaaaaadaaa 🎉.
 
 The next step could be to make a script which switches those lines automatically but for the moment I'm happy with it.
 
-A little tips before leaving, you can include a whole folder by doing `Include config.d/\*`.
+A little tips before leaving, you can include a whole folder by doing `Include config.d/*`.
 
 ---
 

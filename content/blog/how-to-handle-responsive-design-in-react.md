@@ -5,7 +5,7 @@ date: "2021-01-31"
 slug: "how-to-handle-responsive-design-in-react"
 tags: []
 cover: "/blog/how-to-handle-responsive-design-in-react/fab2ee584405.jpg"
-updated: "2026-09-04T11:03:00.000Z"
+updated: "2026-09-04T12:47:00.000Z"
 ---
 
 Hello and welcome in 2021 🥳. I didn't write for ages, glad to see you again.
@@ -14,7 +14,7 @@ Okay, alright. Today, let's talk about [Responsive Web Design](https://web.dev/r
 
 But I'm not here for that. I'm here to show you different ways to handle Responsive Design which can be really helpful when you want to change more than only the CSS.
 
-For that, we will use [contra/react-responsive](https://github.com/contra/react-responsive) which is really good. You have multiple libs to handle our subject but this one also works with \<abbr title="Server-Side Rendering"\>SSR\</abbr\> (that's why I find it interesting for [Next.js](https://nextjs.org/)) and has a `onChange` trigger which can be useful.
+For that, we will use [contra/react-responsive](https://github.com/contra/react-responsive) which is really good. You have multiple libs to handle our subject but this one also works with SSR (that's why I find it interesting for [Next.js](https://nextjs.org/)) and has a `onChange` trigger which can be useful.
 
 So, stop talking, let's see my solution.
 

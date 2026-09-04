@@ -7,7 +7,7 @@ cover: "/blog/extending-your-react-component-with-styled-components/1baa23d780df
 updated: "2026-09-04T11:04:00.000Z"
 ---
 
-Yesterday, I was playing with [styled-components](https://www.styled-components.com/) and I wanted to change the style of my `\<Layout/\>` component injected into another component for a specific case but I didn't understand why it didn't work when I extended it.
+Yesterday, I was playing with [styled-components](https://www.styled-components.com/) and I wanted to change the style of my `<Layout/>` component injected into another component for a specific case but I didn't understand why it didn't work when I extended it.
 
 Imagine this:
 
@@ -58,7 +58,7 @@ class Page extends React.Component {
 export default Page
 ```
 
-As you can see here, I extended my `\<Layout\>` to change the property `background-color`. However, when I did that, nothing happened and I was wondering why.
+As you can see here, I extended my `<Layout>` to change the property `background-color`. However, when I did that, nothing happened and I was wondering why.
 
 The reason is that you need to also transfer the `className`. Ha!
 

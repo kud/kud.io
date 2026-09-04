@@ -5,7 +5,7 @@ date: "2020-06-15"
 slug: "component-namespacing-with-emotion"
 tags: []
 cover: "/blog/component-namespacing-with-emotion/704cf42f5182.jpg"
-updated: "2026-09-04T11:03:00.000Z"
+updated: "2026-09-04T12:47:00.000Z"
 ---
 
 Naming, naming, naming. Oh god. One of the hardest part in computer science. Fortunately, we've got some conventions about that which help us not to overthink every time we must name something.
@@ -14,7 +14,7 @@ For instance, there's one: [BEM](http://getbem.com/).
 
 ## BEM
 
-I'm a BEM lover for ages. The first time I saw this method, I understood quickly it was a really great way to avoid conflict between elements and - \<abbr title="In My Opinion"\>IMO\</abbr\> - to remove all the painful part of CSS. (You've got a good article about this on [css-tricks.com](https://css-tricks.com/bem-101/)).
+I'm a BEM lover for ages. The first time I saw this method, I understood quickly it was a really great way to avoid conflict between elements and - IMO - to remove all the painful part of CSS. (You've got a good article about this on [css-tricks.com](https://css-tricks.com/bem-101/)).
 
 Before using [CSS Modules](https://github.com/css-modules/css-modules) or [styled-components](https://styled-components.com/) or [Emotion](https://emotion.sh/), my stylesheet code was something like that:
 
