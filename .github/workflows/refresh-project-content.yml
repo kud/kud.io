@@ -35,19 +35,21 @@ jobs:
         run: npm run sync
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_BLOG_DATABASE_ID: ${{ vars.NOTION_BLOG_DATABASE_ID }}
 
       - name: Build website
         run: npm run build
 
       - name: Commit refreshed content
         run: |
-          if [ -z "$(git status --porcelain -- content/projects content/readmes content/landings)" ]; then
+          if [ -z "$(git status --porcelain -- content/projects content/readmes content/landings content/blog public/blog)" ]; then
             echo "No project content changes."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add content/projects content/readmes content/landings
+          git add content/projects content/readmes content/landings content/blog public/blog
           git commit -m "📝 docs(content): refresh project content"
           git push
