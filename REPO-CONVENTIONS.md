@@ -145,6 +145,11 @@ on its next run and because none of them means anything to a GitHub visitor.
 | `webext.json`   | `kud-site-webext`  | `{ "amo": "<addon-slug>" }` — the AMO slug rarely matches the repo name. Unlocks the store link and the live daily-users figure. Omit it until the add-on is actually published. |
 | `surfaces.json` | any monorepo       | `{ "ecosystem": "<key>", "surfaces": [...] }` — declares each surface a monorepo ships so the family renders as several cards rather than one lonely one. See `content/projects/foxhop/`. |
 
+**Tag the repo last.** The topic is picked up within minutes, so an app whose
+`app.json` and icon are still sitting uncommitted here goes live as a bare letter
+monogram on a blank tile — the launcher row is the most visible thing on the page,
+and it will show the gap before you have finished filling it.
+
 App icons are the other website-side asset: a 512×512 PNG at `public/apps/<slug>.png`,
 referenced from `app.json` as `/apps/<slug>.png`. The GitHub icon detector never
 matches a PWA, so this one is copied in by hand — usually straight from the app's
