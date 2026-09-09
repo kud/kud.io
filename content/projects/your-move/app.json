@@ -1,0 +1,40 @@
+{
+  "name": "Your Move",
+  "icon": "/apps/your-move.png",
+  "accent": "#e0707c",
+  "tagline": "A GitHub inbox for what moved, and whose move it is — on every device.",
+  "launchUrl": "https://move.kud.io",
+  "launchLabel": "Open Your Move",
+  "ctaTitle": "See whose move it is",
+  "ctaSubtitle": "Sign in with GitHub — your own token, scoped to what you can already see. Nothing to configure.",
+  "why": "GitHub tells you everything happened and nothing about what needs you. I wanted one page that answers a single question — what changed, and is it my turn? — and answers it on a phone, because that is the hardest case and the one nobody serves.",
+  "how": "Next.js reading GitHub live over GraphQL. No database, no mirror, no webhooks: the board derives whose move it is on every load and caches only results, showing its own age rather than hiding it. The session is your GitHub token, sealed with AES-GCM in an HttpOnly cookie — there is no server-side store to run or back up.",
+  "stack": ["Next.js", "React", "TypeScript", "GitHub GraphQL", "PWA"],
+  "features": [
+    {
+      "title": "One board, every width",
+      "description": "A matrix of repositories against statuses, so a project's whole situation is one line you read across. The same board on a phone and on a desk — not a mobile app and a desktop app."
+    },
+    {
+      "title": "Whose move, at a glance",
+      "description": "Every row is marked your move or their move, with a short reason: review requested, CI failing, changes requested, a conflict, approved."
+    },
+    {
+      "title": "Filters that live in the URL",
+      "description": "Whose move, repository, status and label — AND across facets, OR within one. The whole selection is in the address bar, so a view is a bookmark."
+    },
+    {
+      "title": "Honest about its own age",
+      "description": "It polls rather than mirrors, only while you're looking, and says visibly whether you're seeing something live, refreshing, stale, or offline."
+    },
+    {
+      "title": "Opens where the truth lives",
+      "description": "Tapping a row takes you straight to the issue or PR on GitHub. No parallel comment thread, no second place to check."
+    },
+    {
+      "title": "Installable everywhere",
+      "description": "A proper PWA — manifest, service worker, offline page — so it behaves like an app on the home screen rather than a bookmarked tab."
+    }
+  ],
+  "screenshots": []
+}

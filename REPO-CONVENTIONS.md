@@ -3,7 +3,8 @@
 [kud.io/projects](https://kud.io/projects) builds itself automatically from every
 repo tagged on GitHub — no hand-maintained list. **The repo is the single source
 of truth: kud.io just renders your README and docs, nicely.** You edit the repo,
-never the website.
+never the website — bar three small metadata files that have nowhere else to live
+(§9).
 
 A project page (`/projects/<slug>`) is a nicer-looking version of your README. If
 you want more than that, add a `landing.mdx` to override it. The real, multi-page
@@ -16,11 +17,13 @@ documentation lives in `docs/`.
 | Topic              | Effect                                                                                                                                                                                                                                                                                                               |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `kud-site`         | **Required.** Includes the repo on kud.io/projects.                                                                                                                                                                                                                                                                  |
-| `kud-site-<group>` | Section. One of: `app`, `desktop`, `cli`, `mcp`, `claude`, `lib`, `ui`, `vscode`, `theme`, `other`.                                                                                                                                                                                                                  |
-| `kud-site-app`     | A deployed web app — gets the icon launcher tile + an app landing (uses `app.json`, not the README).                                                                                                                                                                                                                 |
+| `kud-site-<group>` | Section. One of: `app`, `desktop`, `cli`, `mcp`, `claude`, `lib`, `ui`, `vscode`, `theme`, `webext`, `other`. |
+| `kud-site-app`     | A deployed web app — gets the icon launcher tile + an app landing (uses `app.json`, not the README). Set the repo homepage to the deployment, not the kud.io page.                                                                                                                                                                                                                 |
 | `kud-site-desktop` | A native desktop app (e.g. Tauri) — shares the launcher tile + app landing with `kud-site-app`. Set `launchLabel`/`launchUrl` (e.g. "Download for macOS") and `ctaSubtitle` in `app.json` so the copy isn't browser-specific. Empty `app.json` → falls back to the README (lets an RFC/vote repo list from day one). |
+| `kud-site-webext`  | A Firefox add-on — listed under **Firefox Add-ons**. Add `webext.json` on the website side (§9) to get the AMO listing link and the live daily-users figure in place of stars. |
 | `kud-site-readme`  | Flag: the README **is** the product (curated lists) — rendered in full, no docs route.                                                                                                                                                                                                                               |
-| `kud-site-tag-*`   | Content tags (e.g. `kud-site-tag-ai`) — surfaced as filterable chips.                                                                                                                                                                                                                                                |
+| `kud-site-tag-*`   | Content tags (e.g. `kud-site-tag-ai`) — surfaced as filterable chips. In use: `ai`, `devtools`, `git`, `media`, `macos`, `terminal`, `productivity`, `cloud`, `theme`. |
+| `kud-site-eco-*`   | Product family (e.g. `kud-site-eco-qobuz` unites the lib, the CLI and the MCP server). Orthogonal to the section — a repo keeps its own category and joins at most one family. A family needs **two or more** members to render a tile, and the `lib` member is its face, so tag the headless core too.                                                                                                                                                                                                                                                |
 
 No category topic → it falls into **CLIs & Tools** by default. Once tagged, the
 repo appears on kud.io within the hour (and on each push, via the refresh
@@ -129,6 +132,25 @@ READMEs, docs, and landings are **published**. Never commit real tokens, secrets
 internal hostnames, or live credentials — even in examples. Use obvious
 placeholders (`example.com`, `<your-token>`).
 
+## 9. The three files that live here, not in the repo
+
+Everything above is authored in the source repo and synced. Three small pieces of
+metadata are the exception — they are authored **in this repo**, under
+`content/projects/<slug>/`, because `scripts/sync-content.js` would overwrite them
+on its next run and because none of them means anything to a GitHub visitor.
+
+| File            | For                | What it holds                                                                                                                            |
+| --------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `app.json`      | `kud-site-app` / `kud-site-desktop` | The whole app landing: `icon`, `accent`, `tagline`, `why`, `how`, `stack`, `features`, `screenshots`, `launchUrl`, `launchLabel`, `ctaTitle`, `ctaSubtitle`. The README is not used. |
+| `webext.json`   | `kud-site-webext`  | `{ "amo": "<addon-slug>" }` — the AMO slug rarely matches the repo name. Unlocks the store link and the live daily-users figure. Omit it until the add-on is actually published. |
+| `surfaces.json` | any monorepo       | `{ "ecosystem": "<key>", "surfaces": [...] }` — declares each surface a monorepo ships so the family renders as several cards rather than one lonely one. See `content/projects/foxhop/`. |
+
+App icons are the other website-side asset: a 512×512 PNG at `public/apps/<slug>.png`,
+referenced from `app.json` as `/apps/<slug>.png`. The GitHub icon detector never
+matches a PWA, so this one is copied in by hand — usually straight from the app's
+own `brand/png/icon-512.png`.
+
+
 ---
 
 ### Quick checklist for a new project
@@ -139,4 +161,6 @@ placeholders (`example.com`, `<your-token>`).
 - [ ] Standard README — logo · intro + features + badges + links · install · usage · dev · docs link
 - [ ] `docs/index.mdx` (+ `docs/meta.json`); **every page `title` leads with an emoji** (index = `👋 Introduction`, not the repo name); no redundant landing/docs links
 - [ ] No secrets anywhere
+- [ ] _(apps only)_ `content/projects/<slug>/app.json` here + a 512×512 icon at `public/apps/<slug>.png` (§9)
+- [ ] _(Firefox add-ons only)_ `content/projects/<slug>/webext.json` once it is live on AMO (§9)
 - [ ] _(flagship only)_ a `landing.mdx`

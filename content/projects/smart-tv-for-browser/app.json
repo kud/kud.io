@@ -1,0 +1,40 @@
+{
+  "name": "smartTV for Browser",
+  "icon": "/apps/smart-tv-for-browser.png",
+  "accent": "#7d8bb8",
+  "tagline": "A smart-TV home screen that runs in your browser — boot animation, D-pad and all.",
+  "launchUrl": "https://smart-tv-for-browser.vercel.app",
+  "launchLabel": "Open smartTV",
+  "ctaTitle": "Turn it on",
+  "ctaSubtitle": "Free, runs in the browser, and installs to any screen you point it at.",
+  "why": "Every streaming service has an app on the TV and a website on the laptop, and the website is always the worse one — a mouse, a cramped header, nothing you can lean back for. I wanted the TV interface on whatever screen I happened to have: the ten-foot layout, the D-pad, the boot animation, the slightly absurd ceremony of it.",
+  "how": "Next.js and React with geometry-based spatial navigation, so focus moves the way a remote expects rather than the way the DOM is ordered. Motion drives the boot, the focus springs and the screensaver. The only backend is a Cloudflare Durable Object per pairing code, which is how a phone becomes the remote: both ends open a WebSocket to the same room, so it works on any network with no NAT negotiation.",
+  "stack": ["Next.js", "React", "TypeScript", "Tailwind CSS", "Cloudflare Workers"],
+  "features": [
+    {
+      "title": "A real ten-foot interface",
+      "description": "Animated power-on boot, glassy channel tiles that glow and scale on focus, a launch splash, and an ambient clock screensaver after a spell of nothing."
+    },
+    {
+      "title": "Driven like a remote",
+      "description": "Arrow keys move focus by geometry, not tab order. Enter opens, Esc goes back, and an on-screen remote mirrors every key for touch."
+    },
+    {
+      "title": "Your phone is the remote",
+      "description": "Scan a QR code and the phone pairs to the screen over a WebSocket room. No app to install, and it works on any network."
+    },
+    {
+      "title": "Your channels, your order",
+      "description": "Add a channel, hide the ones you don't watch, reorder the grid and pick a tile size. It all persists locally between visits."
+    },
+    {
+      "title": "Installs like a TV OS",
+      "description": "A proper PWA with a hand-written service worker, so it runs full-screen and offline-capable on a laptop, a tablet, or a screen in the corner of a room."
+    },
+    {
+      "title": "Focus you can actually see",
+      "description": "The spatial cursor mirrors onto real DOM focus with aria-labels, and every animation honours prefers-reduced-motion."
+    }
+  ],
+  "screenshots": []
+}

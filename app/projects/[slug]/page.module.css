@@ -517,13 +517,20 @@
 }
 
 /* Prominent, accent-coloured launch button (distinct from the orange .primary). */
+/* The one place an accent becomes a solid ground for text, so the one place it
+   has to clear 4.5:1 at 15px/700. White fails it on four of the six accents
+   shipping today (referrals at 2.15, your-move at 3.10) — these accents were
+   drawn as ink on near-black, not as a ground under white. Black ink on the
+   accent lifted 6% toward white passes for all of them, worst case 4.74, and
+   self-corrects for any accent added later that sits in the same mid-luminance
+   band these do. An accent dark enough to need white would break it. */
 .launch {
   display: inline-flex;
   align-items: center;
   padding: 14px 28px;
   border-radius: 12px;
-  background: var(--app-accent);
-  color: #fff;
+  background: color-mix(in srgb, var(--app-accent) 94%, #fff);
+  color: #000;
   font-size: 15px;
   font-weight: 700;
   text-decoration: none;
