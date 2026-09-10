@@ -455,17 +455,33 @@ const pruneOrphans = async ({ projects, readmes, landings }) => {
   return removed
 }
 
+// Paginated, because the single per_page=100 call this replaced would have dropped
+// projects off the site with no error at all once the tagged set passed 100.
+// A PARTIAL result is worse than none here: pruneOrphans deletes content for any
+// slug missing from this list, so a page that fails mid-run would wipe every project
+// after it. Any page error therefore discards the whole run and leaves content as-is.
+const searchRepos = async () => {
+  const perPage = 100
+  const repos = []
+  for (let page = 1; ; page += 1) {
+    const result = await api(
+      `https://api.github.com/search/repositories?q=user:${OWNER}+topic:${TOPIC}+archived:false&per_page=${perPage}&page=${page}`,
+    )
+    const items = result.items ?? []
+    repos.push(...items)
+    if (items.length < perPage || repos.length >= (result.total_count ?? 0)) break
+  }
+  return repos
+}
+
 const main = async () => {
   const start = Date.now()
   const spinner = ora("fetching repos…").start()
 
-  const search = await api(
-    `https://api.github.com/search/repositories?q=user:${OWNER}+topic:${TOPIC}&per_page=100`,
-  ).catch((error) => {
+  const repos = await searchRepos().catch((error) => {
     spinner.warn(`github topic search failed: ${error.message}`)
-    return { items: [] }
+    return []
   })
-  const repos = search.items ?? []
 
   // Start from the existing map so a transient GitHub or Raycast API failure
   // can't wipe icons synced on an earlier run; this run's results overlay it.
