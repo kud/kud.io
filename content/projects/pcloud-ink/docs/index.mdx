@@ -1,0 +1,26 @@
+---
+title: 👋 Introduction
+description: Controlled Ink components for rendering pCloud domain objects — presentation-only, no data fetching, no app-level input.
+---
+
+`@kud/pcloud-ink` renders pCloud domain objects — files, change history, shares,
+trash, public links, revisions, sync pairs, settings and account info — as Ink
+components. Every component is presentation-only: props in, no data fetching,
+no input handling. The consuming surface owns selection, navigation and
+loading, so the same component drops into a one-shot CLI command or a single
+pane of a larger dashboard.
+
+It sits in the middle of the pCloud toolchain:
+[`@kud/pcloud`](https://github.com/kud/pcloud) supplies the types, formatters
+and rewind engine; this package renders them; and
+[`@kud/pcloud-cli`](https://github.com/kud/pcloud-cli) consumes them, with a
+future cockpit TUI pane planned as a second consumer.
+
+## What's here
+
+- [🖥️ The browser](/projects/pcloud-ink/docs/browser) — `PCloudBody` /
+  `PCloudBrowser`, the assembled interactive client and its props
+- [🧩 Components](/projects/pcloud-ink/docs/components) — the individual
+  controlled list and panel components
+- [🛠️ Helpers](/projects/pcloud-ink/docs/helpers) — the pure functions behind
+  sorting, windowing, layout and change-history folding

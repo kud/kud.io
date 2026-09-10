@@ -1,0 +1,122 @@
+---
+title: 🛠️ Helpers
+description: The pure functions behind layout, windowing, sorting and change-history folding — no React, no state, safe to unit test directly.
+---
+
+These are the cross-cutting functions the components build on. All of them are
+pure — same input, same output, no state — which is what makes the fixed-width
+layout and the change-history folding testable without ever mounting Ink.
+
+## fit
+
+```ts
+const fit = (text: string, width: number): string
+```
+
+Pads **and** truncates to an exact width. `padEnd` alone only ever grows a
+string, so a value longer than its column silently runs into the next one —
+that's how a trashed file literally named `'"8 Folders" from 30 Jul 2026
+16:00.zip'` once pushed the size column off the row entirely. A value that
+exactly fills its column is just as broken as one that overruns it, so
+truncation starts one character earlier than looks necessary: the final
+character of any fixed-width column is always a gutter, and the ellipsis
+itself costs one visible character.
+
+## windowSlice
+
+```ts
+const windowSlice = <T>(
+  items: T[],
+  selected: number,
+  rows: number,
+): { items: T[]; offset: number }
+```
+
+Returns the visible slice of `items` that keeps `selected` in view — centred
+when it can be — plus the `offset` of the first visible item. Every list
+component scrolls through this one function, so scrolling behaviour can never
+drift between `FileList` and `TrashList`. It's pure maths: the parent still
+owns the selection index, this just answers "what's on screen right now."
+
+## sortItems
+
+```ts
+const sortItems = (items: PCloudFolderItem[]): PCloudFolderItem[]
+```
+
+Folders first, then files, each group alphabetical — the ordering a file
+browser is expected to have. `FileList` doesn't sort its own `items` prop, so
+callers run their contents through this before rendering.
+
+## buildRuns / buildRows
+
+```ts
+const buildRuns = (entries: PCloudDiffEntry[]): EventRun[]
+const buildRows = (
+  entries: PCloudDiffEntry[],
+  expanded: ReadonlySet<string>,
+  now: Date,
+): RewindRow[]
+```
+
+The pCloud diff stream is one row per event, which is what the API stores but
+not what anyone wants to read: a file saved every three minutes for two hours
+produces forty rows saying the same thing, under two hundred repetitions of
+the same date. `buildRuns` folds events into runs — grouped by day, event type
+and target, not by consecutive pairs, so the same file touched either side of
+an unrelated event still counts as one run. `buildRows` takes that further
+into the exact row list `ChangesList` renders: day headings, collapsed runs,
+and — for any run key present in `expanded` — the individual events inside it.
+
+`ChangesList` builds this list internally, but the browser also builds it
+independently from the same inputs, because its cursor indexes rows rather
+than events and the two need to agree on what a "row" is. Since `buildRows` is
+pure, they can't disagree.
+
+## sparkline
+
+```ts
+const sparkline = (times: string[], buckets = 8): string
+```
+
+Renders a run's activity distribution across its own time span as an eight-bar
+(by default) Unicode spark line (`▁▂▃▄▅▆▇█`). This answers a different
+question than a bare count: a burst of edits in the first minute and a steady
+trickle across two hours produce the same `count`, but a visibly different
+sparkline.
+
+## relativeAge
+
+```ts
+const relativeAge = (time: string, now: Date): string
+```
+
+Formats an ISO timestamp relative to `now` — `"just now"`, `"2m ago"`, `"3h
+ago"`, `"4d ago"`. Takes `now` as a parameter rather than reading the clock
+itself, so a component's own `now` state (ticked on an interval) and a test's
+fixed `Date` produce identical, reproducible output.
+
+## eventTone
+
+```ts
+type EventTone = { glyph: string; label: string; color: string }
+const eventTone = (event: string): EventTone
+```
+
+Maps a change event (`"createfile"`, `"modifyfile"`, `"deletefolder"`, …) to
+its glyph, label and colour: `+ created`, `~ modified`, `- deleted`, falling
+back to `· changed` for anything unrecognised. Colour is reinforcement only —
+the glyph and label carry the meaning, so a viewer who can't separate the red
+from the green still reads `"- deleted"` against `"+ created"`.
+
+## Also exported
+
+A handful of smaller helpers back specific components and are documented
+alongside them on the [components](/projects/pcloud-ink/docs/components) page:
+`shareRights` (ShareList), `trashId` / `deletedOn` (TrashList),
+`publinkExpiry` (PublinkList), `byNewest` (RevisionList), `pairGlyph` /
+`pairIsHealthy` (SyncList), and `settingsRows` / `isEntry` / `nextEntry` /
+`firstEntry` (SettingsPanel). `dayLabel`, `clockTime`, `nextSelectable`,
+`firstSelectable` and `isFolderEvent` are further rewind-history internals
+exported for hosts building their own change-history cursor logic on top of
+`buildRows`.

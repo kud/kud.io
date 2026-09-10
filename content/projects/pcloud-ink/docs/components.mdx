@@ -1,0 +1,221 @@
+---
+title: 🧩 Components
+description: The controlled list and panel components — props, companion helpers, and the layout conventions they share.
+---
+
+Every component below is controlled and presentation-only: it takes a `rows`
+prop for the visible window height and an optional `selected` index, and
+renders exactly that. None of them handle keyboard input or fetch data — the
+host owns selection state and the key handling that moves it.
+
+```tsx
+import { render } from "ink"
+import { FileList, sortItems } from "@kud/pcloud-ink"
+
+const { unmount } = render(
+  <FileList items={sortItems(contents)} rows={contents.length} />,
+)
+unmount()
+```
+
+## FileList
+
+Renders folder contents — kind, name, size, modified — windowed to `rows`.
+Directories get a trailing slash on the name as well as their own `dir` kind
+column, so folder-ness is never colour-only.
+
+```ts
+type FileListProps = {
+  items: PCloudFolderItem[]
+  selected?: number
+  rows: number
+  emptyText?: string // default: "Empty folder"
+}
+```
+
+Pair it with `sortItems`, exported alongside: folders first, then files, each
+group alphabetical — the ordering every file browser is expected to have,
+applied once so every surface agrees.
+
+## ChangesList
+
+Renders change events, folded into one row per file per day rather than one
+row per raw diff entry. Each row reads `<time> <glyph> <label> ×<count> <path> <age>`; a multi-event run can be expanded to show every entry inside it.
+
+```ts
+type ChangesListProps = {
+  entries: PCloudDiffEntry[]
+  selected?: number
+  rows: number
+  emptyText?: string // default: "No changes"
+  expanded?: ReadonlySet<string> // run keys currently expanded
+  now?: Date // default: new Date()
+  paths?: ReadonlyMap<number, string> // resolved full paths by diffid
+}
+```
+
+`paths` exists because a diff entry only carries a name, not a full path —
+hosts that resolve paths asynchronously after the first render pass the map in
+once it's ready. The folding itself is `buildRows`, documented on the
+[helpers](/projects/pcloud-ink/docs/helpers) page.
+
+## ShareList
+
+Renders folder shares, in either direction.
+
+```ts
+type ShareListProps = {
+  shares: PCloudShareItem[]
+  direction?: "outgoing" | "incoming" // default: "outgoing"
+  selected?: number
+  rows: number
+  emptyText?: string // default: "No shares"
+}
+```
+
+`direction` decides which mail column is shown: `"outgoing"` names the
+recipient, `"incoming"` names the owner. The permission column comes from
+`shareRights`, exported alongside:
+
+```ts
+const shareRights = (share: PCloudShareItem): string // e.g. "rw--", "r--d"
+```
+
+It renders the four permission booleans (`canread`, `canmodify`, `cancreate`,
+`candelete`) positionally as `rwcd`, because a comma-separated list of granted
+permissions can't distinguish "read, modify" from "read, delete" the way `r--d`
+and `rw--` can at a glance.
+
+## TrashList
+
+Renders deleted items, with the id that `restore-trash` takes.
+
+```ts
+type TrashListProps = {
+  items: (PCloudTrashItem & { folderid?: number })[]
+  selected?: number
+  rows: number
+  emptyText?: string // default: "Trash is empty"
+}
+```
+
+Two companion helpers:
+
+```ts
+const trashId = (item: PCloudTrashItem & { folderid?: number }): string
+const deletedOn = (item: PCloudTrashItem): string
+```
+
+`trashId` returns whichever id the item actually carries — trash is mostly
+folders, which use `folderid` rather than `fileid`. `deletedOn` guards against
+a trashed folder having no `deletetime` at all; formatting that directly
+throws on `toISOString()`, so it degrades to `"-"` instead.
+
+## PublinkList
+
+Renders public links, with downloads and expiry.
+
+```ts
+type PublinkListProps = {
+  links: PCloudPublink[]
+  selected?: number
+  rows: number
+  emptyText?: string // default: "No public links"
+}
+```
+
+```ts
+const publinkExpiry = (link: PCloudPublink): string // formatted date, or "never"
+```
+
+A link with no `expire` value renders `"never"` rather than a blank cell — an
+empty expiry column reads as missing data, when in fact it's the single most
+consequential value a public link can carry.
+
+## RevisionList
+
+Renders a file's revisions, newest first.
+
+```ts
+type RevisionListProps = {
+  revisions: PCloudRevision[]
+  selected?: number
+  rows: number
+  emptyText?: string // default: "No revisions"
+}
+```
+
+```ts
+const byNewest = (revisions: PCloudRevision[]): PCloudRevision[]
+```
+
+pCloud's API promises no ordering on revisions, so `byNewest` sorts by
+`revisionid` descending before rendering, and the first row is marked
+`"latest"` — the one immediately behind the current file, which is what
+"revert" almost always means. Reverting to whatever revision happened to
+arrive first, instead, silently undoes far more than the last edit.
+
+## SyncList
+
+Renders local sync pair health.
+
+```ts
+type SyncListProps = {
+  pairs: SyncPairView[]
+  selected?: number
+  rows: number
+  emptyText?: string // default: "No sync pairs on this machine"
+}
+```
+
+Read-only by design: pCloud keys a sync pair by the local folder's inode and
+indexes it across further internal tables, so a UI that tried to create one by
+hand would hand the daemon a pair it never built — and the failure mode there
+is deleted local files, not a sync that simply refuses to start.
+
+```ts
+const pairIsHealthy = (pair: SyncPairView): boolean // pair.issues.length === 0
+const pairGlyph = (pair: SyncPairView): string // "✓" or "✗"
+```
+
+## SettingsPanel
+
+Renders the client's ignore rules — ignored name patterns and ignored paths —
+as one flat, headed list so a single cursor walks both.
+
+```ts
+type SettingsPanelProps = {
+  settings: SettingsView // { ignorePatterns: string[], ignorePaths: string[] }
+  selected?: number
+  rows: number
+}
+```
+
+Because a heading row is a label rather than a destination, three companion
+helpers keep the cursor off headings entirely:
+
+```ts
+const settingsRows = (settings: SettingsView): SettingsRow[]
+const isEntry = (row: SettingsRow | undefined): boolean
+const nextEntry = (rows: SettingsRow[], from: number, step: 1 | -1): number
+const firstEntry = (rows: SettingsRow[]): number
+```
+
+`nextEntry` and `firstEntry` skip past `{ kind: "heading" }` rows when moving
+the cursor, so landing on one and needing a second keypress to escape it isn't
+something a user has to discover.
+
+## AccountPanel
+
+Renders email, plan and storage use with a progress bar, inside an
+`@kud/ink-ui` `Panel`.
+
+```ts
+type AccountPanelProps = {
+  user: PCloudUserInfo
+  title?: string // default: "Account"
+}
+```
+
+Unlike the list components above, `AccountPanel` takes no `rows`/`selected` —
+it's a fixed-height summary panel, not a windowed list.

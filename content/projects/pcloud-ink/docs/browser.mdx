@@ -1,0 +1,130 @@
+---
+title: 🖥️ The browser
+description: PCloudBody and PCloudBrowser — the assembled interactive pCloud client, and the props a host uses to configure it.
+---
+
+`PCloudBrowser` (and its unwrapped inner component, `PCloudBody`) is the one
+export in this package that isn't presentation-only in the strict sense — it's
+a full interactive client, mounting the list components into tabs and owning
+its own navigation. What it does _not_ own is the terminal: it never calls
+`render()` and it never calls `process.exit`. It reports quitting through the
+required `onExit` callback, so a host — a standalone CLI, or a pane in a larger
+cockpit — mounts it as a single component and keeps the terminal lifecycle,
+including `render`/`unmount`/`waitUntilExit`, entirely to itself.
+
+```tsx
+import { render } from "ink"
+import { PCloudBrowser } from "@kud/pcloud-ink"
+
+const { unmount, waitUntilExit } = render(
+  <PCloudBrowser onExit={() => unmount()} />,
+  { alternateScreen: true },
+)
+await waitUntilExit()
+```
+
+## PCloudBody vs PCloudBrowser
+
+`PCloudBrowser` wraps `PCloudBody` in ink-picture's `TerminalInfoProvider`:
+
+```tsx
+export const PCloudBrowser = (props: PCloudBodyProps) => (
+  <TerminalInfoProvider>
+    <PCloudBody {...props} />
+  </TerminalInfoProvider>
+)
+```
+
+That context is what image preview needs to size itself against the terminal.
+Mounting `PCloudBody` bare works, but previews silently stop rendering with no
+obvious reason why — so unless a host already provides its own
+`TerminalInfoProvider` further up the tree, reach for `PCloudBrowser`.
+
+## PCloudBodyProps
+
+| Prop            | Type               | Purpose                                                                                                                                |
+| --------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `onExit`        | `() => void`       | Required. Called when the user quits. The host owns the terminal lifecycle, so acting on it — usually `unmount()` — is the host's job. |
+| `sync`          | `SyncProvider`     | Reads this machine's local sync pairs. Omit it and the **Sync** tab is absent entirely.                                                |
+| `settings`      | `SettingsProvider` | Reads and writes pCloud Drive's local client settings. Omit it and the **Settings** tab is absent entirely.                            |
+| `api`           | `PCloudAPI`        | An authenticated client. Omit and the stored credential is used — what the CLI wants when run standalone.                              |
+| `initialScreen` | `Mode`             | The screen to open on. Omit for Files.                                                                                                 |
+
+`sync` and `settings` are providers rather than built-in behaviour because the
+data they return lives in a SQLite database on the host machine, not in the
+pCloud API — a rendering package has no business opening that file. A consumer
+with no local pCloud install has no database to read, and shouldn't be offered
+a tab that could only ever render empty. Passing neither yields a four-tab
+browser (Files, Rewind, Trash, Shares); passing both yields all six.
+
+`initialScreen` deep-links straight to a named tab instead of requiring the
+user to navigate there. Two consumers lean on it: screenshot tooling that
+shoots one tab at a time, and developers iterating on a single panel who'd
+rather reload straight back into it than re-navigate on every restart. A
+request for a screen the current props can't offer (`sync` without a
+provider, say) falls back to Files rather than mounting a tab with nothing to
+show.
+
+## Mode and tabsFor
+
+```ts
+export type Mode = "files" | "trash" | "rewind" | "shares" | "sync" | "settings"
+
+export const tabsFor: (has: {
+  sync: boolean
+  settings: boolean
+}) => TabItem<Mode>[]
+```
+
+`tabsFor` is exported so a host can enumerate the screens it's actually able
+to offer, before ever mounting the browser — it's what backs `--screen list`
+and what validates a requested `--screen <name>` up front. It takes the same
+`{ sync, settings }` shape the browser itself derives from its own props, so a
+host never has to hand-maintain a second copy of the tab list.
+
+```ts
+import { tabsFor, type Mode } from "@kud/pcloud-ink"
+
+const SCREENS = tabsFor({ sync: true, settings: true }).map((tab) => tab.value)
+```
+
+## A real embedding
+
+`@kud/pcloud-cli` mounts `PCloudBrowser` with two host-owned providers — one
+reading pCloud Drive's sync database, one reading and writing its ignore
+rules — plus a mock mode that swaps every source (client, sync, settings) at
+once, so a screenshot never mixes invented files with real sync folders:
+
+```tsx
+import { render } from "ink"
+import { createMockAPI, mockSettings, mockSyncPairs } from "@kud/pcloud"
+import { PCloudBrowser, type Mode } from "@kud/pcloud-ink"
+
+export const startBrowse = async (mock = false, screen?: Mode) => {
+  const { unmount, waitUntilExit } = render(
+    mock ? (
+      <PCloudBrowser
+        onExit={() => unmount()}
+        api={createMockAPI()}
+        sync={mockSyncPairs}
+        settings={{ read: mockSettings, write: () => {} }}
+        initialScreen={screen}
+      />
+    ) : (
+      <PCloudBrowser
+        onExit={() => unmount()}
+        sync={readSyncPairs}
+        settings={{ read: readIgnoreRules, write: writeIgnoreRules }}
+        initialScreen={screen}
+      />
+    ),
+    { alternateScreen: true },
+  )
+  await waitUntilExit()
+}
+```
+
+The `settings` write path is expected to throw when it can't persist — pCloud
+Drive rewrites its own settings from memory on quit, so a write made while the
+daemon is running would otherwise be undone silently, long after it looked to
+have worked.

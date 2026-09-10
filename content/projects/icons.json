@@ -10,6 +10,7 @@
   "modern-cobalt2-vscode": "https://raw.githubusercontent.com/kud/modern-cobalt2-vscode/HEAD/images/icon.png",
   "november-vscode": "https://raw.githubusercontent.com/kud/november-vscode/HEAD/images/icon.png",
   "pcloud-cli": "https://raw.githubusercontent.com/kud/pcloud-cli/HEAD/assets/icon.svg",
+  "pcloud-ink": "https://raw.githubusercontent.com/kud/pcloud-ink/HEAD/assets/icon.svg",
   "raycast-1loc": "https://files.raycast.com/5bk8hwbu2mjvko5zn8m3wja5wj2n",
   "raycast-espanso": "https://files.raycast.com/970rgjydqr28jhklbwllz4i1d0g5",
   "raycast-foxhop": "https://files.raycast.com/mqixmokssu9nj7nd95sr68jqp5w8",
@@ -22,5 +23,6 @@
   "raycast-whimsical": "https://files.raycast.com/g0hdzmmyhn7yvrdtx3e0jpk28l0c",
   "revu-cli": "https://raw.githubusercontent.com/kud/revu-cli/HEAD/assets/icon.png",
   "revu-vscode": "https://raw.githubusercontent.com/kud/revu-vscode/HEAD/assets/icon.png",
-  "shui": "https://raw.githubusercontent.com/kud/shui/HEAD/icon.png"
+  "shui": "https://raw.githubusercontent.com/kud/shui/HEAD/icon.png",
+  "your-move": "https://raw.githubusercontent.com/kud/your-move/HEAD/assets/icon.svg"
 }
