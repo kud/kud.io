@@ -1,0 +1,21 @@
+# Repos deliberately absent from kud.io/projects.
+#
+# `npm run check` reports every public, non-fork, non-archived kud/* repo that
+# carries no `kud-site` topic. Most of those are real decisions waiting to be
+# made; the ones below are not projects at all and never will be, so they are
+# excluded permanently.
+#
+# One slug per line, and a reason is required — an unexplained line is
+# unauditable, so in a year nobody dares remove it and the file ossifies.
+# Adding a line here IS the decision record.
+#
+# Forks, private repos and archived repos are skipped automatically and do not
+# belong here. (An archived repo that is still *tagged* is a finding, not a skip
+# — that is how an archived project stayed live on the site until 2026-09-10.)
+
+kud                   # GitHub profile README, not a project
+kud.github.io         # legacy GitHub Pages host, superseded by kud.io
+kud.io                # this site
+gh-pr-comments-tests  # throwaway-PR fixture for gh-pr-comments
+homebrew-tap          # distribution channel for the macOS apps, not a project
+git-sandbox           # scratch repo for testing git behaviour

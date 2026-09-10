@@ -14,7 +14,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "sync": "node scripts/sync-content.js && node scripts/sync-notion.js"
+    "sync": "node scripts/sync-content.js && node scripts/sync-notion.js",
+    "check": "node scripts/check-repos.js"
   },
   "engines": {
     "node": ">=20.0.0"

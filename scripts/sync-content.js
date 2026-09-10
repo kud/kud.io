@@ -8,9 +8,8 @@
 import { mkdir, readdir, readFile, rm, unlink, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
 import ora from "ora"
+import { ICON, OWNER, TOPIC } from "./lib/kud-site.js"
 
-const OWNER = "kud"
-const TOPIC = "kud-site"
 const CONTENT_DIR = "content/projects"
 const README_DIR = "content/readmes"
 const LANDINGS_DIR = "content/landings"
@@ -219,13 +218,6 @@ const getTree = async (slug) => {
   }
 }
 
-// Convention (see REPO-CONVENTIONS.md): a repo opts into a logo with
-// icon.svg/icon.png at the repo root, under assets/, or under images/ (the
-// standard VS Code packaging path). Detected straight from the tree — no extra
-// API call. `logo.*` and other names are intentionally NOT matched: a single
-// canonical filename keeps logos consistent. When both formats exist, prefer
-// the .svg.
-const ICON = /^(assets\/|images\/)?icon\.(svg|png)$/i
 
 const iconRank = (path) => (/\.svg$/i.test(path) ? 0 : 1)
 
