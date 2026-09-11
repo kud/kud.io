@@ -13,6 +13,7 @@ Ink apps that display large, code-heavy, streaming documents (AI responses, code
 - **Block-based incremental parsing** ✅ — Markdown is segmented into top-level blocks with stable IDs and source hashes, so an edit in one block leaves the others untouched (`updateMarkdownDocument`).
 - **Cached, width-aware layout** ✅ — wrapping, Unicode width and styling are computed once per `(block, width, theme)` and reused until one of those changes, so a terminal resize doesn't force a full relayout.
 - **Unified-diff rendering** ✅ — hunk headers, additions and deletions are styled from the theme rather than treated as flat text.
+- **Pipe tables** ✅ — columns padded to their widest cell and joined by two spaces, a `─` rule segment per column under a bold header, `---:` right-aligns. Always one line per row: when the table is wider than the viewport the widest column shrinks first and cells end in `…`, floored at the header width, so no column ever silently disappears.
 - **Syntax highlighting for fenced code** ⏳ — planned for M4; code blocks currently render unhighlighted, clipped rather than wrapped.
 - **Streaming with a mutable tail** ⏳ — the immutable-completed-blocks design is in place, but the `useMarkdownStream` hook that drives it is not written yet.
 - **Overridable block renderers and perf instrumentation** ⏳ — designed in [`prd.md`](https://github.com/kud/ink-markdown/blob/HEAD/prd.md), not yet built.
