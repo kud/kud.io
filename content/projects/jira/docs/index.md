@@ -177,6 +177,10 @@ Both stop at Markdown rather than emitting ANSI or HTML — rendering is the cal
 
 Turns a bare host (`myorg.atlassian.net`) into a full `https://` URL. A no-op on an already-complete URL.
 
+### `loadConfig(env?, path?)`
+
+Resolves the instance URL, email and token the way every `@kud` Jira surface does, so a host can build a client without re-implementing the lookup. The URL and email come from `ATLASSIAN_BASE_URL` / `ATLASSIAN_USER_EMAIL` or, failing those, from `$XDG_CONFIG_HOME/jira/config.json` (`JIRA_CONFIG_FILE` overrides the path); the token comes from `ATLASSIAN_API_TOKEN` only, and a token found in the file is an error. Returns `{ config }` ready for `createJiraClient`, or `{ missing: string[] }` naming every absent variable at once. `readFileConfig(path?)` and `configPath()` are exported for hosts that need the halves.
+
 ## 🔧 Development
 
 ```
