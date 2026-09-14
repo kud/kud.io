@@ -99,7 +99,7 @@ export const BlogMermaid = ({
     y: number
     originX: number
     originY: number
-  }>()
+  } | null>(null)
   const [svg, setSvg] = useState<string>()
   const [failed, setFailed] = useState(false)
   const [viewerOpen, setViewerOpen] = useState(false)
@@ -232,7 +232,11 @@ export const BlogMermaid = ({
                 >
                   −
                 </button>
-                <button type="button" onClick={resetView} title="Reset zoom and position">
+                <button
+                  type="button"
+                  onClick={resetView}
+                  title="Reset zoom and position"
+                >
                   {Math.round(scale * 100)}%
                 </button>
                 <button
@@ -259,7 +263,9 @@ export const BlogMermaid = ({
                 onWheel={(event) => {
                   event.preventDefault()
                   setScale((value) =>
-                    clampScale(value + (event.deltaY < 0 ? SCALE_STEP : -SCALE_STEP)),
+                    clampScale(
+                      value + (event.deltaY < 0 ? SCALE_STEP : -SCALE_STEP),
+                    ),
                   )
                 }}
                 onPointerDown={(event) => {
@@ -284,12 +290,12 @@ export const BlogMermaid = ({
                 }}
                 onPointerUp={(event) => {
                   if (dragRef.current?.pointerId !== event.pointerId) return
-                  dragRef.current = undefined
+                  dragRef.current = null
                   setDragging(false)
                   event.currentTarget.releasePointerCapture(event.pointerId)
                 }}
                 onPointerCancel={() => {
-                  dragRef.current = undefined
+                  dragRef.current = null
                   setDragging(false)
                 }}
               >
