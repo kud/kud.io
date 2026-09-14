@@ -60,6 +60,13 @@ export const generateMetadata = async ({
   if (!post) return {}
 
   const url = `https://kud.io${postPath(post)}`
+  // The cover is the post's share image and nothing else: the page itself
+  // opens on the title, so a hero would be the same picture twice. Without
+  // one, the generated title card at /blog/og/<slug> stands in — never the
+  // site's own portrait card. Listed under twitter as well: the root
+  // twitter-image.tsx is inherited by every route and only an explicit list
+  // here displaces it.
+  const images = post.cover ? [post.cover] : [`/blog/og/${post.slug}`]
   return {
     title: `${post.title} — kud.io`,
     description: post.description || undefined,
@@ -80,9 +87,13 @@ export const generateMetadata = async ({
       publishedTime: post.date || undefined,
       modifiedTime: post.updated || undefined,
       tags: post.tags,
-      // The cover is the post's share image and nothing else: the page itself
-      // opens on the title, so a hero would be the same picture twice.
-      images: post.cover ? [post.cover] : undefined,
+      images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description || undefined,
+      images,
     },
   }
 }
@@ -98,12 +109,13 @@ const components = {
   // author's own heading level still reads as the top of their document.
   h1: (props) => <h2 {...props} />,
   div: ({ children, ...rest }) => {
-    const source = (
-      rest as {
-        "data-mermaid-source"?: string
-        dataMermaidSource?: string
-      }
-    )["data-mermaid-source"] ??
+    const source =
+      (
+        rest as {
+          "data-mermaid-source"?: string
+          dataMermaidSource?: string
+        }
+      )["data-mermaid-source"] ??
       (rest as { dataMermaidSource?: string }).dataMermaidSource
 
     return source === undefined ? (
@@ -131,7 +143,9 @@ const components = {
       {children}
     </a>
   ),
-  img: (props) => <img {...props} loading="lazy" decoding="async" alt={props.alt ?? ""} />,
+  img: (props) => (
+    <img {...props} loading="lazy" decoding="async" alt={props.alt ?? ""} />
+  ),
 } satisfies Partial<Components>
 
 const BlogPostPage = async ({ params }: Params) => {
