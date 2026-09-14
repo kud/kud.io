@@ -1,6 +1,10 @@
 name: Refresh project content
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/refresh-project-content.yml
   workflow_dispatch:
   repository_dispatch:
     types: [project-content-updated]
