@@ -275,6 +275,64 @@
   opacity: 1;
 }
 
+
+/* Diagram card ------------------------------------------------------------- */
+/* Mermaid is explanatory content rather than code, so it gets the page's
+ * quiet surface instead of the dark terminal card. Colours inside the SVG are
+ * derived from the same blog tokens by BlogMermaid and therefore move with the
+ * blog's independent light/dark theme. */
+.diagram {
+  margin: 1.75em 0;
+  padding: 24px 20px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg-2);
+}
+
+.diagramSvg {
+  display: grid;
+  min-width: 0;
+  place-items: center;
+}
+
+.diagramSvg svg {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
+
+/* This is both the no-JS fallback and the error state. It deliberately looks
+ * quieter than a normal code card: the reader should still get the model, even
+ * if only as Mermaid source, without mistaking it for a command to run. */
+.diagramSource {
+  margin: 0;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--fg-3);
+  white-space: pre;
+}
+
+.diagramSource code {
+  padding: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+}
+
+.diagramSource[data-error] {
+  color: var(--fg-2);
+}
+
+@media (max-width: 580px) {
+  .diagram {
+    padding: 18px 14px;
+  }
+}
+
 /* More ---------------------------------------------------------------------
  *
  * Every value below is the index's own (app/blog/page.module.css) — the two

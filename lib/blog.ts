@@ -197,6 +197,50 @@ const diffTransformer = {
   },
 }
 
+
+// Mermaid is content, not code highlighting. Pull it out of the normal
+// <pre><code> path before Shiki sees the tree, keeping the original source on a data
+// attribute so the React layer can render it client-side and still offer a
+// readable source fallback when JavaScript or Mermaid itself fails.
+type HastNode = {
+  type?: string
+  tagName?: string
+  value?: string
+  properties?: Record<string, unknown>
+  children?: HastNode[]
+}
+
+const hastText = (node: HastNode): string =>
+  node.type === "text"
+    ? node.value ?? ""
+    : (node.children ?? []).map(hastText).join("")
+
+const rehypeBlogMermaid = () => (tree: HastNode) => {
+  const walk = (node: HastNode) => {
+    for (const child of node.children ?? []) {
+      if (child.type === "element" && child.tagName === "pre") {
+        const code = child.children?.find(
+          (candidate) =>
+            candidate.type === "element" && candidate.tagName === "code",
+        )
+        const classes = code?.properties?.className
+        if (
+          code &&
+          Array.isArray(classes) &&
+          classes.includes("language-mermaid")
+        ) {
+          child.tagName = "div"
+          child.properties = { "data-mermaid-source": hastText(code) }
+          child.children = []
+          continue
+        }
+      }
+      walk(child)
+    }
+  }
+  walk(tree)
+}
+
 // Element overrides live with the route, not here: this is the pipeline, and
 // how a blockquote looks is a design decision. Callers pass their own map.
 export const renderMarkdown = async (
@@ -208,6 +252,7 @@ export const renderMarkdown = async (
     .use(remarkGfm)
     .use(remarkRehype)
     .use(rehypeSlug)
+    .use(rehypeBlogMermaid)
     .use(rehypeShiki, {
       theme: SHIKI_THEME,
       transformers: [diffTransformer],

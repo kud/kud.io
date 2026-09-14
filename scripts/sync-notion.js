@@ -187,6 +187,7 @@ const SHIKI_LANGUAGE = {
   yaml: "yaml",
   toml: "toml",
   markdown: "markdown",
+  mermaid: "mermaid",
   diff: "diff",
   docker: "docker",
   graphql: "graphql",

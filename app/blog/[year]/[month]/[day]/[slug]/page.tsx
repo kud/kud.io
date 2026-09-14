@@ -13,6 +13,7 @@ import {
   renderMarkdown,
 } from "@/lib/blog"
 import { BlogCodeBlock } from "@/components/blog-code-block"
+import { BlogMermaid } from "@/components/blog-mermaid"
 import styles from "./page.module.css"
 
 const FEED_TITLE = "Writing — kud.io"
@@ -96,6 +97,21 @@ const components = {
   // post title. Demoted rather than dropped: the outline stays valid and the
   // author's own heading level still reads as the top of their document.
   h1: (props) => <h2 {...props} />,
+  div: ({ children, ...rest }) => {
+    const source = (
+      rest as {
+        "data-mermaid-source"?: string
+        dataMermaidSource?: string
+      }
+    )["data-mermaid-source"] ??
+      (rest as { dataMermaidSource?: string }).dataMermaidSource
+
+    return source === undefined ? (
+      <div {...rest}>{children}</div>
+    ) : (
+      <BlogMermaid source={source} styles={styles} />
+    )
+  },
   pre: ({ children, ...rest }) => (
     <BlogCodeBlock
       styles={styles}
