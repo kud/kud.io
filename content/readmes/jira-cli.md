@@ -52,9 +52,13 @@ Run `jira` with no arguments:
 jira
 ```
 
-Your open issues, newest first. `↑↓` to move, `enter` to open, `a` to include closed ones, `r` to refresh, `q` to quit.
+Your issues as a board. By default the tabs are Jira's three status *categories* — **To do**, **In progress**, **Done** — so it works on any instance without knowing what your board calls its columns. Pass `--board <id>` (or set `defaultBoard` in the config file) and the tabs become that board's own columns, matched by status id; statuses no column claims land on an **Off board** tab. Hand-written `tabs` in the config file win over both. Rows hang under their epic, carry a type pill, a priority glyph (`▲` high, `▼` low) and how long since they last moved. Closed work from the last fortnight is on the Done tab; `a` loads everything.
 
-Inside an issue, `←→` switches between description, comments and attachments — descriptions and comments render as real Markdown, and attachments are listed with the comment or description each was embedded in. `t` transitions, `c` comments, `a` assigns to you, `o` opens the browser, `esc` goes back. Writes ask before they act.
+`↑↓` to move, `←→` (or `⇥`) to switch tab, `enter` to open, `?` for the legend, `r` to refresh. `q` quits from anywhere; `esc` or `⌫` goes back one level — a prompt, then the issue, then nothing.
+
+`/` searches. Plain words narrow the list as you type and, on `enter`, run as `text ~ "…"` within your issues — so a match in a comment counts too. Anything shaped like JQL (`status = Done`, `labels in (a, b)`, `ORDER BY …`) is sent as-is and replaces the scope; the tag at the end of the line says which reading it took, and `⇥` flips it. A query Jira rejects shows Jira's own message under the box and keeps your text for editing. `esc` clears the search.
+
+Inside an issue, `⇥` switches between description, comments and attachments — descriptions and comments render as real Markdown, and attachments are listed with the comment or description each was embedded in. `t` moves it, `c` comments, `a` assigns to you, `o` opens the browser, `esc` or `⌫` goes back. Writes ask before they act.
 
 Ink is loaded only for this view, via a dynamic import, so `jira issue list | grep` never pays for it. Piped or redirected, bare `jira` prints help instead of opening a UI.
 

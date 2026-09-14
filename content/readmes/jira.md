@@ -104,6 +104,7 @@ Returns a client object exposing `request` (the raw authenticated fetch wrapper)
 | ----------------------------- | ------------------------------------------------------ |
 | `getBoards()`                 | Lists all boards.                                      |
 | `getBoard(id)`                | Fetches one board.                                     |
+| `getBoardConfiguration(id)`   | The board's columns and the status ids each one claims. |
 | `getBoardIssues(id, jql?)`    | Lists a board's issues, optionally filtered by JQL.    |
 | `getBacklog(id)`              | Lists a board's backlog issues.                        |
 | `getSprints(boardId, state?)` | Lists a board's sprints, optionally filtered by state. |
@@ -141,6 +142,7 @@ Returns a client object exposing `request` (the raw authenticated fetch wrapper)
 | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `jiraApiError(status, method, url, body)` | Builds a typed `JiraApiError` (`Error` with `name: "JiraApiError"`, `status`, `method`, `url`, `body`). Used internally on every non-2xx response. |
 | `isJiraApiError(e)`                       | Type guard narrowing an unknown catch value to `JiraApiError`.                                                                                     |
+| `errorMessagesOf(e)`                      | Jira's own words for what went wrong — `errorMessages[]` and `errors{}` from the response body — falling back to the error's message. What a person can act on; `message` is the URL-prefixed envelope. |
 
 ```ts
 import { isJiraApiError } from "@kud/jira"
@@ -155,6 +157,20 @@ try {
   }
 }
 ```
+
+### JQL helpers
+
+| Export | Description |
+| --- | --- |
+| `jqlEscape(value)` | Quotes a value for JQL, escaping embedded quotes. |
+| `buildJql(options, defaultProject?)` | Composes `assignee` / `mine` / `project` / `status` / `label` / `sprint` into one query, `ORDER BY updated DESC`; `jql` replaces everything. An empty set means yours. |
+| `looksLikeJql(input)` | Whether a string has the shape of a JQL clause — `identifier operator` — as opposed to plain words. `"in progress"` is words; `"status = Done"` is a query. |
+| `textClause(words)` | `text ~ "…"` with Lucene's specials escaped, so a search for `c++` does not throw. |
+| `searchJql(input, { mode?, scope? })` | What a search box becomes: plain words search within `scope`; JQL replaces it. Returns the query and which reading was taken. |
+
+### Issue types
+
+`isContainerType(type)` says whether an issue type heads children — Jira Cloud's `hierarchyLevel > 0` when present (so a renamed Epic or an Initiative still counts), the name `Epic` otherwise. Use it rather than comparing names.
 
 ### ADF conversion
 
@@ -179,7 +195,7 @@ Turns a bare host (`myorg.atlassian.net`) into a full `https://` URL. A no-op on
 
 ### `loadConfig(env?, path?)`
 
-Resolves the instance URL, email and token the way every `@kud` Jira surface does, so a host can build a client without re-implementing the lookup. The URL and email come from `ATLASSIAN_BASE_URL` / `ATLASSIAN_USER_EMAIL` or, failing those, from `$XDG_CONFIG_HOME/jira/config.json` (`JIRA_CONFIG_FILE` overrides the path); the token comes from `ATLASSIAN_API_TOKEN` only, and a token found in the file is an error. Returns `{ config }` ready for `createJiraClient`, or `{ missing: string[] }` naming every absent variable at once. `readFileConfig(path?)` and `configPath()` are exported for hosts that need the halves.
+Resolves the instance URL, email and token the way every `@kud` Jira surface does, so a host can build a client without re-implementing the lookup. The URL and email come from `ATLASSIAN_BASE_URL` / `ATLASSIAN_USER_EMAIL` or, failing those, from `$XDG_CONFIG_HOME/jira/config.json` (`JIRA_CONFIG_FILE` overrides the path); the token comes from `ATLASSIAN_API_TOKEN` only, and a token found in the file is an error. Returns `{ config }` ready for `createJiraClient`, or `{ missing: string[] }` naming every absent variable at once. `readFileConfig(path?)` and `configPath()` are exported for hosts that need the halves. The file may also carry `defaultProject`, `defaultBoard`, `customFields`, `sprintField`, and `tabs` — hand-written board tabs (`{ label, statuses: string[] }[]`, statuses by id or name) for a TUI to use over a board's own column config.
 
 ## 🔧 Development
 
