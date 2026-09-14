@@ -24,7 +24,9 @@ jobs:
           cache: npm
 
       - name: Patch Mermaid support
-        run: python scripts/implement-blog-mermaid.py
+        run: |
+          head -n -6 scripts/implement-blog-mermaid.py > /tmp/implement-blog-mermaid.py
+          python /tmp/implement-blog-mermaid.py
 
       - name: Add Mermaid dependency
         run: |
@@ -43,6 +45,6 @@ jobs:
           git add scripts/sync-notion.js lib/blog.ts components/blog-mermaid.tsx \
             'app/blog/[year]/[month]/[day]/[slug]/page.tsx' \
             'app/blog/[year]/[month]/[day]/[slug]/page.module.css' \
-            package.json package-lock.json .github/workflows/refresh-project-content.yml
+            package.json package-lock.json
           git commit -m "✨ feat(blog): render Mermaid diagrams"
           git push origin main
