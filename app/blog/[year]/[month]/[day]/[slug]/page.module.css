@@ -409,6 +409,38 @@
   will-change: transform;
 }
 
+/* Opening is an expansion in place: the backdrop and chrome fade, and the
+ * stage — the canvas's parent, whose own transform is live drag/zoom state —
+ * scales up a beat behind them. Animations rather than transitions because the
+ * viewer mounts fresh, with no prior state to transition from. Closing is an
+ * undo and stays instant. */
+.diagramViewer {
+  animation: viewer-in 200ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.diagramViewerStage {
+  animation: viewer-stage-in 260ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@keyframes viewer-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes viewer-stage-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diagramViewerStage {
+    animation-name: viewer-in;
+  }
+}
+
 .diagramViewerCanvas svg {
   display: block;
   width: min(1200px, 82vw) !important;
