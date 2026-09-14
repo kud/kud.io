@@ -275,16 +275,38 @@
   opacity: 1;
 }
 
-/* Diagram card ------------------------------------------------------------- */
-/* Running prose deliberately stops at 630px, while the shell has 684px of
- * usable width. Diagrams get that extra 27px on either side: enough to make a
- * model breathe without turning it into a full-bleed object. */
+/* Diagram stage + frame ---------------------------------------------------- */
+/* Running prose deliberately stops at 630px; a diagram may widen past it, to a
+ * fixed ceiling of 1080px (one and a half shells) and never the viewport: past
+ * that it stops reading as part of the column. The stage is centred on the
+ * shell, whose centre sits 27px right of .body's, so the breakout is
+ * anchored on the column and the inset added back. No transform here: the
+ * fixed viewer inside would take a transformed ancestor as its containing
+ * block and stop covering the screen. */
 .diagram {
+  display: grid;
+  width: calc(100% + 54px);
+  margin: 1.75em 0 1.75em -27px;
+  justify-items: center;
+}
+
+@media (min-width: 768px) {
+  .diagram {
+    --stage: min(1080px, 100vw - 48px);
+    width: var(--stage);
+    margin-left: calc(50% + 27px - var(--stage) / 2);
+  }
+}
+
+/* The frame hugs the diagram's own width (--natural, read off the SVG mermaid
+ * renders — it has no intrinsic width of its own, so fit-content would not
+ * measure it), floored at the shell so a small model looks exactly as it did
+ * and only a sprawling one breaks out. 42px is the frame's own padding and
+ * border. */
+.diagramFrame {
   position: relative;
   box-sizing: border-box;
-  width: calc(100% + 54px);
-  max-width: 684px;
-  margin: 1.75em 0 1.75em -27px;
+  width: min(100%, max(684px, calc(var(--natural, 0px) + 42px)));
   padding: 24px 20px;
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -332,7 +354,7 @@
   opacity: 0.48;
 }
 
-.diagram:hover .diagramZoom,
+.diagramFrame:hover .diagramZoom,
 .diagramZoom:focus-visible {
   opacity: 1;
 }
@@ -484,7 +506,7 @@
 }
 
 @media (max-width: 580px) {
-  .diagram {
+  .diagramFrame {
     padding: 18px 14px;
   }
 

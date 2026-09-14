@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useId, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState, type CSSProperties } from "react"
 import { BLOG_ROOT_ID } from "@/components/blog-theme"
 
 let mermaidModule: Promise<typeof import("mermaid")> | undefined
@@ -12,20 +12,19 @@ const SCALE_STEP = 0.25
 
 const loadMermaid = () => (mermaidModule ??= import("mermaid"))
 
-const token = (
-  style: CSSStyleDeclaration,
-  name: string,
-  fallback: string,
-) => style.getPropertyValue(name).trim() || fallback
+const token = (style: CSSStyleDeclaration, name: string, fallback: string) =>
+  style.getPropertyValue(name).trim() || fallback
 
 const clampScale = (scale: number) =>
   Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale))
 
-const renderMermaid = (
-  id: string,
-  source: string,
-  root: HTMLElement,
-) => {
+// With useMaxWidth, mermaid sizes the SVG to 100% and writes its natural width
+// as an inline max-width; that number is the only record of how wide the
+// diagram actually is, and the frame in page.module.css sizes itself from it.
+const naturalWidth = (svg: string) =>
+  Number(/max-width:\s*([\d.]+)px/.exec(svg)?.[1]) || undefined
+
+const renderMermaid = (id: string, source: string, root: HTMLElement) => {
   const style = getComputedStyle(root)
   const config = {
     startOnLoad: false,
@@ -101,6 +100,7 @@ export const BlogMermaid = ({
     originY: number
   } | null>(null)
   const [svg, setSvg] = useState<string>()
+  const [natural, setNatural] = useState<number>()
   const [failed, setFailed] = useState(false)
   const [viewerOpen, setViewerOpen] = useState(false)
   const [scale, setScale] = useState(1)
@@ -135,11 +135,13 @@ export const BlogMermaid = ({
         )
         if (disposed || current != revision) return
         setSvg(result.svg)
+        setNatural(naturalWidth(result.svg))
         setFailed(false)
       } catch (error) {
         if (disposed || current != revision) return
         console.error("Could not render Mermaid diagram", error)
         setSvg(undefined)
+        setNatural(undefined)
         setFailed(true)
       }
     }
@@ -176,8 +178,7 @@ export const BlogMermaid = ({
       if (event.key === "Escape") closeViewer()
       if (event.key === "+" || event.key === "=")
         setScale((value) => clampScale(value + SCALE_STEP))
-      if (event.key === "-")
-        setScale((value) => clampScale(value - SCALE_STEP))
+      if (event.key === "-") setScale((value) => clampScale(value - SCALE_STEP))
       if (event.key === "0") resetView()
       if (event.key === "ArrowLeft")
         setOffset((value) => ({ ...value, x: value.x - 32 }))
@@ -198,134 +199,144 @@ export const BlogMermaid = ({
 
   return (
     <div className={styles.diagram}>
-      {svg ? (
-        <>
-          <button
-            className={styles.diagramZoom}
-            type="button"
-            aria-label="Open diagram viewer"
-            title="Zoom diagram"
-            onClick={() => setViewerOpen(true)}
-          >
-            <ZoomIcon />
-          </button>
-          <div
-            className={styles.diagramSvg}
-            dangerouslySetInnerHTML={{ __html: svg }}
-          />
-          {viewerOpen && (
-            <div
-              ref={viewerRef}
-              className={styles.diagramViewer}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Diagram viewer"
-              tabIndex={-1}
+      <div
+        className={styles.diagramFrame}
+        style={
+          natural
+            ? ({ "--natural": `${natural}px` } as CSSProperties)
+            : undefined
+        }
+      >
+        {svg ? (
+          <>
+            <button
+              className={styles.diagramZoom}
+              type="button"
+              aria-label="Open diagram viewer"
+              title="Zoom diagram"
+              onClick={() => setViewerOpen(true)}
             >
-              <div className={styles.diagramViewerToolbar}>
-                <button
-                  type="button"
-                  aria-label="Zoom out"
-                  onClick={() =>
-                    setScale((value) => clampScale(value - SCALE_STEP))
-                  }
-                >
-                  −
-                </button>
-                <button
-                  type="button"
-                  onClick={resetView}
-                  title="Reset zoom and position"
-                >
-                  {Math.round(scale * 100)}%
-                </button>
-                <button
-                  type="button"
-                  aria-label="Zoom in"
-                  onClick={() =>
-                    setScale((value) => clampScale(value + SCALE_STEP))
-                  }
-                >
-                  +
-                </button>
-              </div>
-              <button
-                className={styles.diagramViewerClose}
-                type="button"
-                aria-label="Close diagram viewer"
-                onClick={closeViewer}
-              >
-                <CloseIcon />
-              </button>
+              <ZoomIcon />
+            </button>
+            <div
+              className={styles.diagramSvg}
+              dangerouslySetInnerHTML={{ __html: svg }}
+            />
+            {viewerOpen && (
               <div
-                className={styles.diagramViewerStage}
-                data-dragging={dragging || undefined}
-                onWheel={(event) => {
-                  event.preventDefault()
-                  setScale((value) =>
-                    clampScale(
-                      value + (event.deltaY < 0 ? SCALE_STEP : -SCALE_STEP),
-                    ),
-                  )
-                }}
-                onPointerDown={(event) => {
-                  if (event.button !== 0) return
-                  event.currentTarget.setPointerCapture(event.pointerId)
-                  dragRef.current = {
-                    pointerId: event.pointerId,
-                    x: event.clientX,
-                    y: event.clientY,
-                    originX: offset.x,
-                    originY: offset.y,
-                  }
-                  setDragging(true)
-                }}
-                onPointerMove={(event) => {
-                  const drag = dragRef.current
-                  if (!drag || drag.pointerId !== event.pointerId) return
-                  setOffset({
-                    x: drag.originX + event.clientX - drag.x,
-                    y: drag.originY + event.clientY - drag.y,
-                  })
-                }}
-                onPointerUp={(event) => {
-                  if (dragRef.current?.pointerId !== event.pointerId) return
-                  dragRef.current = null
-                  setDragging(false)
-                  event.currentTarget.releasePointerCapture(event.pointerId)
-                }}
-                onPointerCancel={() => {
-                  dragRef.current = null
-                  setDragging(false)
-                }}
+                ref={viewerRef}
+                className={styles.diagramViewer}
+                role="dialog"
+                aria-modal="true"
+                aria-label="Diagram viewer"
+                tabIndex={-1}
               >
+                <div className={styles.diagramViewerToolbar}>
+                  <button
+                    type="button"
+                    aria-label="Zoom out"
+                    onClick={() =>
+                      setScale((value) => clampScale(value - SCALE_STEP))
+                    }
+                  >
+                    −
+                  </button>
+                  <button
+                    type="button"
+                    onClick={resetView}
+                    title="Reset zoom and position"
+                  >
+                    {Math.round(scale * 100)}%
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Zoom in"
+                    onClick={() =>
+                      setScale((value) => clampScale(value + SCALE_STEP))
+                    }
+                  >
+                    +
+                  </button>
+                </div>
+                <button
+                  className={styles.diagramViewerClose}
+                  type="button"
+                  aria-label="Close diagram viewer"
+                  onClick={closeViewer}
+                >
+                  <CloseIcon />
+                </button>
                 <div
-                  className={styles.diagramViewerCanvas}
-                  style={{
-                    transform: `translate(-50%, -50%) translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
+                  className={styles.diagramViewerStage}
+                  data-dragging={dragging || undefined}
+                  onWheel={(event) => {
+                    event.preventDefault()
+                    setScale((value) =>
+                      clampScale(
+                        value + (event.deltaY < 0 ? SCALE_STEP : -SCALE_STEP),
+                      ),
+                    )
                   }}
-                  dangerouslySetInnerHTML={{ __html: svg }}
-                />
+                  onPointerDown={(event) => {
+                    if (event.button !== 0) return
+                    event.currentTarget.setPointerCapture(event.pointerId)
+                    dragRef.current = {
+                      pointerId: event.pointerId,
+                      x: event.clientX,
+                      y: event.clientY,
+                      originX: offset.x,
+                      originY: offset.y,
+                    }
+                    setDragging(true)
+                  }}
+                  onPointerMove={(event) => {
+                    const drag = dragRef.current
+                    if (!drag || drag.pointerId !== event.pointerId) return
+                    setOffset({
+                      x: drag.originX + event.clientX - drag.x,
+                      y: drag.originY + event.clientY - drag.y,
+                    })
+                  }}
+                  onPointerUp={(event) => {
+                    if (dragRef.current?.pointerId !== event.pointerId) return
+                    dragRef.current = null
+                    setDragging(false)
+                    event.currentTarget.releasePointerCapture(event.pointerId)
+                  }}
+                  onPointerCancel={() => {
+                    dragRef.current = null
+                    setDragging(false)
+                  }}
+                >
+                  <div
+                    className={styles.diagramViewerCanvas}
+                    style={{
+                      transform: `translate(-50%, -50%) translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
+                    }}
+                    dangerouslySetInnerHTML={{ __html: svg }}
+                  />
+                </div>
+                <p className={styles.diagramViewerHint}>
+                  Drag to move · scroll or +/− to zoom · 0 to reset · Esc to
+                  close
+                </p>
               </div>
-              <p className={styles.diagramViewerHint}>
-                Drag to move · scroll or +/− to zoom · 0 to reset · Esc to close
-              </p>
-            </div>
-          )}
-        </>
-      ) : (
-        <pre
-          className={styles.diagramSource}
-          data-error={failed || undefined}
-          aria-label={
-            failed
-              ? "Mermaid diagram source (render failed)"
-              : "Mermaid diagram source"
-          }
-        >
-          <code>{source}</code>
-        </pre>
-      )}
+            )}
+          </>
+        ) : (
+          <pre
+            className={styles.diagramSource}
+            data-error={failed || undefined}
+            aria-label={
+              failed
+                ? "Mermaid diagram source (render failed)"
+                : "Mermaid diagram source"
+            }
+          >
+            <code>{source}</code>
+          </pre>
+        )}
+      </div>
     </div>
   )
 }
