@@ -1,10 +1,14 @@
 "use client"
 
-import { useEffect, useId, useState } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import { BLOG_ROOT_ID } from "@/components/blog-theme"
 
 let mermaidModule: Promise<typeof import("mermaid")> | undefined
 let renderQueue: Promise<unknown> = Promise.resolve()
+
+const MIN_SCALE = 0.6
+const MAX_SCALE = 4
+const SCALE_STEP = 0.25
 
 const loadMermaid = () => (mermaidModule ??= import("mermaid"))
 
@@ -13,6 +17,9 @@ const token = (
   name: string,
   fallback: string,
 ) => style.getPropertyValue(name).trim() || fallback
+
+const clampScale = (scale: number) =>
+  Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale))
 
 const renderMermaid = (
   id: string,
@@ -64,6 +71,19 @@ const renderMermaid = (
   return current
 }
 
+const ZoomIcon = () => (
+  <svg viewBox="0 0 20 20" aria-hidden="true">
+    <circle cx="8.25" cy="8.25" r="4.75" />
+    <path d="m11.7 11.7 4.3 4.3M8.25 6v4.5M6 8.25h4.5" />
+  </svg>
+)
+
+const CloseIcon = () => (
+  <svg viewBox="0 0 20 20" aria-hidden="true">
+    <path d="m5 5 10 10M15 5 5 15" />
+  </svg>
+)
+
 export const BlogMermaid = ({
   source,
   styles,
@@ -72,8 +92,31 @@ export const BlogMermaid = ({
   styles: Record<string, string>
 }) => {
   const stableId = useId().replace(/[^a-zA-Z0-9_-]/g, "")
+  const viewerRef = useRef<HTMLDivElement>(null)
+  const dragRef = useRef<{
+    pointerId: number
+    x: number
+    y: number
+    originX: number
+    originY: number
+  }>()
   const [svg, setSvg] = useState<string>()
   const [failed, setFailed] = useState(false)
+  const [viewerOpen, setViewerOpen] = useState(false)
+  const [scale, setScale] = useState(1)
+  const [offset, setOffset] = useState({ x: 0, y: 0 })
+  const [dragging, setDragging] = useState(false)
+
+  const resetView = () => {
+    setScale(1)
+    setOffset({ x: 0, y: 0 })
+  }
+
+  const closeViewer = () => {
+    setViewerOpen(false)
+    setDragging(false)
+    resetView()
+  }
 
   useEffect(() => {
     const root = document.getElementById(BLOG_ROOT_ID)
@@ -122,13 +165,148 @@ export const BlogMermaid = ({
     }
   }, [source, stableId])
 
+  useEffect(() => {
+    if (!viewerOpen) return
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    viewerRef.current?.focus()
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeViewer()
+      if (event.key === "+" || event.key === "=")
+        setScale((value) => clampScale(value + SCALE_STEP))
+      if (event.key === "-")
+        setScale((value) => clampScale(value - SCALE_STEP))
+      if (event.key === "0") resetView()
+      if (event.key === "ArrowLeft")
+        setOffset((value) => ({ ...value, x: value.x - 32 }))
+      if (event.key === "ArrowRight")
+        setOffset((value) => ({ ...value, x: value.x + 32 }))
+      if (event.key === "ArrowUp")
+        setOffset((value) => ({ ...value, y: value.y - 32 }))
+      if (event.key === "ArrowDown")
+        setOffset((value) => ({ ...value, y: value.y + 32 }))
+    }
+
+    window.addEventListener("keydown", onKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener("keydown", onKeyDown)
+    }
+  }, [viewerOpen])
+
   return (
     <div className={styles.diagram}>
       {svg ? (
-        <div
-          className={styles.diagramSvg}
-          dangerouslySetInnerHTML={{ __html: svg }}
-        />
+        <>
+          <button
+            className={styles.diagramZoom}
+            type="button"
+            aria-label="Open diagram viewer"
+            title="Zoom diagram"
+            onClick={() => setViewerOpen(true)}
+          >
+            <ZoomIcon />
+          </button>
+          <div
+            className={styles.diagramSvg}
+            dangerouslySetInnerHTML={{ __html: svg }}
+          />
+          {viewerOpen && (
+            <div
+              ref={viewerRef}
+              className={styles.diagramViewer}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Diagram viewer"
+              tabIndex={-1}
+            >
+              <div className={styles.diagramViewerToolbar}>
+                <button
+                  type="button"
+                  aria-label="Zoom out"
+                  onClick={() =>
+                    setScale((value) => clampScale(value - SCALE_STEP))
+                  }
+                >
+                  −
+                </button>
+                <button type="button" onClick={resetView} title="Reset zoom and position">
+                  {Math.round(scale * 100)}%
+                </button>
+                <button
+                  type="button"
+                  aria-label="Zoom in"
+                  onClick={() =>
+                    setScale((value) => clampScale(value + SCALE_STEP))
+                  }
+                >
+                  +
+                </button>
+              </div>
+              <button
+                className={styles.diagramViewerClose}
+                type="button"
+                aria-label="Close diagram viewer"
+                onClick={closeViewer}
+              >
+                <CloseIcon />
+              </button>
+              <div
+                className={styles.diagramViewerStage}
+                data-dragging={dragging || undefined}
+                onWheel={(event) => {
+                  event.preventDefault()
+                  setScale((value) =>
+                    clampScale(value + (event.deltaY < 0 ? SCALE_STEP : -SCALE_STEP)),
+                  )
+                }}
+                onPointerDown={(event) => {
+                  if (event.button !== 0) return
+                  event.currentTarget.setPointerCapture(event.pointerId)
+                  dragRef.current = {
+                    pointerId: event.pointerId,
+                    x: event.clientX,
+                    y: event.clientY,
+                    originX: offset.x,
+                    originY: offset.y,
+                  }
+                  setDragging(true)
+                }}
+                onPointerMove={(event) => {
+                  const drag = dragRef.current
+                  if (!drag || drag.pointerId !== event.pointerId) return
+                  setOffset({
+                    x: drag.originX + event.clientX - drag.x,
+                    y: drag.originY + event.clientY - drag.y,
+                  })
+                }}
+                onPointerUp={(event) => {
+                  if (dragRef.current?.pointerId !== event.pointerId) return
+                  dragRef.current = undefined
+                  setDragging(false)
+                  event.currentTarget.releasePointerCapture(event.pointerId)
+                }}
+                onPointerCancel={() => {
+                  dragRef.current = undefined
+                  setDragging(false)
+                }}
+              >
+                <div
+                  className={styles.diagramViewerCanvas}
+                  style={{
+                    transform: `translate(-50%, -50%) translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
+                  }}
+                  dangerouslySetInnerHTML={{ __html: svg }}
+                />
+              </div>
+              <p className={styles.diagramViewerHint}>
+                Drag to move · scroll or +/− to zoom · 0 to reset · Esc to close
+              </p>
+            </div>
+          )}
+        </>
       ) : (
         <pre
           className={styles.diagramSource}
