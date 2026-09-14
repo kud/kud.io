@@ -275,16 +275,17 @@
   opacity: 1;
 }
 
-
 /* Diagram card ------------------------------------------------------------- */
-/* Mermaid is explanatory content rather than code, so it gets the page's
- * quiet surface instead of the dark terminal card. Colours inside the SVG are
- * derived from the same blog tokens by BlogMermaid and therefore move with the
- * blog's independent light/dark theme. */
+/* Running prose deliberately stops at 630px, while the shell has 684px of
+ * usable width. Diagrams get that extra 27px on either side: enough to make a
+ * model breathe without turning it into a full-bleed object. */
 .diagram {
-  margin: 1.75em 0;
+  position: relative;
+  box-sizing: border-box;
+  width: calc(100% + 54px);
+  max-width: 684px;
+  margin: 1.75em 0 1.75em -27px;
   padding: 24px 20px;
-  overflow-x: auto;
   border: 1px solid var(--line);
   border-radius: 10px;
   background: var(--bg-2);
@@ -301,6 +302,154 @@
   width: auto;
   max-width: 100%;
   height: auto;
+}
+
+.diagramZoom,
+.diagramViewerClose,
+.diagramViewerToolbar button {
+  border: 1px solid var(--line-2);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  color: var(--fg-2);
+  cursor: pointer;
+  transition:
+    color 130ms,
+    border-color 130ms,
+    background 130ms,
+    opacity 130ms;
+}
+
+.diagramZoom {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  place-items: center;
+  border-radius: 999px;
+  opacity: 0.48;
+}
+
+.diagram:hover .diagramZoom,
+.diagramZoom:focus-visible {
+  opacity: 1;
+}
+
+.diagramZoom:hover,
+.diagramViewerClose:hover,
+.diagramViewerToolbar button:hover {
+  border-color: var(--c-gold);
+  color: var(--fg);
+}
+
+.diagramZoom svg,
+.diagramViewerClose svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Full-screen viewer. It reuses the already-rendered SVG rather than asking
+ * Mermaid to render a second graph, so opening it is immediate and theme-safe. */
+.diagramViewer {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+  color: var(--fg);
+  backdrop-filter: blur(10px);
+}
+
+.diagramViewerStage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.diagramViewerStage[data-dragging] {
+  cursor: grabbing;
+}
+
+.diagramViewerCanvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.diagramViewerCanvas svg {
+  display: block;
+  width: min(1200px, 82vw) !important;
+  max-width: none !important;
+  max-height: 78vh;
+  height: auto !important;
+}
+
+.diagramViewerToolbar {
+  position: absolute;
+  z-index: 2;
+  top: 18px;
+  left: 50%;
+  display: flex;
+  gap: 1px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+  transform: translateX(-50%);
+}
+
+.diagramViewerToolbar button {
+  min-width: 34px;
+  height: 30px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.diagramViewerToolbar button:nth-child(2) {
+  min-width: 58px;
+}
+
+.diagramViewerClose {
+  position: absolute;
+  z-index: 2;
+  top: 18px;
+  right: 18px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  place-items: center;
+  border-radius: 999px;
+}
+
+.diagramViewerHint {
+  position: absolute;
+  z-index: 2;
+  bottom: 18px;
+  left: 50%;
+  margin: 0;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  color: var(--fg-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  white-space: nowrap;
+  transform: translateX(-50%);
 }
 
 /* This is both the no-JS fallback and the error state. It deliberately looks
@@ -327,9 +476,25 @@
   color: var(--fg-2);
 }
 
+@media (max-width: 720px) {
+  .diagram {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
 @media (max-width: 580px) {
   .diagram {
     padding: 18px 14px;
+  }
+
+  .diagramViewerHint {
+    display: none;
+  }
+
+  .diagramViewerCanvas svg {
+    width: 88vw !important;
+    max-height: 76vh;
   }
 }
 
