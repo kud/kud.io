@@ -96,7 +96,7 @@ const items = [
 ]
 
 const Inbox = ({ rows }) => {
-  const { active } = useTabs(items) // Tab forward, Shift+Tab back, wraps
+  const { active } = useTabs(items) // Tab or → forward, Shift+Tab or ← back, wraps
   const { cursor } = useListCursor(rows.length) // ↑/↓ and k/j, clamps at the ends
   return <Tabs active={active} items={items} />
 }
