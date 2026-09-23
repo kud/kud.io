@@ -33,3 +33,20 @@ description: The tabs.json target format.
 | `url`      | opened if no tab matches                                                         |
 | `strategy` | how to match: `hostname` (default) · `prefix` · `exact` · `search` (url + title) |
 | `pick`     | which tab when several match: `recent` (default) · `first` · `pinned`            |
+| `navigate` | let `foxhop focus <name> --url <url>` repoint the matching tab (default `false`) |
+
+## Navigating a matching tab
+
+By default, `foxhop focus <name> --url <url>` only focuses the matching tab. The URL is opened only when nothing matches. Set `"navigate": true` on a target (or tick **Navigate the matching tab** in the extension's editor, or `foxhop add … --navigate`) and the same command repoints the existing tab to that URL instead of leaving it where it was:
+
+```sh
+foxhop focus chatgpt --url https://chatgpt.com/c/abc123
+```
+
+- The tab is chosen by the target's usual `match`, `strategy` and `pick` rules, and pinned tabs are included.
+- The URL must be `http(s)` and must itself satisfy the target's `match`. Anything else is refused and no tab is touched, so a ChatGPT target can never repoint an unrelated tab. This also means `navigate` does nothing useful with `strategy: "exact"`.
+- If nothing matches, the URL opens in a new tab.
+- Focusing from the extension popup never navigates.
+
+> [!WARNING]
+> Navigation replaces the page in that tab. There is no guard for an unsent draft or a half-filled form, which is one reason the option is off by default.
