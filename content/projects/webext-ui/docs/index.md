@@ -24,16 +24,16 @@ This creates `src/vendor/` if it doesn't already exist, and overwrites `tokens.c
 > [!IMPORTANT]
 > Don't add `@kud/webext-ui` as a `dependency` and don't link to it from inside `node_modules`. `web-ext build` — the standard tool for packaging Firefox extensions — excludes `node_modules` from the built `.xpi` entirely. A stylesheet pointing there resolves fine in dev and then silently vanishes from the shipped package. Vendoring the files into your own tree is the only model that survives packaging, not a workaround for one.
 
-Link the vendored files from your popup or options HTML:
+Link the vendored files, then your extension's `src/theme.css`, from **every** page — popup and options alike:
 
 ```html
 <link rel="stylesheet" href="https://github.com/kud/webext-ui/blob/HEAD/vendor/tokens.css" />
 <link rel="stylesheet" href="https://github.com/kud/webext-ui/blob/HEAD/vendor/webext-ui.css" />
+<link rel="stylesheet" href="https://github.com/kud/webext-ui/blob/HEAD/theme.css" />
 <link rel="stylesheet" href="https://github.com/kud/webext-ui/blob/HEAD/popup.css" />
 ```
 
-Your own stylesheet comes last and should hold only what is specific to your
-extension — in most cases that is just its accent:
+`theme.css` holds the extension's identity and nothing else — in most cases just its accent. It lives in its own file, not in `popup.css`, because a page that links the vendored pair without it silently falls back to the default orange. That happens the day an extension grows an options page:
 
 ```css
 :root {
@@ -54,6 +54,9 @@ extension — in most cases that is just its accent:
 > guess it. White on a mid orange measures 3.48:1 and fails AA; ink on the same
 > orange is 4.92:1. And never put the accent in _text_: an accent-toned status
 > label is a filled `.badge`, not coloured type.
+
+> [!NOTE]
+> v0.2 uses `color-mix()` and relative colour syntax, so consumers need Firefox 128 or later. Every extension in the fleet already declares `data_collection_permissions`, which needs 140, so set `"strict_min_version": "142.0"` under `browser_specific_settings.gecko` and the floor is simply stated.
 
 ## Usage
 
