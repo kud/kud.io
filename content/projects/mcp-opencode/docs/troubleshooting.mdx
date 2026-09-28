@@ -39,3 +39,15 @@ npm run inspect
 ```
 
 It opens an interactive UI at `http://localhost:5173`.
+
+## 🗂️ `list_sessions` doesn't show my TUI session
+
+- A plain `opencode` opens no port, so there is nothing to discover. Start it
+  with `opencode --port <free port>` (4097 upwards; 4096 is the MCP's own).
+- Check what the MCP can see: `lsof -nP -a -c opencode -iTCP -sTCP:LISTEN`.
+- If `MCP_OPENCODE_URL` is set, discovery is off and only that server is used.
+
+## ⏳ `send` says "still running"
+
+- The reply took longer than `timeout_seconds` (default 600). opencode is still
+  working on it; call `read` with the same session ID to fetch the answer.

@@ -10,9 +10,17 @@ attributed.
 
 ## 🧰 What it bundles
 
-| Skill           | Trigger                  | What it does                                             |
-| --------------- | ------------------------ | -------------------------------------------------------- |
-| `/ask-opencode` | `/ask-opencode <prompt>` | Send a prompt to any opencode model and see the response |
+| Skill           | Trigger                                                                                    | What it does                                                             |
+| --------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| `/ask-opencode` | `/ask-opencode <prompt>`                                                                   | Send a one-off prompt to any opencode model and see the response         |
+| `/ask-opencode` | `--session [id]`, "talk to my opencode", "ask the opencode I have open", "tell opencode …" | Message a session already running in your opencode TUI and see its reply |
+
+Session mode needs opencode started with `oc` (or `opencode --port <free port>`)
+and at least one message already typed in the TUI — that's what creates the
+session. A plain `opencode` opens no port and is invisible to the MCP. The MCP
+auto-discovers every opencode window listening on a local port, so several
+windows work at once — `list_sessions` shows sessions from all of them, and
+`send`/`read` route to the window that owns the session unless you name one.
 
 ## 📦 Install
 
