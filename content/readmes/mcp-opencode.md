@@ -91,8 +91,9 @@ If the same project is open in two windows, `send` goes to the lowest port and s
 | --------------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `MCP_OPENCODE_URL`          | `http://127.0.0.1:4096` | Pin one opencode server instead of discovering windows (and the server `query` spawns if nothing listens on its port)                   |
 | `MCP_OPENCODE_SEND_TIMEOUT` | `600`                   | Seconds `send` waits for a reply before handing back and letting you `read` it later                                                    |
+| `MCP_OPENCODE_MODEL`        | `github-copilot/gpt-4.1` | Model `query` uses when none is passed                                                                                                  |
 | `MCP_OPENCODE_MODEL_ALLOW`  | all                     | Comma-separated models or `provider/*` patterns `query` may use                                                                         |
-| `MCP_OPENCODE_MODEL_BLOCK`  | none                    | Comma-separated models or patterns to block. Filters apply to `query` and `list_models`, not `send`, which uses the session's own model |
+| `MCP_OPENCODE_MODEL_BLOCK`  | none                    | Comma-separated models or patterns to block. Filters apply to `query`, `list_models` and a `model` passed to `send`; without one, `send` uses the session's own model |
 
 ### Available tools
 
@@ -101,7 +102,7 @@ If the same project is open in two windows, `send` goes to the lowest port and s
 | `query`         | Send a prompt to an opencode model. Accepts `prompt` (required) and `model` (optional, default: `github-copilot/gpt-4.1`).                                                                                                     |
 | `list_models`   | List models available through the running opencode server. Accepts an optional `provider` filter (e.g. `anthropic`).                                                                                                           |
 | `list_sessions` | List sessions across every discovered opencode window, most recent first, with the port each is on. Accepts an optional `directory` filter.                                                                                    |
-| `send`          | Send a message to an existing session and return the reply. Accepts `session_id`, `prompt`, and optional `agent`, `port` and `timeout_seconds`. Routes to the window that owns the session. Never creates or deletes sessions. |
+| `send`          | Send a message to an existing session and return the reply. Accepts `session_id`, `prompt`, and optional `agent`, `model` (allowlist-checked; defaults to the session's own), `port` and `timeout_seconds`. Routes to the window that owns the session. Never creates or deletes sessions. |
 | `read`          | Read a session's recent messages as a condensed transcript. Accepts `session_id` and optional `limit` (default 20) and `port`.                                                                                                 |
 
 ## Development

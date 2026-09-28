@@ -11,16 +11,34 @@ the provider prefix selects which adapter handles the request.
 | Provider                       | Example model strings                                      | Auth                        |
 | ------------------------------ | ---------------------------------------------------------- | --------------------------- |
 | OpenCode (any supported model) | `github-copilot/claude-sonnet-4.6`, `opencode/big-pickle`  | OpenCode session            |
-| Claude CLI (no API key needed) | `claude/sonnet`, `claude/opus`, `claude/haiku`             | Claude Code auth            |
+| Claude CLI (no API key needed) | `claude/sonnet`, `claude/opus`, `claude/fable`             | Claude Code auth            |
 | Anthropic SDK (direct API)     | `anthropic/claude-sonnet-4-6`, `anthropic/claude-opus-4-7` | `ANTHROPIC_API_KEY` env var |
+| Codex CLI                      | `codex/gpt-5.5`                                            | Codex CLI auth              |
 
 ## 🎯 Picking a model
 
-List, pick, and persist your preferred model interactively:
+`models` lists what you can use from every provider available on this machine, one
+`provider/model` id per line:
+
+- **OpenCode**: whatever `opencode models` reports.
+- **Claude CLI**: the aliases `claude --help` documents (`fable`, `opus`, `sonnet`), when `claude` is on your `PATH`.
+- **Anthropic SDK**: the live model list from the API, only when `ANTHROPIC_API_KEY` is set.
+- **Codex CLI**: not listed; model names are free text, so pass `--model codex/<name>` yourself.
+
+Providers that are unavailable are left out, with one line on stderr naming them and why,
+so stdout stays safe to pipe.
 
 ```bash
 ai-conventional-commit models
 ```
+
+Pick one interactively and persist it as your default:
+
+```bash
+ai-conventional-commit models --interactive --save
+```
+
+The same list backs the retry picker shown when a model call times out.
 
 Override the model for a single run:
 
@@ -59,15 +77,15 @@ or `--model`. Nothing is chosen on your behalf.
 
 ### Environment variables
 
-| Variable            | Default                            | Description                                                         |
-| ------------------- | ---------------------------------- | ------------------------------------------------------------------- |
-| `AICC_MODEL`        | `github-copilot/claude-sonnet-4.6` | Model string, e.g. `claude/sonnet` or `anthropic/claude-sonnet-4-6` |
-| `AICC_STYLE`        | `standard`                         | Commit style: `standard`, `gitmoji`, or `gitmoji-pure`              |
-| `AICC_PRIVACY`      | `low`                              | Diff detail level sent to the model                                 |
-| `AICC_YES`          | —                                  | Set to `true` to skip all confirmation prompts                      |
-| `AICC_DEBUG`        | —                                  | Enable verbose provider logs                                        |
-| `AICC_MAX_TOKENS`   | `512`                              | Token limit for model responses                                     |
-| `ANTHROPIC_API_KEY` | —                                  | Required when using `anthropic/*` models                            |
+| Variable            | Default    | Description                                                         |
+| ------------------- | ---------- | ------------------------------------------------------------------- |
+| `AICC_MODEL`        | —          | Model string, e.g. `claude/sonnet` or `anthropic/claude-sonnet-4-6` |
+| `AICC_STYLE`        | `standard` | Commit style: `standard`, `gitmoji`, or `gitmoji-pure`              |
+| `AICC_PRIVACY`      | `low`      | Diff detail level sent to the model                                 |
+| `AICC_YES`          | —          | Set to `true` to skip all confirmation prompts                      |
+| `AICC_DEBUG`        | —          | Enable verbose provider logs                                        |
+| `AICC_MAX_TOKENS`   | `512`      | Token limit for model responses                                     |
+| `ANTHROPIC_API_KEY` | —          | Required when using `anthropic/*` models                            |
 
 ## 🔌 OpenCode MCP behaviour
 

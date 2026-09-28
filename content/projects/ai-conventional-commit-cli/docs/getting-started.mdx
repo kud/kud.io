@@ -35,7 +35,7 @@ AICC_YES=true ai-conventional-commit
 Pick and save your preferred model:
 
 ```bash
-ai-conventional-commit models
+ai-conventional-commit models --interactive --save
 ```
 
 ## ⚡ Commands
@@ -47,7 +47,7 @@ ai-conventional-commit models
 | `ai-conventional-commit split [n]`                | Cluster staged changes into `n` commits and execute each       |
 | `ai-conventional-commit refine`                   | Refine the last generated commit message                       |
 | `ai-conventional-commit reword [hash]`            | AI-assisted reword of an existing commit                       |
-| `ai-conventional-commit models`                   | List, pick, and save available models                          |
+| `ai-conventional-commit models`                   | List models across providers; `-i --save` to pick a default    |
 | `ai-conventional-commit config show`              | Show the merged resolved configuration and its sources         |
 | `ai-conventional-commit config get <key>`         | Read a single configuration value                              |
 | `ai-conventional-commit config set <key> <value>` | Persist a configuration value globally                         |
