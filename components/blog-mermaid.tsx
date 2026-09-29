@@ -18,6 +18,24 @@ const token = (style: CSSStyleDeclaration, name: string, fallback: string) =>
 const clampScale = (scale: number) =>
   Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale))
 
+type Point = { x: number; y: number }
+
+const pointerPoint = ({
+  clientX,
+  clientY,
+}: {
+  clientX: number
+  clientY: number
+}): Point => ({ x: clientX, y: clientY })
+
+const distanceBetween = (a: Point, b: Point) =>
+  Math.hypot(a.x - b.x, a.y - b.y)
+
+const midpointBetween = (a: Point, b: Point): Point => ({
+  x: (a.x + b.x) / 2,
+  y: (a.y + b.y) / 2,
+})
+
 // With useMaxWidth, mermaid sizes the SVG to 100% and writes its natural width
 // as an inline max-width; that number is the only record of how wide the
 // diagram actually is, and the frame in page.module.css sizes itself from it.
@@ -99,6 +117,14 @@ export const BlogMermaid = ({
     originX: number
     originY: number
   } | null>(null)
+  const pointersRef = useRef(new Map<number, Point>())
+  const pinchRef = useRef<{
+    distance: number
+    scale: number
+    midpoint: Point
+    offset: Point
+    lastOffset: Point
+  } | null>(null)
   const [svg, setSvg] = useState<string>()
   const [natural, setNatural] = useState<number>()
   const [failed, setFailed] = useState(false)
@@ -113,6 +139,9 @@ export const BlogMermaid = ({
   }
 
   const closeViewer = () => {
+    pointersRef.current.clear()
+    pinchRef.current = null
+    dragRef.current = null
     setViewerOpen(false)
     setDragging(false)
     resetView()
@@ -278,8 +307,32 @@ export const BlogMermaid = ({
                     )
                   }}
                   onPointerDown={(event) => {
-                    if (event.button !== 0) return
+                    if (event.pointerType === "mouse" && event.button !== 0) return
+
                     event.currentTarget.setPointerCapture(event.pointerId)
+                    pointersRef.current.set(
+                      event.pointerId,
+                      pointerPoint(event),
+                    )
+
+                    if (pointersRef.current.size >= 2) {
+                      const [first, second] = Array.from(
+                        pointersRef.current.values(),
+                      )
+                      const midpoint = midpointBetween(first, second)
+
+                      pinchRef.current = {
+                        distance: Math.max(distanceBetween(first, second), 1),
+                        scale,
+                        midpoint,
+                        offset,
+                        lastOffset: offset,
+                      }
+                      dragRef.current = null
+                      setDragging(false)
+                      return
+                    }
+
                     dragRef.current = {
                       pointerId: event.pointerId,
                       x: event.clientX,
@@ -290,6 +343,69 @@ export const BlogMermaid = ({
                     setDragging(true)
                   }}
                   onPointerMove={(event) => {
+                    if (!pointersRef.current.has(event.pointerId)) return
+
+                    pointersRef.current.set(
+                      event.pointerId,
+                      pointerPoint(event),
+                    )
+
+                    if (pointersRef.current.size >= 2) {
+                      const [first, second] = Array.from(
+                        pointersRef.current.values(),
+                      )
+                      const pinch =
+                        pinchRef.current ??
+                        (() => {
+                          const midpoint = midpointBetween(first, second)
+                          return {
+                            distance: Math.max(
+                              distanceBetween(first, second),
+                              1,
+                            ),
+                            scale,
+                            midpoint,
+                            offset,
+                            lastOffset: offset,
+                          }
+                        })()
+
+                      pinchRef.current = pinch
+
+                      const midpoint = midpointBetween(first, second)
+                      const nextScale = clampScale(
+                        pinch.scale *
+                          (Math.max(distanceBetween(first, second), 1) /
+                            pinch.distance),
+                      )
+                      const stage = event.currentTarget.getBoundingClientRect()
+                      const centre = {
+                        x: stage.left + stage.width / 2,
+                        y: stage.top + stage.height / 2,
+                      }
+                      const anchor = {
+                        x:
+                          (pinch.midpoint.x -
+                            centre.x -
+                            pinch.offset.x) /
+                          pinch.scale,
+                        y:
+                          (pinch.midpoint.y -
+                            centre.y -
+                            pinch.offset.y) /
+                          pinch.scale,
+                      }
+                      const nextOffset = {
+                        x: midpoint.x - centre.x - anchor.x * nextScale,
+                        y: midpoint.y - centre.y - anchor.y * nextScale,
+                      }
+
+                      pinch.lastOffset = nextOffset
+                      setScale(nextScale)
+                      setOffset(nextOffset)
+                      return
+                    }
+
                     const drag = dragRef.current
                     if (!drag || drag.pointerId !== event.pointerId) return
                     setOffset({
@@ -298,12 +414,46 @@ export const BlogMermaid = ({
                     })
                   }}
                   onPointerUp={(event) => {
-                    if (dragRef.current?.pointerId !== event.pointerId) return
+                    const pinch = pinchRef.current
+                    pointersRef.current.delete(event.pointerId)
+
+                    if (
+                      event.currentTarget.hasPointerCapture(event.pointerId)
+                    ) {
+                      event.currentTarget.releasePointerCapture(event.pointerId)
+                    }
+
+                    if (pointersRef.current.size === 1) {
+                      const [pointerId, point] =
+                        pointersRef.current.entries().next().value
+                      const origin = pinch?.lastOffset ?? offset
+
+                      pinchRef.current = null
+                      dragRef.current = {
+                        pointerId,
+                        x: point.x,
+                        y: point.y,
+                        originX: origin.x,
+                        originY: origin.y,
+                      }
+                      setDragging(true)
+                      return
+                    }
+
+                    if (pointersRef.current.size >= 2) {
+                      pinchRef.current = null
+                      dragRef.current = null
+                      setDragging(false)
+                      return
+                    }
+
+                    pinchRef.current = null
                     dragRef.current = null
                     setDragging(false)
-                    event.currentTarget.releasePointerCapture(event.pointerId)
                   }}
-                  onPointerCancel={() => {
+                  onPointerCancel={(event) => {
+                    pointersRef.current.delete(event.pointerId)
+                    pinchRef.current = null
                     dragRef.current = null
                     setDragging(false)
                   }}
@@ -317,8 +467,8 @@ export const BlogMermaid = ({
                   />
                 </div>
                 <p className={styles.diagramViewerHint}>
-                  Drag to move · scroll or +/− to zoom · 0 to reset · Esc to
-                  close
+                  Drag to move · pinch, scroll or +/− to zoom · 0 to reset ·
+                  Esc to close
                 </p>
               </div>
             )}
