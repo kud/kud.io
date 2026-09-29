@@ -4,7 +4,7 @@ description: "Starting Claude Code sessions with a fixed name left my resume pic
 date: "2026-09-29"
 slug: "claude-code-session-names"
 tags: ["engineering","tools"]
-updated: "2026-09-29T16:02:00.000Z"
+updated: "2026-09-29T16:19:00.000Z"
 ---
 
 I run several Claude Code sessions side by side, across a handful of projects, and they work together: one session can hand a task to another by name. That only works if names are predictable, so they are not left to chance. A small wrapper around `claude` names every session at launch after its folder (`claude -n project`).
@@ -75,106 +75,157 @@ The title lands one prompt after the model sets the subject, since the hook only
 
 ## The code
 
-Here's the whole thing. It's one zsh script with two entry points, cut down to the single-`project` setup this post uses. It needs `jq` and nothing else. Mine lives in `~/.local/bin/session-namer`, so the model can call it by name.
+Here's the whole thing: one zsh script, about 120 lines, cut down to the single-`project` setup this post uses. It needs `jq` and nothing else. Mine lives in `~/.local/bin/session-namer`, so the model can call it by name.
+
+It's written to be read rather than to be short, so it's in three parts, the same three the rest of this section walks through.
 
 ```shell
 #!/usr/bin/env zsh
-# session-namer: `project` becomes `project-<subject>`, the subject chosen by
-# the session's own model.
-#   session-namer          UserPromptSubmit hook: nudge, or apply the title
-#   session-namer set <s>  run by the model: validate and store the subject
+# Renames a session from `project` to `project-<subject>`.
+#
+#   session-namer               called by Claude Code on every prompt (the hook)
+#   session-namer set <subject> called by the model, once it knows the subject
 
-config_dir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
-state_root="${TMPDIR:-/tmp}/session-namer"
+sessions_dir="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/sessions"
+subjects_dir="${TMPDIR:-/tmp}/session-namer"
 
-# Claude Code keeps one JSON file per live session, holding its current name.
-# A headless run has no interactive entry, so it is skipped here.
-read_session() {
-  setopt local_options null_glob
-  local -a files=("$config_dir"/sessions/*.json)
-  (( ${#files} )) || return 1
-  local entry
-  entry="$(jq -r --arg sid "$1" \
-    'select(.sessionId == $sid and .kind == "interactive") | [.name, .cwd] | @tsv' \
-    "${files[@]}" 2>/dev/null | head -1)"
-  [[ -n "$entry" ]] || return 1
-  name="${entry%%$'\t'*}"
-  project="${${entry#*$'\t'}:t}"
+# ── Shared ───────────────────────────────────────────────────────────────────
+
+# Looks up a running session and sets two variables:
+#   session_name  its current title, e.g. "project"
+#   project       the name of the folder it was started in
+find_session() {
+  local session_id="$1"
+  local session_file
+
+  for session_file in "$sessions_dir"/*.json(N); do
+    if [[ "$(jq -r '.sessionId' "$session_file")" == "$session_id" &&
+          "$(jq -r '.kind' "$session_file")" == "interactive" ]]; then
+      session_name="$(jq -r '.name' "$session_file")"
+      project="$(basename "$(jq -r '.cwd' "$session_file")")"
+      return 0
+    fi
+  done
+
+  return 1  # not found: a headless run, or not a session at all
 }
 
-# The launch name is the folder name. Anything else was typed with /rename,
-# or already set by this hook, and is left alone.
-has_launch_name() { read_session "$1" && [[ "$name" == "$project" ]] }
+# A session still has its launch name when its title is just the folder name.
+still_has_launch_name() {
+  find_session "$1" && [[ "$session_name" == "$project" ]]
+}
+
+# ── The hook ────────────────────────────────────────────────────────────────
 
 run_hook() {
-  local input session_id prompt subject_file
-  input="$(cat)"
-  session_id="$(jq -r '.session_id // empty' <<< "$input")"
-  prompt="$(jq -r '.prompt // empty' <<< "$input")"
-  [[ -n "$session_id" && "$prompt" != /rename* ]] || return 0
-  has_launch_name "$session_id" || return 0
+  local event session_id prompt
+  event="$(cat)"
+  session_id="$(jq -r '.session_id' <<< "$event")"
+  prompt="$(jq -r '.prompt' <<< "$event")"
 
-  subject_file="$state_root/$session_id"
-  if [[ -s "$subject_file" ]]; then
-    jq -n --arg t "$project-$(<"$subject_file")" \
-      '{hookSpecificOutput: {hookEventName: "UserPromptSubmit", sessionTitle: $t}}'
-    return 0
+  # A /rename the user is typing right now wins.
+  if [[ "$prompt" == /rename* ]]; then
+    return
   fi
 
-  jq -n --arg m "This session is still named \`$name\`. Once its subject is clear, run \`session-namer set <subject>\` (1-3 lowercase kebab-case words naming the task), silently." \
-    '{hookSpecificOutput: {hookEventName: "UserPromptSubmit", additionalContext: $m}}'
+  # Already renamed, by hand or by us: nothing left to do.
+  if ! still_has_launch_name "$session_id"; then
+    return
+  fi
+
+  local subject_file="$subjects_dir/$session_id"
+
+  if [[ -f "$subject_file" ]]; then
+    # The model has picked a subject: apply it as the session title.
+    local title="$project-$(cat "$subject_file")"
+    jq -n --arg title "$title" '{
+      hookSpecificOutput: {
+        hookEventName: "UserPromptSubmit",
+        sessionTitle: $title
+      }
+    }'
+  else
+    # No subject yet: remind the model how to set one.
+    local reminder="This session is still named '$session_name'. Once its subject is clear, run 'session-namer set <subject>' (1-3 lowercase words joined by hyphens), silently."
+    jq -n --arg reminder "$reminder" '{
+      hookSpecificOutput: {
+        hookEventName: "UserPromptSubmit",
+        additionalContext: $reminder
+      }
+    }'
+  fi
 }
+
+# ── The model's command ──────────────────────────────────────────────────────
 
 run_set() {
-  local subject="${(L)1}" session_id="${CLAUDE_CODE_SESSION_ID:-}"
-  [[ -n "$session_id" ]] || { print -u2 "run this from a Claude Code session"; return 1; }
-  [[ "$subject" =~ '^[a-z0-9]+(-[a-z0-9]+){0,2}$' ]] ||
-    { print -u2 "'$1' is not 1-3 kebab-case words"; return 1; }
-  has_launch_name "$session_id" || { print -u2 "already named; nothing to do"; return 1; }
+  local subject="${1:l}"                      # lowercase
+  local session_id="$CLAUDE_CODE_SESSION_ID"  # exported by Claude Code
 
+  if [[ -z "$session_id" ]]; then
+    echo "Run this from inside a Claude Code session." >&2
+    return 1
+  fi
+
+  # One to three words, lowercase letters and digits, joined by hyphens.
+  if [[ ! "$subject" =~ '^[a-z0-9]+(-[a-z0-9]+){0,2}$' ]]; then
+    echo "'$1' should be 1-3 words joined by hyphens, like 'size-budget'." >&2
+    return 1
+  fi
+
+  if ! still_has_launch_name "$session_id"; then
+    echo "This session already has a name; nothing to do." >&2
+    return 1
+  fi
+
+  # If the model repeated the project name, drop it.
   subject="${subject#$project-}"
-  (( ${#project} + 1 + ${#subject} <= 40 )) || { print -u2 "title over 40 characters"; return 1; }
 
-  mkdir -p "$state_root" && print -r -- "$subject" >| "$state_root/$session_id"
-  print "\`$project-$subject\` applies on the next prompt"
+  local title="$project-$subject"
+  if (( ${#title} > 40 )); then
+    echo "'$title' is over 40 characters; pick a shorter subject." >&2
+    return 1
+  fi
+
+  mkdir -p "$subjects_dir"
+  echo "$subject" >| "$subjects_dir/$session_id"
+  echo "The title '$title' applies on the next prompt."
 }
 
-case "${1:-}" in
-  "")  run_hook; exit 0 ;;
-  set) shift; run_set "$@" ;;
-  *)   print -u2 "usage: session-namer [set <subject>]"; exit 2 ;;
+# ── Entry point ──────────────────────────────────────────────────────────────
+
+case "$1" in
+  "")  run_hook; exit 0 ;;   # a hook must never block the prompt
+  set) run_set "$2" ;;
+  *)   echo "Usage: session-namer [set <subject>]" >&2; exit 2 ;;
 esac
 ```
 
-Four parts of it need explaining.
+### The shared part: finding the session
 
-### Where the current name lives
+The hook's input carries the session ID and the prompt, but not the session's title. The title lives in `~/.claude/sessions/`, where Claude Code keeps one small JSON file per running session, and it's always current: both `/rename` and `sessionTitle` update it. `find_session` goes through those files, finds ours, and reads two things from it: the title, and the folder the session was started in.
 
-The hook's input carries the session ID and the prompt, but not the session's name. The name sits in `~/.claude/sessions/`, one small JSON file per running session, and it's the live value: both `/rename` and `sessionTitle` update it. `read_session` scans those files for our ID and pulls out two fields, the name and the working directory.
+`still_has_launch_name` is the whole renaming policy in one line: if the title is still just the folder name, it's the launch name, and we may replace it. Anything else means someone already chose a name, so the script leaves it alone. There's no "already renamed" flag to keep: once the title changes, it stops matching the folder, and the script stops acting on its own.
 
-The same lookup also skips headless runs. A headless `claude -p` run has no `interactive` entry there, so the `select` finds nothing, `read_session` fails, and the hook exits without a word. There's no separate check for it.
+The same lookup also skips headless runs. A `claude -p` run has no `interactive` entry there, so `find_session` finds nothing and the hook stays quiet.
 
-### Deciding whether to touch it
+### The hook: one of two answers
 
-`has_launch_name` is the whole policy in one line: the name is a launch name if it equals the folder's name. `${…:t}` is zsh for "the last path component", so `/Users/me/Projects/project` gives `project`.
+Claude Code runs `run_hook` on every prompt, passing a small JSON event on standard input. After the two early exits (a `/rename` being typed, or a session that already has a real name) it answers in one of two ways:
 
-Anything else means a person or this script already chose the name, and the hook goes quiet for good. There's no "already renamed" flag to store or clean up: once the title changes, the name stops matching the folder, and the hook stops acting.
+- **A subject is waiting**, so it returns `sessionTitle`, and Claude Code renames the session.
 
-### The hook half
+- **No subject yet**, so it returns `additionalContext`: a sentence Claude Code adds to what the model sees on that turn, with the exact command to run. The model never reads the script; that sentence is all it gets.
 
-`run_hook` reads the event JSON from stdin, bails on a `/rename` prompt, then does one of two things.
+Every path through the hook ends in `exit 0`. A `UserPromptSubmit` hook that exits with 2 blocks the prompt outright, and any other failure puts an error in front of me, so when anything is off, the hook says nothing and the prompt goes through untouched.
 
-If a subject is waiting in the state file, it returns `sessionTitle`. If not, it returns `additionalContext`, a line Claude Code adds to what the model sees for that turn, with the exact command to run. The model never reads the script; it only ever sees that one sentence.
+### The model's command: checking the subject
 
-Every early exit is `exit 0` with no output. A `UserPromptSubmit` hook that exits with 2 blocks the prompt outright, and any other failure puts an error in front of me. So when anything is off, the hook says nothing and the prompt goes through untouched.
+`run_set` is what the model runs from its shell. It isn't told which session it's in, and doesn't need to be: Claude Code exports `CLAUDE_CODE_SESSION_ID` to the shell the model runs commands in.
 
-### The model's half
+Then it checks the subject before accepting it. It must be one to three lowercase words joined by hyphens, so a sentence, a path or a stray backtick is refused, with a message the model can read and correct. If the model repeated the project name, it's dropped, so `project-size-budget` becomes `size-budget` rather than `project-project-size-budget`. And the full title has to fit in 40 characters, so it stays readable in the picker.
 
-`run_set` is what the model runs from its shell. It has no session ID in its arguments, and doesn't need one: Claude Code exports `CLAUDE_CODE_SESSION_ID` to the shell the model runs commands in, which is how the script knows which session is asking.
-
-Next, it checks the subject. `${(L)1}` lowercases the input; the regex allows one to three kebab-case words and nothing else, so a sentence, a path or a stray backtick is refused with a message the model can read and act on. `${subject#$project-}` strips the project name if the model repeated it, so `project-size-budget` becomes `size-budget` rather than `project-project-size-budget`. The 40-character cap keeps the title readable in the picker.
-
-The subject is written to a file named after the session ID, under `$TMPDIR`. It only has to last until my next message.
+The subject is saved to a file named after the session, under `$TMPDIR`. It only has to last until my next message, when the hook picks it up.
 
 ## Wiring it up
 
@@ -198,7 +249,7 @@ The hook goes under `UserPromptSubmit` in `~/.claude/settings.json`:
 }
 ```
 
-No `matcher`: `UserPromptSubmit` fires on every prompt, which is what the nudge needs. The five-second timeout is a ceiling, not an estimate: the script is a few `jq` calls and runs in under a tenth of a second.
+There's no `matcher`, because `UserPromptSubmit` fires on every prompt, which is what the reminder needs. The five-second timeout is a ceiling, not an estimate: the script is a handful of `jq` calls and runs in well under a tenth of a second.
 
 ## Guardrails
 
