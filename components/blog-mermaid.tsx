@@ -452,7 +452,26 @@ export const BlogMermaid = ({
                     setDragging(false)
                   }}
                   onPointerCancel={(event) => {
+                    const pinch = pinchRef.current
                     pointersRef.current.delete(event.pointerId)
+
+                    if (pointersRef.current.size === 1) {
+                      const [pointerId, point] =
+                        pointersRef.current.entries().next().value!
+                      const origin = pinch?.lastOffset ?? offset
+
+                      pinchRef.current = null
+                      dragRef.current = {
+                        pointerId,
+                        x: point.x,
+                        y: point.y,
+                        originX: origin.x,
+                        originY: origin.y,
+                      }
+                      setDragging(true)
+                      return
+                    }
+
                     pinchRef.current = null
                     dragRef.current = null
                     setDragging(false)
