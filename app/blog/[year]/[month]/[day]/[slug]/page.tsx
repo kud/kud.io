@@ -160,6 +160,7 @@ const BlogPostPage = async ({ params }: Params) => {
 
   return (
     <>
+      <div className={styles.progress} aria-hidden="true" />
       <article>
         <h1 className={styles.title}>{post.title}</h1>
         <p className={styles.meta}>

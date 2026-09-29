@@ -636,3 +636,40 @@
     font-size: 16.5px;
   }
 }
+
+/* Reading progress ---------------------------------------------------------- */
+/* Gold in both themes: the same mark as the title hover and the selection. It
+ * is about 1.5:1 on the light ground, which is fine for a supplement to the
+ * scrollbar, not a replacement. Pure CSS: browsers without scroll timelines
+ * (Firefox today) show nothing, which beats a scroll listener for a garnish. */
+.progress {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 50;
+  height: 2px;
+  background: var(--c-gold);
+  transform-origin: 0 50%;
+  pointer-events: none;
+  /* The base value matters: a post too short to scroll has no timeline range,
+   * the animation never applies, and without this the bar would sit full. */
+  transform: scaleX(0);
+}
+
+@supports (animation-timeline: scroll()) {
+  .progress {
+    animation: read linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+@keyframes read {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media print {
+  .progress {
+    display: none;
+  }
+}
