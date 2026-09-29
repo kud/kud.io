@@ -21,13 +21,13 @@
 
 /* Prose ------------------------------------------------------------------- */
 
-/* 630px at 17.5px holds the line near 71 characters. The measure is narrower
+/* 700px at 17.5px holds the line near 79 characters. The measure is narrower
  * than the shell on purpose: the card and the site line may use the full
  * column, running prose may not. */
 .body {
   font-size: 17.5px;
   line-height: 1.6;
-  max-width: 630px;
+  max-width: 700px;
 }
 
 .body > :first-child {
@@ -276,8 +276,8 @@
 }
 
 /* Diagram stage + frame ---------------------------------------------------- */
-/* Running prose deliberately stops at 630px; a diagram may widen past it, to a
- * fixed ceiling of 1080px (one and a half shells) and never the viewport: past
+/* Running prose deliberately stops at 700px; a diagram may widen past it, to a
+ * fixed ceiling of 1080px and never the viewport: past
  * that it stops reading as part of the column. The stage is centred on the
  * shell, whose centre sits 27px right of .body's, so the breakout is
  * anchored on the column and the inset added back. No transform here: the

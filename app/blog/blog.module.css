@@ -129,7 +129,7 @@
 
 .wrap {
   width: 100%;
-  max-width: 720px;
+  max-width: 790px;
   margin: 0 auto;
   padding: 42px 18px 56px;
 }
@@ -138,12 +138,12 @@
 
 /* A sibling of .wrap, not a child: it restates .wrap's own max-width and
  * horizontal padding so the two text measures line up, while the rule above it
- * runs the full 720px box. */
+ * runs the full 790px box. */
 .footer {
   display: flex;
   justify-content: space-between;
   gap: 18px;
-  max-width: 720px;
+  max-width: 790px;
   margin: 0 auto;
   padding: 18px 18px 44px;
   border-top: 1px solid var(--line);
