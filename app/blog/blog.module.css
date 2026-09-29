@@ -29,7 +29,9 @@
   --bg-2: #eef0f2;
   --fg: #1b2126;
   --fg-2: #48535b;
-  --fg-3: #6b7780;
+  /* #6b7780 was 4.32:1 on --bg, under AA for the 11-12px dates and tags;
+   * same hue, darkened to clear 4.5:1 on both --bg and --bg-2. */
+  --fg-3: #646f77;
   --line: #e0e4e8;
   --line-2: #c3cad0;
 
