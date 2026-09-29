@@ -71,7 +71,8 @@ or `--model`. Nothing is chosen on your behalf.
   "maxTokens": 512,
   "maxFileLines": 1000,
   "skipFilePatterns": ["**/package-lock.json", "**/dist/**", "**/*.d.ts"],
-  "plugins": ["./src/plugins/my-plugin.ts"]
+  "plugins": ["./src/plugins/my-plugin.ts"],
+  "ticketFromBranch": false
 }
 ```
 
@@ -83,6 +84,7 @@ or `--model`. Nothing is chosen on your behalf.
 | `AICC_STYLE`        | `standard` | Commit style: `standard`, `gitmoji`, or `gitmoji-pure`              |
 | `AICC_PRIVACY`      | `low`      | Diff detail level sent to the model                                 |
 | `AICC_YES`          | —          | Set to `true` to skip all confirmation prompts                      |
+| `AICC_TICKET_FROM_BRANCH` | —    | Set to `true` to prepend the ticket key from the branch name (e.g. `SHOP-1234/feature` → `SHOP-1234: …`) |
 | `AICC_DEBUG`        | —          | Enable verbose provider logs                                        |
 | `AICC_MAX_TOKENS`   | `512`      | Token limit for model responses                                     |
 | `ANTHROPIC_API_KEY` | —          | Required when using `anthropic/*` models                            |
