@@ -151,6 +151,12 @@
   overflow: hidden;
 }
 
+/* The card stays dark in both themes, so it keeps the dark-ground selection;
+ * the #blog-root prefix outranks the light theme's ink tint. */
+:global(#blog-root) .card ::selection {
+  background: rgba(255, 255, 255, 0.15);
+}
+
 .cardHead {
   display: flex;
   /* center, not baseline — a dot has no baseline to sit on. */
