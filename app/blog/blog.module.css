@@ -246,19 +246,18 @@
   }
 }
 
-/* The site-wide selection is white 15%, built for the dark surfaces, and it
- * vanishes on the light ground. Light gets an ink tint; both dark branches
- * restate the white explicitly so the light rule's id specificity can't win. */
+/* Cobalt2 gold as a highlighter, shared with the code cards. Never set
+ * `color` here: it would flatten links and inline code inside the selection. */
 :global(#blog-root) ::selection {
-  background: rgba(27, 33, 38, 0.14);
+  background: rgba(255, 198, 0, 0.4);
 }
 
 @media (prefers-color-scheme: dark) {
   :global(#blog-root:not([data-theme="light"])) ::selection {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 198, 0, 0.22);
   }
 }
 
 :global(#blog-root[data-theme="dark"]) ::selection {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 198, 0, 0.22);
 }

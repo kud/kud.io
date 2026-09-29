@@ -151,10 +151,11 @@
   overflow: hidden;
 }
 
-/* The card stays dark in both themes, so it keeps the dark-ground selection;
- * the #blog-root prefix outranks the light theme's ink tint. */
+/* The card is dark in both themes. 13% gold keeps fn and kw at AA on both
+ * grounds, where white 15% dropped them below it; `color` stays unset so the
+ * syntax survives. The #blog-root prefix outranks the prose highlighter. */
 :global(#blog-root) .card ::selection {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 198, 0, 0.13);
 }
 
 .cardHead {

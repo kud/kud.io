@@ -25,11 +25,10 @@
   --color-fd-accent-foreground: #f1f5f9;
 }
 
+/* The dark surfaces (/projects, docs) select in the projects accent #e0a87e.
+   Light surfaces override this in their own modules. */
 ::selection {
-  background: rgba(255, 255, 255, 0.15);
-}
-::-moz-selection {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(224, 168, 126, 0.18);
 }
 
 html {
