@@ -5,6 +5,12 @@
   display: contents;
 }
 
+/* The site-wide selection is white 15% for the dark pages; on this cream ground
+   it disappears, so the home page selects in its own accent. */
+.home ::selection {
+  background: rgba(194, 112, 61, 0.28);
+}
+
 /* Mobile-only slide elements: hidden on desktop, where the split-screen hero
    carries everything instead. */
 .slideCard,

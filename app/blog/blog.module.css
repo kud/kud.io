@@ -245,3 +245,20 @@
     transition: none !important;
   }
 }
+
+/* The site-wide selection is white 15%, built for the dark surfaces, and it
+ * vanishes on the light ground. Light gets an ink tint; both dark branches
+ * restate the white explicitly so the light rule's id specificity can't win. */
+:global(#blog-root) ::selection {
+  background: rgba(27, 33, 38, 0.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :global(#blog-root:not([data-theme="light"])) ::selection {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+:global(#blog-root[data-theme="dark"]) ::selection {
+  background: rgba(255, 255, 255, 0.15);
+}
