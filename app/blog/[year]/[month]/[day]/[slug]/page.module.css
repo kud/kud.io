@@ -139,12 +139,17 @@
 }
 
 /* Code card ---------------------------------------------------------------- */
-/* One dark ground, a filename, the code. No header fill, no divider, no border,
- * no line numbers — every one of those is chrome arguing with the code it
- * frames. The three dots are the one ornament kept on purpose. */
+/* One dark ground, a filename, the code. No header fill, no divider, no border:
+ * chrome argues with the code it frames. The three dots are the one ornament
+ * kept on purpose. Line numbers were added later, at Erwann's request, and only
+ * on plain cards of 10+ lines, where "see line 84" earns the column; a short
+ * snippet does not need them and a diff would not know which side to number. */
 
 .card {
-  margin: 1.75em 0;
+  width: fit-content;
+  min-width: min(100%, 684px);
+  max-width: 100%;
+  margin: 0;
   background: var(--c-bg);
   border-radius: 10px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.045);
@@ -251,6 +256,33 @@
   white-space: pre;
 }
 
+/* The gutter sits inside the line's 22px padding, under the header dots, muted
+ * like the neutral diff sign. ::before content never reaches the clipboard, so
+ * Copy still copies clean code. 3ch from the 100th line on. */
+.card pre code {
+  counter-reset: ln;
+  --ln-w: 2ch;
+}
+
+.card pre code:has(> [data-line]:nth-child(100)) {
+  --ln-w: 3ch;
+}
+
+.card
+  pre
+  code:has(> [data-line]:nth-child(10)):not(:has([data-diff]))
+  [data-line]::before {
+  counter-increment: ln;
+  content: counter(ln);
+  display: inline-block;
+  width: var(--ln-w);
+  margin-right: 2ch;
+  text-align: right;
+  color: var(--c-mut);
+  opacity: 0.4;
+  font-variant-numeric: tabular-nums;
+}
+
 .card pre code [data-diff="add"] {
   background: var(--c-add);
   box-shadow: inset 2px 0 0 var(--c-str);
@@ -290,7 +322,8 @@
  * anchored on the column and the inset added back. No transform here: the
  * fixed viewer inside would take a transformed ancestor as its containing
  * block and stop covering the screen. */
-.diagram {
+.diagram,
+.codeStage {
   display: grid;
   width: calc(100% + 54px);
   margin: 1.75em 0 1.75em -27px;
@@ -298,7 +331,8 @@
 }
 
 @media (min-width: 768px) {
-  .diagram {
+  .diagram,
+  .codeStage {
     --stage: min(1080px, 100vw - 48px);
     width: var(--stage);
     margin-left: calc(50% + 27px - var(--stage) / 2);
@@ -538,7 +572,8 @@
 }
 
 @media (max-width: 720px) {
-  .diagram {
+  .diagram,
+  .codeStage {
     width: 100%;
     margin-left: 0;
   }
