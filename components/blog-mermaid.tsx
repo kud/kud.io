@@ -425,7 +425,7 @@ export const BlogMermaid = ({
 
                     if (pointersRef.current.size === 1) {
                       const [pointerId, point] =
-                        pointersRef.current.entries().next().value
+                        pointersRef.current.entries().next().value!
                       const origin = pinch?.lastOffset ?? offset
 
                       pinchRef.current = null
