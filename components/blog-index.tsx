@@ -45,8 +45,10 @@ export const BlogIndex = ({
 
   return (
     <>
-      {/* Tags appear once, at the top, as navigation — never repeated per row,
-          where they would compete with the titles they are meant to index. */}
+      {/* The filter bar is the index; the row tags are a reversal of an earlier
+          "tags once, at the top" rule, asked for by Erwann so a post shows its
+          topics at a glance. They stay quieter than the titles (smaller, no
+          border at rest) and double as a shortcut into the same filter. */}
       {tags.length > 0 && (
         <div className={styles.filter} role="group" aria-label="Filter by tag">
           <button
@@ -81,6 +83,21 @@ export const BlogIndex = ({
                 <h2>
                   <Link href={postPath(post)}>{post.title}</Link>
                 </h2>
+                {post.tags.length > 0 && (
+                  <div className={styles.tags}>
+                    {post.tags.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        onClick={() => setTag(option)}
+                        aria-pressed={tag === option}
+                        data-active={tag === option || undefined}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </li>
             ))}
           </ul>

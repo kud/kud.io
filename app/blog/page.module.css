@@ -81,7 +81,7 @@ section:first-of-type .year {
  * column is measured off the content, so no date ever wraps or floats. */
 .list li {
   display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
+  grid-template-columns: 88px minmax(0, 1fr) auto;
   gap: 20px;
   align-items: baseline;
 }
@@ -113,6 +113,39 @@ section:first-of-type .year {
   border-bottom-color: var(--c-gold);
 }
 
+/* Row tags mirror the date as metadata on the right. One size under the filter
+ * pills, no border or ground at rest: the filter bar owns the filled state, so
+ * active here is weight alone. */
+.tags {
+  display: flex;
+  gap: 2px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.tags button {
+  font: inherit;
+  padding: 1px 6px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  color: var(--fg-3);
+  cursor: pointer;
+  transition:
+    color 130ms,
+    border-color 130ms;
+}
+
+.tags button:hover {
+  color: var(--fg-2);
+  border-color: var(--line);
+}
+
+.tags button[data-active] {
+  color: var(--fg-2);
+  font-weight: 500;
+}
+
 .empty {
   margin: 0;
   font-size: 17.5px;
@@ -124,5 +157,12 @@ section:first-of-type .year {
   .list li {
     grid-template-columns: minmax(0, 1fr);
     gap: 3px;
+  }
+
+  /* -7px is the pill's padding plus border, so the tag text lines up with the
+   * title's left edge rather than indenting it. */
+  .tags {
+    flex-wrap: wrap;
+    margin-left: -7px;
   }
 }
