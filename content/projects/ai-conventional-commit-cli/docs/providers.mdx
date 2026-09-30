@@ -83,8 +83,8 @@ or `--model`. Nothing is chosen on your behalf.
 | `AICC_MODEL`        | —          | Model string, e.g. `claude/sonnet` or `anthropic/claude-sonnet-4-6` |
 | `AICC_STYLE`        | `standard` | Commit style: `standard`, `gitmoji`, or `gitmoji-pure`              |
 | `AICC_PRIVACY`      | `low`      | Diff detail level sent to the model                                 |
-| `AICC_YES`          | —          | Set to `true` to skip all confirmation prompts                      |
-| `AICC_TICKET_FROM_BRANCH` | —    | Set to `true` to prepend the ticket key from the branch name (e.g. `SHOP-1234/feature` → `SHOP-1234: …`) |
+| `AICC_YES`          | —          | Set to `true` to skip all confirmation prompts. **Scope: global** — when set in the environment (e.g. via shell RC), it auto-confirms every invocation including unattended agent runs. For per-invocation control, use the `-y`/`--yes` CLI flag instead. |
+| `AICC_TICKET_FROM_BRANCH` | —    | Set to `true` to prepend the ticket key from the branch name (e.g. `SHOP-1234/feature` → `SHOP-1234: …`). Multiple ticket prefixes in the branch (e.g. `SHOP-1234/ABC-5678/feature`) are joined with ` / `. |
 | `AICC_DEBUG`        | —          | Enable verbose provider logs                                        |
 | `AICC_MAX_TOKENS`   | `512`      | Token limit for model responses                                     |
 | `ANTHROPIC_API_KEY` | —          | Required when using `anthropic/*` models                            |
