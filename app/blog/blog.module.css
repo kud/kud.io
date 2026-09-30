@@ -35,15 +35,17 @@
   --line: #e0e4e8;
   --line-2: #c3cad0;
 
-  /* Card grounds, light. #062335 on this page was 15.4:1 — a higher-contrast
-   * event than the writing at ~14:1 — so the card read as a slab pasted on.
-   * #223442 brings it to 11.7:1. The other three re-derive off it: the dots
-   * hold their ~1.5:1 whisper, and the diff grounds stay at or above the card
-   * ground so a marked line reads as lifted rather than as a darker patch. */
-  --c-bg: #223442;
-  --c-dot: #3b5064;
-  --c-add: #1e4a2c;
-  --c-del: #5a3039;
+  /* Card grounds, light. #132a3e sits at 13.8:1 on this page, under the
+   * writing's 15.3:1, so the card stays quieter than the text; it is Cobalt2's
+   * own blue at half saturation, which is what keeps it from reading dusty.
+   * (Was #223442 at 12.1:1, which went grey; before that #062335 at 15.2:1, a
+   * slab.) The other three re-derive off it: the dots hold their ~1.5:1
+   * whisper, and the diff grounds sit at or above the card ground so a marked
+   * line reads as lifted rather than as a darker patch. */
+  --c-bg: #132a3e;
+  --c-dot: #30465a;
+  --c-add: #1a3f26;
+  --c-del: #4c272f;
 
   --sans:
     var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI",

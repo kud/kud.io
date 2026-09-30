@@ -143,6 +143,13 @@ const components = {
       {children}
     </a>
   ),
+  // A scroll box around the table, so a wide one scrolls inside the column
+  // rather than widening the page.
+  table: (props) => (
+    <div className={styles.tableScroll}>
+      <table {...props} />
+    </div>
+  ),
   img: (props) => (
     <img {...props} loading="lazy" decoding="async" alt={props.alt ?? ""} />
   ),

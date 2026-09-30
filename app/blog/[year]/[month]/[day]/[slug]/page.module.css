@@ -138,6 +138,56 @@
   border-radius: 3px;
 }
 
+/* Tables ------------------------------------------------------------------ */
+/* Hairlines, not boxes: a firmer rule under the head, a quiet one under each
+ * row, and the last row's rule closes the table so the next paragraph has an
+ * edge to start from. No verticals and no zebra; alignment does that work.
+ * The wrapper scrolls, not the table, so a wide one never widens the page and
+ * the table keeps its own display (display: block on a table drops its
+ * semantics in some screen readers). */
+.tableScroll {
+  max-width: 100%;
+  margin: 1.5em 0 1.75em;
+  overflow-x: auto;
+}
+
+.body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+}
+
+/* start, not left, and only by default: a GFM alignment arrives as an inline
+ * style and still wins. */
+.body th {
+  padding: 0 1.25em 0.55em 0;
+  border-bottom: 1px solid var(--line-2);
+  font-weight: 600;
+  text-align: start;
+  vertical-align: bottom;
+}
+
+/* Top alignment: a two-line cell beside a one-line cell should share a first
+ * line, not a midpoint. */
+.body td {
+  padding: 0.6em 1.25em 0.6em 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.body th:last-child,
+.body td:last-child {
+  padding-right: 0;
+}
+
+/* An identifier never breaks mid-name; a cell holding several breaks between
+ * them, at the commas, where the wrapper can take the overflow if it must. */
+.body td code {
+  white-space: nowrap;
+}
+
 /* Code card ---------------------------------------------------------------- */
 /* One dark ground, a filename, the code. No header fill, no divider, no border:
  * chrome argues with the code it frames. The three dots are the one ornament
