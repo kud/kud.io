@@ -4,7 +4,7 @@ description: "opencode's docs stop at themes and keybinds. Underneath there's a 
 date: "2026-09-30"
 slug: "making-opencode-look-like-the-rest-of-my-terminal"
 tags: ["tools","engineering"]
-updated: "2026-09-30T17:02:00.000Z"
+updated: "2026-09-30T17:04:00.000Z"
 ---
 
 For a long time [**opencode**](https://opencode.ai/) was the tool I opened now and then, and stock `tokyonight` was fine for that. Claude Code was where I spent my days, and it had long since been bent into shape: my colours, a statusline I read without thinking.
