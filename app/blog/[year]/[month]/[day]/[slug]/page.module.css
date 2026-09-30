@@ -313,10 +313,13 @@
 }
 
 /* Code stage --------------------------------------------------------------- */
-/* Centred on the prose column, not on the shell as diagrams are: a short card
- * is exactly the column's width, so both its edges must meet the text's. A card
- * wider than its code needs is never drawn; one whose lines run long grows
- * symmetrically past the column, up to the same 1080px ceiling, then scrolls.
+/* A short card belongs to the prose: it is exactly the column's width, so both
+ * its edges meet the text's. A wide one has left the column and sits on the
+ * shell's axis, as diagrams do. The stage is shell-centred; its middle track is
+ * at least the shell's 754px and grows with the code, and the card is pinned to
+ * the track's start, so its left edge is min(shell-centred, prose-left): flush
+ * up to 700px, growing right to 754px, centred on the page past that, scrolling
+ * past the 1080px ceiling. A card wider than its code needs is never drawn.
  * minmax(0, 1fr) is load-bearing: an auto grid track would size itself to the
  * code's max-content and carry the card straight past max-width. */
 .codeStage {
@@ -334,7 +337,16 @@
   .codeStage {
     --stage: min(1080px, 100vw - 48px);
     width: var(--stage);
-    margin-left: calc(50% - var(--stage) / 2);
+    margin-left: calc(50% + 27px - var(--stage) / 2);
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(min(100%, 754px), max-content)
+      minmax(0, 1fr);
+  }
+
+  .codeStage > .card {
+    grid-column: 2;
+    justify-self: start;
   }
 }
 
