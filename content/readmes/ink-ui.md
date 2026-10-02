@@ -9,7 +9,7 @@ description: "🧱 Opinionated design system for Ink CLIs — pre-styled compone
   - **Inputs** — `TextInput`, `EmailInput` (domain completion), `PasswordInput` (masked), `ConfirmInput`
   - **Lists** — `UnorderedList`, `OrderedList` (both nestable), `Table`
   - **Selection & navigation** — `Select`, `MultiSelect`, `Tabs`, `Switch`, `Toggle`, `SelectableRow`
-  - **Status & feedback** — `Spinner`, `ProgressBar`, `StatusMessage`, `Alert`, `Badge`, `Toast`
+  - **Status & feedback** — `Spinner`, `ProgressBar`, `SkeletonBar`, `SkeletonRows`, `StatusMessage`, `Alert`, `Badge`, `Toast`
   - **Layout & chrome** — `Banner`, `Header`, `Panel` (bordered pane, optional focus state), `Columns`, `FooterHints`, `KeyValue`, `LoadingScreen`, `ScrollView`
 - **Behaviour hooks** — `useTabs` and `useListCursor` own the keyboard state that every consumer used to hand-roll, so Tab/Shift+Tab and arrow/vim navigation behave the same everywhere
 - **Full [@inkjs/ui](https://github.com/vadimdemedes/ink-ui) parity** — every upstream component has an equivalent, plus a dozen more the design system adds on top

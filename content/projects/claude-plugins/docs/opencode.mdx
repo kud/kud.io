@@ -1,12 +1,13 @@
 ---
 title: 🧠 opencode
-description: Query any opencode-supported model from inside Claude — get a second opinion without leaving your session.
+description: Query any opencode-supported model for a second opinion, or delegate a task on a public repo to a private headless opencode instance — all from inside Claude.
 ---
 
 The **opencode** plugin wraps the
 [`@kud/mcp-opencode`](https://www.npmjs.com/package/@kud/mcp-opencode) MCP server
 so you can query any opencode-supported model and see its answer inline, clearly
-attributed.
+attributed, or hand a coding task on a public repository to a private headless
+opencode instance and get the reviewed result back.
 
 ## 🧰 What it bundles
 
@@ -21,6 +22,81 @@ session. A plain `opencode` opens no port and is invisible to the MCP. The MCP
 auto-discovers every opencode window listening on a local port, so several
 windows work at once — `list_sessions` shows sessions from all of them, and
 `send`/`read` route to the window that owns the session unless you name one.
+
+## 🤖 Delegated tasks: `opencode-runner`
+
+The plugin also ships an **`opencode-runner`** agent for work on **public
+repositories**. Claude spawns one per task; it drives the MCP's headless
+instance tools and never touches an opencode window you have open.
+
+| Agent             | When Claude uses it                                               | What it does                                                                                                    |
+| ----------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `opencode-runner` | A coding task on a public repo that should be routed via opencode | Works in a fresh git worktree, runs the task on its own headless instance, reviews the diff and the repo's gate |
+
+What it does, in order:
+
+1. Refuses unless `gh repo view` reports the repository as `PUBLIC`.
+2. Creates a fresh `git worktree` on a new branch (or uses a worktree you pass it), so your checkout is never touched.
+3. Starts a headless instance on the worktree, writes a self-contained brief and starts the task. You get an `opencode attach …` line to watch it live.
+4. Waits (at most six rounds), reviews the diff against the brief, runs the repo's test, typecheck and build scripts itself, and sends at most one follow-up.
+5. Always stops the instance, then reports the worktree path and branch, the diff stat, the gate results and a verdict (accept, needs follow-up or reject).
+
+It never commits, pushes or opens a PR: you land the work. The instances run
+with no git credentials, no `GH_TOKEN`, a pinned model and a permission set that
+denies `git push`, `gh`, `npm publish`, web fetches and anything outside the
+worktree. See the MCP's
+[tools reference](https://kud.io/projects/mcp-opencode/docs/tools) for the
+headless instance tools.
+
+## 👀 Watching jobs: `/opencode-jobs`
+
+The plugin also ships a [mod](https://code.claude.com/docs/en/plugins/mods/overview)
+(Claude Code 2.1.287 or later). `/opencode-jobs` opens a 48-column pane listing
+every headless opencode instance the MCP has started, one two-line row per
+session:
+
+```
+opencode jobs        1 ready · 1 retrying · 1 running
+
+✓ ready   api-gateway                  1h :53817
+  fix flaky retry test                 copy attach
+
+⚠ retrying web-shop                   30m :53900
+  tidy checkout copy                   copy attach
+
+◌ running api-gateway                 10m :53817
+  add rate limit header                copy attach
+
+gone      docs                         2h :54000
+  rewrite the intro
+```
+
+| Glyph | State      | Meaning                                                    |
+| ----- | ---------- | ---------------------------------------------------------- |
+| `✓`   | `ready`    | The session has finished: its result is waiting for you    |
+| `⚠`   | `retrying` | opencode is retrying a failed model request                |
+| `◌`   | `running`  | Still working                                              |
+|       | `gone`     | The instance no longer answers (shown dim, never an error) |
+
+The header counts each state, leaving out any that are zero. Rows sort ready
+first, then retrying, running and gone, newest first within each. A long title
+is cut at the edge with an ellipsis. Each live row has a **copy attach** button
+(hotkeys `1`–`9`, in on-screen order) that puts
+`opencode attach http://127.0.0.1:<port> --session <id>` on your clipboard, so
+you can watch or take over the job in a terminal of your own. With no instances
+running, `/opencode-jobs` shows a toast ("No headless opencode jobs") instead of
+opening an empty pane.
+
+How it works, and what it never does:
+
+- It reads the MCP's registry, `~/.local/state/mcp-opencode/instances.json`
+  (or `$MCP_OPENCODE_STATE_DIR/instances.json`), every 5 seconds, and re-reads
+  it only when the file changes.
+- While the registry lists instances it asks each one for
+  `GET /session/status` every 5 seconds, all in parallel with a one-second
+  timeout. An empty registry means no network requests at all.
+- It is read-only: it never hooks tool calls, never starts or stops an
+  instance and never writes to the registry.
 
 ## 📦 Install
 

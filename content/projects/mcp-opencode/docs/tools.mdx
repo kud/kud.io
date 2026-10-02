@@ -1,11 +1,12 @@
 ---
 title: 🧰 Tools
-description: The tools mcp-opencode exposes — query a model, list models, and talk to a live opencode session.
+description: The tools mcp-opencode exposes — query a model, list models, talk to a live opencode session, and run headless jobs on private instances.
 ---
 
-mcp-opencode exposes **five tools**: `query` and `list_models` for one-off
-questions, and `list_sessions`, `send` and `read` for holding a conversation with
-a live opencode session.
+mcp-opencode exposes **ten tools**: `query` and `list_models` for one-off
+questions; `list_sessions`, `send` and `read` for holding a conversation with
+a live opencode session; and `start_instance`, `task`, `wait`, `list_instances`
+and `stop_instance` for running headless jobs on a private opencode server.
 
 ## ⚡ `query`
 
@@ -63,13 +64,14 @@ Send a message to an existing session and return its reply.
 | `session_id`      | `string` | yes      | Session ID from `list_sessions`.                                                      |
 | `prompt`          | `string` | yes      | The message to send.                                                                  |
 | `agent`           | `string` | no       | opencode agent to handle the message (e.g. `build`, `plan`).                          |
+| `model`           | `string` | no       | Model for this message, `provider/model`. Must pass the allow/block filters.          |
 | `port`            | `number` | no       | Window to use. Defaults to the window that owns the session (lowest port if several). |
 | `timeout_seconds` | `number` | no       | How long to wait for the reply. Defaults to `MCP_OPENCODE_SEND_TIMEOUT` (600).        |
 
 The session keeps its history and its own model, and the exchange appears live
 in any TUI attached to the same server. `send` never creates or deletes a
-session. Model allow/block filters don't apply here: the session already has
-its model.
+session. Model allow/block filters apply only when you pass a `model`; without one,
+the session keeps its own.
 
 If the reply takes longer than the timeout, `send` returns a "still running"
 note instead of hanging. opencode keeps working; call `read` later for the
@@ -87,3 +89,100 @@ Read a session's recent messages as a condensed transcript.
 
 Each message is headed by its role, with text in full and tool calls summarised
 as `[tool: name (status)]`.
+
+## 🏗️ Headless instances
+
+The five tools below run jobs on a **private opencode server per job**, away
+from your windows and from the `query` server on 4096. An instance is started
+for one project directory, takes one or more `task`s, and is stopped when you
+are done (or reaped once idle).
+
+### `start_instance`
+
+| Parameter   | Type     | Required | Description                                         |
+| ----------- | -------- | -------- | --------------------------------------------------- |
+| `directory` | `string` | yes      | Absolute path of the project the instance works in. |
+
+Spawns `opencode serve --port 0 --hostname 127.0.0.1` in `directory`, reads the
+port from its `opencode server listening on …` line (10s timeout), registers it,
+and returns `{ port, url }`. The server runs with a hardened environment:
+
+- `GIT_TERMINAL_PROMPT=0`, `GIT_SSH_COMMAND=false` and an empty
+  `credential.helper`, so git cannot authenticate to a remote;
+- `GH_TOKEN` and `GITHUB_TOKEN` removed;
+- `OPENCODE_CONFIG_CONTENT` pinning `model` and `small_model` to
+  `MCP_OPENCODE_MODEL`, and carrying the permission rules below so every agent
+  in the instance, task subagents included, follows them.
+
+It refuses to start if the default model fails the allow/block filters.
+
+### `task`
+
+| Parameter | Type     | Required | Description                                                   |
+| --------- | -------- | -------- | ------------------------------------------------------------- |
+| `port`    | `number` | yes      | Port from `start_instance`.                                   |
+| `prompt`  | `string` | yes      | What the job should do.                                       |
+| `model`   | `string` | no       | `provider/model`. Defaults to `MCP_OPENCODE_MODEL`; filtered. |
+| `agent`   | `string` | no       | opencode agent. Defaults to `build`.                          |
+| `title`   | `string` | no       | Session title.                                                |
+
+Creates a fresh session with the guard rails, prompts it in the background and
+returns at once with `{ session_id, port, attach }`. It never deletes the
+session. A port that `start_instance` didn't register is refused.
+
+### `wait`
+
+| Parameter         | Type     | Required | Description              |
+| ----------------- | -------- | -------- | ------------------------ |
+| `port`            | `number` | yes      | Port of the instance.    |
+| `session_id`      | `string` | yes      | Session ID from `task`.  |
+| `timeout_seconds` | `number` | no       | Default and maximum 570. |
+
+Polls every 2s until the session is idle or the timeout hits, then returns its
+`status` (`idle`, `busy` or `error`), the last assistant text, and the files the
+job changed with line counts. The 570s cap keeps it under a 600s tool timeout;
+on `busy`, call `wait` again.
+
+### `list_instances`
+
+Reaps first, then returns every registered instance with the sessions `task`
+started on it and their live status.
+
+### `stop_instance`
+
+| Parameter | Type     | Required | Description           |
+| --------- | -------- | -------- | --------------------- |
+| `port`    | `number` | yes      | Port of the instance. |
+
+Aborts busy sessions, sends `SIGTERM` (then `SIGKILL` if needed), deregisters
+the instance and confirms the port has stopped listening.
+
+### 🛡️ Guard rails
+
+Every `task` session gets a ruleset with **no `ask` anywhere**, because nobody
+is there to answer and a headless session would wait forever. opencode applies
+the **last matching rule**, so the bash denies come after the bash allow:
+
+| Permission                                                                     | Action |
+| ------------------------------------------------------------------------------ | ------ |
+| `read`, `edit`, `glob`, `grep`, `list`, `todowrite`, `task`                    | allow  |
+| `external_directory`, `question`, `doom_loop`, `webfetch`                      | deny   |
+| `bash` `*`                                                                     | allow  |
+| `bash` `git push*`, `git remote*`, `gh *`, `npm publish*`, `git reset --hard*` | deny   |
+
+### 🧹 Reaping
+
+The reaper runs at MCP start-up, on `start_instance` and on `list_instances`. It
+drops instances whose process is gone and stops instances where every session
+has been idle for longer than `MCP_OPENCODE_INSTANCE_TTL` seconds (default
+1800). It never stops a busy instance and never touches a server it didn't
+start. When the MCP exits, it stops the instances it started.
+
+### 🔭 Watching a job
+
+`task` returns an `attach` command. Run it in a terminal to watch the session
+live, or step in:
+
+```sh
+opencode attach http://127.0.0.1:53817 --session ses_…
+```

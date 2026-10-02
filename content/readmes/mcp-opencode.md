@@ -9,6 +9,7 @@ description: "🔮 Query any model configured in opencode from Claude — zero A
 - **Multi-model support** — any model configured in opencode is available; query GPT-4.1, Claude, Gemini, or any other supported provider.
 - **Model filtering** — restrict or block models via `MCP_OPENCODE_MODEL_ALLOW` and `MCP_OPENCODE_MODEL_BLOCK` environment variables using glob-style patterns.
 - **Talk to a live session** — `list_sessions`, `send` and `read` let your assistant hold a conversation with a running opencode session, such as the one open in your TUI, and the exchange shows up there live.
+- **Headless jobs** — `start_instance`, `task`, `wait`, `list_instances` and `stop_instance` run work on a private opencode server per job, with guard rails (no git push, no credentials, no permission prompts) and an `opencode attach` command to watch it live.
 - **Auto-start** — if opencode is not already listening on the configured port (default 4096), the server spawns `opencode serve` on that port in the background.
 - **Session isolation** — each `query` call creates and destroys its own opencode session, so one-off questions leave nothing behind.
 - **Works everywhere** — compatible with Claude Desktop, Claude Code, Cursor, Windsurf, VSCode, and any MCP-capable client.
@@ -85,25 +86,77 @@ oc() {
 
 If the same project is open in two windows, `send` goes to the lowest port and says so. Pass `port` to choose.
 
+### Running headless jobs
+
+For work you want done in the background rather than in a window you are watching, ask your assistant to start an instance and hand it a task. For example: _"start an opencode instance in ~/Projects/my-app, have it add a health-check endpoint, and tell me what changed"_. It calls:
+
+1. `start_instance({ directory })` → `{ port, url }`: a private `opencode serve` on a free port, separate from your windows and from 4096.
+2. `task({ port, prompt })` → `{ session_id, port, attach }`: returns at once while the job runs.
+3. `wait({ port, session_id })` → status, the last assistant text and the files changed. Call it again if it comes back `busy`.
+4. `stop_instance({ port })` when done. Idle instances are reaped after `MCP_OPENCODE_INSTANCE_TTL`, and the MCP stops its own instances when it exits.
+
+**Guard rails.** Nobody is there to answer a permission prompt, so a task's session never gets one: reading, editing and shell commands are allowed, while `git push`, `git remote`, `gh`, `npm publish`, `git reset --hard`, web fetches, questions and anything outside the directory are denied. The server itself runs with no git credentials (`GIT_TERMINAL_PROMPT=0`, `GIT_SSH_COMMAND=false`, an empty `credential.helper`), without `GH_TOKEN`/`GITHUB_TOKEN`, and with its model pinned to `MCP_OPENCODE_MODEL`.
+
+**Watching or stepping in.** Paste the `attach` command from `task` into a terminal:
+
+```sh
+opencode attach http://127.0.0.1:53817 --session ses_…
+```
+
+#### Instance registry
+
+Instances are recorded in `~/.local/state/mcp-opencode/instances.json` (or `$MCP_OPENCODE_STATE_DIR/instances.json`). Other tools may read it directly; this shape is a stable contract:
+
+```jsonc
+[
+  {
+    "runtime": "opencode", // always "opencode" for now
+    "port": 53817, // where the server listens, on 127.0.0.1
+    "pid": 41234, // the opencode serve process
+    "mcpPid": 41200, // the mcp-opencode process that started it
+    "directory": "/Users/me/Projects/my-app",
+    "startedAt": "2026-10-02T12:04:34.453Z",
+    // one entry per task, appended when task starts it
+    "sessions": [
+      {
+        "id": "ses_…",
+        "title": "add health check",
+        "model": "github-copilot/gpt-4.1",
+        "startedAt": "2026-10-02T12:04:35.021Z",
+      },
+    ],
+  },
+]
+```
+
+Live state (busy or idle, last activity) is deliberately not in the file: read it from the server at `http://127.0.0.1:<port>`.
+
 ### Environment variables
 
-| Variable                    | Default                 | Purpose                                                                                                                                 |
-| --------------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `MCP_OPENCODE_URL`          | `http://127.0.0.1:4096` | Pin one opencode server instead of discovering windows (and the server `query` spawns if nothing listens on its port)                   |
-| `MCP_OPENCODE_SEND_TIMEOUT` | `600`                   | Seconds `send` waits for a reply before handing back and letting you `read` it later                                                    |
-| `MCP_OPENCODE_MODEL`        | `github-copilot/gpt-4.1` | Model `query` uses when none is passed                                                                                                  |
-| `MCP_OPENCODE_MODEL_ALLOW`  | all                     | Comma-separated models or `provider/*` patterns `query` may use                                                                         |
-| `MCP_OPENCODE_MODEL_BLOCK`  | none                    | Comma-separated models or patterns to block. Filters apply to `query`, `list_models` and a `model` passed to `send`; without one, `send` uses the session's own model |
+| Variable                    | Default                       | Purpose                                                                                                                                                               |
+| --------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MCP_OPENCODE_URL`          | `http://127.0.0.1:4096`       | Pin one opencode server instead of discovering windows (and the server `query` spawns if nothing listens on its port)                                                 |
+| `MCP_OPENCODE_SEND_TIMEOUT` | `600`                         | Seconds `send` waits for a reply before handing back and letting you `read` it later                                                                                  |
+| `MCP_OPENCODE_MODEL`        | `github-copilot/gpt-4.1`      | Model `query` uses when none is passed                                                                                                                                |
+| `MCP_OPENCODE_MODEL_ALLOW`  | all                           | Comma-separated models or `provider/*` patterns `query` may use                                                                                                       |
+| `MCP_OPENCODE_MODEL_BLOCK`  | none                          | Comma-separated models or patterns to block. Filters apply to `query`, `list_models` and a `model` passed to `send`; without one, `send` uses the session's own model |
+| `MCP_OPENCODE_INSTANCE_TTL` | `1800`                        | Seconds every session on an instance may sit idle before the reaper stops it                                                                                          |
+| `MCP_OPENCODE_STATE_DIR`    | `~/.local/state/mcp-opencode` | Where the instance registry (`instances.json`) and instance logs live                                                                                                 |
 
 ### Available tools
 
-| Tool            | Description                                                                                                                                                                                                                    |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `query`         | Send a prompt to an opencode model. Accepts `prompt` (required) and `model` (optional, default: `github-copilot/gpt-4.1`).                                                                                                     |
-| `list_models`   | List models available through the running opencode server. Accepts an optional `provider` filter (e.g. `anthropic`).                                                                                                           |
-| `list_sessions` | List sessions across every discovered opencode window, most recent first, with the port each is on. Accepts an optional `directory` filter.                                                                                    |
-| `send`          | Send a message to an existing session and return the reply. Accepts `session_id`, `prompt`, and optional `agent`, `model` (allowlist-checked; defaults to the session's own), `port` and `timeout_seconds`. Routes to the window that owns the session. Never creates or deletes sessions. |
-| `read`          | Read a session's recent messages as a condensed transcript. Accepts `session_id` and optional `limit` (default 20) and `port`.                                                                                                 |
+| Tool             | Description                                                                                                                                                                                                                                                                                |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `query`          | Send a prompt to an opencode model. Accepts `prompt` (required) and `model` (optional, default: `github-copilot/gpt-4.1`).                                                                                                                                                                 |
+| `list_models`    | List models available through the running opencode server. Accepts an optional `provider` filter (e.g. `anthropic`).                                                                                                                                                                       |
+| `list_sessions`  | List sessions across every discovered opencode window, most recent first, with the port each is on. Accepts an optional `directory` filter.                                                                                                                                                |
+| `send`           | Send a message to an existing session and return the reply. Accepts `session_id`, `prompt`, and optional `agent`, `model` (allowlist-checked; defaults to the session's own), `port` and `timeout_seconds`. Routes to the window that owns the session. Never creates or deletes sessions. |
+| `read`           | Read a session's recent messages as a condensed transcript. Accepts `session_id` and optional `limit` (default 20) and `port`.                                                                                                                                                             |
+| `start_instance` | Start a private headless opencode server in `directory`. Returns `{ port, url }`.                                                                                                                                                                                                          |
+| `task`           | Start a job on an instance: `port`, `prompt`, optional `model` (allowlist-checked), `agent` (default `build`) and `title`. Returns `{ session_id, port, attach }` at once.                                                                                                                 |
+| `wait`           | Wait for a job (`port`, `session_id`, `timeout_seconds` up to 570). Returns status, last assistant text and changed files.                                                                                                                                                                 |
+| `list_instances` | Reap, then list registered instances with their task sessions' live status.                                                                                                                                                                                                                |
+| `stop_instance`  | Abort busy sessions, stop the server on `port` and confirm the port has closed.                                                                                                                                                                                                            |
 
 ## Development
 

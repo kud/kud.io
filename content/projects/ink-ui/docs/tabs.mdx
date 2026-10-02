@@ -23,7 +23,7 @@ import type { TabItem } from "@kud/ink-ui";
 | ------- | -------- | ------------------------------- |
 | `value` | `T`      | Stable tab identifier           |
 | `label` | `string` | Visible tab label               |
-| `count` | `number` | Optional count rendered in tabs |
+| `count` | `number \| null` | Optional count rendered in tabs; `null` (not loaded yet) draws `(–)` at a two-digit width |
 
 ## 💡 Examples
 
