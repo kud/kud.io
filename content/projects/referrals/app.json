@@ -1,4 +1,5 @@
 {
+  "icon": "/apps/referrals.png",
   "accent": "#f59e0b",
   "tagline": "Every referral code I use, in one place — sign up through one and we both get the perk.",
   "launchUrl": "https://referrals.kud.io",

@@ -18,4 +18,4 @@ kud.github.io         # legacy GitHub Pages host, superseded by kud.io
 kud.io                # this site
 gh-pr-comments-tests  # throwaway-PR fixture for gh-pr-comments
 homebrew-tap          # distribution channel for the macOS apps, not a project
-git-sandbox           # scratch repo for testing git behaviour
+sandbox               # scratch repo for testing git behaviour
