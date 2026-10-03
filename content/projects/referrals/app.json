@@ -1,7 +1,7 @@
 {
   "accent": "#f59e0b",
   "tagline": "Every referral code I use, in one place — sign up through one and we both get the perk.",
-  "launchUrl": "https://referrals.kud.io",
+  "launchUrl": "https://referrals.beansontoast.app",
   "launchLabel": "Open Referrals",
   "why": "My referral codes were scattered across emails, apps, and screenshots. I wanted a single tidy page to point people at — pick a service, grab the code, and we both get the bonus.",
   "how": "Next.js on Vercel with Notion as the CMS: each code is a row in a Notion database, served through the Notion API. Add a referral in Notion and it appears on the site — no redeploy.",
