@@ -1,0 +1,64 @@
+---
+title: 🖼️ image-view
+description: See the images you paste into Claude Code — thumbnails above the prompt, with real pixels in kitty, Ghostty and iTerm2, and half-blocks everywhere else.
+---
+
+The **image-view** plugin is a
+[mod](https://code.claude.com/docs/en/plugins/mods/overview) (Claude Code
+2.1.287 or later) that draws a thumbnail of every image in your draft in the
+band above the prompt, instead of a bare `[Image #1]` tag.
+
+## 📦 Install
+
+```
+/plugin install image-view@kud --scope user
+```
+
+## 🖼️ How it draws
+
+| Terminal                                            | Element  | What you see                                |
+| --------------------------------------------------- | -------- | ------------------------------------------- |
+| kitty (`TERM=xterm-kitty`), Ghostty                 | `Image`  | the picture itself, out of the box          |
+| iTerm2 3.6+ or nightly, with the setting below      | `Image`  | the picture itself                          |
+| everything else (iTerm2 without it, WezTerm, tmux…) | `Raster` | a half-block thumbnail, two pixels per cell |
+
+### iTerm2
+
+iTerm2 draws kitty graphics from 3.6 (and the nightly builds), but Claude Code
+cannot detect it. Set `CLAUDE_CODE_FORCE_TERMINAL_IMAGES=1` in your shell
+environment, or in the `env` block of Claude Code's settings:
+
+```json
+{
+  "env": {
+    "CLAUDE_CODE_FORCE_TERMINAL_IMAGES": "1"
+  }
+}
+```
+
+kitty and Ghostty need nothing. Claude Code reads the override once, as it
+starts: added to settings mid-session, it takes effect after a restart, and
+the mod keeps drawing `Raster` thumbnails until then.
+
+### The `Raster` fallback
+
+In the `Raster` case the pasted PNG is scaled with macOS `sips` to the tile's
+exact pixel size and turned into `▀` cells, foreground the top pixel and
+background the bottom one, in truecolour. It all happens locally; decoded tiles
+are cached per image and size. Off macOS the tile reads `no preview`.
+
+## ✨ Behaviour
+
+- Thumbnails show as soon as you paste, and clear when you send.
+- The aspect ratio is kept, tiles stay within 20 rows, and the row always fits the band.
+- An `Image` tile is sized for a terminal cell 2.3 times as tall as it is wide,
+  so the picture fills its border. If your font leaves thin bands, set
+  `IMAGE_VIEW_CELL_ASPECT` (1 to 4) to your cell's height over its width.
+- Each tile has a rounded grey border, a column of padding, and its `[Image #n]` label in bold, centred directly under the picture.
+
+## 🙏 Credit
+
+Adapted from
+[jarrodwatts/claude-image-view](https://github.com/jarrodwatts/claude-image-view)
+by Jarrod Watts (MIT). The `Raster` fallback for terminals without kitty
+graphics is new here.
