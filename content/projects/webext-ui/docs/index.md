@@ -22,7 +22,23 @@ npx @kud/webext-ui@latest sync src/vendor/
 This creates `src/vendor/` if it doesn't already exist, and overwrites `tokens.css` and `webext-ui.css` if it does — running it again later (to pick up a new version) is always safe.
 
 > [!IMPORTANT]
-> Don't add `@kud/webext-ui` as a `dependency` and don't link to it from inside `node_modules`. `web-ext build` — the standard tool for packaging Firefox extensions — excludes `node_modules` from the built `.xpi` entirely. A stylesheet pointing there resolves fine in dev and then silently vanishes from the shipped package. Vendoring the files into your own tree is the only model that survives packaging, not a workaround for one.
+> Without a bundler, don't link to `@kud/webext-ui` from inside `node_modules`. `web-ext build` — the standard tool for packaging Firefox extensions — excludes `node_modules` from the built `.xpi` entirely. A stylesheet pointing there resolves fine in dev and then silently vanishes from the shipped package. For a plain, unbundled extension, vendoring the files into your own tree is the only model that survives packaging.
+
+### With a bundler
+
+An extension built with a bundler (WXT, Vite) copies imported CSS into its own output, so `node_modules` never has to ship. Install the package pinned to an exact version and import the stylesheets by subpath, tokens first:
+
+```sh
+npm install --save-exact @kud/webext-ui
+```
+
+```js
+import "@kud/webext-ui/tokens.css"
+import "@kud/webext-ui/webext-ui.css"
+import "./theme.css"
+```
+
+`theme.css` still belongs to the extension, as below.
 
 Link the vendored files, then your extension's `src/theme.css`, from **every** page — popup and options alike:
 
