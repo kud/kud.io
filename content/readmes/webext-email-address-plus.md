@@ -80,10 +80,10 @@ npm install
 # Run in development mode
 npm run dev
 
-# Build extension
+# Build extension into .output/firefox-mv2
 npm run build
 
-# Lint code
+# Lint the built extension (run after build)
 npm run lint
 ```
 
