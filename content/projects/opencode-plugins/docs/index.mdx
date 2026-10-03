@@ -1,0 +1,39 @@
+---
+title: 👋 Introduction
+description: A small collection of opencode plugins by kud — each one a single TypeScript file, installed from npm by naming it in your opencode config.
+---
+
+**opencode-plugins** is the [opencode](https://opencode.ai) counterpart of
+[claude-plugins](/projects/claude-plugins/docs). Each plugin is a single
+TypeScript file, published to npm as `@kud/opencode-<name>`: name it in your
+opencode config, pinned to a version, and forget about it.
+
+There is no build step: opencode installs the package and runs the `.ts` as-is.
+
+## 🧩 Plugins
+
+| Plugin                                                   | Kind | What it does                                                                         |
+| -------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------ |
+| [quiet-home](/projects/opencode-plugins/docs/quiet-home) | TUI  | The home screen laid out like a session: logo top left, prompt docked at the bottom. |
+
+## 📦 Install a plugin
+
+Installation differs by plugin kind: TUI plugins go in `tui.json`, server
+plugins in `opencode.json`. Each plugin page lists the package line and the
+config entries it needs, plus a single-file install for when npm is not wanted.
+
+## ⚙️ How it works
+
+- **One file per plugin.** Read the whole thing in a sitting, copy it, tweak it.
+- **Loaded as-is.** opencode runs the `.ts` directly: nothing to compile or
+  bundle.
+- **Typechecked.** Every plugin is checked against the real
+  `@opencode-ai/plugin` and `@opentui/solid` types, so API drift shows up in
+  the repo before it shows up in your terminal.
+- **Easy to switch off.** Each plugin registers under its own ID, so a single
+  `plugin_enabled` entry turns it off without touching the rest of your setup.
+
+Plugins live under `plugins/<name>/` as a single `.ts` file with its own README.
+The only script is `npm run typecheck` (`tsc --noEmit`).
+
+Pick a plugin from the list above to see how to install it.

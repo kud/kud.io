@@ -1,0 +1,99 @@
+---
+title: 🏠 quiet-home
+description: opencode's home screen laid out like a session — logo top left, prompt docked at the bottom, nothing else.
+---
+
+The **quiet-home** plugin lays out opencode's home screen like a session. The
+prompt sits docked at the bottom, where it stays once the conversation starts,
+and the opencode logo sits at the top left, where the first message will land,
+with the name and version beside it. Starting a session then moves nothing but
+the header.
+
+No tips, no footer, no model line: the statusline and the prompt already carry
+those.
+
+## 📦 Install
+
+A TUI plugin, so it goes in `~/.config/opencode/tui.json`, not `opencode.json`.
+Name the package, pinned to a version, and switch off the two built-in home
+blocks it replaces:
+
+```json
+{
+  "plugin": ["@kud/opencode-quiet-home@0.1.0"],
+  "plugin_enabled": {
+    "internal:home-tips": false,
+    "internal:home-footer": false
+  }
+}
+```
+
+opencode installs it with Bun on the next start. To upgrade, bump the version in
+that line.
+
+### Without npm
+
+The plugin is a single file, so you can also download it somewhere **outside**
+`~/.config/opencode/plugin/` and `plugins/` (opencode loads everything there as a
+server plugin and would hand this one the wrong API):
+
+```sh
+mkdir -p ~/.config/opencode/tui
+curl -fsSL -o ~/.config/opencode/tui/quiet-home.ts \
+  https://raw.githubusercontent.com/kud/opencode-plugins/main/plugins/quiet-home/quiet-home.ts
+```
+
+Then use its absolute path in place of the package name:
+`"plugin": ["/Users/you/.config/opencode/tui/quiet-home.ts"]`, with the same
+`plugin_enabled` block.
+
+Either way there is no build step: the plugin is written without JSX, so
+opencode loads the `.ts` as-is.
+
+## ⚙️ How it works
+
+opencode centres home with two equal `flexGrow` spacers around the logo and
+prompt, and no plugin can reach them. So the plugin blanks the stock logo and
+prompt, and its `home_bottom` slot draws an absolutely positioned column over the
+whole screen instead.
+
+- **Session padding.** The column uses the session route's own padding: 2 left
+  and right, 1 below, a gap of 1, and the 1-row spacer its scrollbox opens with.
+- **Header.** The logo, with `OpenCode` and the version beside it, level with the
+  letters rather than the ascender row.
+- **Prompt.** A new prompt, docked at the bottom.
+- **Logo.** opencode's own glyph table, copied because the plugin API does not
+  expose the component.
+
+## 🔄 What it replaces
+
+| Built-in               | Handled by                                               |
+| ---------------------- | -------------------------------------------------------- |
+| Home logo and prompt   | Blanked by the plugin, redrawn in `home_bottom`          |
+| `internal:home-tips`   | Switched off in `plugin_enabled`                         |
+| `internal:home-footer` | Switched off in `plugin_enabled`                         |
+| Model line             | Not drawn: the prompt's own line tracks the model in use |
+
+The plugin leaves the model line out on purpose. The model in use lives in
+opencode's memory, out of the plugin API's reach, and the config's `model` is
+only the startup default, so it would go stale on the first switch.
+
+## 🔌 Turning it off
+
+Set `"kud.quiet-home": false` under `plugin_enabled`:
+
+```json
+{
+  "plugin_enabled": {
+    "kud.quiet-home": false
+  }
+}
+```
+
+If the plugin ever breaks the home screen, this is the switch to reach for.
+
+## ✅ Compatibility
+
+Written against opencode 1.18. It mirrors the session route's padding and copies
+opencode's logo glyphs, so a layout change upstream may need a matching tweak
+here.
