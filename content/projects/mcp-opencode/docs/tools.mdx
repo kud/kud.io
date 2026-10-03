@@ -105,7 +105,10 @@ are done (or reaped once idle).
 
 Spawns `opencode serve --port 0 --hostname 127.0.0.1` in `directory`, reads the
 port from its `opencode server listening on …` line (10s timeout), registers it,
-and returns `{ port, url }`. The server runs with a hardened environment:
+and returns `{ port, url }`. With `MCP_OPENCODE_SANDBOX=srt` the same command
+is wrapped as `srt --settings <generated file> opencode serve …` (or your
+`MCP_OPENCODE_SANDBOX_SETTINGS` file verbatim), and the registry row records
+`"sandbox": "srt"` (else `null`). The server runs with a hardened environment:
 
 - `GIT_TERMINAL_PROMPT=0`, `GIT_SSH_COMMAND=false` and an empty
   `credential.helper`, so git cannot authenticate to a remote;
@@ -130,6 +133,14 @@ Creates a fresh session with the guard rails, prompts it in the background and
 returns at once with `{ session_id, port, attach }`. It never deletes the
 session. A port that `start_instance` didn't register is refused.
 
+The job tries `[its model, ...MCP_OPENCODE_MODEL_FALLBACK]` once each, in
+order (deduped, allow/block-filtered). When the session stays in `retry` for
+`MCP_OPENCODE_RETRY_TIMEOUT_SECONDS` (default 90) or its reply ends in a
+provider error, a per-job watchdog aborts the session and re-prompts the same
+session with the same prompt on the next model, so history and worktree edits
+carry over — even when nobody calls `wait`. When the list is exhausted the job
+settles as `error`.
+
 ### `wait`
 
 | Parameter         | Type     | Required | Description              |
@@ -139,14 +150,18 @@ session. A port that `start_instance` didn't register is refused.
 | `timeout_seconds` | `number` | no       | Default and maximum 570. |
 
 Polls every 2s until the session is idle or the timeout hits, then returns its
-`status` (`idle`, `busy` or `error`), the last assistant text, and the files the
-job changed with line counts. The 570s cap keeps it under a 600s tool timeout;
-on `busy`, call `wait` again.
+`status` (`idle`, `busy`, `retry` or `error`), the current `model`, the
+`fallbacks` taken so far (`[{ from, to, reason, at }]`), the last assistant
+text, and the files the job changed with line counts. The changed-files diff
+is taken from the job's first prompt, so fallback re-prompts don't re-base
+it. The 570s cap keeps it under a 600s tool timeout; on `busy` or `retry`,
+call `wait` again.
 
 ### `list_instances`
 
 Reaps first, then returns every registered instance with the sessions `task`
-started on it and their live status.
+started on it, each with its live status, current `model` and `fallbacks` —
+plus each instance's `sandbox` mode (`"srt"` or `null`).
 
 ### `stop_instance`
 
@@ -169,6 +184,29 @@ the **last matching rule**, so the bash denies come after the bash allow:
 | `external_directory`, `question`, `doom_loop`, `webfetch`                      | deny   |
 | `bash` `*`                                                                     | allow  |
 | `bash` `git push*`, `git remote*`, `gh *`, `npm publish*`, `git reset --hard*` | deny   |
+
+### 📦 Sandboxing (opt-in)
+
+Set `MCP_OPENCODE_SANDBOX=srt` to wrap each instance in an OS-level sandbox
+via `srt` (`npm i -g @anthropic-ai/sandbox-runtime`; macOS `sandbox-exec`,
+Linux `bubblewrap`). Unset, everything behaves as before. Anything else fails
+`start_instance` with the supported values, and a missing `srt` fails the
+start rather than running unsandboxed — never silently.
+
+The generated settings file allows writes only to the instance directory, its
+git dir(s) (common and per-worktree, so worktrees work), opencode's own
+data/config/cache/state dirs and the temp dir; denies reads of credential
+paths (`~/.ssh`, `~/.aws`, `~/.config/gh`, `~/.gnupg`, `~/.netrc`, `~/.npmrc`,
+`**/.env`, `**/.env.*`, `~/Library/Keychains`, `~/.config/gcloud`, `~/.kube`,
+`~/.docker/config.json`); and allows only the provider, github, npm and
+loopback domains plus local binding. `MCP_OPENCODE_SANDBOX_SETTINGS` points at
+your own settings file to use instead of the generated one. Sandboxed
+instances additionally deny `rm -rf*`, `sudo *` and piped `curl`/`wget` in
+their opencode permission config — `deny`, never `ask`, because a headless
+session would wait forever on a prompt.
+
+This is defence in depth, not a guarantee: see the README's Sandboxing
+section for the verified-vs-assumed allowlist and the limits.
 
 ### 🧹 Reaping
 

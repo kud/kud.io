@@ -9,10 +9,12 @@ or blocking expensive models from accidental use.
 
 ## 🔧 Variables
 
-| Variable                   | Description                                                  | Example                        |
-| -------------------------- | ------------------------------------------------------------ | ------------------------------ |
-| `MCP_OPENCODE_MODEL_ALLOW` | Comma-separated allowlist (supports `provider/*` wildcards). | `github-copilot/*,anthropic/*` |
-| `MCP_OPENCODE_MODEL_BLOCK` | Comma-separated blocklist (same syntax).                     | `anthropic/claude-opus-4-6`    |
+| Variable                             | Description                                                                                                       | Example                                            |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `MCP_OPENCODE_MODEL_ALLOW`           | Comma-separated allowlist (supports `provider/*` wildcards).                                                      | `github-copilot/*,anthropic/*`                     |
+| `MCP_OPENCODE_MODEL_BLOCK`           | Comma-separated blocklist (same syntax).                                                                          | `anthropic/claude-opus-4-6`                        |
+| `MCP_OPENCODE_MODEL_FALLBACK`        | Ordered, comma-separated fallback models (`provider/model`) a headless job tries in order after its chosen model. | `github-copilot/gpt-5,anthropic/claude-sonnet-4-6` |
+| `MCP_OPENCODE_RETRY_TIMEOUT_SECONDS` | Seconds a job's session may stay continuously in `retry` before switching to the next fallback (default `90`).    | `60`                                               |
 
 ## ⚙️ How matching works
 
@@ -32,6 +34,21 @@ The rules:
 
 Both `query` and `list_models` respect these filters: blocked models never
 appear in the list, and querying one returns an error.
+
+## 🔁 Job fallbacks
+
+A headless job (`task`) tries `[its model, ...MCP_OPENCODE_MODEL_FALLBACK]`
+once each, in order (deduped). Fallback entries must pass the same
+allow/block filters; disallowed entries are dropped. `MCP_OPENCODE_MODEL`
+itself stays a single model and is unchanged.
+
+A switch happens when the model is down: the session status stays `retry`
+continuously for at least `MCP_OPENCODE_RETRY_TIMEOUT_SECONDS` (default 90),
+or the reply ends in a provider error (`APIError`, `ProviderAuthError`, model
+not found). Broken code or failing tests in the work are not "down". On a
+switch the watchdog aborts the session and re-prompts the same session with
+the same prompt on the next model, so history and worktree edits carry over;
+when the list is exhausted the job settles as `error`.
 
 ## 📝 Example
 
