@@ -3,7 +3,7 @@
   "icon": "/apps/your-move.png",
   "accent": "#e0707c",
   "tagline": "A GitHub inbox for what moved, and whose move it is — on every device.",
-  "launchUrl": "https://move.kud.io",
+  "launchUrl": "https://move.beansontoast.app",
   "launchLabel": "Open Your Move",
   "ctaTitle": "See whose move it is",
   "ctaSubtitle": "Sign in with GitHub — your own token, scoped to what you can already see. Nothing to configure.",
