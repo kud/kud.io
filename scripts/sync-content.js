@@ -5,7 +5,14 @@
 // the README, with the repo as the single source of truth. When a repo ships no
 // docs/index, its README also serves as the fallback docs page. Runs as part of
 // `npm run build` and never fails the build.
-import { mkdir, readdir, readFile, rm, unlink, writeFile } from "node:fs/promises"
+import {
+  mkdir,
+  readdir,
+  readFile,
+  rm,
+  unlink,
+  writeFile,
+} from "node:fs/promises"
 import { dirname, join } from "node:path"
 import ora from "ora"
 import { ICON, OWNER, TOPIC } from "./lib/kud-site.js"
@@ -104,6 +111,21 @@ const stripLeadingImage = (markdown) => {
   return trimmed.slice(match[0].length).replace(/^\s+/, "")
 }
 
+// A wide banner image above the hero is the project's artwork, not chrome: keep it
+// at the top of the landing and strip the hero that follows it. Logos and icons are
+// left to stripLeadingImage.
+const leadingBanner = (markdown) => {
+  const trimmed = markdown.replace(/^\s+/, "")
+  const match = trimmed.match(
+    /^(?:<img\b[^>]*\/?>|!\[[^\]]*\]\([^)]*\))\s*(?:\n|$)/i,
+  )
+  if (!match || /\b(?:icon|logo)\b/i.test(match[0])) return null
+  return {
+    image: match[0].trim(),
+    rest: trimmed.slice(match[0].length).replace(/^\s+/, ""),
+  }
+}
+
 // A leading thematic break (---/***/___) left dangling once the hero above it is
 // stripped — drop it so the landing doesn't open with a stray rule.
 const stripLeadingRule = (markdown) => {
@@ -117,6 +139,8 @@ const stripLeadingRule = (markdown) => {
 // dangling rule) in whatever order it appears, so the landing starts at the first
 // real content.
 const stripLeadingChrome = (markdown) => {
+  const banner = leadingBanner(markdown)
+  if (banner) return `${banner.image}\n\n${stripLeadingChrome(banner.rest)}`
   let out = markdown
   for (let i = 0; i < 6; i += 1) {
     const next = stripLeadingRule(
@@ -217,7 +241,6 @@ const getTree = async (slug) => {
     return []
   }
 }
-
 
 const iconRank = (path) => (/\.svg$/i.test(path) ? 0 : 1)
 
@@ -461,7 +484,8 @@ const searchRepos = async () => {
     )
     const items = result.items ?? []
     repos.push(...items)
-    if (items.length < perPage || repos.length >= (result.total_count ?? 0)) break
+    if (items.length < perPage || repos.length >= (result.total_count ?? 0))
+      break
   }
   return repos
 }
