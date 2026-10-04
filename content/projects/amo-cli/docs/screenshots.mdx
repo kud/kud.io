@@ -1,0 +1,36 @@
+---
+title: 🖼️ Screenshots
+description: Make AMO's preview images and captions match a local directory.
+---
+
+```sh
+amo screenshots sync --guid my-addon@example.com --screenshots store/screenshots
+amo screenshots sync --apply
+```
+
+`sync` is the `previews` scope of [`amo listing push`](/projects/amo-cli/docs/listing) on its own. It is a dry run unless you pass `--apply`, and it needs a screenshots directory (`--screenshots` or `AMO_SCREENSHOTS`).
+
+## The directory
+
+- Every `.png`, `.jpg` and `.jpeg` file in the directory is a screenshot. Subdirectories and other files are ignored.
+- Files are sorted by name, and that order becomes the order on AMO. Prefix names with numbers to control it: `01-overview.png`, `02-settings.png`.
+- An optional `<name>.txt` beside an image holds its caption. `01-overview.txt` captions `01-overview.png`. Surrounding whitespace is trimmed and an empty file means no caption.
+
+```text
+store/screenshots/
+  01-overview.png
+  01-overview.txt
+  02-settings.png
+```
+
+## What it sends
+
+AMO's current previews are compared with the directory. Previews that no longer match are deleted (`DELETE .../previews/<id>/`) and missing ones uploaded (`POST .../previews/`, with the caption as `en-US` when present). If everything already matches, the output says `previews: in sync (<n>)`.
+
+An empty directory is skipped with a note rather than wiping the listing.
+
+| Option          | Description                               |
+| --------------- | ----------------------------------------- |
+| `--guid`        | Add-on GUID (`AMO_GUID`)                  |
+| `--screenshots` | Screenshots directory (`AMO_SCREENSHOTS`) |
+| `--apply`       | Send the changes. Omit for a dry run      |

@@ -1,0 +1,48 @@
+---
+title: 📝 Listing
+description: Pull the live listing into a JSON file, then push local edits back to AMO.
+---
+
+The listing file is JSON with `en-US` text for `name`, `summary`, `description`, `homepage`, `support_email` and `support_url`, plus `categories` (slugs) and `tags`.
+
+## Pull
+
+```sh
+amo listing pull <guid>
+amo listing pull <guid> --out store/listing.json
+```
+
+Downloads the live listing and writes it as JSON to stdout, or to `--out`. Credentials are optional: with them the add-on is read through the authenticated API, without them through the public one.
+
+AMO stores descriptions as rendered HTML, so `pull` converts the description back to Markdown. Fields that are empty on AMO are left out.
+
+## Push
+
+```sh
+amo listing push --guid my-addon@example.com --listing store/listing.json
+amo listing push --apply
+```
+
+Compares the listing file, icon and screenshots with the live add-on and sends the differences. It is a [dry run](/projects/amo-cli/docs/configuration) unless you pass `--apply`.
+
+Descriptions in Markdown are compared as plain text against AMO's rendered HTML, so formatting alone never shows up as a difference. Only fields that really differ are included in the `PATCH` body.
+
+| Option          | Description                               |
+| --------------- | ----------------------------------------- |
+| `--guid`        | Add-on GUID (`AMO_GUID`)                  |
+| `--listing`     | Listing JSON file (`AMO_LISTING`)         |
+| `--icon`        | 128x128 icon PNG (`AMO_ICON`)             |
+| `--screenshots` | Screenshots directory (`AMO_SCREENSHOTS`) |
+| `--only`        | Restrict the push to some scopes          |
+| `--apply`       | Send the changes. Omit for a dry run      |
+
+## Limiting scope with `--only`
+
+`--only` takes a comma-separated list of `listing`, `icon` and `previews`. Anything else is rejected. With no `--only`, all three are in play.
+
+```sh
+amo listing push --only=listing          # text fields only
+amo listing push --only=icon,previews    # images only
+```
+
+The `icon` scope needs `--icon` (or `AMO_ICON`) and fails if the file does not exist. The `previews` scope is covered in [Screenshots](/projects/amo-cli/docs/screenshots).

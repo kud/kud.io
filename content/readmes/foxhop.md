@@ -3,6 +3,8 @@ title: "foxhop"
 description: "Focus a specific Firefox tab from anywhere on macOS — CLI, Raycast, and a Firefox extension."
 ---
 
+<img src="https://raw.githubusercontent.com/kud/foxhop/HEAD/assets/brand/foxhop-banner.png" alt="Fox Hop: a red fox leaping across browser tabs to land on the one you want" />
+
 ## Ecosystem
 
 foxhop isn't a single CLI — it's one product with three surfaces, all sharing the same targets in `~/.config/foxhop/tabs.json`:
@@ -62,3 +64,24 @@ cd cli && npm test           # vitest suite
 cd webextension && npm run dev  # launch Firefox Nightly with the extension loaded
 cd webextension && npm run lint # web-ext lint
 ```
+
+## Updating the AMO listing
+
+The public add-on page (name, summary, description, icon, screenshots) is managed
+from `webext/amo/listing.json`, plus `assets/icons/foxhop-128.png` for the icon and
+`webext/amo/screenshots/` for previews (see the README there).
+
+```sh
+npm run amo:listing              # dry run: diff against the live listing, send nothing
+npm run amo:listing -- --apply   # send the changes to AMO
+npm run amo:listing -- --only=listing --apply   # restrict to listing, icon and/or previews
+```
+
+The repo's script wires in the foxhop inputs (`--listing`, `--guid`, `--icon`,
+`--screenshots`, also settable via `AMO_LISTING`, `AMO_GUID`, `AMO_ICON`,
+`AMO_SCREENSHOTS`); `bin/amo-listing.mjs` itself is generic and reusable as-is.
+Sending needs `WEB_EXT_API_KEY` and `WEB_EXT_API_SECRET` in the environment (the
+JWT issuer/secret from
+[AMO's API credentials page](https://addons.mozilla.org/en-US/developers/addon/api/key/)).
+The dry run needs no credentials. The `AMO listing` workflow offers the same as a
+manual run: dispatch it with `apply` on for a real send, off for a dry run.

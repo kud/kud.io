@@ -74,8 +74,8 @@ Install from your browser's extension store:
 ## 🛠️ Development
 
 ```bash
-# Install dependencies
-npm install
+# Install the exact locked dependencies (Node 22 or later)
+npm ci
 
 # Run in development mode
 npm run dev

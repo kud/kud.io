@@ -1,0 +1,31 @@
+---
+title: 🚦 Status
+description: Show an add-on's listing status and the review state of its latest version.
+---
+
+```sh
+amo status <guid>
+amo status <guid> --json
+```
+
+`status` needs [credentials](/projects/amo-cli/docs/configuration), because review state is only visible to the add-on's owner. It fetches the add-on and its latest version in parallel and prints a short report:
+
+```console
+My Add-on (my-addon@example.com)
+listing:  public
+version:  1.4.0 (listed)
+review:   approved (file public)
+```
+
+| Line      | Meaning                                                |
+| --------- | ------------------------------------------------------ |
+| `listing` | The add-on's overall status on AMO, or `unknown`       |
+| `version` | Latest version number and its channel, or `none found` |
+| `review`  | `approved` or `not approved`, with the file status     |
+
+## Options
+
+| Option   | Description                                                                           |
+| -------- | ------------------------------------------------------------------------------------- |
+| `<guid>` | Add-on GUID (positional, required)                                                    |
+| `--json` | Print the report as JSON: `guid`, `name`, `slug`, `listingStatus` and `latestVersion` |

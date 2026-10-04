@@ -1,0 +1,61 @@
+---
+title: ⚙️ Configuration
+description: Credentials, environment variable fallbacks and the dry-run default that apply to every command.
+---
+
+## Credentials
+
+amo-cli uses the same API key pair as `web-ext`. Generate it in the AMO developer hub and export both values:
+
+```sh
+export WEB_EXT_API_KEY="user:12345:67"
+export WEB_EXT_API_SECRET="..."
+```
+
+| Command                                       | Credentials                                        |
+| --------------------------------------------- | -------------------------------------------------- |
+| `amo status`                                  | Required                                           |
+| `amo listing pull`                            | Optional. Without them, the public listing is read |
+| `amo listing push` and `amo screenshots sync` | Optional for a dry run, required with `--apply`    |
+
+If a command needs the keys and either variable is missing, it stops with `this needs WEB_EXT_API_KEY and WEB_EXT_API_SECRET`.
+
+## Dry run by default
+
+`amo listing push` and `amo screenshots sync` never change anything unless you pass `--apply`. Without it they fetch the live listing, compare, print the planned requests (with the authorisation header redacted) and stop.
+
+```console
+AMO listing for my-addon@example.com (dry run)
+listing: summary differs
+  live:  {"en-US":"Old summary"}
+  local: {"en-US":"New summary"}
+planned requests:
+  PATCH https://addons.mozilla.org/api/v5/addons/addon/my-addon@example.com/
+    Authorization: JWT <redacted>
+    body: {"summary":{"en-US":"New summary"}}
+```
+
+With `--apply`, each planned request is sent in order and reported as `sent: <METHOD> <url>`. When nothing differs, the output ends with `nothing to send`.
+
+## Environment fallbacks
+
+Every push input can come from a flag or from the environment. The flag wins.
+
+| Flag            | Environment variable | Meaning               |
+| --------------- | -------------------- | --------------------- |
+| `--guid`        | `AMO_GUID`           | Add-on GUID           |
+| `--listing`     | `AMO_LISTING`        | Listing JSON file     |
+| `--icon`        | `AMO_ICON`           | 128x128 icon PNG      |
+| `--screenshots` | `AMO_SCREENSHOTS`    | Screenshots directory |
+
+The GUID is always required. The listing file is required only when the `listing` scope is in play.
+
+```sh
+export AMO_GUID="my-addon@example.com"
+export AMO_LISTING="store/listing.json"
+export AMO_ICON="store/icon.png"
+export AMO_SCREENSHOTS="store/screenshots"
+
+amo listing push          # dry run
+amo listing push --apply  # send
+```
