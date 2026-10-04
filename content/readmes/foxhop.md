@@ -41,12 +41,15 @@ Targets live in `~/.config/foxhop/tabs.json`. Add one with `foxhop add` or by ed
 $ foxhop focus chatgpt          # focus a saved target (foregrounds Firefox)
 $ foxhop list                   # list saved targets   (--json for machine output)
 $ foxhop tabs                   # list currently open Firefox tabs   (--json)
-$ foxhop add gmail --match mail.google.com --url https://mail.google.com --title Gmail
+$ foxhop add https://mail.google.com --title Gmail   # id: gmail (slug of the title)
+$ foxhop edit gmail --url https://mail.google.com/mail/u/1   # change fields, never the id
 $ foxhop remove gmail
 $ foxhop sync                   # generate per-tab Raycast hotkey scripts
 ```
 
 Set `FOXHOP_BROWSER` to override the default Firefox Nightly (e.g. `FOXHOP_BROWSER=Firefox`).
+
+Target ids are the kebab-case slug of the title (`Notion Calendar` becomes `notion-calendar`), fixed when the target is created and never renamed. A taken id gets a `-2`, `-3` suffix instead of overwriting another target. Older configs migrate once on load (`bsky` titled Bluesky becomes `bluesky`); old names are not kept as aliases, so update saved `foxhop focus <name>` calls after upgrading. `foxhop edit <id>` changes any field but the id. Any change from the CLI, the popup or Raycast regenerates the Raycast scripts, and the popup shows each id with its script name. It also remembers favicons, so targets keep their icon when no tab is open.
 
 ## Development
 

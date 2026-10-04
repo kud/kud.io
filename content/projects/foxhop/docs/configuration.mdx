@@ -29,7 +29,7 @@ description: The tabs.json target format.
 | ---------- | -------------------------------------------------------------------------------- |
 | `name`     | id used by `foxhop focus <name>`                                                 |
 | `title`    | human label (shown in Raycast)                                                   |
-| `match`    | substring matched against tab URLs                                               |
+| `match`    | matched against tabs (hostname: host equals match or is a subdomain)             |
 | `url`      | opened if no tab matches                                                         |
 | `strategy` | how to match: `hostname` (default) · `prefix` · `exact` · `search` (url + title) |
 | `pick`     | which tab when several match: `recent` (default) · `first` · `pinned`            |
