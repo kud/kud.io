@@ -7,7 +7,7 @@ description: "Sync an add-on's listing, icon and screenshots with addons.mozilla
 
 - **Listing as a file** — keep your add-on's name, summary, description, categories and tags in a JSON file, and push only what differs from the live listing.
 - **Dry run by default** — `push` and `screenshots sync` print the planned requests, with the `Authorization` header redacted, and send nothing until you pass `--apply`.
-- **Icon and screenshots** — upload the icon and make AMO's previews match a directory of images, with optional captions.
+- **Icon and screenshots** — upload the icon and make AMO's previews match a directory of images, with optional captions. A small state file of preview ids and image hashes means a replaced image is noticed even when its caption is unchanged.
 - **Markdown descriptions** — write descriptions in Markdown, which AMO renders to HTML. The diff compares them as plain text, so an unchanged description reports no difference.
 - **Review status** — see the listing status and whether the latest version has been approved, as text or JSON.
 - **CI friendly** — credentials come from environment variables, and every input has an environment fallback.
@@ -63,6 +63,7 @@ $ amo screenshots sync --guid my-addon@example.com --screenshots screenshots --a
 | `--screenshots` | `AMO_SCREENSHOTS`    | `push`, `screenshots sync` | Screenshots directory                                       |
 | `--only`        |                      | `push`                     | Comma-separated subset of `listing`, `icon`, `previews`     |
 | `--apply`       |                      | `push`, `screenshots sync` | Send the changes to AMO                                     |
+| `--force`       |                      | `push`, `screenshots sync` | Replace every preview, even when they look in sync          |
 | `--out`         |                      | `listing pull`             | Write the listing to a file instead of stdout               |
 | `--json`        |                      | `status`                   | Print JSON                                                  |
 
@@ -106,6 +107,26 @@ screenshots/
   03-dark.jpg
 ```
 
+AMO cannot tell you which image sits behind a preview, so after a successful `--apply` the CLI writes `.amo-previews.json` into the screenshots directory. It records, for each preview it uploaded, the AMO preview id, the SHA-256 of the local file and its caption:
+
+```json
+{
+  "version": 1,
+  "previews": [
+    {
+      "id": 418930,
+      "file": "01-overview.png",
+      "sha256": "9f2c…",
+      "caption": "Overview"
+    }
+  ]
+}
+```
+
+Previews count as in sync only when AMO's preview ids, in display order, match the recorded ids, and every local file's hash and caption match its record. Anything else, including a missing or unreadable state file, replaces all previews: the live ones are deleted and the local files uploaded in file-name order, each with its `position` set so that order is the order shown on AMO. A dry run never writes the file. Pass `--force` to replace the previews regardless.
+
+Commit `.amo-previews.json` alongside the screenshots. It holds only ids, hashes and captions, and without it the next run cannot know the previews are current, so it uploads them all again.
+
 ### Continuous integration
 
 Add the two secrets to your repository, then push the listing whenever it changes.
@@ -119,11 +140,14 @@ on:
     paths:
       - listing.json
       - screenshots/**
+      - "!screenshots/.amo-previews.json"
       - icon.png
 
 jobs:
   listing:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -133,9 +157,15 @@ jobs:
         env:
           WEB_EXT_API_KEY: ${{ secrets.WEB_EXT_API_KEY }}
           WEB_EXT_API_SECRET: ${{ secrets.WEB_EXT_API_SECRET }}
+      - name: Commit the preview state
+        run: |
+          git add screenshots/.amo-previews.json
+          git diff --cached --quiet && exit 0
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit --message "chore: record AMO preview state"
+          git push
 ```
 
-Drop `--apply` to run the same job as a dry run on pull requests.
+Drop `--apply` to run the same job as a dry run on pull requests. Keep the commit step: a state file written on a CI runner and then thrown away leaves the next run with nothing to compare against, so it uploads every screenshot again.
 
 ## Development
 

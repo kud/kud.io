@@ -79,7 +79,7 @@ npm run amo:listing -- --only=listing --apply   # restrict to listing, icon and/
 
 The repo's script wires in the foxhop inputs (`--listing`, `--guid`, `--icon`,
 `--screenshots`, also settable via `AMO_LISTING`, `AMO_GUID`, `AMO_ICON`,
-`AMO_SCREENSHOTS`); `bin/amo-listing.mjs` itself is generic and reusable as-is.
+`AMO_SCREENSHOTS`), and the work is done by [`@kud/amo-cli`](https://kud.io/projects/amo-cli).
 Sending needs `WEB_EXT_API_KEY` and `WEB_EXT_API_SECRET` in the environment (the
 JWT issuer/secret from
 [AMO's API credentials page](https://addons.mozilla.org/en-US/developers/addon/api/key/)).
