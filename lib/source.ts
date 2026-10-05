@@ -60,6 +60,19 @@ export const getProjectDocsTree = (slug: string): Root => {
 // repo also ships its own docs/index.mdx.
 export const getProjectReadme = (slug: string) => readmeSource.getPage([slug])
 
+// Whether the landing is a pitch distilled from the README — computed once at
+// sync time (a repo ships its own docs index, docs/index.md or .mdx, or any
+// authored .mdx doc) and stored in the landing's frontmatter, so the filter and
+// the page read the same value. Falls back to the .mdx-only test for landings
+// synced before the stored value existed.
+export const projectHasDocs = (slug: string): boolean => {
+  const stored = (
+    getProjectReadme(slug)?.data as { hasDocs?: unknown } | undefined
+  )?.hasDocs
+  if (typeof stored === "boolean") return stored
+  return projectHasExtraDocs(slug)
+}
+
 // True when a project ships authored docs — i.e. .mdx under docs/. A repo with no
 // docs/ gets a generated README fallback (docs/index.md), which must NOT count, or
 // the landing would link to a page that just re-shows the README. So we key off the

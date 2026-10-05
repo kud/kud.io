@@ -628,6 +628,11 @@
   min-width: 0;
 }
 
+/* Closing docs link at the foot of a pitch landing — detail lives in /docs. */
+.landingCta {
+  margin-top: 44px;
+}
+
 /* Right-rail table of contents */
 .toc {
   position: sticky;

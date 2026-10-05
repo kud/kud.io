@@ -9,7 +9,7 @@ import { getProject, getProjects, type Project } from "@/lib/projects"
 import { getApp, appDisplayName, type AppMeta } from "@/lib/app"
 import { isAppCategory } from "@/lib/categories"
 import { getLandingMdx } from "@/lib/landings"
-import { getProjectReadme, projectHasExtraDocs } from "@/lib/source"
+import { getProjectReadme, projectHasDocs } from "@/lib/source"
 import { getIcons } from "@/lib/icons"
 import { landingComponents } from "@/components/landing-kit"
 import { getMDXComponents } from "@/components/mdx"
@@ -238,7 +238,10 @@ const ReadmeLanding = ({
   // skip the docs route and show a store CTA in the hero instead.
   const isWebext = project.category === "webext"
   const hasDocs =
-    !isList && !isRaycast && !isWebext && projectHasExtraDocs(project.slug)
+    !isList && !isRaycast && !isWebext && projectHasDocs(project.slug)
+  // A pitch landing (distilled from the README because the repo ships docs) is
+  // short enough to need no TOC; curated lists keep theirs.
+  const showToc = toc.length > 0 && (isList || !hasDocs)
   const badgeLabel = isRaycast
     ? project.downloads
       ? `${project.downloads.toLocaleString()} installs`
@@ -359,8 +362,18 @@ const ReadmeLanding = ({
             <DocsBody>
               <Body components={getMDXComponents()} />
             </DocsBody>
+            {hasDocs && !isList ? (
+              <div className={styles.landingCta}>
+                <Link
+                  href={`/projects/${project.slug}/docs`}
+                  className={styles.primary}
+                >
+                  Read the documentation →
+                </Link>
+              </div>
+            ) : null}
           </article>
-          {toc.length > 0 ? (
+          {showToc ? (
             <aside className={styles.toc}>
               <p className={styles.tocTitle}>On this page</p>
               <ul>

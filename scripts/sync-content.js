@@ -16,6 +16,11 @@ import {
 import { dirname, join } from "node:path"
 import ora from "ora"
 import { ICON, OWNER, TOPIC } from "./lib/kud-site.js"
+import {
+  LANDING_WORD_BUDGET,
+  countWords,
+  filterLanding,
+} from "./lib/landing-filter.js"
 
 const CONTENT_DIR = "content/projects"
 const README_DIR = "content/readmes"
@@ -68,10 +73,10 @@ const rawFile = async (slug, path) => {
   return res.ok ? res.text() : null
 }
 
-const frontmatter = (title, description) =>
+const frontmatter = (title, description, hasDocs) =>
   `---\ntitle: ${JSON.stringify(title ?? "")}\ndescription: ${JSON.stringify(
     description ?? "",
-  )}\n---\n\n`
+  )}${typeof hasDocs === "boolean" ? `\nhasDocs: ${hasDocs}` : ""}\n---\n\n`
 
 const stripLeadingH1 = (markdown) => markdown.replace(/^\s*#\s+.+\n+/, "")
 
@@ -252,7 +257,9 @@ const findIcon = (slug, tree) => {
   return `https://raw.githubusercontent.com/${OWNER}/${slug}/HEAD/${icons[0].path}`
 }
 
-// Pull a repo's docs/ folder; returns true if it provides its own docs index.
+// Pull a repo's docs/ folder; returns whether it provides its own docs index
+// (docs/index.md or .mdx) and whether it ships any authored .mdx doc. The two
+// are tracked separately because the landing's hasDocs answers either.
 const syncRepoDocs = async (slug, tree) => {
   let hasIndex = false
   const docFiles = tree.filter(
@@ -284,14 +291,21 @@ const syncRepoDocs = async (slug, tree) => {
       rewriteLinks(text, slug, `${dirname(file.path)}/`),
     )
   }
-  return hasIndex
+  const hasMdx = liveDocFiles.some((file) => file.path.endsWith(".mdx"))
+  return { hasIndex, hasMdx }
 }
 
 const syncRepo = async (repo) => {
   const slug = repo.name
 
   const tree = await getTree(slug)
-  const hasDocsIndex = await syncRepoDocs(slug, tree)
+  const { hasIndex: hasDocsIndex, hasMdx } = await syncRepoDocs(slug, tree)
+  // The one hasDocs value the landing filter and the page both read: true when
+  // the repo ships its own docs index (docs/index.md counts — the .mdx-only
+  // render-time test missed those, e.g. jira-cli) or any authored .mdx doc.
+  // Stored in the landing's frontmatter so the page never recomputes it.
+  const hasDocs = hasDocsIndex || hasMdx
+  const isReadmeLanding = (repo.topics ?? []).includes(`${TOPIC}-readme`)
   const icon = findIcon(slug, tree)
 
   const readme = await rawFile(slug, "README.md")
@@ -314,14 +328,26 @@ const syncRepo = async (repo) => {
   }
 
   // The README rendered as the project's landing page. `landing:skip` regions are
-  // dropped and relative links/images are absolutised to the repo. Written as .md
-  // (not .mdx) so a stray brace in any of 30+ READMEs can't fail the static build.
+  // dropped and relative links/images are absolutised to the repo. When the repo
+  // ships docs the landing is a pitch distilled from the README (intro plus the
+  // features/install/usage sections); without docs, and for README-is-the-product
+  // repos, the full README is kept. Written as .md (not .mdx) so a stray brace in
+  // any of 30+ READMEs can't fail the static build.
   if (cleaned) {
     await mkdir(README_DIR, { recursive: true })
+    const skipped = stripLandingSkips(cleaned)
+    const pitched =
+      hasDocs && !isReadmeLanding ? filterLanding(skipped) : skipped
+    const words = countWords(pitched)
+    if (hasDocs && !isReadmeLanding && words > LANDING_WORD_BUDGET) {
+      console.warn(
+        `[sync] ${slug} landing is ${words} words (budget ~${LANDING_WORD_BUDGET})`,
+      )
+    }
     await writeFile(
       join(README_DIR, `${slug}.md`),
-      frontmatter(repo.name, repo.description) +
-        rewriteLinks(stripLandingSkips(cleaned), slug, ""),
+      frontmatter(repo.name, repo.description, hasDocs) +
+        rewriteLinks(pitched, slug, ""),
     )
   }
 

@@ -57,12 +57,27 @@ extensions/themes may use their packaging icon at **`images/icon.png`**. No icon
 - **Transparent background**, **the mark only** (no product-name text baked in).
 - Designed to read on a **dark** surface.
 
-## 4. The landing page is your README
+## 4. The landing is a pitch distilled from your README
 
-`/projects/<slug>` renders your README. kud.io supplies its own hero (title from
+`/projects/<slug>` pitches your README. kud.io supplies its own hero (title from
 the repo, the description as tagline, GitHub + Documentation buttons), then renders
-the README body beneath it.
+the pitch beneath it — with a "Read the documentation →" link at its foot. Detail
+lives in `docs/` (§6).
 
+- When the repo ships docs, the landing keeps the **intro** (everything before the
+  first H2) plus the **first matching H2 section per bucket**, in original order:
+  - Features — `features`, `highlights`, `why`
+  - Install — `install`, `installation`, `quick start`, `quickstart`,
+    `getting started`, `setup`
+  - Usage — `usage`, `example`, `examples` (kept up to its first H3 — the H3
+    subsections are the reference detail `/docs` already covers)
+- Headings match after lowercasing and stripping emoji/punctuation, so
+  `## 🚀 Quick Start` counts. A README with no matching H2 lands **in full** —
+  following the shape in §5 is what earns the pitch.
+- A pitch over ~350 words logs a warning at sync time; it is never truncated.
+- No docs, or a `kud-site-readme` repo (the README _is_ the product): the landing
+  renders the full README, with its "On this page" index. The pitch landing is
+  short enough to need none.
 - The README's **leading GitHub chrome is stripped automatically** for the landing
   — the H1 title, an ASCII-art banner, a `<div align="center">` logo/badges hero,
   and any dangling `---` rule. The site hero replaces them, so don't fight it.
@@ -96,6 +111,10 @@ bespoke visuals live in an optional `landing.mdx`.
 6. **`## Development`** — clone + run for contributors (a good `landing:skip`
    candidate if you don't want it on the landing).
 7. **Footer link to the docs** — `📚 **Full documentation → [<slug>/docs](https://kud.io/projects/<slug>/docs)**` (link text is `<slug>/docs`, not the raw URL).
+
+**Landing budget:** keep the pitch within ~350 words and at most 4 H2 sections —
+the landing shows the intro plus one section each for features, install and usage,
+so anything past that shape only weighs down the README on GitHub.
 
 ## 6. Docs — `docs/*.mdx`
 
