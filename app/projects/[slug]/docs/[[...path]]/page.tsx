@@ -58,8 +58,15 @@ export const generateMetadata = async ({
   const page = resolvePage(slug, path)
   if (!page) notFound()
 
+  const project = await getProject(slug)
+  const title = `${page.data.title} — ${project?.name ?? slug} docs`
+  const description = page.data.description
+  const url = `https://kud.io/projects/${slug}/docs${path?.length ? `/${path.join("/")}` : ""}`
+
   return {
-    title: page.data.title,
-    description: page.data.description,
+    title,
+    description,
+    openGraph: { type: "article", url, title, description },
+    twitter: { title, description },
   }
 }
