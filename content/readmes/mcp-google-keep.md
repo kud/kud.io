@@ -1,6 +1,7 @@
 ---
 title: "mcp-google-keep"
 description: "📝 Read & write Google Keep notes from Claude — search, create, checklists, labels & colours"
+hasDocs: true
 ---
 
 ## Features
@@ -58,20 +59,3 @@ Available tools:
 | `delete_label`        | Delete a label (requires `confirm=true`)                                       |
 | `add_collaborator`    | Share a note with another user by email                                        |
 | `remove_collaborator` | Remove a collaborator from a note                                              |
-
-## Development
-
-```sh
-git clone https://github.com/kud/mcp-google-keep.git
-cd mcp-google-keep
-uv sync
-uv run python server.py
-```
-
-Run the credential setup flow separately:
-
-```sh
-uv run python keep_setup.py
-```
-
-The server lives in `server.py` (FastMCP, all 18 tools); credential setup lives in `keep_setup.py`.

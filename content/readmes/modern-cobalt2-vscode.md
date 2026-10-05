@@ -1,6 +1,7 @@
 ---
 title: "modern-cobalt2-vscode"
 description: "🎨 A modern take on Cobalt2 for VS Code — deep navy with Palenight syntax colours"
+hasDocs: true
 ---
 
 ## Features
@@ -27,18 +28,3 @@ code --install-extension kud.modern-cobalt2-vscode
 ## Usage
 
 After installing, open the Command Palette (`Cmd+Shift+P`) and run **Preferences: Color Theme**, then select **Modern Cobalt2**.
-
-## Development
-
-```sh
-git clone https://github.com/kud/modern-cobalt2-vscode.git
-cd modern-cobalt2-vscode
-npm install
-```
-
-Press `F5` in VS Code to open an Extension Development Host with the theme loaded. Edit `themes/cobalt2.json` and the preview updates on save.
-
-```sh
-npm run package      # build .vsix into build/
-npm run install-ext  # package and install locally
-```

@@ -1,6 +1,7 @@
 ---
 title: "ding-cli"
 description: "A tiny macOS alarm/timer CLI — set a relative or absolute time, get a notification and a sound when it fires"
+hasDocs: false
 ---
 
 Originally built to remember when Claude's usage quota resets — `ding 5h "quota is back"` and forget about it.

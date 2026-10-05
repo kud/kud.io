@@ -1,6 +1,7 @@
 ---
 title: "ink-markdown"
 description: "A high-performance Markdown / code / diff rendering engine for Ink 7."
+hasDocs: true
 ---
 
 > **Alpha.** The rendering path works today: parse a document, lay it out for a width, and scroll a virtualised viewport over it. `MarkdownViewport`, `useMarkdownScroll` and the whole `core` surface are real and covered by tests. Still ahead: syntax highlighting for fenced code (M4), the `useMarkdownStream` hook, overridable per-block renderers, and performance instrumentation — each is called out where it appears below. The API may still move before 1.0.
@@ -75,15 +76,3 @@ Pass `source` instead of `layout` and the viewport parses and lays out for you �
 `createMarkdownLayout` also takes a `theme` and a `cache` — a `Map` you own and reuse across renders, so a resize re-lays out only the blocks whose width actually changed. `layout.reused` and `layout.computed` report how that went.
 
 Streaming (`useMarkdownStream`), overridable per-block renderers and performance instrumentation are designed but not yet built — see [`prd.md`](https://github.com/kud/ink-markdown/blob/HEAD/prd.md) for the full specification and [`plan.md`](https://github.com/kud/ink-markdown/blob/HEAD/plan.md) for the decisions and spike results behind it.
-
-## Development
-
-```sh
-git clone https://github.com/kud/ink-markdown.git
-cd ink-markdown
-npm install
-npm run build
-npm test
-```
-
-Other scripts: `npm run build:watch` (rebuild on change), `npm run typecheck`, `npm run test:watch`.

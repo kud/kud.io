@@ -1,6 +1,7 @@
 ---
 title: "macos-media-keys-cli"
 description: "CLI to send macOS system media keys — play/pause, next, previous, fast-forward, rewind"
+hasDocs: false
 ---
 
 ## Features

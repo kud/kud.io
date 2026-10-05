@@ -1,6 +1,7 @@
 ---
 title: "mcp-getstream-feeds"
 description: "🔔 Debug GetStream push delivery from Claude — inspect follows, followers & activity fan-out"
+hasDocs: true
 ---
 
 ## Features
@@ -43,19 +44,3 @@ Add the server to your MCP client configuration:
 | `getstream_feed_activities` | Retrieve recent activities on a feed with timestamps and payloads.        |
 | `getstream_feed_follow`     | Subscribe one feed to another. Requires `confirm: true`.                  |
 | `getstream_feed_unfollow`   | Remove a follow relationship between two feeds. Requires `confirm: true`. |
-
-## Development
-
-```sh
-git clone https://github.com/kud/mcp-getstream-feeds.git
-cd mcp-getstream-feeds
-npm install
-npm run dev
-```
-
-| Script                | Description                         |
-| --------------------- | ----------------------------------- |
-| `npm run dev`         | Run via `tsx` (no build step)       |
-| `npm run build`       | Compile TypeScript to `dist/`       |
-| `npm test`            | Run tests with Vitest               |
-| `npm run inspect:dev` | Launch MCP Inspector against source |

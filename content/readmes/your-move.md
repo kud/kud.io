@@ -1,6 +1,7 @@
 ---
 title: "your-move"
 description: "A phone-sized inbox for GitHub: what moved, and whose move it is."
+hasDocs: false
 ---
 
 Your Move is a single authenticated page that answers one question: **what changed, and is it my turn?** It reads GitHub live — pull requests, reviews, checks, issues — and lays it out as a matrix: one row per repository, one column per status, so a project's whole situation is a single line you read across. Every row is marked `your move` or `their move`. Tap a card and it opens on GitHub. There is nothing else to configure.

@@ -1,6 +1,7 @@
 ---
 title: "gh"
 description: "The @kud/gh family — GitHub PR tooling: core, Ink components, and CLIs."
+hasDocs: false
 ---
 
 The **gh family** — GitHub PR tooling as a layered, reusable ecosystem. A

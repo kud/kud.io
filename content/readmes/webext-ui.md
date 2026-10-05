@@ -1,6 +1,7 @@
 ---
 title: "webext-ui"
 description: "A design system for Firefox WebExtension popups and options pages — vendored CSS, not a dependency."
+hasDocs: false
 ---
 
 ## Features

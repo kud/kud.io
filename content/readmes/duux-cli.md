@@ -1,6 +1,7 @@
 ---
 title: "duux-cli"
 description: "Control your Duux Whisper Flex 2 smart fan from the CLI"
+hasDocs: true
 ---
 
 ## Features
@@ -69,19 +70,3 @@ $ duux debug "tune set horosc 3"
 ```
 
 TUI keys: `↑↓` select · `←→` adjust · `⇧←→` adjust by a larger step · `↵`/`space` toggle or cycle · `o` preferences · `q` quit
-
-## Development
-
-```sh
-git clone https://github.com/kud/duux-cli.git
-cd duux-cli
-npm install
-npm run dev
-```
-
-| Script              | Description                            |
-| ------------------- | -------------------------------------- |
-| `npm run dev`       | Run the CLI with `tsx`, no build step  |
-| `npm run build`     | Bundle to `dist/` with `tsup`          |
-| `npm run typecheck` | Type-check with `tsc --noEmit`         |
-| `npm run link`      | Build and `npm link` for local testing |

@@ -3,24 +3,35 @@ title: 🎨 Design Tokens
 description: The shared colour palette and spacing scale that keep every screen consistent.
 ---
 
-Every component is built on the same set of design tokens. Import `colors` and `spacing` to keep your own components aligned with the design system.
+Every component is built on the same set of design tokens. Import `colors`, `palette`, `priorityColors` and `spacing` to keep your own components aligned with the design system.
 
 ```ts
-import { colors, spacing } from "@kud/ink-ui";
-import type { Color, Spacing } from "@kud/ink-ui";
+import { colors, palette, priorityColors, spacing } from "@kud/ink-ui";
+import type { Color, Palette, PriorityColor, Spacing } from "@kud/ink-ui";
 ```
 
 ## 🌈 Colours
 
-| Token            | Value     | Semantic use                       |
-| ---------------- | --------- | ---------------------------------- |
-| `colors.accent`  | `#FF8C00` | Primary highlight, icons, spinners |
-| `colors.muted`   | `gray`    | Dimmed text, table headers         |
-| `colors.success` | `green`   | Positive states                    |
-| `colors.error`   | `red`     | Failures and errors                |
-| `colors.warning` | `yellow`  | Caution states                     |
-| `colors.info`    | `cyan`    | Neutral informational              |
-| `colors.track`   | `#2b323d` | Unfilled ground: progress track, skeleton bars |
+| Token                   | Value     | Semantic use                                     |
+| ----------------------- | --------- | ------------------------------------------------ |
+| `colors.accent`         | `#FF8C00` | Primary highlight, cursor, active tab            |
+| `colors.secondary`      | `#999999` | Context beside the answer                        |
+| `colors.muted`          | `#75767E` | Dimmed text, table headers                       |
+| `colors.dim`            | `#5C5E73` | Rules and separators only, never text            |
+| `colors.success`        | `#5FD7A7` | Positive states, with `✓` or a word              |
+| `colors.error`          | `#FF5364` | Failures and errors, with `✗` or a word          |
+| `colors.warning`        | `#FFB400` | Caution states, with `⚠` or a word               |
+| `colors.info`           | `#89DDFF` | Neutral informational, with `ℹ` or a word        |
+| `colors.pending`        | `#75767E` | Queued or waiting, no hue                        |
+| `colors.group`          | `#C792EA` | Container header (an epic)                       |
+| `colors.ticket`         | `#FFCB6B` | Ticket key, such as `SHOP-1234`                  |
+| `colors.pr`             | `#FF8C00` | PR or issue number, such as `#123`               |
+| `colors.link`           | `#82AAFF` | Links and URLs                                   |
+| `colors.selection`      | `#30364A` | Selected row ground                              |
+| `colors.track`          | `#2B323D` | Unfilled ground: progress track, skeleton bars   |
+| `colors.trackHighlight` | `#6B7480` | Skeleton shimmer crest                           |
+
+Every value is drawn from `palette`, tuned to the dark ground `#1a1b27`: dark-only, truecolour assumed, and chalk downsamples on a 256-colour terminal. `priorityColors` steps priority by lightness: `highest` and `high` `#E4E4EC`, `medium` `#999999`, `low` and `lowest` `#75767E`.
 
 `Color` is the union of these token values, so you can type props that accept a palette colour.
 

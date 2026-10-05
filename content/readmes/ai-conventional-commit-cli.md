@@ -1,6 +1,7 @@
 ---
 title: "ai-conventional-commit-cli"
 description: "🤖 AI Conventional Commits that learn your repo's style — generate, split and refine messages"
+hasDocs: true
 ---
 
 ## Features
@@ -35,13 +36,4 @@ $ ai-conventional-commit refine --scope ui
 $ ai-conventional-commit reword HEAD
 $ ai-conventional-commit models --interactive --save
 $ ai-conventional-commit config set style gitmoji
-```
-
-## Development
-
-```sh
-git clone https://github.com/kud/ai-conventional-commit-cli.git
-cd ai-conventional-commit-cli
-npm install
-npm run dev -- generate
 ```

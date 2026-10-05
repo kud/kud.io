@@ -1,6 +1,7 @@
 ---
 title: "macos-nowplaying-bridge"
 description: "Publish Now Playing metadata to macOS Control Center and receive its media-button events, from Node"
+hasDocs: false
 ---
 
 ## Features

@@ -1,6 +1,7 @@
 ---
 title: "sim-crafter-cli"
 description: "📱 Minimal simctl wrapper — list, create, boot and screenshot iOS simulators from your terminal"
+hasDocs: true
 ---
 
 ## Features
@@ -36,13 +37,4 @@ $ sim-crafter boot
 $ sim-crafter screenshot
 $ sim-crafter delete
 $ sim-crafter list-remote
-```
-
-## Development
-
-```sh
-git clone https://github.com/kud/sim-crafter-cli.git
-cd sim-crafter-cli
-npm install
-./index.js list
 ```

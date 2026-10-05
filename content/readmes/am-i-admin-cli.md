@@ -1,6 +1,7 @@
 ---
 title: "am-i-admin-cli"
 description: "👑 Check whether you're a macOS admin from the terminal — human-readable or raw boolean output"
+hasDocs: true
 ---
 
 ## Features
@@ -25,13 +26,4 @@ $ am-i-admin
 
 $ am-i-admin --raw
 true
-```
-
-## Development
-
-```sh
-git clone https://github.com/kud/am-i-admin-cli.git
-cd am-i-admin-cli
-npm install
-node index.js
 ```

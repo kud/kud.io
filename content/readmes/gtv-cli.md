@@ -1,6 +1,7 @@
 ---
 title: "gtv-cli"
 description: "Control your Google TV from the CLI via the Android TV Remote protocol"
+hasDocs: true
 ---
 
 `gtv` pairs with a Google TV over the Android TV Remote v2 protocol, then lets you drive it from a fullscreen terminal remote or from one-shot shell commands.
@@ -49,16 +50,3 @@ $ gtv --debug <command>      # enable protocol logging for any command
 ```
 
 Inside the TUI, use arrow keys and Enter to move around the remote. Press `a` for apps, `Tab` for keyboard mode, `o` for preferences, and `q` to quit.
-
-## Development
-
-```sh
-git clone https://github.com/kud/gtv-cli.git
-cd gtv-cli
-npm install
-npm run dev
-npm run typecheck
-npm run build
-```
-
-The CLI is written in TypeScript, rendered with Ink, and compiled to `dist/` with tsup.

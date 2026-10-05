@@ -1,6 +1,7 @@
 ---
 title: "bt-switch-cli"
 description: "🖱️ Bluetooth device handoff CLI — switch Magic peripherals between Macs by name"
+hasDocs: true
 ---
 
 > [!NOTE]
@@ -51,16 +52,4 @@ Press Enter when ready...
 
 $ bt-switch forget trackpad
 ✓ Unpaired trackpad.
-```
-
-## Development
-
-```sh
-git clone https://github.com/kud/bt-switch-cli.git
-cd bt-switch-cli
-npm install
-npm run dev      # run from source via tsx
-npm test         # unit tests (vitest)
-npm run lint     # eslint
-npm run build    # bundle to dist/
 ```

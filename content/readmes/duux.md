@@ -1,6 +1,7 @@
 ---
 title: "duux"
 description: "Duux smart fan control library — passwordless auth, device discovery, and cloud/MQTT command transports for the Whisper Flex 2"
+hasDocs: true
 ---
 
 ## Features
@@ -86,16 +87,3 @@ session.on("change", (state) => {
 await session.setSpeed(20)
 session.stop()
 ```
-
-## Development
-
-```sh
-git clone https://github.com/kud/duux.git
-cd duux
-npm install
-npm run build
-npm run typecheck
-npm test
-```
-
-`npm test` runs the vitest suite (50 tests).

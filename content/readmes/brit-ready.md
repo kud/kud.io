@@ -1,6 +1,7 @@
 ---
 title: "brit-ready"
 description: "Brit Ready — a gamified, non-official PWA for the Life in the UK Test. Learn every fact, practise the exam format, and know when you're ready to book."
+hasDocs: false
 ---
 
 ## 🌟 Features

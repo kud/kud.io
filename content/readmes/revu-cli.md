@@ -1,6 +1,7 @@
 ---
 title: "revu-cli"
 description: "🔍 Review code diffs in your terminal — annotate lines, export to Markdown for humans & AI"
+hasDocs: true
 ---
 
 ## Features
@@ -35,13 +36,3 @@ $ revu --against main   # review all commits between a branch and HEAD (PR mode)
 ```
 
 Inside the reviewer, move with `↑↓` / `j k`, press `↵` to annotate a line, hold `shift` to select a range, and `e` to export to `revu-review.md`.
-
-## Development
-
-```sh
-git clone https://github.com/kud/revu-cli.git
-cd revu-cli
-mise install
-mise run dev    # run in hot-reload mode
-mise run build  # compile a standalone binary
-```

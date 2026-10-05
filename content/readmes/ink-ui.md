@@ -1,6 +1,7 @@
 ---
 title: "ink-ui"
 description: "🧱 Opinionated design system for Ink CLIs — pre-styled components and tokens for consistent TUIs"
+hasDocs: true
 ---
 
 ## Features
@@ -110,17 +111,6 @@ All components accept only the props they need — no theme provider or context 
 import { colors, spacing } from "@kud/ink-ui"
 
 // colors.accent   → "#FF8C00"
-// colors.success  → "green"
+// colors.success  → "#5FD7A7"
 // spacing.md      → 3
 ```
-
-## Development
-
-```sh
-git clone https://github.com/kud/ink-ui.git
-cd ink-ui
-npm install
-npm run dev
-```
-
-`npm run build` compiles TypeScript to `dist/`. `npm run dev` runs the compiler in watch mode.

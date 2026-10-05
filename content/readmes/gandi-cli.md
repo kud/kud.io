@@ -1,6 +1,7 @@
 ---
 title: "gandi-cli"
 description: "🌐 Manage Gandi domains & LiveDNS from your terminal — list, renew and edit records via the v5 API"
+hasDocs: true
 ---
 
 ## Features
@@ -40,13 +41,4 @@ gandi redirect update example.com www https://example.net --type http302
 # Doctor & scripting
 gandi doctor
 gandi dns list example.com --json | jq '.[].name'
-```
-
-## Development
-
-```sh
-git clone https://github.com/kud/gandi-cli.git
-cd gandi-cli
-npm install
-npm run dev -- doctor
 ```

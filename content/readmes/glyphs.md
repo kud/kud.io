@@ -1,6 +1,7 @@
 ---
 title: "glyphs"
 description: "Multi-language source of truth for terminal glyphs — Nerd Font codepoints and unicode fallbacks, typed and escape-safe"
+hasDocs: false
 ---
 
 ## Features

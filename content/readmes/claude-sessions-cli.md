@@ -1,6 +1,7 @@
 ---
 title: "claude-sessions-cli"
 description: "🗂️ TUI session manager for Claude Code — browse, resume, organise and clean up every session"
+hasDocs: true
 ---
 
 ## Features
@@ -31,13 +32,4 @@ npm install -g @kud/claude-sessions-cli
 $ claude-sessions
 $ claude-sessions clean
 $ claude-sessions --no-banner
-```
-
-## Development
-
-```sh
-git clone https://github.com/kud/claude-sessions-cli.git
-cd claude-sessions-cli
-npm install
-npm run dev
 ```

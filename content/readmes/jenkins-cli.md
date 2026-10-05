@@ -1,6 +1,7 @@
 ---
 title: "jenkins-cli"
 description: "🧰 Jenkins in your terminal — interactive TUI, scriptable build commands and smart log highlighting"
+hasDocs: true
 ---
 
 ## Features
@@ -47,18 +48,3 @@ deploy-preview
 
 $ jenkins interactive
 ```
-
-## Development
-
-```sh
-git clone https://github.com/kud/jenkins-cli.git
-cd jenkins-cli
-npm install
-npm run dev
-```
-
-| Script          | Purpose                              |
-| --------------- | ------------------------------------ |
-| `npm run build` | Compile TypeScript to `dist/`        |
-| `npm run dev`   | Run directly via tsx (no build step) |
-| `npm test`      | Run Node.js built-in test runner     |

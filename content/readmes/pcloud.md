@@ -1,6 +1,7 @@
 ---
 title: "pcloud"
 description: "☁️ Typed pCloud API client with OAuth and session auth — shared core for CLI, MCP and TUI surfaces"
+hasDocs: false
 ---
 
 Typed pCloud API client — shared SDK for CLI, MCP, and extensions.

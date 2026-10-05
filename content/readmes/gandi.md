@@ -1,6 +1,7 @@
 ---
 title: "gandi"
 description: "Typed Gandi v5 REST API client — the headless core shared by @kud/gandi-cli and future Gandi surfaces"
+hasDocs: false
 ---
 
 Typed Gandi v5 REST API client — the headless core shared by `@kud/gandi-cli`, a future `@kud/gandi-ink` browser UI, and potentially an MCP server.

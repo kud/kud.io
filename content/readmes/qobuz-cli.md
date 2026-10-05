@@ -1,6 +1,7 @@
 ---
 title: "qobuz-cli"
 description: "Command-line interface for Qobuz — search, library, and quick-open in the app"
+hasDocs: true
 ---
 
 ## Features
@@ -18,39 +19,6 @@ description: "Command-line interface for Qobuz — search, library, and quick-op
 ```sh
 npm install -g @kud/qobuz-cli
 ```
-
-## TUI mode
-
-Run `qobuz` (no arguments) or `qobuz tui` to open the interactive full-screen interface — "Raycast in the terminal". The TUI requires an interactive terminal (TTY) and works on both macOS and Linux.
-
-### Views
-
-| View                | What it shows                                                              |
-| ------------------- | -------------------------------------------------------------------------- |
-| **Home**            | Palette — Search, Favourites, Playlists, Now Playing                       |
-| **Search**          | Live results sectioned into Tracks, Albums, Artists (debounced, ≥ 2 chars) |
-| **Favourites**      | Your starred tracks                                                        |
-| **Playlists**       | Playlist list → Tracklist (read-only)                                      |
-| **Detail — Track**  | Title, artist, album, duration, Hi-Res flag                                |
-| **Detail — Album**  | Title, artist, release date, genre, track count, Hi-Res flag               |
-| **Detail — Artist** | Album count + navigable similar-artists list                               |
-| **Convert**         | Qobuz track → Deezer / Spotify / YouTube links                             |
-| **Now Playing**     | Currently playing track info                                               |
-
-### Keybindings
-
-| Key                    | Action                                          |
-| ---------------------- | ----------------------------------------------- |
-| type                   | Search (in Search view)                         |
-| `↑` / `↓` or `j` / `k` | Navigate list                                   |
-| `↵`                    | Open / drill into item                          |
-| `Esc` or `Backspace`   | Back (quit from root)                           |
-| `q`                    | Quit                                            |
-| `o`                    | Open current item in Qobuz app (Detail views)   |
-| `c`                    | Convert track to streaming links (Track detail) |
-| `space`                | Toggle play/pause (macOS only)                  |
-| `n`                    | Next track (macOS only)                         |
-| `p`                    | Previous track (macOS only)                     |
 
 ## Usage
 
@@ -77,19 +45,6 @@ Full command set: `tui`, `login`, `logout`, `search`, `album`, `artist`, `track`
 
 > **macOS note** — playback commands (`play`, `next`, `previous`, `forward`, `rewind`) and TUI playback keys (`space`, `n`, `p`) use real media keys and require Accessibility permission granted to your terminal. The first playback command compiles a small Swift helper via `swiftc`.
 
-## Development
-
-```sh
-git clone https://github.com/kud/qobuz-cli.git
-cd qobuz-cli
-npm install
-npm run dev -- search "radiohead"   # run from source via tsx
-npm run dev                         # run TUI from source
-npm run build
-npm run typecheck
-```
-
-📚 **Full documentation → [qobuz-cli/docs](https://kud.io/projects/qobuz-cli/docs)**
 ## Disclaimer
 
 This is an independent, unofficial project — not affiliated with, endorsed by, or sponsored by Qobuz. "Qobuz", the Qobuz logo, and any icons derived from it are trademarks of Qobuz Music, used here only to indicate compatibility.

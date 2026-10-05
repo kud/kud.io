@@ -1,6 +1,7 @@
 ---
 title: "mcp-bugzilla"
 description: "🐞 Search, triage and comment on Firefox/Mozilla bugs from Claude via the Bugzilla REST API"
+hasDocs: true
 ---
 
 ## Features
@@ -57,20 +58,3 @@ The server exposes 17 tools across six areas. Tools marked with 🔑 require `MC
 | `get_user`            | Users       | —    | Look up a user by email or login name                      |
 | `get_bug_fields`      | Fields      | —    | List bug fields and their legal values                     |
 | `get_flag_types`      | Flags       | —    | List flag types for a product/component                    |
-
-## Development
-
-```sh
-git clone https://github.com/kud/mcp-bugzilla.git
-cd mcp-bugzilla
-npm install
-npm run dev
-```
-
-| Script                | Description                       |
-| --------------------- | --------------------------------- |
-| `npm run build`       | Compile TypeScript to `dist/`     |
-| `npm run dev`         | Run source directly via `tsx`     |
-| `npm test`            | Run the Vitest test suite         |
-| `npm run typecheck`   | Type-check without emitting       |
-| `npm run inspect:dev` | Open MCP Inspector against source |

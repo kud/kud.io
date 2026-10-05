@@ -1,6 +1,7 @@
 ---
 title: "jira-cli"
 description: "Jira on the command line — read issues, comments and attachments as plain text"
+hasDocs: false
 ---
 
 Jira on the command line. Reads issues, comments and **attachments** as plain text, so you can pipe them into anything.

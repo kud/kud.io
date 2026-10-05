@@ -1,6 +1,7 @@
 ---
 title: "planning-poker"
 description: "Estimate user stories together in real time — free, no account required. 🃏"
+hasDocs: false
 ---
 
 ## 🌟 Features

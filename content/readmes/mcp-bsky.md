@@ -1,6 +1,7 @@
 ---
 title: "mcp-bsky"
 description: "MCP server for Bluesky — search, read, and post via the AT Protocol."
+hasDocs: false
 ---
 
 ## 🌟 Features

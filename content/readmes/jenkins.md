@@ -1,6 +1,7 @@
 ---
 title: "jenkins"
 description: "Headless Jenkins core — client, config, and types behind @kud/jenkins-cli."
+hasDocs: false
 ---
 
 ## 🌟 Features

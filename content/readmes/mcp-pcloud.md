@@ -1,6 +1,7 @@
 ---
 title: "mcp-pcloud"
 description: "☁️ Recover lost pCloud files from Claude — restore from trash and rewind to older versions"
+hasDocs: true
 ---
 
 ## Features
@@ -68,20 +69,3 @@ Once configured, the following tools are available to your AI assistant:
 | `create_folder_publink` | Create a public link for a folder                        |
 | `list_publinks`         | List all active public links                             |
 | `delete_publink`        | Delete a public link by its code                         |
-
-## Development
-
-```sh
-git clone https://github.com/kud/mcp-pcloud.git
-cd mcp-pcloud
-npm install
-npm run dev
-```
-
-| Script              | Purpose                                           |
-| ------------------- | ------------------------------------------------- |
-| `npm run dev`       | Run from source via `tsx`                         |
-| `npm run build`     | Compile TypeScript to `dist/`                     |
-| `npm run typecheck` | Type-check without emitting                       |
-| `npm test`          | Run the test suite with Vitest                    |
-| `npm run inspect`   | Launch the MCP inspector against the built server |

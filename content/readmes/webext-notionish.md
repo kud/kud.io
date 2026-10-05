@@ -1,6 +1,7 @@
 ---
 title: "webext-notionish"
 description: "Firefox extension that makes Google Docs and Sheets read like Notion"
+hasDocs: false
 ---
 
 > [!NOTE]

@@ -1,6 +1,7 @@
 ---
 title: "qobuz-bridge"
 description: "Background daemon that bridges Qobuz into macOS Now Playing — Control Center tile, artwork, and working media buttons"
+hasDocs: false
 ---
 
 ## Features

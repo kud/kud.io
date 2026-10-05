@@ -1,6 +1,7 @@
 ---
 title: "mcp-youtube"
 description: "▶️ MCP server for YouTube — create, prune, and clean up playlists conversationally from Claude"
+hasDocs: true
 ---
 
 ## Features
@@ -52,28 +53,6 @@ export MCP_YOUTUBE_REFRESH_TOKEN=$(security find-generic-password -s mcp-youtube
 
 > **Tip:** set the OAuth app's publishing status to **In production** in Google Cloud. `youtube.force-ssl` is a _sensitive_ scope, and while the app sits in _Testing_ the refresh token expires after 7 days.
 
-## Configuration
-
-Register the server with your MCP client. The exact config file and its location depend on the client — Claude Desktop, for example, uses `claude_desktop_config.json` (Settings → Developer → Edit Config); Cursor, Cline, Zed, and Continue each have their own. The registration follows the standard `mcpServers` shape:
-
-```json
-{
-  "mcpServers": {
-    "youtube": {
-      "command": "npx",
-      "args": ["-y", "@kud/mcp-youtube"],
-      "env": {
-        "MCP_YOUTUBE_CLIENT_ID": "your-client-id",
-        "MCP_YOUTUBE_CLIENT_SECRET": "your-client-secret",
-        "MCP_YOUTUBE_REFRESH_TOKEN": "your-refresh-token"
-      }
-    }
-  }
-}
-```
-
-If you installed via `/plugin install youtube@kud`, the plugin handles registration — you only need to supply the three environment variables above.
-
 ## Usage
 
 YouTube's Data API v3 gives every project a fixed **10,000 quota units/day**. A single careless `search`, bulk delete, or video upload can burn through a meaningful chunk of that, so every tool documents its cost up front — and every destructive or outward-irreversible tool requires an explicit `confirm: true`.
@@ -107,20 +86,3 @@ Deleted 6 tombstones and 3 duplicates (9 items, 450 units).
 ```
 
 `clean-playlist` always returns its plan first — pass `dryRun: false` (or just confirm in conversation) to actually delete.
-
-## Development
-
-```sh
-git clone https://github.com/kud/mcp-youtube.git
-cd mcp-youtube
-npm install
-npm run dev
-```
-
-| Script                | Purpose                                     |
-| --------------------- | ------------------------------------------- |
-| `npm run dev`         | Run the server directly from source (`tsx`) |
-| `npm run build`       | Compile to `dist/`                          |
-| `npm test`            | Run the Vitest suite                        |
-| `npm run typecheck`   | Type-check without emitting                 |
-| `npm run inspect:dev` | Launch the MCP Inspector against source     |

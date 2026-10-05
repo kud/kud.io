@@ -1,6 +1,7 @@
 ---
 title: "models-dev-cli"
 description: "🤖 Explore the models.dev LLM catalogue in your terminal — fuzzy search, rich TUI, copy IDs"
+hasDocs: true
 ---
 
 ## Features
@@ -43,14 +44,4 @@ Options:
 $ models-dev --provider anthropic --tool
 $ models-dev --search gpt-4 --json
 $ mdl --reasoning --sort input-cost
-```
-
-## Development
-
-```sh
-git clone https://github.com/kud/models-dev-cli.git
-cd models-dev-cli
-npm install
-npm link
-models-dev
 ```

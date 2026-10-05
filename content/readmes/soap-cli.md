@@ -1,6 +1,7 @@
 ---
 title: "soap-cli"
 description: "🧼 Uninstall macOS apps and scrub every leftover — prefs, caches, containers, launch agents"
+hasDocs: true
 ---
 
 ## Features
@@ -49,16 +50,4 @@ $ soap --help
 
   Environment:
     SOAP_DEBUG=1               Enable verbose shell output
-```
-
-## Development
-
-```sh
-git clone https://github.com/kud/soap-cli.git
-cd soap-cli
-npm install
-npm run dev        # run from source via tsx
-npm run build      # compile to dist/
-npm run typecheck  # type-check without emitting
-npm test           # vitest unit tests
 ```

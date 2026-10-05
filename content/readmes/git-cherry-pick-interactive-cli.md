@@ -1,6 +1,7 @@
 ---
 title: "git-cherry-pick-interactive-cli"
 description: "A CLI tool that provides an interactive way to cherry-pick commits from a specified branch."
+hasDocs: false
 ---
 
 A CLI tool that provides an interactive way to cherry-pick commits from a specified branch.

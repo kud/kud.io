@@ -1,6 +1,7 @@
 ---
 title: "revu-vscode"
 description: "📝 Annotate any line in VS Code, export your review to Claude, Copilot, ChatGPT or opencode"
+hasDocs: true
 ---
 
 ## Features
@@ -35,20 +36,3 @@ code --install-extension kud.revu-vscode
 6. Optionally, click **Edit Review Prompt** (`$(sparkle)`) to switch between Code Review, Refactor, Explain, or a custom prompt.
 
 Annotations persist across sessions via `.revu.json` in your workspace root.
-
-## Development
-
-```sh
-git clone https://github.com/kud/revu-vscode.git
-cd revu-vscode
-npm install
-npm run watch
-```
-
-Press `F5` in VS Code to open an Extension Development Host with revu loaded.
-
-To build and install locally:
-
-```sh
-npm run install-ext
-```

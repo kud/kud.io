@@ -1,6 +1,7 @@
 ---
 title: "gpuswitch-cli"
 description: "🖥️ Switch Intel Mac GPU — integrated, discrete or auto — via pmset, with an interactive TUI"
+hasDocs: true
 ---
 
 ## Features
@@ -42,13 +43,4 @@ GPU mode set to: discrete
 
 $ gpuswitch auto
 GPU mode set to: auto
-```
-
-## Development
-
-```sh
-git clone https://github.com/kud/gpuswitch-cli.git
-cd gpuswitch-cli
-npm install
-npm run dev
 ```

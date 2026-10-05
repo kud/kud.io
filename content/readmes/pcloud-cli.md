@@ -1,6 +1,7 @@
 ---
 title: "pcloud-cli"
 description: "☁️ Restore deleted pCloud files and rewind versions from the terminal — list trash, recover"
+hasDocs: true
 ---
 
 ## Features
@@ -132,23 +133,3 @@ $ pcloud settings ignore add "*.log"
    + *.log
 Dry run. Re-run with --apply to write.
 ```
-
-## Development
-
-```sh
-git clone https://github.com/kud/pcloud-cli.git
-cd pcloud-cli
-npm install
-npm run dev -- ls /
-npm test
-```
-
-Build compiled output to `dist/`:
-
-```sh
-npm run build
-```
-
-Built on [`@kud/pcloud`](https://github.com/kud/pcloud) for the API and rewind
-engine, and [`@kud/pcloud-ink`](https://github.com/kud/pcloud-ink) for the
-components — the same ones the browser and the one-shot commands both render.

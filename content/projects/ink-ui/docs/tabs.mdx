@@ -3,7 +3,7 @@ title: 🗂️ Tabs
 description: Inline tab strip for grouped interactive screens.
 ---
 
-`<Tabs>` renders an inline tab strip. Active tabs are bold and highlighted; inactive tabs are dimmed. Optional counts render beside labels.
+`<Tabs>` renders an inline tab strip. Active tabs are bold and highlighted; inactive tabs are dimmed. Optional counts render beside labels. Tabs can be grouped — a divider is drawn where the `group` value changes between neighbouring tabs.
 
 ```tsx
 import { Tabs } from "@kud/ink-ui";
@@ -24,6 +24,7 @@ import type { TabItem } from "@kud/ink-ui";
 | `value` | `T`      | Stable tab identifier           |
 | `label` | `string` | Visible tab label               |
 | `count` | `number \| null` | Optional count rendered in tabs; `null` (not loaded yet) draws `(–)` at a two-digit width |
+| `group` | `string` | Optional group name; a divider is drawn between tabs whose group differs from the previous tab |
 
 ## 💡 Examples
 
@@ -36,3 +37,18 @@ import type { TabItem } from "@kud/ink-ui";
   ]}
 />
 ```
+
+### Grouped tabs
+
+```tsx
+<Tabs
+  active="qa"
+  items={[
+    { value: "qa", label: "QA", count: 22, group: "board" },
+    { value: "off", label: "Off board", count: 4, group: "board" },
+    { value: "prs", label: "My PRs", count: 3, group: "github" },
+  ]}
+/>
+```
+
+A divider (`│`) appears between "Off board" and "My PRs" because the group changes from `board` to `github`. Tabs without a `group`, or with the same group as their neighbour, render without a divider. Navigation (Tab, ←, →) is unchanged — dividers are never a stop.

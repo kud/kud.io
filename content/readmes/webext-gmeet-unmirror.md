@@ -1,6 +1,7 @@
 ---
 title: "webext-gmeet-unmirror"
 description: "Hides the Google Meet presentation tile so full-screen sharing doesn't produce an infinite hall of mirrors."
+hasDocs: true
 ---
 
 ## Features
@@ -40,26 +41,3 @@ Open any Google Meet call at `meet.google.com` and share your whole screen as us
 3. The button and shortcut are disabled/inert whenever you're not presenting — there's nothing to toggle until you are.
 
 Only the presentation tile is ever touched. The participant grid, your own self-view thumbnail, and Meet's controls are left exactly as they are, and remote viewers always see your full, unmodified screen share.
-
-## Development
-
-```sh
-git clone https://github.com/kud/webext-gmeet-unmirror.git
-cd webext-gmeet-unmirror
-npm install
-npm run dev
-```
-
-`npm run dev` runs `web-ext run --firefox=nightly`, launching Firefox Nightly with the extension already loaded and reloaded on every save.
-
-Other scripts:
-
-```sh
-npm run lint    # web-ext lint
-npm run build   # bundle into web-ext-artifacts/
-```
-
-Requires Firefox 142.0 or later (`strict_min_version`), since the content scripts rely on `world: "MAIN"`.
-
-📚 **Full documentation → [webext-gmeet-unmirror/docs](https://kud.io/projects/webext-gmeet-unmirror/docs)**
-</content>

@@ -1,19 +1,10 @@
 ---
 title: "foxhop"
 description: "Focus a specific Firefox tab from anywhere on macOS — CLI, Raycast, and a Firefox extension."
+hasDocs: true
 ---
 
 <img src="https://raw.githubusercontent.com/kud/foxhop/HEAD/assets/brand/foxhop-banner.png" alt="Fox Hop: a red fox leaping across browser tabs to land on the one you want" />
-
-## Ecosystem
-
-foxhop isn't a single CLI — it's one product with three surfaces, all sharing the same targets in `~/.config/foxhop/tabs.json`:
-
-- **CLI + native host** (`@kud/foxhop-cli`) — the engine: focuses tabs, manages targets, and bridges macOS to Firefox over native messaging.
-- **Firefox extension** — the in-browser half of the bridge; it receives a request from the native host and switches to the matching tab.
-- **Raycast extension** — a launcher-native way to search, add, edit, and focus targets, plus generated per-tab hotkeys via `foxhop sync`.
-
-Reach for whichever surface fits the moment — a global hotkey, a Raycast command, or the terminal — they all drive the same configuration.
 
 ## Features
 
@@ -52,36 +43,3 @@ $ foxhop sync                   # generate per-tab Raycast hotkey scripts
 Set `FOXHOP_BROWSER` to override the default Firefox Nightly (e.g. `FOXHOP_BROWSER=Firefox`).
 
 Target ids are the kebab-case slug of the title (`Notion Calendar` becomes `notion-calendar`), fixed when the target is created and never renamed. A taken id gets a `-2`, `-3` suffix instead of overwriting another target. Older configs migrate once on load (`bsky` titled Bluesky becomes `bluesky`); old names are not kept as aliases, so update saved `foxhop focus <name>` calls after upgrading. `foxhop edit <id>` changes any field but the id. Any change from the CLI, the popup or Raycast regenerates the Raycast scripts, and the popup shows each id with its script name. It also remembers favicons, so targets keep their icon when no tab is open.
-
-## Development
-
-```sh
-# CLI
-cd cli && npm run dev        # run from source via tsx
-cd cli && npm test           # vitest suite
-
-# Extension
-cd webextension && npm run dev  # launch Firefox Nightly with the extension loaded
-cd webextension && npm run lint # web-ext lint
-```
-
-## Updating the AMO listing
-
-The public add-on page (name, summary, description, icon, screenshots) is managed
-from `webext/amo/listing.json`, plus `assets/icons/foxhop-128.png` for the icon and
-`webext/amo/screenshots/` for previews (see the README there).
-
-```sh
-npm run amo:listing              # dry run: diff against the live listing, send nothing
-npm run amo:listing -- --apply   # send the changes to AMO
-npm run amo:listing -- --only=listing --apply   # restrict to listing, icon and/or previews
-```
-
-The repo's script wires in the foxhop inputs (`--listing`, `--guid`, `--icon`,
-`--screenshots`, also settable via `AMO_LISTING`, `AMO_GUID`, `AMO_ICON`,
-`AMO_SCREENSHOTS`), and the work is done by [`@kud/amo-cli`](https://kud.io/projects/amo-cli).
-Sending needs `WEB_EXT_API_KEY` and `WEB_EXT_API_SECRET` in the environment (the
-JWT issuer/secret from
-[AMO's API credentials page](https://addons.mozilla.org/en-US/developers/addon/api/key/)).
-The dry run needs no credentials. The `AMO listing` workflow offers the same as a
-manual run: dispatch it with `apply` on for a real send, off for a dry run.

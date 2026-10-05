@@ -1,6 +1,7 @@
 ---
 title: "shui"
 description: "🌊 Fluid terminal UI for Zsh — a design system for the shell"
+hasDocs: true
 ---
 
 ## Features
@@ -75,19 +76,4 @@ Switch icon sets with `SHUI_ICONS`:
 SHUI_ICONS=emoji   # default — requires Nerd Font
 SHUI_ICONS=unicode # plain Unicode fallback
 SHUI_ICONS=none    # no icons at all
-```
-
-## Development
-
-```sh
-git clone https://github.com/kud/shui.git
-cd shui
-```
-
-Tasks are managed with [mise](https://mise.jdx.dev/):
-
-```sh
-mise run test   # run all test suites
-mise run lint   # syntax-check all Zsh source files
-mise run demo   # run the visual component demo
 ```

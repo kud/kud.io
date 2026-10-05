@@ -1,6 +1,7 @@
 ---
 title: "qobuz"
 description: "Reverse-engineered Qobuz API client for Node.js"
+hasDocs: true
 ---
 
 ## Features
@@ -41,18 +42,6 @@ const client = await createQobuzClient({ store: createKeychainStore() })
 
 Prefer the terminal? The companion CLI [`@kud/qobuz-cli`](https://kud.io/projects/qobuz-cli) wraps all of this in a `qobuz login` flow.
 
-## Development
-
-```sh
-git clone https://github.com/kud/qobuz.git
-cd qobuz
-npm install
-npm run build   # tsup → ESM + dts
-npm test        # vitest
-npm run typecheck
-```
-
-📚 **Full documentation → [qobuz/docs](https://kud.io/projects/qobuz/docs)**
 ## Disclaimer
 
 This is an independent, unofficial project — not affiliated with, endorsed by, or sponsored by Qobuz. "Qobuz", the Qobuz logo, and any icons derived from it are trademarks of Qobuz Music, used here only to indicate compatibility.

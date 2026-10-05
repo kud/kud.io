@@ -1,6 +1,7 @@
 ---
 title: "macos-media-keys"
 description: "Send macOS system media keys (play/pause, next, previous, fast-forward, rewind) from Node"
+hasDocs: false
 ---
 
 ## Features

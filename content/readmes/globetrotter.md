@@ -1,6 +1,7 @@
 ---
 title: "globetrotter"
 description: "Interactive 3D globe visualization built with Next.js, React, Three.js, and D3. Explore geographic data with smooth animations and real-time interactivity."
+hasDocs: false
 ---
 
 ## 🌟 Features

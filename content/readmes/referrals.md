@@ -1,6 +1,7 @@
 ---
 title: "referrals"
 description: "All my referrals codes. Powered by next.js on @vercel and @makenotion as API. 🙌🏻"
+hasDocs: false
 ---
 
 ## Features

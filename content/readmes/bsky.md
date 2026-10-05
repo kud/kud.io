@@ -1,6 +1,7 @@
 ---
 title: "bsky"
 description: "A Bluesky (AT Protocol) client library for Node — post, thread, reply, quote, engage, read, and search"
+hasDocs: false
 ---
 
 ## Features

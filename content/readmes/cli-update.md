@@ -1,6 +1,7 @@
 ---
 title: "cli-update"
 description: "Tell users when a @kud CLI has an update, without blocking startup or corrupting piped output"
+hasDocs: true
 ---
 
 ## Features
@@ -43,60 +44,3 @@ if (notice) console.error(formatNotice(notice))
 ```console
 Update available: @kud/duux-cli 1.2.0 -> 1.3.0. Run `npm i -g @kud/duux-cli` to upgrade.
 ```
-
-### Opting out
-
-A CLI can expose its own `update --disable` subcommand on top of the config file at `~/.config/kud/cli.json`:
-
-```ts
-import { disableNotices, enableNotices, noticesEnabled } from "@kud/cli-update"
-
-disableNotices()
-disableNotices("@kud/duux-cli")
-enableNotices("@kud/duux-cli")
-
-noticesEnabled("@kud/duux-cli")
-```
-
-The first call turns off notices for every `@kud` CLI; passing a package name scopes it to just that one, and `enableNotices` reverses either. `noticesEnabled` reads the current state.
-
-Per-package settings win over the global one. Users can reach the same switch directly, without any CLI-specific code, by editing the config file or setting `NO_UPDATE_NOTIFIER=1`:
-
-```json
-{
-  "updateNotifier": false,
-  "packages": {
-    "@kud/duux-cli": true
-  }
-}
-```
-
-### API
-
-```ts
-type UpdateNotice = {
-  name: string
-  current: string
-  latest: string
-  command: string
-}
-
-checkForUpdate(options: { name: string; version: string; cacheHours?: number }): Promise<UpdateNotice | null>
-formatNotice(notice: UpdateNotice): string
-disableNotices(scope?: string): void
-enableNotices(scope?: string): void
-noticesEnabled(name: string): boolean
-```
-
-`cacheHours` defaults to `24` and controls how long a cached "latest version" answer is trusted before a background refresh is triggered.
-
-## Development
-
-```sh
-git clone https://github.com/kud/cli-update.git
-cd cli-update
-npm install
-npm run build
-```
-
-`npm test` runs the Vitest suite, `npm run build:watch` rebuilds on change, and `npm run typecheck` runs a type-only check with no emit.

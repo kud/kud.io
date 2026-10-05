@@ -1,6 +1,7 @@
 ---
 title: "gandi-ink"
 description: "Ink components for browsing Gandi domains, DNS records, and web redirects"
+hasDocs: false
 ---
 
 Ink components for browsing Gandi domains, DNS records, and web redirects.

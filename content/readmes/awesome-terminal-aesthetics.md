@@ -1,6 +1,7 @@
 ---
 title: "awesome-terminal-aesthetics"
 description: "✨ A curated list of tools and frameworks that make the terminal genuinely beautiful"
+hasDocs: false
 ---
 
 > A curated list of tools, frameworks, and libraries that make the terminal genuinely beautiful to build with and look at.

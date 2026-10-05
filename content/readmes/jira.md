@@ -1,6 +1,7 @@
 ---
 title: "jira"
 description: "Headless Jira client — issues, comments, attachments, ADF conversion, agile boards and instance metadata, with no environment or process dependencies"
+hasDocs: false
 ---
 
 ## 🌟 Features

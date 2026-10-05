@@ -1,6 +1,7 @@
 ---
 title: "mcp-jenkins"
 description: "🛠️ Drive Jenkins from Claude — trigger builds, watch pipelines, and manage CI/CD jobs & nodes"
+hasDocs: true
 ---
 
 ## Features
@@ -47,57 +48,4 @@ For bearer token authentication, replace the env block with:
   "MCP_JENKINS_URL": "https://pipeline.yourcompany.com",
   "MCP_JENKINS_BEARER_TOKEN": "your_bearer_token"
 }
-```
-
-### Slow instances
-
-Every request this server makes is bounded by one deadline, **10 seconds** by default. A large or busy Jenkins can spend longer than that answering a single call — and when it does, the error you see (`Jenkins request timed out`) comes from this server giving up, not from Jenkins refusing anything.
-
-Raise it with `MCP_JENKINS_TIMEOUT_MS`:
-
-```json
-"env": {
-  "MCP_JENKINS_URL": "https://pipeline.yourcompany.com",
-  "MCP_JENKINS_BEARER_TOKEN": "your_bearer_token",
-  "MCP_JENKINS_TIMEOUT_MS": "30000"
-}
-```
-
-Or on the command line:
-
-```sh
-mcp-jenkins --url https://pipeline.yourcompany.com --bearer-token abc123 --timeout-ms 30000
-```
-
-One value applies to every configured instance. To find out what your instance actually needs, time the call the server makes:
-
-```sh
-time curl -u user:token 'https://pipeline.yourcompany.com/job/my-job/api/json'
-```
-
-### Tools
-
-| Category                | Tools                                                                                                                                                                                                                                                                                        |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Job operations**      | `jenkins_list_jobs`, `jenkins_search_jobs`, `jenkins_get_job_status`, `jenkins_get_job_parameters`, `jenkins_enable_job`, `jenkins_disable_job`, `jenkins_delete_job`, `jenkins_get_job_config`, `jenkins_create_job`, `jenkins_update_job_config`, `jenkins_rename_job`, `jenkins_copy_job` |
-| **Build operations**    | `jenkins_get_build_status`, `jenkins_get_recent_builds`, `jenkins_trigger_build`, `jenkins_stop_build`, `jenkins_delete_build`, `jenkins_replay_build`, `jenkins_get_console_log`, `jenkins_get_build_changes`, `jenkins_get_pipeline_stages`                                                |
-| **Testing & artefacts** | `jenkins_get_test_results`, `jenkins_list_artifacts`, `jenkins_get_artifact`                                                                                                                                                                                                                 |
-| **Queue management**    | `jenkins_get_queue`, `jenkins_cancel_queue`                                                                                                                                                                                                                                                  |
-| **System & nodes**      | `jenkins_list_nodes`, `jenkins_get_node`, `jenkins_toggle_node_offline`, `jenkins_get_system_info`, `jenkins_get_version`, `jenkins_get_plugins`, `jenkins_quiet_down`, `jenkins_cancel_quiet_down`                                                                                          |
-| **Views**               | `jenkins_list_views`, `jenkins_get_view`                                                                                                                                                                                                                                                     |
-| **Instances & admin**   | `jenkins_list_instances`, `jenkins_safe_restart`                                                                                                                                                                                                                                             |
-
-## Development
-
-```sh
-git clone https://github.com/kud/mcp-jenkins.git
-cd mcp-jenkins
-npm install
-npm run dev
-```
-
-To test interactively with the MCP Inspector:
-
-```sh
-npm run inspect:dev
 ```

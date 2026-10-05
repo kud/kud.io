@@ -1,6 +1,7 @@
 ---
 title: "webext-email-address-plus"
 description: "Get a shiny email address with a ✌️ label ✌️ depending on the hostname"
+hasDocs: false
 ---
 
 🚀 **Automatically generate labeled email addresses for better organization and spam protection.**

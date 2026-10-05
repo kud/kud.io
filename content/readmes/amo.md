@@ -1,6 +1,7 @@
 ---
 title: "amo"
 description: "Typed client for the addons.mozilla.org (AMO) API v5: listing, icon, previews and version status."
+hasDocs: false
 ---
 
 ## Features
