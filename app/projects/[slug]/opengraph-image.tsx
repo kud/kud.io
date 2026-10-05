@@ -49,7 +49,6 @@ const Image = async ({ params }: { params: Promise<{ slug: string }> }) => {
     >
       <div style={{ display: "flex", alignItems: "center", gap: 36 }}>
         {isRaster(icon) ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={icon}
             alt=""

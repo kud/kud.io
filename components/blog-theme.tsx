@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useSyncExternalStore } from "react"
 import type { ReactNode } from "react"
 
 // The blog owns its own theme, independent of the rest of the site.
@@ -56,23 +56,44 @@ export const BLOG_THEME_SCRIPT = `try{var t=localStorage.getItem(${JSON.stringif
   BLOG_ROOT_ID,
 )}).dataset.theme=t}catch(e){}`
 
-export const useBlogTheme = () => {
-  const [theme, setThemeState] = useState<BlogTheme>("system")
+const themeListeners = new Set<() => void>()
+// Holds the choice for this page load when storage is blocked, so the control
+// still reflects what was picked even though it cannot persist.
+let unpersistedTheme: BlogTheme = "system"
 
-  // The pre-paint script has already applied the stored value to the DOM; this
-  // only syncs React's copy after mount, which is why the wrapper carries
-  // suppressHydrationWarning.
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(BLOG_THEME_KEY)
-      if (isTheme(stored)) setThemeState(stored)
-    } catch {
-      // Private browsing or blocked storage — "system" is a fine answer.
-    }
-  }, [])
+const subscribeToTheme = (listener: () => void) => {
+  themeListeners.add(listener)
+  window.addEventListener("storage", listener)
+  return () => {
+    themeListeners.delete(listener)
+    window.removeEventListener("storage", listener)
+  }
+}
+
+const readStoredTheme = (): BlogTheme => {
+  try {
+    const stored = localStorage.getItem(BLOG_THEME_KEY)
+    return isTheme(stored) ? stored : "system"
+  } catch {
+    // Private browsing or blocked storage — "system" is a fine answer.
+    return unpersistedTheme
+  }
+}
+
+const serverTheme = (): BlogTheme => "system"
+
+export const useBlogTheme = () => {
+  // The pre-paint script has already applied the stored value to the DOM; the
+  // server snapshot keeps hydration on "system" and React then re-reads storage
+  // on the client, which is why the wrapper carries suppressHydrationWarning.
+  const theme = useSyncExternalStore(
+    subscribeToTheme,
+    readStoredTheme,
+    serverTheme,
+  )
 
   const setTheme = useCallback((next: BlogTheme) => {
-    setThemeState(next)
+    unpersistedTheme = next
     const root = document.getElementById(BLOG_ROOT_ID)
     if (root) root.dataset.theme = next
     try {
@@ -80,6 +101,7 @@ export const useBlogTheme = () => {
     } catch {
       // Preference simply won't persist; the session still themes correctly.
     }
+    themeListeners.forEach((listener) => listener())
   }, [])
 
   return { theme, setTheme }

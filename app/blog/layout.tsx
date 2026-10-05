@@ -41,9 +41,9 @@ const BlogLayout = ({ children }: { children: ReactNode }) => (
         not a page, so there is no client route for Link to prefetch. */}
     <footer className={styles.footer}>
       <a href="/blog/feed.xml">RSS</a>
-      <a href="/">
+      <Link href="/">
         kud.io <span aria-hidden>↗</span>
-      </a>
+      </Link>
     </footer>
   </div>
 )

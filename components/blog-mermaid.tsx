@@ -400,7 +400,7 @@ export const BlogMermaid = ({
                         y: midpoint.y - centre.y - anchor.y * nextScale,
                       }
 
-                      pinch.lastOffset = nextOffset
+                      pinchRef.current = { ...pinch, lastOffset: nextOffset }
                       setScale(nextScale)
                       setOffset(nextOffset)
                       return

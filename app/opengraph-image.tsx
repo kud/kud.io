@@ -26,7 +26,6 @@ const Image = () =>
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 40 }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={AVATAR}
           alt=""

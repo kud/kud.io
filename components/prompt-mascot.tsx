@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import styles from "./prompt-mascot.module.css"
 
 // A pool of lines per trigger type, so it doesn't repeat itself.
@@ -61,11 +61,17 @@ export const PromptMascot = () => {
   const [message, setMessage] = useState<string | null>(null)
   const [typed, setTyped] = useState("It's me!")
   const [title, setTitle] = useState("zsh")
+  const [typingFor, setTypingFor] = useState<string | null>(null)
 
-  // Typewriter: retype from empty whenever a new line is summoned.
+  // Typewriter: retype from empty whenever a new line is summoned. The reset
+  // happens during render so the previous line never flashes for a frame.
+  if (message !== typingFor) {
+    setTypingFor(message)
+    if (message) setTyped("")
+  }
+
   useEffect(() => {
     if (!message) return
-    setTyped("")
     let index = 0
     const id = window.setInterval(() => {
       index += 1

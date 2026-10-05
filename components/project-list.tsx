@@ -5,11 +5,14 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
   type CSSProperties,
   type ReactNode,
 } from "react"
 import { MorphLink } from "@/components/morph-link"
 import type { Project } from "@/lib/projects"
+
+const subscribeToNothing = () => () => {}
 import type { Ecosystem } from "@/lib/ecosystems"
 import { isAppCategory } from "@/lib/categories"
 import styles from "./project-list.module.css"
@@ -149,7 +152,11 @@ export const ProjectList = ({
   // in once the browse area scrolls up. `scrollReveal` is only switched on after
   // mount, so with JS disabled the rail renders visible (progressive
   // enhancement) rather than being stranded hidden.
-  const [scrollReveal, setScrollReveal] = useState(false)
+  const scrollReveal = useSyncExternalStore(
+    subscribeToNothing,
+    () => true,
+    () => false,
+  )
   const [filtersRevealed, setFiltersRevealed] = useState(false)
   const revealSentinelRef = useRef<HTMLDivElement>(null)
   // Ecosystem is single-select (unlike tags): you're looking at one family at a
@@ -167,7 +174,6 @@ export const ProjectList = ({
   // recedes again on the way back up. Read on every scroll frame (rAF-throttled)
   // rather than on observer crossings, so it can't get stuck between boundaries.
   useEffect(() => {
-    setScrollReveal(true)
     const sentinel = revealSentinelRef.current
     if (!sentinel) return
     let frame = 0
