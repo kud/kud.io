@@ -13,6 +13,12 @@ import { getMDXComponents } from "@/components/mdx"
 
 type Params = { slug: string; path?: string[] }
 
+// Link unfurlers render a title's emoji as text: Slack shows `🖼️ image-view`
+// as `:frame_with_picture: image-view`. The page keeps its emoji; the shared
+// title drops a leading one.
+const withoutLeadingEmoji = (title: string) =>
+  title.replace(/^(?:\p{Extended_Pictographic}|️|‍|\s)+/u, "")
+
 const resolvePage = (slug: string, path?: string[]) =>
   source.getPage([slug, "docs", ...(path ?? [])])
 
@@ -59,7 +65,7 @@ export const generateMetadata = async ({
   if (!page) notFound()
 
   const project = await getProject(slug)
-  const title = `${page.data.title} — ${project?.name ?? slug} docs`
+  const title = `${withoutLeadingEmoji(page.data.title)} — ${project?.name ?? slug} docs`
   const description = page.data.description
   const url = `https://kud.io/projects/${slug}/docs${path?.length ? `/${path.join("/")}` : ""}`
 
