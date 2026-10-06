@@ -87,6 +87,20 @@ npm run build
 npm run lint
 ```
 
+## 🏪 Updating the AMO listing
+
+The public add-on page (name, summary, description, categories and screenshots) lives in this repo: `amo/listing.json` for the text, `amo/screenshots/` for the previews (name-sorted, with an optional same-named `.txt` as the caption). The repo is the source of truth, so anything edited by hand on the AMO dashboard gets overwritten on the next push.
+
+```bash
+# Dry run: diff against the live listing, send nothing
+npx -y @kud/amo-cli@0.1.1 listing push --listing amo/listing.json --guid email-address-plus@kud.io --screenshots amo/screenshots --only=listing,previews
+
+# Send the changes to AMO
+npx -y @kud/amo-cli@0.1.1 listing push --listing amo/listing.json --guid email-address-plus@kud.io --screenshots amo/screenshots --only=listing,previews --apply
+```
+
+Sending needs `WEB_EXT_API_KEY` and `WEB_EXT_API_SECRET` in the environment (the JWT issuer and secret from [AMO's API credentials page](https://addons.mozilla.org/en-US/developers/addon/api/key/)). The description is Markdown, which AMO renders on the page. The work is done by [`@kud/amo-cli`](https://kud.io/projects/amo-cli).
+
 ## 📄 License
 
 MIT License - see [LICENSE](https://github.com/kud/webext-email-address-plus/blob/HEAD/LICENSE) file for details.

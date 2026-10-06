@@ -148,3 +148,60 @@ npm run build      # emits dist/index.js (ESM) and dist/index.global.js (IIFE)
 npm run typecheck
 npm test
 ```
+
+## Releasing an extension
+
+Two reusable workflows in `.github/workflows` release any Firefox extension
+without copying them. The extension repo keeps its own version (`git lzv`, a
+repo script); the workflows never bump anything.
+
+`release-extension.yml` builds (WXT, or plain web-ext, detected from
+`package.json`), signs and uploads the listed AMO version, attaches the
+artefacts to the GitHub release, then applies the AMO listing. Tag-triggered:
+
+```yaml
+# .github/workflows/release.yml
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+jobs:
+  release:
+    uses: kud/webext/.github/workflows/release-extension.yml@main
+    secrets: inherit
+```
+
+Inputs: `root` (default `.`), `node-version`, `mode` (`auto`, `wxt`, `web-ext`),
+`source-dir` and `ignore-files` (web-ext mode), `amo-metadata`, `listing`,
+`icon`. The caller needs `WEB_EXT_API_KEY` and `WEB_EXT_API_SECRET` secrets,
+or `MOZILLA_ADDONS_JWT_ISSUER` and `MOZILLA_ADDONS_JWT_SECRET` as a fallback.
+
+`amo-listing.yml` pushes `<root>/amo/listing.json`, the icon and
+`<root>/amo/screenshots`. A dry run writes the diff to the job summary;
+`apply` sends it and commits `.amo-previews.json` back. `force` replaces every
+screenshot and only takes effect on `workflow_dispatch`, never on a tag. The
+add-on id comes from `<root>/manifest.json`; a WXT project, which has none
+checked in, passes it as `guid`:
+
+```yaml
+# .github/workflows/amo-listing.yml
+on:
+  push:
+    branches: [main]
+    paths: ["amo/**"]
+  workflow_dispatch:
+    inputs:
+      apply: { type: boolean, default: false }
+      force: { type: boolean, default: false }
+permissions:
+  contents: write
+jobs:
+  listing:
+    uses: kud/webext/.github/workflows/amo-listing.yml@main
+    with:
+      apply: ${{ inputs.apply == true }}
+      force: ${{ inputs.force == true }}
+      icon: assets/icon-128.png
+    secrets: inherit
+```
