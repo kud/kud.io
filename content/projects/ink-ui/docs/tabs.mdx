@@ -3,7 +3,7 @@ title: 🗂️ Tabs
 description: Inline tab strip for grouped interactive screens.
 ---
 
-`<Tabs>` renders an inline tab strip. Active tabs are bold and highlighted; inactive tabs are dimmed. Optional counts render beside labels. Tabs can be grouped — a divider is drawn where the `group` value changes between neighbouring tabs.
+`<Tabs>` renders an inline tab strip. Active tabs are bold and highlighted; inactive tabs are dimmed. Optional counts render as a soft chip beside the label. Tabs can be grouped — a divider is drawn where the `group` value changes between neighbouring tabs.
 
 ```tsx
 import { Tabs } from "@kud/ink-ui";
@@ -16,7 +16,7 @@ import type { TabItem } from "@kud/ink-ui";
 | -------- | -------------- | ---------------- |
 | `active` | `T`            | Active tab value |
 | `items`  | `TabItem<T>[]` | Tabs to render   |
-| `width`  | `number` | Available width; defaults to the terminal's columns, and never folds when that is unknown. When the full strip does not fit, inactive icon tabs fold to `icon count` |
+| `width`  | `number` | Available width; defaults to the terminal's columns, and never folds when that is unknown. When the full strip does not fit, inactive icon tabs fold to `icon` plus the count chip |
 
 ### `TabItem<T>` shape
 
@@ -24,8 +24,8 @@ import type { TabItem } from "@kud/ink-ui";
 | ------- | -------- | ------------------------------- |
 | `value` | `T`      | Stable tab identifier           |
 | `label` | `string` | Visible tab label               |
-| `icon` | `string` | Optional single glyph drawn between the marker gutter and the label; takes the label's style, and the active underline spans icon, space and label |
-| `count` | `number \| null` | Optional count rendered in tabs; `null` (not loaded yet) draws `(–)` at a two-digit width |
+| `icon` | `string` | Optional single glyph drawn between the marker gutter and the label; takes the label's style, and the active underline spans icon, space and label, stopping before the count chip |
+| `count` | `number \| null` | Optional count drawn as a soft chip beside the label; `null` (not loaded yet) draws a chip holding `–` at a two-digit width |
 | `group` | `string` | Optional group name; a divider is drawn between tabs whose group differs from the previous tab |
 
 ## 💡 Examples

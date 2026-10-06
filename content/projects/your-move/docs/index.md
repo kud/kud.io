@@ -71,7 +71,7 @@ When creating the OAuth App, set its **Authorization callback URL** to `<your-de
 
 Deliberately an **OAuth App**, not a GitHub App: a GitHub App's user access token is intersected with the App's installations, so it only ever sees repos the App happens to be installed on — the wrong shape for a scope that changes weekly. An OAuth App carries no such restriction.
 
-The reference deployment runs at `move.kud.io`. To run your own:
+The reference deployment runs at `your-move.beansontoast.app`. To run your own:
 
 ```sh
 npm run build
@@ -79,6 +79,10 @@ npm start
 ```
 
 Deploy the build output anywhere that runs Node — a platform like Vercel works with zero extra configuration beyond the three environment variables above.
+
+### Demo mode
+
+A preview or local run can be signed into and browsed without GitHub. Demo mode is on when `VERCEL_ENV` is `preview`, or when `YOUR_MOVE_DEMO=1` is set on any non-production deploy — production is never demo, even with the flag set. The login page is still the way in, but the GitHub round trip is pretended: it seals a sentinel session and the board serves sample data (`lib/demo-fixtures.ts`, invented names only). Writes answer 200 and save nothing. With no `SESSION_SECRET` set, demo falls back to a fixed demo-only secret; set a real one and it is used instead.
 
 ## 🔧 Development
 

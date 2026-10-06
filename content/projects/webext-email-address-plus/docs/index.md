@@ -87,6 +87,26 @@ npm run build
 npm run lint
 ```
 
+## 🖼️ Web demo
+
+`preview/` is the live demo: the real popup and options pages, exactly as they
+ship, side by side on one realistic set of invented `example.*` data, running
+against a fake `browser` API shim. Generating an address, the Recent list and
+the settings all work; changes live in the tab's session storage and vanish when
+it closes. The popup stays open instead of closing after four seconds, and its
+timer bar is hidden for that reason. It is excluded from the extension build and
+the AMO source zip, and `vercel.json` deploys it.
+
+```bash
+# Run the demo locally
+npm run preview
+
+# Static output in preview-dist/ (also what vercel.json deploys)
+npm run build:preview
+```
+
+The colour scheme follows the OS. `preview/fixtures/demo.json` holds the data.
+
 ## 🏪 Updating the AMO listing
 
 The public add-on page (name, summary, description, categories and screenshots) lives in this repo: `amo/listing.json` for the text, `amo/screenshots/` for the previews (name-sorted, with an optional same-named `.txt` as the caption). The repo is the source of truth, so anything edited by hand on the AMO dashboard gets overwritten on the next push.
