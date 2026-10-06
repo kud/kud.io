@@ -2,75 +2,86 @@
 
 import { useEffect, useRef, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
-import styles from "./ink-transition.module.css"
-
-// The overlay is inset by -60px, so a viewport point maps to element-local
-// coordinates by adding this offset (keeps the ink origin on the pressed button).
-const OVERSIZE = 60
+import { clear, spill } from "@kud/inkblot"
 
 type RevealDetail = { x: number; y: number; href: string; color: string }
 
-// Desktop home → /projects "ink" transition. Listens for the `ink:reveal` event
-// RevealLink dispatches: it spreads a dark, turbulence-edged overlay out of the
-// click point, navigates under the cover, then fades the overlay to reveal the
-// freshly-loaded /projects page. Rendered once in the root layout.
+type CoveredWait = {
+  href: string
+  x: number
+  y: number
+  color: string
+  run: number
+}
+
+// Numeric match for the previous local overlay's 0.32s fade-out. The shape
+// differs (the library lifts the ink with a reverse spread rather than an
+// opacity fade), but the time under cover after the route commits is the same.
+const REVEAL_DURATION = 320
+
+// Desktop ink transition, now backed by @kud/inkblot. Listens for the
+// `ink:reveal` event the link components dispatch: spills cover ink out of the
+// pressed control, navigates under the full cover, holds it until the pathname
+// confirms the destination has committed, then reveals the new page. Rendered
+// once in the root layout. The overlay element starts bare; the library adds
+// its own class, injected stylesheet and turbulence filter on first spill.
 export const InkTransition = () => {
   const router = useRouter()
   const pathname = usePathname()
   const overlayRef = useRef<HTMLDivElement>(null)
-  const hrefRef = useRef<string | null>(null)
-  const [phase, setPhase] = useState<"idle" | "inking" | "covered" | "fading">(
-    "idle",
-  )
+  const runRef = useRef(0)
+  const [covered, setCovered] = useState<CoveredWait | null>(null)
 
   useEffect(() => {
     const onReveal = (event: Event) => {
       const { x, y, href, color } = (event as CustomEvent<RevealDetail>).detail
       const el = overlayRef.current
       if (!el) return
-      // The cover matches the destination's background, so fading it out reveals
-      // only the new page's content — no colour seam between the two themes.
-      el.style.backgroundColor = color
-      el.style.setProperty("--x", `${x + OVERSIZE}px`)
-      el.style.setProperty("--y", `${y + OVERSIZE}px`)
-      hrefRef.current = href
-      setPhase("inking")
+      runRef.current += 1
+      const run = runRef.current
+      setCovered(null)
+      const coverPage = async () => {
+        // The point is raw viewport coordinates; the library shifts it onto its
+        // oversized overlay itself, so pre-offsetting here would move the
+        // origin twice.
+        await spill(el, { mode: "cover", from: { x, y }, colour: color })
+        if (runRef.current !== run) return
+        router.push(href)
+        setCovered({ href, x, y, color, run })
+      }
+      void coverPage()
     }
     window.addEventListener("ink:reveal", onReveal)
     return () => window.removeEventListener("ink:reveal", onReveal)
-  }, [])
-
-  const handleAnimationEnd = () => {
-    if (phase !== "inking" || !hrefRef.current) return
-    // The screen is fully covered now — swap the route under it, but keep the
-    // cover visible until the pathname confirms the destination has committed.
-    router.push(hrefRef.current)
-    setPhase("covered")
-  }
+  }, [router])
 
   useEffect(() => {
-    if (phase !== "covered" || pathname !== hrefRef.current) return
-    requestAnimationFrame(() => requestAnimationFrame(() => setPhase("fading")))
-  }, [pathname, phase])
+    if (!covered || pathname !== covered.href) return
+    const arrival = covered
+    const frame = requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        if (runRef.current !== arrival.run) return
+        setCovered(null)
+        const el = overlayRef.current
+        if (!el) return
+        void spill(el, {
+          mode: "reveal",
+          from: { x: arrival.x, y: arrival.y },
+          colour: arrival.color,
+          duration: REVEAL_DURATION,
+        })
+      }),
+    )
+    return () => cancelAnimationFrame(frame)
+  }, [pathname, covered])
 
-  const handleTransitionEnd = () => {
-    if (phase === "fading") setPhase("idle")
-  }
+  useEffect(() => {
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted && overlayRef.current) clear(overlayRef.current)
+    }
+    window.addEventListener("pageshow", onPageShow)
+    return () => window.removeEventListener("pageshow", onPageShow)
+  }, [])
 
-  return (
-    <div
-      ref={overlayRef}
-      aria-hidden
-      className={[
-        styles.overlay,
-        phase === "inking" ? styles.inking : "",
-        phase === "covered" ? styles.covered : "",
-        phase === "fading" ? styles.fading : "",
-      ]
-        .filter(Boolean)
-        .join(" ")}
-      onAnimationEnd={handleAnimationEnd}
-      onTransitionEnd={handleTransitionEnd}
-    />
-  )
+  return <div ref={overlayRef} aria-hidden />
 }

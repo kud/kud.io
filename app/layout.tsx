@@ -74,33 +74,6 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
       className={sans.variable}
     >
       <body className="flex min-h-screen flex-col">
-        {/* Off-screen SVG filter: organic turbulence displacement for the home →
-            /projects "ink reveal" edge (see vt-ink-reveal in global.css). */}
-        <svg aria-hidden width="0" height="0" style={{ position: "absolute" }}>
-          <filter
-            id="ink-edge"
-            x="-20%"
-            y="-20%"
-            width="140%"
-            height="140%"
-            colorInterpolationFilters="sRGB"
-          >
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.009 0.013"
-              numOctaves="2"
-              seed="11"
-              result="noise"
-            />
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="noise"
-              scale="26"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-        </svg>
         <InkTransition />
         <RootProvider
           theme={{

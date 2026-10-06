@@ -172,11 +172,12 @@ html[data-vt="morph"]::view-transition-new(root) {
   animation-duration: 0.55s;
 }
 
-/* The home → /projects "ink" transition is handled on desktop by the
-   InkTransition overlay component (a real full-screen element it can filter and
-   clip reliably), not by View Transitions — browsers don't apply SVG filters to
-   ::view-transition pseudo-elements dependably, so there are no root-clip reveal
-   rules here. Mobile keeps the flat cross-fade + avatar morph below. */
+/* The home ↔ /projects "ink" transition is handled on desktop by the
+   InkTransition overlay, which spills cover ink out of the pressed control and
+   reveals the new route once it commits (via @kud/inkblot, which injects its
+   own overlay styles and turbulence filter) — not by View Transitions, whose
+   pseudo-elements take SVG filters unreliably. Narrower viewports keep the
+   flat cross-fade + avatar morph below. */
 
 /* Desktop: gentle proximity scroll-snap so sections magnetise near their start
    without trapping the scroll. Mobile uses mandatory snap via .home instead. */
