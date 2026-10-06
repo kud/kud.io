@@ -1,23 +1,31 @@
-/* Toolbar -------------------------------------------------------------------*/
-.toolbar {
+.store {
   max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.store a:focus-visible,
+.store button:focus-visible,
+.store input:focus-visible {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
+}
+
+/* Search ---------------------------------------------------------------*/
+.searchWrap {
+  max-width: 320px;
   margin: 12px auto 0;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
 }
 
 .search {
-  flex: 1 1 220px;
-  min-width: 180px;
-  background: var(--surface);
+  width: 100%;
+  background: transparent;
   color: var(--text);
   border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 11px 16px;
+  border-radius: 8px;
+  padding: 6px 12px;
   font-family: inherit;
-  font-size: 14.5px;
+  font-size: 13px;
   transition: border-color 0.15s;
 }
 
@@ -30,1164 +38,508 @@
   border-color: var(--primary);
 }
 
-/* Two-column browse: grid in the main column, sticky filter rail on the right --*/
-.layout {
-  --content-max: 1180px;
-  --rail-width: clamp(280px, 18vw, 340px);
-
-  max-width: calc(var(--content-max) + (var(--rail-width) * 2) + 80px);
-  margin: 12px auto 0;
-  padding: 0 24px;
-  display: grid;
-  gap: 40px;
-  grid-template-columns: 1fr;
-  /* Mobile: filters stack above the grid so they stay reachable. */
-  grid-template-areas: "filters" "main";
-}
-
-@media (min-width: 1100px) {
-  .layout {
-    /* An empty left spacer mirrors the right rail, so the main column stays
-       centred on the page (aligned with the hero) while the filters live in
-       the right gutter — rather than the whole block sliding left. */
-    grid-template-columns:
-      minmax(0, var(--rail-width)) minmax(0, var(--content-max))
-      minmax(0, var(--rail-width));
-    grid-template-areas: "spacer main filters";
-    align-items: start;
-  }
-}
-
-.main {
-  grid-area: main;
-  min-width: 0;
-}
-
-/* Inside the two-column layout the sections fill the main column, so drop the
-   full-width era's own centering (max-width + auto side margins). */
-.main .section,
-.main .ecoSection,
-.main .noResults {
-  max-width: none;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.sidebar {
-  --sidebar-top: clamp(16px, 4vh, 40px);
-  grid-area: filters;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  height: fit-content;
-}
-
-@media (min-width: 1100px) {
-  .sidebar {
-    align-self: start;
-    position: sticky;
-    top: var(--sidebar-top);
-    max-height: calc(100svh - var(--sidebar-top) * 2);
-    overflow: auto;
-    overscroll-behavior: contain;
-    margin-top: 60px;
-    padding-bottom: 20px;
-  }
-
-  /* Scroll-reveal (desktop only): keep the hero clean by holding the rail back
-     until the browse area scrolls into view, then fade it in. Only armed once
-     JS has mounted (.scrollReveal) — without it the rail stays visible. */
-  .scrollReveal .sidebar {
-    opacity: 0;
-    transform: translateY(-8px);
-    pointer-events: none;
-    transition:
-      opacity 0.4s ease,
-      transform 0.4s ease;
-  }
-
-  .scrollReveal .sidebar[data-revealed="true"] {
-    opacity: 1;
-    transform: none;
-    pointer-events: auto;
-  }
-}
-
-/* A zero-height marker at the top of the browse area; the scroll listener reads
-   its position each frame to decide when to reveal the filter rail. */
-.revealSentinel {
-  height: 0;
-  scroll-margin: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scrollReveal .sidebar {
-    transform: none;
-    transition: opacity 0.4s ease;
-  }
-}
-
-.results {
-  min-width: 0;
-}
-
-.resultsAnimated {
-  animation: resultsIn 0.22s ease-out both;
-}
-
-.resultsAnimated .section,
-.resultsAnimated .noResults {
-  animation: resultItemIn 0.28s ease-out both;
-}
-
-.resultsAnimated .appTile,
-.resultsAnimated .row {
-  animation: resultItemIn 0.24s ease-out both;
-}
-
-@keyframes resultsIn {
-  from {
-    opacity: 0.72;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes resultItemIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .resultsAnimated,
-  .resultsAnimated .section,
-  .resultsAnimated .noResults,
-  .resultsAnimated .appTile,
-  .resultsAnimated .row {
-    animation: none;
-  }
-}
-
-/* The reused search / Dropdown / filter atoms go full-width in the rail. */
-.sidebar .search {
-  flex: none;
-  width: 100%;
-}
-
-.sidebar .sortGroup {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 9px;
-}
-
-.sidebar .trigger {
-  width: 100%;
-  min-width: 0;
-}
-
-.sidebar .menu {
-  left: 0;
-  right: auto;
-  min-width: 100%;
-}
-
-.sidebar .filterGroup {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 11px;
-}
-
-.sidebar .filterLabel {
-  width: auto;
-}
-
-/* Filter section: labelled Language + Tags rows below the search/sort bar */
-.filters {
-  max-width: 1040px;
-  margin: 14px auto 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 4px 0;
-}
-
-.filterGroup {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.filterLabel {
-  flex-shrink: 0;
-  width: 84px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
+.resultCount {
+  margin: 18px 0 0;
+  text-align: center;
   color: var(--muted);
+  font-size: 14px;
 }
 
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  align-items: center;
-}
-
-.chip {
-  background: var(--surface);
-  color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 8px 15px;
-  font-family: inherit;
-  font-size: 13.5px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    color 0.14s,
-    background 0.14s,
-    border-color 0.14s;
-}
-
-.chip:hover {
-  color: var(--text);
-  border-color: var(--primary);
-}
-
-.chip[data-active="true"] {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
-}
-
-.languageChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--surface);
-  color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 7px 15px 7px 10px;
-  font-family: inherit;
-  font-size: 13.5px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    color 0.14s,
-    background 0.14s,
-    border-color 0.14s;
-}
-
-.languageChip:hover {
-  color: var(--text);
-  border-color: var(--primary);
-}
-
-.languageChip[data-active="true"] {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
-}
-
-.languageIcon {
-  display: inline-grid;
-  place-items: center;
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-
-.languageIcon img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
-}
-
-.ecosystemChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background: var(--surface);
-  color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 5px 10px 5px 5px;
-  font-family: inherit;
-  font-size: 13.5px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    color 0.14s,
-    background 0.14s,
-    border-color 0.14s;
-}
-
-.ecosystemChip:hover {
-  color: var(--text);
-  border-color: var(--primary);
-}
-
-.ecosystemChip[data-active="true"] {
-  background: rgba(194, 112, 61, 0.16);
-  border-color: var(--primary);
-  color: var(--primary-light);
-}
-
-.chipIcon {
-  display: inline-grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  flex-shrink: 0;
-  overflow: hidden;
-  border-radius: 999px;
-  background:
-    radial-gradient(
-      110% 110% at 50% 0%,
-      rgba(255, 255, 255, 0.12),
-      transparent 58%
-    ),
-    var(--surface-2);
-  color: var(--text);
-  font-size: 12px;
-  font-weight: 700;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-}
-
-.chipIcon img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.chipIcon img[data-bleed="false"] {
-  width: 64%;
-  height: 64%;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
-}
-
-.chipCount {
-  display: inline-grid;
-  place-items: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.07);
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1;
-}
-
-.ecosystemChip[data-active="true"] .chipCount {
-  background: rgba(255, 255, 255, 0.12);
-  color: var(--text);
-}
-
-/* Content tags (multi-select) */
-.tagChip {
-  background: transparent;
-  color: var(--muted);
-  border: 1px dashed var(--border);
-  border-radius: 8px;
-  padding: 5px 11px;
-  font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    color 0.14s,
-    background 0.14s,
-    border-color 0.14s;
-}
-
-.tagChip:hover {
-  color: var(--text);
-  border-color: var(--primary-light);
-}
-
-.tagChip[data-active="true"] {
-  background: rgba(194, 112, 61, 0.16);
-  border-style: solid;
-  border-color: var(--primary);
-  color: var(--primary-light);
-}
-
-.tagClear {
+.clear {
+  margin-left: 10px;
   background: none;
   border: none;
-  color: var(--dim, var(--muted));
+  padding: 0;
+  color: var(--primary-light);
   font-family: inherit;
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;
   cursor: pointer;
 }
 
-.tagClear:hover {
-  color: var(--text);
-}
-
-.sortGroup {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.dropdown {
-  position: relative;
-}
-
-.trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 180px;
-  justify-content: space-between;
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 8px 14px;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    border-color 0.15s,
-    background 0.15s;
-}
-
-.trigger:hover,
-.trigger[aria-expanded="true"] {
-  border-color: var(--primary);
-  background: var(--surface-2);
-}
-
-.chevron {
-  width: 7px;
-  height: 7px;
-  border-right: 1.5px solid var(--muted);
-  border-bottom: 1.5px solid var(--muted);
-  transform: translateY(-2px) rotate(45deg);
-  transition: transform 0.18s;
-}
-
-.trigger[aria-expanded="true"] .chevron {
-  transform: translateY(1px) rotate(225deg);
-}
-
-.menu {
-  position: absolute;
-  top: calc(100% + 7px);
-  right: 0;
-  z-index: 30;
-  min-width: 210px;
-  margin: 0;
-  padding: 6px;
-  list-style: none;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 20px 48px -20px rgba(0, 0, 0, 0.85);
-  animation: menuIn 0.14s ease both;
-}
-
-@keyframes menuIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 9px 10px;
-  background: transparent;
-  border: 0;
-  border-radius: 8px;
-  color: var(--muted);
-  font-family: inherit;
-  font-size: 13.5px;
-  text-align: left;
-  cursor: pointer;
-  transition:
-    background 0.12s,
-    color 0.12s;
-}
-
-.option:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text);
-}
-
-.option[data-active="true"] {
-  color: var(--text);
-}
-
-.check {
-  width: 13px;
-  flex-shrink: 0;
-  color: var(--primary-light);
-  font-size: 11px;
-}
-
-/* Sections ------------------------------------------------------------------*/
-.section {
-  --accent: #8892a4;
-  position: relative;
-  max-width: 1040px;
-  margin: 0 auto;
-  padding-top: 60px;
-  /* When the app landing's back link anchors to #apps, leave breathing room
-     above the section so it isn't jammed under the viewport top. */
-  scroll-margin-top: 32px;
-}
-
-.section[data-cat="cli"] {
-  --accent: #f59e0b;
-}
-.section[data-cat="mcp"] {
-  --accent: #4f74ec;
-}
-.section[data-cat="claude"] {
-  --accent: #e0a87e;
-}
-.section[data-cat="ui"] {
-  --accent: #10b981;
-}
-.section[data-cat="vscode"] {
-  --accent: #22d3ee;
-}
-.section[data-cat="theme"] {
-  --accent: #ec4899;
-}
-.section[data-cat="other"] {
-  --accent: #8892a4;
-}
-
-.sectionTitle {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  font-size: 21px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text);
-  margin: 0 0 14px;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 14px var(--accent);
-}
-
-.count {
-  font-size: 16px;
-  color: var(--muted);
-  font-weight: 500;
-  letter-spacing: normal;
-  text-transform: none;
-}
-
-.blurb {
-  max-width: 660px;
-  margin: 0 0 26px;
-  color: var(--muted);
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-.noResults {
-  max-width: 1040px;
-  margin: 48px auto;
-  text-align: center;
-  color: var(--muted);
-  font-size: 15px;
-}
-
-/* App launcher --------------------------------------------------------------*/
-/* The `kud-site-app` group leads the page as a home-screen of big liquid-glass
-   squircle icons — icon-first, no card chrome. Each tile carries its own accent
-   via the inline --app-accent custom property (from app.json). */
-.appGrid {
+/* Featured --------------------------------------------------------------*/
+.featured {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: clamp(18px, 3vw, 36px);
-  margin-top: 4px;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 20px;
+  margin-top: 40px;
 }
 
-.appTile {
-  --app-accent: #8892a4;
+.featuredLead {
+  grid-row: span 2;
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 14px;
-  padding: 8px 6px;
-  text-decoration: none;
-  color: inherit;
-}
-
-.appIconWrap {
-  position: relative;
-  width: clamp(100px, 13vw, 132px);
-  aspect-ratio: 1;
-  border-radius: 27%;
-  display: grid;
-  place-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
   overflow: hidden;
-  isolation: isolate;
-  /* Accent-tinted glass — visible behind contained glyphs, hidden under
-     full-bleed raster icons (which fill the squircle). */
-  background:
-    radial-gradient(
-      130% 120% at 50% -10%,
-      color-mix(in srgb, var(--app-accent) 42%, transparent),
-      transparent 62%
-    ),
-    var(--surface-2);
-  box-shadow: 0 20px 44px -20px color-mix(in srgb, var(--app-accent) 70%, #000);
-  transition:
-    transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Diagonal specular sweep — the liquid-glass highlight, kept subtle so it reads
-   as a sheen rather than a smudge. Sits above the icon. */
-.appIconWrap::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: linear-gradient(
-    133deg,
-    rgba(255, 255, 255, 0.34) 0%,
-    rgba(255, 255, 255, 0.06) 14%,
-    transparent 34%
-  );
-  mix-blend-mode: screen;
-  pointer-events: none;
+.featuredSide {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
 }
 
-/* Glass rim — top edge highlight + soft bottom shade + a 1px inner ring, layered
-   over the icon so the squircle keeps its glassy edge even when full-bleed. */
-.appIconWrap::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  border-radius: inherit;
-  box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.45),
-    inset 0 -16px 30px -18px rgba(0, 0, 0, 0.6),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-  pointer-events: none;
+.shotLink {
+  display: block;
+  border-bottom: 1px solid var(--border);
 }
 
-.appTile:hover .appIconWrap {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 30px 60px -22px color-mix(in srgb, var(--app-accent) 85%, #000);
-}
-
-.appIconImg {
+.shot {
+  display: block;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
-  z-index: 1;
-}
-
-/* SVG glyphs aren't full app-icon art — contain them on the tinted glass. */
-.appIconImg[data-bleed="false"] {
-  width: 64%;
-  height: 64%;
-  object-fit: contain;
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.4));
-}
-
-.appMonogram {
-  z-index: 1;
-  font-size: 44px;
-  font-weight: 800;
-  color: #fff;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.appName {
-  font-size: 16.5px;
-  font-weight: 650;
-  color: var(--text);
-  letter-spacing: -0.01em;
-  transition: color 0.18s;
-}
-
-.appTile:hover .appName {
-  color: color-mix(in srgb, var(--app-accent) 55%, var(--text));
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .appTile:hover .appIconWrap {
-    transform: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .appGrid {
-    grid-template-columns: repeat(auto-fit, minmax(116px, 1fr));
-  }
-  .appIconWrap {
-    width: clamp(84px, 26vw, 104px);
-  }
-}
-
-/* Ruled two-column list -----------------------------------------------------*/
-.list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  overflow: hidden;
-}
-
-@media (max-width: 640px) {
-  .list {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Fills the odd trailing slot so it reads as intentional, not a broken cell. */
-.filler {
-  background-color: var(--surface);
-  background-image: repeating-linear-gradient(
-    -45deg,
-    transparent 0,
-    transparent 11px,
-    rgba(255, 255, 255, 0.025) 11px,
-    rgba(255, 255, 255, 0.025) 12px
-  );
-}
-
-@media (max-width: 640px) {
-  .filler {
-    display: none;
-  }
-}
-
-.row {
-  display: flex;
-  align-items: flex-start;
-  gap: 18px;
-  padding: 26px 30px;
-  background: var(--surface);
-  text-decoration: none;
-  color: inherit;
-  transition: background 0.15s;
-}
-
-.row:hover {
   background: var(--surface-2);
 }
 
-.rowBody {
+.featuredSide .shot {
+  aspect-ratio: 16 / 7;
+}
+
+.featuredBody {
   display: flex;
-  flex-direction: column;
-  gap: 9px;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+}
+
+.featuredLead .featuredBody {
+  padding: 20px 22px;
+}
+
+.featuredIcon {
+  width: 64px;
+  height: 64px;
+  flex: none;
+}
+
+.featuredText {
   flex: 1;
   min-width: 0;
 }
 
-.rowHead {
+.eyebrow {
+  margin: 0 0 2px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary-light);
+}
+
+.featuredName {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.featuredName:hover {
+  color: var(--primary-light);
+}
+
+.featuredNameSmall {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.featuredNameSmall:hover {
+  color: var(--primary-light);
+}
+
+.featuredTag {
+  margin: 3px 0 0;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.platformNote {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* Shelf headings ---------------------------------------------------------*/
+.shelfHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 52px 0 6px;
+}
+
+.shelfTitle {
+  margin: 0;
+  font-size: 23px;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.seeAll {
+  flex: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-light);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.seeAll:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.shelfBlurb {
+  margin: 0 0 18px;
+  max-width: 640px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/* App launchers ------------------------------------------------------------*/
+.launchers {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.launcher {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.launcherLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.launcherIcon {
+  width: 100%;
+  max-width: 112px;
+  aspect-ratio: 1;
+}
+
+.launcherName {
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.launcherLink:hover .launcherName {
+  color: var(--primary-light);
+}
+
+/* Whole-tile tap target: the name link stretches over its tile; the action
+   pill sits above it as a separate link, so no anchor is nested. */
+.featuredName::after,
+.featuredNameSmall::after,
+.rowName::after,
+.launcherLink::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+/* Shelf rows -----------------------------------------------------------------*/
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 28px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.row {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 14px;
+  padding: 13px 0;
+  border-top: 1px solid var(--border);
+  min-width: 0;
 }
 
-.icon,
-.monogram {
-  width: 44px;
-  height: 44px;
-  border-radius: 11px;
-  flex-shrink: 0;
+.rowIcon {
+  width: 52px;
+  height: 52px;
+  flex: none;
 }
 
-.icon {
-  object-fit: contain;
-  background: var(--surface-2);
-  padding: 3px;
-}
-
-.monogram {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 21px;
-  font-weight: 700;
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
-  border: 1px solid color-mix(in srgb, var(--accent) 32%, transparent);
+.rowMain {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
 .rowName {
-  font-size: 19px;
+  font-size: 16px;
   font-weight: 700;
+  letter-spacing: -0.005em;
   color: var(--text);
-  transition: color 0.15s;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.row:hover .rowName {
-  color: var(--accent);
+.rowName:hover {
+  color: var(--primary-light);
+}
+
+.rowDesc {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .rowMeta {
   display: flex;
   align-items: center;
-  gap: 16px;
-  flex-shrink: 0;
-  font-size: 14px;
+  gap: 8px;
+  margin: 2px 0 0;
+}
+
+.fact {
+  font-size: 12.5px;
   color: var(--muted);
   white-space: nowrap;
 }
 
-.downloads {
-  display: inline-flex;
-  align-items: center;
-}
-
-.lang {
-  display: inline-flex;
-  align-items: center;
-}
-
-.lang::before {
-  content: "●";
-  color: var(--accent);
-  margin-right: 6px;
-}
-
-.rowDesc {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.65;
-  color: var(--muted);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* Mobile -------------------------------------------------------------------*/
-@media (max-width: 720px) {
-  .search {
-    flex-basis: 100%;
-    order: -1;
-  }
-
-  /* Stack each dropdown as label-above-control, full width and flush-left, so
-     Type/Sort line up on the exact same left edge as the search field and the
-     Lang/Tags rows — one consistent column instead of indented half-width boxes. */
-  .sortGroup {
-    margin-left: 0;
-    flex-basis: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 7px;
-  }
-
-  .trigger {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .menu {
-    left: 0;
-    right: 0;
-    min-width: 0;
-  }
-
-  .section {
-    padding-top: 48px;
-  }
-
-  .sectionTitle {
-    font-size: 18px;
-  }
-
-  .blurb {
-    font-size: 15px;
-    margin-bottom: 22px;
-  }
-
-  .row {
-    gap: 14px;
-    padding: 20px 18px;
-  }
-
-  .icon,
-  .monogram {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-  }
-
-  .monogram {
-    font-size: 19px;
-  }
-
-  .rowName {
-    font-size: 17px;
-  }
-
-  .rowHead {
-    flex-wrap: wrap;
-    gap: 6px 12px;
-  }
-}
-
-/* Phones: shrink the icon and let the description span the full card width,
-   wrapping below the icon instead of being boxed into the right column. The row
-   becomes a 2-col grid and .rowBody flattens (display: contents) so its head and
-   description place directly — head beside the icon, description across both. */
-@media (max-width: 640px) {
-  .row {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    column-gap: 13px;
-    row-gap: 11px;
-    align-items: center;
-    padding: 22px 18px;
-  }
-
-  .rowBody {
-    display: contents;
-  }
-
-  .icon,
-  .monogram {
-    width: 34px;
-    height: 34px;
-    border-radius: 9px;
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .monogram {
-    font-size: 16px;
-  }
-
-  .rowHead {
-    grid-column: 2;
-    grid-row: 1;
-    min-width: 0;
-  }
-
-  .rowDesc {
-    grid-column: 1 / -1;
-    grid-row: 2;
-  }
-}
-
-/* Ecosystems ----------------------------------------------------------------*/
-/* A facet, not a category: tiles that filter the whole grid to one product
-   family. They share the Apps liquid-glass squircle but sit smaller and act as
-   a toggle control rather than a launcher. */
-.ecoSection {
-  max-width: 1040px;
-  margin: 30px auto 8px;
-}
-
-.ecoHead {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-bottom: 16px;
-}
-
-.ecoTitle {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text);
-}
-
-.ecoBlurb {
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--muted);
-  max-width: 62ch;
-}
-
-.ecoGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
-  gap: clamp(12px, 2vw, 22px);
-}
-
-.ecoTile {
-  --eco-accent: var(--primary);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 9px;
-  padding: 10px 6px;
-  background: none;
-  border: none;
-  border-radius: 14px;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.ecoIconWrap {
+/* Icons: squircle for real icons, tinted monogram otherwise ---------------------*/
+.launcherIcon,
+.featuredIcon,
+.rowIcon {
   position: relative;
-  width: clamp(64px, 8vw, 82px);
-  aspect-ratio: 1;
-  border-radius: 27%;
+  border-radius: 23%;
+  overflow: hidden;
   display: grid;
   place-items: center;
-  overflow: hidden;
-  isolation: isolate;
-  background:
-    radial-gradient(
-      130% 120% at 50% -10%,
-      color-mix(in srgb, var(--eco-accent) 40%, transparent),
-      transparent 62%
-    ),
-    var(--surface-2);
-  box-shadow: 0 14px 30px -16px color-mix(in srgb, var(--eco-accent) 70%, #000);
-  transition:
-    transform 0.26s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--surface-2);
 }
 
-/* Glass rim, matched to the Apps tiles but a touch softer for the smaller size. */
-.ecoIconWrap::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  border-radius: inherit;
-  box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.4),
-    inset 0 -14px 26px -16px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  pointer-events: none;
+.launcherIcon {
+  border-radius: 27%;
+  box-shadow: 0 20px 44px -20px rgba(194, 112, 61, 0.5);
 }
 
-.ecoTile:hover .ecoIconWrap {
-  transform: translateY(-4px) scale(1.04);
-}
-
-.ecoIcon {
+.launcherIcon img,
+.featuredIcon img,
+.rowIcon img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 1;
 }
 
-/* SVG glyphs aren't full icon art — contain them on the tinted glass. */
-.ecoIcon[data-bleed="false"] {
-  width: 62%;
-  height: 62%;
+.launcherIcon img[data-bleed="false"],
+.featuredIcon img[data-bleed="false"],
+.rowIcon img[data-bleed="false"] {
+  width: 66%;
+  height: 66%;
   object-fit: contain;
-  filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.4));
 }
 
-.ecoMonogram {
-  z-index: 1;
-  font-size: 30px;
-  font-weight: 800;
-  color: #fff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+.monogram {
+  font-weight: 750;
+  color: var(--primary-light);
+  background: rgba(194, 112, 61, 0.13);
+  border: 1px solid rgba(194, 112, 61, 0.3);
 }
 
-.ecoName {
-  font-size: 13.5px;
-  font-weight: 640;
-  color: var(--text);
-  letter-spacing: -0.01em;
-  line-height: 1.2;
-  /* Reserve two lines so a wrapping name (macOS Media Keys) keeps its surface
-     count aligned with the single-line tiles beside it. */
-  min-height: calc(2 * 1.2 * 13.5px);
+.launcherIcon.monogram {
+  font-size: 44px;
 }
 
-.ecoCount {
+.featuredIcon.monogram {
+  font-size: 28px;
+}
+
+.rowIcon.monogram {
+  font-size: 23px;
+}
+
+/* Platform label: a quiet classifier, never the accent ---------------------------*/
+.platform {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 5px;
   font-size: 11.5px;
-  color: var(--muted);
-}
-
-/* Active family: bright ring + lift; the rest dim to push it forward. */
-.ecoTile[data-active="true"] .ecoIconWrap {
-  box-shadow:
-    0 16px 34px -14px color-mix(in srgb, var(--eco-accent) 85%, #000),
-    0 0 0 2px var(--primary);
-}
-
-.ecoTile[data-active="true"] .ecoName {
-  color: var(--primary-light);
-}
-
-.ecoSection:has(.ecoTile[data-active="true"])
-  .ecoTile:not([data-active="true"]) {
-  opacity: 0.5;
-}
-
-.ecoClear {
-  margin-top: 16px;
-  background: var(--surface);
-  border: 1px dashed var(--border);
-  border-radius: 999px;
-  padding: 7px 15px;
-  font: inherit;
-  font-size: 13px;
-  color: var(--muted);
-  cursor: pointer;
-  transition:
-    border-color 0.15s,
-    color 0.15s;
-}
-
-.ecoClear:hover {
-  border-color: var(--primary);
-  color: var(--text);
-}
-
-.ecoClear strong {
-  color: var(--primary-light);
   font-weight: 650;
+  letter-spacing: 0.02em;
+  color: #cbd2de;
+  background: #1b1c33;
+  white-space: nowrap;
+}
+
+/* Action pill: one per item, the only thing that spends the accent ------------------*/
+.pill {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+  color: #fff;
+  background: var(--primary);
+}
+
+.pill:hover {
+  filter: brightness(1.12);
+}
+
+.pillGhost {
+  color: var(--primary-light);
+  background: rgba(194, 112, 61, 0.16);
+}
+
+.pillGhost:hover {
+  background: rgba(194, 112, 61, 0.26);
+  filter: none;
+}
+
+/* Phone ------------------------------------------------------------------------*/
+@media (max-width: 720px) {
+  .store {
+    padding: 0 16px;
+  }
+
+  .featured {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 28px;
+  }
+
+  .featuredLead {
+    grid-row: auto;
+  }
+
+  .featuredSide {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    background: none;
+    border: none;
+    border-radius: 0;
+  }
+
+  .featuredSide .shotLink {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .featuredSide .shot {
+    aspect-ratio: 16 / 10;
+  }
+
+  .featuredSide .featuredBody {
+    padding: 12px 0;
+    gap: 10px;
+  }
+
+  .featuredSide .featuredIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .featuredSide .featuredIcon.monogram {
+    font-size: 18px;
+  }
+
+  .featuredTag {
+    font-size: 14px;
+  }
+
+  .launchers {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    margin-right: -16px;
+    padding-right: 16px;
+  }
+
+  .launcher {
+    flex: 0 0 96px;
+  }
+
+  .launcherName {
+    font-size: 13.5px;
+  }
+
+  .shelf {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    margin-right: -16px;
+    padding-right: 16px;
+  }
+
+  .column {
+    flex: 0 0 86%;
+    scroll-snap-align: start;
+  }
+
+  .shelfHead {
+    margin-top: 40px;
+  }
+
+  .shelfTitle {
+    font-size: 20px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ecoTile:hover .ecoIconWrap {
-    transform: none;
+  .launcherLink,
+  .pill {
+    transition: none;
   }
 }

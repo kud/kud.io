@@ -85,7 +85,7 @@
 
 @media (max-width: 720px) {
   /* Keep the blueprint on mobile — it's the hero's signature. Widen it slightly
-     past the viewport so the linework fills behind the avatar, and soften it a
+     past the viewport so the linework fills the hero, and soften it a
      touch so it stays a backdrop. */
   .blueprint {
     width: min(560px, 128vw);
@@ -126,20 +126,6 @@
   }
 }
 
-.avatar {
-  --avatar-placeholder-background: linear-gradient(135deg, #f3f4f4 0%, #d9dcde 100%);
-
-  display: block;
-  width: 148px;
-  height: 148px;
-  margin: 0 auto 24px;
-  border-radius: 50%;
-  border: 2px solid var(--border);
-  box-shadow:
-    0 0 0 5px rgba(194, 112, 61, 0.12),
-    0 18px 40px -16px rgba(0, 0, 0, 0.7);
-}
-
 .title {
   font-size: clamp(52px, 8vw, 76px);
   font-weight: 800;
@@ -173,51 +159,7 @@
   line-height: 1.7;
 }
 
-.intro strong {
-  color: var(--text);
-  font-weight: 600;
-}
-
-.social {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  align-items: center;
-  margin: 28px 0 0;
-}
-
-.sep {
-  color: var(--dim);
-  font-size: 13px;
-}
-
-.social a {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--muted);
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 0.18s;
-}
-
-.social a svg {
-  opacity: 0.85;
-}
-
-.social a:hover {
-  color: var(--primary-light);
-}
-
-.count {
-  margin: 26px 0 0;
-  font-size: 13px;
-  color: var(--dim);
-  letter-spacing: 0.02em;
-}
-
-/* Sections render in components/project-list.tsx (client, sortable). */
+/* Sections render in components/project-list.tsx (client, searchable). */
 
 .empty {
   text-align: center;
@@ -226,23 +168,4 @@
 
 .empty code {
   color: var(--primary-light);
-}
-
-/* Pin the avatar to the exact same spot as the home carte-de-visite so it never
-   moves through the route transition. Both values are shared verbatim with the
-   home `.slideCard`: identical `padding-top` anchor + identical avatar size, so
-   on any mobile viewport both routes compute the same rect. The matching
-   view-transition-name then locks them as one shared element. Scoped to 860px to
-   line up with the home mobile-slides breakpoint (not this page's 720px layout
-   breakpoint) so both ends exist together across the whole mobile range. */
-@media (max-width: 860px) {
-  .hero {
-    padding-top: clamp(64px, 16svh, 190px);
-  }
-
-  .avatar {
-    width: 156px;
-    height: 156px;
-    view-transition-name: site-avatar;
-  }
 }

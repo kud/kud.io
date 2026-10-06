@@ -1,596 +1,369 @@
 "use client"
 
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useSyncExternalStore,
-  type CSSProperties,
-  type ReactNode,
-} from "react"
+import { useMemo, useState, type ReactNode } from "react"
 import { MorphLink } from "@/components/morph-link"
-import type { Project } from "@/lib/projects"
-
-const subscribeToNothing = () => () => {}
-import type { Ecosystem } from "@/lib/ecosystems"
-import { isAppCategory } from "@/lib/categories"
+import {
+  actionFor,
+  buildShelves,
+  selectApps,
+  selectFeatured,
+  type StoreProject,
+} from "@/lib/store"
 import styles from "./project-list.module.css"
 
-type Group = {
-  key: string
-  name: string
-  blurb: string | null
-  items: Project[]
-}
+const formatCount = (value: number): string =>
+  value >= 10000 ? `${Math.round(value / 1000)}k` : value.toLocaleString("en-GB")
 
-type SortKey = "updated" | "stars" | "name"
+const matches = (project: StoreProject, needle: string): boolean =>
+  !needle ||
+  `${project.name} ${project.description ?? ""} ${project.tagline ?? ""}`
+    .toLowerCase()
+    .includes(needle)
 
-const SORTS: Record<
-  SortKey,
-  { label: string; fn: (a: Project, b: Project) => number }
-> = {
-  updated: {
-    label: "Recently updated",
-    fn: (a, b) => b.pushedAt.localeCompare(a.pushedAt),
-  },
-  stars: {
-    label: "Most stars",
-    fn: (a, b) => b.stars - a.stars || a.slug.localeCompare(b.slug),
-  },
-  name: {
-    label: "Name (A–Z)",
-    fn: (a, b) => a.slug.localeCompare(b.slug),
-  },
-}
-
-type Option = { value: string | null; label: string }
-
-const LANGUAGE_ICONS: Record<string, string> = {
-  JavaScript: "https://cdn.simpleicons.org/javascript/F7DF1E",
-  Python: "https://cdn.simpleicons.org/python/3776AB",
-  Rust: "https://cdn.simpleicons.org/rust/FFFFFF",
-  Shell: "https://cdn.simpleicons.org/gnubash/4EAA25",
-  Swift: "https://cdn.simpleicons.org/swift/F05138",
-  TypeScript: "https://cdn.simpleicons.org/typescript/3178C6",
-}
-
-// A self-contained select dropdown (used for both Type and Sort).
-const Dropdown = ({
-  label,
-  value,
-  options,
-  onChange,
+const ProjectIcon = ({
+  project,
+  size,
 }: {
-  label: string
-  value: string | null
-  options: Option[]
-  onChange: (value: string | null) => void
+  project: StoreProject
+  size: "large" | "medium" | "small"
 }) => {
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!open) return
-    const onPointerDown = (event: MouseEvent) => {
-      if (!ref.current?.contains(event.target as Node)) setOpen(false)
-    }
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false)
-    }
-    document.addEventListener("mousedown", onPointerDown)
-    document.addEventListener("keydown", onKeyDown)
-    return () => {
-      document.removeEventListener("mousedown", onPointerDown)
-      document.removeEventListener("keydown", onKeyDown)
-    }
-  }, [open])
-
-  const current = options.find((option) => option.value === value) ?? options[0]
-
+  const className =
+    size === "large"
+      ? styles.launcherIcon
+      : size === "medium"
+        ? styles.featuredIcon
+        : styles.rowIcon
+  if (!project.icon)
+    return (
+      <span className={`${className} ${styles.monogram}`} aria-hidden>
+        {project.name.charAt(0).toUpperCase()}
+      </span>
+    )
+  const glyph = !project.icon.endsWith(".svg")
   return (
-    <div className={styles.sortGroup}>
-      <span className={styles.filterLabel}>{label}</span>
-      <div className={styles.dropdown} ref={ref}>
-        <button
-          type="button"
-          className={styles.trigger}
-          aria-haspopup="listbox"
-          aria-expanded={open}
-          onClick={() => setOpen((state) => !state)}
-        >
-          {current.label}
-          <span className={styles.chevron} aria-hidden />
-        </button>
-        {open ? (
-          <ul className={styles.menu} role="listbox">
-            {options.map((option) => (
-              <li key={option.label}>
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={option.value === value}
-                  data-active={option.value === value}
-                  className={styles.option}
-                  onClick={() => {
-                    onChange(option.value)
-                    setOpen(false)
-                  }}
-                >
-                  <span className={styles.check} aria-hidden>
-                    {option.value === value ? "✓" : ""}
-                  </span>
-                  {option.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : null}
-      </div>
-    </div>
+    <span className={className} aria-hidden>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={project.icon}
+        alt=""
+        loading="lazy"
+        data-bleed={glyph ? undefined : "false"}
+      />
+    </span>
+  )
+}
+
+const ActionPill = ({
+  project,
+  ghost,
+}: {
+  project: StoreProject
+  ghost?: boolean
+}) => {
+  const action = actionFor(project)
+  if (!action) return null
+  const className = `${styles.pill}${ghost ? ` ${styles.pillGhost}` : ""}`
+  const label = `${action.label}: ${project.name}`
+  return action.external ? (
+    <a
+      href={action.href}
+      target="_blank"
+      rel="noreferrer"
+      className={className}
+      aria-label={label}
+    >
+      {action.label}
+    </a>
+  ) : (
+    <MorphLink href={action.href} className={className} aria-label={label}>
+      {action.label}
+    </MorphLink>
   )
 }
 
 export const ProjectList = ({
-  groups,
-  ecosystems,
+  projects,
   children,
 }: {
-  groups: Group[]
-  ecosystems: Ecosystem[]
+  projects: StoreProject[]
   // Footer content (the Contributions graph) rendered on the server and hidden
-  // once the grid is narrowed to a filtered subset.
+  // once the store is narrowed to a search subset.
   children?: ReactNode
 }) => {
-  const [sort, setSort] = useState<SortKey>("updated")
   const [query, setQuery] = useState("")
-  const [category, setCategory] = useState<string | null>(null)
-  const [lang, setLang] = useState<string | null>(null)
-  const [activeTags, setActiveTags] = useState<string[]>([])
-  const [hasFilterInteraction, setHasFilterInteraction] = useState(false)
-  // The filter rail stays out of the way while the hero is in view, then fades
-  // in once the browse area scrolls up. `scrollReveal` is only switched on after
-  // mount, so with JS disabled the rail renders visible (progressive
-  // enhancement) rather than being stranded hidden.
-  const scrollReveal = useSyncExternalStore(
-    subscribeToNothing,
-    () => true,
-    () => false,
-  )
-  const [filtersRevealed, setFiltersRevealed] = useState(false)
-  const revealSentinelRef = useRef<HTMLDivElement>(null)
-  // Ecosystem is single-select (unlike tags): you're looking at one family at a
-  // time. Clicking the active tile again clears it.
-  const [activeEcosystem, setActiveEcosystem] = useState<string | null>(null)
-  const compare = SORTS[sort].fn
-
-  const markFilterInteraction = () => setHasFilterInteraction(true)
-
-  // Keep the rail hidden over the hero, then reveal it once the top of the
-  // browse area has climbed near the top of the viewport — i.e. the hero has
-  // scrolled away and you're into the Apps grid. The sentinel sits at the top of
-  // `.main`, so its `top` starts at the hero's height and shrinks as you scroll;
-  // once it drops below ~15% of the viewport the hero is essentially gone. It
-  // recedes again on the way back up. Read on every scroll frame (rAF-throttled)
-  // rather than on observer crossings, so it can't get stuck between boundaries.
-  useEffect(() => {
-    const sentinel = revealSentinelRef.current
-    if (!sentinel) return
-    let frame = 0
-    const update = () => {
-      frame = 0
-      setFiltersRevealed(
-        sentinel.getBoundingClientRect().top <= window.innerHeight * 0.15,
-      )
-    }
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update)
-    }
-    update()
-    window.addEventListener("scroll", onScroll, { passive: true })
-    window.addEventListener("resize", onScroll)
-    return () => {
-      window.removeEventListener("scroll", onScroll)
-      window.removeEventListener("resize", onScroll)
-      if (frame) cancelAnimationFrame(frame)
-    }
-  }, [])
-
-  const toggleTag = (tag: string) => {
-    markFilterInteraction()
-    setActiveTags((current) =>
-      current.includes(tag)
-        ? current.filter((value) => value !== tag)
-        : [...current, tag],
-    )
-  }
-
-  // Languages ordered by how many projects use them, so the common ones lead.
-  const languages = useMemo(() => {
-    const counts = new Map<string, number>()
-    for (const group of groups)
-      for (const project of group.items)
-        if (project.language)
-          counts.set(project.language, (counts.get(project.language) ?? 0) + 1)
-    return [...counts.keys()].sort(
-      (a, b) =>
-        (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || a.localeCompare(b),
-    )
-  }, [groups])
-
-  // Content tags (kud-site-tag-*), ordered by frequency.
-  const tags = useMemo(() => {
-    const counts = new Map<string, number>()
-    for (const group of groups)
-      for (const project of group.items)
-        for (const tag of project.tags)
-          counts.set(tag, (counts.get(tag) ?? 0) + 1)
-    return [...counts.keys()].sort(
-      (a, b) =>
-        (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || a.localeCompare(b),
-    )
-  }, [groups])
+  const [expanded, setExpanded] = useState<Set<string>>(new Set())
 
   const needle = query.trim().toLowerCase()
-  const matches = (project: Project) =>
-    (!lang || project.language === lang) &&
-    (!activeEcosystem || project.ecosystem === activeEcosystem) &&
-    (activeTags.length === 0 ||
-      project.tags.some((tag) => activeTags.includes(tag))) &&
-    (!needle ||
-      `${project.name} ${project.description ?? ""}`
-        .toLowerCase()
-        .includes(needle))
 
-  const visibleGroups = groups
-    .filter((group) => !category || group.key === category)
-    .map((group) => ({
-      ...group,
-      items: [...group.items].filter(matches).sort(compare),
-    }))
-    .filter((group) => group.items.length > 0)
+  const featured = useMemo(() => selectFeatured(projects), [projects])
+  const apps = useMemo(() => selectApps(projects), [projects])
+  const searching = needle.length > 0
 
-  const categoryOptions: Option[] = [
-    { value: null, label: "All types" },
-    ...groups.map((group) => ({ value: group.key, label: group.name })),
-  ]
-  const sortOptions: Option[] = (Object.keys(SORTS) as SortKey[]).map(
-    (key) => ({
-      value: key,
-      label: SORTS[key].label,
-    }),
-  )
+  const shelves = useMemo(() => {
+    const all = buildShelves(projects)
+    if (!searching) return all
+    return all
+      .map((shelf) => ({
+        ...shelf,
+        items: shelf.items.filter((project) => matches(project, needle)),
+      }))
+      .filter((shelf) => shelf.items.length > 0)
+  }, [projects, searching, needle])
 
-  const isFiltered = Boolean(
-    needle || category || lang || activeTags.length > 0 || activeEcosystem,
-  )
-  const filterKey = [
-    needle,
-    category ?? "all-types",
-    lang ?? "all-languages",
-    activeEcosystem ?? "all-ecosystems",
-    activeTags.join(","),
-    sort,
-  ].join("|")
+  const matchingApps = searching
+    ? apps.filter((project) => matches(project, needle))
+    : []
+  const matchCount =
+    matchingApps.length +
+    shelves.reduce((total, shelf) => total + shelf.items.length, 0)
+
+  const toggleShelf = (key: string) =>
+    setExpanded((current) => {
+      const next = new Set(current)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+
+  const [lead, ...side] = searching ? [] : featured
 
   return (
-    <>
-      <div
-        className={`${styles.layout} ${scrollReveal ? styles.scrollReveal : ""}`}
-      >
-        <div className={styles.main}>
-          <div
-            ref={revealSentinelRef}
-            className={styles.revealSentinel}
-            aria-hidden
-          />
-          <div
-            key={filterKey}
-            className={`${styles.results} ${hasFilterInteraction ? styles.resultsAnimated : ""}`}
-          >
-            {visibleGroups.length === 0 ? (
-              <p className={styles.noResults}>
-                No projects match “{query.trim()}”{lang ? ` in ${lang}` : ""}.
-              </p>
-            ) : (
-              visibleGroups.map((group) => (
-                <section
-                  key={group.key}
-                  id={
-                    group.key === "app"
-                      ? "apps"
-                      : group.key === "desktop"
-                        ? "desktop"
-                        : undefined
-                  }
-                  className={styles.section}
-                  data-cat={group.key}
-                >
-                  <h2 className={styles.sectionTitle}>
-                    <span className={styles.dot} />
-                    {group.name}
-                    <span className={styles.count}>{group.items.length}</span>
-                  </h2>
-                  {group.blurb ? (
-                    <p className={styles.blurb}>{group.blurb}</p>
-                  ) : null}
-                  {isAppCategory(group.key) ? (
-                    <div className={styles.appGrid}>
-                      {group.items.map((project) => (
-                        <MorphLink
-                          key={project.slug}
-                          href={`/projects/${project.slug}`}
-                          className={styles.appTile}
-                          style={
-                            project.accent
-                              ? ({
-                                  "--app-accent": project.accent,
-                                } as CSSProperties)
-                              : undefined
-                          }
-                        >
-                          <span
-                            className={styles.appIconWrap}
-                            style={{
-                              viewTransitionName: `app-icon-${project.slug}`,
-                            }}
-                          >
-                            {project.icon ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                className={styles.appIconImg}
-                                src={project.icon}
-                                alt=""
-                                loading="lazy"
-                                data-bleed={Boolean(
-                                  project.icon &&
-                                  !project.icon.endsWith(".svg"),
-                                )}
-                              />
-                            ) : (
-                              <span className={styles.appMonogram} aria-hidden>
-                                {project.name.charAt(0).toUpperCase()}
-                              </span>
-                            )}
-                          </span>
-                          <span className={styles.appName}>{project.name}</span>
-                        </MorphLink>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className={styles.list}>
-                      {group.items.map((project) => (
-                        <MorphLink
-                          key={project.slug}
-                          href={`/projects/${project.slug}`}
-                          className={styles.row}
-                        >
-                          {project.icon ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              className={styles.icon}
-                              src={project.icon}
-                              alt=""
-                              loading="lazy"
-                            />
-                          ) : (
-                            <span className={styles.monogram} aria-hidden>
-                              {project.name.charAt(0).toUpperCase()}
-                            </span>
-                          )}
-                          <span className={styles.rowBody}>
-                            <span className={styles.rowHead}>
-                              <span
-                                className={styles.rowName}
-                                style={{
-                                  viewTransitionName: `project-${project.slug}`,
-                                }}
-                              >
-                                {project.name}
-                              </span>
-                              <span className={styles.rowMeta}>
-                                {project.stars > 0 ? (
-                                  <span className={styles.stars}>
-                                    ★ {project.stars}
-                                  </span>
-                                ) : null}
-                                {project.downloads ? (
-                                  <span className={styles.downloads}>
-                                    {project.downloads.toLocaleString()}{" "}
-                                    installs
-                                  </span>
-                                ) : null}
-                                {project.users ? (
-                                  <span className={styles.downloads}>
-                                    {project.users.toLocaleString()} user
-                                    {project.users === 1 ? "" : "s"}
-                                  </span>
-                                ) : null}
-                                {project.language ? (
-                                  <span className={styles.lang}>
-                                    {project.language}
-                                  </span>
-                                ) : null}
-                              </span>
-                            </span>
-                            {project.description ? (
-                              <p className={styles.rowDesc}>
-                                {project.description}
-                              </p>
-                            ) : null}
-                          </span>
-                        </MorphLink>
-                      ))}
-                      {group.items.length % 2 === 1 ? (
-                        <div className={styles.filler} aria-hidden />
-                      ) : null}
-                    </div>
-                  )}
-                </section>
-              ))
-            )}
-          </div>
+    <div className={styles.store}>
+      <div className={styles.searchWrap}>
+        <input
+          type="search"
+          className={styles.search}
+          placeholder={`Search ${projects.length} projects…`}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          aria-label="Search projects"
+        />
+      </div>
 
-          {isFiltered ? null : children}
-        </div>
-
-        <aside className={styles.sidebar} data-revealed={filtersRevealed}>
-          <input
-            type="search"
-            className={styles.search}
-            placeholder="Search projects…"
-            value={query}
-            onChange={(event) => {
-              markFilterInteraction()
-              setQuery(event.target.value)
-            }}
-            aria-label="Search projects"
-          />
-          <Dropdown
-            label="Type"
-            value={category}
-            options={categoryOptions}
-            onChange={(value) => {
-              markFilterInteraction()
-              setCategory(value)
-            }}
-          />
-          <Dropdown
-            label="Sort"
-            value={sort}
-            options={sortOptions}
-            onChange={(value) => {
-              markFilterInteraction()
-              setSort((value ?? "updated") as SortKey)
-            }}
-          />
-
-          {ecosystems.length > 0 ? (
-            <div className={styles.filterGroup}>
-              <span className={styles.filterLabel}>Ecosystems</span>
-              <div className={styles.chips}>
-                <button
-                  type="button"
-                  className={styles.chip}
-                  data-active={activeEcosystem === null}
-                  onClick={() => {
-                    markFilterInteraction()
-                    setActiveEcosystem(null)
-                  }}
-                >
-                  All
-                </button>
-                {ecosystems.map((ecosystem) => (
-                  <button
-                    key={ecosystem.key}
-                    type="button"
-                    className={styles.ecosystemChip}
-                    data-active={activeEcosystem === ecosystem.key}
-                    onClick={() => {
-                      markFilterInteraction()
-                      setActiveEcosystem(
-                        activeEcosystem === ecosystem.key
-                          ? null
-                          : ecosystem.key,
-                      )
-                    }}
-                  >
-                    <span className={styles.chipIcon} aria-hidden>
-                      {ecosystem.icon ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={ecosystem.icon}
-                          alt=""
-                          loading="lazy"
-                          data-bleed={Boolean(
-                            ecosystem.icon && !ecosystem.icon.endsWith(".svg"),
-                          )}
-                        />
-                      ) : (
-                        ecosystem.name.charAt(0)
-                      )}
-                    </span>
-                    {ecosystem.name}
-                    <span className={styles.chipCount}>{ecosystem.count}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
+      {searching ? (
+        <p className={styles.resultCount} role="status">
+          {matchCount === 0
+            ? `No projects match “${query.trim()}”.`
+            : `${matchCount} match${matchCount === 1 ? "" : "es"} for “${query.trim()}”.`}
+          {matchCount === 0 ? (
+            <button
+              type="button"
+              className={styles.clear}
+              onClick={() => setQuery("")}
+            >
+              Clear search
+            </button>
           ) : null}
+        </p>
+      ) : null}
 
-          <div className={styles.filterGroup}>
-            <span className={styles.filterLabel}>Languages</span>
-            <div className={styles.chips}>
-              <button
-                type="button"
-                className={styles.chip}
-                data-active={lang === null}
-                onClick={() => {
-                  markFilterInteraction()
-                  setLang(null)
-                }}
-              >
-                All
-              </button>
-              {languages.map((language) => (
-                <button
-                  key={language}
-                  type="button"
-                  className={styles.languageChip}
-                  data-active={lang === language}
-                  onClick={() => {
-                    markFilterInteraction()
-                    setLang(lang === language ? null : language)
-                  }}
+      {!searching && lead ? (
+        <section className={styles.featured} aria-label="Featured">
+          <article className={styles.featuredLead}>
+            <MorphLink
+              href={`/projects/${lead.slug}`}
+              className={styles.shotLink}
+              aria-label={`${lead.name}: read more`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className={styles.shot}
+                src={lead.screenshots[0]}
+                alt={`Screenshot of ${lead.name}`}
+                loading="eager"
+              />
+            </MorphLink>
+            <div className={styles.featuredBody}>
+              <ProjectIcon project={lead} size="medium" />
+              <div className={styles.featuredText}>
+                <p className={styles.eyebrow}>Featured</p>
+                <MorphLink
+                  href={`/projects/${lead.slug}`}
+                  className={styles.featuredName}
                 >
-                  {LANGUAGE_ICONS[language] ? (
-                    <span className={styles.languageIcon} aria-hidden>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={LANGUAGE_ICONS[language]}
-                        alt=""
-                        loading="lazy"
-                      />
-                    </span>
-                  ) : null}
-                  {language}
-                </button>
+                  {lead.name}
+                </MorphLink>
+                {lead.tagline ?? lead.description ? (
+                  <p className={styles.featuredTag}>
+                    {lead.tagline ?? lead.description}
+                  </p>
+                ) : null}
+              </div>
+              <ActionPill project={lead} />
+            </div>
+          </article>
+          {side.slice(0, 2).map((project) => (
+            <article key={project.slug} className={styles.featuredSide}>
+              <MorphLink
+                href={`/projects/${project.slug}`}
+                className={styles.shotLink}
+                aria-label={`${project.name}: read more`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  className={styles.shot}
+                  src={project.screenshots[0]}
+                  alt={`Screenshot of ${project.name}`}
+                  loading="lazy"
+                />
+              </MorphLink>
+              <div className={styles.featuredBody}>
+                <ProjectIcon project={project} size="small" />
+                <div className={styles.featuredText}>
+                  <MorphLink
+                    href={`/projects/${project.slug}`}
+                    className={styles.featuredNameSmall}
+                  >
+                    {project.name}
+                  </MorphLink>
+                  <p className={styles.platformNote}>Web app</p>
+                </div>
+                <ActionPill project={project} ghost />
+              </div>
+            </article>
+          ))}
+        </section>
+      ) : null}
+
+      {!searching && apps.length > 0 ? (
+        <section aria-labelledby="store-apps">
+          <div className={styles.shelfHead}>
+            <h2 id="store-apps" className={styles.shelfTitle}>
+              Apps
+            </h2>
+          </div>
+          <p className={styles.shelfBlurb}>
+            Open them straight from here — nothing to install.
+          </p>
+          <ul className={styles.launchers}>
+            {apps.map((project) => (
+              <li key={project.slug} className={styles.launcher}>
+                <MorphLink
+                  href={`/projects/${project.slug}`}
+                  className={styles.launcherLink}
+                >
+                  <ProjectIcon project={project} size="large" />
+                  <span className={styles.launcherName}>{project.name}</span>
+                </MorphLink>
+                <ActionPill project={project} ghost />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {searching && matchingApps.length > 0 ? (
+        <section aria-labelledby="store-search-apps">
+          <div className={styles.shelfHead}>
+            <h2 id="store-search-apps" className={styles.shelfTitle}>
+              Apps
+            </h2>
+          </div>
+          <div className={styles.shelf}>
+            <div className={styles.column}>
+              {matchingApps.map((project) => (
+                <ShelfRow key={project.slug} project={project} />
               ))}
             </div>
           </div>
+        </section>
+      ) : null}
 
-          {tags.length > 0 ? (
-            <div className={styles.filterGroup}>
-              <span className={styles.filterLabel}>Tags</span>
-              <div className={styles.chips}>
-                {tags.map((tag) => (
-                  <button
-                    key={tag}
-                    type="button"
-                    className={styles.tagChip}
-                    data-active={activeTags.includes(tag)}
-                    onClick={() => toggleTag(tag)}
-                  >
-                    #{tag}
-                  </button>
-                ))}
-                {activeTags.length > 0 ? (
-                  <button
-                    type="button"
-                    className={styles.tagClear}
-                    onClick={() => {
-                      markFilterInteraction()
-                      setActiveTags([])
-                    }}
-                  >
-                    clear
-                  </button>
-                ) : null}
-              </div>
+      {shelves.map((shelf) => {
+        const open = searching || expanded.has(shelf.key)
+        const shown = open ? shelf.items : shelf.items.slice(0, shelf.cap)
+        const columns: StoreProject[][] = []
+        for (let i = 0; i < shown.length; i += 2)
+          columns.push(shown.slice(i, i + 2))
+        return (
+          <section key={shelf.key} aria-labelledby={`store-${shelf.key}`}>
+            <div className={styles.shelfHead}>
+              <h2 id={`store-${shelf.key}`} className={styles.shelfTitle}>
+                {shelf.title}
+              </h2>
+              {!searching && shelf.items.length > shelf.cap ? (
+                <button
+                  type="button"
+                  className={styles.seeAll}
+                  onClick={() => toggleShelf(shelf.key)}
+                  aria-expanded={open}
+                >
+                  {open ? "Show less ↑" : `See all ${shelf.items.length} →`}
+                </button>
+              ) : null}
             </div>
-          ) : null}
-        </aside>
-      </div>
-    </>
+            {shelf.blurb ? (
+              <p className={styles.shelfBlurb}>{shelf.blurb}</p>
+            ) : null}
+            <div className={styles.shelf}>
+              {columns.map((column, index) => (
+                <div key={index} className={styles.column}>
+                  {column.map((project) => (
+                    <ShelfRow
+                      key={project.slug}
+                      project={project}
+                    />
+                  ))}
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      })}
+
+      {searching ? null : children}
+    </div>
   )
 }
+
+const ShelfRow = ({ project }: { project: StoreProject }) => (
+  <article className={styles.row} aria-label={project.name}>
+    <ProjectIcon project={project} size="small" />
+    <div className={styles.rowMain}>
+      <MorphLink
+        href={`/projects/${project.slug}`}
+        className={styles.rowName}
+      >
+        {project.name}
+      </MorphLink>
+      {project.description ? (
+        <p className={styles.rowDesc}>{project.description}</p>
+      ) : null}
+      <p className={styles.rowMeta}>
+        <PlatformLabel project={project} />
+        {project.downloads ? (
+          <span className={styles.fact}>
+            {formatCount(project.downloads)} installs
+          </span>
+        ) : null}
+        {project.users ? (
+          <span className={styles.fact}>
+            {formatCount(project.users)} user{project.users === 1 ? "" : "s"}
+          </span>
+        ) : null}
+      </p>
+    </div>
+    <ActionPill project={project} ghost />
+  </article>
+)
+
+const PLATFORM_LABELS: Record<string, string> = {
+  app: "Web",
+  desktop: "Desktop",
+  webext: "Firefox",
+  raycast: "Raycast",
+  cli: "CLI",
+  mcp: "MCP",
+  claude: "Claude Code",
+  lib: "npm",
+  ui: "npm",
+  vscode: "VS Code",
+  theme: "VS Code",
+  other: "List",
+}
+
+const PlatformLabel = ({ project }: { project: StoreProject }) => (
+  <span className={styles.platform}>
+    {PLATFORM_LABELS[project.category] ?? project.category}
+  </span>
+)
