@@ -19,6 +19,26 @@
   letter-spacing: 0.01em;
 }
 
+/* Covers are 16 / 9 by convention but not always, so the hero holds that frame
+ * and crops into it: the space is reserved before the image loads and an odd
+ * cover never shifts the prose below it. The meta keeps its own 38px,
+ * so this margin only sets the hero to body gap and posts without a cover
+ * read exactly as before. */
+.hero {
+  margin: 0 0 38px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--bg-2);
+}
+
+.hero img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* Prose ------------------------------------------------------------------- */
 
 /* 700px at 17.5px holds the line near 79 characters. The measure is narrower

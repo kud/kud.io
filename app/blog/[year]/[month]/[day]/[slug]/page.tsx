@@ -60,9 +60,8 @@ export const generateMetadata = async ({
   if (!post) return {}
 
   const url = `https://kud.io${postPath(post)}`
-  // The cover is the post's share image and nothing else: the page itself
-  // opens on the title, so a hero would be the same picture twice. Without
-  // one, the generated title card at /blog/og/<slug> stands in — never the
+  // The cover is both the share image and the page's hero. Without one,
+  // the generated title card at /blog/og/<slug> stands in — never the
   // site's own portrait card. Listed under twitter as well: the root
   // twitter-image.tsx is inherited by every route and only an explicit list
   // here displaces it.
@@ -175,6 +174,17 @@ const BlogPostPage = async ({ params }: Params) => {
             .filter(Boolean)
             .join(" · ")}
         </p>
+        {post.cover && (
+          <figure className={styles.hero}>
+            <img
+              src={post.cover}
+              alt=""
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+            />
+          </figure>
+        )}
         <div className={styles.body}>{body}</div>
       </article>
 
