@@ -16,6 +16,7 @@ import type { TabItem } from "@kud/ink-ui";
 | -------- | -------------- | ---------------- |
 | `active` | `T`            | Active tab value |
 | `items`  | `TabItem<T>[]` | Tabs to render   |
+| `width`  | `number` | Available width; defaults to the terminal's columns, and never folds when that is unknown. When the full strip does not fit, inactive icon tabs fold to `icon count` |
 
 ### `TabItem<T>` shape
 
@@ -23,6 +24,7 @@ import type { TabItem } from "@kud/ink-ui";
 | ------- | -------- | ------------------------------- |
 | `value` | `T`      | Stable tab identifier           |
 | `label` | `string` | Visible tab label               |
+| `icon` | `string` | Optional single glyph drawn between the marker gutter and the label; takes the label's style, and the active underline spans icon, space and label |
 | `count` | `number \| null` | Optional count rendered in tabs; `null` (not loaded yet) draws `(–)` at a two-digit width |
 | `group` | `string` | Optional group name; a divider is drawn between tabs whose group differs from the previous tab |
 
@@ -52,3 +54,18 @@ import type { TabItem } from "@kud/ink-ui";
 ```
 
 A divider (`│`) appears between "Off board" and "My PRs" because the group changes from `board` to `github`. Tabs without a `group`, or with the same group as their neighbour, render without a divider. Navigation (Tab, ←, →) is unchanged — dividers are never a stop.
+
+### Icons and narrow folding
+
+```tsx
+<Tabs
+  active="open"
+  width={40}
+  items={[
+    { value: "open", label: "Open", count: 3, icon: "◆" },
+    { value: "done", label: "Done", count: 7, icon: "▲" },
+  ]}
+/>
+```
+
+An `icon` is part of the label, not a second marker: it renders one space before the label in the label's own style, and the active underline spans icon, space and label together. The `marker` gutter is untouched, so a pulse appearing beside an icon moves nothing.
