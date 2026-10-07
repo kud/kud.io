@@ -5,7 +5,7 @@ import { CopyButton } from "@/components/copy-button"
 // so the text to copy has to be walked back out of the tree. Re-reading the
 // Markdown to get it would mean carrying the raw source through the render
 // purely for the clipboard, and the two copies could then disagree.
-const toText = (node: ReactNode): string => {
+export const toText = (node: ReactNode): string => {
   if (typeof node === "string") return node
   if (typeof node === "number") return String(node)
   if (Array.isArray(node)) return node.map(toText).join("")

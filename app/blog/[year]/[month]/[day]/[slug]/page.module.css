@@ -908,3 +908,106 @@
     display: none;
   }
 }
+
+/* Heading anchors ----------------------------------------------------------- */
+/* The link sits OUTSIDE the text column on desktop (absolute, in the left
+ * gutter) so it can never move the heading's text. --anchor-top lines it up
+ * with the first line: h2 carries padding above its hairline. */
+.heading {
+  position: relative;
+  --anchor-top: 0px;
+  scroll-margin-top: 24px;
+}
+
+.body h2.heading {
+  --anchor-top: 1.05em;
+}
+
+.body > h2.heading:first-child {
+  --anchor-top: 0px;
+}
+
+.body h4 {
+  margin: 2em 0 0.4em;
+  font-size: 17.5px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.body .anchor {
+  position: absolute;
+  top: var(--anchor-top);
+  right: 100%;
+  padding-right: 0.45em;
+  font-family: var(--mono);
+  font-size: 0.8em;
+  font-weight: 400;
+  line-height: inherit;
+  color: var(--fg-3);
+  text-decoration: none;
+  border-radius: 3px;
+  opacity: 0;
+  transition:
+    opacity 140ms,
+    color 140ms;
+}
+
+/* Revealed by hover OR focus — a keyboard user never triggers the first. */
+.body .heading:hover .anchor,
+.body .anchor:focus-visible {
+  opacity: 1;
+}
+
+.body .anchor:hover {
+  color: var(--c-gold);
+  text-decoration: none;
+}
+
+.body .anchor:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 2px;
+}
+
+.anchorStatus {
+  position: absolute;
+  top: var(--anchor-top);
+  left: calc(100% + 0.6em);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.9;
+  color: var(--fg-3);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* No gutter on a phone, and no hover either: the glyph follows the text,
+ * always visible and tappable, after the last word so nothing moves. */
+@media (max-width: 767px), (hover: none) {
+  .body .anchor {
+    position: static;
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    margin-left: 0.15em;
+    opacity: 0.55;
+  }
+
+  .anchorStatus {
+    position: static;
+    margin-left: 0.4em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .body .anchor {
+    transition: none;
+  }
+}
+
+@media print {
+  .body .anchor,
+  .anchorStatus {
+    display: none;
+  }
+}
