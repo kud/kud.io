@@ -5,7 +5,7 @@ date: "2026-10-07"
 slug: "your-move-a-github-inbox-that-tells-you-whose-turn-it-is"
 tags: ["tools","engineering"]
 cover: "/blog/your-move-a-github-inbox-that-tells-you-whose-turn-it-is/bfbe8d86bb73.png"
-updated: "2026-10-07T00:05:00.000Z"
+updated: "2026-10-07T00:07:00.000Z"
 ---
 
 Most of what GitHub tells me in a day is noise, and the one thing I actually want to know it never says plainly: is it my turn?
