@@ -1,40 +1,16 @@
 "use client"
 
-import { useEffect, useId, useRef, useState, type CSSProperties } from "react"
+import { useEffect, useId, useState, type CSSProperties } from "react"
 import { BLOG_ROOT_ID } from "@/components/blog-theme"
+import { BlogZoomViewer, ZoomIcon } from "@/components/blog-zoom-viewer"
 
 let mermaidModule: Promise<typeof import("mermaid")> | undefined
 let renderQueue: Promise<unknown> = Promise.resolve()
-
-const MIN_SCALE = 0.6
-const MAX_SCALE = 4
-const SCALE_STEP = 0.25
 
 const loadMermaid = () => (mermaidModule ??= import("mermaid"))
 
 const token = (style: CSSStyleDeclaration, name: string, fallback: string) =>
   style.getPropertyValue(name).trim() || fallback
-
-const clampScale = (scale: number) =>
-  Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale))
-
-type Point = { x: number; y: number }
-
-const pointerPoint = ({
-  clientX,
-  clientY,
-}: {
-  clientX: number
-  clientY: number
-}): Point => ({ x: clientX, y: clientY })
-
-const distanceBetween = (a: Point, b: Point) =>
-  Math.hypot(a.x - b.x, a.y - b.y)
-
-const midpointBetween = (a: Point, b: Point): Point => ({
-  x: (a.x + b.x) / 2,
-  y: (a.y + b.y) / 2,
-})
 
 // With useMaxWidth, mermaid sizes the SVG to 100% and writes its natural width
 // as an inline max-width; that number is the only record of how wide the
@@ -88,19 +64,6 @@ const renderMermaid = (id: string, source: string, root: HTMLElement) => {
   return current
 }
 
-const ZoomIcon = () => (
-  <svg viewBox="0 0 20 20" aria-hidden="true">
-    <circle cx="8.25" cy="8.25" r="4.75" />
-    <path d="m11.7 11.7 4.3 4.3M8.25 6v4.5M6 8.25h4.5" />
-  </svg>
-)
-
-const CloseIcon = () => (
-  <svg viewBox="0 0 20 20" aria-hidden="true">
-    <path d="m5 5 10 10M15 5 5 15" />
-  </svg>
-)
-
 export const BlogMermaid = ({
   source,
   styles,
@@ -109,44 +72,10 @@ export const BlogMermaid = ({
   styles: Record<string, string>
 }) => {
   const stableId = useId().replace(/[^a-zA-Z0-9_-]/g, "")
-  const viewerRef = useRef<HTMLDivElement>(null)
-  const dragRef = useRef<{
-    pointerId: number
-    x: number
-    y: number
-    originX: number
-    originY: number
-  } | null>(null)
-  const pointersRef = useRef(new Map<number, Point>())
-  const pinchRef = useRef<{
-    distance: number
-    scale: number
-    midpoint: Point
-    offset: Point
-    lastOffset: Point
-  } | null>(null)
   const [svg, setSvg] = useState<string>()
   const [natural, setNatural] = useState<number>()
   const [failed, setFailed] = useState(false)
   const [viewerOpen, setViewerOpen] = useState(false)
-  const [scale, setScale] = useState(1)
-  const [offset, setOffset] = useState({ x: 0, y: 0 })
-  const [dragging, setDragging] = useState(false)
-
-  const resetView = () => {
-    setScale(1)
-    setOffset({ x: 0, y: 0 })
-  }
-
-  const closeViewer = () => {
-    pointersRef.current.clear()
-    pinchRef.current = null
-    dragRef.current = null
-    setViewerOpen(false)
-    setDragging(false)
-    resetView()
-  }
-
   useEffect(() => {
     const root = document.getElementById(BLOG_ROOT_ID)
     if (!root) return
@@ -196,36 +125,6 @@ export const BlogMermaid = ({
     }
   }, [source, stableId])
 
-  useEffect(() => {
-    if (!viewerOpen) return
-
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = "hidden"
-    viewerRef.current?.focus()
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") closeViewer()
-      if (event.key === "+" || event.key === "=")
-        setScale((value) => clampScale(value + SCALE_STEP))
-      if (event.key === "-") setScale((value) => clampScale(value - SCALE_STEP))
-      if (event.key === "0") resetView()
-      if (event.key === "ArrowLeft")
-        setOffset((value) => ({ ...value, x: value.x - 32 }))
-      if (event.key === "ArrowRight")
-        setOffset((value) => ({ ...value, x: value.x + 32 }))
-      if (event.key === "ArrowUp")
-        setOffset((value) => ({ ...value, y: value.y - 32 }))
-      if (event.key === "ArrowDown")
-        setOffset((value) => ({ ...value, y: value.y + 32 }))
-    }
-
-    window.addEventListener("keydown", onKeyDown)
-    return () => {
-      document.body.style.overflow = previousOverflow
-      window.removeEventListener("keydown", onKeyDown)
-    }
-  }, [viewerOpen])
-
   return (
     <div className={styles.diagram}>
       <div
@@ -252,244 +151,14 @@ export const BlogMermaid = ({
               dangerouslySetInnerHTML={{ __html: svg }}
             />
             {viewerOpen && (
-              <div
-                ref={viewerRef}
-                className={styles.diagramViewer}
-                role="dialog"
-                aria-modal="true"
-                aria-label="Diagram viewer"
-                tabIndex={-1}
+              <BlogZoomViewer
+                styles={styles}
+                label="Diagram viewer"
+                closeLabel="Close diagram viewer"
+                onClose={() => setViewerOpen(false)}
               >
-                <div className={styles.diagramViewerToolbar}>
-                  <button
-                    type="button"
-                    aria-label="Zoom out"
-                    onClick={() =>
-                      setScale((value) => clampScale(value - SCALE_STEP))
-                    }
-                  >
-                    −
-                  </button>
-                  <button
-                    type="button"
-                    onClick={resetView}
-                    title="Reset zoom and position"
-                  >
-                    {Math.round(scale * 100)}%
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Zoom in"
-                    onClick={() =>
-                      setScale((value) => clampScale(value + SCALE_STEP))
-                    }
-                  >
-                    +
-                  </button>
-                </div>
-                <button
-                  className={styles.diagramViewerClose}
-                  type="button"
-                  aria-label="Close diagram viewer"
-                  onClick={closeViewer}
-                >
-                  <CloseIcon />
-                </button>
-                <div
-                  className={styles.diagramViewerStage}
-                  data-dragging={dragging || undefined}
-                  onWheel={(event) => {
-                    event.preventDefault()
-                    setScale((value) =>
-                      clampScale(
-                        value + (event.deltaY < 0 ? SCALE_STEP : -SCALE_STEP),
-                      ),
-                    )
-                  }}
-                  onPointerDown={(event) => {
-                    if (event.pointerType === "mouse" && event.button !== 0) return
-
-                    event.currentTarget.setPointerCapture(event.pointerId)
-                    pointersRef.current.set(
-                      event.pointerId,
-                      pointerPoint(event),
-                    )
-
-                    if (pointersRef.current.size >= 2) {
-                      const [first, second] = Array.from(
-                        pointersRef.current.values(),
-                      )
-                      const midpoint = midpointBetween(first, second)
-
-                      pinchRef.current = {
-                        distance: Math.max(distanceBetween(first, second), 1),
-                        scale,
-                        midpoint,
-                        offset,
-                        lastOffset: offset,
-                      }
-                      dragRef.current = null
-                      setDragging(false)
-                      return
-                    }
-
-                    dragRef.current = {
-                      pointerId: event.pointerId,
-                      x: event.clientX,
-                      y: event.clientY,
-                      originX: offset.x,
-                      originY: offset.y,
-                    }
-                    setDragging(true)
-                  }}
-                  onPointerMove={(event) => {
-                    if (!pointersRef.current.has(event.pointerId)) return
-
-                    pointersRef.current.set(
-                      event.pointerId,
-                      pointerPoint(event),
-                    )
-
-                    if (pointersRef.current.size >= 2) {
-                      const [first, second] = Array.from(
-                        pointersRef.current.values(),
-                      )
-                      const pinch =
-                        pinchRef.current ??
-                        (() => {
-                          const midpoint = midpointBetween(first, second)
-                          return {
-                            distance: Math.max(
-                              distanceBetween(first, second),
-                              1,
-                            ),
-                            scale,
-                            midpoint,
-                            offset,
-                            lastOffset: offset,
-                          }
-                        })()
-
-                      pinchRef.current = pinch
-
-                      const midpoint = midpointBetween(first, second)
-                      const nextScale = clampScale(
-                        pinch.scale *
-                          (Math.max(distanceBetween(first, second), 1) /
-                            pinch.distance),
-                      )
-                      const stage = event.currentTarget.getBoundingClientRect()
-                      const centre = {
-                        x: stage.left + stage.width / 2,
-                        y: stage.top + stage.height / 2,
-                      }
-                      const anchor = {
-                        x:
-                          (pinch.midpoint.x -
-                            centre.x -
-                            pinch.offset.x) /
-                          pinch.scale,
-                        y:
-                          (pinch.midpoint.y -
-                            centre.y -
-                            pinch.offset.y) /
-                          pinch.scale,
-                      }
-                      const nextOffset = {
-                        x: midpoint.x - centre.x - anchor.x * nextScale,
-                        y: midpoint.y - centre.y - anchor.y * nextScale,
-                      }
-
-                      pinchRef.current = { ...pinch, lastOffset: nextOffset }
-                      setScale(nextScale)
-                      setOffset(nextOffset)
-                      return
-                    }
-
-                    const drag = dragRef.current
-                    if (!drag || drag.pointerId !== event.pointerId) return
-                    setOffset({
-                      x: drag.originX + event.clientX - drag.x,
-                      y: drag.originY + event.clientY - drag.y,
-                    })
-                  }}
-                  onPointerUp={(event) => {
-                    const pinch = pinchRef.current
-                    pointersRef.current.delete(event.pointerId)
-
-                    if (
-                      event.currentTarget.hasPointerCapture(event.pointerId)
-                    ) {
-                      event.currentTarget.releasePointerCapture(event.pointerId)
-                    }
-
-                    if (pointersRef.current.size === 1) {
-                      const [pointerId, point] =
-                        pointersRef.current.entries().next().value!
-                      const origin = pinch?.lastOffset ?? offset
-
-                      pinchRef.current = null
-                      dragRef.current = {
-                        pointerId,
-                        x: point.x,
-                        y: point.y,
-                        originX: origin.x,
-                        originY: origin.y,
-                      }
-                      setDragging(true)
-                      return
-                    }
-
-                    if (pointersRef.current.size >= 2) {
-                      pinchRef.current = null
-                      dragRef.current = null
-                      setDragging(false)
-                      return
-                    }
-
-                    pinchRef.current = null
-                    dragRef.current = null
-                    setDragging(false)
-                  }}
-                  onPointerCancel={(event) => {
-                    const pinch = pinchRef.current
-                    pointersRef.current.delete(event.pointerId)
-
-                    if (pointersRef.current.size === 1) {
-                      const [pointerId, point] =
-                        pointersRef.current.entries().next().value!
-                      const origin = pinch?.lastOffset ?? offset
-
-                      pinchRef.current = null
-                      dragRef.current = {
-                        pointerId,
-                        x: point.x,
-                        y: point.y,
-                        originX: origin.x,
-                        originY: origin.y,
-                      }
-                      setDragging(true)
-                      return
-                    }
-
-                    pinchRef.current = null
-                    dragRef.current = null
-                    setDragging(false)
-                  }}
-                >
-                  <div
-                    className={styles.diagramViewerCanvas}
-                    style={{
-                      transform: `translate(-50%, -50%) translate(${offset.x}px, ${offset.y}px) scale(${scale})`,
-                    }}
-                    dangerouslySetInnerHTML={{ __html: svg }}
-                  />
-                </div>
-                <p className={styles.diagramViewerHint}>
-                  Drag to move · pinch, scroll or +/− to zoom · 0 to reset ·
-                  Esc to close
-                </p>
-              </div>
+                <div dangerouslySetInnerHTML={{ __html: svg }} />
+              </BlogZoomViewer>
             )}
           </>
         ) : (

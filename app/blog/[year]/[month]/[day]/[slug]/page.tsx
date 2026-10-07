@@ -13,6 +13,7 @@ import {
   renderMarkdown,
 } from "@/lib/blog"
 import { BlogCodeBlock } from "@/components/blog-code-block"
+import { BlogImage } from "@/components/blog-image"
 import { BlogMermaid } from "@/components/blog-mermaid"
 import styles from "./page.module.css"
 
@@ -149,9 +150,7 @@ const components = {
       <table {...props} />
     </div>
   ),
-  img: (props) => (
-    <img {...props} loading="lazy" decoding="async" alt={props.alt ?? ""} />
-  ),
+  img: (props) => <BlogImage {...props} styles={styles} />,
 } satisfies Partial<Components>
 
 const BlogPostPage = async ({ params }: Params) => {

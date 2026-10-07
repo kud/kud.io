@@ -142,12 +142,100 @@
   border-top: 1px solid var(--line);
 }
 
-.body img {
+/* Image stage ---------------------------------------------------------------- */
+/* Same ceiling and the same shell-centred anchor as .diagram and .codeStage
+ * (min(1080px, 100vw - 48px), centre 27px right of .body's), so an image breaks
+ * out exactly as far as a diagram does. The image inside is never stretched:
+ * it keeps its natural width up to the stage and is centred on the shell, so a
+ * 350px GIF stays 350px.
+ *
+ * --lead is how far the stage's containing block starts to the right of .body's
+ * left edge: 1.15em for each list level it sits in (the lists' own padding-left).
+ * The margin cancels it, so a screenshot inside a bullet leaves the bullet and
+ * lands where a top-level one does. It is per depth rather than accumulated
+ * because a custom property cannot be defined in terms of its own inherited
+ * value on the same element. An image in a blockquote does not break out. */
+.body {
+  --lead: 0px;
+}
+
+.body :is(ul, ol) {
+  --lead: 1.15em;
+}
+
+.body :is(ul, ol) :is(ul, ol) {
+  --lead: 2.3em;
+}
+
+.body :is(ul, ol) :is(ul, ol) :is(ul, ol) {
+  --lead: 3.45em;
+}
+
+.body :is(ul, ol) :is(ul, ol) :is(ul, ol) :is(ul, ol) {
+  --lead: 4.6em;
+}
+
+.imageStage {
+  display: grid;
+  width: calc(100% + var(--lead));
+  margin: 1.75em 0 1.75em calc(-1 * var(--lead));
+  justify-items: center;
+}
+
+@media (min-width: 768px) {
+  .imageStage {
+    --stage: min(1080px, 100vw - 48px);
+    width: var(--stage);
+    margin-left: calc(50% - var(--lead) / 2 + 27px - var(--stage) / 2);
+  }
+}
+
+.body blockquote .imageStage {
+  width: 100%;
+  margin-left: 0;
+}
+
+.imageFrame {
+  position: relative;
+  display: grid;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.imageFrame img {
   display: block;
   max-width: 100%;
   height: auto;
-  margin: 1.75em 0;
   border-radius: 8px;
+}
+
+.imageFrame[data-zoomable] img {
+  cursor: zoom-in;
+}
+
+.imageFrame[data-zoomable] img:focus-visible {
+  outline: 2px solid var(--c-gold);
+  outline-offset: 3px;
+}
+
+/* The badge is a hint, not a target: the image under it takes the click. */
+.imageZoom {
+  pointer-events: none;
+}
+
+.imageFrame:hover .diagramZoom,
+.imageFrame:focus-within .diagramZoom {
+  opacity: 1;
+}
+
+.diagramViewerCanvas img {
+  display: block;
+  width: auto;
+  max-width: 92vw;
+  height: auto;
+  max-height: 84vh;
+  border-radius: 8px;
+  user-select: none;
 }
 
 .body code {
