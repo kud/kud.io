@@ -1,7 +1,7 @@
 {
   "name": "smartTV for Browser",
   "icon": "/apps/smart-tv-for-browser.png",
-  "accent": "#7d8bb8",
+  "accent": "#00bff0",
   "tagline": "A smart-TV home screen that runs in your browser — boot animation, D-pad and all.",
   "launchUrl": "https://smart-tv-for-browser.vercel.app",
   "launchLabel": "Open smartTV",
