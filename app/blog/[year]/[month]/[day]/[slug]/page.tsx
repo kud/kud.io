@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 // The same Link the index uses — next/link here would drop the view
 // transition on every in-blog hop.
 import { Link } from "next-view-transitions"
+import type { ComponentPropsWithoutRef } from "react"
 import type { Components } from "hast-util-to-jsx-runtime"
 import type { Post } from "@/lib/blog"
 import {
@@ -12,7 +13,8 @@ import {
   readingMinutes,
   renderMarkdown,
 } from "@/lib/blog"
-import { BlogCodeBlock } from "@/components/blog-code-block"
+import { BlogCodeBlock, toText } from "@/components/blog-code-block"
+import { BlogHeadingAnchor } from "@/components/blog-heading-anchor"
 import { BlogImage } from "@/components/blog-image"
 import { BlogMermaid } from "@/components/blog-mermaid"
 import styles from "./page.module.css"
@@ -98,6 +100,22 @@ export const generateMetadata = async ({
   }
 }
 
+// h2-h4 carry the id rehype-slug already gave them; the anchor links to it.
+// The heading text stays its own children, so the outline reads as before.
+const Heading = ({
+  as: Tag,
+  id,
+  children,
+  ...rest
+}: ComponentPropsWithoutRef<"h2"> & { as: "h2" | "h3" | "h4" }) => (
+  <Tag {...rest} id={id} className={styles.heading}>
+    {children}
+    {id && (
+      <BlogHeadingAnchor id={id} label={toText(children)} styles={styles} />
+    )}
+  </Tag>
+)
+
 // Only the elements whose STRUCTURE changes get a component. Everything else —
 // paragraphs, lists, links, quotes, rules, inline code — is styled by
 // descendant rules in page.module.css, which produce identical markup. A
@@ -107,7 +125,10 @@ const components = {
   // Notion's heading_1 becomes `#`, which would be a second <h1> under the
   // post title. Demoted rather than dropped: the outline stays valid and the
   // author's own heading level still reads as the top of their document.
-  h1: (props) => <h2 {...props} />,
+  h1: (props) => <Heading as="h2" {...props} />,
+  h2: (props) => <Heading as="h2" {...props} />,
+  h3: (props) => <Heading as="h3" {...props} />,
+  h4: (props) => <Heading as="h4" {...props} />,
   div: ({ children, ...rest }) => {
     const source =
       (
