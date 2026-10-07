@@ -218,9 +218,18 @@
   outline-offset: 3px;
 }
 
-/* The badge is a hint, not a target: the image under it takes the click. */
-.imageZoom {
+/* The badge is a hint, not a target: the image under it takes the click.
+ * It stays out of the way until the pointer is on the image; touch screens,
+ * which have no hover, keep a faint one so the image still reads as tappable. */
+.diagramZoom.imageZoom {
   pointer-events: none;
+  opacity: 0;
+}
+
+@media (hover: none) {
+  .diagramZoom.imageZoom {
+    opacity: 0.24;
+  }
 }
 
 .imageFrame:hover .diagramZoom,
