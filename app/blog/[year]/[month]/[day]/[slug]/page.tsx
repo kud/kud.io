@@ -17,6 +17,7 @@ import { BlogCodeBlock, toText } from "@/components/blog-code-block"
 import { BlogHeadingAnchor } from "@/components/blog-heading-anchor"
 import { BlogImage } from "@/components/blog-image"
 import { BlogMermaid } from "@/components/blog-mermaid"
+import { PostMeta } from "@/components/post-meta"
 import styles from "./page.module.css"
 
 const FEED_TITLE = "Writing — kud.io"
@@ -183,17 +184,28 @@ const BlogPostPage = async ({ params }: Params) => {
   const post = posts[index]
   const neighbours = neighboursOf(posts, index)
   const body = await renderMarkdown(post.body, components)
+  const minutes = readingMinutes(post.body)
 
   return (
     <>
+      <div className={styles.progressTrack} aria-hidden="true" />
       <div className={styles.progress} aria-hidden="true" />
       <article>
+        <PostMeta
+          slot="above"
+          date={post.date}
+          minutes={minutes}
+          tags={post.tags}
+          styles={styles}
+        />
         <h1 className={styles.title}>{post.title}</h1>
-        <p className={styles.meta}>
-          {[post.date, `${readingMinutes(post.body)} min`, ...post.tags]
-            .filter(Boolean)
-            .join(" · ")}
-        </p>
+        <PostMeta
+          slot="below"
+          date={post.date}
+          minutes={minutes}
+          tags={post.tags}
+          styles={styles}
+        />
         {post.cover && (
           <figure className={styles.hero}>
             <img

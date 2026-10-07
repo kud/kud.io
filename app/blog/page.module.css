@@ -166,3 +166,87 @@ section:first-of-type .year {
     margin-left: -7px;
   }
 }
+
+/* Tag pill candidates (?meta=1..4) ------------------------------------------ */
+/* The index keeps ISO dates in every variant; only the pills change. The
+ * active row tag keeps its weight in all of them. */
+:global(#blog-root[data-meta="1"]) .tags,
+:global(#blog-root[data-meta="2"]) .tags,
+:global(#blog-root[data-meta="3"]) .tags,
+:global(#blog-root[data-meta="4"]) .tags {
+  gap: 6px;
+}
+
+/* 1 */
+:global(#blog-root[data-meta="1"]) .tags button {
+  padding: 1px 8px;
+  border-color: var(--line);
+  background: var(--bg-2);
+  color: var(--fg-2);
+}
+
+:global(#blog-root[data-meta="1"]) .tags button:hover {
+  border-color: var(--line-2);
+  color: var(--fg);
+}
+
+:global(#blog-root[data-meta="1"]) .filter button {
+  background: var(--bg-2);
+  color: var(--fg-2);
+}
+
+:global(#blog-root[data-meta="1"]) .filter button[data-active] {
+  background: var(--fg);
+  border-color: var(--fg);
+  color: var(--bg);
+}
+
+/* 2 */
+:global(#blog-root[data-meta="2"]) .tags button {
+  padding: 1px 8px;
+  border-color: var(--line-2);
+  color: var(--fg-2);
+}
+
+:global(#blog-root[data-meta="2"]) .tags button:hover {
+  background: var(--bg-2);
+  color: var(--fg);
+}
+
+:global(#blog-root[data-meta="2"]) .filter button {
+  border-color: var(--line-2);
+  color: var(--fg-2);
+}
+
+/* 3: row tags gain the filter pill's border at rest */
+:global(#blog-root[data-meta="3"]) .tags button {
+  border-color: var(--line);
+}
+
+:global(#blog-root[data-meta="3"]) .tags button:hover {
+  border-color: var(--line-2);
+  color: var(--fg-2);
+}
+
+/* 4: borderless filled chips everywhere */
+:global(#blog-root[data-meta="4"]) .tags button {
+  padding: 1px 8px;
+  background: var(--bg-2);
+  color: var(--fg-2);
+}
+
+:global(#blog-root[data-meta="4"]) .tags button:hover {
+  border-color: var(--line-2);
+  color: var(--fg);
+}
+
+:global(#blog-root[data-meta="4"]) .filter button {
+  border-color: transparent;
+  background: var(--bg-2);
+  color: var(--fg-2);
+}
+
+:global(#blog-root[data-meta="4"]) .filter button[data-active] {
+  border-color: var(--line-2);
+  color: var(--fg);
+}

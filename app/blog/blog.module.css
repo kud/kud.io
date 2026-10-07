@@ -265,3 +265,22 @@
 :global(#blog-root[data-theme="dark"]) ::selection {
   background: rgba(255, 198, 0, 0.22);
 }
+
+/* Footer band candidates (?footer=1..3) ------------------------------------ */
+/* The footer already sits outside .wrap, so dropping its max-width is all the
+ * bleed it needs; the padding keeps its text on the body's edges. C1 and C3
+ * also band the post's "More" block (see the post's page.module.css). */
+:global(#blog-root[data-footer="1"]) .footer,
+:global(#blog-root[data-footer="2"]) .footer,
+:global(#blog-root[data-footer="3"]) .footer {
+  max-width: none;
+  margin: 0;
+  padding: 18px max(18px, calc((100% - 790px) / 2 + 18px)) 44px;
+  border-top: 1px solid var(--line-2);
+  background: var(--bg-2);
+}
+
+:global(#blog-root[data-footer="2"]) .footer {
+  padding-top: 22px;
+  padding-bottom: 40px;
+}

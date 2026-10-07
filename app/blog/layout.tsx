@@ -1,5 +1,6 @@
 import type { ReactNode } from "react"
 import { Link } from "next-view-transitions"
+import { BlogPreviewSwitches } from "@/components/blog-preview-switches"
 import {
   BLOG_ROOT_ID,
   BLOG_THEME_SCRIPT,
@@ -20,6 +21,7 @@ const BlogLayout = ({ children }: { children: ReactNode }) => (
     className={mono.variable}
   >
     <script dangerouslySetInnerHTML={{ __html: BLOG_THEME_SCRIPT }} />
+    <BlogPreviewSwitches />
     <div className={styles.wrap}>
       {/* A div, not a p: BlogThemeControl renders a div, and a div inside a
           p makes the browser close the paragraph early — which silently

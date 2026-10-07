@@ -2,6 +2,7 @@
 
 import { Link } from "next-view-transitions"
 import { postPath } from "@/lib/blog-path"
+import { useSearchParams } from "next/navigation"
 import { useMemo, useState } from "react"
 
 export type IndexEntry = {
@@ -23,19 +24,43 @@ const byYear = (entries: IndexEntry[]) =>
     return groups
   }, [])
 
+// ?tag= is the shareable form of the filter. replaceState rather than a router
+// push: a filter click is not a page, and Back should leave the index.
+const writeTagToUrl = (tag: string | null) => {
+  const params = new URLSearchParams(location.search)
+  if (tag) params.set("tag", tag)
+  else params.delete("tag")
+  const query = params.toString()
+  history.replaceState(
+    history.state,
+    "",
+    `${location.pathname}${query ? `?${query}` : ""}${location.hash}`,
+  )
+}
+
 export const BlogIndex = ({
   entries,
   styles,
+  initialTag = null,
 }: {
   entries: IndexEntry[]
   styles: Record<string, string>
+  initialTag?: string | null
 }) => {
-  const [tag, setTag] = useState<string | null>(null)
-
   const tags = useMemo(
     () => [...new Set(entries.flatMap((entry) => entry.tags))].sort(),
     [entries],
   )
+
+  // A tag nobody has is ignored rather than filtering the list to nothing.
+  const [tag, setTagState] = useState<string | null>(
+    initialTag && tags.includes(initialTag) ? initialTag : null,
+  )
+
+  const setTag = (next: string | null) => {
+    setTagState(next)
+    writeTagToUrl(next)
+  }
 
   const groups = useMemo(
     () =>
@@ -106,3 +131,8 @@ export const BlogIndex = ({
     </>
   )
 }
+
+export const BlogIndexFromUrl = (props: {
+  entries: IndexEntry[]
+  styles: Record<string, string>
+}) => <BlogIndex {...props} initialTag={useSearchParams().get("tag")} />

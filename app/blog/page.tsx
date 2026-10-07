@@ -1,6 +1,7 @@
+import { Suspense } from "react"
 import type { Metadata } from "next"
 import { getAllPosts } from "@/lib/blog"
-import { BlogIndex } from "@/components/blog-index"
+import { BlogIndex, BlogIndexFromUrl } from "@/components/blog-index"
 import styles from "./page.module.css"
 
 const TITLE = "Writing"
@@ -43,16 +44,20 @@ const BlogIndexPage = async () => {
       </p>
     )
 
+  const entries = posts.map(({ slug, title, date, tags }) => ({
+    slug,
+    title,
+    date,
+    tags,
+  }))
+
+  // useSearchParams opts its subtree out of static rendering up to the nearest
+  // Suspense. The fallback is the unfiltered index, so the prerendered HTML
+  // still carries every row.
   return (
-    <BlogIndex
-      styles={styles}
-      entries={posts.map(({ slug, title, date, tags }) => ({
-        slug,
-        title,
-        date,
-        tags,
-      }))}
-    />
+    <Suspense fallback={<BlogIndex styles={styles} entries={entries} />}>
+      <BlogIndexFromUrl styles={styles} entries={entries} />
+    </Suspense>
   )
 }
 
