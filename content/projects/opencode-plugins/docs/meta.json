@@ -1,4 +1,4 @@
 {
   "title": "opencode-plugins",
-  "pages": ["index", "quiet-home"]
+  "pages": ["index", "statusline", "shell-highlighting"]
 }

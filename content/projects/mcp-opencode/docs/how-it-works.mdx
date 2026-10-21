@@ -9,16 +9,19 @@ and opencode's local HTTP API on the other.
 
 ## 🔄 The flow
 
-1. On first use, the server checks whether an opencode HTTP server is listening
-   on the port of `MCP_OPENCODE_URL` (default `127.0.0.1:4096`).
-2. If it isn't, the server spawns `opencode serve --port <port>` in the
-   background and waits for it to become ready.
+1. On first use, `query` and `list_models` look up opencode's background
+   service, the one server every TUI window shares, from the registration it
+   keeps in opencode's state directory (address and password).
+2. If it isn't running, they start it the way the TUI does
+   (`opencode serve --service`) and wait for it to become ready. Set
+   `MCP_OPENCODE_URL` (and `MCP_OPENCODE_PASSWORD`) to use a server of your
+   own instead.
 3. Each `query` call creates a temporary opencode session, sends the prompt,
    waits for the response, then deletes the session.
 4. `list_sessions`, `send` and `read` work on sessions that already exist in
-   your opencode windows. They discover the windows themselves: every opencode
-   process listening on a local port (found with `lsof`, then probed) counts.
-   A window started without `--port` opens no port and can't be seen.
+   your opencode windows. They find the background service the same way, plus
+   the headless instances this MCP started. A window started with
+   `opencode --standalone` runs a private server and can't be reached.
 5. Authentication is handled entirely by opencode — configure your providers
    once in opencode and this MCP inherits them automatically.
 
@@ -42,7 +45,5 @@ itself.
 
 **`send` is conversational.** It talks to a session that already exists and
 never deletes it, so history carries over from message to message. Start
-opencode with a port (`opencode --port 4097`) and whatever your assistant
-sends shows up live in that window, where you can pick the conversation up
-yourself. When the same project is open in two windows, `send` uses the
-lowest port and says so; only that window streams the exchange live.
+opencode as usual and whatever your assistant sends shows up live in the
+window showing that session, where you can pick the conversation up yourself.

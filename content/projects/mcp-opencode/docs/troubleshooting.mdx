@@ -42,9 +42,10 @@ It opens an interactive UI at `http://localhost:5173`.
 
 ## 🗂️ `list_sessions` doesn't show my TUI session
 
-- A plain `opencode` opens no port, so there is nothing to discover. Start it
-  with `opencode --port <free port>` (4097 upwards; 4096 is the MCP's own).
-- Check what the MCP can see: `lsof -nP -a -c opencode -iTCP -sTCP:LISTEN`.
+- The MCP talks to opencode's background service. Check it is up with
+  `opencode service status`; a window started with `--standalone` runs its
+  own private server and is not visible.
+- Send a first message in the window: opencode creates the session only then.
 - If `MCP_OPENCODE_URL` is set, discovery is off and only that server is used.
 
 ## ⏳ `send` says "still running"

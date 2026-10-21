@@ -1,0 +1,47 @@
+---
+title: 🐚 shell-highlighting
+description: Shell command names in the theme's amber, in opencode's file views and shell code fences.
+---
+
+Shell command names drawn in the theme's amber, in opencode's file views and in `sh`, `bash` and `zsh` code fences alike.
+
+opencode already highlights shell scripts, but the stock tree-sitter query captures command names as `@function.call`, which opencode draws in the plain variable colour. So `git`, `npm` and `curl` look like any other word. This plugin registers `bash` again with a local copy of that query, changed on one line, so commands stand out.
+
+## 📦 Install
+
+A TUI plugin, so it goes in `~/.config/opencode/cli.json`. Name the package, pinned to a version:
+
+```json
+{
+  "plugins": ["@kud/opencode-shell-highlighting@0.1.0"]
+}
+```
+
+opencode installs it on the next start. To upgrade, bump the version in that line.
+
+### Without npm
+
+Two files this time: the plugin and its query. Drop them in `~/.config/opencode/plugins/shell-highlighting/`, with the plugin named `tui.ts`, and opencode finds it on its own:
+
+```sh
+mkdir -p ~/.config/opencode/plugins/shell-highlighting
+cd ~/.config/opencode/plugins/shell-highlighting
+curl -fsSL -o tui.ts \
+  https://raw.githubusercontent.com/kud/opencode-plugins/main/plugins/shell-highlighting/shell-highlighting.ts
+curl -fsSLO \
+  https://raw.githubusercontent.com/kud/opencode-plugins/main/plugins/shell-highlighting/bash-highlights.scm
+```
+
+## ⚙️ How it works
+
+- **The query.** `bash-highlights.scm` is nvim-treesitter's bash query with `(command_name (word))` captured as `@attribute.builtin`. Nothing defines that name, so it falls back to `attribute`, which opencode draws in the theme's warning amber. Every other language's functions keep their colour. The file's header explains the choice of name.
+- **The grammar.** tree-sitter-bash 0.25.0, fetched by opencode on first use.
+- **Registered twice on purpose.** Once for a tree-sitter client that has not started yet, once for one that has. Either way it lands after opencode's own registration, and the later one wins.
+
+## 🔌 Turning it off
+
+Add `"-kud.shell-highlighting"` to `plugins` in `cli.json`.
+
+## ✅ Compatibility
+
+Written against opencode 2.1.

@@ -43,35 +43,36 @@ clear `No models found` message rather than an empty response.
 
 ## 🗂️ `list_sessions`
 
-List the sessions across every discovered opencode window, most recently
-updated first. Windows are found automatically: any opencode started with
-`--port` on this machine.
+List the sessions on opencode's background service (shared by every TUI
+window) and on the headless instances this MCP started, most recently updated
+first.
 
 | Parameter   | Type     | Required | Description                                    |
 | ----------- | -------- | -------- | ---------------------------------------------- |
 | `directory` | `string` | no       | Only list sessions for this project directory. |
 
-Returns one session per line: ID, title, directory, the port(s) of the windows
-it is open in, and last update. Use it to
+Returns one session per line: ID, title, directory, the port(s) of the servers
+serving it, and last update. Use it to
 find the session you have open in the opencode TUI.
 
 ## 💬 `send`
 
 Send a message to an existing session and return its reply.
 
-| Parameter         | Type     | Required | Description                                                                           |
-| ----------------- | -------- | -------- | ------------------------------------------------------------------------------------- |
-| `session_id`      | `string` | yes      | Session ID from `list_sessions`.                                                      |
-| `prompt`          | `string` | yes      | The message to send.                                                                  |
-| `agent`           | `string` | no       | opencode agent to handle the message (e.g. `build`, `plan`).                          |
-| `model`           | `string` | no       | Model for this message, `provider/model`. Must pass the allow/block filters.          |
-| `port`            | `number` | no       | Window to use. Defaults to the window that owns the session (lowest port if several). |
-| `timeout_seconds` | `number` | no       | How long to wait for the reply. Defaults to `MCP_OPENCODE_SEND_TIMEOUT` (600).        |
+| Parameter         | Type     | Required | Description                                                                    |
+| ----------------- | -------- | -------- | ------------------------------------------------------------------------------ |
+| `session_id`      | `string` | yes      | Session ID from `list_sessions`.                                               |
+| `prompt`          | `string` | yes      | The message to send.                                                           |
+| `agent`           | `string` | no       | opencode agent for the session (e.g. `build`, `plan`).                         |
+| `model`           | `string` | no       | Model for the session, `provider/model`. Must pass the allow/block filters.    |
+| `port`            | `number` | no       | Server to use. Defaults to the server that owns the session.                   |
+| `timeout_seconds` | `number` | no       | How long to wait for the reply. Defaults to `MCP_OPENCODE_SEND_TIMEOUT` (600). |
 
-The session keeps its history and its own model, and the exchange appears live
-in any TUI attached to the same server. `send` never creates or deletes a
-session. Model allow/block filters apply only when you pass a `model`; without one,
-the session keeps its own.
+The session keeps its history, and the exchange appears live in any TUI
+showing it. `send` never creates or deletes a session. opencode 2 sets agent
+and model on the session rather than per message, so passing either switches
+the session for later turns too, as picking it in the TUI does. Model
+allow/block filters apply only when you pass a `model`.
 
 If the reply takes longer than the timeout, `send` returns a "still running"
 note instead of hanging. opencode keeps working; call `read` later for the
@@ -85,7 +86,7 @@ Read a session's recent messages as a condensed transcript.
 | ------------ | -------- | -------- | --------------------------------------------------------------- |
 | `session_id` | `string` | yes      | Session ID from `list_sessions`.                                |
 | `limit`      | `number` | no       | Number of most recent messages to return. Default 20.           |
-| `port`       | `number` | no       | Window to read from. Defaults to the one that owns the session. |
+| `port`       | `number` | no       | Server to read from. Defaults to the one that owns the session. |
 
 Each message is headed by its role, with text in full and tool calls summarised
 as `[tool: name (status)]`.
@@ -93,7 +94,7 @@ as `[tool: name (status)]`.
 ## 🏗️ Headless instances
 
 The five tools below run jobs on a **private opencode server per job**, away
-from your windows and from the `query` server on 4096. An instance is started
+from the background service your windows use. An instance is started
 for one project directory, takes one or more `task`s, and is stopped when you
 are done (or reaped once idle).
 
@@ -104,18 +105,20 @@ are done (or reaped once idle).
 | `directory` | `string` | yes      | Absolute path of the project the instance works in. |
 
 Spawns `opencode serve --port 0 --hostname 127.0.0.1` in `directory`, reads the
-port from its `opencode server listening on …` line (10s timeout), registers it,
-and returns `{ port, url }`. With `MCP_OPENCODE_SANDBOX=srt` the same command
+port from its `server listening on …` line (10s timeout), registers it with
+the password it was started with, and returns `{ port, url }`. With `MCP_OPENCODE_SANDBOX=srt` the same command
 is wrapped as `srt --settings <generated file> opencode serve …` (or your
 `MCP_OPENCODE_SANDBOX_SETTINGS` file verbatim), and the registry row records
 `"sandbox": "srt"` (else `null`). The server runs with a hardened environment:
 
 - `GIT_TERMINAL_PROMPT=0`, `GIT_SSH_COMMAND=false` and an empty
   `credential.helper`, so git cannot authenticate to a remote;
-- `GH_TOKEN` and `GITHUB_TOKEN` removed;
-- `OPENCODE_CONFIG_CONTENT` pinning `model` and `small_model` to
-  `MCP_OPENCODE_MODEL`, and carrying the permission rules below so every agent
-  in the instance, task subagents included, follows them.
+- `GH_TOKEN` and `GITHUB_TOKEN` removed, and a fresh random password in
+  `OPENCODE_PASSWORD` (basic auth, user `opencode`);
+- `OPENCODE_CONFIG_CONTENT` in opencode 2's native shape: `model` and
+  `agents.title.model` pinned to `MCP_OPENCODE_MODEL`, the permission rules
+  below in `permissions` so every agent in the instance, subagents included,
+  follows them, and every deny repeated in `policies`.
 
 It refuses to start if the default model fails the allow/block filters.
 
@@ -136,8 +139,8 @@ session. A port that `start_instance` didn't register is refused.
 The job tries `[its model, ...MCP_OPENCODE_MODEL_FALLBACK]` once each, in
 order (deduped, allow/block-filtered). When the session stays in `retry` for
 `MCP_OPENCODE_RETRY_TIMEOUT_SECONDS` (default 90) or its reply ends in a
-provider error, a per-job watchdog aborts the session and re-prompts the same
-session with the same prompt on the next model, so history and worktree edits
+provider error, a per-job watchdog interrupts the session, switches its model
+and re-prompts the same session with the same prompt on the next model, so history and worktree edits
 carry over — even when nobody calls `wait`. When the list is exhausted the job
 settles as `error`.
 
@@ -153,8 +156,7 @@ Polls every 2s until the session is idle or the timeout hits, then returns its
 `status` (`idle`, `busy`, `retry` or `error`), the current `model`, the
 `fallbacks` taken so far (`[{ from, to, reason, at }]`), the last assistant
 text, and the files the job changed with line counts. The changed-files diff
-is taken from the job's first prompt, so fallback re-prompts don't re-base
-it. The 570s cap keeps it under a 600s tool timeout; on `busy` or `retry`,
+spans the whole session, so fallback re-prompts don't re-base it. The 570s cap keeps it under a 600s tool timeout; on `busy` or `retry`,
 call `wait` again.
 
 ### `list_instances`
@@ -169,21 +171,26 @@ plus each instance's `sandbox` mode (`"srt"` or `null`).
 | --------- | -------- | -------- | --------------------- |
 | `port`    | `number` | yes      | Port of the instance. |
 
-Aborts busy sessions, sends `SIGTERM` (then `SIGKILL` if needed), deregisters
+Interrupts busy sessions, sends `SIGTERM` (then `SIGKILL` if needed), deregisters
 the instance and confirms the port has stopped listening.
 
 ### 🛡️ Guard rails
 
 Every `task` session gets a ruleset with **no `ask` anywhere**, because nobody
 is there to answer and a headless session would wait forever. opencode applies
-the **last matching rule**, so the bash denies come after the bash allow:
+the **last matching rule**, so the shell denies come after the shell allow:
 
-| Permission                                                                     | Action |
-| ------------------------------------------------------------------------------ | ------ |
-| `read`, `edit`, `glob`, `grep`, `list`, `todowrite`, `task`                    | allow  |
-| `external_directory`, `question`, `doom_loop`, `webfetch`                      | deny   |
-| `bash` `*`                                                                     | allow  |
-| `bash` `git push*`, `git remote*`, `gh *`, `npm publish*`, `git reset --hard*` | deny   |
+| Action                                                                          | Effect |
+| ------------------------------------------------------------------------------- | ------ |
+| `read`, `edit`, `glob`, `grep`, `subagent`                                      | allow  |
+| `external_directory`, `question`, `webfetch`, `websearch`                       | deny   |
+| `shell` `*`                                                                     | allow  |
+| `shell` `*git* push*`, `*git* remote*`, `*git* reset*--hard*`, `gh *`, `* gh *`, `*npm* publish*` | deny   |
+
+opencode 2 allows `external_directory` by default; the instance keeps it
+denied. Each deny is also a `tool.use` policy (`shell:*git* push*`,
+`webfetch:*`, …). Policies run after every rule and can only deny, so a
+repository's own opencode config cannot allow these back.
 
 ### 📦 Sandboxing (opt-in)
 
@@ -198,7 +205,8 @@ git dir(s) (common and per-worktree, so worktrees work), opencode's own
 data/config/cache/state dirs and the temp dir; denies reads of credential
 paths (`~/.ssh`, `~/.aws`, `~/.config/gh`, `~/.gnupg`, `~/.netrc`, `~/.npmrc`,
 `**/.env`, `**/.env.*`, `~/Library/Keychains`, `~/.config/gcloud`, `~/.kube`,
-`~/.docker/config.json`); and allows only the provider, github, npm and
+`~/.docker/config.json`, and the background service's `service.json` files,
+which hold its password); and allows only the provider, github, npm and
 loopback domains plus local binding. `MCP_OPENCODE_SANDBOX_SETTINGS` points at
 your own settings file to use instead of the generated one. Sandboxed
 instances additionally deny `rm -rf*`, `sudo *` and piped `curl`/`wget` in
@@ -218,9 +226,10 @@ start. When the MCP exits, it stops the instances it started.
 
 ### 🔭 Watching a job
 
-`task` returns an `attach` command. Run it in a terminal to watch the session
-live, or step in:
+`task` returns an `attach` command. Run it in a terminal to open the session
+in the TUI against the instance, with the instance's password, and watch it
+live or step in:
 
 ```sh
-opencode attach http://127.0.0.1:53817 --session ses_…
+OPENCODE_PASSWORD=… opencode --server http://127.0.0.1:53817 --session ses_…
 ```

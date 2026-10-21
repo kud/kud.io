@@ -1,0 +1,63 @@
+---
+title: 📏 statusline
+description: opencode's prompt footer as a statusline — path, branch, provider, model and session title in one row.
+---
+
+opencode's prompt footer row, redrawn as a statusline:
+
+```
+~/Projects/site ⎇  main ◈ GitHub Copilot ✻ Claude Sonnet 5                 ✦ Fix the prompt bar colour
+```
+
+The working directory (parent in pink, folder in blue), the git branch, the provider, the model and, pushed to the right, the session title. While a turn runs, the row shows opencode's quiet busy mark `[⋯]` instead.
+
+Narrow panes drop parts in a fixed order: the title shortens first, then the provider, model and branch go. The path always stays.
+
+## 📦 Install
+
+A TUI plugin, so it goes in `~/.config/opencode/cli.json`. Name the package, pinned to a version:
+
+```json
+{
+  "plugins": ["@kud/opencode-statusline@0.1.0"]
+}
+```
+
+opencode installs it on the next start. To upgrade, bump the version in that line.
+
+The statusline carries what the sidebar's context block and footer show, so it pairs well with switching those off, and the home footer with them:
+
+```json
+{
+  "plugins": [
+    "@kud/opencode-statusline@0.1.0",
+    "-opencode.sidebar.context",
+    "-opencode.sidebar.footer",
+    "-opencode.home.footer"
+  ]
+}
+```
+
+### Without npm
+
+The plugin is a single file. Drop it in as `~/.config/opencode/plugins/statusline/tui.ts` and opencode finds it on its own:
+
+```sh
+mkdir -p ~/.config/opencode/plugins/statusline
+curl -fsSL -o ~/.config/opencode/plugins/statusline/tui.ts \
+  https://raw.githubusercontent.com/kud/opencode-plugins/main/plugins/statusline/statusline.ts
+```
+
+Either way there is no build step: the plugin is written without JSX, so opencode loads the `.ts` as-is.
+
+## 🔄 What it replaces
+
+The plugin claims the whole `prompt.footer.status` slot, because opencode draws its own path and branch there and offers no slot for the path alone. Two things go with it: the "press esc again" interrupt hint and the "(new worktree)" progress line.
+
+## 🔌 Turning it off
+
+Add `"-kud.statusline"` to `plugins` in `cli.json`.
+
+## ✅ Compatibility
+
+Written against opencode 2.1. The colours are constants at the top of `statusline.ts`.

@@ -44,9 +44,9 @@ itself stays a single model and is unchanged.
 
 A switch happens when the model is down: the session status stays `retry`
 continuously for at least `MCP_OPENCODE_RETRY_TIMEOUT_SECONDS` (default 90),
-or the reply ends in a provider error (`APIError`, `ProviderAuthError`, model
-not found). Broken code or failing tests in the work are not "down". On a
-switch the watchdog aborts the session and re-prompts the same session with
+or the run ends in a provider error (a `provider.*` error type, or model not
+found). Broken code or failing tests in the work are not "down". On a switch
+the watchdog interrupts the session, switches its model and re-prompts the same session with
 the same prompt on the next model, so history and worktree edits carry over;
 when the list is exhausted the job settles as `error`.
 

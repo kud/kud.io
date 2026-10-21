@@ -9,29 +9,32 @@ TypeScript file, published to npm as `@kud/opencode-<name>`: name it in your
 opencode config, pinned to a version, and forget about it.
 
 There is no build step: opencode installs the package and runs the `.ts` as-is.
+These are opencode v2 plugins and need opencode 2.1.0 or later.
 
 ## 🧩 Plugins
 
-| Plugin                                                   | Kind | What it does                                                                         |
-| -------------------------------------------------------- | ---- | ------------------------------------------------------------------------------------ |
-| [quiet-home](/projects/opencode-plugins/docs/quiet-home) | TUI  | The home screen laid out like a session: logo top left, prompt docked at the bottom. |
+| Plugin                                                                   | Kind | What it does                                                                        |
+| ------------------------------------------------------------------------ | ---- | ----------------------------------------------------------------------------------- |
+| [statusline](/projects/opencode-plugins/docs/statusline)                 | TUI  | The prompt's footer row as a statusline: path, branch, provider, model and title.   |
+| [shell-highlighting](/projects/opencode-plugins/docs/shell-highlighting) | TUI  | Shell command names in the theme's amber, in file views and `sh`/`zsh` code fences. |
 
 ## 📦 Install a plugin
 
-Installation differs by plugin kind: TUI plugins go in `tui.json`, server
-plugins in `opencode.json`. Each plugin page lists the package line and the
-config entries it needs, plus a single-file install for when npm is not wanted.
+TUI plugins go in `~/.config/opencode/cli.json`, under `plugins`. Each plugin
+page lists the package line, the built-ins it pairs with, and a single-file
+install for when npm is not wanted.
 
 ## ⚙️ How it works
 
 - **One file per plugin.** Read the whole thing in a sitting, copy it, tweak it.
 - **Loaded as-is.** opencode runs the `.ts` directly: nothing to compile or
   bundle.
-- **Typechecked.** Every plugin is checked against the real
-  `@opencode-ai/plugin` and `@opentui/solid` types, so API drift shows up in
-  the repo before it shows up in your terminal.
+- **Typechecked.** Every plugin is checked against the real `@opencode/plugin`
+  and `@opentui` types, so API drift shows up in the repo before it shows up in
+  your terminal.
 - **Easy to switch off.** Each plugin registers under its own ID, so a single
-  `plugin_enabled` entry turns it off without touching the rest of your setup.
+  `-<id>` entry in `plugins` turns it off without touching the rest of your
+  setup.
 
 Plugins live under `plugins/<name>/` as a single `.ts` file with its own README.
 The only script is `npm run typecheck` (`tsc --noEmit`).

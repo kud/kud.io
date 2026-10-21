@@ -14,14 +14,16 @@ opencode instance and get the reviewed result back.
 | Skill           | Trigger                                                                                    | What it does                                                             |
 | --------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
 | `/ask-opencode` | `/ask-opencode <prompt>`                                                                   | Send a one-off prompt to any opencode model and see the response         |
-| `/ask-opencode` | `--session [id]`, "talk to my opencode", "ask the opencode I have open", "tell opencode …" | Message a session already running in your opencode TUI and see its reply |
+| `/ask-opencode` | `--session [id]`, "talk to my opencode", "ask the opencode I have open", "tell opencode …" | Message a session on your running opencode and see its reply |
 
-Session mode needs opencode started with `oc` (or `opencode --port <free port>`)
-and at least one message already typed in the TUI — that's what creates the
-session. A plain `opencode` opens no port and is invisible to the MCP. The MCP
-auto-discovers every opencode window listening on a local port, so several
-windows work at once — `list_sessions` shows sessions from all of them, and
-`send`/`read` route to the window that owns the session unless you name one.
+Session mode needs opencode v2 (and `@kud/mcp-opencode` 2.0.0 or later) with at
+least one message already sent — that is what creates the session. opencode v2
+runs a shared background service that the MCP finds automatically, so a plain
+`opencode` is visible with nothing extra to start. `list_sessions` shows the
+sessions of the service and of any other servers, and `send`/`read` route to the
+server that owns the session unless you pass a `port`, which selects a server
+rather than a window. A model or agent passed to `send` switches the session for
+its later turns too, as opencode v2 has no per-message agent or model.
 
 ## 🤖 Delegated tasks: `opencode-runner`
 
@@ -37,14 +39,14 @@ What it does, in order:
 
 1. Refuses unless `gh repo view` reports the repository as `PUBLIC`.
 2. Creates a fresh `git worktree` on a new branch (or uses a worktree you pass it), so your checkout is never touched.
-3. Starts a headless instance on the worktree, writes a self-contained brief and starts the task. You get an `opencode attach …` line to watch it live.
+3. Starts a headless instance on the worktree, writes a self-contained brief and starts the task. You get an `OPENCODE_PASSWORD=… opencode --server <url> --session <id>` line to watch it live.
 4. Waits (at most six rounds), reviews the diff against the brief, runs the repo's test, typecheck and build scripts itself, and sends at most one follow-up.
 5. Always stops the instance, then reports the worktree path and branch, the diff stat, the gate results and a verdict (accept, needs follow-up or reject).
 
 It never commits, pushes or opens a PR: you land the work. The instances run
 with no git credentials, no `GH_TOKEN`, a pinned model and a permission set that
-denies `git push`, `gh`, `npm publish`, web fetches and anything outside the
-worktree. See the MCP's
+denies `git push`, `git remote` and `git reset --hard` in any form, `gh`,
+`npm publish`, web search and anything outside the worktree. See the MCP's
 [tools reference](https://kud.io/projects/mcp-opencode/docs/tools) for the
 headless instance tools.
 
