@@ -9,6 +9,7 @@ export type IndexEntry = {
   title: string
   date: string
   tags: string[]
+  cover?: string
 }
 
 // A year is a heading over a list, not a property of a row — so grouping
@@ -100,6 +101,19 @@ export const BlogIndex = ({
             {posts.map((post) => (
               <li key={post.slug}>
                 <time dateTime={post.date}>{post.date}</time>
+                {/* The thumb repeats the title's link for the pointer only: one tab
+                    stop and one announcement per post. A post with no cover
+                    gets a tile in its first tag's hue rather than a gap, so
+                    the title column starts at the same x on every row. */}
+                <Link
+                  href={postPath(post)}
+                  className={styles.thumb}
+                  data-tag={post.tags[0]}
+                  tabIndex={-1}
+                  aria-hidden="true"
+                >
+                  {post.cover && <img src={post.cover} alt="" loading="lazy" decoding="async" />}
+                </Link>
                 <h2>
                   <Link href={postPath(post)}>{post.title}</Link>
                 </h2>

@@ -31,7 +31,7 @@ export const metadata: Metadata = {
 }
 
 // The index needs the whole list in the browser to filter it, and the list is
-// four small fields per post — so the bodies stay on the server and only what
+// five small fields per post — so the bodies stay on the server and only what
 // a row renders crosses the boundary.
 const BlogIndexPage = async () => {
   const posts = await getAllPosts()
@@ -46,11 +46,12 @@ const BlogIndexPage = async () => {
   return (
     <BlogIndex
       styles={styles}
-      entries={posts.map(({ slug, title, date, tags }) => ({
+      entries={posts.map(({ slug, title, date, tags, cover }) => ({
         slug,
         title,
         date,
         tags,
+        cover,
       }))}
     />
   )

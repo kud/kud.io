@@ -80,7 +80,7 @@ section:first-of-type .year {
 .list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -90,9 +90,9 @@ section:first-of-type .year {
  * column is measured off the content, so no date ever wraps or floats. */
 .list li {
   display: grid;
-  grid-template-columns: 88px minmax(0, 1fr) auto;
-  gap: 20px;
-  align-items: baseline;
+  grid-template-columns: 88px 64px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
 }
 
 .list time {
@@ -137,6 +137,35 @@ section:first-of-type .year {
   composes: tag from "./blog.module.css";
 }
 
+/* 64px at 16:9 is 36px tall: one title line and its leading, so a row with a
+ * thumb is barely taller than one without. Big enough to recognise a cover,
+ * too small to compete with the title beside it. The hairline keeps white
+ * covers (screenshots, wordmarks) from dissolving into the page. */
+.thumb {
+  --tag-hue: var(--fg-3);
+  display: block;
+  width: 64px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 5px;
+  outline: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+  outline-offset: -1px;
+  background-color: color-mix(in srgb, var(--tag-hue) 18%, var(--bg));
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--tag-hue) 55%, var(--bg)) 1px,
+    transparent 1.3px
+  );
+  background-size: 6px 6px;
+  background-position: 1px 1px;
+}
+
+.thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .empty {
   margin: 0;
   font-size: 17.5px;
@@ -146,8 +175,22 @@ section:first-of-type .year {
 
 @media (max-width: 580px) {
   .list li {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 3px;
+    grid-template-columns: minmax(0, 1fr) 80px;
+    gap: 3px 14px;
+    align-items: start;
+  }
+
+  /* On a phone the thumb moves to the right of the text block, top-aligned
+   * with the date, so the title keeps the full left edge to wrap from. */
+  .list li > * {
+    grid-column: 1;
+  }
+
+  .list li > .thumb {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    width: 80px;
+    margin-top: 2px;
   }
 
   /* Under the title the tags start where it starts: right-flush, they float
