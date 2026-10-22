@@ -179,11 +179,28 @@ const BlogPostPage = async ({ params }: Params) => {
           </figure>
         )}
         <h1 className={styles.title}>{post.title}</h1>
-        <p className={styles.meta}>
-          {[post.date, `${readingMinutes(post.body)} min`, ...post.tags]
-            .filter(Boolean)
-            .join(" · ")}
-        </p>
+        <div className={styles.meta}>
+          <span>
+            {[post.date, `${readingMinutes(post.body)} min`]
+              .filter(Boolean)
+              .join(" · ")}
+          </span>
+          {post.tags.length > 0 && (
+            <ul className={styles.metaTags} aria-label="Tags">
+              {post.tags.map((tag) => (
+                <li key={tag}>
+                  <Link
+                    href={`/blog?tag=${tag}`}
+                    className={styles.tag}
+                    data-tag={tag}
+                  >
+                    {tag}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
         <div className={styles.body}>{body}</div>
       </article>
 

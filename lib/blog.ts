@@ -59,7 +59,10 @@ const toPost = (slug: string, raw: string): Post => {
     title: (data.title as string) ?? slug,
     description: (data.description as string) ?? "",
     date: (data.date as string) ?? "",
-    tags: (data.tags as string[]) ?? [],
+    // Sorted so every row lists its tags in the filter bar's order: with the
+    // Notion order, "tools engineering" and "engineering tools" sat in the same
+    // right-hand column and the eye could not read it as one.
+    tags: [...((data.tags as string[]) ?? [])].sort(),
     cover: data.cover as string | undefined,
     updated: data.updated as string | undefined,
     body,

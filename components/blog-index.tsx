@@ -2,7 +2,7 @@
 
 import { Link } from "next-view-transitions"
 import { postPath } from "@/lib/blog-path"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 export type IndexEntry = {
   slug: string
@@ -37,9 +37,28 @@ export const BlogIndex = ({
     [entries],
   )
 
+  // ?tag= is how a post page links into a filtered index. It is read after
+  // mount rather than through useSearchParams so the page stays static, and
+  // written back with replaceState so a filtered view can be shared without
+  // every click becoming a history entry.
+  useEffect(() => {
+    const requested = new URLSearchParams(location.search).get("tag")
+    if (requested && tags.includes(requested)) setTag(requested)
+  }, [tags])
+
+  const choose = (next: string | null) => {
+    setTag(next)
+    const url = new URL(location.href)
+    if (next) url.searchParams.set("tag", next)
+    else url.searchParams.delete("tag")
+    history.replaceState(history.state, "", url)
+  }
+
   const groups = useMemo(
     () =>
-      byYear(tag ? entries.filter((entry) => entry.tags.includes(tag)) : entries),
+      byYear(
+        tag ? entries.filter((entry) => entry.tags.includes(tag)) : entries,
+      ),
     [entries, tag],
   )
 
@@ -53,7 +72,7 @@ export const BlogIndex = ({
         <div className={styles.filter} role="group" aria-label="Filter by tag">
           <button
             type="button"
-            onClick={() => setTag(null)}
+            onClick={() => choose(null)}
             aria-pressed={tag === null}
             data-active={tag === null || undefined}
           >
@@ -63,7 +82,8 @@ export const BlogIndex = ({
             <button
               key={option}
               type="button"
-              onClick={() => setTag(option)}
+              data-tag={option}
+              onClick={() => choose(option)}
               aria-pressed={tag === option}
               data-active={tag === option || undefined}
             >
@@ -89,7 +109,9 @@ export const BlogIndex = ({
                       <button
                         key={option}
                         type="button"
-                        onClick={() => setTag(option)}
+                        className={styles.tag}
+                        data-tag={option}
+                        onClick={() => choose(option)}
                         aria-pressed={tag === option}
                         data-active={tag === option || undefined}
                       >

@@ -118,32 +118,14 @@ section:first-of-type .year {
  * active here is weight alone. */
 .tags {
   display: flex;
+  justify-content: flex-end;
   gap: 2px;
   font-family: var(--mono);
   font-size: 11px;
 }
 
-.tags button {
-  font: inherit;
-  padding: 1px 6px;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  background: none;
-  color: var(--fg-3);
-  cursor: pointer;
-  transition:
-    color 130ms,
-    border-color 130ms;
-}
-
-.tags button:hover {
-  color: var(--fg-2);
-  border-color: var(--line);
-}
-
-.tags button[data-active] {
-  color: var(--fg-2);
-  font-weight: 500;
+.tag {
+  composes: tag from "./blog.module.css";
 }
 
 .empty {

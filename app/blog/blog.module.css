@@ -265,3 +265,32 @@
 :global(#blog-root[data-theme="dark"]) ::selection {
   background: rgba(255, 198, 0, 0.22);
 }
+
+/* Tag ---------------------------------------------------------------------- */
+
+/* One tag, composed by the index rows and the post meta, so a tag reads the
+ * same on both routes. The filter bar is a control, not a tag, and keeps its
+ * own rules in app/blog/page.module.css. */
+.tag {
+  font: inherit;
+  padding: 1px 6px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  color: var(--fg-3);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color 130ms,
+    border-color 130ms;
+}
+
+.tag:hover {
+  color: var(--fg-2);
+  border-color: var(--line);
+}
+
+.tag[data-active] {
+  color: var(--fg-2);
+  font-weight: 500;
+}
