@@ -272,10 +272,36 @@
   aspect-ratio: var(--w) / var(--h);
 }
 
-/* The placeholder ground: the hero's own --bg-2, so a body image waits the
- * way the cover does. Cleared on load, so a transparent image never keeps it. */
+/* The placeholder ground: the hero's own --bg-2, with one slow, soft band of
+ * light crossing it so a wait reads as a wait rather than an empty box. Slow
+ * and low-contrast on purpose: it runs beside prose. Still under reduced
+ * motion. Cleared on load, so a transparent image never keeps it. */
 .imageFrame[data-sized]:not([data-loaded]) {
-  background: var(--bg-2);
+  background-color: var(--bg-2);
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    color-mix(in srgb, var(--bg) 70%, transparent) 50%,
+    transparent 70%
+  );
+  background-size: 250% 100%;
+  background-repeat: no-repeat;
+  animation: image-wait 2.4s ease-in-out infinite;
+}
+
+@keyframes image-wait {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imageFrame[data-sized]:not([data-loaded]) {
+    animation: none;
+  }
 }
 
 .imageFrame[data-zoomable] img {
