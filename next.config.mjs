@@ -1,20 +1,14 @@
+import { readFileSync } from "node:fs"
 import { createMDX } from "fumadocs-mdx/next"
 
-// Posts unpublished in Notion. Their URLs may still be linked from elsewhere,
-// so they land on the index rather than a 404.
-const retiredPosts = [
-  "2015/04/03/avoid-popup-blockers-with-ajax",
-  "2017/09/13/bck-i-search",
-  "2019/10/16/fixme-js",
-  "2019/10/30/extending-styled-components",
-  "2019/11/03/composing-styled-components",
-  "2020/03/06/reactive-search-filter-reset",
-  "2020/05/09/deploying-next-js-on-gh-pages",
-  "2020/05/11/markdown-editing-2-editors",
-  "2020/05/14/markdown-editing-3-prettier",
-  "2020/06/13/last-array-item-destructuring",
-  "2021/01/31/responsive-design-in-react",
-]
+// Written by scripts/sync-notion.js from posts marked Retired in Notion.
+const readBlogRedirects = () => {
+  try {
+    return JSON.parse(readFileSync("content/blog-redirects.json", "utf8"))
+  } catch {
+    return []
+  }
+}
 
 /** @type {import('next').NextConfig} */
 const config = {
@@ -35,16 +29,10 @@ const config = {
       destination: "/blog",
       permanent: false,
     },
-    ...retiredPosts.map((path) => ({
-      source: `/blog/${path}`,
-      destination: "/blog",
+    ...readBlogRedirects().map((redirect) => ({
+      ...redirect,
       permanent: true,
     })),
-    {
-      source: "/blog/2017/12/01/macos-ssh-passphrase-fix",
-      destination: "/blog/2020/06/08/ssh-config-include",
-      permanent: true,
-    },
   ],
 }
 

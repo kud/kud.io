@@ -30,6 +30,7 @@
     "fumadocs-mdx": "15.0.12",
     "fumadocs-ui": "16.10.3",
     "hast-util-to-jsx-runtime": "2.3.6",
+    "image-size": "2.0.4",
     "mermaid": "12.0.0",
     "next": "16.2.9",
     "next-mdx-remote": "6.0.0",

@@ -1,13 +1,18 @@
 import { readFileSync } from "node:fs"
 import path from "node:path"
+import { imageSize } from "image-size"
 
 export type ImageDimensions = { width: number; height: number }
 
+// EXIF orientations 5–8 rotate the image a quarter turn, so the stored width
+// and height are the displayed height and width.
+const isQuarterTurn = (orientation?: number) =>
+  orientation !== undefined && orientation >= 5 && orientation <= 8
+
 // A body image is drawn at width: auto, so until it loads its box has no size
-// and nothing can be painted there. Reading the size from the file's own
-// header at render time lets the frame reserve its box up front. Only the
-// formats the Notion sync writes into public/ are read; anything else (a
-// remote URL, an unknown format) returns null and the image lays out as before.
+// and nothing can be painted there. Reading the size from the file at render
+// time lets the frame reserve its box up front. Anything unreadable (a remote
+// URL, an unknown format) returns null and the image lays out as before.
 export const imageDimensions = (src: string): ImageDimensions | null => {
   if (!src.startsWith("/")) return null
 
@@ -18,40 +23,13 @@ export const imageDimensions = (src: string): ImageDimensions | null => {
     return null
   }
 
-  const isPng = bytes.readUInt32BE(0) === 0x89504e47
-  if (isPng) {
-    return { width: bytes.readUInt32BE(16), height: bytes.readUInt32BE(20) }
+  try {
+    const { width, height, orientation } = imageSize(bytes)
+    if (!width || !height) return null
+    return isQuarterTurn(orientation)
+      ? { width: height, height: width }
+      : { width, height }
+  } catch {
+    return null
   }
-
-  const isGif = bytes.toString("ascii", 0, 3) === "GIF"
-  if (isGif) {
-    return { width: bytes.readUInt16LE(6), height: bytes.readUInt16LE(8) }
-  }
-
-  const isJpeg = bytes[0] === 0xff && bytes[1] === 0xd8
-  if (isJpeg) return jpegDimensions(bytes)
-
-  return null
-}
-
-// The size lives in the first start-of-frame segment (SOF0–SOF15, less the
-// three markers in that range that are not frames: DHT, JPG and DAC).
-const NOT_FRAME_MARKERS = new Set([0xc4, 0xc8, 0xcc])
-
-const jpegDimensions = (bytes: Buffer): ImageDimensions | null => {
-  let offset = 2
-  while (offset + 9 < bytes.length) {
-    if (bytes[offset] !== 0xff) return null
-    const marker = bytes[offset + 1]
-    const isFrame =
-      marker >= 0xc0 && marker <= 0xcf && !NOT_FRAME_MARKERS.has(marker)
-    if (isFrame) {
-      return {
-        height: bytes.readUInt16BE(offset + 5),
-        width: bytes.readUInt16BE(offset + 7),
-      }
-    }
-    offset += 2 + bytes.readUInt16BE(offset + 2)
-  }
-  return null
 }
