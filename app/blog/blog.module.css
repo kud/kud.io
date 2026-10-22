@@ -268,29 +268,53 @@
 
 /* Tag ---------------------------------------------------------------------- */
 
-/* One tag, composed by the index rows and the post meta, so a tag reads the
- * same on both routes. The filter bar is a control, not a tag, and keeps its
- * own rules in app/blog/page.module.css. */
+/* Each tag owns one hue, borrowed from the Cobalt2 ink so the tags belong to
+ * the same family as the code cards. Keyed on the attribute rather than a
+ * class so the filter bar and both routes read one map. A tag not listed here
+ * falls back to grey, which is the honest state for a topic nobody has
+ * coloured yet. */
+:global(#blog-root) [data-tag] {
+  --tag-hue: var(--fg-3);
+}
+
+:global(#blog-root) [data-tag="design"] {
+  --tag-hue: var(--c-kw);
+}
+
+:global(#blog-root) [data-tag="engineering"] {
+  --tag-hue: var(--c-fn);
+}
+
+:global(#blog-root) [data-tag="tools"] {
+  --tag-hue: var(--c-gold);
+}
+
+/* Soft tint: the ground is a whisper of the hue, the word is the hue pulled
+ * towards the page's own text colour. Mixing against --fg and --bg is what
+ * lets one rule hold in both themes: the ink darkens in light and lifts in
+ * dark without a theme block. No border at rest, so a row of them stays
+ * quieter than the title beside it. */
 .tag {
+  display: inline-block;
   font: inherit;
-  padding: 1px 6px;
+  line-height: 1.5;
+  padding: 0 7px;
   border: 1px solid transparent;
   border-radius: 999px;
-  background: none;
-  color: var(--fg-3);
+  background: color-mix(in srgb, var(--tag-hue) 16%, var(--bg));
+  color: color-mix(in srgb, var(--tag-hue) 38%, var(--fg));
   text-decoration: none;
   cursor: pointer;
   transition:
-    color 130ms,
+    background 130ms,
     border-color 130ms;
 }
 
 .tag:hover {
-  color: var(--fg-2);
-  border-color: var(--line);
+  background: color-mix(in srgb, var(--tag-hue) 26%, var(--bg));
 }
 
 .tag[data-active] {
-  color: var(--fg-2);
+  border-color: color-mix(in srgb, var(--tag-hue) 60%, var(--fg));
   font-weight: 500;
 }

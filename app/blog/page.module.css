@@ -44,6 +44,15 @@
   font-weight: 500;
 }
 
+/* A topic pill takes its tag's tint when chosen, so the bar and the rows
+ * under it agree on what "design" looks like. "all" has no data-tag and keeps
+ * the neutral fill above. */
+.filter button[data-tag][data-active] {
+  border-color: color-mix(in srgb, var(--tag-hue) 60%, var(--fg));
+  background: color-mix(in srgb, var(--tag-hue) 16%, var(--bg));
+  color: color-mix(in srgb, var(--tag-hue) 38%, var(--fg));
+}
+
 /* The rule runs the full measure, never the 88px date column: a short rule
  * beside the dates reads as an accent rail — decoration — where a full one
  * reads as the structural break the year actually is. */
@@ -119,7 +128,7 @@ section:first-of-type .year {
 .tags {
   display: flex;
   justify-content: flex-end;
-  gap: 2px;
+  gap: 5px;
   font-family: var(--mono);
   font-size: 11px;
 }
@@ -141,10 +150,12 @@ section:first-of-type .year {
     gap: 3px;
   }
 
-  /* -7px is the pill's padding plus border, so the tag text lines up with the
-   * title's left edge rather than indenting it. */
+  /* Under the title the tags start where it starts: right-flush, they float
+   * away from the row they belong to. A filled pill aligns by its edge, not
+   * its text, so no negative margin. */
   .tags {
     flex-wrap: wrap;
-    margin-left: -7px;
+    justify-content: flex-start;
+    margin-top: 2px;
   }
 }
