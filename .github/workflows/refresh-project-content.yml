@@ -43,14 +43,14 @@ jobs:
 
       - name: Commit refreshed content
         run: |
-          if [ -z "$(git status --porcelain -- content/projects content/readmes content/landings content/blog public/blog)" ]; then
+          if [ -z "$(git status --porcelain -- content/projects content/readmes content/landings content/blog content/blog-redirects.json public/blog)" ]; then
             echo "No project content changes."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add content/projects content/readmes content/landings content/blog public/blog
+          git add content/projects content/readmes content/landings content/blog content/blog-redirects.json public/blog
           git commit -m "📝 docs(content): refresh project content"
           # Humans and agents push to this branch too, so a bare push races the
           # hourly run and rejects. Rebase onto whatever landed since checkout.
