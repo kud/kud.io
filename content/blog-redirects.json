@@ -1,0 +1,50 @@
+[
+  {
+    "source": "/blog/2020/05/14/markdown-editing-3-prettier",
+    "destination": "/blog"
+  },
+  {
+    "source": "/blog/2020/05/11/markdown-editing-2-editors",
+    "destination": "/blog"
+  },
+  {
+    "source": "/blog/2020/05/09/deploying-next-js-on-gh-pages",
+    "destination": "/blog"
+  },
+  {
+    "source": "/blog/2020/03/06/reactive-search-filter-reset",
+    "destination": "/blog"
+  },
+  {
+    "source": "/blog/2020/06/13/last-array-item-destructuring",
+    "destination": "/blog"
+  },
+  {
+    "source": "/blog/2021/01/31/responsive-design-in-react",
+    "destination": "/blog"
+  },
+  {
+    "source": "/blog/2019/11/03/composing-styled-components",
+    "destination": "/blog"
+  },
+  {
+    "source": "/blog/2019/10/30/extending-styled-components",
+    "destination": "/blog"
+  },
+  {
+    "source": "/blog/2019/10/16/fixme-js",
+    "destination": "/blog"
+  },
+  {
+    "source": "/blog/2017/12/01/macos-ssh-passphrase-fix",
+    "destination": "/blog/2020/06/08/ssh-config-include"
+  },
+  {
+    "source": "/blog/2017/09/13/bck-i-search",
+    "destination": "/blog"
+  },
+  {
+    "source": "/blog/2015/04/03/avoid-popup-blockers-with-ajax",
+    "destination": "/blog"
+  }
+]
