@@ -4,7 +4,7 @@ date: "2020-06-08"
 slug: "ssh-config-include"
 tags: ["tools"]
 cover: "/blog/ssh-config-include/c53c40d84308.jpg"
-updated: "2026-09-04T13:39:00.000Z"
+updated: "2026-10-22T16:44:00.000Z"
 ---
 
 Since the confinement (COVID-19 😷), we all had in my company to work remotely. Even if it was a real experience as human being, technically we were already prepared as we have some colleagues who work full-time remotely.
@@ -26,7 +26,7 @@ Host *+*
   ProxyCommand ssh $(echo %h | sed 's/+[^+]*$//;s/\\([^+%%]*\\)%%\\([^+]*\\)$/\\2 -l \\1/;s/:/ -p /') nc -w1 $(echo %h | sed 's/^.*+//;/:/!s/$/ %p/;s/:/ /')
 ```
 
-The first block is a way to prevent to be asked every time you want to connect to a server your passphrase, using the Keychain.
+The first block stops macOS asking for your passphrase every time you connect to a server. Since Sierra, the Keychain no longer remembers it by default ([Apple explains why](https://developer.apple.com/library/content/technotes/tn2449/_index.html)): `UseKeychain yes` stores it there again, and `AddKeysToAgent yes` loads the key into the agent on first use. To add it by hand instead, it's `ssh-add --apple-use-keychain` (it used to be `ssh-add -K`).
 
 The second block is to ease the connection of a server via another server. A jumper so.
 
