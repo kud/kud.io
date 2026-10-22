@@ -14,6 +14,7 @@ import ora from "ora"
 
 const CONTENT_DIR = "content/blog"
 const IMAGE_DIR = "public/blog"
+const REDIRECTS_FILE = "content/blog-redirects.json"
 
 const token = process.env.NOTION_TOKEN
 const databaseId = process.env.NOTION_BLOG_DATABASE_ID
@@ -447,6 +448,36 @@ const pruneStale = async (kept) => {
   return removed
 }
 
+const datedPath = (page) => {
+  const date = page.properties.Published?.date?.start
+  const slug = plain(page.properties.Slug)
+  if (!date || !slug) return undefined
+  return `/blog/${date.slice(0, 10).replaceAll("-", "/")}/${slug}`
+}
+
+// A Retired post leaves the site but keeps its URL working: it redirects to the
+// post it was merged into, or to the index. next.config.mjs reads the file.
+const writeRedirects = async (dataSourceId, published) => {
+  const retired = await collectAll((cursor) =>
+    notion.dataSources.query({
+      data_source_id: dataSourceId,
+      start_cursor: cursor,
+      filter: { property: "Status", select: { equals: "Retired" } },
+    }),
+  )
+
+  const pathById = new Map(published.map((page) => [page.id, datedPath(page)]))
+  const redirects = retired.flatMap((page) => {
+    const source = datedPath(page)
+    if (!source) return []
+    const mergedInto = page.properties["Merged into"]?.relation?.[0]?.id
+    return [{ source, destination: pathById.get(mergedInto) ?? "/blog" }]
+  })
+
+  await writeFile(REDIRECTS_FILE, JSON.stringify(redirects, null, 2) + "\n")
+  return redirects.length
+}
+
 const main = async () => {
   if (!notion || !databaseId) {
     ora().warn(
@@ -484,10 +515,11 @@ const main = async () => {
   }
 
   const removed = await pruneStale(kept)
+  const redirected = await writeRedirects(dataSourceId, pages)
   spinner.succeed(
     `blog: ${kept.size} post(s)${skipped ? `, ${skipped} skipped` : ""}${
       removed ? `, ${removed} pruned` : ""
-    }`,
+    }${redirected ? `, ${redirected} redirected` : ""}`,
   )
 }
 
