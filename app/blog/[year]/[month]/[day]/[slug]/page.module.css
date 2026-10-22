@@ -272,10 +272,17 @@
   aspect-ratio: var(--w) / var(--h);
 }
 
-/* The placeholder ground: the hero's own --bg-2, so a body image waits the
- * way the cover does. Cleared on load, so a transparent image never keeps it. */
+/* The placeholder ground: the index thumb's dot grid, in the page's neutral
+ * rather than a tag hue, so a body image waits the way its thumb looks.
+ * Cleared on load, so a transparent image never keeps it. */
 .imageFrame[data-sized]:not([data-loaded]) {
-  background: var(--bg-2);
+  background-color: var(--bg-2);
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--fg-3) 30%, var(--bg-2)) 1px,
+    transparent 1.3px
+  );
+  background-size: 8px 8px;
+  background-position: 2px 2px;
 }
 
 .imageFrame[data-zoomable] img {
