@@ -1000,8 +1000,10 @@
   position: fixed;
   inset: 0 0 auto;
   z-index: 50;
-  height: 2px;
-  background: var(--c-gold);
+  height: 3px;
+  /* Pure gold is about 1.5:1 on the light ground and easy to miss; a deeper
+   * gold in light keeps it a garnish but a visible one. */
+  background: #c99700;
   transform-origin: 0 50%;
   pointer-events: none;
   /* The base value matters: a post too short to scroll has no timeline range,
@@ -1026,4 +1028,14 @@
   .progress {
     display: none;
   }
+}
+
+@media (prefers-color-scheme: dark) {
+  :global(#blog-root:not([data-theme="light"])) .progress {
+    background: var(--c-gold);
+  }
+}
+
+:global(#blog-root[data-theme="dark"]) .progress {
+  background: var(--c-gold);
 }
