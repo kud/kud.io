@@ -561,6 +561,70 @@
   height: auto;
 }
 
+/* Night sign: the frame is a dark board in both themes, so the neon reads the
+ * same whether the page is light or dark. Tubes have a white-hot core and a
+ * gold bloom, as real ones do; the light page only adds a shadow to seat the
+ * board. The glow sits on the <svg> as a whole, not on each shape: an SVG
+ * element's filter region is its bounding box plus 10%, which clips a bloom
+ * into a visible rectangle. Mermaid's own rules are #id-scoped, hence
+ * !important. */
+.diagram {
+  --sign-ink: #0a0e11;
+  --sign-core: #fff1b8;
+  --sign-label: #fdf6e3;
+  --sign-glow: rgb(255 198 0 / 0.85);
+  --sign-bloom: rgb(255 160 0 / 0.45);
+}
+
+.diagram .diagramFrame {
+  border-color: rgb(255 198 0 / 0.16);
+  background: radial-gradient(
+    ellipse at 50% 45%,
+    #151c22 0%,
+    var(--sign-ink) 75%
+  );
+  box-shadow:
+    inset 0 0 60px rgb(0 0 0 / 0.55),
+    0 14px 32px -18px rgb(14 20 24 / 0.55);
+}
+
+.diagram .diagramFrame .diagramZoom {
+  border-color: rgb(255 198 0 / 0.25);
+  background: rgb(10 14 17 / 0.85);
+  color: var(--sign-label);
+}
+
+.diagram svg[aria-roledescription] {
+  filter: drop-shadow(0 0 1px var(--sign-glow))
+    drop-shadow(0 0 5px var(--sign-glow))
+    drop-shadow(0 0 16px var(--sign-bloom));
+}
+
+.diagram :global(.node rect.label-container) {
+  fill: var(--sign-ink) !important;
+  stroke: var(--sign-core) !important;
+  stroke-width: 1.75px !important;
+  rx: 8px;
+  filter: none !important;
+}
+
+.diagram :global(.nodeLabel) {
+  color: var(--sign-label) !important;
+  fill: var(--sign-label) !important;
+}
+
+.diagram :global(.flowchart-link) {
+  stroke: var(--sign-core) !important;
+  stroke-width: 1.5px !important;
+  stroke-linecap: round;
+}
+
+.diagram :global(.marker),
+.diagram :global(.arrowMarkerPath) {
+  fill: var(--sign-core) !important;
+  stroke: var(--sign-core) !important;
+}
+
 .diagramZoom,
 .diagramViewerClose,
 .diagramViewerToolbar button {
