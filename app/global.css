@@ -91,6 +91,53 @@ body {
   animation-name: vt-fade-in;
 }
 
+/* Light blog: a deliberate beat of ink between the two pages. The old page
+   fades out fully to the blog's ink (BLOG_INK, its dark ground) before the new
+   one fades in, so the dark moment reads as a choice rather than as the body's
+   forced-dark canvas leaking through a cross-fade. Dark stays as it was. */
+@keyframes vt-ink-out {
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-ink-in {
+  0%,
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+html:has(#blog-root[data-theme="light"]) {
+  background-color: #0e1418;
+}
+
+html:has(#blog-root[data-theme="light"])::view-transition-old(root) {
+  animation-name: vt-ink-out;
+}
+
+html:has(#blog-root[data-theme="light"])::view-transition-new(root) {
+  animation-name: vt-ink-in;
+}
+
+@media (prefers-color-scheme: light) {
+  html:has(#blog-root:not([data-theme="dark"])) {
+    background-color: #0e1418;
+  }
+
+  html:has(#blog-root:not([data-theme="dark"]))::view-transition-old(root) {
+    animation-name: vt-ink-out;
+  }
+
+  html:has(#blog-root:not([data-theme="dark"]))::view-transition-new(root) {
+    animation-name: vt-ink-in;
+  }
+}
+
 @keyframes vt-fade-out {
   to {
     opacity: 0;
