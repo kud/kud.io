@@ -91,6 +91,22 @@ body {
   animation-name: vt-fade-in;
 }
 
+/* Replacing the animation names above also drops the browser's own
+   plus-lighter blend, which is what makes a cross-fade add up to one opaque
+   frame. Without it, mid-fade both snapshots are part-transparent and the
+   canvas shows through: the body's forced-dark #08080f (fumadocs), a grey dip
+   between two light pages. Restored here, the two pages dissolve straight into
+   each other with no third colour. The morph keeps normal blending: its hold
+   and reveal overlap at full opacity and would add up past one. */
+html:not([data-vt="morph"])::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+
+html:not([data-vt="morph"])::view-transition-old(root),
+html:not([data-vt="morph"])::view-transition-new(root) {
+  mix-blend-mode: plus-lighter;
+}
+
 @keyframes vt-fade-out {
   to {
     opacity: 0;
