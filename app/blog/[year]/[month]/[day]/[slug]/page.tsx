@@ -167,12 +167,6 @@ const BlogPostPage = async ({ params }: Params) => {
     <>
       <div className={styles.progress} aria-hidden="true" />
       <article>
-        <h1 className={styles.title}>{post.title}</h1>
-        <p className={styles.meta}>
-          {[post.date, `${readingMinutes(post.body)} min`, ...post.tags]
-            .filter(Boolean)
-            .join(" · ")}
-        </p>
         {post.cover && (
           <figure className={styles.hero}>
             <img
@@ -184,6 +178,12 @@ const BlogPostPage = async ({ params }: Params) => {
             />
           </figure>
         )}
+        <h1 className={styles.title}>{post.title}</h1>
+        <p className={styles.meta}>
+          {[post.date, `${readingMinutes(post.body)} min`, ...post.tags]
+            .filter(Boolean)
+            .join(" · ")}
+        </p>
         <div className={styles.body}>{body}</div>
       </article>
 
