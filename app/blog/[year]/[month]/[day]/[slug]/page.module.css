@@ -658,6 +658,43 @@
   opacity: 1;
 }
 
+/* On a diagram the badge is pinned to the frame's corner, half outside it, as
+ * one more sticker. Mermaid fills the frame's content box edge to edge, so any
+ * spot inside the padding can still land on a node; the corner overhang is the
+ * only place no diagram reaches. It stays fully opaque: a half-faded sticker
+ * reads as a mistake, not as restraint. */
+.diagram .diagramZoom {
+  top: -12px;
+  right: -12px;
+  border: 2px solid var(--sticker-ink);
+  background: var(--sticker-card);
+  color: var(--sticker-ink);
+  box-shadow: 2px 2px 0 var(--sticker-shadow);
+  opacity: 1;
+  transition:
+    box-shadow 130ms,
+    transform 130ms;
+}
+
+.diagram .diagramZoom:hover,
+.diagram .diagramZoom:focus-visible {
+  border-color: var(--sticker-ink);
+  color: var(--sticker-ink);
+  box-shadow: 3px 3px 0 var(--sticker-shadow);
+  transform: translate(-1px, -1px);
+}
+
+.diagram .diagramZoom svg {
+  stroke-width: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diagram .diagramZoom:hover,
+  .diagram .diagramZoom:focus-visible {
+    transform: none;
+  }
+}
+
 .diagramZoom:hover,
 .diagramViewerClose:hover,
 .diagramViewerToolbar button:hover {
