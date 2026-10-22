@@ -91,6 +91,21 @@ body {
   animation-name: vt-fade-in;
 }
 
+/* Mid-fade, neither snapshot is opaque, so the canvas shows through — and the
+   canvas is the body's forced-dark #08080f (fumadocs), which a light blog never
+   paints itself. Give the canvas the light blog's own ground (#blog-root's --bg)
+   so the dip lands on the page's colour. The dark rule restores the default
+   rather than restating a ground, so dark stays exactly as it was. */
+html:has(#blog-root:not([data-theme="dark"])) {
+  background-color: #f7f8f9;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:has(#blog-root:not([data-theme="light"])) {
+    background-color: transparent;
+  }
+}
+
 @keyframes vt-fade-out {
   to {
     opacity: 0;
