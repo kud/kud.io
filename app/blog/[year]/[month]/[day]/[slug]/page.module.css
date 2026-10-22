@@ -205,7 +205,9 @@
 .imageFrame img {
   display: block;
   max-width: 100%;
+  width: auto;
   height: auto;
+  max-height: min(75svh, 720px);
   border-radius: 8px;
 }
 
