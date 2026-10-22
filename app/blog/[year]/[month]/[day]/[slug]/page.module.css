@@ -561,6 +561,70 @@
   height: auto;
 }
 
+/* Sticker: flat white cards with a thick ink outline and a hard offset shadow,
+ * on a gold ground. No blur anywhere, so the shadow fits inside the element's
+ * filter region (bounding box plus 10%) without clipping. In dark the ground
+ * goes back to the page's own and the shadow takes the gold, since an ink
+ * shadow on a dark ground disappears. Mermaid's own rules are #id-scoped,
+ * hence !important. */
+.diagram {
+  --sticker-ground: color-mix(in srgb, var(--c-gold) 42%, var(--bg));
+  --sticker-card: #ffffff;
+  --sticker-ink: #132a3e;
+  --sticker-shadow: #132a3e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :global(#blog-root:not([data-theme="light"])) .diagram {
+    --sticker-ground: var(--bg-2);
+    --sticker-card: #10171c;
+    --sticker-ink: #e8e3d4;
+    --sticker-shadow: var(--c-gold);
+  }
+}
+
+:global(#blog-root[data-theme="dark"]) .diagram {
+  --sticker-ground: var(--bg-2);
+  --sticker-card: #10171c;
+  --sticker-ink: #e8e3d4;
+  --sticker-shadow: var(--c-gold);
+}
+
+.diagram .diagramFrame {
+  border-color: transparent;
+  background: var(--sticker-ground);
+}
+
+.diagram :global(.node rect.label-container),
+.diagram :global(.node polygon),
+.diagram :global(.node path) {
+  fill: var(--sticker-card) !important;
+  stroke: var(--sticker-ink) !important;
+  stroke-width: 2px !important;
+  filter: drop-shadow(4px 4px 0 var(--sticker-shadow)) !important;
+}
+
+.diagram :global(.node rect.label-container) {
+  rx: 4px;
+}
+
+.diagram :global(.nodeLabel) {
+  color: var(--sticker-ink) !important;
+  fill: var(--sticker-ink) !important;
+  font-weight: 600;
+}
+
+.diagram :global(.flowchart-link) {
+  stroke: var(--sticker-ink) !important;
+  stroke-width: 2px !important;
+}
+
+.diagram :global(.marker),
+.diagram :global(.arrowMarkerPath) {
+  fill: var(--sticker-ink) !important;
+  stroke: var(--sticker-ink) !important;
+}
+
 .diagramZoom,
 .diagramViewerClose,
 .diagramViewerToolbar button {
