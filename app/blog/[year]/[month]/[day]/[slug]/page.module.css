@@ -254,6 +254,30 @@
   border-radius: 8px;
 }
 
+/* With the file's size known (data-sized), the frame takes the width the image
+ * would settle at, every cap applied: the column, its natural width, and the
+ * width at which it reaches the max-height above. The image then fills that
+ * box at its own ratio, so the box exists before a single byte arrives. */
+.imageFrame[data-sized] {
+  width: min(
+    100%,
+    calc(var(--w) * 1px),
+    calc(min(75svh, 720px) * var(--w) / var(--h))
+  );
+  border-radius: 8px;
+}
+
+.imageFrame[data-sized] img {
+  width: 100%;
+  aspect-ratio: var(--w) / var(--h);
+}
+
+/* The placeholder ground: the hero's own --bg-2, so a body image waits the
+ * way the cover does. Cleared on load, so a transparent image never keeps it. */
+.imageFrame[data-sized]:not([data-loaded]) {
+  background: var(--bg-2);
+}
+
 .imageFrame[data-zoomable] img {
   cursor: zoom-in;
 }

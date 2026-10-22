@@ -14,6 +14,7 @@ import {
 } from "@/lib/blog"
 import { BlogCodeBlock } from "@/components/blog-code-block"
 import { BlogImage } from "@/components/blog-image"
+import { imageDimensions } from "@/lib/image-dimensions"
 import { BlogMermaid } from "@/components/blog-mermaid"
 import styles from "./page.module.css"
 
@@ -150,7 +151,15 @@ const components = {
       <table {...props} />
     </div>
   ),
-  img: (props) => <BlogImage {...props} styles={styles} />,
+  img: (props) => (
+    <BlogImage
+      {...props}
+      dimensions={
+        typeof props.src === "string" ? imageDimensions(props.src) : null
+      }
+      styles={styles}
+    />
+  ),
 } satisfies Partial<Components>
 
 const BlogPostPage = async ({ params }: Params) => {
