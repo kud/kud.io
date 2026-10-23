@@ -6,27 +6,28 @@ description: Inline tab strip for grouped interactive screens.
 `<Tabs>` renders an inline tab strip. Active tabs are bold and highlighted; inactive tabs are dimmed. Optional counts render as a soft chip beside the label. Tabs can be grouped — a divider is drawn where the `group` value changes between neighbouring tabs.
 
 ```tsx
-import { Tabs } from "@kud/ink-ui";
-import type { TabItem } from "@kud/ink-ui";
+import { Tabs } from "@kud/ink-ui"
+import type { TabItem } from "@kud/ink-ui"
 ```
 
 ## 🔧 Props
 
-| Prop     | Type           | Description      |
-| -------- | -------------- | ---------------- |
-| `active` | `T`            | Active tab value |
-| `items`  | `TabItem<T>[]` | Tabs to render   |
-| `width`  | `number` | Available width; defaults to the terminal's columns, and never folds when that is unknown. When the full strip does not fit, inactive icon tabs fold to `icon` plus the count chip |
+| Prop     | Type           | Description                                                                                                                                                                        |
+| -------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `active` | `T`            | Active tab value                                                                                                                                                                   |
+| `items`  | `TabItem<T>[]` | Tabs to render                                                                                                                                                                     |
+| `width`  | `number`       | Available width; defaults to the terminal's columns, and never folds when that is unknown. When the full strip does not fit, inactive icon tabs fold to `icon` plus the count chip |
 
 ### `TabItem<T>` shape
 
-| Field   | Type     | Description                     |
-| ------- | -------- | ------------------------------- |
-| `value` | `T`      | Stable tab identifier           |
-| `label` | `string` | Visible tab label               |
-| `icon` | `string` | Optional single glyph drawn between the marker gutter and the label; takes the label's style, and the active underline spans icon, space and label, stopping before the count chip |
-| `count` | `number \| null` | Optional count drawn as a soft chip beside the label; `null` (not loaded yet) draws a chip holding `–` at a two-digit width |
-| `group` | `string` | Optional group name; a divider is drawn between tabs whose group differs from the previous tab |
+| Field     | Type             | Description                                                                                                                                                                                            |
+| --------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `value`   | `T`              | Stable tab identifier                                                                                                                                                                                  |
+| `label`   | `string`         | Visible tab label                                                                                                                                                                                      |
+| `icon`    | `string`         | Optional single glyph drawn between the marker gutter and the label; takes the label's style, and the active underline spans icon, space and label, stopping before the count chip                     |
+| `count`   | `number \| null` | Optional count drawn as a soft chip beside the label; `null` (not loaded yet) draws a chip holding `–` at a two-digit width                                                                            |
+| `warning` | `number`         | Optional count of things in the tab that warn, drawn after the count chip as the warning mark and the number in the warning colour (`QA 27 ⚠ 1`); `0` or absent draws nothing, and it survives folding |
+| `group`   | `string`         | Optional group name; a divider is drawn between tabs whose group differs from the previous tab                                                                                                         |
 
 ## 💡 Examples
 
