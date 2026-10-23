@@ -27,7 +27,7 @@ Ink apps that display large, code-heavy, streaming documents (AI responses, code
 npm install @kud/ink-markdown
 ```
 
-`ink-markdown` targets **Ink 7.x** and **React 19.x** as peer dependencies, and requires **Node.js 20+**.
+`ink-markdown` works with **Ink 7 and 8** and **React 19** as peer dependencies, and requires **Node.js 20+** (Ink 8 itself needs Node.js 22+).
 
 ## Usage
 

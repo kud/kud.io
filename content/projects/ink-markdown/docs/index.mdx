@@ -1,9 +1,9 @@
 ---
 title: 👋 Introduction
-description: A high-performance Markdown/code/diff rendering engine for Ink 7 — what it is, why it exists, and its current build status.
+description: A high-performance Markdown/code/diff rendering engine for Ink — what it is, why it exists, and its current build status.
 ---
 
-`ink-markdown` is a rendering engine for large, code-heavy, streaming documents in [Ink 7](https://github.com/vadimdemedes/ink) terminal applications — AI responses, code review, Git diffs, and source files. It exists because the common approach (parse the whole document into a React tree, run Yoga layout over all of it, re-diff the entire output every frame) scales with document size, and a 10,000-line document or a 20fps streaming feed makes that approach unusable.
+`ink-markdown` is a rendering engine for large, code-heavy, streaming documents in [Ink](https://github.com/vadimdemedes/ink) terminal applications — AI responses, code review, Git diffs, and source files. It exists because the common approach (parse the whole document into a React tree, run Yoga layout over all of it, re-diff the entire output every frame) scales with document size, and a 10,000-line document or a 20fps streaming feed makes that approach unusable.
 
 The engine keeps rendering cost bounded to the viewport instead of the document: parse into stable blocks, cache layout per block, and hand Ink only the visible slice.
 
