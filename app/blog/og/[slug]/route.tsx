@@ -1,8 +1,8 @@
 import { ImageResponse } from "next/og"
-import { getAllPosts, getPost } from "@/lib/blog"
+import { getAllPosts, getPost, shareImage } from "@/lib/blog"
 
-// Share card for posts that carry no cover. This is a route handler, not an
-// opengraph-image.tsx beside the post page, because file-based metadata
+// Share card for posts with no cover share image. This is a route handler, not
+// an opengraph-image.tsx beside the post page, because file-based metadata
 // overrides openGraph.images and would replace every post's cover with a
 // generated card; here the post page points at /blog/og/<slug> only when there
 // is nothing else to show. The card is the post's title page, not a portrait:
@@ -12,7 +12,7 @@ export const dynamicParams = false
 
 export const generateStaticParams = async () =>
   (await getAllPosts())
-    .filter((post) => !post.cover)
+    .filter((post) => !shareImage(post))
     .map(({ slug }) => ({ slug }))
 
 const size = { width: 1200, height: 630 }

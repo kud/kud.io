@@ -11,6 +11,7 @@ import {
   postPath,
   readingMinutes,
   renderMarkdown,
+  shareImage,
 } from "@/lib/blog"
 import { BlogCodeBlock } from "@/components/blog-code-block"
 import { BlogImage } from "@/components/blog-image"
@@ -62,12 +63,15 @@ export const generateMetadata = async ({
   if (!post) return {}
 
   const url = `https://kud.io${postPath(post)}`
-  // The cover is both the share image and the page's hero. Without one,
-  // the generated title card at /blog/og/<slug> stands in — never the
+  // The cover is the page's hero; its share image is a light 1200×630 JPEG
+  // derived from it, since WhatsApp shows no picture at all for one much
+  // over 300 KB. Without a share image on disk, the generated title card at
+  // /blog/og/<slug> stands in — never the full-size cover, and never the
   // site's own portrait card. Listed under twitter as well: the root
   // twitter-image.tsx is inherited by every route and only an explicit list
   // here displaces it.
-  const images = post.cover ? [post.cover] : [`/blog/og/${post.slug}`]
+  const share = shareImage(post)
+  const images = share ? [share] : [`/blog/og/${post.slug}`]
   return {
     title: `${post.title} — kud.io`,
     description: post.description || undefined,

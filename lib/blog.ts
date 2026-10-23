@@ -11,6 +11,7 @@ import remarkGfm from "remark-gfm"
 import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
 import { unified } from "unified"
+import { imageDimensions } from "@/lib/image-dimensions"
 import type { Components } from "hast-util-to-jsx-runtime"
 
 // Posts are plain Markdown, not MDX: Notion cannot emit JSX, so an MDX compiler
@@ -67,6 +68,17 @@ const toPost = (slug: string, raw: string): Post => {
     updated: data.updated as string | undefined,
     body,
   }
+}
+
+// The cover's 1200×630 JPEG sibling, written by scripts/share-images.js (which
+// mirrors the path rule). The cover itself is far too heavy for link previews.
+// Undefined when the post has no cover or its share image isn't on disk yet;
+// the generated title card at /blog/og/<slug> covers both cases.
+export const shareImage = (post: Post) => {
+  if (!post.cover) return undefined
+  const url = post.cover.replace(/\.[^./]+$/, ".share.jpg")
+  const size = imageDimensions(url)
+  return size ? { url, ...size, type: "image/jpeg" } : undefined
 }
 
 export const getAllPosts = async (): Promise<Post[]> => {
