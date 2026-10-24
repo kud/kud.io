@@ -5,7 +5,7 @@ date: "2026-10-22"
 slug: "a-road-trip-that-fits-in-one-tab"
 tags: ["engineering","design"]
 cover: "/blog/a-road-trip-that-fits-in-one-tab/43180db41c58.png"
-updated: "2026-10-21T23:30:00.000Z"
+updated: "2026-10-24T16:00:00.000Z"
 ---
 
 Flights were in email. Hotels were in booking apps. The rental car had its own confirmation, door codes arrived in messages, and the itinerary itself lived in Notion.
@@ -27,12 +27,10 @@ The real trip is a Notion database. A row can be a flight, a drive, a hotel, a m
 At build time those rows are normalised into one trip. Roads are resolved onto road geometry, flights become great-circle arcs, places get coordinates and time zones, and the result is written as a private snapshot that the app can serve after authentication.
 
 ```mermaid
-flowchart LR
+flowchart TD
   A["Notion trip database"] --> B["Build-time normalisation"]
   B --> C["Private trip snapshot"]
-  C --> D["Map"]
-  C --> E["Now"]
-  C --> F["Itinerary"]
+  C --> D["App views<br>Map · Now · Itinerary"]
   C --> G["Offline cache"]
 ```
 
