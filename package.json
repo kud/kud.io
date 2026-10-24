@@ -17,7 +17,8 @@
     "typecheck": "tsc --noEmit",
     "sync": "node scripts/sync-content.js && node scripts/sync-notion.js",
     "check": "node scripts/check-repos.js",
-    "share-images": "node scripts/share-images.js"
+    "share-images": "node scripts/share-images.js",
+    "cover-images": "node scripts/cover-images.js"
   },
   "engines": {
     "node": ">=22.12.0"

@@ -11,6 +11,7 @@ import { mkdir, readdir, rm, unlink, writeFile } from "node:fs/promises"
 import { join } from "node:path"
 import { Client } from "@notionhq/client"
 import ora from "ora"
+import { writeCoverImages } from "./cover-images.js"
 import { writeShareImages } from "./share-images.js"
 
 const CONTENT_DIR = "content/blog"
@@ -516,12 +517,13 @@ const main = async () => {
   const removed = await pruneStale(kept)
   const redirected = await writeRedirects(dataSourceId)
   const shared = await writeShareImages()
+  const sized = await writeCoverImages()
   spinner.succeed(
     `blog: ${kept.size} post(s)${skipped ? `, ${skipped} skipped` : ""}${
       removed ? `, ${removed} pruned` : ""
     }${redirected ? `, ${redirected} redirected` : ""}${
       shared ? `, ${shared} share image(s)` : ""
-    }`,
+    }${sized ? `, ${sized} cover size(s)` : ""}`,
   )
 }
 
