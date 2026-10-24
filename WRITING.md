@@ -60,3 +60,14 @@ different posts.** Not from an instinct at midnight.
   here rather than advisory: this blog is public and indexed. Restate any real
   case with a neutral vendor, then check the restatement still demonstrates the
   point.
+
+## Cover
+
+Every post needs one: it's the hero and, through `scripts/share-images.js`, the
+link preview. Without it the post shares with no picture. Landscape 1.91:1,
+subject in the centre third.
+
+An agent can't upload a Notion cover (the MCP takes an external URL only), so
+the file lives here: `design/blog-covers/<slug>.jpg`, and the Notion cover
+points at its raw GitHub URL. The sync mirrors it into `public/blog/<slug>/`
+like any cover, so the raw URL is only read at sync time.
