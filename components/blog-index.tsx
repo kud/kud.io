@@ -2,14 +2,16 @@
 
 import { Link } from "next-view-transitions"
 import { postPath } from "@/lib/blog-path"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, type CSSProperties } from "react"
+import { CoverImage } from "@/components/blog-cover"
+import type { CoverImages } from "@/lib/blog"
 
 export type IndexEntry = {
   slug: string
   title: string
   date: string
   tags: string[]
-  cover?: string
+  cover?: CoverImages
 }
 
 // A year is a heading over a list, not a property of a row — so grouping
@@ -102,17 +104,26 @@ export const BlogIndex = ({
               <li key={post.slug}>
                 <time dateTime={post.date}>{post.date}</time>
                 {/* The thumb repeats the title's link for the pointer only: one tab
-                    stop and one announcement per post. A post with no cover
-                    gets a tile in its first tag's hue rather than a gap, so
-                    the title column starts at the same x on every row. */}
+                    stop and one announcement per post. While the cover loads,
+                    its own colours wait there, blurred; a post with no cover
+                    gets a plain tile in its first tag's hue rather than a gap,
+                    so the title column starts at the same x on every row. */}
                 <Link
                   href={postPath(post)}
                   className={styles.thumb}
                   data-tag={post.tags[0]}
+                  data-cover={post.cover ? true : undefined}
+                  style={
+                    post.cover?.preview
+                      ? ({ "--preview": `url(${post.cover.preview})` } as CSSProperties)
+                      : undefined
+                  }
                   tabIndex={-1}
                   aria-hidden="true"
                 >
-                  {post.cover && <img src={post.cover} alt="" loading="lazy" decoding="async" />}
+                  {post.cover && (
+                    <CoverImage src={post.cover.thumb} loading="lazy" decoding="async" />
+                  )}
                 </Link>
                 <h2>
                   <Link href={postPath(post)}>{post.title}</Link>

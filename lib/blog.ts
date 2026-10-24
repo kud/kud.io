@@ -1,5 +1,6 @@
 export { postPath } from "./blog-path"
 
+import { readFileSync } from "node:fs"
 import { readFile, readdir } from "node:fs/promises"
 import { join } from "node:path"
 import { Fragment, jsx, jsxs } from "react/jsx-runtime"
@@ -79,6 +80,39 @@ export const shareImage = (post: Post) => {
   const url = post.cover.replace(/\.[^./]+$/, ".share.jpg")
   const size = imageDimensions(url)
   return size ? { url, ...size, type: "image/jpeg" } : undefined
+}
+
+// The sizes a cover is drawn at, written by scripts/cover-images.js (which
+// mirrors the path rule): a 1600px hero, a 320×180 index thumb, and a 24px
+// preview inlined as a data URI, blurred behind either while it loads. Each
+// falls back to the full cover when its file isn't on disk yet, and the
+// preview to nothing, so a cover synced without the backfill still shows.
+export type CoverImages = { hero: string; thumb: string; preview?: string }
+
+const derived = (cover: string, kind: string) =>
+  cover.replace(/\.[^./]+$/, `.${kind}.webp`)
+
+const readPublic = (url: string) => {
+  try {
+    return readFileSync(join(process.cwd(), "public", decodeURI(url)))
+  } catch {
+    return undefined
+  }
+}
+
+export const coverImages = (cover?: string): CoverImages | undefined => {
+  if (!cover) return undefined
+  if (!cover.startsWith("/")) return { hero: cover, thumb: cover }
+  const sized = (kind: string) => {
+    const url = derived(cover, kind)
+    return readPublic(url) ? url : cover
+  }
+  const preview = readPublic(derived(cover, "preview"))
+  return {
+    hero: sized("hero"),
+    thumb: sized("thumb"),
+    preview: preview && `data:image/webp;base64,${preview.toString("base64")}`,
+  }
 }
 
 export const getAllPosts = async (): Promise<Post[]> => {

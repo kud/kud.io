@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { getAllPosts } from "@/lib/blog"
+import { coverImages, getAllPosts } from "@/lib/blog"
 import { BlogIndex } from "@/components/blog-index"
 import styles from "./page.module.css"
 
@@ -51,7 +51,7 @@ const BlogIndexPage = async () => {
         title,
         date,
         tags,
-        cover,
+        cover: coverImages(cover),
       }))}
     />
   )

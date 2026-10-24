@@ -150,20 +150,45 @@ section:first-of-type .year {
   border-radius: 5px;
   outline: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
   outline-offset: -1px;
+  position: relative;
   background-color: color-mix(in srgb, var(--tag-hue) 18%, var(--bg));
-  background-image: radial-gradient(
-    color-mix(in srgb, var(--tag-hue) 55%, var(--bg)) 1px,
-    transparent 1.3px
-  );
-  background-size: 6px 6px;
-  background-position: 1px 1px;
+}
+
+/* A post with a cover waits on a neutral ground, not its tag's tint: the
+ * tint is the no-cover tile's whole look, and here it would flash a colour
+ * the cover doesn't have. */
+.thumb[data-cover] {
+  background-color: var(--bg-2);
+}
+
+/* The cover's own colours, from a 24px preview inlined in the page, blurred
+ * so it reads as the picture out of focus rather than as big pixels. */
+.thumb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--preview, none) center / cover no-repeat;
+  filter: blur(4px);
+  transform: scale(1.15);
 }
 
 .thumb img {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* Hidden only while scripting can reveal it again (see CoverImage). */
+@media (scripting: enabled) {
+  .thumb img {
+    transition: opacity 320ms ease-out;
+  }
+
+  .thumb img:not([data-loaded]) {
+    opacity: 0;
+  }
 }
 
 .empty {

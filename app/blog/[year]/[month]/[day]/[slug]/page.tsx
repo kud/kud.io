@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import type { CSSProperties } from "react"
 import { notFound } from "next/navigation"
 // The same Link the index uses — next/link here would drop the view
 // transition on every in-blog hop.
@@ -6,6 +7,7 @@ import { Link } from "next-view-transitions"
 import type { Components } from "hast-util-to-jsx-runtime"
 import type { Post } from "@/lib/blog"
 import {
+  coverImages,
   getAllPosts,
   getPost,
   postPath,
@@ -15,6 +17,7 @@ import {
 } from "@/lib/blog"
 import { BlogCodeBlock } from "@/components/blog-code-block"
 import { BlogImage } from "@/components/blog-image"
+import { CoverImage } from "@/components/blog-cover"
 import { imageDimensions } from "@/lib/image-dimensions"
 import { BlogMermaid } from "@/components/blog-mermaid"
 import styles from "./page.module.css"
@@ -175,16 +178,23 @@ const BlogPostPage = async ({ params }: Params) => {
   const post = posts[index]
   const neighbours = neighboursOf(posts, index)
   const body = await renderMarkdown(post.body, components)
+  const cover = coverImages(post.cover)
 
   return (
     <>
       <div className={styles.progress} aria-hidden="true" />
       <article>
-        {post.cover && (
-          <figure className={styles.hero}>
-            <img
-              src={post.cover}
-              alt=""
+        {cover && (
+          <figure
+            className={styles.hero}
+            style={
+              cover.preview
+                ? ({ "--preview": `url(${cover.preview})` } as CSSProperties)
+                : undefined
+            }
+          >
+            <CoverImage
+              src={cover.hero}
               loading="eager"
               fetchPriority="high"
               decoding="async"

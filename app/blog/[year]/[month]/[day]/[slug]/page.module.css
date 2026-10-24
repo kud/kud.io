@@ -44,10 +44,16 @@
  * The cover leads the article, above the title: order is what makes it a cover
  * rather than the first figure, and it costs nothing in size. The title then
  * sits on it as its caption, so the gap is tighter than the meta's 38px, and a
- * post without a cover reads exactly as before. It settles in once on load (a
- * slight zoom-out and fade), never loops: motion beside running prose is a
+ * post without a cover reads exactly as before.
+ *
+ * While it loads, the frame holds the cover itself out of focus: a 24px
+ * preview inlined in the page (scripts/cover-images.js), blurred and scaled
+ * past the rounded edge so the blur never shows a rim. The cover then settles
+ * in over it once its pixels are all in (a slight zoom-out and fade), never
+ * painting top to bottom, and never loops: motion beside running prose is a
  * distraction, and a cover may be a wordmark that would look odd drifting. */
 .hero {
+  position: relative;
   margin: 0 0 26px;
   aspect-ratio: 16 / 9;
   overflow: hidden;
@@ -55,24 +61,47 @@
   background: var(--bg-2);
 }
 
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--preview, none) center / cover no-repeat;
+  filter: blur(28px) saturate(1.1);
+  transform: scale(1.12);
+}
+
 .hero img {
+  position: relative;
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  animation: cover-settle 1100ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-@keyframes cover-settle {
-  from {
+/* Hidden only while scripting can reveal it again (see CoverImage). The fade
+ * starts at load, not at mount: a keyframe started at mount had finished long
+ * before a heavy cover arrived. */
+@media (scripting: enabled) {
+  .hero img {
+    transition:
+      opacity 700ms ease-out,
+      transform 1100ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .hero img:not([data-loaded]) {
     opacity: 0;
     transform: scale(1.045);
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
+/* Reduced motion keeps the fade, which moves nothing, and drops the zoom. */
+@media (scripting: enabled) and (prefers-reduced-motion: reduce) {
   .hero img {
-    animation: none;
+    transition: opacity 400ms ease-out;
+  }
+
+  .hero img:not([data-loaded]) {
+    transform: none;
   }
 }
 
