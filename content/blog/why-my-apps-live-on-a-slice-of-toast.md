@@ -5,7 +5,7 @@ date: "2026-10-24"
 slug: "why-my-apps-live-on-a-slice-of-toast"
 tags: ["design","notes"]
 cover: "/blog/why-my-apps-live-on-a-slice-of-toast/36223be2ccdd.png"
-updated: "2026-10-24T13:41:00.000Z"
+updated: "2026-10-24T13:43:00.000Z"
 ---
 
 I live in the UK, and I still don't quite understand beans on toast.
