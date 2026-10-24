@@ -4,7 +4,7 @@ description: "Rethink DNS + Firewall made me want the same device-wide filtering
 date: "2026-10-24"
 slug: "filtering-the-internet-before-it-reaches-my-apps"
 tags: ["engineering","tools"]
-cover: "/blog/filtering-the-internet-before-it-reaches-my-apps/f6a53300359d.png"
+cover: "/blog/filtering-the-internet-before-it-reaches-my-apps/50f785939814.jpg"
 updated: "2026-10-24T16:23:00.000Z"
 ---
 
