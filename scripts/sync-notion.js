@@ -457,8 +457,9 @@ const datedPath = (page) => {
 }
 
 // A Retired post leaves the site but keeps its URL working: it redirects to the
-// post it was merged into, or to the index. next.config.mjs reads the file.
-const writeRedirects = async (dataSourceId, published) => {
+// index. next.config.mjs reads the file, and holds by hand the rare redirect to
+// the post that replaced one.
+const writeRedirects = async (dataSourceId) => {
   const retired = await collectAll((cursor) =>
     notion.dataSources.query({
       data_source_id: dataSourceId,
@@ -467,12 +468,9 @@ const writeRedirects = async (dataSourceId, published) => {
     }),
   )
 
-  const pathById = new Map(published.map((page) => [page.id, datedPath(page)]))
   const redirects = retired.flatMap((page) => {
     const source = datedPath(page)
-    if (!source) return []
-    const mergedInto = page.properties["Merged into"]?.relation?.[0]?.id
-    return [{ source, destination: pathById.get(mergedInto) ?? "/blog" }]
+    return source ? [{ source, destination: "/blog" }] : []
   })
 
   await writeFile(REDIRECTS_FILE, JSON.stringify(redirects, null, 2) + "\n")
@@ -516,7 +514,7 @@ const main = async () => {
   }
 
   const removed = await pruneStale(kept)
-  const redirected = await writeRedirects(dataSourceId, pages)
+  const redirected = await writeRedirects(dataSourceId)
   const shared = await writeShareImages()
   spinner.succeed(
     `blog: ${kept.size} post(s)${skipped ? `, ${skipped} skipped` : ""}${

@@ -29,6 +29,14 @@ const config = {
       destination: "/blog",
       permanent: false,
     },
+    // A retired post folded into a later one lands on that post. Listed before
+    // the generated file, which sends every retired post to the index: the
+    // first matching redirect wins.
+    {
+      source: "/blog/2017/12/01/macos-ssh-passphrase-fix",
+      destination: "/blog/2020/06/08/ssh-config-include",
+      permanent: true,
+    },
     ...readBlogRedirects().map((redirect) => ({
       ...redirect,
       permanent: true,
