@@ -36,6 +36,7 @@ jira attachment list ABC-123
 
 jira attachment read ABC-123 error.log | grep -i timeout
 jira attachment get ABC-123 screen.png --output ~/Desktop/
+jira attachment upload ABC-123 ./build.log ./screenshot.png
 ```
 
 Descriptions and comments render as Markdown, with embedded files named rather than left as opaque ids:
@@ -52,7 +53,7 @@ Run `jira` with no arguments:
 jira
 ```
 
-Your issues as a board. By default the tabs are Jira's three status *categories* — **To do**, **In progress**, **Done** — so it works on any instance without knowing what your board calls its columns. Pass `--board <id>` (or set `defaultBoard` in the config file) and the tabs become that board's own columns, matched by status id; statuses no column claims land on an **Off board** tab. Hand-written `tabs` in the config file win over both. Rows hang under their epic, carry a type pill, a priority glyph (`▲` high, `▼` low) and how long since they last moved. Closed work from the last fortnight is on the Done tab; `a` loads everything.
+Your issues as a board. By default the tabs are Jira's three status _categories_ — **To do**, **In progress**, **Done** — so it works on any instance without knowing what your board calls its columns. Pass `--board <id>` (or set `defaultBoard` in the config file) and the tabs become that board's own columns, matched by status id; statuses no column claims land on an **Off board** tab. Hand-written `tabs` in the config file win over both. Rows hang under their epic, carry a type pill, a priority glyph (`▲` high, `▼` low) and how long since they last moved. Closed work from the last fortnight is on the Done tab; `a` loads everything.
 
 `↑↓` to move, `←→` (or `⇥`) to switch tab, `enter` to open, `?` for the legend, `r` to refresh. `q` quits from anywhere; `esc` or `⌫` goes back one level — a prompt, then the issue, then nothing.
 
@@ -94,13 +95,23 @@ jira issue edit ABC-123 --summary 'Better title'
 jira issue assign ABC-123 me               # or a name, or 'none'
 jira issue comment add ABC-123 -          # body from stdin
 jira issue comment list ABC-123
+jira issue comment edit ABC-123 12345 'Actually fixed in 2.1'
+jira issue delete ABC-123                 # asks first; --yes to confirm in scripts
+jira issue rank ABC-1 ABC-2 --before ABC-3
 jira issue link ABC-1 Blocks ABC-2
 jira issue watch add ABC-123
 jira issue worklog add ABC-123 '2h 30m'
+jira issue worklog edit ABC-123 456 --time '3h'
+jira issue worklog delete ABC-123 456
+jira issue remotelink list ABC-123
+jira issue remotelink add ABC-123 https://example.atlassian.net/wiki/spaces/ABC/pages/1234
+jira issue remotelink remove ABC-123 789
 jira issue history ABC-123
 ```
 
 Bodies accept Markdown — paragraphs, headings, lists, fenced code, links and code spans are converted to ADF.
+
+Deletes (`issue delete`, `comment delete`, `worklog delete`, `remotelink remove`) ask before they act; piped or scripted runs refuse unless `--yes` is passed, since there is no undo on Jira's side. `remotelink add` is idempotent: re-adding the same url updates the same link rather than creating duplicates.
 
 ## Projects, boards and sprints
 
@@ -118,6 +129,8 @@ jira epic ABC-100
 
 jira sprint list 42 --state active
 jira sprint issues 1234
+jira sprint add 1234 ABC-1 ABC-2
+jira backlog add ABC-1 ABC-2
 ```
 
 ## Knowing what this instance supports
