@@ -65,6 +65,12 @@ export const BlogIndex = ({
     [entries, tag],
   )
 
+  // The newest post in view leads with its cover at the full column, so the
+  // index opens on a picture. Only with a cover: a lead without one would be
+  // a slab of tag tint.
+  const lead = groups[0]?.[1][0]
+  const leadSlug = lead?.cover ? lead.slug : undefined
+
   return (
     <>
       {/* The filter bar is the index; the row tags are a reversal of an earlier
@@ -101,7 +107,10 @@ export const BlogIndex = ({
           <p className={styles.year}>{year}</p>
           <ul className={styles.list}>
             {posts.map((post) => (
-              <li key={post.slug}>
+              <li
+                key={post.slug}
+                data-lead={post.slug === leadSlug || undefined}
+              >
                 <time dateTime={post.date}>{post.date}</time>
                 {/* The thumb repeats the title's link for the pointer only: one tab
                     stop and one announcement per post. While the cover loads,
@@ -122,7 +131,17 @@ export const BlogIndex = ({
                   aria-hidden="true"
                 >
                   {post.cover && (
-                    <CoverImage src={post.cover.thumb} loading="lazy" decoding="async" />
+                    <CoverImage
+                      src={post.cover.thumb}
+                      {...(post.slug === leadSlug
+                        ? {
+                            srcSet: `${post.cover.thumb} 320w, ${post.cover.hero} 1600w`,
+                            sizes: "(max-width: 580px) calc(100vw - 36px), 754px",
+                            loading: "eager",
+                          }
+                        : { loading: "lazy" })}
+                      decoding="async"
+                    />
                   )}
                 </Link>
                 <h2>

@@ -37,9 +37,11 @@
   composes: tag from "../../../../blog.module.css";
 }
 
-/* Covers are 16 / 9 by convention but not always, so the hero holds that frame
- * and crops into it: the space is reserved before the image loads and an odd
- * cover never shifts the prose below it.
+/* The hero leaves the 754px reading column for up to 1120px, centred on it, so
+ * the cover reads as a picture rather than an inline figure. The frame takes
+ * the cover's own aspect (--ratio, read at render) so the whole illustration
+ * shows instead of a 16:9 crop, and the space is still reserved before the
+ * image loads; 16 / 9 is only the fallback for a cover whose size is unknown.
  *
  * The cover leads the article, above the title: order is what makes it a cover
  * rather than the first figure, and it costs nothing in size. The title then
@@ -53,12 +55,28 @@
  * painting top to bottom, and never loops: motion beside running prose is a
  * distraction, and a cover may be a wordmark that would look odd drifting. */
 .hero {
+  --frame: min(1120px, 100vw - 36px);
   position: relative;
-  margin: 0 0 26px;
-  aspect-ratio: 16 / 9;
+  width: var(--frame);
+  margin: 0 0 34px calc(50% - var(--frame) / 2);
+  aspect-ratio: var(--ratio, 16 / 9);
   overflow: hidden;
-  border-radius: 10px;
+  /* Its own stacking context, so WebKit clips the filtered ground to the
+   * rounded corners too. */
+  isolation: isolate;
+  border-radius: 12px;
   background: var(--bg-2);
+}
+
+/* On a phone the hero goes edge to edge: 18px of gutter either side of a
+ * picture is the frame of a thumbnail, not of a hero. 100vw counts a classic
+ * scrollbar, which #blog-root clips (blog.module.css). */
+@media (max-width: 580px) {
+  .hero {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    border-radius: 0;
+  }
 }
 
 .hero::before {
@@ -94,6 +112,15 @@
   }
 }
 
+/* Once the cover has faded in, the blurred ground goes. Left under it, a
+ * filtered, scaled layer can show as a light hairline where the cover's edge
+ * lands on a fractional pixel, and WebKit can let it leak past the rounded
+ * clip. The delay outlasts the fade, so the swap is never seen. */
+.hero:has(> img[data-loaded])::before {
+  visibility: hidden;
+  transition: visibility 0s 700ms;
+}
+
 /* Reduced motion keeps the fade, which moves nothing, and drops the zoom. */
 @media (scripting: enabled) and (prefers-reduced-motion: reduce) {
   .hero img {
@@ -105,10 +132,11 @@
   }
 }
 
-@media (min-width: 768px) {
-  .hero + .title {
-    font-size: 34px;
-  }
+/* Under a cover that wide, the title has to hold its own as the caption. */
+.hero + .title {
+  font-size: clamp(28px, 4.2vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
 }
 
 /* Prose ------------------------------------------------------------------- */

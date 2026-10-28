@@ -179,6 +179,7 @@ const BlogPostPage = async ({ params }: Params) => {
   const neighbours = neighboursOf(posts, index)
   const body = await renderMarkdown(post.body, components)
   const cover = coverImages(post.cover)
+  const coverSize = cover ? imageDimensions(cover.hero) : null
 
   return (
     <>
@@ -188,9 +189,12 @@ const BlogPostPage = async ({ params }: Params) => {
           <figure
             className={styles.hero}
             style={
-              cover.preview
-                ? ({ "--preview": `url(${cover.preview})` } as CSSProperties)
-                : undefined
+              {
+                ...(cover.preview && { "--preview": `url(${cover.preview})` }),
+                ...(coverSize && {
+                  "--ratio": `${coverSize.width} / ${coverSize.height}`,
+                }),
+              } as CSSProperties
             }
           >
             <CoverImage

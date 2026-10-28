@@ -60,6 +60,9 @@
   background: var(--bg);
   color: var(--fg);
   font-family: var(--sans);
+  /* The post hero sizes off 100vw, which counts a classic scrollbar: clip
+   * that sliver rather than scroll sideways. */
+  overflow-x: clip;
 }
 
 /* The dark palette, written flat and twice: once for the OS preference when no

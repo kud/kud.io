@@ -90,9 +90,36 @@ section:first-of-type .year {
  * column is measured off the content, so no date ever wraps or floats. */
 .list li {
   display: grid;
-  grid-template-columns: 88px 64px minmax(0, 1fr) auto;
+  grid-template-columns: 88px 96px minmax(0, 1fr) auto;
   gap: 18px;
   align-items: center;
+}
+
+/* The lead: the newest post's cover at the full column, then its date, title
+ * and tags stacked under it as the caption. */
+.list li[data-lead] {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.list li[data-lead] > .thumb {
+  order: -1;
+  width: 100%;
+  margin: 0 0 8px;
+  border-radius: 10px;
+}
+
+.list li[data-lead] h2 {
+  font-size: 26px;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+}
+
+.list li[data-lead] .tags {
+  justify-content: flex-start;
 }
 
 .list time {
@@ -137,14 +164,14 @@ section:first-of-type .year {
   composes: tag from "./blog.module.css";
 }
 
-/* 64px at 16:9 is 36px tall: one title line and its leading, so a row with a
- * thumb is barely taller than one without. Big enough to recognise a cover,
- * too small to compete with the title beside it. The hairline keeps white
- * covers (screenshots, wordmarks) from dissolving into the page. */
+/* 96px at 16:9 is 54px tall: enough to recognise the cover, still quieter
+ * than the title beside it, since the lead card carries the big picture. The
+ * hairline keeps white covers (screenshots, wordmarks) from dissolving into
+ * the page. */
 .thumb {
   --tag-hue: var(--fg-3);
   display: block;
-  width: 64px;
+  width: 96px;
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 5px;
@@ -200,7 +227,7 @@ section:first-of-type .year {
 
 @media (max-width: 580px) {
   .list li {
-    grid-template-columns: minmax(0, 1fr) 80px;
+    grid-template-columns: minmax(0, 1fr) 96px;
     gap: 3px 14px;
     align-items: start;
   }
@@ -214,7 +241,7 @@ section:first-of-type .year {
   .list li > .thumb {
     grid-column: 2;
     grid-row: 1 / span 3;
-    width: 80px;
+    width: 96px;
     margin-top: 2px;
   }
 
