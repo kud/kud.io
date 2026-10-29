@@ -6,7 +6,7 @@ import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { DocsBody } from "fumadocs-ui/layouts/docs/page"
 import { getProject, getProjects, type Project } from "@/lib/projects"
-import { getApp, appDisplayName, type AppMeta } from "@/lib/app"
+import { getApp, appDisplayName, type AppMeta, studioUrl } from "@/lib/app"
 import { isAppCategory } from "@/lib/categories"
 import { getLandingMdx } from "@/lib/landings"
 import { getProjectReadme, projectHasDocs } from "@/lib/source"
@@ -56,6 +56,7 @@ const AppLanding = ({ project }: { project: Project }) => {
   const name = appDisplayName(project.slug, app)
   const launchUrl = app.launchUrl ?? project.homepage
   const launchLabel = app.launchLabel ?? "Launch app"
+  const studio = studioUrl(app)
   const tagline = app.tagline ?? project.description
   // SVG icons are glyphs — contain them on the tinted glass; raster icons are
   // full app-icon art, so they fill the squircle edge to edge.
@@ -104,6 +105,16 @@ const AppLanding = ({ project }: { project: Project }) => {
                 rel="noreferrer"
               >
                 {launchLabel} →
+              </a>
+            ) : null}
+            {studio ? (
+              <a
+                href={studio}
+                className={styles.secondary}
+                target="_blank"
+                rel="noreferrer"
+              >
+                On Beans on Toast ↗
               </a>
             ) : null}
             <a
