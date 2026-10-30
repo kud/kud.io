@@ -4,7 +4,7 @@ description: "Coding agents read files for a living. Permission rules, hooks and
 date: "2026-09-04"
 slug: "three-fences-around-a-secret"
 tags: ["engineering","tools"]
-cover: "/blog/three-fences-around-a-secret/8d00d81fde75.jpg"
+cover: "/blog/three-fences-around-a-secret/95bf703bf6b6.jpg"
 updated: "2026-09-04T12:47:00.000Z"
 ---
 
