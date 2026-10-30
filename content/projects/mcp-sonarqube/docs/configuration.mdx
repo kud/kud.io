@@ -1,0 +1,28 @@
+---
+title: ⚙️ Configuration
+description: Host, token and the shared config file.
+---
+
+Configuration is resolved by the `@kud/sonarqube` core, in layers: config file, then environment.
+
+| Setting | Environment (first set wins)                             | File key |
+| ------- | -------------------------------------------------------- | -------- |
+| host    | `SONARQUBE_DASH_HOST`, `SONAR_HOST_URL`                  | `host`   |
+| token   | `SONARQUBE_DASH_TOKEN`, `SONARQUBE_TOKEN`, `SONAR_TOKEN` | `token`  |
+
+The file is `$XDG_CONFIG_HOME/sonarqube-dash-cli/config.json` (default `~/.config/sonarqube-dash-cli/config.json`), shared with the `sonarqube-dash` CLI. There is no default host: the server exits at start-up without one.
+
+```json
+{
+  "mcpServers": {
+    "sonarqube": {
+      "command": "npx",
+      "args": ["-y", "@kud/mcp-sonarqube@latest"],
+      "env": {
+        "SONAR_HOST_URL": "https://sonarqube.example.com",
+        "SONARQUBE_TOKEN": "<your-token>"
+      }
+    }
+  }
+}
+```

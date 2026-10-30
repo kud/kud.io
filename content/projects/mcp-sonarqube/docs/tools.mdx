@@ -1,0 +1,24 @@
+---
+title: 🧰 Tools
+description: Reference for the six SonarQube MCP tools.
+---
+
+Every tool is read-only.
+
+| Tool                     | Description                                                                 |
+| ------------------------ | --------------------------------------------------------------------------- |
+| `sonarqube_quality_gate` | Why is the gate red: status, new-code period, failing conditions first      |
+| `sonarqube_issues`       | Unresolved issues with file, line, rule, severity, type, author, date       |
+| `sonarqube_measures`     | Measures for a project, branch or pull request (ratings as A-E)             |
+| `sonarqube_issue_source` | Source lines around a component and line, as returned by `sonarqube_issues` |
+| `sonarqube_branches`     | Branches with quality gate status and last analysis date                    |
+| `sonarqube_projects`     | List or search the projects the token can see                               |
+
+## Examples
+
+```
+sonarqube_quality_gate  { "project": "my-project", "pullRequest": "42" }
+sonarqube_issues        { "project": "my-project", "newCode": true, "severities": ["BLOCKER", "CRITICAL"], "limit": 20 }
+sonarqube_measures      { "project": "my-project", "metricKeys": ["coverage", "new_coverage", "reliability_rating"] }
+sonarqube_issue_source  { "component": "my-project:src/index.ts", "line": 12, "contextLines": 5 }
+```

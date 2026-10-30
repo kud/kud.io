@@ -9,7 +9,7 @@ opencode's prompt footer row, redrawn as a statusline:
 ~/Projects/site ⎇  main ◈ GitHub Copilot ✻ Claude Sonnet 5                 ✦ Fix the prompt bar colour
 ```
 
-The working directory (parent in pink, folder in blue), the git branch, the provider, the model and, pushed to the right, the session title. While a turn runs, the row shows opencode's quiet busy mark `[⋯]` instead.
+The working directory (parent in pink, folder in blue), the git branch, the provider, the model and, pushed to the right, the session title. While a turn runs, the row shows opencode's busy scanner instead, in the theme's border colour.
 
 Narrow panes drop parts in a fixed order: the title shortens first, then the provider, model and branch go. The path always stays.
 
@@ -19,7 +19,7 @@ A TUI plugin, so it goes in `~/.config/opencode/cli.json`. Name the package, pin
 
 ```json
 {
-  "plugins": ["@kud/opencode-statusline@0.1.0"]
+  "plugins": ["@kud/opencode-statusline@0.1.1"]
 }
 ```
 
@@ -30,7 +30,7 @@ The statusline carries what the sidebar's context block and footer show, so it p
 ```json
 {
   "plugins": [
-    "@kud/opencode-statusline@0.1.0",
+    "@kud/opencode-statusline@0.1.1",
     "-opencode.sidebar.context",
     "-opencode.sidebar.footer",
     "-opencode.home.footer"

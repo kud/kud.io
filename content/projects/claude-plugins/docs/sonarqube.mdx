@@ -1,0 +1,48 @@
+---
+title: 🧭 sonarqube
+description: Read-only SonarQube from Claude — check quality gates, browse issues and measures, view flagged source, and list branches and projects.
+---
+
+The **sonarqube** plugin wraps the
+[`@kud/mcp-sonarqube`](https://www.npmjs.com/package/@kud/mcp-sonarqube) MCP
+server, giving Claude read-only access to SonarQube: check quality gates, browse
+issues and measures, view the source around a flagged issue, and list branches
+and projects. It never changes anything on your server.
+
+## 🧰 Tools
+
+| Tool                     | What it does                                      |
+| ------------------------ | ------------------------------------------------- |
+| `sonarqube_quality_gate` | Why a gate is red: failing conditions first       |
+| `sonarqube_issues`       | Search issues by severity, type, status or new code |
+| `sonarqube_measures`     | Metrics such as coverage, bugs and duplications   |
+| `sonarqube_issue_source` | Source code around a flagged issue                |
+| `sonarqube_branches`     | Branches of a project and their gate status       |
+| `sonarqube_projects`     | Projects visible to your token                    |
+
+## 📦 Install
+
+```
+/plugin install sonarqube@kud --scope user
+```
+
+## 🔧 Configuration
+
+Set these environment variables so the server can reach your SonarQube
+instance:
+
+```
+SONAR_HOST_URL=https://sonarqube.example.com
+SONARQUBE_TOKEN=your-user-token
+```
+
+Generate the token under **My Account → Security** in SonarQube. A project key
+such as `my-project` is passed to each tool call, not stored in the config.
+
+The server also accepts `SONARQUBE_DASH_HOST` / `SONARQUBE_DASH_TOKEN` and
+`SONAR_TOKEN` as alternatives, and can read a shared config file.
+
+## 🔗 Links
+
+- npm: [`@kud/mcp-sonarqube`](https://www.npmjs.com/package/@kud/mcp-sonarqube)
+- GitHub: [kud/mcp-sonarqube](https://github.com/kud/mcp-sonarqube)

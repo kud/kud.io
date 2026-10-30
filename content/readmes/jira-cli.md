@@ -83,8 +83,9 @@ jira issue list                            # yours, most recently updated first
 jira issue list --status 'In Progress'
 jira issue list --project ABC --sprint current
 jira issue view ABC-123
+jira issue view ABC-123 --fields status,assignee,issuelinks
 jira issue transition ABC-123              # list what's available
-jira issue transition ABC-123 'In Review'
+jira issue transition ABC-123 'In Review'  # by transition name or target status
 jira issue open ABC-123
 ```
 
@@ -92,14 +93,16 @@ Writing:
 
 ```sh
 jira issue create -p ABC -t Task -s 'Fix the thing' -b 'Longer **markdown** body'
-jira issue edit ABC-123 --summary 'Better title'
-jira issue assign ABC-123 me               # or a name, or 'none'
+jira issue create -p ABC -t Task -s 'A sub-task' --parent ABC-100 --link Relates:ABC-99
+jira issue edit ABC-123 --summary 'Better title' --assignee me --parent ABC-100
+jira issue assign ABC-123 me               # or a name, an email, an account id, or 'none'
 jira issue comment add ABC-123 -          # body from stdin
 jira issue comment list ABC-123
 jira issue comment edit ABC-123 12345 'Actually fixed in 2.1'
 jira issue delete ABC-123                 # asks first; --yes to confirm in scripts
 jira issue rank ABC-1 ABC-2 --before ABC-3
 jira issue link ABC-1 Blocks ABC-2
+jira issue link list ABC-1
 jira issue watch add ABC-123
 jira issue worklog add ABC-123 '2h 30m'
 jira issue worklog edit ABC-123 456 --time '3h'
@@ -109,6 +112,14 @@ jira issue remotelink add ABC-123 https://example.atlassian.net/wiki/spaces/ABC/
 jira issue remotelink remove ABC-123 789
 jira issue history ABC-123
 ```
+
+`jira issue view` lists the issue's links and subtasks, in plain text and in `--json`. Pass `--fields status,assignee,parent,issuelinks` (comma-separated) to see only those fields — both in plain text and `--json`; the key and summary stay either way, and without `--fields` the view is exactly what it has always been.
+
+People are resolved for you. `issue assign`, and `--assignee` on `create` and `edit`, accept a name or an email: assignable users of the project are searched first, then every user. `me` means you, `none` unassigns, and a raw account id passes straight through. If a name matches several people nothing is assigned — every match is printed on stderr and the command exits non-zero, because a guess is worse than an error.
+
+Parents and links belong to the same commands. `--parent ABC-100` sets a parent on `create` or `edit`, and `edit --parent none` clears it. `--link Relates:ABC-99` (repeatable, `<type>:<KEY>`) links the new issue right after creating it, exactly as `jira issue link <new> <type> <KEY>` would. The link type is checked against your instance's link type names before anything is created, so a typo costs nothing; if creation succeeds but a link fails, the new key and the failure are reported and the exit is non-zero.
+
+`issue transition` takes either a transition name or the status it leads to (`Start Progress` or `In Progress`), matched case-insensitively and by transition id. With no argument it lists the transitions as `name → target status`.
 
 Bodies accept Markdown — paragraphs, headings, lists, fenced code, links and code spans are converted to ADF.
 
@@ -206,6 +217,8 @@ Anything not covered:
 jira api /rest/api/3/myself
 jira api /rest/api/3/issue/ABC-123/watchers -X POST -d '{"accountId":"..."}'
 ```
+
+A call returning 2xx with an empty body — a 204, or a 201 with no content — prints nothing and exits 0, rather than printing the string `null`; that way `null` only ever means Jira really answered null. A non-2xx is still an error, showing the body.
 
 ## Licence
 

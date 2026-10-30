@@ -1,0 +1,24 @@
+---
+title: 👋 Introduction
+description: A read-only SonarQube MCP server that answers "why is the gate red".
+---
+
+A SonarQube MCP server with **6 read-only tools**, built on the [`@kud/sonarqube`](https://github.com/kud/sonarqube) core. It turns a failing quality gate into a short answer: the status, the new-code period, and the failing conditions first, with ratings shown as A to E.
+
+## ✨ Features
+
+- **🚦 Quality gate explainer** - Status word, new-code period, failing conditions first
+- **🐞 Issue search** - File, line, rule, severity, type, message, author and date
+- **📏 Measures** - Coverage, bugs, ratings for a project, branch or pull request
+- **🔎 Source snippets** - The lines around an issue, with the focus line marked
+- **🔐 Safe auth** - The token is sent as basic-auth username and never returned or logged
+
+## 🚀 Quick Start
+
+```sh
+SONAR_HOST_URL=https://sonarqube.example.com \
+SONARQUBE_TOKEN=<your-token> \
+npx --yes @kud/mcp-sonarqube@latest
+```
+
+See [Tools](/projects/mcp-sonarqube/docs/tools) and [Configuration](/projects/mcp-sonarqube/docs/configuration).
