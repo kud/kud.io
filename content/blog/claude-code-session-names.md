@@ -4,7 +4,7 @@ description: "Starting Claude Code sessions with a fixed name left my resume pic
 date: "2026-09-29"
 slug: "claude-code-session-names"
 tags: ["engineering","tools"]
-cover: "/blog/claude-code-session-names/838cc25d2fc6.jpg"
+cover: "/blog/claude-code-session-names/cbec7569a10e.jpg"
 updated: "2026-09-29T16:19:00.000Z"
 ---
 
