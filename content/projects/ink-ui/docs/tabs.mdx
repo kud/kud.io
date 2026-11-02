@@ -26,7 +26,7 @@ import type { TabItem } from "@kud/ink-ui"
 | `label`   | `string`         | Visible tab label                                                                                                                                                                                      |
 | `icon`    | `string`         | Optional single glyph drawn between the marker gutter and the label; takes the label's style, and the active underline spans icon, space and label, stopping before the count chip                     |
 | `count`   | `number \| null` | Optional count drawn as a soft chip beside the label; `null` (not loaded yet) draws a chip holding `–` at a two-digit width                                                                            |
-| `warning` | `number`         | Optional count of things in the tab that warn, drawn after the count chip as the warning mark and the number in the warning colour (`QA 27 ⚠ 1`); `0` or absent draws nothing, and it survives folding |
+| `warning` | `number`         | Optional count of things in the tab that warn, drawn inside the count chip, after the count, as the warning mark and the number in the warning colour (`QA (27 ⚠ 1)`); `0` or absent draws nothing, and it survives folding |
 | `group`   | `string`         | Optional group name; a divider is drawn between tabs whose group differs from the previous tab                                                                                                         |
 
 ## 💡 Examples
