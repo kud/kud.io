@@ -219,7 +219,7 @@ jira automation disable 0192e5ac-0e25-71de-ba7b-d972e6a2049a
 jira automation enable 0192e5ac-0e25-71de-ba7b-d972e6a2049a
 ```
 
-These use Atlassian's [Automation REST API](https://developer.atlassian.com/cloud/automation/rest/api-group-rule-management/) with the same classic API token as everything else; nothing new to configure. The account behind it needs the **Jira administrator** global permission (Administer Jira): Jira answers a project admin with a bare 403, even for rules scoped to that project, and the CLI says so and exits 4.
+These use Atlassian's [Automation REST API](https://developer.atlassian.com/cloud/automation/rest/api-group-rule-management/) with the same classic API token as everything else; nothing new to configure. The account behind it needs the **Jira administrator** global permission (Administer Jira): Jira answers a project admin with a bare 403, even for rules scoped to that project, and the CLI says so and exits 4. Project admins can still manage their project's rules in the Jira web UI.
 
 `create` and `update` take the shape `get` prints, `{ "rule": { … } }`, or a bare rule. The cloud ID is read from the site's `/_edge/tenant_info`; set `ATLASSIAN_CLOUD_ID` to skip that call. Requests go through the site's gateway by default; `--host api` (or `ATLASSIAN_AUTOMATION_HOST=api`) sends them to `api.atlassian.com` instead.
 
