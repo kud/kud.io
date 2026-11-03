@@ -14,6 +14,7 @@ const ECOSYSTEM_META: Record<string, { name: string }> = {
   pcloud: { name: "pCloud" },
   "macos-media-keys": { name: "macOS Media Keys" },
   foxhop: { name: "Fox Hop" },
+  sonarqube: { name: "SonarQube" },
 }
 
 export const ecosystemName = (key: string): string =>
