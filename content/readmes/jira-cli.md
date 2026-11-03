@@ -209,6 +209,21 @@ jira fields points
 
 Named fields are requested on every search and shown in `issue view`.
 
+## Automation rules
+
+```sh
+jira automation list --project SHOP          # --state ENABLED|DISABLED, --limit, --json
+jira automation get 0192e5ac-0e25-71de-ba7b-d972e6a2049a > rule.json
+jira automation update 0192e5ac-0e25-71de-ba7b-d972e6a2049a --file rule.json
+jira automation create --file rule.json      # prints the new rule's UUID; - reads stdin
+jira automation disable 0192e5ac-0e25-71de-ba7b-d972e6a2049a
+jira automation enable 0192e5ac-0e25-71de-ba7b-d972e6a2049a
+```
+
+These use Atlassian's [Automation REST API](https://developer.atlassian.com/cloud/automation/rest/api-group-rule-management/) with the same classic API token as everything else; nothing new to configure. The account behind it needs the **Jira administrator** global permission (Administer Jira): Jira answers a project admin with a bare 403, even for rules scoped to that project, and the CLI says so and exits 4.
+
+`create` and `update` take the shape `get` prints, `{ "rule": { … } }`, or a bare rule. The cloud ID is read from the site's `/_edge/tenant_info`; set `ATLASSIAN_CLOUD_ID` to skip that call. Requests go through the site's gateway by default; `--host api` (or `ATLASSIAN_AUTOMATION_HOST=api`) sends them to `api.atlassian.com` instead.
+
 ## Escape hatch
 
 Anything not covered:
