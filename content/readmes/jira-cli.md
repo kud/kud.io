@@ -92,15 +92,18 @@ jira issue open ABC-123
 Writing:
 
 ```sh
-jira issue create -p ABC -t Task -s 'Fix the thing' -b 'Longer **markdown** body'
+jira issue create -p ABC -t Task -s 'Fix the thing' -b 'Longer **markdown** body' --status 'In Progress'
 jira issue create -p ABC -t Task -s 'A sub-task' --parent ABC-100 --link Relates:ABC-99
 jira issue edit ABC-123 --summary 'Better title' --assignee me --parent ABC-100
+jira issue edit ABC-123 --prepend-description '**Update:** finished QA'
 jira issue assign ABC-123 me               # or a name, an email, an account id, or 'none'
 jira issue comment add ABC-123 -          # body from stdin
 jira issue comment list ABC-123
+jira issue comment list ABC-123 --last 5  # the 5 most recent, oldest first
 jira issue comment edit ABC-123 12345 'Actually fixed in 2.1'
 jira issue delete ABC-123                 # asks first; --yes to confirm in scripts
 jira issue rank ABC-1 ABC-2 --before ABC-3
+jira issue rank ABC-1 ABC-2 --top --jql 'project = ABC AND sprint = 42'
 jira issue link ABC-1 Blocks ABC-2
 jira issue link list ABC-1
 jira issue watch add ABC-123
@@ -119,7 +122,13 @@ People are resolved for you. `issue assign`, and `--assignee` on `create` and `e
 
 Parents and links belong to the same commands. `--parent ABC-100` sets a parent on `create` or `edit`, and `edit --parent none` clears it. `--link Relates:ABC-99` (repeatable, `<type>:<KEY>`) links the new issue right after creating it, exactly as `jira issue link <new> <type> <KEY>` would. The link type is checked against your instance's link type names before anything is created, so a typo costs nothing; if creation succeeds but a link fails, the new key and the failure are reported and the exit is non-zero.
 
+`create --status 'In Progress'` moves the new issue to that status right after creation and any links. If the fresh issue already sits in that status nothing is sent, and if the move fails the key and the reason are reported with a non-zero exit, as with links.
+
+`edit --prepend-description` and `--append-description` splice markdown onto the start or end of an existing description without touching it: the current ADF nodes are preserved and the converted markdown is added around them. Both may be combined; with `--body` neither is allowed. Like `-b`, a value of `-` reads stdin.
+
 `issue transition` takes either a transition name or the status it leads to (`Start Progress` or `In Progress`), matched case-insensitively and by transition id. With no argument it lists the transitions as `name → target status`.
+
+`issue rank --top --jql <jql>` ranks the keys above the first issue of the JQL scope. The JQL must order by rank (`ORDER BY Rank ASC` is appended when missing, and a JQL ordered any other way is refused, since its first result would not be the top). When the keys already occupy the top in rank order nothing is sent.
 
 Bodies accept Markdown — paragraphs, headings, lists, fenced code, links and code spans are converted to ADF.
 
@@ -134,6 +143,9 @@ jira project components ABC
 jira project statuses ABC
 
 jira board list
+jira board list --project ABC
+jira board view 42                        # columns, their statuses, and the board's filter
+jira board view 42 --json
 jira board issues 42
 jira board backlog 42
 jira board epics 42
