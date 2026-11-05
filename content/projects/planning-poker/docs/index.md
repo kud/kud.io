@@ -5,7 +5,7 @@ description: "Estimate user stories together in real time — free, no account r
 
 ## 🌟 Features
 
-- 🔗 **Real-time rooms** — a tiny [PartyKit](https://www.partykit.io/) room server on Cloudflare's edge keeps everyone in sync over WebSockets; rooms survive host refreshes and reconnects
+- 🔗 **Real-time rooms** — a tiny [PartyServer](https://github.com/cloudflare/partykit/tree/main/packages/partyserver) room server on Cloudflare Workers keeps everyone in sync over WebSockets; rooms survive host refreshes and reconnects
 - 🎟 **Friendly room codes** — six-character codes (e.g. `PKD8QC`) that are easy to read out loud or paste in chat
 - 🃏 **Multiple deck presets** — Fibonacci (0–21 + ? + ☕), Numeric, T-shirt (XS–XXL), or a fully custom deck; your favourite is remembered for next time
 - 🎰 **Casino-style reveal** — votes stay face-down on the felt until the host flips them all at once
@@ -28,8 +28,8 @@ git clone https://github.com/kud/planning-poker.git
 cd planning-poker
 npm install
 
-# Start the PartyKit room server and the Next.js dev server
-npm run party:dev   # terminal 1 — ws://127.0.0.1:1999
+# Start the room server and the Next.js dev server
+npm run party:dev   # terminal 1 — ws://127.0.0.1:8787
 npm run dev         # terminal 2 — http://localhost:3000
 ```
 
@@ -49,11 +49,11 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 Host    ◄──────────────┐
                        │ WebSockets
 Guest 1 ◄──────────────┤
-Guest 2 ◄──────────────┼──► PartyKit room server (Cloudflare edge)
+Guest 2 ◄──────────────┼──► PartyServer room server (Cloudflare Workers)
 Guest 3 ◄──────────────┘    └── authoritative room state
 ```
 
-Each room is a stateful [PartyKit](https://www.partykit.io/) server running on Cloudflare's edge (free tier). Every participant — host included — connects over a WebSocket; the server holds the authoritative room state and broadcasts every change to all connections. The deck and host identity are persisted in room storage, so the room survives refreshes and reconnects.
+Each room is a stateful [PartyServer](https://github.com/cloudflare/partykit/tree/main/packages/partyserver) Durable Object running on Cloudflare Workers (free tier). Every participant — host included — connects over a WebSocket; the server holds the authoritative room state and broadcasts every change to all connections. The deck and host identity are persisted in Durable Object storage, so the room survives refreshes and reconnects.
 
 Hosting is a capability, not a page: creating a room generates a secret kept in `localStorage`, and whoever presents it to the room server gets the host controls. No accounts, no database.
 
@@ -81,7 +81,7 @@ Hosting is a capability, not a page: creating a room generates a secret kept in 
 
 ```
 party/
-└── index.ts              # PartyKit room server — authoritative state
+└── index.ts              # PartyServer room server — authoritative state
 src/
 ├── app/
 │   ├── page.tsx          # Landing — create or join
@@ -112,8 +112,8 @@ src/
 | Script                 | Description                                                       |
 | ---------------------- | ----------------------------------------------------------------- |
 | `npm run dev`          | Start Next.js dev server with HMR                                 |
-| `npm run party:dev`    | Start the PartyKit room server locally                            |
-| `npm run party:deploy` | Deploy the room server to PartyKit                                |
+| `npm run party:dev`    | Start the room server locally (wrangler dev)                       |
+| `npm run party:deploy` | Deploy the room server to Cloudflare Workers (wrangler deploy)     |
 | `npm run crew -- CODE` | Inject auto-voting fake users for testing (`--count N`, `--prod`) |
 | `npm run build`        | Production build                                                  |
 | `npm run start`        | Serve the production build                                        |
@@ -122,8 +122,7 @@ src/
 ### Configuration
 
 The client connects to `NEXT_PUBLIC_PARTYKIT_HOST` when set, and falls back to
-`127.0.0.1:1999` in development and `planning-poker.kud.partykit.dev` in
-production builds.
+`127.0.0.1:8787` in development and `planning-poker.kud-space.workers.dev` in production builds.
 
 ---
 
@@ -133,7 +132,7 @@ production builds.
 | ------------------------------------------------------------ | ---------------------------------- |
 | [Next.js 16](https://nextjs.org/)                            | React framework & routing          |
 | [React 19](https://react.dev/)                               | UI rendering                       |
-| [PartyKit](https://www.partykit.io/)                         | Real-time room server (WebSockets) |
+| [PartyServer](https://github.com/cloudflare/partykit/tree/main/packages/partyserver) | Real-time room server (WebSockets) on Cloudflare Workers |
 | [Framer Motion 12](https://www.framer.com/motion/)           | Card flip & flying-card animations |
 | [Base UI](https://base-ui.com/)                              | Unstyled accessible primitives     |
 | [Tailwind CSS v4](https://tailwindcss.com/)                  | Utility-first styling              |
