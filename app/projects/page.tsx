@@ -4,7 +4,7 @@ import { BackLink } from "@/components/back-link"
 import { getProjects } from "@/lib/projects"
 import { getEcosystems } from "@/lib/ecosystems"
 import { getIcons } from "@/lib/icons"
-import { getApp, appDisplayName } from "@/lib/app"
+import { getApp, appDisplayName, isProduct } from "@/lib/app"
 import { isAppCategory, groupByCategory } from "@/lib/categories"
 import { Blueprint } from "@/components/blueprint"
 import {
@@ -19,7 +19,7 @@ import styles from "./page.module.css"
 export const metadata: Metadata = {
   title: "Projects — Erwann Mest",
   description:
-    "Open-source command-line tools, MCP servers, and terminal design systems designed and maintained by Erwann Mest (kud).",
+    "Everything Erwann Mest (kud) has built: how the beansontoast apps are made, and the open-source CLIs, MCP servers, libraries and extensions he maintains.",
 }
 
 const AVATAR =
@@ -32,8 +32,13 @@ const ProjectsIndex = async () => {
   const withIcons = projects.map((project) => {
     if (isAppCategory(project.category)) {
       const app = getApp(project.slug)
+      // A beansontoast product moves into its own section and reads as a row:
+      // kud.io indexes its engineering record, it is not a second launcher.
+      const product = isProduct(app)
       return {
         ...project,
+        category: product ? "product" : project.category,
+        description: (product ? app.summary : null) ?? project.description,
         name: appDisplayName(project.slug, app),
         icon: app.icon ?? icons[project.slug] ?? null,
         accent: app.accent ?? null,
@@ -66,11 +71,13 @@ const ProjectsIndex = async () => {
             Projects <span className={styles.titleBy}>by kud</span>
           </h1>
           <p className={styles.intro}>
-            Open-source tools I design and build: command-line apps, MCP
-            servers, and terminal design systems. Each one is shaped by the same
-            care: <strong>developer experience</strong> first, a real passion
-            for polish, and neat, considered interfaces, down to the last
-            detail.
+            Everything I&apos;ve built, in two kinds. <strong>Products</strong>{" "}
+            are apps for everyone, published under{" "}
+            <a href="https://beansontoast.app/">beansontoast</a>: you use them
+            there, and here is how each one is made. <strong>Tools</strong> are
+            for people who make software: command-line apps, MCP servers,
+            libraries and extensions, all open source, with their documentation
+            on this site.
           </p>
           <div className={styles.social}>
             <a href="https://github.kud.io/" target="_blank" rel="noreferrer">
@@ -90,7 +97,7 @@ const ProjectsIndex = async () => {
           </div>
           {projects.length > 0 ? (
             <p className={styles.count}>
-              {projects.length} open-source projects · always shipping
+              {projects.length} projects · always shipping
             </p>
           ) : null}
         </div>

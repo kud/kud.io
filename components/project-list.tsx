@@ -297,11 +297,13 @@ export const ProjectList = ({
                 <section
                   key={group.key}
                   id={
-                    group.key === "app"
-                      ? "apps"
-                      : group.key === "desktop"
-                        ? "desktop"
-                        : undefined
+                    group.key === "product"
+                      ? "products"
+                      : group.key === "app"
+                        ? "apps"
+                        : group.key === "desktop"
+                          ? "desktop"
+                          : undefined
                   }
                   className={styles.section}
                   data-cat={group.key}

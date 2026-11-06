@@ -918,3 +918,124 @@
   border-top: 1px solid var(--border);
   margin: 44px 0;
 }
+
+/* Product record ------------------------------------------------------------
+   A beansontoast product's page on kud.io: a plain record of how it was built,
+   read top to bottom, rather than the centred pitch of an app landing. */
+.recordIcon {
+  display: inline-grid;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 20px;
+  border-radius: 27%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.recordIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.record {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 56px 24px 96px;
+  display: grid;
+  gap: 40px;
+}
+
+.recordBlock {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 8px 24px;
+  align-items: start;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.recordLabel {
+  margin: 0;
+  padding-top: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--primary-light);
+}
+
+.recordStack {
+  justify-content: flex-start;
+  margin: 0;
+}
+
+.decisions,
+.writing {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.decisions li {
+  position: relative;
+  padding-left: 18px;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.decisions li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--app-accent) 70%, var(--text));
+}
+
+.writing li {
+  display: grid;
+  gap: 4px;
+}
+
+.writing a {
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--app-accent) 55%, transparent);
+  text-underline-offset: 3px;
+}
+
+.writing a:hover {
+  text-decoration-color: currentColor;
+}
+
+.writing span {
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+.recordFoot {
+  margin: 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 14.5px;
+}
+
+.recordFoot a {
+  color: var(--text);
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 560px) {
+  .recordBlock {
+    grid-template-columns: 1fr;
+  }
+}

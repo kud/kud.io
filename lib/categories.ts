@@ -12,10 +12,17 @@ export const isAppCategory = (category: string): boolean =>
 // just move or add it here; there's nothing to renumber. Membership is driven
 // entirely by the repo topics on GitHub.
 export const CATEGORY_META: Record<string, { name: string; blurb: string }> = {
+  // Not a GitHub topic: app.json's `beansontoast` field moves a `kud-site-app`
+  // repo here (app/projects/page.tsx), so it lists as a record, not a launcher.
+  product: {
+    name: "Products, made under beansontoast",
+    blurb:
+      "Apps for everyone, each at its own beansontoast.app address. Each page here is the engineering record: the stack, the decisions behind it, the source and what I've written about it.",
+  },
   app: {
     name: "Apps",
     blurb:
-      "Web apps I design and ship end to end — open them straight from here, or read the story behind each one.",
+      "Small web apps of my own, outside the beansontoast label — open them straight from here, or read the story behind each one.",
   },
   desktop: {
     name: "Desktop Apps",

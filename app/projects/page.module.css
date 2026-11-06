@@ -173,6 +173,11 @@
   line-height: 1.7;
 }
 
+.intro a {
+  color: var(--text);
+  text-underline-offset: 3px;
+}
+
 .intro strong {
   color: var(--text);
   font-weight: 600;

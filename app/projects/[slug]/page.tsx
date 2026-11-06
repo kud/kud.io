@@ -6,7 +6,16 @@ import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { DocsBody } from "fumadocs-ui/layouts/docs/page"
 import { getProject, getProjects, type Project } from "@/lib/projects"
-import { getApp, appDisplayName, type AppMeta } from "@/lib/app"
+import {
+  getApp,
+  appDisplayName,
+  isProduct,
+  productHost,
+  productUrl,
+  type AppMeta,
+} from "@/lib/app"
+import { getAllPosts } from "@/lib/blog"
+import { postPath } from "@/lib/blog-path"
 import { isAppCategory } from "@/lib/categories"
 import { getLandingMdx } from "@/lib/landings"
 import { getProjectReadme, projectHasDocs } from "@/lib/source"
@@ -27,11 +36,13 @@ export const generateMetadata = async ({
   const { slug } = await params
   const project = await getProject(slug)
   if (!project) return { title: slug }
-  const name = isAppCategory(project.category)
-    ? appDisplayName(project.slug, getApp(project.slug))
-    : project.name
+  const app = isAppCategory(project.category) ? getApp(project.slug) : null
+  const name = app ? appDisplayName(project.slug, app) : project.name
   const title = `${name} — Erwann Mest`
-  const description = project.description ?? undefined
+  const description =
+    (app && isProduct(app) ? app.summary : null) ??
+    project.description ??
+    undefined
   // The opengraph-image.tsx / twitter-image.tsx in this segment are attached by
   // Next automatically; here we just override the canonical URL so the share card
   // points at the project, not the site root inherited from the root metadata.
@@ -211,6 +222,137 @@ const AppLanding = ({ project }: { project: Project }) => {
           ) : null}
         </section>
       ) : null}
+    </div>
+  )
+}
+
+// Product record — for a beansontoast product. The product's own page, at its
+// beansontoast.app subdomain, answers "what can this do for me?"; this one answers
+// "what did Erwann build here?": a one-line summary, the stack, the decisions
+// behind it, and links to the product, the source, the docs and related writing.
+// No tagline, feature list or screenshots: that would be a second landing.
+const ProductRecord = async ({ project }: { project: Project }) => {
+  const app = getApp(project.slug)
+  const name = appDisplayName(project.slug, app)
+  const url = productUrl(app)
+  const host = productHost(app)
+  const hasDocs = projectHasDocs(project.slug)
+  const posts = await getAllPosts()
+  const writing = app.writing
+    .map((slug) => posts.find((post) => post.slug === slug))
+    .filter((post) => post !== undefined)
+  const accentStyle = app.accent
+    ? ({ "--app-accent": app.accent } as CSSProperties)
+    : undefined
+
+  return (
+    <div className={styles.appLanding} style={accentStyle}>
+      <section className={styles.hero}>
+        <div className={styles.heroGrid} />
+        <MorphLink href="/projects#products" className={styles.back}>
+          ← Projects
+        </MorphLink>
+        <div className={styles.heroContent}>
+          {app.icon ? (
+            <span className={styles.recordIcon}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={app.icon} alt="" />
+            </span>
+          ) : null}
+          <div className={styles.badge}>
+            <span className={styles.badgeDot} />
+            {project.license ? `${project.license} · ` : ""}A beansontoast
+            product
+          </div>
+          <h1
+            className={`${styles.title} ${styles.titleReadme}`}
+            style={{ viewTransitionName: `project-${project.slug}` }}
+          >
+            {name}
+          </h1>
+          {app.summary ? <p className={styles.tagline}>{app.summary}</p> : null}
+          <div className={styles.actions}>
+            {url ? (
+              <a
+                href={url}
+                className={styles.primary}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open {host} ↗
+              </a>
+            ) : null}
+            <a
+              href={project.repoUrl}
+              className={styles.secondary}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Source ↗
+            </a>
+            {hasDocs ? (
+              <Link
+                href={`/projects/${project.slug}/docs`}
+                className={styles.secondary}
+              >
+                Documentation →
+              </Link>
+            ) : null}
+          </div>
+        </div>
+      </section>
+
+      <div className={styles.record}>
+        {app.stack.length > 0 ? (
+          <section className={styles.recordBlock}>
+            <h2 className={styles.recordLabel}>Stack</h2>
+            <ul className={`${styles.stack} ${styles.recordStack}`}>
+              {app.stack.map((tech) => (
+                <li key={tech}>{tech}</li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        {app.decisions.length > 0 ? (
+          <section className={styles.recordBlock}>
+            <h2 className={styles.recordLabel}>Decisions</h2>
+            <ul className={styles.decisions}>
+              {app.decisions.map((decision) => (
+                <li key={decision}>{decision}</li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        {writing.length > 0 ? (
+          <section className={styles.recordBlock}>
+            <h2 className={styles.recordLabel}>Writing</h2>
+            <ul className={styles.writing}>
+              {writing.map((post) => (
+                <li key={post.slug}>
+                  <Link href={postPath(post)}>{post.title}</Link>
+                  <span>{post.description}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        <p className={styles.recordFoot}>
+          What it does, and how to use it, lives on the product&apos;s own page
+          {url ? (
+            <>
+              {" "}
+              at{" "}
+              <a href={url} target="_blank" rel="noreferrer">
+                {host}
+              </a>
+            </>
+          ) : null}
+          .
+        </p>
+      </div>
     </div>
   )
 }
@@ -409,16 +551,20 @@ const ProjectLanding = async ({
 
   const authored = getLandingMdx(slug)
   const app = isAppCategory(project.category) ? getApp(slug) : null
-  const showAppLanding = app !== null && appHasContent(app)
+  const showRecord = app !== null && isProduct(app)
+  const showAppLanding = app !== null && !showRecord && appHasContent(app)
   // The AppLanding hero shows the app icon itself, so the README icon is hidden
   // there; an app-like project that falls back to the README still gets its icon.
-  const icon = showAppLanding
-    ? null
-    : ((await getIcons())[slug] ?? project.icon ?? null)
+  const icon =
+    showAppLanding || showRecord
+      ? null
+      : ((await getIcons())[slug] ?? project.icon ?? null)
 
   return (
     <main className={styles.page}>
-      {showAppLanding ? (
+      {showRecord ? (
+        <ProductRecord project={project} />
+      ) : showAppLanding ? (
         <AppLanding project={project} />
       ) : authored ? (
         <MDXRemote

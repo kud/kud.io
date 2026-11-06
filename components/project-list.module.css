@@ -563,6 +563,9 @@
   scroll-margin-top: 32px;
 }
 
+.section[data-cat="product"] {
+  --accent: #e2683c;
+}
 .section[data-cat="cli"] {
   --accent: #f59e0b;
 }

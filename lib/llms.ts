@@ -1,6 +1,6 @@
 import { getAllPosts, postPath } from "@/lib/blog"
 import { getProjects, type Project } from "@/lib/projects"
-import { getApp, appDisplayName } from "@/lib/app"
+import { getApp, appDisplayName, productUrl } from "@/lib/app"
 import { groupByCategory, isAppCategory } from "@/lib/categories"
 import { source } from "@/lib/source"
 
@@ -63,14 +63,19 @@ const stripLeadingEmoji = (text: string) =>
 
 const projectPage = (project: Project) => `${SITE}/projects/${project.slug}`
 
-// Apps are linked to where they run, not to their kud.io write-up: the same
-// launchUrl ?? homepage fallback the app landing uses for its Launch button.
+// Apps are linked to where they run, not to their kud.io write-up: a
+// beansontoast product's subdomain, else the launchUrl ?? homepage fallback the
+// app landing uses for its Launch button.
 const toAppLink = (project: Project): LlmsLink => {
   const app = getApp(project.slug)
   return {
     name: appDisplayName(project.slug, app),
-    url: app.launchUrl ?? project.homepage ?? projectPage(project),
-    notes: app.tagline ?? project.description,
+    url:
+      productUrl(app) ??
+      app.launchUrl ??
+      project.homepage ??
+      projectPage(project),
+    notes: app.summary ?? app.tagline ?? project.description,
   }
 }
 

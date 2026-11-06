@@ -5,13 +5,25 @@ import { capitalCase } from "change-case"
 export type Feature = { title: string; description: string }
 
 // Curated content for a `kud-site-app` project — the deployed web apps that lead
-// the projects list as big liquid-glass launcher tiles and get their own landing.
+// the projects list as big liquid-glass launcher tiles and get their own page.
 // Kept in content/projects/<slug>/app.json so it survives sync-content runs (the
 // GitHub icon detector never matches these PWAs), and read server-side only.
+//
+// Two shapes share the file:
+// - A beansontoast product sets `beansontoast` (its subdomain). The product's
+//   pitch lives at <subdomain>.beansontoast.app; kud.io keeps an engineering
+//   record only: `summary`, `stack`, `decisions`, `writing`. It never carries a
+//   tagline, a feature list or screenshots, which would make it a second landing.
+// - Any other app keeps the landing fields (`tagline`, `why`, `how`, `features`,
+//   `screenshots`, `launchUrl`, the CTA copy).
 export type AppMeta = {
   name: string | null
   icon: string | null
   accent: string | null
+  beansontoast: string | null
+  summary: string | null
+  decisions: string[]
+  writing: string[]
   tagline: string | null
   why: string | null
   how: string | null
@@ -28,6 +40,10 @@ const EMPTY: AppMeta = {
   name: null,
   icon: null,
   accent: null,
+  beansontoast: null,
+  summary: null,
+  decisions: [],
+  writing: [],
   tagline: null,
   why: null,
   how: null,
@@ -51,6 +67,10 @@ export const getApp = (slug: string): AppMeta => {
       name: data.name ?? null,
       icon: data.icon ?? null,
       accent: data.accent ?? null,
+      beansontoast: data.beansontoast ?? null,
+      summary: data.summary ?? null,
+      decisions: data.decisions ?? [],
+      writing: data.writing ?? [],
       tagline: data.tagline ?? null,
       why: data.why ?? null,
       how: data.how ?? null,
@@ -72,3 +92,13 @@ export const getApp = (slug: string): AppMeta => {
 // default is the slug run through capitalCase.
 export const appDisplayName = (slug: string, app: AppMeta): string =>
   app.name ?? capitalCase(slug)
+
+// Products made under the beansontoast label: they live at their own subdomain,
+// and kud.io holds only how they were built.
+export const isProduct = (app: AppMeta): boolean => app.beansontoast !== null
+
+export const productUrl = (app: AppMeta): string | null =>
+  app.beansontoast ? `https://${app.beansontoast}.beansontoast.app` : null
+
+export const productHost = (app: AppMeta): string | null =>
+  app.beansontoast ? `${app.beansontoast}.beansontoast.app` : null
