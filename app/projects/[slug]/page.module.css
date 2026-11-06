@@ -923,10 +923,10 @@
    A beansontoast product's page on kud.io: a plain record of how it was built,
    read top to bottom, rather than the centred pitch of an app landing. */
 .recordIcon {
-  display: inline-grid;
+  display: grid;
   width: 72px;
   height: 72px;
-  margin-bottom: 20px;
+  margin: 0 auto 20px;
   border-radius: 27%;
   overflow: hidden;
   border: 1px solid var(--border);

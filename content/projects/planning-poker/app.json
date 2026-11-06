@@ -2,7 +2,7 @@
   "icon": "/apps/planning-poker.png",
   "accent": "#6366f1",
   "beansontoast": "planning-poker",
-  "summary": "Real-time planning poker for refinement sessions: open a link, share the room, estimate. No account.",
+  "summary": "Real-time planning poker in a shared link, no account.",
   "stack": ["Next.js", "PartyKit", "WebSockets", "PWA", "TypeScript"],
   "decisions": [
     "PartyKit keeps every participant's vote in sync over WebSockets.",

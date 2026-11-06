@@ -2,7 +2,7 @@
   "icon": "/apps/globetrotter.png",
   "accent": "#3b82f6",
   "beansontoast": "globetrotter",
-  "summary": "A personal atlas: the countries you've been to, a journal for each, and the ones still to come, on a flat map or a 3D globe.",
+  "summary": "A personal atlas of where you've been, on a flat map or a 3D globe.",
   "stack": ["Next.js", "React", "Three.js", "D3", "Zustand", "TypeScript"],
   "decisions": [
     "Two renderers over one dataset: a D3 SVG Mercator map and a WebGL globe through react-globe.gl and Three.js, switching views without converting data.",
