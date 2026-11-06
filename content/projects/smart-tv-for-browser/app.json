@@ -2,7 +2,7 @@
   "name": "Smart TV for Browser",
   "icon": "/apps/smart-tv-for-browser.png",
   "accent": "#00bff0",
-  "beansontoast": "smart-tv",
+  "beansontoast": "tv",
   "summary": "A smart-TV home screen in the browser, with a phone as the remote.",
   "stack": [
     "Next.js",
