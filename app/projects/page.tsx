@@ -32,8 +32,8 @@ const ProjectsIndex = async () => {
   const withIcons = projects.map((project) => {
     if (isAppCategory(project.category)) {
       const app = getApp(project.slug)
-      // A beansontoast product moves into its own section and reads as a row:
-      // kud.io indexes its engineering record, it is not a second launcher.
+      // A beansontoast product moves into its own section, whose tiles open
+      // its engineering record on kud.io rather than the app itself.
       const product = isProduct(app)
       return {
         ...project,

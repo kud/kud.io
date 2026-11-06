@@ -254,7 +254,10 @@ const ProductRecord = async ({ project }: { project: Project }) => {
         </MorphLink>
         <div className={styles.heroContent}>
           {app.icon ? (
-            <span className={styles.recordIcon}>
+            <span
+              className={styles.recordIcon}
+              style={{ viewTransitionName: `app-icon-${project.slug}` }}
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={app.icon} alt="" />
             </span>

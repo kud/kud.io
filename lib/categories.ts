@@ -2,7 +2,9 @@
 // `app` is deployed web apps/PWAs, `desktop` is native desktop apps (e.g. Tauri).
 // Kept in its own dependency-free module so the client ProjectList can import it
 // without pulling server-only code from lib/projects.
-export const APP_CATEGORIES = new Set(["app", "desktop"])
+// `product` is not a topic: it is a `kud-site-app` whose app.json names a
+// beansontoast subdomain (see CATEGORY_META below); its tile opens the record.
+export const APP_CATEGORIES = new Set(["product", "app", "desktop"])
 
 export const isAppCategory = (category: string): boolean =>
   APP_CATEGORIES.has(category)
@@ -13,7 +15,7 @@ export const isAppCategory = (category: string): boolean =>
 // entirely by the repo topics on GitHub.
 export const CATEGORY_META: Record<string, { name: string; blurb: string }> = {
   // Not a GitHub topic: app.json's `beansontoast` field moves a `kud-site-app`
-  // repo here (app/projects/page.tsx), so it lists as a record, not a launcher.
+  // repo here (app/projects/page.tsx). Its tiles open the engineering record.
   product: {
     name: "Products, made under beansontoast",
     blurb:
