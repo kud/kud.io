@@ -171,8 +171,12 @@ and it will show the gap before you have finished filling it.
 
 App icons are the other website-side asset: a 512×512 PNG at `public/apps/<slug>.png`,
 referenced from `app.json` as `/apps/<slug>.png`. The GitHub icon detector never
-matches a PWA, so this one is copied in by hand — usually straight from the app's
-own `brand/png/icon-512.png`.
+matches a PWA, so this one is copied in by hand. **The live app's web manifest is
+the source**: take the 512×512 icon with purpose `any` from
+`<app-url>/manifest.webmanifest`, byte for byte, not the maskable one, whose
+extra safe-zone padding would shrink the mark inside the tile. Nothing syncs it, so when an
+app changes its icon, copy the new one here in the same change and retint
+`accent` to match.
 
 ---
 

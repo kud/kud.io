@@ -1,7 +1,7 @@
 {
   "name": "Your Move",
   "icon": "/apps/your-move.png",
-  "accent": "#e0707c",
+  "accent": "#3b82f6",
   "beansontoast": "your-move",
   "summary": "A phone-sized GitHub inbox: what moved, and whose move it is.",
   "stack": ["Next.js", "React", "GitHub GraphQL", "PWA", "TypeScript"],
