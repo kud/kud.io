@@ -13,66 +13,42 @@
   position: absolute;
   height: auto;
   max-width: none;
-  opacity: 0;
   pointer-events: none;
-  transition: opacity 0.16s ease;
-}
-.part[data-shown] {
-  opacity: 1;
 }
 
-/* A head dipping or lifting settles with a small give, not a cut. */
-.part[data-part^="head"][data-shown] {
-  animation: settle 0.32s cubic-bezier(0.3, 1.4, 0.5, 1);
-}
-@keyframes settle {
-  from {
-    transform: translateY(1.5%);
-  }
-  to {
-    transform: none;
-  }
-}
-
-/* The paper ball rolls a little on a tap, then back on the next. */
-.roll {
+/* A rig is a layer the size of the scene, so its pivot and its moves are in
+   scene percent. The script sets transform (and opacity on the heads) every
+   frame; only these layers are promoted. */
+.rig {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  will-change: transform;
 }
-.roll .part {
-  transform-box: fill-box;
-  transform-origin: 50% 60%;
+/* The neck. */
+.rig[data-rig^="head"] {
+  transform-origin: 59% 46%;
+  will-change: transform, opacity;
 }
-.roll[data-rolling][data-way="out"] .part {
-  animation: rollOut 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+.rig[data-rig="head-deeper"],
+.rig[data-rig="head-up"] {
+  opacity: 0;
 }
-.roll[data-rolling][data-way="back"] .part {
-  animation: rollBack 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+/* The root of the tail, where it leaves the back. */
+.rig[data-rig="tail"] {
+  transform-origin: 82.8% 38.5%;
 }
-@keyframes rollOut {
-  from {
-    transform: none;
-  }
-  to {
-    transform: translateX(-22%) rotate(-150deg);
-  }
+/* The feet: the body breathes and leans from the floor. */
+.rig[data-rig="body"] {
+  transform-origin: 66% 90%;
 }
-@keyframes rollBack {
-  from {
-    transform: translateX(-22%) rotate(-150deg);
-  }
-  to {
-    transform: none;
-  }
+/* The middle of the paper ball, on the floor. */
+.rig[data-rig="paper"] {
+  transform-origin: 11.8% 90%;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .part,
-  .roll .part,
-  .part[data-part^="head"][data-shown] {
-    transition: none;
-    animation: none !important;
-    transform: none !important;
+  .rig {
+    will-change: auto;
   }
 }
