@@ -1,0 +1,78 @@
+/* The cat scene: parts stacked in a box the shape of the whole drawing. */
+.scene {
+  position: relative;
+  width: min(420px, 76vw);
+  aspect-ratio: 954 / 832;
+  margin: 0 auto 28px;
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.part {
+  position: absolute;
+  height: auto;
+  max-width: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.16s ease;
+}
+.part[data-shown] {
+  opacity: 1;
+}
+
+/* A head dipping or lifting settles with a small give, not a cut. */
+.part[data-part^="head"][data-shown] {
+  animation: settle 0.32s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+@keyframes settle {
+  from {
+    transform: translateY(1.5%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* The paper ball rolls a little on a tap, then back on the next. */
+.roll {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.roll .part {
+  transform-box: fill-box;
+  transform-origin: 50% 60%;
+}
+.roll[data-rolling][data-way="out"] .part {
+  animation: rollOut 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+.roll[data-rolling][data-way="back"] .part {
+  animation: rollBack 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+@keyframes rollOut {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateX(-22%) rotate(-150deg);
+  }
+}
+@keyframes rollBack {
+  from {
+    transform: translateX(-22%) rotate(-150deg);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .part,
+  .roll .part,
+  .part[data-part^="head"][data-shown] {
+    transition: none;
+    animation: none !important;
+    transform: none !important;
+  }
+}
