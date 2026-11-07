@@ -9,16 +9,7 @@ import styles from "./lost-cat.module.css";
 // the scene box, so the stack reads as one picture at any size. Every moving
 // part sits in a rig: a layer the size of the scene, so its transform origin
 // and translations are in scene percent too.
-type Part =
-  | "shadow"
-  | "tail"
-  | "body"
-  | "box"
-  | "paws"
-  | "head"
-  | "head-deeper"
-  | "head-up"
-  | "paper";
+type Part = "shadow" | "tail" | "body" | "box" | "paws" | "head" | "paper";
 
 const PARTS: Record<Part, { left: number; top: number; width: number }> = {
   shadow: { left: 13.935, top: 93.149, width: 57.941 },
@@ -29,39 +20,34 @@ const PARTS: Record<Part, { left: number; top: number; width: number }> = {
   // the chest and legs stay behind and beside it.
   paws: { left: 29.756, top: 51.564, width: 45.892 },
   head: { left: 26.299, top: 14.545, width: 44.131 },
-  "head-deeper": { left: 23.413, top: 18.439, width: 44.81 },
-  "head-up": { left: 26.977, top: 11.467, width: 42.349 },
   paper: { left: 0, top: 81.972, width: 23.679 },
 };
 
+// Intrinsic pixel sizes: every part is exported at about twice its largest
+// CSS size (the scene is at most 420px wide), so a 2x screen never upsamples.
 const SIZES: Record<Part, [number, number]> = {
-  shadow: [442, 46],
-  tail: [151, 268],
-  body: [551, 409],
-  box: [582, 314],
-  paws: [350, 80],
-  head: [337, 288],
-  "head-deeper": [342, 263],
-  "head-up": [323, 269],
-  paper: [181, 106],
+  shadow: [498, 51],
+  tail: [169, 302],
+  body: [620, 460],
+  box: [654, 354],
+  paws: [394, 90],
+  head: [379, 324],
+  paper: [203, 119],
 };
 
-// The head turns about the neck (scene percent, also in the CSS). A pose is
-// the transform that carries the resting head onto that pose's drawing:
-// translate (scene %), rotate (deg), scale x and y. Solved so the centres and
-// sizes line up, so a crossfade between two drawings happens mid-move, with
-// both in the same place.
+// One head drawing, the peering one, turned about the neck (scene percent,
+// also in the CSS). Every expression is a continuous transform of it, never a
+// second drawing: a pose is translate (scene %), rotate (deg), scale x and y.
+// Nose deeper tips the face down towards the box and tucks it in, with a hint
+// of squash; looking up tips it back and lifts it. The face stays the same
+// until separate eyes, lids and ears arrive as layers inside the head rig.
 type Pose = [number, number, number, number, number];
 const REST: Pose = [0, 0, 0, 1, 1];
-const DEEPER: Pose = [-1.62, -0.17, -6, 1.0154, 0.9137];
-const UP: Pose = [-1.23, -4.32, 4, 0.9596, 0.935];
+const DEEPER: Pose = [-1.1, 1.5, -7, 1.01, 0.975];
+const UP: Pose = [0.3, -2.8, 8, 0.995, 1.015];
 
 const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
 const clamp = (u: number) => Math.min(1, Math.max(0, u));
-const smooth = (a: number, b: number, x: number) => {
-  const u = clamp((x - a) / (b - a));
-  return u * u * (3 - 2 * u);
-};
 
 // The head's pose as one number: 0 rests, 1 is nose deeper in the box, -1 is
 // looking up at you. In between, the transform is interpolated.
@@ -72,8 +58,6 @@ const poseAt = (dip: number): Pose => {
 };
 const css = ([x, y, r, sx, sy]: Pose) =>
   `translate(${x}%, ${y}%) rotate(${r}deg) scale(${sx}, ${sy})`;
-const inverse = ([x, y, r, sx, sy]: Pose) =>
-  `scale(${1 / sx}, ${1 / sy}) rotate(${-r}deg) translate(${-x}%, ${-y}%)`;
 
 type Ease = (u: number) => number;
 const inOut: Ease = (u) =>
@@ -143,13 +127,6 @@ const Layer = ({ part }: { part: Part }) => {
   );
 };
 
-const HEADS = ["head", "head-deeper", "head-up"] as const;
-const HEAD_POSE: Record<(typeof HEADS)[number], Pose> = {
-  head: REST,
-  "head-deeper": DEEPER,
-  "head-up": UP,
-};
-
 // The paper ball's radius in scene-width percent, so its spin matches the
 // distance it rolls.
 const BALL_RADIUS = 6.9;
@@ -168,7 +145,7 @@ export const Cat = () => {
     const tail = rig("tail");
     const paws = rig("paws");
     const ball = rig("paper");
-    const heads = HEADS.map((name) => ({ name, el: rig(name) }));
+    const head = rig("head");
 
     // The scene's own clock: it only runs while the cat is animating, so a
     // hidden tab or a scroll away pauses the routine rather than skipping it.
@@ -212,20 +189,7 @@ export const Cat = () => {
       pose[0] += shift;
       pose[1] += 0.55 * lift;
       pose[2] += drift;
-      const head = css(pose);
-      for (const { name, el } of heads) {
-        // Each drawing is placed by the current pose relative to its own, and
-        // shown only around its pose: the next drawing fades in over the one
-        // in front while the head is still moving, then the old one goes.
-        const shown =
-          name === "head"
-            ? 1 - smooth(0.6, 0.8, Math.abs(dip))
-            : name === "head-deeper"
-              ? smooth(0.3, 0.62, dip)
-              : smooth(0.3, 0.62, -dip);
-        el.style.opacity = String(shown);
-        el.style.transform = `${head} ${inverse(HEAD_POSE[name])}`;
-      }
+      head.style.transform = css(pose);
 
       // The tail sways lazily about its root; the shear lags the swing, so
       // the tip follows through like a bend.
@@ -253,13 +217,18 @@ export const Cat = () => {
       draw();
       frame = requestAnimationFrame(tick);
     };
+    // Layers are promoted only while they move. At rest the browser paints
+    // each image straight at its transform, one resample, so a paused or
+    // still cat is as sharp as the drawing rather than a rotated texture.
     const stop = () => {
       cancelAnimationFrame(frame);
       frame = 0;
+      delete root.dataset.moving;
     };
     const update = () => {
       if (!calm && visible && onScreen) {
         if (!frame) {
+          root.dataset.moving = "";
           last = performance.now();
           frame = requestAnimationFrame(tick);
         }
@@ -346,11 +315,11 @@ export const Cat = () => {
       <div className={styles.rig} data-rig="paws">
         <Layer part="paws" />
       </div>
-      {HEADS.map((name) => (
-        <div key={name} className={styles.rig} data-rig={name}>
-          <Layer part={name} />
-        </div>
-      ))}
+      {/* The head group: the face's future layers (eyes, lids, ears) go in
+          here, above the head drawing, and turn with it about the neck. */}
+      <div className={styles.rig} data-rig="head">
+        <Layer part="head" />
+      </div>
       <div className={styles.rig} data-rig="paper">
         <Layer part="paper" />
       </div>

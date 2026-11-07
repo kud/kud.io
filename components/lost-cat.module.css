@@ -17,22 +17,19 @@
 }
 
 /* A rig is a layer the size of the scene, so its pivot and its moves are in
-   scene percent. The script sets transform (and opacity on the heads) every
-   frame; only these layers are promoted. */
+   scene percent. The script sets its transform every frame, and promotes the
+   rigs only while it runs (data-moving), so a resting cat is painted crisp. */
 .rig {
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+.scene[data-moving] .rig {
   will-change: transform;
 }
 /* The neck. */
-.rig[data-rig^="head"] {
+.rig[data-rig="head"] {
   transform-origin: 59% 46%;
-  will-change: transform, opacity;
-}
-.rig[data-rig="head-deeper"],
-.rig[data-rig="head-up"] {
-  opacity: 0;
 }
 /* The root of the tail, where it leaves the back. */
 .rig[data-rig="tail"] {
@@ -45,10 +42,4 @@
 /* The middle of the paper ball, on the floor. */
 .rig[data-rig="paper"] {
   transform-origin: 11.8% 90%;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rig {
-    will-change: auto;
-  }
 }
