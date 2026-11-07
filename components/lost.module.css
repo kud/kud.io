@@ -1,0 +1,387 @@
+/* The 404. It wears the home page's warm paper by day and a warm, ink-dark
+ * version of it by night, chosen by the OS. Every colour is declared on .lost,
+ * never keyed on `.dark`: app/layout.tsx forces class="dark" onto <html> for
+ * fumadocs, which is /projects' axis, not this page's (see blog.module.css). */
+.lost {
+  --bg: #fdfbf8;
+  --fg: #1f1813;
+  --fg-2: #574f47;
+  /* Home's #857c72 is 4.0:1 here; darkened to clear AA for the small type. */
+  --fg-3: #6f655b;
+  --line: #e6dfd5;
+  --card: #f6f1ea;
+  /* The home accent darkened until it clears AA as text (home.module notes). */
+  --accent: #a85a2c;
+  --ring: #1d3f8f;
+  --primary-bg: #141420;
+  --primary-fg: #ffffff;
+
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  .lost {
+    --bg: #15110e;
+    --fg: #f3ece4;
+    --fg-2: #c9bdb0;
+    --fg-3: #a29586;
+    --line: #2e2620;
+    --card: #1d1814;
+    /* The /projects accent: the same rust, lifted for a dark ground. */
+    --accent: #e0a87e;
+    --ring: #9db8ff;
+    --primary-bg: #f3ece4;
+    --primary-fg: #15110e;
+  }
+}
+
+.lost ::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.inner {
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 72px 24px;
+}
+
+/* Entrance: the home hero's stagger, shortened. -------------------------- */
+@keyframes enterUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.inner > * {
+  animation: enterUp 0.6s cubic-bezier(0.2, 0.6, 0.2, 1) both;
+}
+.inner > :nth-child(2) {
+  animation-delay: 0.07s;
+}
+.inner > :nth-child(3) {
+  animation-delay: 0.14s;
+}
+.inner > :nth-child(4) {
+  animation-delay: 0.21s;
+}
+.inner > :nth-child(5) {
+  animation-delay: 0.28s;
+}
+.inner > :nth-child(n + 6) {
+  animation-delay: 0.35s;
+}
+
+/* 4:3, drawn at 960x720 and shown at up to 240x180. Transparent, so it sits
+ * on either ground. */
+.art {
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  margin: 0 0 28px;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--fg-3);
+}
+
+/* Home's dot, hollow: the same mark with nobody in. */
+.eyebrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  box-sizing: border-box;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  transform: translateY(-1px);
+}
+
+.title {
+  margin: 0 0 18px;
+  font-size: clamp(40px, 7vw, 60px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.lede {
+  margin: 0 0 36px;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--fg-2);
+  text-wrap: pretty;
+}
+
+/* The address you asked for. It shakes its head once, as the page settles. */
+@keyframes no {
+  0%,
+  100% {
+    transform: none;
+  }
+  20% {
+    transform: translateX(-3px);
+  }
+  40% {
+    transform: translateX(3px);
+  }
+  60% {
+    transform: translateX(-2px);
+  }
+  80% {
+    transform: translateX(1px);
+  }
+}
+
+.path {
+  display: inline-block;
+  max-width: 100%;
+  padding: 1px 7px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--fg);
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.86em;
+  overflow-wrap: anywhere;
+  animation: no 0.5s ease-in-out 0.75s both;
+}
+
+.block {
+  margin: 0 0 28px;
+}
+
+.note {
+  display: block;
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.place {
+  display: grid;
+  gap: 2px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--fg);
+  text-decoration: none;
+  transition:
+    border-color 0.18s,
+    transform 0.18s;
+}
+
+.place:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.kind {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-3);
+}
+
+.label {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.label::after {
+  content: " →";
+  color: var(--accent);
+}
+
+.detail {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--fg-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.search {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  font-size: 16px;
+}
+
+.search::placeholder {
+  color: var(--fg-3);
+}
+
+.results {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.empty {
+  margin: 10px 0 0;
+  font-size: 15px;
+  color: var(--fg-3);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 36px 0 28px;
+}
+
+/* On a phone the three would wrap two-and-one; home first, full width, and
+ * the other two sharing the row beneath it. */
+@media (max-width: 480px) {
+  .actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .primary {
+    grid-column: 1 / -1;
+  }
+
+  .primary,
+  .secondary {
+    justify-content: center;
+  }
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background 0.18s,
+    color 0.18s,
+    border-color 0.18s,
+    transform 0.18s;
+}
+
+.primary {
+  padding: 13px 22px;
+  background: var(--primary-bg);
+  color: var(--primary-fg);
+}
+
+.primary:hover {
+  background: var(--accent);
+  color: var(--bg);
+  transform: translateY(-2px);
+}
+
+.primary span {
+  transition: transform 0.18s ease;
+  transform: translateY(-1px);
+}
+
+.primary:hover span {
+  transform: translateX(3px) translateY(-1px);
+}
+
+.secondary {
+  padding: 12px 21px;
+  border: 1px solid var(--line);
+  color: var(--fg);
+}
+
+.secondary:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.footnote {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--fg-3);
+}
+
+.footnote a {
+  color: var(--fg-2);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+
+.footnote a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+/* One visible ring for everything you can reach by keyboard. */
+.lost a:focus-visible,
+.search:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+}
+
+.search:focus-visible {
+  outline-offset: 1px;
+  border-color: var(--ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inner > *,
+  .path {
+    animation: none;
+  }
+
+  .place,
+  .primary,
+  .primary span,
+  .secondary {
+    transition: none;
+  }
+
+  .place:hover,
+  .primary:hover,
+  .secondary:hover {
+    transform: none;
+  }
+}
