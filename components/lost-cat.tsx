@@ -22,7 +22,7 @@ const P = {
   // its own.
   tail: { left: 78.87, top: 0.601, width: 19.665, w: 165, h: 344 },
   body: { left: 61.611, top: 28.726, width: 37.971, w: 319, h: 452 },
-  box: { left: 7.427, top: 51.683, width: 76.987, w: 647, h: 351 },
+  box: { left: 7.322, top: 53.005, width: 76.883, w: 646, h: 339 },
   "neck-under": { left: 37.657, top: 25.841, width: 34.623, w: 291, h: 240 },
   "head-under": { left: 28.766, top: 21.274, width: 43.515, w: 366, h: 273 },
   "head-base": { left: 28.766, top: 21.274, width: 43.515, w: 366, h: 273 },
