@@ -25,11 +25,12 @@ const P = {
   "ear-right": { left: 45.293, top: 15.264, width: 23.849, w: 200, h: 156 },
   "eye-left-white": { left: 36.715, top: 44.712, width: 8.787, w: 74, h: 76 },
   "eye-left-solid": { left: 37.029, top: 45.553, width: 8.159, w: 69, h: 66 },
-  "lid-left-half": { left: 36.611, top: 44.952, width: 8.577, w: 72, h: 66 },
-  "lid-left-closed": { left: 36.611, top: 44.952, width: 8.577, w: 72, h: 70 },
+  "lid-left-half": { left: 36.506, top: 44.712, width: 9.205, w: 77, h: 65 },
+  "lid-left-closed": { left: 36.506, top: 44.712, width: 9.205, w: 77, h: 76 },
   "eye-right-white": { left: 51.151, top: 43.149, width: 9.519, w: 80, h: 83 },
   "eye-right-solid": { left: 51.569, top: 43.87, width: 8.996, w: 76, h: 72 },
-  "lid-right-closed": { left: 51.674, top: 43.389, width: 9.31, w: 78, h: 76 },
+  "lid-right-half": { left: 50.941, top: 42.909, width: 10.042, w: 84, h: 58 },
+  "lid-right-closed": { left: 50.941, top: 42.909, width: 9.937, w: 83, h: 85 },
   "whiskers-left": { left: 27.197, top: 47.957, width: 7.636, w: 64, h: 40 },
   "whiskers-right": { left: 61.506, top: 43.75, width: 8.473, w: 71, h: 57 },
   // The whiskers' dark strokes alone, in a light warm grey, for the dark page.
@@ -126,11 +127,8 @@ const Eye = ({ side }: { side: "left" | "right" }) => {
           />
         </div>
       </div>
-      {/* The right eye sits on the grey patch, where a half lid read as a
-          disc; it only ever closes. */}
-      {side === "left" && (
-        <Layer part="lid-left-half" motion style={{ opacity: 0 }} />
-      )}
+      {/* Sacha's painted lids: his line, over fur taken from round the eye. */}
+      <Layer part={`lid-${side}-half`} motion style={{ opacity: 0 }} />
       <Layer part={`lid-${side}-closed`} motion style={{ opacity: 0 }} />
     </>
   );
@@ -270,8 +268,8 @@ export const Cat = () => {
       }
       const lid = lidAt(t);
       for (const l of lids) {
-        // The right eye has no half lid: it stays open when bored and shuts
-        // for the whole of a blink.
+        // Both eyes have a half lid now; an eye without one would stay open
+        // when bored and shut for the whole of a blink.
         const shut = l.half
           ? lid === 2
           : lid === 2 || (lid === 1 && t - blinkAt < 0.2);
