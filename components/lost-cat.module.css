@@ -43,8 +43,8 @@
   transform-origin: 63.72% 32.69%;
 }
 
-/* Paint for motion only (solid eyes, lids, the neck, the head's underside, the
-   tail's root): hidden on a still cat, which is the approved drawing as is. */
+/* Paint for motion only (solid eyes, lids, the neck, the head's underside):
+   hidden on a still cat, which is the approved drawing as is. */
 .scene:not([data-moving]) .part[data-motion] {
   visibility: hidden;
 }

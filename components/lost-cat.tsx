@@ -13,9 +13,10 @@ type Box = { left: number; top: number; width: number; w: number; h: number };
 const P = {
   shadow: { left: 4.289, top: 76.202, width: 95.188, w: 800, h: 172 },
   paper: { left: 0.418, top: 82.212, width: 23.954, w: 201, h: 121 },
-  tail: { left: 78.87, top: 0.601, width: 19.665, w: 165, h: 311 },
-  "tail-root": { left: 82.636, top: 30.048, width: 12.448, w: 105, h: 80 },
-  body: { left: 62.657, top: 28.846, width: 36.925, w: 310, h: 451 },
+  // The tail runs on behind the back as a solid tube, so it needs no root of
+  // its own.
+  tail: { left: 78.87, top: 0.601, width: 19.665, w: 165, h: 344 },
+  body: { left: 61.611, top: 28.726, width: 37.971, w: 319, h: 452 },
   box: { left: 7.427, top: 51.683, width: 76.987, w: 647, h: 351 },
   "neck-under": { left: 37.657, top: 25.841, width: 34.623, w: 291, h: 240 },
   "head-under": { left: 28.766, top: 21.274, width: 43.515, w: 366, h: 273 },
@@ -28,7 +29,6 @@ const P = {
   "lid-left-closed": { left: 36.611, top: 44.952, width: 8.577, w: 72, h: 70 },
   "eye-right-white": { left: 51.151, top: 43.149, width: 9.519, w: 80, h: 83 },
   "eye-right-solid": { left: 51.569, top: 43.87, width: 8.996, w: 76, h: 72 },
-  "lid-right-half": { left: 51.674, top: 43.389, width: 9.31, w: 78, h: 67 },
   "lid-right-closed": { left: 51.674, top: 43.389, width: 9.31, w: 78, h: 76 },
   "whiskers-left": { left: 27.197, top: 47.957, width: 7.636, w: 64, h: 40 },
   "whiskers-right": { left: 61.506, top: 43.75, width: 8.473, w: 71, h: 57 },
@@ -114,7 +114,9 @@ const Eye = ({ side }: { side: "left" | "right" }) => {
           />
         </div>
       </div>
-      <Layer part={`lid-${side}-half`} motion style={{ opacity: 0 }} />
+      {/* The right eye sits on the grey patch, where a half lid read as a
+          disc; it only ever closes. */}
+      {side === "left" && <Layer part="lid-left-half" motion style={{ opacity: 0 }} />}
       <Layer part={`lid-${side}-closed`} motion style={{ opacity: 0 }} />
     </>
   );
@@ -150,7 +152,8 @@ export const Cat = () => {
     const ears = { left: rig("ear-left"), right: rig("ear-right") };
     const pupils = { left: rig("pupil-left"), right: rig("pupil-right") };
     const lids = (["left", "right"] as const).map((side) => ({
-      half: q(`[data-part="lid-${side}-half"]`),
+      side,
+      half: root.querySelector<HTMLElement>(`[data-part="lid-${side}-half"]`),
       closed: q(`[data-part="lid-${side}-closed"]`),
     }));
 
@@ -237,11 +240,14 @@ export const Cat = () => {
       }
       const lid = lidAt(t);
       for (const l of lids) {
-        l.half.style.opacity = lid === 1 ? "1" : "0";
-        l.closed.style.opacity = lid === 2 ? "1" : "0";
+        // The right eye has no half lid: it stays open when bored and shuts
+        // for the whole of a blink.
+        const shut = l.half ? lid === 2 : lid === 2 || (lid === 1 && t - blinkAt < 0.2);
+        if (l.half) l.half.style.opacity = lid === 1 ? "1" : "0";
+        l.closed.style.opacity = shut ? "1" : "0";
       }
 
-      // The tail sways lazily about its root, within what the painted root holds.
+      // The tail sways lazily about its root; its tube runs on behind the back.
       const swing = Math.sin(t * 1.15) * 3 + Math.sin(t * 0.43 + 2) * 1.5;
       const bend = Math.sin(t * 1.15 - 0.9) * 2;
       tail.style.transform = `rotate(${swing}deg) skewX(${bend}deg)`;
@@ -309,7 +315,7 @@ export const Cat = () => {
         // The key pose, still: every rig back to its identity.
         for (const el of root.querySelectorAll<HTMLElement>("[data-rig]")) el.style.transform = "";
         for (const l of lids) {
-          l.half.style.opacity = "0";
+          if (l.half) l.half.style.opacity = "0";
           l.closed.style.opacity = "0";
         }
         rollX = 0;
@@ -351,7 +357,6 @@ export const Cat = () => {
       <Layer part="shadow" />
       <div className={styles.rig} data-rig="tail">
         <Layer part="tail" />
-        <Layer part="tail-root" motion />
       </div>
       <div className={styles.rig} data-rig="body">
         <Layer part="body" />
