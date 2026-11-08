@@ -24,14 +24,17 @@ const P = {
   "ear-right": { left: 45.293, top: 15.264, width: 23.849, w: 200, h: 156 },
   "eye-left-white": { left: 36.715, top: 44.712, width: 8.787, w: 74, h: 76 },
   "eye-left-solid": { left: 37.029, top: 45.553, width: 8.159, w: 69, h: 66 },
-  "lid-left-half": { left: 36.611, top: 44.952, width: 8.577, w: 72, h: 58 },
+  "lid-left-half": { left: 36.611, top: 44.952, width: 8.577, w: 72, h: 66 },
   "lid-left-closed": { left: 36.611, top: 44.952, width: 8.577, w: 72, h: 70 },
   "eye-right-white": { left: 51.151, top: 43.149, width: 9.519, w: 80, h: 83 },
   "eye-right-solid": { left: 51.569, top: 43.87, width: 8.996, w: 76, h: 72 },
-  "lid-right-half": { left: 51.674, top: 43.389, width: 9.31, w: 78, h: 54 },
+  "lid-right-half": { left: 51.674, top: 43.389, width: 9.31, w: 78, h: 67 },
   "lid-right-closed": { left: 51.674, top: 43.389, width: 9.31, w: 78, h: 76 },
   "whiskers-left": { left: 27.197, top: 47.957, width: 7.636, w: 64, h: 40 },
   "whiskers-right": { left: 61.506, top: 43.75, width: 8.473, w: 71, h: 57 },
+  // The whiskers' dark strokes alone, in a light warm grey, for the dark page.
+  "whiskers-left-light": { left: 27.197, top: 47.957, width: 7.636, w: 64, h: 40 },
+  "whiskers-right-light": { left: 61.506, top: 43.75, width: 8.473, w: 71, h: 57 },
   "paw-left": { left: 30.335, top: 49.76, width: 9.833, w: 83, h: 83 },
   "paw-right": { left: 61.297, top: 47.957, width: 21.862, w: 184, h: 109 },
 } satisfies Record<string, Box>;
@@ -346,9 +349,6 @@ export const Cat = () => {
       }}
     >
       <Layer part="shadow" />
-      <div className={styles.rig} data-rig="paper">
-        <Layer part="paper" />
-      </div>
       <div className={styles.rig} data-rig="tail">
         <Layer part="tail" />
         <Layer part="tail-root" motion />
@@ -357,6 +357,10 @@ export const Cat = () => {
         <Layer part="body" />
       </div>
       <Layer part="box" />
+      {/* The paper sits in front of the box's corner, so it can roll off it. */}
+      <div className={styles.rig} data-rig="paper">
+        <Layer part="paper" />
+      </div>
       {/* The neck and the box behind the chin, for when the head moves. */}
       <Layer part="neck-under" motion />
       <div className={styles.rig} data-rig="head">
@@ -372,6 +376,8 @@ export const Cat = () => {
         <Eye side="right" />
         <Layer part="whiskers-left" />
         <Layer part="whiskers-right" />
+        <Layer part="whiskers-left-light" />
+        <Layer part="whiskers-right-light" />
       </div>
       {/* The paws stay on the rim. */}
       <Layer part="paw-left" />

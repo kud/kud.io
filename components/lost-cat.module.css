@@ -67,11 +67,19 @@
   will-change: transform;
 }
 
-/* The whiskers are dark lines drawn for a light ground; on the dark page they
-   lighten so they still read. */
+/* The whiskers are dark lines drawn for a light ground, with fur-coloured
+   fringes; on the dark page their strokes alone show instead, already light,
+   so no filter can turn a fringe into a second line. */
+.part[data-part$="-light"] {
+  display: none;
+}
 @media (prefers-color-scheme: dark) {
-  .part[data-part^="whiskers"] {
-    filter: invert(1) brightness(0.82) sepia(0.25);
+  .part[data-part="whiskers-left"],
+  .part[data-part="whiskers-right"] {
+    display: none;
+  }
+  .part[data-part$="-light"] {
+    display: block;
   }
 }
 /* The feet: the body breathes from the floor. */
