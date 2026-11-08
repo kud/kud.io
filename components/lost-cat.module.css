@@ -2,7 +2,7 @@
 .scene {
   position: relative;
   width: min(420px, 76vw);
-  aspect-ratio: 954 / 832;
+  aspect-ratio: 956 / 832;
   margin: 0 auto 28px;
   cursor: default;
   -webkit-tap-highlight-color: transparent;
@@ -33,11 +33,50 @@
 }
 /* The root of the tail, where it leaves the back. */
 .rig[data-rig="tail"] {
-  transform-origin: 82.8% 38.5%;
+  transform-origin: 82.6% 41.9%;
 }
-/* The feet: the body breathes and leans from the floor. */
+/* Each ear turns about its root. */
+.rig[data-rig="ear-left"] {
+  transform-origin: 34.54% 35.22%;
+}
+.rig[data-rig="ear-right"] {
+  transform-origin: 63.72% 32.69%;
+}
+
+/* Paint for motion only (solid eyes, lids, the neck, the head's underside, the
+   tail's root): hidden on a still cat, which is the approved drawing as is. */
+.scene:not([data-moving]) .part[data-motion] {
+  visibility: hidden;
+}
+
+/* A pupil's box, the size of its eye. While the cat moves the pupil is clipped
+   to the eye, so a glance never leaves it. */
+.eye {
+  position: absolute;
+  pointer-events: none;
+}
+.scene[data-moving] .eye {
+  mask-image: var(--mask);
+  mask-size: 100% 100%;
+}
+.glance {
+  position: absolute;
+  inset: 0;
+}
+.scene[data-moving] .glance {
+  will-change: transform;
+}
+
+/* The whiskers are dark lines drawn for a light ground; on the dark page they
+   lighten so they still read. */
+@media (prefers-color-scheme: dark) {
+  .part[data-part^="whiskers"] {
+    filter: invert(1) brightness(0.82) sepia(0.25);
+  }
+}
+/* The feet: the body breathes from the floor. */
 .rig[data-rig="body"] {
-  transform-origin: 66% 90%;
+  transform-origin: 80% 90%;
 }
 /* The middle of the paper ball, on the floor. */
 .rig[data-rig="paper"] {
