@@ -151,10 +151,27 @@ export const Cat = () => {
   const scene = useRef<HTMLDivElement>(null);
   const notice = useRef<() => void>(() => {});
 
+  // The cat appears whole: every layer is decoded before the scene fades in,
+  // so it never paints piece by piece. A slow layer can hold it for 4s at most.
   useEffect(() => {
     const root = scene.current;
     if (!root) return;
-    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    let done = false;
+    const show = () => {
+      if (done) return;
+      done = true;
+      root.dataset.loaded = "";
+    };
+    const images = Array.from(root.querySelectorAll("img"));
+    Promise.allSettled(images.map((img) => img.decode())).then(show);
+    const fallback = window.setTimeout(show, 4000);
+    return () => window.clearTimeout(fallback);
+  }, []);
+
+  useEffect(() => {
+    const root = scene.current;
+    if (!root) return;
+    const q =<T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
     const rig = (name: string) => q(`[data-rig="${name}"]`);
     const body = rig("body");
     const tail = [rig("tail"), rig("tail-mid"), rig("tail-tip")];

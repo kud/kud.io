@@ -9,6 +9,23 @@
   user-select: none;
 }
 
+/* With scripting on, the scene waits until every layer is decoded, then fades
+   in whole; without it, the layers show as they arrive. A filter, not opacity:
+   the page's entrance animation already drives this element's opacity. */
+@media (scripting: enabled) {
+  .scene:not([data-loaded]) {
+    filter: opacity(0);
+  }
+  .scene {
+    transition: filter 0.4s ease-out;
+  }
+}
+@media (scripting: enabled) and (prefers-reduced-motion: reduce) {
+  .scene {
+    transition: filter 0.2s linear;
+  }
+}
+
 .part {
   position: absolute;
   height: auto;
