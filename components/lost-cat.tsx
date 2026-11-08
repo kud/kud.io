@@ -13,6 +13,11 @@ type Box = { left: number; top: number; width: number; w: number; h: number };
 const P = {
   shadow: { left: 4.289, top: 76.202, width: 95.188, w: 800, h: 172 },
   paper: { left: 0.418, top: 82.212, width: 23.954, w: 201, h: 121 },
+  // A second, smaller ball (the first one flipped, turned and a shade darker),
+  // on the floor in front of the box's right corner, under the back paws, with
+  // its own contact shadow.
+  "paper-2-shadow": { left: 72.06, top: 95.3, width: 17.857, w: 150, h: 36 },
+  "paper-2": { left: 74.5, top: 90.135, width: 12.976, w: 109, h: 67 },
   // The tail runs on behind the back as a solid tube, so it needs no root of
   // its own.
   tail: { left: 78.87, top: 0.601, width: 19.665, w: 165, h: 344 },
@@ -139,10 +144,13 @@ const clamp = (u: number) => Math.min(1, Math.max(0, u));
 const sine = (u: number) => -(Math.cos(Math.PI * clamp(u)) - 1) / 2;
 const out = (u: number) => 1 - Math.pow(1 - clamp(u), 3);
 
-// The paper ball's radius in scene-width percent, so its spin matches the
-// distance it rolls.
-const BALL_RADIUS = 6.9;
-const ROLL = 6.5;
+// A tap scoots the paper balls apart, in scene-width percent: a hop out, a
+// rock of a few degrees at most, and a slide back home, upright again, so the
+// drawn light always falls from the right side and the first ball keeps the
+// box's corner covered at rest.
+const SCOOT = [-3.2, 2.4];
+const HOP = 1.6;
+const ROCK = 8;
 // The head's lift when it looks up, in percent of the scene's height (7 px of
 // 832), and its tilt, in degrees: the painted neck holds to about here.
 const LIFT = 0.84;
@@ -160,7 +168,8 @@ export const Cat = () => {
     const body = rig("body");
     const tail = [rig("tail"), rig("tail-mid"), rig("tail-tip")];
     const head = rig("head");
-    const ball = rig("paper");
+    const balls = [rig("paper"), rig("paper-2")];
+    const ballShadow = rig("paper-2-shadow");
     const ears = { left: rig("ear-left"), right: rig("ear-right") };
     const pupils = { left: rig("pupil-left"), right: rig("pupil-right") };
     const lids = (["left", "right"] as const).map((side) => ({
@@ -188,8 +197,7 @@ export const Cat = () => {
     let flick = { at: -10, side: "left" as "left" | "right" };
     let nextSwish = 5;
     let swish = { at: -10, dir: 1 };
-    let roll = { from: 0, to: 0, start: -10 };
-    let rollX = 0;
+    let scoot = -10;
     const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
     // 0 open, 1 half, 2 closed: a blink is half, closed, half, about 0.2 s.
@@ -302,19 +310,26 @@ export const Cat = () => {
         (deg, i) => (tail[i].style.transform = `rotate(${deg}deg)`),
       );
 
-      // The paper ball rolls and slows, turning as far as it travels, then
-      // rocks to rest on its flattest side.
-      const u = clamp((t - roll.start) / 1.25);
-      rollX = lerp(roll.from, roll.to, out(u));
-      const after = Math.max(0, t - roll.start - 1.25);
-      const rock =
-        roll.start > 0 && after < 2
-          ? Math.sin(after * 9) *
-            Math.exp(-after * 3.2) *
-            5 *
-            Math.sign(roll.to - roll.from)
-          : 0;
-      ball.style.transform = `translateX(${rollX}%) rotate(${(rollX / BALL_RADIUS) * (180 / Math.PI) + rock}deg)`;
+      // The paper balls scoot: out with a small hop in 0.45 s, a beat, then
+      // back home in 0.6 s, rocking to rest at 0 degrees.
+      const k = t - scoot;
+      let away = 0;
+      let hop = 0;
+      let rock = 0;
+      if (k >= 0 && k < 1.6) {
+        const o = clamp(k / 0.45);
+        const back = clamp((k - 0.6) / 0.6);
+        away = out(o) * (1 - back * back * (3 - 2 * back));
+        hop = Math.sin(Math.PI * o) * HOP;
+        rock = Math.sin(k * 11) * Math.exp(-k * 2.6) * ROCK;
+      }
+      balls.forEach((el, i) => {
+        const dx = SCOOT[i] * away;
+        const dir = Math.sign(SCOOT[i]);
+        el.style.transform = `translate(${dx}%, ${-hop}%) rotate(${rock * dir}deg)`;
+        if (i === 1)
+          ballShadow.style.transform = `translateX(${dx}%) scaleX(${1 - hop * 0.08})`;
+      });
     };
 
     const tick = (now: number) => {
@@ -350,9 +365,8 @@ export const Cat = () => {
       }
     };
     const kick = () => {
-      if (calm || clock - roll.start < 0.4) return;
-      const home = Math.abs(rollX) > ROLL / 2;
-      roll = { from: rollX, to: home ? 0 : -ROLL, start: clock };
+      if (calm || clock - scoot < 1.2) return;
+      scoot = clock;
     };
     root.dataset.ready = "";
     const onTap = () => {
@@ -372,8 +386,7 @@ export const Cat = () => {
           if (l.half) l.half.style.opacity = "0";
           l.closed.style.opacity = "0";
         }
-        rollX = 0;
-        roll = { from: 0, to: 0, start: -10 };
+        scoot = -10;
       }
       update();
     };
@@ -403,7 +416,7 @@ export const Cat = () => {
       ref={scene}
       className={styles.scene}
       role="img"
-      aria-label="A calico cat with its nose in an empty cardboard box, next to a crumpled ball of paper."
+      aria-label="A calico cat with its nose in an empty cardboard box, next to two crumpled balls of paper."
       onPointerEnter={(event) => {
         if (event.pointerType === "mouse") notice.current();
       }}
@@ -436,6 +449,14 @@ export const Cat = () => {
       {/* The paper sits in front of the box's corner, so it can roll off it. */}
       <div className={styles.rig} data-rig="paper">
         <Layer part="paper" />
+      </div>
+      {/* The second ball sits in front of everything on the floor; its
+          shadow slides with it but never turns. */}
+      <div className={styles.rig} data-rig="paper-2-shadow">
+        <Layer part="paper-2-shadow" />
+      </div>
+      <div className={styles.rig} data-rig="paper-2">
+        <Layer part="paper-2" />
       </div>
       {/* The neck and the box behind the chin, for when the head moves. */}
       <Layer part="neck-under" motion />

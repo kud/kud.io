@@ -118,5 +118,12 @@
 }
 /* The middle of the paper ball, on the floor. */
 .rig[data-rig="paper"] {
-  transform-origin: 11.8% 90%;
+  transform-origin: 11.8% 98%;
+}
+/* The second ball rocks on its foot; its shadow squeezes about its middle. */
+.rig[data-rig="paper-2"] {
+  transform-origin: 81% 99%;
+}
+.rig[data-rig="paper-2-shadow"] {
+  transform-origin: 81% 98%;
 }
