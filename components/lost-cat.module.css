@@ -31,9 +31,39 @@
 .rig[data-rig="head"] {
   transform-origin: 59% 46%;
 }
-/* The root of the tail, where it leaves the back. */
+/* The root of the tail, where it leaves the back, and its two joints on the
+   tube's centre line, below the curl. */
 .rig[data-rig="tail"] {
   transform-origin: 82.6% 41.9%;
+}
+.rig[data-rig="tail-mid"] {
+  transform-origin: 85.7% 29%;
+}
+.rig[data-rig="tail-tip"] {
+  transform-origin: 84% 17.5%;
+}
+/* Each tail band, in scene height: the base from y 25%, the middle 15-31%,
+   the curl down to 19.5%. Where two meet, the upper one is opaque over the
+   lower and fades out below it, so the joint never shows a line. */
+.seg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.seg[data-seg="base"] {
+  mask-image: linear-gradient(to bottom, transparent 25%, #000 27%);
+}
+.seg[data-seg="mid"] {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 15%,
+    #000 17%,
+    #000 27%,
+    transparent 31%
+  );
+}
+.seg[data-seg="tip"] {
+  mask-image: linear-gradient(to bottom, #000 17%, transparent 19.5%);
 }
 /* Each ear turns about its root. */
 .rig[data-rig="ear-left"] {

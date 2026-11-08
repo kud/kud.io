@@ -33,8 +33,20 @@ const P = {
   "whiskers-left": { left: 27.197, top: 47.957, width: 7.636, w: 64, h: 40 },
   "whiskers-right": { left: 61.506, top: 43.75, width: 8.473, w: 71, h: 57 },
   // The whiskers' dark strokes alone, in a light warm grey, for the dark page.
-  "whiskers-left-light": { left: 27.197, top: 47.957, width: 7.636, w: 64, h: 40 },
-  "whiskers-right-light": { left: 61.506, top: 43.75, width: 8.473, w: 71, h: 57 },
+  "whiskers-left-light": {
+    left: 27.197,
+    top: 47.957,
+    width: 7.636,
+    w: 64,
+    h: 40,
+  },
+  "whiskers-right-light": {
+    left: 61.506,
+    top: 43.75,
+    width: 8.473,
+    w: 71,
+    h: 57,
+  },
   "paw-left": { left: 30.335, top: 49.76, width: 9.833, w: 83, h: 83 },
   "paw-right": { left: 61.297, top: 47.957, width: 21.862, w: 184, h: 109 },
 } satisfies Record<string, Box>;
@@ -116,7 +128,9 @@ const Eye = ({ side }: { side: "left" | "right" }) => {
       </div>
       {/* The right eye sits on the grey patch, where a half lid read as a
           disc; it only ever closes. */}
-      {side === "left" && <Layer part="lid-left-half" motion style={{ opacity: 0 }} />}
+      {side === "left" && (
+        <Layer part="lid-left-half" motion style={{ opacity: 0 }} />
+      )}
       <Layer part={`lid-${side}-closed`} motion style={{ opacity: 0 }} />
     </>
   );
@@ -146,7 +160,7 @@ export const Cat = () => {
     const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
     const rig = (name: string) => q(`[data-rig="${name}"]`);
     const body = rig("body");
-    const tail = rig("tail");
+    const tail = [rig("tail"), rig("tail-mid"), rig("tail-tip")];
     const head = rig("head");
     const ball = rig("paper");
     const ears = { left: rig("ear-left"), right: rig("ear-right") };
@@ -174,6 +188,8 @@ export const Cat = () => {
     let glance = { at: -10, hold: 0 };
     let nextFlick = 4;
     let flick = { at: -10, side: "left" as "left" | "right" };
+    let nextSwish = 5;
+    let swish = { at: -10, dir: 1 };
     let roll = { from: 0, to: 0, start: -10 };
     let rollX = 0;
     const rand = (a: number, b: number) => a + Math.random() * (b - a);
@@ -187,7 +203,13 @@ export const Cat = () => {
       return 0;
     };
     // A move in, a hold and a move back, as 0..1.
-    const envelope = (t: number, at: number, hold: number, inS: number, outS: number) => {
+    const envelope = (
+      t: number,
+      at: number,
+      hold: number,
+      inS: number,
+      outS: number,
+    ) => {
       const d = t - at;
       if (d < 0) return 0;
       if (d < inS) return sine(d / inS);
@@ -211,6 +233,10 @@ export const Cat = () => {
         glance = { at: t, hold: rand(1.2, 2.2) };
         nextGlance = t + rand(7, 11);
       }
+      if (t > nextSwish) {
+        swish = { at: t, dir: Math.random() < 0.6 ? 1 : -1 };
+        nextSwish = t + rand(6, 11);
+      }
       if (t > nextFlick) {
         flick = { at: t, side: Math.random() < 0.5 ? "left" : "right" };
         nextFlick = t + rand(4.5, 9);
@@ -222,35 +248,61 @@ export const Cat = () => {
       // and lifts a touch when the cat glances up.
       const tilt = calm
         ? 0
-        : TILT * (0.7 * Math.sin(t * 0.5) + 0.3 * Math.sin(t * 0.23 + 1)) * (1 - 0.5 * look);
+        : TILT *
+          (0.7 * Math.sin(t * 0.5) + 0.3 * Math.sin(t * 0.23 + 1)) *
+          (1 - 0.5 * look);
       const lift = -LIFT * look - 0.25 * breath;
       head.style.transform = `translateY(${lift}%) rotate(${tilt}deg)`;
       body.style.transform = `scaleY(${1 + 0.006 * breath})`;
 
       for (const side of ["left", "right"] as const) {
         const [gx, gy] = GLANCE[side];
-        pupils[side].style.transform = `translate(${gx * look}%, ${gy * look}%)`;
+        pupils[side].style.transform =
+          `translate(${gx * look}%, ${gy * look}%)`;
         // One ear twitches back and settles, a quarter of a second.
         const f = t - flick.at;
         const ear =
           flick.side === side && f >= 0 && f < 0.45
             ? Math.sin((f / 0.45) * Math.PI) * Math.exp(-f * 3) * 5
             : 0;
-        ears[side].style.transform = `rotate(${side === "left" ? -ear : ear}deg)`;
+        ears[side].style.transform =
+          `rotate(${side === "left" ? -ear : ear}deg)`;
       }
       const lid = lidAt(t);
       for (const l of lids) {
         // The right eye has no half lid: it stays open when bored and shuts
         // for the whole of a blink.
-        const shut = l.half ? lid === 2 : lid === 2 || (lid === 1 && t - blinkAt < 0.2);
+        const shut = l.half
+          ? lid === 2
+          : lid === 2 || (lid === 1 && t - blinkAt < 0.2);
         if (l.half) l.half.style.opacity = lid === 1 ? "1" : "0";
         l.closed.style.opacity = shut ? "1" : "0";
       }
 
-      // The tail sways lazily about its root; its tube runs on behind the back.
-      const swing = Math.sin(t * 1.15) * 3 + Math.sin(t * 0.43 + 2) * 1.5;
-      const bend = Math.sin(t * 1.15 - 0.9) * 2;
-      tail.style.transform = `rotate(${swing}deg) skewX(${bend}deg)`;
+      // The tail sways lazily, the same wave reaching each joint later, so
+      // the curl follows through: the base within 4.5 degrees of the drawing
+      // (its tube runs on behind the back), the tip about 14 all told. Now
+      // and then the tip flicks up and settles.
+      const f = t - swish.at;
+      const lash =
+        f < 0
+          ? 0
+          : f < 0.35
+            ? sine(f / 0.35)
+            : f < 1.8
+              ? Math.exp(-(f - 0.35) * 3) * Math.cos((f - 0.35) * 4.5)
+              : 0;
+      const sway = (lag: number) =>
+        Math.sin(t * 1.15 - lag) * 0.67 +
+        Math.sin(t * 0.43 + 2 - lag * 0.4) * 0.33;
+      const joints = [
+        4.5 * sway(0),
+        4 * sway(0.7) + 3 * lash * swish.dir,
+        6 * sway(1.4) + 8 * lash * swish.dir,
+      ];
+      joints.forEach(
+        (deg, i) => (tail[i].style.transform = `rotate(${deg}deg)`),
+      );
 
       // The paper ball rolls and slows, turning as far as it travels, then
       // rocks to rest on its flattest side.
@@ -259,7 +311,10 @@ export const Cat = () => {
       const after = Math.max(0, t - roll.start - 1.25);
       const rock =
         roll.start > 0 && after < 2
-          ? Math.sin(after * 9) * Math.exp(-after * 3.2) * 5 * Math.sign(roll.to - roll.from)
+          ? Math.sin(after * 9) *
+            Math.exp(-after * 3.2) *
+            5 *
+            Math.sign(roll.to - roll.from)
           : 0;
       ball.style.transform = `translateX(${rollX}%) rotate(${(rollX / BALL_RADIUS) * (180 / Math.PI) + rock}deg)`;
     };
@@ -313,7 +368,8 @@ export const Cat = () => {
       calm = query.matches;
       if (calm) {
         // The key pose, still: every rig back to its identity.
-        for (const el of root.querySelectorAll<HTMLElement>("[data-rig]")) el.style.transform = "";
+        for (const el of root.querySelectorAll<HTMLElement>("[data-rig]"))
+          el.style.transform = "";
         for (const l of lids) {
           if (l.half) l.half.style.opacity = "0";
           l.closed.style.opacity = "0";
@@ -355,8 +411,25 @@ export const Cat = () => {
       }}
     >
       <Layer part="shadow" />
+      {/* The tail is three rigs, each turning about the joint below it, all
+          showing the one drawing through a band that overlaps its neighbours:
+          the base barely moves, so the root stays clean, and the curl lags
+          and swings furthest. The upper band is drawn over the lower one and
+          is opaque where they overlap, so a still tail is the drawing. */}
       <div className={styles.rig} data-rig="tail">
-        <Layer part="tail" />
+        <div className={styles.seg} data-seg="base">
+          <Layer part="tail" />
+        </div>
+        <div className={styles.rig} data-rig="tail-mid">
+          <div className={styles.seg} data-seg="mid">
+            <Layer part="tail" />
+          </div>
+          <div className={styles.rig} data-rig="tail-tip">
+            <div className={styles.seg} data-seg="tip">
+              <Layer part="tail" />
+            </div>
+          </div>
+        </div>
       </div>
       <div className={styles.rig} data-rig="body">
         <Layer part="body" />
