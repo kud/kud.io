@@ -42,7 +42,7 @@
 .rig[data-rig="tail-tip"] {
   transform-origin: 84% 17.5%;
 }
-/* Each tail band, in scene height: the base from y 25%, the middle 15-31%,
+/* Each tail band, in scene height: the base from y 25% to 41%, the middle 15-31%,
    the curl down to 19.5%. Where two meet, the upper one is opaque over the
    lower and fades out below it, so the joint never shows a line. */
 .seg {
@@ -51,7 +51,16 @@
   pointer-events: none;
 }
 .seg[data-seg="base"] {
-  mask-image: linear-gradient(to bottom, transparent 25%, #000 27%);
+  /* Below 40%, where the tube meets the back's line (39.3% at rest), it is
+     all behind the body; cut it there so the sway never swings it out past
+     the back's edge as a dark sliver. */
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 25%,
+    #000 27%,
+    #000 40.2%,
+    transparent 41.2%
+  );
 }
 .seg[data-seg="mid"] {
   mask-image: linear-gradient(
@@ -115,15 +124,4 @@
 /* The feet: the body breathes from the floor. */
 .rig[data-rig="body"] {
   transform-origin: 80% 90%;
-}
-/* The middle of the paper ball, on the floor. */
-.rig[data-rig="paper"] {
-  transform-origin: 11.8% 98%;
-}
-/* The second ball rocks on its foot; its shadow squeezes about its middle. */
-.rig[data-rig="paper-2"] {
-  transform-origin: 81% 99%;
-}
-.rig[data-rig="paper-2-shadow"] {
-  transform-origin: 81% 98%;
 }
