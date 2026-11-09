@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { AvatarImage } from "@/components/avatar-image"
 import { BackLink } from "@/components/back-link"
 import { ThemePicker } from "@/components/theme-picker"
+import { ThemeScopeScript } from "@/components/scoped-theme"
 import { getProjects } from "@/lib/projects"
 import { getEcosystems } from "@/lib/ecosystems"
 import { getIcons } from "@/lib/icons"
@@ -57,7 +58,14 @@ const ProjectsIndex = async () => {
   const ecosystems = getEcosystems(withIcons, icons)
 
   return (
-    <main className={styles.page} data-ground="dusk">
+    <main
+      className={styles.page}
+      data-ground="dusk"
+      data-theme="system"
+      data-theme-scope
+      suppressHydrationWarning
+    >
+      <ThemeScopeScript />
       <ThemePicker className="dusk-picker-top" />
       <header className={styles.hero}>
         <Blueprint className={styles.blueprint} />

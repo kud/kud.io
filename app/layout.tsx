@@ -1,7 +1,7 @@
 import "./global.css"
 import type { Metadata, Viewport } from "next"
 import type { ReactNode } from "react"
-import { ThemeRoot } from "@/components/theme-root"
+import { RootProvider } from "fumadocs-ui/provider/next"
 import { ViewTransitions } from "next-view-transitions"
 import { InkTransition } from "@/components/ink-transition"
 import { Hanken_Grotesk } from "next/font/google"
@@ -83,7 +83,15 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
       </head>
       <body className="flex min-h-screen flex-col">
         <InkTransition />
-        <ThemeRoot>{children}</ThemeRoot>
+        <RootProvider
+          theme={{
+            defaultTheme: "dark",
+            enableSystem: false,
+            forcedTheme: "dark",
+          }}
+        >
+          {children}
+        </RootProvider>
       </body>
     </html>
   </ViewTransitions>

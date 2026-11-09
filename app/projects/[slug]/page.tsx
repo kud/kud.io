@@ -27,6 +27,7 @@ import { getMDXComponents } from "@/components/mdx"
 import { Reveal } from "@/components/reveal"
 import { getRelease, releaseAge, type Release } from "@/lib/release"
 import { ThemePicker } from "@/components/theme-picker"
+import { ThemeScopeScript } from "@/components/scoped-theme"
 import styles from "./page.module.css"
 
 // The release pill says how old the latest version is, so rebuild hourly.
@@ -604,7 +605,14 @@ const ProjectLanding = async ({
       : ((await getIcons())[slug] ?? project.icon ?? null)
 
   return (
-    <main className={styles.page} data-ground="dusk">
+    <main
+      className={styles.page}
+      data-ground="dusk"
+      data-theme="system"
+      data-theme-scope
+      suppressHydrationWarning
+    >
+      <ThemeScopeScript />
       <ThemePicker className="dusk-picker-top" />
       {showRecord ? (
         <ProductRecord project={project} />

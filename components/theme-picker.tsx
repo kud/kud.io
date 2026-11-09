@@ -1,8 +1,7 @@
 "use client"
 
-import { useSyncExternalStore } from "react"
-import { useTheme } from "next-themes"
 import { Monitor, Moon, Sun } from "lucide-react"
+import { useScopedTheme } from "@/components/scoped-theme"
 
 const OPTIONS = [
   { value: "system", label: "System", Icon: Monitor },
@@ -10,17 +9,11 @@ const OPTIONS = [
   { value: "light", label: "Light", Icon: Sun },
 ] as const
 
-const noop = () => () => {}
-
-// System, Dark or Light for the Dusk pages, through next-themes. Nothing is
-// marked until mounted: the stored choice is only known on the client.
+// System, Dark or Light for the Dusk pages: the shared scoped theme, stamped
+// on the data-ground="dusk" wrapper, never on <html>. The server renders
+// System; the stored choice is marked once the client reads it.
 export const ThemePicker = ({ className }: { className?: string }) => {
-  const { theme, setTheme } = useTheme()
-  const mounted = useSyncExternalStore(
-    noop,
-    () => true,
-    () => false,
-  )
+  const { theme, setTheme } = useScopedTheme()
 
   return (
     <div
@@ -28,23 +21,20 @@ export const ThemePicker = ({ className }: { className?: string }) => {
       aria-label="Colour theme"
       className={["dusk-picker", className].filter(Boolean).join(" ")}
     >
-      {OPTIONS.map(({ value, label, Icon }) => {
-        const checked = mounted && theme === value
-        return (
-          <button
-            key={value}
-            type="button"
-            role="radio"
-            aria-checked={checked}
-            aria-label={label}
-            title={label}
-            onClick={() => setTheme(value)}
-          >
-            <Icon aria-hidden size={14} strokeWidth={2} />
-            <span>{label}</span>
-          </button>
-        )
-      })}
+      {OPTIONS.map(({ value, label, Icon }) => (
+        <button
+          key={value}
+          type="button"
+          role="radio"
+          aria-checked={theme === value}
+          aria-label={label}
+          title={label}
+          onClick={() => setTheme(value)}
+        >
+          <Icon aria-hidden size={14} strokeWidth={2} />
+          <span>{label}</span>
+        </button>
+      ))}
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { RevealLink } from "@/components/reveal-link"
-import { blogInkCover } from "@/components/blog-theme"
+import { blogInkCover } from "@/components/scoped-theme"
 import { AvatarImage } from "@/components/avatar-image"
 import {
   GitHubIcon,

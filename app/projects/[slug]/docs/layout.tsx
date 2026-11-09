@@ -4,6 +4,7 @@ import { getProjectDocsTree } from "@/lib/source"
 import { getIcons } from "@/lib/icons"
 import { baseOptions } from "@/lib/layout.shared"
 import { ThemePicker } from "@/components/theme-picker"
+import { ThemeScopeScript } from "@/components/scoped-theme"
 
 const Layout = async ({
   params,
@@ -33,7 +34,14 @@ const Layout = async ({
   )
 
   return (
-    <div data-ground="dusk" style={{ display: "contents" }}>
+    <div
+      data-ground="dusk"
+      data-theme="system"
+      data-theme-scope
+      suppressHydrationWarning
+      style={{ display: "contents" }}
+    >
+      <ThemeScopeScript />
       <DocsLayout
         tree={getProjectDocsTree(slug)}
         {...base}

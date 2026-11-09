@@ -156,10 +156,12 @@
   color: var(--muted);
 }
 
-/* It comes in two lights. next-themes resolves System, Light or Dark to a
-   class on <html> before first paint (System reads prefers-color-scheme and
-   follows it live), so the class is the one key here. --dl-* is the day,
-   --dn-* the night, --dk-* whichever is showing.
+/* It comes in two lights. <html> is forced .dark site-wide, so Dusk never
+   keys on it: the wrapper's data-theme does (components/scoped-theme.tsx),
+   "dark" or "light" from the picker, or "system", which follows
+   prefers-color-scheme live. <html> takes the same answer through :has(),
+   for the search dialog and popovers fumadocs portals out of the scope.
+   --dl-* is the day, --dn-* the night, --dk-* whichever is showing.
 
    Day reads like paper in a warm room: near-black plum ink, a pale ground
    with white cards drawn by a visible border, and the lamp glow kept to a
@@ -289,7 +291,8 @@
   --dn-glow: 232 150 175;
   --dn-cool: 214 150 170;
 }
-:root.dark {
+html:has([data-ground="dusk"][data-theme="dark"]),
+[data-ground="dusk"][data-theme="dark"] {
   --dk-bg: var(--dn-bg);
   --dk-surface: var(--dn-surface);
   --dk-surface-2: var(--dn-surface-2);
@@ -315,6 +318,36 @@
   --dk-cat-ui: #9fc4a8;
   --dk-cat-vscode: #d8a982;
   --dk-cat-theme: #e7a3bd;
+}
+@media (prefers-color-scheme: dark) {
+  html:has([data-ground="dusk"]:not([data-theme="light"])),
+  [data-ground="dusk"]:not([data-theme="light"]) {
+    --dk-bg: var(--dn-bg);
+    --dk-surface: var(--dn-surface);
+    --dk-surface-2: var(--dn-surface-2);
+    --dk-surface-3: var(--dn-surface-3);
+    --dk-border: var(--dn-border);
+    --dk-border-dim: var(--dn-border-dim);
+    --dk-text: var(--dn-text);
+    --dk-muted: var(--dn-muted);
+    --dk-dim: var(--dn-dim);
+    --dk-primary: var(--dn-primary);
+    --dk-primary-light: var(--dn-primary-light);
+    --dk-on-primary: var(--dn-on-primary);
+    --dk-title-a: var(--dn-title-a);
+    --dk-hi: var(--dn-hi);
+    --dk-glow: var(--dn-glow);
+    --dk-cool: var(--dn-cool);
+    --dk-scheme: dark;
+    --dk-cat: #c4a9ad;
+    --dk-cat-product: #ef9a74;
+    --dk-cat-cli: #e6be6e;
+    --dk-cat-mcp: #b4c49a;
+    --dk-cat-claude: #e9a9a0;
+    --dk-cat-ui: #9fc4a8;
+    --dk-cat-vscode: #d8a982;
+    --dk-cat-theme: #e7a3bd;
+  }
 }
 
 /* fumadocs redefines its tokens on .dark #nd-sidebar, so the sidebar is
@@ -387,6 +420,29 @@ body:has([data-ground="dusk"]) {
   --accent: var(--dk-cat-theme);
 }
 
+/* Code: <html> stays .dark, so fumadocs paints --shiki-dark everywhere. The
+   scope's light decides instead: day Dusk takes the light theme, night keeps
+   the dark one. Both themes are the dusk pair in lib/code-themes.ts. */
+[data-ground="dusk"][data-theme="light"] .shiki,
+[data-ground="dusk"][data-theme="light"] .shiki span {
+  color: var(--shiki-light) !important;
+  font-style: var(--shiki-light-font-style) !important;
+}
+@media not (prefers-color-scheme: dark) {
+  [data-ground="dusk"]:not([data-theme="dark"]) .shiki,
+  [data-ground="dusk"]:not([data-theme="dark"]) .shiki span {
+    color: var(--shiki-light) !important;
+    font-style: var(--shiki-light-font-style) !important;
+  }
+}
+
+/* The actions row ends the hero copy, so its 56px bottom margin is dead
+   space: inside the card at 1440 it pushed the card past the art, and
+   stacked it opened a gap above the record. The section padding spaces it. */
+[data-ground="dusk"] .warm-hero-copy.warm-hero-copy > :last-child {
+  margin-bottom: 0;
+}
+
 /* On wide screens the hero copy sits on the drawing, so it keeps day ink in
    both lights, on a white card drawn over the art rather than a wash fading
    into it: a wash greys the picture and still leaves the text on haze.
@@ -433,8 +489,8 @@ body:has([data-ground="dusk"]) {
   }
   /* At night the card turns plum and takes the page ink, so the hero is
      not a lit window in a dark room. */
-  :root.dark:not([data-light="2"])
-    [data-ground="dusk"]
+  :root:not([data-light="2"])
+    [data-ground="dusk"][data-theme="dark"]
     .warm-hero-copy.warm-hero-copy {
     --title-a: var(--dn-title-a);
     --text: var(--dn-text);
@@ -449,12 +505,37 @@ body:has([data-ground="dusk"]) {
     background: rgb(51 37 44 / 0.92);
     color: var(--dn-text);
   }
-  :root.dark:not([data-light="2"])
-    [data-ground="dusk"]
+  :root:not([data-light="2"])
+    [data-ground="dusk"][data-theme="dark"]
     .warm-hero.warm-hero
     > a {
     background: rgb(51 37 44 / 0.92);
     color: var(--dn-muted);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-light="2"])
+      [data-ground="dusk"]:not([data-theme="light"])
+      .warm-hero-copy.warm-hero-copy {
+      --title-a: var(--dn-title-a);
+      --text: var(--dn-text);
+      --muted: var(--dn-muted);
+      --primary: var(--dn-primary);
+      --primary-light: var(--dn-primary-light);
+      --on-primary: var(--dn-on-primary);
+      --surface: var(--dn-surface);
+      --surface-2: var(--dn-surface-2);
+      --border: var(--dn-border);
+      border-color: var(--dn-border);
+      background: rgb(51 37 44 / 0.92);
+      color: var(--dn-text);
+    }
+    :root:not([data-light="2"])
+      [data-ground="dusk"]:not([data-theme="light"])
+      .warm-hero.warm-hero
+      > a {
+      background: rgb(51 37 44 / 0.92);
+      color: var(--dn-muted);
+    }
   }
   /* 2 keeps a wash, steeper, so it clears the copy and leaves the art. */
   :root[data-light="2"] [data-ground="dusk"] .warm-hero > .illus-art::after {
@@ -467,6 +548,9 @@ body:has([data-ground="dusk"]) {
   }
 }
 @media (max-width: 860px) {
+  [data-ground="dusk"] .warm-hero.warm-hero {
+    padding-bottom: 0;
+  }
   [data-ground="dusk"] .warm-hero-copy.warm-hero-copy {
     --title-a: inherit;
     --text: inherit;

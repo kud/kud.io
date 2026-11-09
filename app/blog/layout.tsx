@@ -2,26 +2,27 @@ import type { ReactNode } from "react"
 import { Link } from "next-view-transitions"
 import {
   BLOG_ROOT_ID,
-  BLOG_THEME_SCRIPT,
-  BlogThemeControl,
-} from "@/components/blog-theme"
+  ThemeControl,
+  ThemeScopeScript,
+} from "@/components/scoped-theme"
 import { mono } from "./fonts"
 import styles from "./blog.module.css"
 
 // The wrapper lives in the layout, not in either page, because it is the thing
-// the theme is stamped on: two copies would be two ids, and the pre-paint
-// script resolves exactly one. suppressHydrationWarning is required — the
-// script below rewrites data-theme before React ever sees the element.
+// the theme is stamped on: two copies would be two ids, and the mermaid and
+// image viewers resolve exactly one. suppressHydrationWarning is required —
+// ThemeScopeScript rewrites data-theme before React ever sees the element.
 const BlogLayout = ({ children }: { children: ReactNode }) => (
   <div
     id={BLOG_ROOT_ID}
     data-theme="system"
+    data-theme-scope
     suppressHydrationWarning
     className={mono.variable}
   >
-    <script dangerouslySetInnerHTML={{ __html: BLOG_THEME_SCRIPT }} />
+    <ThemeScopeScript />
     <div className={styles.wrap}>
-      {/* A div, not a p: BlogThemeControl renders a div, and a div inside a
+      {/* A div, not a p: ThemeControl renders a div, and a div inside a
           p makes the browser close the paragraph early — which silently
           drops the pill out of the flex row it is meant to sit in. */}
       <div className={styles.site}>
@@ -31,7 +32,7 @@ const BlogLayout = ({ children }: { children: ReactNode }) => (
         <Link href="/blog" className={styles.where}>
           /writing
         </Link>
-        <BlogThemeControl className={styles.theme} />
+        <ThemeControl className={styles.theme} />
       </div>
       {children}
     </div>

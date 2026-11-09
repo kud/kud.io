@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useId, useState, type CSSProperties } from "react"
-import { BLOG_ROOT_ID } from "@/components/blog-theme"
+import { BLOG_ROOT_ID } from "@/components/scoped-theme"
 import { BlogZoomViewer, ZoomIcon } from "@/components/blog-zoom-viewer"
 
 let mermaidModule: Promise<typeof import("mermaid")> | undefined

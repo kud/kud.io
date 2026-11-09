@@ -10,7 +10,7 @@ import {
   type KeyboardEvent,
 } from "react"
 import { createPortal } from "react-dom"
-import { BLOG_ROOT_ID } from "@/components/blog-theme"
+import { BLOG_ROOT_ID } from "@/components/scoped-theme"
 import { BlogZoomViewer, ZoomIcon } from "@/components/blog-zoom-viewer"
 import type { ImageDimensions } from "@/lib/image-dimensions"
 
