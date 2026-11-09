@@ -115,13 +115,19 @@ const ProjectsIndex = async () => {
           ← kud.io
         </BackLink>
         <div className={styles.heroInner}>
-          <AvatarImage
-            src={AVATAR}
-            alt="Erwann Mest"
-            width={148}
-            height={148}
-            className={styles.avatar}
-          />
+          <BackLink
+            href="/"
+            className={styles.avatarLink}
+            aria-label="kud.io home"
+          >
+            <AvatarImage
+              src={AVATAR}
+              alt="Erwann Mest"
+              width={148}
+              height={148}
+              className={styles.avatar}
+            />
+          </BackLink>
           <h1 className={styles.title}>
             Projects <span className={styles.titleBy}>by kud</span>
           </h1>

@@ -9,12 +9,8 @@
     {
       "repo": "gnachman/iTerm2",
       "label": "iTerm2",
+      "icon": "/contributions/iterm2.png",
       "note": "Patches to the macOS terminal I live in, upstreamed over the years."
-    },
-    {
-      "repo": "mcollina/githuman",
-      "label": "githuman",
-      "note": "Contributions to a human-friendly GitHub tooling project."
     }
   ]
 }

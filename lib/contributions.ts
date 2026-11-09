@@ -35,7 +35,13 @@ export type RepoContribution = {
 export type Contribution = RaycastContribution | RepoContribution
 
 type RaycastEntry = { owner: string; slug: string }
-type RepoEntry = { repo: string; label?: string; note?: string }
+type RepoEntry = {
+  repo: string
+  label?: string
+  note?: string
+  // A local icon, for a project whose owner avatar is a person, not its logo.
+  icon?: string
+}
 type ContributionsFile = {
   user: string
   raycast: RaycastEntry[]
@@ -124,7 +130,7 @@ const repoContribution = async (
     label: entry.label ?? name,
     note: entry.note ?? "",
     description: meta?.description ?? null,
-    ownerAvatar: meta?.owner.avatar_url ?? null,
+    ownerAvatar: entry.icon ?? meta?.owner.avatar_url ?? null,
     mergedPrs,
     stars: meta?.stargazers_count ?? 0,
     url: meta?.html_url ?? `https://github.com/${entry.repo}`,

@@ -18,9 +18,17 @@
      kept very faint so it reads as a backdrop, not a foreground. */
   background-image:
     linear-gradient(rgb(var(--cool, 79 116 236) / 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(var(--cool, 79 116 236) / 0.035) 1px, transparent 1px),
+    linear-gradient(
+      90deg,
+      rgb(var(--cool, 79 116 236) / 0.035) 1px,
+      transparent 1px
+    ),
     linear-gradient(rgb(var(--cool, 79 116 236) / 0.014) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(var(--cool, 79 116 236) / 0.014) 1px, transparent 1px);
+    linear-gradient(
+      90deg,
+      rgb(var(--cool, 79 116 236) / 0.014) 1px,
+      transparent 1px
+    );
   background-size:
     140px 140px,
     140px 140px,
@@ -127,8 +135,24 @@
   }
 }
 
+/* The avatar leads home, like the back link. */
+.avatarLink {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+  border-radius: 50%;
+}
+.avatarLink:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 4px;
+}
+
 .avatar {
-  --avatar-placeholder-background: linear-gradient(135deg, #f3f4f4 0%, #d9dcde 100%);
+  --avatar-placeholder-background: linear-gradient(
+    135deg,
+    #f3f4f4 0%,
+    #d9dcde 100%
+  );
 
   display: block;
   width: 148px;
@@ -152,7 +176,12 @@
      reduced to keep the gap to the intro unchanged. */
   padding-bottom: 0.16em;
   margin: 0 0 6px;
-  background: linear-gradient(135deg, var(--title-a, #f1f5f9) 0%, var(--primary-light, #e0a87e) 55%, var(--primary, #c2703d) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--title-a, #f1f5f9) 0%,
+    var(--primary-light, #e0a87e) 55%,
+    var(--primary, #c2703d) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
