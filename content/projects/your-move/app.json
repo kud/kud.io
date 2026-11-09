@@ -4,6 +4,21 @@
   "accent": "#3b82f6",
   "beansontoast": "your-move",
   "summary": "A phone-sized GitHub inbox: what moved, and whose move it is.",
+  "what": "One page that answers one question: what changed on GitHub, and is it my turn? Pull requests, reviews, checks and issues, laid out one row per repository and one column per status, every row marked your move or their move.",
+  "who": "Someone working across several repositories who wants to know, from a phone as much as a desk, what is waiting on them.",
+  "facts": [
+    { "label": "Runs in", "value": "Any width, phone first, installable" },
+    { "label": "Account", "value": "Sign in with GitHub, under your own token" },
+    { "label": "Data", "value": "Read live from GitHub, nothing stored" },
+    { "label": "Refresh", "value": "Every 10 minutes, only while you look" }
+  ],
+  "flow": [
+    { "label": "The board", "note": "polls one endpoint, shows how old its data is" },
+    { "label": "@kud/gh", "note": "builds the GraphQL queries and merges the results" },
+    { "label": "@kud/gh-workflow", "note": "decides what a row is and whose move it is" },
+    { "label": "GitHub GraphQL", "note": "about 74 of the 5,000 hourly points per full read" }
+  ],
+  "flowNote": "Derive, never mirror: GitHub owns the facts, the app owns only the interpretation, worked out fresh on every load.",
   "stack": ["Next.js", "React", "GitHub GraphQL", "PWA", "TypeScript"],
   "decisions": [
     "Reads GitHub live over GraphQL: no database, no mirror, no webhooks.",

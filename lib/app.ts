@@ -4,6 +4,10 @@ import { capitalCase } from "change-case"
 
 export type Feature = { title: string; description: string }
 
+// A product record's infobox row, and one step of its "How it works" chain.
+export type Fact = { label: string; value: string }
+export type FlowStep = { label: string; note?: string }
+
 // Curated content for a `kud-site-app` project — the deployed web apps that lead
 // the projects list as big liquid-glass launcher tiles and get their own page.
 // Kept in content/projects/<slug>/app.json so it survives sync-content runs (the
@@ -24,6 +28,11 @@ export type AppMeta = {
   summary: string | null
   decisions: string[]
   writing: string[]
+  what: string | null
+  who: string | null
+  facts: Fact[]
+  flow: FlowStep[]
+  flowNote: string | null
   tagline: string | null
   why: string | null
   how: string | null
@@ -44,6 +53,11 @@ const EMPTY: AppMeta = {
   summary: null,
   decisions: [],
   writing: [],
+  what: null,
+  who: null,
+  facts: [],
+  flow: [],
+  flowNote: null,
   tagline: null,
   why: null,
   how: null,
@@ -71,6 +85,11 @@ export const getApp = (slug: string): AppMeta => {
       summary: data.summary ?? null,
       decisions: data.decisions ?? [],
       writing: data.writing ?? [],
+      what: data.what ?? null,
+      who: data.who ?? null,
+      facts: data.facts ?? [],
+      flow: data.flow ?? [],
+      flowNote: data.flowNote ?? null,
       tagline: data.tagline ?? null,
       why: data.why ?? null,
       how: data.how ?? null,

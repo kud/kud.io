@@ -3,10 +3,25 @@
   "accent": "#6366f1",
   "beansontoast": "planning-poker",
   "summary": "Real-time planning poker in a shared link, no account.",
-  "stack": ["Next.js", "PartyKit", "WebSockets", "PWA", "TypeScript"],
+  "what": "Planning poker for estimating user stories together. Open the link, pick a name and an avatar, vote, and the host flips every card at once. Then the highest and lowest votes explain themselves, and the table votes again or moves on.",
+  "who": "A team estimating together, round a table or on a call, with nobody signing up for anything.",
+  "facts": [
+    { "label": "Runs in", "value": "Any browser, installable as a PWA" },
+    { "label": "Account", "value": "None: a shared link or a six-letter code" },
+    { "label": "Data", "value": "Room state on Cloudflare, no database" },
+    { "label": "Decks", "value": "Fibonacci, numeric, T-shirt or custom" }
+  ],
+  "flow": [
+    { "label": "Every browser, host included", "note": "one WebSocket each" },
+    { "label": "Room server", "note": "a PartyServer Durable Object on Cloudflare Workers" },
+    { "label": "Authoritative room state", "note": "broadcast to every connection on each change" }
+  ],
+  "flowNote": "Hosting is a capability, not a page: creating a room stores a secret in the browser, and whoever presents it gets the host controls.",
+  "screenshots": ["/apps/planning-poker-shot.png"],
+  "stack": ["Next.js", "PartyServer", "Cloudflare Workers", "WebSockets", "PWA", "TypeScript"],
   "decisions": [
-    "PartyKit keeps every participant's vote in sync over WebSockets.",
-    "Rooms live in memory at the edge: no database, and nothing to clean up after a session.",
+    "A PartyServer room on Cloudflare Workers keeps every participant's vote in sync over WebSockets, one Durable Object per room.",
+    "The deck and the host's identity persist in Durable Object storage, so a room survives refreshes and reconnects without a database.",
     "No accounts, by design: a shared link is the whole onboarding.",
     "Installable as a PWA, for a phone in a stand-up."
   ],

@@ -59,6 +59,7 @@ export const getRaycastProjects = (): Project[] => {
     // Every extension in raycast/extensions ships under the monorepo's MIT licence.
     license: "MIT",
     pushedAt: record.updatedAt,
+    createdAt: null,
   }))
   return cache
 }

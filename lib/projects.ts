@@ -31,6 +31,8 @@ export type Project = {
   language: string | null
   license: string | null
   pushedAt: string
+  // When the repo was created on GitHub: the "Started" date on a product record.
+  createdAt: string | null
   // Raycast extensions only: links to the Raycast store + the raycast:// install
   // deep link, and a download count shown in place of stars (they have no GitHub
   // repo of their own).
@@ -77,6 +79,7 @@ type Repo = {
   language: string | null
   license: { spdx_id: string | null } | null
   pushed_at: string
+  created_at: string
 }
 
 export const ghHeaders = (): HeadersInit => {
@@ -127,6 +130,7 @@ const toProject = (repo: Repo): Project => ({
       ? repo.license.spdx_id
       : null,
   pushedAt: repo.pushed_at,
+  createdAt: repo.created_at,
 })
 
 export const getProjects = async (): Promise<Project[]> => {

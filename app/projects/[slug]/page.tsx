@@ -28,8 +28,7 @@ import { Reveal } from "@/components/reveal"
 import { getRelease, releaseAge, type Release } from "@/lib/release"
 import { ThemePicker } from "@/components/theme-picker"
 import { ThemeScopeScript } from "@/components/scoped-theme"
-import { AppRecordProto } from "@/components/app-record-proto"
-import { APP_PROTO } from "@/lib/app-proto"
+import { RecordSheet, RecordTimeline } from "@/components/product-record"
 import styles from "./page.module.css"
 
 // The release pill says how old the latest version is, so rebuild hourly.
@@ -237,20 +236,30 @@ const AppLanding = ({ project }: { project: Project }) => {
 }
 
 // Product record — for a beansontoast product. The product's own page, at its
-// beansontoast.app subdomain, answers "what can this do for me?"; this one answers
-// "what did Erwann build here?": a one-line summary, the stack, the decisions
-// behind it, and links to the product, the source, the docs and related writing.
-// No tagline, feature list or screenshots: that would be a second landing.
+// beansontoast.app subdomain, sells it; this one is the record of what Erwann
+// built: the hero with the project's timeline beside the buttons, then the
+// story (screenshot, what it is, how it works, decisions, writing) next to an
+// infobox holding every other fact. Each fact lives in one place: time and
+// terms in the hero, the rest in the infobox.
 const ProductRecord = async ({ project }: { project: Project }) => {
   const app = getApp(project.slug)
   const name = appDisplayName(project.slug, app)
   const url = productUrl(app)
   const host = productHost(app)
   const hasDocs = projectHasDocs(project.slug)
-  const posts = await getAllPosts()
+  const [posts, release] = await Promise.all([
+    getAllPosts(),
+    getRelease(project.slug),
+  ])
   const writing = app.writing
     .map((slug) => posts.find((post) => post.slug === slug))
     .filter((post) => post !== undefined)
+    .map((post) => ({
+      slug: post.slug,
+      title: post.title,
+      description: post.description,
+      href: postPath(post),
+    }))
   // The record sits on the Dusk ground like a README landing, so it takes the
   // ground's tokens rather than the product's own accent.
   const art = Boolean(ART[project.slug])
@@ -275,8 +284,7 @@ const ProductRecord = async ({ project }: { project: Project }) => {
           ) : null}
           <div className={styles.badge}>
             <span className={styles.badgeDot} />
-            {project.license ? `${project.license} · ` : ""}A beansontoast
-            product
+            A beansontoast product
           </div>
           <h1
             className={`${styles.title} ${styles.titleReadme}`}
@@ -285,7 +293,9 @@ const ProductRecord = async ({ project }: { project: Project }) => {
             {name}
           </h1>
           {app.summary ? <p className={styles.tagline}>{app.summary}</p> : null}
-          <div className={`${styles.actions} warm-hero-actions`}>
+          <div
+            className={`${styles.actions} ${styles.actionsRecord} warm-hero-actions`}
+          >
             {url ? (
               <a
                 href={url}
@@ -313,60 +323,20 @@ const ProductRecord = async ({ project }: { project: Project }) => {
               </Link>
             ) : null}
           </div>
+          <RecordTimeline project={project} />
         </div>
       </section>
 
-      <div className={styles.record}>
-        {app.stack.length > 0 ? (
-          <section className={styles.recordBlock}>
-            <h2 className={styles.recordLabel}>Stack</h2>
-            <ul className={`${styles.stack} ${styles.recordStack}`}>
-              {app.stack.map((tech) => (
-                <li key={tech}>{tech}</li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-
-        {app.decisions.length > 0 ? (
-          <section className={styles.recordBlock}>
-            <h2 className={styles.recordLabel}>Decisions</h2>
-            <ul className={styles.decisions}>
-              {app.decisions.map((decision) => (
-                <li key={decision}>{decision}</li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-
-        {writing.length > 0 ? (
-          <section className={styles.recordBlock}>
-            <h2 className={styles.recordLabel}>Writing</h2>
-            <ul className={styles.writing}>
-              {writing.map((post) => (
-                <li key={post.slug}>
-                  <Link href={postPath(post)}>{post.title}</Link>
-                  <span>{post.description}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-
-        <p className={styles.recordFoot}>
-          What it does, and how to use it, lives on the product&apos;s own page
-          {url ? (
-            <>
-              {" "}
-              at{" "}
-              <a href={url} target="_blank" rel="noreferrer">
-                {host}
-              </a>
-            </>
-          ) : null}
-          .
-        </p>
-      </div>
+      <RecordSheet
+        project={project}
+        app={app}
+        name={name}
+        url={url}
+        host={host}
+        hasDocs={hasDocs}
+        release={release}
+        writing={writing}
+      />
     </div>
   )
 }
@@ -616,9 +586,7 @@ const ProjectLanding = async ({
     >
       <ThemeScopeScript />
       <ThemePicker className="dusk-picker-top" />
-      {showRecord && APP_PROTO[slug] ? (
-        <ProtoRecord project={project} />
-      ) : showRecord ? (
+      {showRecord ? (
         <ProductRecord project={project} />
       ) : showAppLanding ? (
         <AppLanding project={project} />
@@ -640,32 +608,3 @@ const ProjectLanding = async ({
 }
 
 export default ProjectLanding
-
-// Prototype (feat/proto-app-pages): today's record plus three richer candidates,
-// switched by ?p=1..3, for the products with a fixture in lib/app-proto.ts.
-const ProtoRecord = async ({ project }: { project: Project }) => {
-  const app = getApp(project.slug)
-  const posts = await getAllPosts()
-  const writing = app.writing
-    .map((slug) => posts.find((post) => post.slug === slug))
-    .filter((post) => post !== undefined)
-    .map((post) => ({
-      slug: post.slug,
-      title: post.title,
-      description: post.description,
-      href: postPath(post),
-    }))
-  return (
-    <AppRecordProto
-      project={project}
-      app={app}
-      proto={APP_PROTO[project.slug]}
-      name={appDisplayName(project.slug, app)}
-      url={productUrl(app)}
-      host={productHost(app)}
-      hasDocs={projectHasDocs(project.slug)}
-      writing={writing}
-      current={<ProductRecord project={project} />}
-    />
-  )
-}
