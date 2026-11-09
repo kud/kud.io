@@ -1,5 +1,5 @@
 /* A product record on the Dusk ground: the hero's timeline line, then the
-   story beside an encyclopaedia-style infobox. Built only on Dusk tokens
+   story beside an infobox card. Built only on Dusk tokens
    (--text, --muted, --primary, --primary-light, --surface, --surface-2,
    --border), so day and night both follow the picker. */
 
@@ -41,7 +41,7 @@
   margin: 0 auto;
   padding: 8px 24px 96px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-columns: minmax(0, 1fr) 340px;
   grid-template-areas: "main box";
   gap: 56px;
   align-items: start;
@@ -182,38 +182,20 @@
 }
 
 /* Infobox ---------------------------------------------------------------------
-   An encyclopaedia's summary panel: a title bar, a picture with its caption,
-   then label and value rows under centred group headers. Square-ish corners
-   and hairlines, not a floating card: it reads as reference, not as an ad. */
+   Every fact the story does not tell, in a card like the rest of the page:
+   one border, the page's radius, no bars and no rules between rows. A head
+   with the name and the live status, then sections under quiet labels set
+   like the timeline's, so the hero and the box speak one type scale. */
 .infobox {
   grid-area: box;
+  display: grid;
+  gap: 22px;
+  padding: 22px 22px 24px;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 14px;
   background: var(--surface);
-  overflow: hidden;
   font-size: 14px;
-  line-height: 1.45;
-}
-.infobox table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.infobox th,
-.infobox td {
-  padding: 7px 12px;
-  text-align: left;
-  vertical-align: top;
-}
-.infobox tbody tr + tr > * {
-  border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
-}
-.infobox tbody th[scope="row"] {
-  width: 38%;
-  color: var(--text);
-  font-weight: 650;
-}
-.infobox td {
-  color: var(--text);
+  line-height: 1.5;
 }
 .infobox a {
   color: var(--primary-light);
@@ -224,39 +206,57 @@
   text-underline-offset: 3px;
 }
 
-.infoTitle.infoTitle {
-  padding: 11px 12px;
-  background: color-mix(in srgb, var(--primary) 16%, var(--surface));
-  border-bottom: 1px solid var(--border);
-  color: var(--text);
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  text-align: center;
+.infoHead {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-dim, var(--border));
 }
-
-.infoImage.infoImage {
-  padding: 18px 12px 14px;
-  text-align: center;
-}
-.infoImage img {
+.infoIcon {
   display: block;
-  width: 96px;
-  height: 96px;
-  margin: 0 auto;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 4px;
   border-radius: 27%;
+  overflow: hidden;
   border: 1px solid var(--border);
+}
+.infoIcon img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
-.infoCaption {
+.infoName {
+  margin: 0;
+  color: var(--text);
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+.infobox a.livePill {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  margin-top: 10px;
-  color: var(--muted);
-  font-size: 13px;
+  gap: 8px;
+  max-width: 100%;
+  padding: 4px 11px 4px 9px;
+  border: 1px solid color-mix(in srgb, #2f9e5b 30%, var(--border));
+  border-radius: 999px;
+  background: color-mix(in srgb, #2f9e5b 9%, var(--surface));
+  color: var(--text);
+  font-size: 12.5px;
+  font-weight: 550;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.infobox a.livePill:hover {
+  text-decoration: none;
+  border-color: color-mix(in srgb, #2f9e5b 55%, var(--border));
 }
 .liveDot {
+  flex: none;
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -264,36 +264,63 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, #2f9e5b 22%, transparent);
 }
 
-.group th {
-  padding: 6px 12px;
-  background: color-mix(
-    in srgb,
-    var(--primary) 8%,
-    var(--surface-2, var(--surface))
-  );
-  color: var(--text);
-  font-size: 12px;
-  font-weight: 750;
-  letter-spacing: 0.9px;
-  text-align: center !important;
+.infoSection {
+  display: grid;
+  gap: 12px;
+}
+.infoLabel {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  line-height: 1.3;
   text-transform: uppercase;
 }
 
-.inlineList {
+.infoRows {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+.infoRows > div {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 12px;
+}
+.infoRows dt {
+  color: var(--muted);
+}
+.infoRows dd {
+  margin: 0;
+  color: var(--text);
+}
+
+.chips {
   list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
   margin: 0;
   padding: 0;
 }
-.inlineList li {
-  display: inline;
-}
-.inlineList li + li::before {
-  content: " · ";
-  color: var(--muted);
+.chips li {
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2, var(--surface));
+  color: var(--text);
+  font-size: 12.5px;
+  line-height: 1.5;
 }
 
 .infoMuted {
   color: var(--muted);
+}
+
+/* ?i=2 keeps the icon in the hero, so the box opens on the name. */
+:root[data-infobox="2"] .infoIcon {
+  display: none;
 }
 
 /* Narrow -------------------------------------------------------------------- */
@@ -303,6 +330,12 @@
     grid-template-areas: "box" "main";
     gap: 40px;
   }
+  /* The box follows the date line closely, as the next fact, not a new
+     chapter: the hero keeps its bottom padding, the sheet gives some back. */
+  .sheet {
+    margin-top: -16px;
+    padding-top: 0;
+  }
 }
 @media (max-width: 560px) {
   .sheet {
@@ -311,28 +344,4 @@
   .timeline > div {
     padding: 0 14px;
   }
-}
-
-/* The live link: the picture's caption (?i=1) or its own row (?i=2). */
-.infobox a.infoCaption {
-  color: var(--muted);
-}
-.infobox a.infoCaption:hover {
-  color: var(--text);
-}
-.infoStatus {
-  display: none;
-}
-:root[data-infobox="2"] .infoStatus {
-  display: table-row;
-}
-:root[data-infobox="2"] .infoPicture {
-  display: none;
-}
-.infoStatusCell.infoStatusCell {
-  padding: 9px 12px;
-  text-align: center;
-}
-.infoStatusCell .infoCaption {
-  margin-top: 0;
 }

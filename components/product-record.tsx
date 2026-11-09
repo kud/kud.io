@@ -70,50 +70,28 @@ type SheetProps = {
   writing: Post[]
 }
 
-// Two infobox treatments for review: ?i=1 (or none) heads the box with the
-// icon as its picture, the live link as caption; ?i=2 drops the picture, which
-// the hero already shows, for a plain status row under the title bar. Picked
-// before first paint.
+// Two infobox treatments for review: ?i=1 (or none) heads the box with the app
+// icon and drops the hero's, so the icon shows once; ?i=2 keeps the icon in the
+// hero and the box opens on the name. Picked before first paint.
 const PICK = `(function(){try{if(new URLSearchParams(location.search).get("i")==="2")document.documentElement.setAttribute("data-infobox","2")}catch(e){}})()`
 
-const Live = ({ url, host }: { url: string | null; host: string | null }) =>
-  url && host ? (
-    <a
-      className={styles.infoCaption}
-      href={url}
-      target="_blank"
-      rel="noreferrer"
-    >
-      <span className={styles.liveDot} aria-hidden="true" />
-      Live at {host}
-    </a>
-  ) : null
-
-const Group = ({ title }: { title: string }) => (
-  <tr className={styles.group}>
-    <th colSpan={2} scope="colgroup">
-      {title}
-    </th>
-  </tr>
-)
-
-const Row = ({
-  label,
+const Section = ({
+  title,
   children,
 }: {
-  label: string
+  title: string
   children: React.ReactNode
 }) => (
-  <tr>
-    <th scope="row">{label}</th>
-    <td>{children}</td>
-  </tr>
+  <section className={styles.infoSection}>
+    <h2 className={styles.infoLabel}>{title}</h2>
+    {children}
+  </section>
 )
 
-// The infobox: an encyclopaedia's summary panel in Dusk terms. Title bar, the
-// icon as its picture with the live status as caption, then label and value
-// rows in three groups: what the product is, what it is built with, and where
-// the project lives.
+// The infobox: every fact the story does not tell, in a card on the Dusk
+// ground. A head with the product's name (and, in ?i=1, its icon) and its live
+// status as a pill, then three quiet sections: what the product is, what it is
+// built with, and where the project lives.
 const Infobox = ({
   project,
   app,
@@ -127,85 +105,101 @@ const Infobox = ({
     ? formatDate(release.publishedAt, dayMonthYear)
     : null
   const repo = project.repoUrl.replace(/^https:\/\/github\.com\//, "")
-  return (
-    <aside className={styles.infobox} aria-label={`${name} at a glance`}>
-      <script dangerouslySetInnerHTML={{ __html: PICK }} />
-      <table>
-        <thead>
-          <tr>
-            <th colSpan={2} className={styles.infoTitle}>
-              {name}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {app.icon ? (
-            <tr className={styles.infoPicture}>
-              <td colSpan={2} className={styles.infoImage}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={app.icon} alt={`${name} icon`} />
-                <Live url={url} host={host} />
-              </td>
-            </tr>
-          ) : null}
-          {url ? (
-            <tr className={app.icon ? styles.infoStatus : undefined}>
-              <td colSpan={2} className={styles.infoStatusCell}>
-                <Live url={url} host={host} />
-              </td>
-            </tr>
-          ) : null}
-          {app.facts.length > 0 ? (
+  const projectRows = [
+    {
+      label: "Source",
+      value: (
+        <a href={project.repoUrl} target="_blank" rel="noreferrer">
+          {repo}
+        </a>
+      ),
+    },
+    release
+      ? {
+          label: "Latest release",
+          value: (
             <>
-              <Group title="Product" />
-              {app.facts.map((fact) => (
-                <Row key={fact.label} label={fact.label}>
-                  {fact.value}
-                </Row>
-              ))}
-            </>
-          ) : null}
-          {app.stack.length > 0 ? (
-            <>
-              <Group title="Built with" />
-              <Row label="Stack">
-                <ul className={styles.inlineList}>
-                  {app.stack.map((tech) => (
-                    <li key={tech}>{tech}</li>
-                  ))}
-                </ul>
-              </Row>
-            </>
-          ) : null}
-          <Group title="Project" />
-          <Row label="Source">
-            <a href={project.repoUrl} target="_blank" rel="noreferrer">
-              {repo}
-            </a>
-          </Row>
-          {release ? (
-            <Row label="Latest release">
               <a href={release.url} target="_blank" rel="noreferrer">
                 v{release.version}
               </a>
               {released ? (
                 <span className={styles.infoMuted}>
-                  {" "}
-                  ·{" "}
+                  {" · "}
                   <time dateTime={release.publishedAt ?? undefined}>
                     {released}
                   </time>
                 </span>
               ) : null}
-            </Row>
-          ) : null}
-          {hasDocs ? (
-            <Row label="Documentation">
-              <Link href={`/projects/${project.slug}/docs`}>Read the docs</Link>
-            </Row>
-          ) : null}
-        </tbody>
-      </table>
+            </>
+          ),
+        }
+      : null,
+    hasDocs
+      ? {
+          label: "Documentation",
+          value: (
+            <Link href={`/projects/${project.slug}/docs`}>Read the docs</Link>
+          ),
+        }
+      : null,
+  ].filter((row) => row !== null)
+  return (
+    <aside className={styles.infobox} aria-label={`${name} at a glance`}>
+      <script dangerouslySetInnerHTML={{ __html: PICK }} />
+      <header className={styles.infoHead}>
+        {app.icon ? (
+          <span
+            className={styles.infoIcon}
+            style={{ viewTransitionName: `app-icon-${project.slug}` }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={app.icon} alt="" />
+          </span>
+        ) : null}
+        <p className={styles.infoName}>{name}</p>
+        {url && host ? (
+          <a
+            className={styles.livePill}
+            href={url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span className={styles.liveDot} aria-hidden="true" />
+            Live at {host}
+          </a>
+        ) : null}
+      </header>
+      {app.facts.length > 0 ? (
+        <Section title="Product">
+          <dl className={styles.infoRows}>
+            {app.facts.map((fact) => (
+              <div key={fact.label}>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </Section>
+      ) : null}
+      {app.stack.length > 0 ? (
+        <Section title="Built with">
+          <ul className={styles.chips} aria-label="Stack">
+            {app.stack.map((tech) => (
+              <li key={tech}>{tech}</li>
+            ))}
+          </ul>
+        </Section>
+      ) : null}
+      <Section title="Project">
+        <dl className={styles.infoRows}>
+          {projectRows.map((row) => (
+            <div key={row.label}>
+              <dt>{row.label}</dt>
+              <dd>{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </Section>
     </aside>
   )
 }

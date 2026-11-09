@@ -942,6 +942,10 @@
   height: 100%;
   object-fit: cover;
 }
+/* Infobox ?i=1 (the default) carries the icon, so the hero lets it go. */
+:global(:root:not([data-infobox="2"])) .recordIcon {
+  display: none;
+}
 
 /* Release version in the README hero ----------------------------------------
    A release pill, between the pitch and the calls to action. Built on the hero's
