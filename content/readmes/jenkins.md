@@ -87,6 +87,7 @@ listServers() // [{ name: "prod", url: "...", current: true }]
 | `getSpecificJobs(jobNames)`           | Batch-fetch jobs by name, tolerant of per-job errors          |
 | `getPipelineStages(job, buildNumber)` | Pipeline stage breakdown (Workflow API)                       |
 | `getTestReport(job, buildNumber)`     | Test report for a build                                       |
+| `diagnoseBuild(job, buildNumber?, opts?)` | Diagnose a failed build: failed stages, steps with log tails, test failures, hints |
 
 ### Logs
 
