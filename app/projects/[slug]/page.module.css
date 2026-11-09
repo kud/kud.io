@@ -1041,10 +1041,8 @@
 }
 
 /* Release version in the README hero ----------------------------------------
-   Prototype: four treatments, picked by `?v=`. Each is one element built on the
-   hero's tokens, so a palette change restyles it without touching this block. */
-
-/* 2 · Release pill, between the pitch and the calls to action. The tagline
+   A release pill, between the pitch and the calls to action. Built on the hero's
+   tokens, so a palette change restyles it without touching this block. The tagline
    gives up some of its bottom margin so the pill belongs to the buttons. */
 .taglineTight {
   margin-bottom: 24px;
@@ -1148,134 +1146,6 @@
 @media (max-width: 420px) {
   .releasePillAge {
     display: none;
-  }
-}
-
-/* 3 · A joined tail on the source button: the version reads as a property of
-   the code it links to. */
-.split {
-  display: inline-flex;
-  align-items: stretch;
-}
-
-.split > :first-child {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.split > :first-child:hover {
-  transform: none;
-}
-
-.splitTail {
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 2px;
-  padding: 0 16px 0 14px;
-  border: 1px solid var(--border);
-  border-left: 0;
-  border-radius: 0 11px 11px 0;
-  background: var(--surface-2);
-  text-decoration: none;
-  line-height: 1;
-  transition:
-    background 0.18s,
-    border-color 0.18s;
-}
-
-.splitTail:hover {
-  background: var(--surface-3);
-}
-
-.splitFilled .splitTail {
-  border-color: color-mix(in srgb, var(--primary) 55%, transparent);
-  border-left: 1px solid color-mix(in srgb, var(--primary) 60%, var(--bg));
-  background: color-mix(in srgb, var(--primary) 18%, var(--surface));
-}
-
-.splitFilled .splitTail:hover {
-  background: color-mix(in srgb, var(--primary) 30%, var(--surface));
-}
-
-.splitTailLabel {
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.splitFilled .splitTailLabel,
-.splitTail[data-fresh] .splitTailLabel {
-  color: var(--primary-light);
-}
-
-.splitTailVersion {
-  font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-/* 4 · The version as the title's superscript, in the title's own gradient. */
-.titleRow {
-  position: relative;
-  display: table;
-  margin: 0 auto;
-}
-
-.versionSup {
-  position: absolute;
-  top: 4px;
-  left: 100%;
-  margin-left: 12px;
-  padding-bottom: 3px;
-  font-family: var(--mono);
-  font-size: 14px;
-  font-weight: 600;
-  white-space: nowrap;
-  text-decoration: none;
-  background: linear-gradient(
-    135deg,
-    var(--text) 0%,
-    var(--primary-light) 55%,
-    var(--primary) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: fadeUp 0.6s ease both;
-  animation-delay: 0.1s;
-}
-
-.versionSup::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: linear-gradient(90deg, var(--primary-light), transparent);
-  transform-origin: left;
-  transform: scaleX(0);
-  transition: transform 0.25s ease;
-}
-
-.versionSup:hover::after {
-  transform: scaleX(1);
-}
-
-@media (max-width: 640px) {
-  .titleRow {
-    display: block;
-  }
-
-  .versionSup {
-    position: static;
-    display: inline-block;
-    margin: 0 0 14px;
   }
 }
 

@@ -1,4 +1,4 @@
-import { type CSSProperties, type ReactNode } from "react"
+import { type CSSProperties } from "react"
 import type { Metadata } from "next"
 import { Link } from "next-view-transitions"
 import { MorphLink } from "@/components/morph-link"
@@ -25,6 +25,9 @@ import { getMDXComponents } from "@/components/mdx"
 import { Reveal } from "@/components/reveal"
 import { getRelease, releaseAge, type Release } from "@/lib/release"
 import styles from "./page.module.css"
+
+// The release pill says how old the latest version is, so rebuild hourly.
+export const revalidate = 3600
 
 export const generateStaticParams = async () =>
   (await getProjects()).map((project) => ({ slug: project.slug }))
@@ -369,12 +372,10 @@ const ReadmeLanding = ({
   project,
   icon,
   release,
-  variant,
 }: {
   project: Project
   icon: string | null
   release: Release | null
-  variant: VersionVariant
 }) => {
   const readme = getProjectReadme(project.readmeSlug ?? project.slug)
   const Body = readme?.data.body
@@ -393,28 +394,6 @@ const ReadmeLanding = ({
   // short enough to need no TOC; curated lists keep theirs.
   const showToc = toc.length > 0 && (isList || !hasDocs)
   const age = release ? releaseAge(release.publishedAt) : null
-  // Variant 3 hangs the version off the source button as a joined tail.
-  const withVersion = (button: ReactNode, filled: boolean) =>
-    variant === 3 && release ? (
-      <span className={`${styles.split} ${filled ? styles.splitFilled : ""}`}>
-        {button}
-        <a
-          href={release.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.splitTail}
-          data-fresh={age?.fresh ? "" : undefined}
-          title={age ? `Released ${age.label}` : undefined}
-        >
-          <span className={styles.splitTailLabel}>
-            {age?.fresh ? "New" : "Latest"}
-          </span>
-          <span className={styles.splitTailVersion}>v{release.version}</span>
-        </a>
-      </span>
-    ) : (
-      button
-    )
   const badgeLabel = isRaycast
     ? project.downloads
       ? `${project.downloads.toLocaleString()} installs`
@@ -445,35 +424,21 @@ const ReadmeLanding = ({
             <span className={styles.badgeDot} />
             {project.license ? `${project.license} · ` : ""}
             {badgeLabel}
-            {variant === 1 && release ? ` · v${release.version}` : ""}
           </div>
-          <div className={styles.titleRow}>
-            <h1
-              className={`${styles.title} ${styles.titleReadme}`}
-              style={{ viewTransitionName: `project-${project.slug}` }}
-            >
-              {project.name}
-            </h1>
-            {variant === 4 && release ? (
-              <a
-                href={release.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.versionSup}
-                title={age ? `Released ${age.label}` : undefined}
-              >
-                v{release.version}
-              </a>
-            ) : null}
-          </div>
+          <h1
+            className={`${styles.title} ${styles.titleReadme}`}
+            style={{ viewTransitionName: `project-${project.slug}` }}
+          >
+            {project.name}
+          </h1>
           {project.description ? (
             <p
-              className={`${styles.tagline} ${variant === 2 && release ? styles.taglineTight : ""}`}
+              className={`${styles.tagline} ${release ? styles.taglineTight : ""}`}
             >
               {project.description}
             </p>
           ) : null}
-          {variant === 2 && release ? (
+          {release ? (
             <a
               href={release.url}
               target="_blank"
@@ -514,17 +479,14 @@ const ReadmeLanding = ({
                 >
                   Raycast Store ↗
                 </a>
-                {withVersion(
-                  <a
-                    href={project.repoUrl}
-                    className={styles.secondary}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    View source ↗
-                  </a>,
-                  false,
-                )}
+                <a
+                  href={project.repoUrl}
+                  className={styles.secondary}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View source ↗
+                </a>
               </>
             ) : isWebext ? (
               <>
@@ -538,19 +500,16 @@ const ReadmeLanding = ({
                     Add to Firefox ↗
                   </a>
                 ) : null}
-                {withVersion(
-                  <a
-                    href={project.repoUrl}
-                    className={
-                      project.storeUrl ? styles.secondary : styles.primary
-                    }
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    View source ↗
-                  </a>,
-                  !project.storeUrl,
-                )}
+                <a
+                  href={project.repoUrl}
+                  className={
+                    project.storeUrl ? styles.secondary : styles.primary
+                  }
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View source ↗
+                </a>
               </>
             ) : (
               <>
@@ -562,17 +521,14 @@ const ReadmeLanding = ({
                     Documentation →
                   </Link>
                 ) : null}
-                {withVersion(
-                  <a
-                    href={project.repoUrl}
-                    className={hasDocs ? styles.secondary : styles.primary}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {hasDocs ? "GitHub ↗" : "View on GitHub ↗"}
-                  </a>,
-                  !hasDocs,
-                )}
+                <a
+                  href={project.repoUrl}
+                  className={hasDocs ? styles.secondary : styles.primary}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {hasDocs ? "GitHub ↗" : "View on GitHub ↗"}
+                </a>
               </>
             )}
           </div>
@@ -621,25 +577,12 @@ const ReadmeLanding = ({
 const appHasContent = (app: AppMeta): boolean =>
   Boolean(app.launchUrl || app.why || app.how || app.features.length > 0)
 
-// Prototype: `?v=1..4` picks the hero version treatment so one preview shows
-// them all. 1 in the badge, 2 a release pill, 3 a tail on the source button, 4 a
-// superscript on the title.
-const VERSION_VARIANTS = [1, 2, 3, 4] as const
-type VersionVariant = (typeof VERSION_VARIANTS)[number]
-const DEFAULT_VERSION_VARIANT: VersionVariant = 2
-
-const toVersionVariant = (raw: string | string[] | undefined): VersionVariant =>
-  VERSION_VARIANTS.find((n) => String(n) === raw) ?? DEFAULT_VERSION_VARIANT
-
 const ProjectLanding = async ({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{ v?: string | string[] }>
 }) => {
   const { slug } = await params
-  const variant = toVersionVariant((await searchParams).v)
   const project = await getProject(slug)
   if (!project) notFound()
 
@@ -671,7 +614,6 @@ const ProjectLanding = async ({
           project={project}
           icon={icon}
           release={await getRelease(project.slug)}
-          variant={variant}
         />
       )}
     </main>
