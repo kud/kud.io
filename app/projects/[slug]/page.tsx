@@ -23,6 +23,7 @@ import { getIcons } from "@/lib/icons"
 import { landingComponents } from "@/components/landing-kit"
 import { getMDXComponents } from "@/components/mdx"
 import { Reveal } from "@/components/reveal"
+import { getNpmRelease, type NpmRelease } from "@/lib/npm-version"
 import styles from "./page.module.css"
 
 export const generateStaticParams = async () =>
@@ -367,9 +368,11 @@ const ProductRecord = async ({ project }: { project: Project }) => {
 const ReadmeLanding = ({
   project,
   icon,
+  release,
 }: {
   project: Project
   icon: string | null
+  release: NpmRelease | null
 }) => {
   const readme = getProjectReadme(project.readmeSlug ?? project.slug)
   const Body = readme?.data.body
@@ -417,6 +420,7 @@ const ReadmeLanding = ({
             <span className={styles.badgeDot} />
             {project.license ? `${project.license} · ` : ""}
             {badgeLabel}
+            {release ? ` · v${release.version}` : ""}
           </div>
           <h1
             className={`${styles.title} ${styles.titleReadme}`}
@@ -576,7 +580,11 @@ const ProjectLanding = async ({
           options={{ parseFrontmatter: true }}
         />
       ) : (
-        <ReadmeLanding project={project} icon={icon} />
+        <ReadmeLanding
+          project={project}
+          icon={icon}
+          release={await getNpmRelease(project.slug)}
+        />
       )}
     </main>
   )
