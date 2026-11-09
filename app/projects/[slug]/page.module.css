@@ -186,7 +186,12 @@
      aren't clipped; margin trimmed to keep the gap to the tagline unchanged. */
   padding-bottom: 0.16em;
   margin: 0 0 8px;
-  background: linear-gradient(135deg, var(--title-a, #f1f5f9) 0%, var(--primary-light, #e0a87e) 60%, var(--primary, #c2703d) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--title-a, #f1f5f9) 0%,
+    var(--primary-light, #e0a87e) 60%,
+    var(--primary, #c2703d) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -761,7 +766,7 @@
   padding: 0;
   margin: 0 0 8px;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
   background: var(--border);
   border: 1px solid var(--border);
@@ -939,6 +944,8 @@
 }
 
 .record {
+  /* Stack chips and decision bullets in the ground's mauve. */
+  --app-accent: var(--primary-light);
   max-width: 720px;
   margin: 0 auto;
   padding: 56px 24px 96px;

@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { Link } from "next-view-transitions"
 import { MorphLink } from "@/components/morph-link"
 import { IllustrationSlot } from "@/components/illustration-slot"
-import { ILLUSTRATED, SKIN } from "@/lib/skin"
+import { ART } from "@/lib/art"
 import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { DocsBody } from "fumadocs-ui/layouts/docs/page"
@@ -247,18 +247,19 @@ const ProductRecord = async ({ project }: { project: Project }) => {
   const writing = app.writing
     .map((slug) => posts.find((post) => post.slug === slug))
     .filter((post) => post !== undefined)
-  const accentStyle = app.accent
-    ? ({ "--app-accent": app.accent } as CSSProperties)
-    : undefined
+  // The record sits on the Dusk ground like a README landing, so it takes the
+  // ground's tokens rather than the product's own accent.
+  const art = Boolean(ART[project.slug])
 
   return (
-    <div className={styles.appLanding} style={accentStyle}>
-      <section className={styles.hero}>
+    <div className={styles.appLanding}>
+      <section className={`${styles.hero} ${art ? "warm-hero" : ""}`}>
         <div className={styles.heroGrid} />
         <MorphLink href="/projects#products" className={styles.back}>
           ← Projects
         </MorphLink>
-        <div className={styles.heroContent}>
+        {art ? <IllustrationSlot ratio="16/9" slug={project.slug} /> : null}
+        <div className={`${styles.heroContent} ${art ? "warm-hero-copy" : ""}`}>
           {app.icon ? (
             <span
               className={styles.recordIcon}
@@ -380,7 +381,7 @@ const ReadmeLanding = ({
   release: Release | null
 }) => {
   const readme = getProjectReadme(project.readmeSlug ?? project.slug)
-  const art = SKIN.illustration && ILLUSTRATED.includes(project.slug)
+  const art = Boolean(ART[project.slug])
   const Body = readme?.data.body
   // Section headings (depth 2) drive a simple right-rail TOC.
   const toc = (readme?.data.toc ?? []).filter((item) => item.depth === 2)
@@ -602,7 +603,7 @@ const ProjectLanding = async ({
       : ((await getIcons())[slug] ?? project.icon ?? null)
 
   return (
-    <main className={styles.page} data-ground={SKIN.projects}>
+    <main className={styles.page} data-ground="dusk">
       {showRecord ? (
         <ProductRecord project={project} />
       ) : showAppLanding ? (

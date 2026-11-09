@@ -1,7 +1,6 @@
-// Syntax themes drawn from the warm illustration palette (cream, peach,
-// terracotta, mustard, sage, forest, teak). Every token colour clears WCAG AA
-// (4.5:1) against its own background and against the ground's card surface,
-// which is where fumadocs actually paints the block.
+// Syntax themes for the Dusk ground, drawn from the delivered project art.
+// Every token colour clears WCAG AA (4.5:1) against its own background, which
+// is the card surface fumadocs paints the block on.
 
 type Rule = {
   scope: string[]
@@ -91,31 +90,9 @@ const theme = (
   ] satisfies Rule[],
 })
 
-export const warmNight = theme("warm-night", "dark", "#1c2822", {
-  fg: "#efe6d6",
-  comment: "#9aa595",
-  keyword: "#ec9a6e",
-  string: "#bccc9f",
-  number: "#e6bf66",
-  fn: "#f2b48c",
-  type: "#dcb98f",
-  punct: "#c9bfae",
-})
-
-export const warmDay = theme("warm-day", "light", "#fbf6ee", {
-  fg: "#2b2420",
-  comment: "#6c6356",
-  keyword: "#a3442a",
-  string: "#4a6636",
-  number: "#82590f",
-  fn: "#8c4524",
-  type: "#6b4a2f",
-  punct: "#5a4f45",
-})
-
-// The Dusk pair. Night clears AA on all three night candidates' card and
-// raised surfaces; day clears it on day Dusk's card and its blush ground.
-export const duskNight = theme("dusk-night", "dark", "#261b21", {
+// The Dusk pair, each on its own light's card surface: night on late dusk's
+// #33252c, day on #fdf5ef. Both clear AA there and on the page ground.
+export const duskNight = theme("dusk-night", "dark", "#33252c", {
   fg: "#f4e7e1",
   comment: "#b9a1a8",
   keyword: "#dfa0c4",

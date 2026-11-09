@@ -3,7 +3,6 @@ import { DocsLayout } from "fumadocs-ui/layouts/docs"
 import { getProjectDocsTree } from "@/lib/source"
 import { getIcons } from "@/lib/icons"
 import { baseOptions } from "@/lib/layout.shared"
-import { SKIN } from "@/lib/skin"
 
 const Layout = async ({
   params,
@@ -33,7 +32,7 @@ const Layout = async ({
   )
 
   return (
-    <div data-ground={SKIN.docs} style={{ display: "contents" }}>
+    <div data-ground="dusk" style={{ display: "contents" }}>
       <DocsLayout
         tree={getProjectDocsTree(slug)}
         {...base}

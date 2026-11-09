@@ -603,6 +603,7 @@
 .dot {
   width: 12px;
   height: 12px;
+  flex-shrink: 0;
   border-radius: 50%;
   background: var(--accent);
   box-shadow: 0 0 14px var(--accent);
@@ -769,7 +770,7 @@
 /* Ruled two-column list -----------------------------------------------------*/
 .list {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
   background: var(--border);
   border: 1px solid var(--border);

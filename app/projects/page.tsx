@@ -16,7 +16,7 @@ import { ProjectList } from "@/components/project-list"
 import { Contributions } from "@/components/contributions"
 import { Link } from "next-view-transitions"
 import { IllustrationSlot } from "@/components/illustration-slot"
-import { ILLUSTRATED, SKIN } from "@/lib/skin"
+import { FEATURED } from "@/lib/art"
 import styles from "./page.module.css"
 
 export const metadata: Metadata = {
@@ -56,7 +56,7 @@ const ProjectsIndex = async () => {
   const ecosystems = getEcosystems(withIcons, icons)
 
   return (
-    <main className={styles.page} data-ground={SKIN.projects}>
+    <main className={styles.page} data-ground="dusk">
       <header className={styles.hero}>
         <Blueprint className={styles.blueprint} />
         <BackLink href="/" className={styles.back}>
@@ -106,11 +106,11 @@ const ProjectsIndex = async () => {
         </div>
       </header>
 
-      {SKIN.illustration ? (
+      {FEATURED.length > 0 ? (
         <section className="warm-featured" aria-labelledby="featured">
           <h2 id="featured">Featured</h2>
           <ul>
-            {ILLUSTRATED.map((slug) => withIcons.find((p) => p.slug === slug))
+            {FEATURED.map((slug) => withIcons.find((p) => p.slug === slug))
               .filter((p) => p !== undefined)
               .map((p) => (
                 <li key={p.slug}>

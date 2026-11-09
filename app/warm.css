@@ -1,174 +1,12 @@
-/* Warm restyle prototype --------------------------------------------------- */
-/* The tutti illustration world as tokens: cream, peach, terracotta, mustard,
-   sage, forest, teak. Grounds are chosen per surface in lib/skin.ts and land
-   here as data-ground on the page wrapper. Selectors double the attribute so
-   they outrank the single-class CSS-module tokens they override. */
+/* Dusk ---------------------------------------------------------------------- */
+/* The ground for /projects, the project landings and their docs, sampled from
+   the delivered heroes: blush ground lifted from the rose walls, plum ink,
+   terracotta from the throws, mauve from the cards and screens, peach and
+   amber from the lamps. Pages opt in with data-ground="dusk" on their wrapper;
+   selectors double the attribute so they outrank the single-class CSS-module
+   tokens they override. The home page never carries it. */
 :root {
   --w-cream: #f4ebdd;
-  --w-peach: #f2b48c;
-  --w-terracotta: #c65d3b;
-  --w-orange: #d9772f;
-  --w-mustard: #d9a93b;
-  --w-sage: #9fb08f;
-  --w-forest: #2f4a3a;
-  --w-teak: #8a5a3b;
-}
-
-/* Warm night: forest/teak dark ground, cream ink. */
-[data-ground="night"][data-ground] {
-  --bg: #16201b;
-  --surface: #1c2822;
-  --surface-2: #23302a;
-  --surface-3: #2b3a32;
-  --border: #34463b;
-  --border-dim: #1f2a24;
-  --text: #efe6d6;
-  --muted: #b3ac9c;
-  --dim: #6f7b70;
-  --primary: #c65d3b;
-  --primary-light: #f2b48c;
-  --title-a: #f7efe2;
-  --hi: 239 230 214;
-  --glow: 217 119 47;
-  --cool: 159 176 143;
-  --color-fd-background: #16201b;
-  --color-fd-foreground: #efe6d6;
-  --color-fd-card: #1c2822;
-  --color-fd-card-foreground: #efe6d6;
-  --color-fd-popover: #1c2822;
-  --color-fd-popover-foreground: #efe6d6;
-  --color-fd-muted: #23302a;
-  --color-fd-muted-foreground: #b3ac9c;
-  --color-fd-border: #34463b;
-  --color-fd-secondary: #23302a;
-  --color-fd-secondary-foreground: #efe6d6;
-  --color-fd-accent: #2b3a32;
-  --color-fd-accent-foreground: #f7efe2;
-  --color-fd-primary: #f2b48c;
-  --color-fd-primary-foreground: #16201b;
-  --color-fd-ring: #f2b48c;
-  background-color: var(--bg);
-  color: var(--text);
-}
-
-/* Warm day: cream ground, ink type, deeper palette accents for AA on cream. */
-[data-ground="day"][data-ground] {
-  --bg: #f5ede0;
-  --surface: #fbf6ee;
-  --surface-2: #efe4d2;
-  --surface-3: #e7dac4;
-  --border: #dccdb5;
-  --border-dim: #ebe0cd;
-  --text: #2b2420;
-  --muted: #66584b;
-  --dim: #a8998a;
-  --primary: #a3472b;
-  --primary-light: #8a4f2e;
-  --title-a: #2b2420;
-  --hi: 43 36 32;
-  --glow: 217 119 47;
-  --cool: 120 150 110;
-  --color-fd-background: #f5ede0;
-  --color-fd-foreground: #2b2420;
-  --color-fd-card: #fbf6ee;
-  --color-fd-card-foreground: #2b2420;
-  --color-fd-popover: #fbf6ee;
-  --color-fd-popover-foreground: #2b2420;
-  --color-fd-muted: #efe4d2;
-  --color-fd-muted-foreground: #66584b;
-  --color-fd-border: #dccdb5;
-  --color-fd-secondary: #efe4d2;
-  --color-fd-secondary-foreground: #2b2420;
-  --color-fd-accent: #e7dac4;
-  --color-fd-accent-foreground: #2b2420;
-  --color-fd-primary: #a3472b;
-  --color-fd-primary-foreground: #fbf6ee;
-  --color-fd-ring: #a3472b;
-  background-color: var(--bg);
-  color: var(--text);
-  color-scheme: light;
-}
-
-/* Palette only: today's navy ground, warm accents, blueprint lines in sage. */
-[data-ground="palette"][data-ground] {
-  --primary: #d9772f;
-  --primary-light: #f2b48c;
-  --glow: 217 119 47;
-  --cool: 159 176 143;
-  --color-fd-primary: #f2b48c;
-}
-
-/* The page behind the grounds (overscroll, docs gutters) follows the ground. */
-body:has([data-ground="night"]) {
-  background: #16201b;
-}
-body:has([data-ground="day"]) {
-  background: #f5ede0;
-}
-
-/* Category accents move onto the palette. */
-[data-ground="night"] [data-cat][data-cat],
-[data-ground="palette"] [data-cat][data-cat] {
-  --accent: #b3ac9c;
-}
-[data-ground="night"] [data-cat="product"][data-cat],
-[data-ground="palette"] [data-cat="product"][data-cat] {
-  --accent: #e07a4a;
-}
-[data-ground="night"] [data-cat="cli"][data-cat],
-[data-ground="palette"] [data-cat="cli"][data-cat] {
-  --accent: #e0b04a;
-}
-[data-ground="night"] [data-cat="mcp"][data-cat],
-[data-ground="palette"] [data-cat="mcp"][data-cat] {
-  --accent: #9fb08f;
-}
-[data-ground="night"] [data-cat="claude"][data-cat],
-[data-ground="palette"] [data-cat="claude"][data-cat] {
-  --accent: #f2b48c;
-}
-[data-ground="night"] [data-cat="ui"][data-cat],
-[data-ground="palette"] [data-cat="ui"][data-cat] {
-  --accent: #86b394;
-}
-[data-ground="night"] [data-cat="vscode"][data-cat],
-[data-ground="palette"] [data-cat="vscode"][data-cat] {
-  --accent: #c9925f;
-}
-[data-ground="night"] [data-cat="theme"][data-cat],
-[data-ground="palette"] [data-cat="theme"][data-cat] {
-  --accent: #e89a86;
-}
-[data-ground="day"] [data-cat][data-cat] {
-  --accent: #66584b;
-}
-[data-ground="day"] [data-cat="product"][data-cat] {
-  --accent: #a3472b;
-}
-[data-ground="day"] [data-cat="cli"][data-cat] {
-  --accent: #8a5f12;
-}
-[data-ground="day"] [data-cat="mcp"][data-cat] {
-  --accent: #4a6636;
-}
-[data-ground="day"] [data-cat="claude"][data-cat] {
-  --accent: #8a4f2e;
-}
-[data-ground="day"] [data-cat="ui"][data-cat] {
-  --accent: #2f6a4a;
-}
-[data-ground="day"] [data-cat="vscode"][data-cat] {
-  --accent: #6b4a2f;
-}
-[data-ground="day"] [data-cat="theme"][data-cat] {
-  --accent: #9c4256;
-}
-
-/* Code: the html is forced .dark, so fumadocs paints --shiki-dark. A day
-   ground switches the tokens to the light theme instead. */
-[data-ground="day"] .shiki,
-[data-ground="day"] .shiki span {
-  color: var(--shiki-light) !important;
 }
 
 /* Illustration slots ------------------------------------------------------- */
@@ -179,28 +17,11 @@ body:has([data-ground="day"]) {
   border-radius: 20px;
   background: var(--w-cream);
 }
-.illus-slot svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
 .illus-art img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-.illus-label {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgb(22 32 27 / 0.78);
-  color: #f7efe2;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
 }
 
 /* Hero: the title block sits in the drawing's quiet zone, top-left. Under
@@ -248,9 +69,8 @@ body:has([data-ground="day"]) {
   margin: 32px 0 0 44px;
   color: #5b4e42;
 }
-/* Real art is busier than the placeholder: its top-left is a mid-tone wall,
-   too dark for the muted line. A soft cream wash from the left keeps the copy
-   at AA without boxing it; stacked layouts need none. */
+/* The art's top-left is a mid-tone wall, too dark for the muted line. A
+   soft cream wash from the left keeps the copy at AA without boxing it; stacked layouts need none. */
 @media (min-width: 861px) {
   .warm-hero > .illus-art::after {
     content: "";
@@ -307,7 +127,7 @@ body:has([data-ground="day"]) {
 }
 .warm-featured ul {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 20px;
   margin: 0;
   padding: 0;
@@ -336,15 +156,9 @@ body:has([data-ground="day"]) {
   color: var(--muted);
 }
 
-/* Dusk: the palette sampled from the delivered heroes. Blush ground lifted
-   from the rose walls, plum ink, terracotta from the throws, mauve from the
-   cards and screens, peach and amber from the lamps.
-
-   It comes in two lights. --dk-* holds whichever one is showing: day by
-   default, night when the reader's system asks for dark. ?mode=light|dark
-   pins one for the preview and ?n=1..5 picks the night candidate, 5 by
-   default; the inline script in app/layout.tsx turns both into attributes
-   on <html>. */
+/* It comes in two lights, chosen by the reader's system and nothing else, so
+   the first paint is already right. --dk-* holds whichever one is showing:
+   day by default, night (late dusk) when the system asks for dark. */
 :root {
   --dk-bg: #f8ece4;
   --dk-surface: #fdf5ef;
@@ -354,7 +168,7 @@ body:has([data-ground="day"]) {
   --dk-border-dim: #f1e2e6;
   --dk-text: #3a2830;
   --dk-muted: #765a5c;
-  --dk-dim: #7f6669;
+  --dk-dim: #785f62;
   --dk-primary: #914426;
   --dk-primary-light: #80485f;
   --dk-on-primary: #fff;
@@ -365,94 +179,16 @@ body:has([data-ground="day"]) {
   --dk-scheme: light;
   --dk-cat: #66584b;
   --dk-cat-product: #a3472b;
-  --dk-cat-cli: #8a5f12;
+  --dk-cat-cli: #875d11;
   --dk-cat-mcp: #4a6636;
   --dk-cat-claude: #8a4f2e;
   --dk-cat-ui: #2f6a4a;
   --dk-cat-vscode: #6b4a2f;
   --dk-cat-theme: #9c4256;
 
-  /* Night 1, plum: the shadow under the throws and behind the screens. The
-     art's shadows run brown-red; this keeps their warmth but turns the hue
-     towards aubergine, so it reads as a room at night and not as mud. */
-  --dn-bg: #1d1519;
-  --dn-surface: #261b21;
-  --dn-surface-2: #30232a;
-  --dn-surface-3: #3a2a32;
-  --dn-border: #463440;
-  --dn-border-dim: #2a1e24;
-  --dn-text: #f6e9e2;
-  --dn-muted: #c9afb2;
-  --dn-dim: #a88f96;
-  --dn-primary: #ef9d77;
-  --dn-primary-light: #e8acc2;
-  --dn-on-primary: #1d1519;
-  --dn-title-a: #fdf1ea;
-  --dn-hi: 246 233 226;
-  --dn-glow: 232 150 175;
-  --dn-cool: 214 150 170;
-}
-/* Night 2, low lamp: the plum code panel of day Dusk as the whole ground.
-   Lighter and softer, closer to dusk than to midnight. */
-:root[data-night="2"] {
-  --dn-bg: #2e2026;
-  --dn-surface: #382830;
-  --dn-surface-2: #43313a;
-  --dn-surface-3: #4c3842;
-  --dn-border: #57424d;
-  --dn-border-dim: #3a2a31;
-  --dn-text: #fbefe8;
-  --dn-muted: #dcc2c4;
-  --dn-dim: #bfa4aa;
-  --dn-primary: #f2a682;
-  --dn-primary-light: #efb7cb;
-  --dn-on-primary: #2e2026;
-  --dn-title-a: #fff5ef;
-  --dn-hi: 251 239 232;
-}
-/* Night 3, blue hour: the window after sunset. A cool slate ground with the
-   same lamp-lit accents, so the warmth lives in the light, not the walls. */
-:root[data-night="3"] {
-  --dn-glow: 249 189 116;
-  --dn-bg: #181922;
-  --dn-surface: #20212c;
-  --dn-surface-2: #292a37;
-  --dn-surface-3: #313242;
-  --dn-border: #3b3d4f;
-  --dn-border-dim: #22232e;
-  --dn-text: #f3e9e4;
-  --dn-muted: #bdb2ba;
-  --dn-dim: #9d93a0;
-  --dn-primary: #ef9d77;
-  --dn-primary-light: #e8acc2;
-  --dn-on-primary: #181922;
-  --dn-title-a: #fbf2ec;
-  --dn-hi: 243 233 228;
-  --dn-cool: 150 160 200;
-}
-
-/* Night 4, dusk: the true middle of plum and low lamp, mixed in OKLab across
-   every ground, surface, border and accent so the steps between surfaces
-   keep their rhythm. Glow and cool are shared by 1 and 2, so they stay. */
-:root[data-night="4"] {
-  --dn-bg: #251a1f;
-  --dn-surface: #2f2128;
-  --dn-surface-2: #392a32;
-  --dn-surface-3: #43313a;
-  --dn-border: #4e3b46;
-  --dn-border-dim: #32242a;
-  --dn-text: #f8ece5;
-  --dn-muted: #d2b8bb;
-  --dn-dim: #b399a0;
-  --dn-primary: #f1a27d;
-  --dn-primary-light: #ecb1c6;
-  --dn-on-primary: #251a1f;
-  --dn-title-a: #fef3ec;
-  --dn-hi: 248 236 229;
-}
-/* Night 5, late dusk: three quarters of the way to low lamp. Keeps its
-   softness but holds back a little depth, so the cards still sit up. */
-:root[data-night="5"] {
+  /* Night, late dusk: the plum of the art's shadows, lifted three quarters of
+     the way towards the low lamp. Soft, but with enough depth left that the
+     cards still sit up. */
   --dn-bg: #2a1d23;
   --dn-surface: #33252c;
   --dn-surface-2: #3e2d36;
@@ -467,12 +203,11 @@ body:has([data-ground="day"]) {
   --dn-on-primary: #2a1d23;
   --dn-title-a: #fff4ee;
   --dn-hi: 250 237 230;
+  --dn-glow: 232 150 175;
+  --dn-cool: 214 150 170;
 }
-
-/* Night is the same swap twice: once for the system preference, once for the
-   preview's ?mode=dark. Production needs only the first. */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-mode="light"]) {
+  :root {
     --dk-bg: var(--dn-bg);
     --dk-surface: var(--dn-surface);
     --dk-surface-2: var(--dn-surface-2);
@@ -499,33 +234,6 @@ body:has([data-ground="day"]) {
     --dk-cat-vscode: #d8a982;
     --dk-cat-theme: #e7a3bd;
   }
-}
-:root[data-mode="dark"] {
-  --dk-bg: var(--dn-bg);
-  --dk-surface: var(--dn-surface);
-  --dk-surface-2: var(--dn-surface-2);
-  --dk-surface-3: var(--dn-surface-3);
-  --dk-border: var(--dn-border);
-  --dk-border-dim: var(--dn-border-dim);
-  --dk-text: var(--dn-text);
-  --dk-muted: var(--dn-muted);
-  --dk-dim: var(--dn-dim);
-  --dk-primary: var(--dn-primary);
-  --dk-primary-light: var(--dn-primary-light);
-  --dk-on-primary: var(--dn-on-primary);
-  --dk-title-a: var(--dn-title-a);
-  --dk-hi: var(--dn-hi);
-  --dk-glow: var(--dn-glow);
-  --dk-cool: var(--dn-cool);
-  --dk-scheme: dark;
-  --dk-cat: #c4a9ad;
-  --dk-cat-product: #ef9a74;
-  --dk-cat-cli: #e6be6e;
-  --dk-cat-mcp: #b4c49a;
-  --dk-cat-claude: #e9a9a0;
-  --dk-cat-ui: #9fc4a8;
-  --dk-cat-vscode: #d8a982;
-  --dk-cat-theme: #e7a3bd;
 }
 
 /* fumadocs redefines its tokens on .dark #nd-sidebar, so the sidebar is
@@ -597,24 +305,14 @@ body:has([data-ground="dusk"]) {
 }
 
 /* Code: <html> is forced .dark, so fumadocs paints --shiki-dark everywhere.
-   The ground decides instead: day Dusk takes the light theme, night keeps the
+   The light decides instead: day Dusk takes the light theme, night keeps the
    dark one. Both themes are the dusk pair in lib/code-themes.ts. */
-[data-ground="dusk"] .shiki,
-[data-ground="dusk"] .shiki span {
-  color: var(--shiki-light) !important;
-  font-style: var(--shiki-light-font-style) !important;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-mode="light"]) [data-ground="dusk"] .shiki,
-  :root:not([data-mode="light"]) [data-ground="dusk"] .shiki span {
-    color: var(--shiki-dark) !important;
-    font-style: var(--shiki-dark-font-style) !important;
+@media not (prefers-color-scheme: dark) {
+  [data-ground="dusk"] .shiki,
+  [data-ground="dusk"] .shiki span {
+    color: var(--shiki-light) !important;
+    font-style: var(--shiki-light-font-style) !important;
   }
-}
-:root[data-mode="dark"] [data-ground="dusk"] .shiki,
-:root[data-mode="dark"] [data-ground="dusk"] .shiki span {
-  color: var(--shiki-dark) !important;
-  font-style: var(--shiki-dark-font-style) !important;
 }
 
 /* The hero copy sits on the drawing's cream wash on wide screens, so it keeps
