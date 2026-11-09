@@ -165,8 +165,7 @@
 
    Day reads like paper in a warm room: near-black plum ink, a pale ground
    with white cards drawn by a visible border, and the lamp glow kept to a
-   whisper so nothing hazes the text. Candidates 2 and 3 stay selectable on
-   the preview with ?l=2 / ?l=3 until one is picked. */
+   whisper so nothing hazes the text. */
 :root {
   --dl-bg: #fbf7f3;
   --dl-surface: #ffffff;
@@ -192,57 +191,6 @@
   --dl-cat-ui: #285f42;
   --dl-cat-vscode: #5f4229;
   --dl-cat-theme: #8f3a4e;
-}
-/* 2, blush defined: the old blush ground, deepened, with white cards. */
-:root[data-light="2"] {
-  --dl-bg: #f6e7df;
-  --dl-surface: #fffaf7;
-  --dl-surface-2: #f0dcd8;
-  --dl-surface-3: #f1d9cc;
-  --dl-border: #dfc2b6;
-  --dl-border-dim: #ecd9d1;
-  --dl-text: #2e1d24;
-  --dl-muted: #5a3f45;
-  --dl-dim: #654a4f;
-  --dl-primary: #8a3c1e;
-  --dl-primary-light: #77405a;
-  --dl-glow: 244 196 160;
-  --dl-cool: 210 170 180;
-  --dl-panel: none;
-  --dl-cat: #5c4f43;
-  --dl-cat-product: #963e23;
-  --dl-cat-cli: #74500b;
-  --dl-cat-mcp: #3e5c2b;
-  --dl-cat-claude: #7a4426;
-  --dl-cat-ui: #265b3f;
-  --dl-cat-vscode: #5c4027;
-  --dl-cat-theme: #8a374b;
-}
-/* 3, cream: the ground taken from the art's cream, ink a warm brown-black. */
-:root[data-light="3"] {
-  --dl-bg: #f5eee4;
-  --dl-surface: #fffdf9;
-  --dl-surface-2: #ece2d4;
-  --dl-surface-3: #f0e0cf;
-  --dl-border: #d9c8b3;
-  --dl-border-dim: #e9dfd1;
-  --dl-text: #2a1e1a;
-  --dl-muted: #574639;
-  --dl-dim: #65534a;
-  --dl-primary: #8a3b1f;
-  --dl-primary-light: #7a4a2c;
-  --dl-title-a: #2f2420;
-  --dl-glow: 240 205 160;
-  --dl-cool: 214 196 172;
-  --dl-panel: rgb(255 253 249 / 0.9);
-  --dl-cat: #5c4f43;
-  --dl-cat-product: #963e23;
-  --dl-cat-cli: #74500b;
-  --dl-cat-mcp: #3e5c2b;
-  --dl-cat-claude: #7a4426;
-  --dl-cat-ui: #265b3f;
-  --dl-cat-vscode: #5c4027;
-  --dl-cat-theme: #8a374b;
 }
 :root {
   --dk-bg: var(--dl-bg);
@@ -463,15 +411,10 @@ body:has([data-ground="dusk"]) {
   color: var(--dl-muted);
 }
 @media (min-width: 861px) {
-  :root:not([data-light="2"])
-    [data-ground="dusk"]
-    .warm-hero
-    > .illus-art::after {
+  [data-ground="dusk"] .warm-hero > .illus-art::after {
     content: none;
   }
-  :root:not([data-light="2"])
-    [data-ground="dusk"]
-    .warm-hero-copy.warm-hero-copy {
+  [data-ground="dusk"] .warm-hero-copy.warm-hero-copy {
     max-width: 472px;
     margin: 60px 0 0 32px;
     padding: 24px 28px 28px;
@@ -481,7 +424,7 @@ body:has([data-ground="dusk"]) {
     box-shadow: 0 8px 28px rgb(43 28 34 / 0.1);
     backdrop-filter: blur(8px);
   }
-  :root:not([data-light="2"]) [data-ground="dusk"] .warm-hero.warm-hero > a {
+  [data-ground="dusk"] .warm-hero.warm-hero > a {
     margin: 20px 0 0 32px;
     padding: 4px 12px;
     border-radius: 999px;
@@ -489,9 +432,7 @@ body:has([data-ground="dusk"]) {
   }
   /* At night the card turns plum and takes the page ink, so the hero is
      not a lit window in a dark room. */
-  :root:not([data-light="2"])
-    [data-ground="dusk"][data-theme="dark"]
-    .warm-hero-copy.warm-hero-copy {
+  [data-ground="dusk"][data-theme="dark"] .warm-hero-copy.warm-hero-copy {
     --title-a: var(--dn-title-a);
     --text: var(--dn-text);
     --muted: var(--dn-muted);
@@ -505,16 +446,12 @@ body:has([data-ground="dusk"]) {
     background: rgb(51 37 44 / 0.92);
     color: var(--dn-text);
   }
-  :root:not([data-light="2"])
-    [data-ground="dusk"][data-theme="dark"]
-    .warm-hero.warm-hero
-    > a {
+  [data-ground="dusk"][data-theme="dark"] .warm-hero.warm-hero > a {
     background: rgb(51 37 44 / 0.92);
     color: var(--dn-muted);
   }
   @media (prefers-color-scheme: dark) {
-    :root:not([data-light="2"])
-      [data-ground="dusk"]:not([data-theme="light"])
+    [data-ground="dusk"]:not([data-theme="light"])
       .warm-hero-copy.warm-hero-copy {
       --title-a: var(--dn-title-a);
       --text: var(--dn-text);
@@ -529,22 +466,10 @@ body:has([data-ground="dusk"]) {
       background: rgb(51 37 44 / 0.92);
       color: var(--dn-text);
     }
-    :root:not([data-light="2"])
-      [data-ground="dusk"]:not([data-theme="light"])
-      .warm-hero.warm-hero
-      > a {
+    [data-ground="dusk"]:not([data-theme="light"]) .warm-hero.warm-hero > a {
       background: rgb(51 37 44 / 0.92);
       color: var(--dn-muted);
     }
-  }
-  /* 2 keeps a wash, steeper, so it clears the copy and leaves the art. */
-  :root[data-light="2"] [data-ground="dusk"] .warm-hero > .illus-art::after {
-    background: linear-gradient(
-      100deg,
-      rgb(251 241 233 / 0.94) 0%,
-      rgb(251 241 233 / 0.84) 30%,
-      rgb(251 241 233 / 0) 46%
-    );
   }
 }
 @media (max-width: 860px) {
