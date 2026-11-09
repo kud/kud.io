@@ -2,6 +2,8 @@ import type { ReactNode } from "react"
 import { Link } from "next-view-transitions"
 import type { Project } from "@/lib/projects"
 import type { AppMeta } from "@/lib/app"
+import { ART } from "@/lib/art"
+import { IllustrationSlot } from "@/components/illustration-slot"
 import { type AppProto, monthYear, shortDate } from "@/lib/app-proto"
 import styles from "./app-record-proto.module.css"
 
@@ -99,7 +101,7 @@ const Story = ({ proto, writing }: { proto: AppProto; writing: Post[] }) =>
   )
 
 const Actions = ({ project, url, host, hasDocs }: Props) => (
-  <div className={styles.actions}>
+  <div className={`${styles.actions} warm-hero-actions`}>
     {url ? (
       <a href={url} className={styles.primary} target="_blank" rel="noreferrer">
         Open {host} ↗
@@ -124,6 +126,18 @@ const Actions = ({ project, url, host, hasDocs }: Props) => (
   </div>
 )
 
+// With delivered art, a candidate's header joins the same hero as today's
+// record: the drawing as a framed figure, the copy under it or beside it.
+const ArtHero = ({ slug, children }: { slug: string; children: ReactNode }) =>
+  ART[slug] ? (
+    <section className={`warm-hero ${styles.artHero}`}>
+      <IllustrationSlot ratio="16/9" slug={slug} />
+      <div className="warm-hero-copy">{children}</div>
+    </section>
+  ) : (
+    children
+  )
+
 const Icon = ({ app, size }: { app: AppMeta; size: "lg" | "sm" }) =>
   app.icon ? (
     <span className={size === "lg" ? styles.iconLg : styles.iconSm}>
@@ -145,35 +159,37 @@ const CaseFile = (props: Props) => {
   const { app, proto, name, project, writing } = props
   return (
     <>
-      <header className={styles.heroCentre}>
-        <Icon app={app} size="lg" />
-        <Status props={props} />
-        <h1 className={styles.title}>{name}</h1>
-        {app.summary ? <p className={styles.summary}>{app.summary}</p> : null}
-        <Actions {...props} />
-        <dl className={styles.strip}>
-          <div>
-            <dt>Started</dt>
-            <dd>{monthYear(proto.started)}</dd>
-          </div>
-          <div>
-            <dt>Last change</dt>
-            <dd>{shortDate(proto.lastChange)}</dd>
-          </div>
-          {proto.release ? (
+      <ArtHero slug={project.slug}>
+        <header className={styles.heroCentre}>
+          <Icon app={app} size="lg" />
+          <Status props={props} />
+          <h1 className={styles.title}>{name}</h1>
+          {app.summary ? <p className={styles.summary}>{app.summary}</p> : null}
+          <Actions {...props} />
+          <dl className={styles.strip}>
             <div>
-              <dt>Release</dt>
-              <dd>{proto.release}</dd>
+              <dt>Started</dt>
+              <dd>{monthYear(proto.started)}</dd>
             </div>
-          ) : null}
-          {project.license ? (
             <div>
-              <dt>Licence</dt>
-              <dd>{project.license}</dd>
+              <dt>Last change</dt>
+              <dd>{shortDate(proto.lastChange)}</dd>
             </div>
-          ) : null}
-        </dl>
-      </header>
+            {proto.release ? (
+              <div>
+                <dt>Release</dt>
+                <dd>{proto.release}</dd>
+              </div>
+            ) : null}
+            {project.license ? (
+              <div>
+                <dt>Licence</dt>
+                <dd>{project.license}</dd>
+              </div>
+            ) : null}
+          </dl>
+        </header>
+      </ArtHero>
       <div className={styles.wideShot}>
         <Shot proto={proto} name={name} />
       </div>
@@ -229,16 +245,18 @@ const SpecSheet = (props: Props) => {
   const { app, proto, name, project, writing } = props
   return (
     <>
-      <header className={styles.heroLeft}>
-        <Icon app={app} size="sm" />
-        <div>
-          <h1 className={styles.titleLeft}>{name}</h1>
-          {app.summary ? (
-            <p className={styles.summaryLeft}>{app.summary}</p>
-          ) : null}
-          <Actions {...props} />
-        </div>
-      </header>
+      <ArtHero slug={project.slug}>
+        <header className={styles.heroLeft}>
+          <Icon app={app} size="sm" />
+          <div>
+            <h1 className={styles.titleLeft}>{name}</h1>
+            {app.summary ? (
+              <p className={styles.summaryLeft}>{app.summary}</p>
+            ) : null}
+            <Actions {...props} />
+          </div>
+        </header>
+      </ArtHero>
       <div className={styles.sheet}>
         <div className={styles.sheetMain}>
           <Shot proto={proto} name={name} />
@@ -304,12 +322,14 @@ const BuildStory = (props: Props) => {
   const { app, proto, name, project, writing } = props
   return (
     <>
-      <header className={styles.heroStory}>
-        <Icon app={app} size="lg" />
-        <h1 className={styles.title}>{name}</h1>
-        {app.summary ? <p className={styles.summary}>{app.summary}</p> : null}
-        <Actions {...props} />
-      </header>
+      <ArtHero slug={project.slug}>
+        <header className={styles.heroStory}>
+          <Icon app={app} size="lg" />
+          <h1 className={styles.title}>{name}</h1>
+          {app.summary ? <p className={styles.summary}>{app.summary}</p> : null}
+          <Actions {...props} />
+        </header>
+      </ArtHero>
       <div className={styles.storyShot}>
         <Shot proto={proto} name={name} />
       </div>
@@ -379,9 +399,15 @@ const CANDIDATES = [
 export const AppRecordProto = (props: Props) => (
   <>
     <script dangerouslySetInnerHTML={{ __html: PICK }} />
-    <div data-proto-v="0" className={styles.v}>{props.current}</div>
+    <div data-proto-v="0" className={styles.v}>
+      {props.current}
+    </div>
     {CANDIDATES.map(({ n, View }) => (
-      <div key={n} data-proto-v={n} className={`${styles.v} ${styles.candidate}`}>
+      <div
+        key={n}
+        data-proto-v={n}
+        className={`${styles.v} ${styles.candidate}`}
+      >
         <View {...props} />
       </div>
     ))}

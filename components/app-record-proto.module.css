@@ -623,3 +623,28 @@
     gap: 2px;
   }
 }
+
+/* Art hero ----------------------------------------------------------------- */
+/* With delivered art the header sits in the shared hero (app/warm.css), so it
+   drops its own centring and padding; the top clears the theme picker. */
+.artHero.artHero {
+  padding-top: 84px;
+}
+.artHero .heroCentre,
+.artHero .heroStory,
+.artHero .heroLeft {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+.artHero .iconLg {
+  margin: 0 0 18px;
+}
+.artHero .summary {
+  margin-inline: 0;
+}
+.artHero .actions,
+.artHero .strip {
+  justify-content: flex-start;
+}

@@ -116,7 +116,7 @@ const AppLanding = ({ project }: { project: Project }) => {
             {name}
           </h1>
           {tagline ? <p className={styles.tagline}>{tagline}</p> : null}
-          <div className={styles.actions}>
+          <div className={`${styles.actions} warm-hero-actions`}>
             {launchUrl ? (
               <a
                 href={launchUrl}
@@ -285,7 +285,7 @@ const ProductRecord = async ({ project }: { project: Project }) => {
             {name}
           </h1>
           {app.summary ? <p className={styles.tagline}>{app.summary}</p> : null}
-          <div className={styles.actions}>
+          <div className={`${styles.actions} warm-hero-actions`}>
             {url ? (
               <a
                 href={url}
@@ -470,7 +470,7 @@ const ReadmeLanding = ({
               </span>
             </a>
           ) : null}
-          <div className={styles.actions}>
+          <div className={`${styles.actions} warm-hero-actions`}>
             {isRaycast ? (
               <>
                 {project.installUrl ? (

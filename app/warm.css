@@ -24,91 +24,74 @@
   object-fit: cover;
 }
 
-/* Hero: the title block sits in the drawing's quiet zone, top-left. Under
-   860px the drawing is too short to hold it, so they stack. The module hero
-   centres with flex, which would shrink a grid track to its content, so the
-   track is pinned to the full width. */
+/* Hero: the drawing is a framed figure on the ground, never a backdrop with a
+   box over it. The back link, the art and the copy stack in that order; from
+   1200px the copy takes its own column beside the art. Nothing is drawn over
+   the picture, so the copy keeps the page's tokens in both lights. Doubled
+   selectors outrank the single-class module hero, which centres with flex
+   and pads for an absolute back link. */
 .warm-hero.warm-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  justify-content: stretch;
+  grid-template-areas: "back" "art" "copy";
   align-items: start;
   width: 100%;
-  max-width: 1120px;
+  max-width: 1168px;
   margin: 0 auto;
+  padding: 30px 24px 40px;
   text-align: left;
 }
-.warm-hero.warm-hero > * {
-  grid-area: 1 / 1;
+.warm-hero.warm-hero > .illus-art {
+  grid-area: art;
+  border: 1px solid var(--border);
 }
-.warm-hero-copy.warm-hero-copy {
-  position: relative;
-  justify-self: start;
-  text-align: left;
-  --title-a: #2b2420;
-  --text: #2b2420;
-  --muted: #5b4e42;
-  --primary: #a3472b;
-  --primary-light: #8a4f2e;
-  --surface: #fbf6ee;
-  --surface-2: #efe4d2;
-  --border: #dccdb5;
-  z-index: 1;
-  align-self: start;
-  max-width: 420px;
-  padding: 72px 0 0 44px;
-  color: #2b2420;
-}
-/* The back link joins the quiet zone, in ink, above the copy. */
 .warm-hero.warm-hero > a {
+  grid-area: back;
   position: relative;
   inset: auto;
-  z-index: 2;
-  align-self: start;
   justify-self: start;
-  margin: 32px 0 0 44px;
-  color: #5b4e42;
+  margin: 0 0 20px;
+  color: var(--muted);
 }
-/* The art's top-left is a mid-tone wall, too dark for the muted line. A
-   soft cream wash from the left keeps the copy at AA without boxing it; stacked layouts need none. */
-@media (min-width: 861px) {
-  .warm-hero > .illus-art::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      100deg,
-      rgb(251 241 233 / 0.86) 0%,
-      rgb(251 241 233 / 0.62) 32%,
-      rgb(251 241 233 / 0) 58%
-    );
-  }
+.warm-hero-copy.warm-hero-copy {
+  grid-area: copy;
+  justify-self: start;
+  max-width: 640px;
+  padding: 32px 0 0;
+  text-align: left;
 }
 .warm-hero-copy > * {
   justify-content: flex-start !important;
   margin-left: 0 !important;
   margin-right: 0 !important;
 }
-@media (max-width: 860px) {
-  .warm-hero.warm-hero > * {
-    grid-area: auto;
-  }
-  .warm-hero.warm-hero > a {
-    margin: 0 0 16px;
-    color: inherit;
+.warm-hero-copy.warm-hero-copy > :last-child {
+  margin-bottom: 0;
+}
+/* A reading measure for the tagline, and no word left alone on its last line. */
+.warm-hero-copy p {
+  max-width: 34em;
+  text-wrap: pretty;
+}
+/* The buttons share a row at one height; when the row runs out they wrap
+   together and each takes the full width, so no button hangs at its own. */
+.warm-hero-copy .warm-hero-actions {
+  width: fit-content;
+  max-width: 100%;
+}
+.warm-hero-copy .warm-hero-actions > * {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+@media (min-width: 1200px) {
+  .warm-hero.warm-hero {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 5fr);
+    grid-template-areas: "back back" "copy art";
+    column-gap: 56px;
+    align-items: center;
   }
   .warm-hero-copy.warm-hero-copy {
-    max-width: none;
-    padding: 24px 0 0;
-    color: inherit;
-    --title-a: inherit;
-    --text: inherit;
-    --muted: inherit;
-    --primary: inherit;
-    --primary-light: inherit;
-    --surface: inherit;
-    --surface-2: inherit;
-    --border: inherit;
+    padding: 0;
   }
 }
 
@@ -337,115 +320,6 @@ body:has([data-ground="dusk"]) {
   [data-ground="dusk"]:not([data-theme="dark"]) .shiki span {
     color: var(--shiki-light) !important;
     font-style: var(--shiki-light-font-style) !important;
-  }
-}
-
-/* The actions row ends the hero copy, so its 56px bottom margin is dead
-   space: inside the card at 1440 it pushed the card past the art, and
-   stacked it opened a gap above the record. The section padding spaces it. */
-[data-ground="dusk"] .warm-hero-copy.warm-hero-copy > :last-child {
-  margin-bottom: 0;
-}
-
-/* On wide screens the hero copy sits on the drawing, so it keeps day ink in
-   both lights, on a white card drawn over the art rather than a wash fading
-   into it: a wash greys the picture and still leaves the text on haze.
-   Stacked under 860px it is on the page again and takes the page tokens. */
-[data-ground="dusk"] .warm-hero-copy.warm-hero-copy {
-  --title-a: var(--dl-title-a);
-  --text: var(--dl-text);
-  --muted: var(--dl-muted);
-  --primary: var(--dl-primary);
-  --primary-light: var(--dl-primary-light);
-  --on-primary: #fff;
-  --surface: var(--dl-surface);
-  --surface-2: var(--dl-surface-2);
-  --border: var(--dl-border);
-  color: var(--dl-text);
-}
-[data-ground="dusk"] .warm-hero.warm-hero > a {
-  color: var(--dl-muted);
-}
-@media (min-width: 861px) {
-  [data-ground="dusk"] .warm-hero > .illus-art::after {
-    content: none;
-  }
-  [data-ground="dusk"] .warm-hero-copy.warm-hero-copy {
-    max-width: 472px;
-    margin: 60px 0 0 32px;
-    padding: 24px 28px 28px;
-    border: 1px solid var(--dl-border);
-    border-radius: 18px;
-    background: var(--dl-panel);
-    box-shadow: 0 8px 28px rgb(43 28 34 / 0.1);
-    backdrop-filter: blur(8px);
-  }
-  [data-ground="dusk"] .warm-hero.warm-hero > a {
-    margin: 20px 0 0 32px;
-    padding: 4px 12px;
-    border-radius: 999px;
-    background: var(--dl-panel);
-  }
-  /* At night the card turns plum and takes the page ink, so the hero is
-     not a lit window in a dark room. */
-  [data-ground="dusk"][data-theme="dark"] .warm-hero-copy.warm-hero-copy {
-    --title-a: var(--dn-title-a);
-    --text: var(--dn-text);
-    --muted: var(--dn-muted);
-    --primary: var(--dn-primary);
-    --primary-light: var(--dn-primary-light);
-    --on-primary: var(--dn-on-primary);
-    --surface: var(--dn-surface);
-    --surface-2: var(--dn-surface-2);
-    --border: var(--dn-border);
-    border-color: var(--dn-border);
-    background: rgb(51 37 44 / 0.92);
-    color: var(--dn-text);
-  }
-  [data-ground="dusk"][data-theme="dark"] .warm-hero.warm-hero > a {
-    background: rgb(51 37 44 / 0.92);
-    color: var(--dn-muted);
-  }
-  @media (prefers-color-scheme: dark) {
-    [data-ground="dusk"]:not([data-theme="light"])
-      .warm-hero-copy.warm-hero-copy {
-      --title-a: var(--dn-title-a);
-      --text: var(--dn-text);
-      --muted: var(--dn-muted);
-      --primary: var(--dn-primary);
-      --primary-light: var(--dn-primary-light);
-      --on-primary: var(--dn-on-primary);
-      --surface: var(--dn-surface);
-      --surface-2: var(--dn-surface-2);
-      --border: var(--dn-border);
-      border-color: var(--dn-border);
-      background: rgb(51 37 44 / 0.92);
-      color: var(--dn-text);
-    }
-    [data-ground="dusk"]:not([data-theme="light"]) .warm-hero.warm-hero > a {
-      background: rgb(51 37 44 / 0.92);
-      color: var(--dn-muted);
-    }
-  }
-}
-@media (max-width: 860px) {
-  [data-ground="dusk"] .warm-hero.warm-hero {
-    padding-bottom: 0;
-  }
-  [data-ground="dusk"] .warm-hero-copy.warm-hero-copy {
-    --title-a: inherit;
-    --text: inherit;
-    --muted: inherit;
-    --primary: inherit;
-    --primary-light: inherit;
-    --on-primary: inherit;
-    --surface: inherit;
-    --surface-2: inherit;
-    --border: inherit;
-    color: inherit;
-  }
-  [data-ground="dusk"] .warm-hero.warm-hero > a {
-    color: var(--muted);
   }
 }
 
