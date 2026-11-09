@@ -4,6 +4,7 @@ import type { ReactNode } from "react"
 import { RootProvider } from "fumadocs-ui/provider/next"
 import { ViewTransitions } from "next-view-transitions"
 import { ArriveScript, InkTransition } from "@/components/ink-transition"
+import { HashScroll } from "@/components/hash-scroll"
 import { Hanken_Grotesk } from "next/font/google"
 
 // Hanken Grotesk — a refined, elegant grotesque: subtle squared character with
@@ -76,6 +77,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
       <body className="flex min-h-screen flex-col">
         <ArriveScript />
         <InkTransition />
+        <HashScroll />
         <RootProvider
           theme={{
             defaultTheme: "dark",
