@@ -1,6 +1,6 @@
 // Prototype switchboard for the warm restyle candidates. Each preview branch
 // sets these few values; everything else is shared. "current" is today's look.
-export type Ground = "current" | "night" | "day" | "palette"
+export type Ground = "current" | "night" | "day" | "palette" | "dusk"
 
 export type Skin = {
   // The ground for /projects and the project landings.
@@ -12,8 +12,8 @@ export type Skin = {
 }
 
 export const SKIN: Skin = {
-  projects: "day",
-  docs: "day",
+  projects: "dusk",
+  docs: "dusk",
   illustration: true,
 }
 
@@ -35,6 +35,7 @@ const COVERS: Record<Ground, string | null> = {
   palette: "#08080f",
   night: "#16201b",
   day: null,
+  dusk: null,
 }
 
 export const projectsCover = COVERS[SKIN.projects]

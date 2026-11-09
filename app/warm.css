@@ -139,28 +139,36 @@ body:has([data-ground="day"]) {
 [data-ground="palette"] [data-cat="theme"][data-cat] {
   --accent: #e89a86;
 }
-[data-ground="day"] [data-cat][data-cat] {
+[data-ground="day"] [data-cat][data-cat],
+[data-ground="dusk"] [data-cat][data-cat] {
   --accent: #66584b;
 }
-[data-ground="day"] [data-cat="product"][data-cat] {
+[data-ground="day"] [data-cat="product"][data-cat],
+[data-ground="dusk"] [data-cat="product"][data-cat] {
   --accent: #a3472b;
 }
-[data-ground="day"] [data-cat="cli"][data-cat] {
+[data-ground="day"] [data-cat="cli"][data-cat],
+[data-ground="dusk"] [data-cat="cli"][data-cat] {
   --accent: #8a5f12;
 }
-[data-ground="day"] [data-cat="mcp"][data-cat] {
+[data-ground="day"] [data-cat="mcp"][data-cat],
+[data-ground="dusk"] [data-cat="mcp"][data-cat] {
   --accent: #4a6636;
 }
-[data-ground="day"] [data-cat="claude"][data-cat] {
+[data-ground="day"] [data-cat="claude"][data-cat],
+[data-ground="dusk"] [data-cat="claude"][data-cat] {
   --accent: #8a4f2e;
 }
-[data-ground="day"] [data-cat="ui"][data-cat] {
+[data-ground="day"] [data-cat="ui"][data-cat],
+[data-ground="dusk"] [data-cat="ui"][data-cat] {
   --accent: #2f6a4a;
 }
-[data-ground="day"] [data-cat="vscode"][data-cat] {
+[data-ground="day"] [data-cat="vscode"][data-cat],
+[data-ground="dusk"] [data-cat="vscode"][data-cat] {
   --accent: #6b4a2f;
 }
-[data-ground="day"] [data-cat="theme"][data-cat] {
+[data-ground="day"] [data-cat="theme"][data-cat],
+[data-ground="dusk"] [data-cat="theme"][data-cat] {
   --accent: #9c4256;
 }
 
@@ -334,4 +342,61 @@ body:has([data-ground="day"]) {
   font-size: 14px;
   line-height: 1.5;
   color: var(--muted);
+}
+
+/* Dusk: the palette sampled from the delivered heroes. Blush ground lifted
+   from the rose walls, plum ink, terracotta from the throws, mauve from the
+   cards and screens, peach and amber from the lamps. */
+[data-ground="dusk"][data-ground] {
+  --bg: #f8ece4;
+  --surface: #fdf5ef;
+  --surface-2: #f1e2e6;
+  --surface-3: #f3e0d6;
+  --border: #ead6cc;
+  --border-dim: #f1e2e6;
+  --text: #3a2830;
+  --muted: #765a5c;
+  --dim: #b09a9a;
+  --primary: #914426;
+  --primary-light: #80485f;
+  --title-a: #3a2830;
+  --hi: 58 40 48;
+  --glow: 249 189 116;
+  --cool: 175 123 136;
+  --color-fd-background: #f8ece4;
+  --color-fd-foreground: #3a2830;
+  --color-fd-card: #fdf5ef;
+  --color-fd-card-foreground: #3a2830;
+  --color-fd-popover: #fdf5ef;
+  --color-fd-popover-foreground: #3a2830;
+  --color-fd-muted: #f1e2e6;
+  --color-fd-muted-foreground: #765a5c;
+  --color-fd-border: #ead6cc;
+  --color-fd-secondary: #f1e2e6;
+  --color-fd-secondary-foreground: #3a2830;
+  --color-fd-accent: #f3e0d6;
+  --color-fd-accent-foreground: #3a2830;
+  --color-fd-primary: #914426;
+  --color-fd-primary-foreground: #fdf5ef;
+  --color-fd-ring: #80485f;
+  background-color: var(--bg);
+  color: var(--text);
+  color-scheme: light;
+}
+body:has([data-ground="dusk"]) {
+  background: #f8ece4;
+}
+[data-ground="dusk"] .warm-hero-copy.warm-hero-copy {
+  --title-a: #3a2830;
+  --text: #3a2830;
+  --muted: #5e4448;
+  --primary: #914426;
+  --primary-light: #80485f;
+  --surface: #fdf5ef;
+  --surface-2: #f1e2e6;
+  --border: #ead6cc;
+  color: #3a2830;
+}
+[data-ground="dusk"] .warm-hero.warm-hero > a {
+  color: #5e4448;
 }
