@@ -223,11 +223,24 @@ body:has([data-ground="day"]) {
   --muted: #5b4e42;
   --primary: #a3472b;
   --primary-light: #8a4f2e;
+  --surface: #fbf6ee;
+  --surface-2: #efe4d2;
+  --border: #dccdb5;
   z-index: 1;
   align-self: start;
   max-width: 420px;
-  padding: 40px 0 0 44px;
+  padding: 72px 0 0 44px;
   color: #2b2420;
+}
+/* The back link joins the quiet zone, in ink, above the copy. */
+.warm-hero.warm-hero > a {
+  position: relative;
+  inset: auto;
+  z-index: 2;
+  align-self: start;
+  justify-self: start;
+  margin: 32px 0 0 44px;
+  color: #5b4e42;
 }
 .warm-hero-copy > * {
   justify-content: flex-start !important;
@@ -238,6 +251,10 @@ body:has([data-ground="day"]) {
   .warm-hero.warm-hero > * {
     grid-area: auto;
   }
+  .warm-hero.warm-hero > a {
+    margin: 0 0 16px;
+    color: inherit;
+  }
   .warm-hero-copy.warm-hero-copy {
     max-width: none;
     padding: 24px 0 0;
@@ -247,6 +264,9 @@ body:has([data-ground="day"]) {
     --muted: inherit;
     --primary: inherit;
     --primary-light: inherit;
+    --surface: inherit;
+    --surface-2: inherit;
+    --border: inherit;
   }
 }
 
