@@ -3,6 +3,45 @@
   "accent": "#e11d48",
   "beansontoast": "brit-ready",
   "summary": "Life in the UK Test revision that tells you when you're ready.",
+  "what": "Revision for the Life in the UK Test. Every examinable fact is tracked on its own, and its questions are interchangeable variants of it, so learning the wording is not enough to pass. Practise by topic, sit timed mock exams, and weak facts come back in fresh wording until they stick. One readiness score, set against the real 75% pass mark, says when you are ready to book.",
+  "who": "Anyone preparing for the Life in the UK Test.",
+  "facts": [
+    {
+      "label": "Runs in",
+      "value": "Any browser, installable, works offline after the first load"
+    },
+    {
+      "label": "Account",
+      "value": "None"
+    },
+    {
+      "label": "Data",
+      "value": "Your browser only, in IndexedDB, with export and import"
+    },
+    {
+      "label": "Mock exams",
+      "value": "24 questions, 45 minutes, the real pass mark"
+    },
+    {
+      "label": "Questions",
+      "value": "Original, about 150 across 10 topics"
+    }
+  ],
+  "flow": [
+    {
+      "label": "The question bank",
+      "note": "each fact a KnowledgeItem, its questions interchangeable variants"
+    },
+    {
+      "label": "Your progress and readiness",
+      "note": "a Zustand store, persisted to IndexedDB through idb-keyval"
+    },
+    {
+      "label": "Service worker",
+      "note": "Serwist caches the app, so it runs offline after the first load"
+    }
+  ],
+  "flowNote": "The build is pinned to webpack: Serwist only generates its service worker there, and the default Turbopack build would quietly ship without offline support.",
   "stack": ["Next.js", "React", "Tailwind CSS", "Zustand", "PWA", "TypeScript"],
   "decisions": [
     "An installable PWA with all learning and progress state on the client in Zustand, so it works offline once installed.",

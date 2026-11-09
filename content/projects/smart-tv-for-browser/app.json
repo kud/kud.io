@@ -4,6 +4,40 @@
   "accent": "#00bff0",
   "beansontoast": "tv",
   "summary": "A smart-TV home screen in the browser, with a phone as the remote.",
+  "what": "A smart-TV home screen that runs in the browser. It boots with an animated power-on, opens on a 10-foot grid of app tiles that glow and scale on focus, and is driven like a TV: arrow keys or an on-screen D-pad, with OK, Back and Menu. Opening an app plays a launch splash and hands over to the channel's own website; after about 45 seconds idle, an ambient clock fades in.",
+  "facts": [
+    {
+      "label": "Runs in",
+      "value": "Any browser, installable as a PWA, full-screen"
+    },
+    {
+      "label": "Controls",
+      "value": "Arrow keys, Enter and Esc, or the on-screen remote; no mouse needed"
+    },
+    {
+      "label": "Settings",
+      "value": "Show or hide each app, change the tile size; kept in localStorage"
+    },
+    {
+      "label": "Getting back",
+      "value": "A companion extension adds a Home button and Alt+Shift+H to every channel site"
+    }
+  ],
+  "flow": [
+    {
+      "label": "The apps",
+      "note": "one entry each in services.json: name, logo, link and background colour"
+    },
+    {
+      "label": "Spatial navigation",
+      "note": "norigin-spatial-navigation moves focus by geometry, mirrored onto real DOM focus"
+    },
+    {
+      "label": "The channel's own website",
+      "note": "opened directly after the launch splash; the companion extension brings you home"
+    }
+  ],
+  "flowNote": "Offline without build-tool coupling: a native manifest and a hand-written service worker cache the app shell.",
   "stack": [
     "Next.js",
     "React",
