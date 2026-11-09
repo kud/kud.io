@@ -5,7 +5,7 @@ export const baseOptions = (): BaseLayoutProps => ({
     title: "kud",
     url: "/projects",
   },
-  // The whole site is dark-only — hide the docs light/dark switch so the docs
-  // read as one continuous theme with the rest of kud.io.
+  // fumadocs' own switch stays off: the Dusk docs carry ThemePicker at the
+  // head of the sidebar, the same control as on the project pages.
   themeSwitch: { enabled: false },
 })

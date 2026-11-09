@@ -1,7 +1,7 @@
 import "./global.css"
 import type { Metadata, Viewport } from "next"
 import type { ReactNode } from "react"
-import { RootProvider } from "fumadocs-ui/provider/next"
+import { ThemeRoot } from "@/components/theme-root"
 import { ViewTransitions } from "next-view-transitions"
 import { InkTransition } from "@/components/ink-transition"
 import { Hanken_Grotesk } from "next/font/google"
@@ -73,17 +73,17 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
       data-scroll-behavior="smooth"
       className={sans.variable}
     >
+      <head>
+        {/* Preview only, until a light Dusk is picked: ?l=2 or ?l=3. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var l=new URLSearchParams(location.search).get("l");if(l)document.documentElement.dataset.light=l}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="flex min-h-screen flex-col">
         <InkTransition />
-        <RootProvider
-          theme={{
-            defaultTheme: "dark",
-            enableSystem: false,
-            forcedTheme: "dark",
-          }}
-        >
-          {children}
-        </RootProvider>
+        <ThemeRoot>{children}</ThemeRoot>
       </body>
     </html>
   </ViewTransitions>

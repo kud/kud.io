@@ -156,35 +156,118 @@
   color: var(--muted);
 }
 
-/* It comes in two lights, chosen by the reader's system and nothing else, so
-   the first paint is already right. --dk-* holds whichever one is showing:
-   day by default, night (late dusk) when the system asks for dark. */
+/* It comes in two lights. next-themes resolves System, Light or Dark to a
+   class on <html> before first paint (System reads prefers-color-scheme and
+   follows it live), so the class is the one key here. --dl-* is the day,
+   --dn-* the night, --dk-* whichever is showing.
+
+   Day reads like paper in a warm room: near-black plum ink, a pale ground
+   with white cards drawn by a visible border, and the lamp glow kept to a
+   whisper so nothing hazes the text. Candidates 2 and 3 stay selectable on
+   the preview with ?l=2 / ?l=3 until one is picked. */
 :root {
-  --dk-bg: #f8ece4;
-  --dk-surface: #fdf5ef;
-  --dk-surface-2: #f1e2e6;
-  --dk-surface-3: #f3e0d6;
-  --dk-border: #ead6cc;
-  --dk-border-dim: #f1e2e6;
-  --dk-text: #3a2830;
-  --dk-muted: #765a5c;
-  --dk-dim: #785f62;
-  --dk-primary: #914426;
-  --dk-primary-light: #80485f;
+  --dl-bg: #fbf7f3;
+  --dl-surface: #ffffff;
+  --dl-surface-2: #f4ebe6;
+  --dl-surface-3: #f6e6dc;
+  --dl-border: #e3d2c8;
+  --dl-border-dim: #efe4dd;
+  --dl-text: #2b1c22;
+  --dl-muted: #5c4549;
+  --dl-dim: #6b5357;
+  --dl-primary: #8e3f20;
+  --dl-primary-light: #7a3f57;
+  --dl-title-a: #3a2830;
+  --dl-hi: 43 28 34;
+  --dl-glow: 246 214 190;
+  --dl-cool: 222 200 206;
+  --dl-panel: rgb(255 255 255 / 0.9);
+  --dl-cat: #5f5246;
+  --dl-cat-product: #9a4126;
+  --dl-cat-cli: #7a530c;
+  --dl-cat-mcp: #41602d;
+  --dl-cat-claude: #7e4628;
+  --dl-cat-ui: #285f42;
+  --dl-cat-vscode: #5f4229;
+  --dl-cat-theme: #8f3a4e;
+}
+/* 2, blush defined: the old blush ground, deepened, with white cards. */
+:root[data-light="2"] {
+  --dl-bg: #f6e7df;
+  --dl-surface: #fffaf7;
+  --dl-surface-2: #f0dcd8;
+  --dl-surface-3: #f1d9cc;
+  --dl-border: #dfc2b6;
+  --dl-border-dim: #ecd9d1;
+  --dl-text: #2e1d24;
+  --dl-muted: #5a3f45;
+  --dl-dim: #654a4f;
+  --dl-primary: #8a3c1e;
+  --dl-primary-light: #77405a;
+  --dl-glow: 244 196 160;
+  --dl-cool: 210 170 180;
+  --dl-panel: none;
+  --dl-cat: #5c4f43;
+  --dl-cat-product: #963e23;
+  --dl-cat-cli: #74500b;
+  --dl-cat-mcp: #3e5c2b;
+  --dl-cat-claude: #7a4426;
+  --dl-cat-ui: #265b3f;
+  --dl-cat-vscode: #5c4027;
+  --dl-cat-theme: #8a374b;
+}
+/* 3, cream: the ground taken from the art's cream, ink a warm brown-black. */
+:root[data-light="3"] {
+  --dl-bg: #f5eee4;
+  --dl-surface: #fffdf9;
+  --dl-surface-2: #ece2d4;
+  --dl-surface-3: #f0e0cf;
+  --dl-border: #d9c8b3;
+  --dl-border-dim: #e9dfd1;
+  --dl-text: #2a1e1a;
+  --dl-muted: #574639;
+  --dl-dim: #65534a;
+  --dl-primary: #8a3b1f;
+  --dl-primary-light: #7a4a2c;
+  --dl-title-a: #2f2420;
+  --dl-glow: 240 205 160;
+  --dl-cool: 214 196 172;
+  --dl-panel: rgb(255 253 249 / 0.9);
+  --dl-cat: #5c4f43;
+  --dl-cat-product: #963e23;
+  --dl-cat-cli: #74500b;
+  --dl-cat-mcp: #3e5c2b;
+  --dl-cat-claude: #7a4426;
+  --dl-cat-ui: #265b3f;
+  --dl-cat-vscode: #5c4027;
+  --dl-cat-theme: #8a374b;
+}
+:root {
+  --dk-bg: var(--dl-bg);
+  --dk-surface: var(--dl-surface);
+  --dk-surface-2: var(--dl-surface-2);
+  --dk-surface-3: var(--dl-surface-3);
+  --dk-border: var(--dl-border);
+  --dk-border-dim: var(--dl-border-dim);
+  --dk-text: var(--dl-text);
+  --dk-muted: var(--dl-muted);
+  --dk-dim: var(--dl-dim);
+  --dk-primary: var(--dl-primary);
+  --dk-primary-light: var(--dl-primary-light);
   --dk-on-primary: #fff;
-  --dk-title-a: #3a2830;
-  --dk-hi: 58 40 48;
-  --dk-glow: 249 189 116;
-  --dk-cool: 175 123 136;
+  --dk-title-a: var(--dl-title-a);
+  --dk-hi: var(--dl-hi);
+  --dk-glow: var(--dl-glow);
+  --dk-cool: var(--dl-cool);
   --dk-scheme: light;
-  --dk-cat: #66584b;
-  --dk-cat-product: #a3472b;
-  --dk-cat-cli: #875d11;
-  --dk-cat-mcp: #4a6636;
-  --dk-cat-claude: #8a4f2e;
-  --dk-cat-ui: #2f6a4a;
-  --dk-cat-vscode: #6b4a2f;
-  --dk-cat-theme: #9c4256;
+  --dk-cat: var(--dl-cat);
+  --dk-cat-product: var(--dl-cat-product);
+  --dk-cat-cli: var(--dl-cat-cli);
+  --dk-cat-mcp: var(--dl-cat-mcp);
+  --dk-cat-claude: var(--dl-cat-claude);
+  --dk-cat-ui: var(--dl-cat-ui);
+  --dk-cat-vscode: var(--dl-cat-vscode);
+  --dk-cat-theme: var(--dl-cat-theme);
 
   /* Night, late dusk: the plum of the art's shadows, lifted three quarters of
      the way towards the low lamp. Soft, but with enough depth left that the
@@ -206,38 +289,38 @@
   --dn-glow: 232 150 175;
   --dn-cool: 214 150 170;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --dk-bg: var(--dn-bg);
-    --dk-surface: var(--dn-surface);
-    --dk-surface-2: var(--dn-surface-2);
-    --dk-surface-3: var(--dn-surface-3);
-    --dk-border: var(--dn-border);
-    --dk-border-dim: var(--dn-border-dim);
-    --dk-text: var(--dn-text);
-    --dk-muted: var(--dn-muted);
-    --dk-dim: var(--dn-dim);
-    --dk-primary: var(--dn-primary);
-    --dk-primary-light: var(--dn-primary-light);
-    --dk-on-primary: var(--dn-on-primary);
-    --dk-title-a: var(--dn-title-a);
-    --dk-hi: var(--dn-hi);
-    --dk-glow: var(--dn-glow);
-    --dk-cool: var(--dn-cool);
-    --dk-scheme: dark;
-    --dk-cat: #c4a9ad;
-    --dk-cat-product: #ef9a74;
-    --dk-cat-cli: #e6be6e;
-    --dk-cat-mcp: #b4c49a;
-    --dk-cat-claude: #e9a9a0;
-    --dk-cat-ui: #9fc4a8;
-    --dk-cat-vscode: #d8a982;
-    --dk-cat-theme: #e7a3bd;
-  }
+:root.dark {
+  --dk-bg: var(--dn-bg);
+  --dk-surface: var(--dn-surface);
+  --dk-surface-2: var(--dn-surface-2);
+  --dk-surface-3: var(--dn-surface-3);
+  --dk-border: var(--dn-border);
+  --dk-border-dim: var(--dn-border-dim);
+  --dk-text: var(--dn-text);
+  --dk-muted: var(--dn-muted);
+  --dk-dim: var(--dn-dim);
+  --dk-primary: var(--dn-primary);
+  --dk-primary-light: var(--dn-primary-light);
+  --dk-on-primary: var(--dn-on-primary);
+  --dk-title-a: var(--dn-title-a);
+  --dk-hi: var(--dn-hi);
+  --dk-glow: var(--dn-glow);
+  --dk-cool: var(--dn-cool);
+  --dk-scheme: dark;
+  --dk-cat: #c4a9ad;
+  --dk-cat-product: #ef9a74;
+  --dk-cat-cli: #e6be6e;
+  --dk-cat-mcp: #b4c49a;
+  --dk-cat-claude: #e9a9a0;
+  --dk-cat-ui: #9fc4a8;
+  --dk-cat-vscode: #d8a982;
+  --dk-cat-theme: #e7a3bd;
 }
 
 /* fumadocs redefines its tokens on .dark #nd-sidebar, so the sidebar is
-   named here too, with the id doubled to outrank it. */
+   named here too, with the id doubled to outrank it. <html> carries them as
+   well, for the search dialog and popovers fumadocs portals out of the page. */
+html:has([data-ground="dusk"]),
 [data-ground="dusk"][data-ground],
 [data-ground="dusk"] #nd-sidebar#nd-sidebar {
   --bg: var(--dk-bg);
@@ -304,34 +387,84 @@ body:has([data-ground="dusk"]) {
   --accent: var(--dk-cat-theme);
 }
 
-/* Code: <html> is forced .dark, so fumadocs paints --shiki-dark everywhere.
-   The light decides instead: day Dusk takes the light theme, night keeps the
-   dark one. Both themes are the dusk pair in lib/code-themes.ts. */
-@media not (prefers-color-scheme: dark) {
-  [data-ground="dusk"] .shiki,
-  [data-ground="dusk"] .shiki span {
-    color: var(--shiki-light) !important;
-    font-style: var(--shiki-light-font-style) !important;
-  }
-}
-
-/* The hero copy sits on the drawing's cream wash on wide screens, so it keeps
-   day ink in both lights. Stacked under 860px it is on the page again and
-   takes the page's own tokens. */
+/* On wide screens the hero copy sits on the drawing, so it keeps day ink in
+   both lights, on a white card drawn over the art rather than a wash fading
+   into it: a wash greys the picture and still leaves the text on haze.
+   Stacked under 860px it is on the page again and takes the page tokens. */
 [data-ground="dusk"] .warm-hero-copy.warm-hero-copy {
-  --title-a: #3a2830;
-  --text: #3a2830;
-  --muted: #5e4448;
-  --primary: #914426;
-  --primary-light: #80485f;
+  --title-a: var(--dl-title-a);
+  --text: var(--dl-text);
+  --muted: var(--dl-muted);
+  --primary: var(--dl-primary);
+  --primary-light: var(--dl-primary-light);
   --on-primary: #fff;
-  --surface: #fdf5ef;
-  --surface-2: #f1e2e6;
-  --border: #ead6cc;
-  color: #3a2830;
+  --surface: var(--dl-surface);
+  --surface-2: var(--dl-surface-2);
+  --border: var(--dl-border);
+  color: var(--dl-text);
 }
 [data-ground="dusk"] .warm-hero.warm-hero > a {
-  color: #5e4448;
+  color: var(--dl-muted);
+}
+@media (min-width: 861px) {
+  :root:not([data-light="2"])
+    [data-ground="dusk"]
+    .warm-hero
+    > .illus-art::after {
+    content: none;
+  }
+  :root:not([data-light="2"])
+    [data-ground="dusk"]
+    .warm-hero-copy.warm-hero-copy {
+    max-width: 472px;
+    margin: 60px 0 0 32px;
+    padding: 24px 28px 28px;
+    border: 1px solid var(--dl-border);
+    border-radius: 18px;
+    background: var(--dl-panel);
+    box-shadow: 0 8px 28px rgb(43 28 34 / 0.1);
+    backdrop-filter: blur(8px);
+  }
+  :root:not([data-light="2"]) [data-ground="dusk"] .warm-hero.warm-hero > a {
+    margin: 20px 0 0 32px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--dl-panel);
+  }
+  /* At night the card turns plum and takes the page ink, so the hero is
+     not a lit window in a dark room. */
+  :root.dark:not([data-light="2"])
+    [data-ground="dusk"]
+    .warm-hero-copy.warm-hero-copy {
+    --title-a: var(--dn-title-a);
+    --text: var(--dn-text);
+    --muted: var(--dn-muted);
+    --primary: var(--dn-primary);
+    --primary-light: var(--dn-primary-light);
+    --on-primary: var(--dn-on-primary);
+    --surface: var(--dn-surface);
+    --surface-2: var(--dn-surface-2);
+    --border: var(--dn-border);
+    border-color: var(--dn-border);
+    background: rgb(51 37 44 / 0.92);
+    color: var(--dn-text);
+  }
+  :root.dark:not([data-light="2"])
+    [data-ground="dusk"]
+    .warm-hero.warm-hero
+    > a {
+    background: rgb(51 37 44 / 0.92);
+    color: var(--dn-muted);
+  }
+  /* 2 keeps a wash, steeper, so it clears the copy and leaves the art. */
+  :root[data-light="2"] [data-ground="dusk"] .warm-hero > .illus-art::after {
+    background: linear-gradient(
+      100deg,
+      rgb(251 241 233 / 0.94) 0%,
+      rgb(251 241 233 / 0.84) 30%,
+      rgb(251 241 233 / 0) 46%
+    );
+  }
 }
 @media (max-width: 860px) {
   [data-ground="dusk"] .warm-hero-copy.warm-hero-copy {
@@ -348,5 +481,78 @@ body:has([data-ground="dusk"]) {
   }
   [data-ground="dusk"] .warm-hero.warm-hero > a {
     color: var(--muted);
+  }
+}
+
+/* Theme picker: a quiet segmented pill, top right of the Dusk pages, across
+   from the back link; in the docs it heads the sidebar. Labels show from
+   720px; below, the icons carry it, named for assistive tech. */
+.dusk-picker {
+  display: inline-flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1;
+}
+.dusk-picker button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 11px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
+}
+.dusk-picker button:hover {
+  color: var(--text);
+}
+.dusk-picker button[aria-checked="true"] {
+  background: var(--surface-3);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.dusk-picker button:focus-visible {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 1px;
+}
+.dusk-picker-top {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  z-index: 5;
+}
+.dusk-picker-docs {
+  align-self: flex-start;
+  margin-top: 4px;
+}
+@media (max-width: 720px) {
+  .dusk-picker button {
+    width: 30px;
+    padding: 0;
+    justify-content: center;
+  }
+  .dusk-picker button span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .dusk-picker-top {
+    top: 12px;
+    right: 14px;
   }
 }

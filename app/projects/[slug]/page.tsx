@@ -26,6 +26,7 @@ import { landingComponents } from "@/components/landing-kit"
 import { getMDXComponents } from "@/components/mdx"
 import { Reveal } from "@/components/reveal"
 import { getRelease, releaseAge, type Release } from "@/lib/release"
+import { ThemePicker } from "@/components/theme-picker"
 import styles from "./page.module.css"
 
 // The release pill says how old the latest version is, so rebuild hourly.
@@ -604,6 +605,7 @@ const ProjectLanding = async ({
 
   return (
     <main className={styles.page} data-ground="dusk">
+      <ThemePicker className="dusk-picker-top" />
       {showRecord ? (
         <ProductRecord project={project} />
       ) : showAppLanding ? (

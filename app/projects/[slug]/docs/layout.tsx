@@ -3,6 +3,7 @@ import { DocsLayout } from "fumadocs-ui/layouts/docs"
 import { getProjectDocsTree } from "@/lib/source"
 import { getIcons } from "@/lib/icons"
 import { baseOptions } from "@/lib/layout.shared"
+import { ThemePicker } from "@/components/theme-picker"
 
 const Layout = async ({
   params,
@@ -37,6 +38,7 @@ const Layout = async ({
         tree={getProjectDocsTree(slug)}
         {...base}
         nav={{ ...base.nav, title, url: `/projects/${slug}` }}
+        sidebar={{ banner: <ThemePicker className="dusk-picker-docs" /> }}
       >
         {children}
       </DocsLayout>

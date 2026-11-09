@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { AvatarImage } from "@/components/avatar-image"
 import { BackLink } from "@/components/back-link"
+import { ThemePicker } from "@/components/theme-picker"
 import { getProjects } from "@/lib/projects"
 import { getEcosystems } from "@/lib/ecosystems"
 import { getIcons } from "@/lib/icons"
@@ -57,6 +58,7 @@ const ProjectsIndex = async () => {
 
   return (
     <main className={styles.page} data-ground="dusk">
+      <ThemePicker className="dusk-picker-top" />
       <header className={styles.hero}>
         <Blueprint className={styles.blueprint} />
         <BackLink href="/" className={styles.back}>
