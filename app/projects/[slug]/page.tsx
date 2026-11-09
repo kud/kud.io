@@ -2,6 +2,8 @@ import { type CSSProperties } from "react"
 import type { Metadata } from "next"
 import { Link } from "next-view-transitions"
 import { MorphLink } from "@/components/morph-link"
+import { IllustrationSlot } from "@/components/illustration-slot"
+import { ILLUSTRATED, SKIN } from "@/lib/skin"
 import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { DocsBody } from "fumadocs-ui/layouts/docs/page"
@@ -378,6 +380,7 @@ const ReadmeLanding = ({
   release: Release | null
 }) => {
   const readme = getProjectReadme(project.readmeSlug ?? project.slug)
+  const art = SKIN.illustration && ILLUSTRATED.includes(project.slug)
   const Body = readme?.data.body
   // Section headings (depth 2) drive a simple right-rail TOC.
   const toc = (readme?.data.toc ?? []).filter((item) => item.depth === 2)
@@ -408,12 +411,13 @@ const ReadmeLanding = ({
 
   return (
     <>
-      <section className={styles.hero}>
+      <section className={`${styles.hero} ${art ? "warm-hero" : ""}`}>
         <div className={styles.heroGrid} />
         <MorphLink href="/projects" className={styles.back}>
           ← Projects
         </MorphLink>
-        <div className={styles.heroContent}>
+        {art ? <IllustrationSlot ratio="16/9" /> : null}
+        <div className={`${styles.heroContent} ${art ? "warm-hero-copy" : ""}`}>
           {icon ? (
             <span className={styles.readmeIcon}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -598,7 +602,7 @@ const ProjectLanding = async ({
       : ((await getIcons())[slug] ?? project.icon ?? null)
 
   return (
-    <main className={styles.page}>
+    <main className={styles.page} data-ground={SKIN.projects}>
       {showRecord ? (
         <ProductRecord project={project} />
       ) : showAppLanding ? (

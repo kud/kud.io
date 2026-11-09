@@ -4,6 +4,7 @@ import type { MouseEvent, ReactNode } from "react"
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useTransitionRouter } from "next-view-transitions"
+import { projectsCover } from "@/lib/skin"
 
 type Props = {
   href: string
@@ -33,7 +34,7 @@ export const BackLink = ({ href, className, children }: Props) => {
       "(prefers-reduced-motion: reduce)",
     ).matches
 
-    if (desktop && !reducedMotion) {
+    if (desktop && !reducedMotion && projectsCover !== null) {
       const rect = event.currentTarget.getBoundingClientRect()
       window.dispatchEvent(
         new CustomEvent("ink:reveal", {

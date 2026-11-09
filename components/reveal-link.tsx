@@ -4,6 +4,7 @@ import type { MouseEvent, ReactNode } from "react"
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useTransitionRouter } from "next-view-transitions"
+import { projectsCover } from "@/lib/skin"
 
 type Props = {
   href: string
@@ -14,7 +15,7 @@ type Props = {
 
 // /projects' dark background, and the default for any link that doesn't say
 // otherwise — so omitting resolveCover is exactly today's behaviour.
-const DEFAULT_COVER = "#08080f"
+const DEFAULT_COVER = projectsCover
 
 // The home → destination CTA. On desktop it fires the `ink:reveal` event so the
 // InkTransition overlay spreads ink out of the button and navigates under the
@@ -28,6 +29,7 @@ const DEFAULT_COVER = "#08080f"
 // A destination whose ground is decided at runtime (the blog, which the visitor
 // themes) therefore supplies resolveCover, and returning null there means
 // "navigate without ink" — never "guess a colour".
+
 export const RevealLink = ({
   href,
   className,

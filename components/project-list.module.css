@@ -339,7 +339,7 @@
 }
 
 .ecosystemChip[data-active="true"] {
-  background: rgba(194, 112, 61, 0.16);
+  background: rgb(var(--glow, 194 112 61) / 0.16);
   border-color: var(--primary);
   color: var(--primary-light);
 }
@@ -355,14 +355,14 @@
   background:
     radial-gradient(
       110% 110% at 50% 0%,
-      rgba(255, 255, 255, 0.12),
+      rgb(var(--hi, 255 255 255) / 0.12),
       transparent 58%
     ),
     var(--surface-2);
   color: var(--text);
   font-size: 12px;
   font-weight: 700;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgb(var(--hi, 255 255 255) / 0.08);
 }
 
 .chipIcon img {
@@ -385,14 +385,14 @@
   height: 18px;
   padding: 0 5px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.07);
+  background: rgb(var(--hi, 255 255 255) / 0.07);
   color: var(--muted);
   font-size: 11px;
   line-height: 1;
 }
 
 .ecosystemChip[data-active="true"] .chipCount {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgb(var(--hi, 255 255 255) / 0.12);
   color: var(--text);
 }
 
@@ -419,7 +419,7 @@
 }
 
 .tagChip[data-active="true"] {
-  background: rgba(194, 112, 61, 0.16);
+  background: rgb(var(--glow, 194 112 61) / 0.16);
   border-style: solid;
   border-color: var(--primary);
   color: var(--primary-light);
@@ -536,7 +536,7 @@
 }
 
 .option:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgb(var(--hi, 255 255 255) / 0.05);
   color: var(--text);
 }
 
@@ -688,8 +688,8 @@
   z-index: 2;
   background: linear-gradient(
     133deg,
-    rgba(255, 255, 255, 0.34) 0%,
-    rgba(255, 255, 255, 0.06) 14%,
+    rgb(var(--hi, 255 255 255) / 0.34) 0%,
+    rgb(var(--hi, 255 255 255) / 0.06) 14%,
     transparent 34%
   );
   mix-blend-mode: screen;
@@ -705,9 +705,9 @@
   z-index: 3;
   border-radius: inherit;
   box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.45),
+    inset 0 1.5px 0 rgb(var(--hi, 255 255 255) / 0.45),
     inset 0 -16px 30px -18px rgba(0, 0, 0, 0.6),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    inset 0 0 0 1px rgb(var(--hi, 255 255 255) / 0.12);
   pointer-events: none;
 }
 
@@ -790,8 +790,8 @@
     -45deg,
     transparent 0,
     transparent 11px,
-    rgba(255, 255, 255, 0.025) 11px,
-    rgba(255, 255, 255, 0.025) 12px
+    rgb(var(--hi, 255 255 255) / 0.025) 11px,
+    rgb(var(--hi, 255 255 255) / 0.025) 12px
   );
 }
 
@@ -1099,9 +1099,9 @@
   z-index: 3;
   border-radius: inherit;
   box-shadow:
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.4),
+    inset 0 1.5px 0 rgb(var(--hi, 255 255 255) / 0.4),
     inset 0 -14px 26px -16px rgba(0, 0, 0, 0.55),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    inset 0 0 0 1px rgb(var(--hi, 255 255 255) / 0.1);
   pointer-events: none;
 }
 

@@ -1,6 +1,7 @@
 import { defineDocs, defineConfig } from "fumadocs-mdx/config"
 import { rehypeCodeDefaultOptions } from "fumadocs-core/mdx-plugins"
 import rehypeRaw from "rehype-raw"
+import { warmDay, warmNight } from "./lib/code-themes"
 
 // Per-project documentation is synced from each repo's markdown into
 // content/projects/<slug>/... at build time; Fumadocs indexes it for the
@@ -37,6 +38,7 @@ export default defineConfig({
     // whole static build.
     rehypeCodeOptions: {
       ...rehypeCodeDefaultOptions,
+      themes: { light: warmDay, dark: warmNight },
       fallbackLanguage: "text",
     },
     rehypePlugins: (plugins) => [

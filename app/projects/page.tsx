@@ -14,6 +14,9 @@ import {
 } from "@/components/social-icons"
 import { ProjectList } from "@/components/project-list"
 import { Contributions } from "@/components/contributions"
+import { Link } from "next-view-transitions"
+import { IllustrationSlot } from "@/components/illustration-slot"
+import { ILLUSTRATED, SKIN } from "@/lib/skin"
 import styles from "./page.module.css"
 
 export const metadata: Metadata = {
@@ -53,7 +56,7 @@ const ProjectsIndex = async () => {
   const ecosystems = getEcosystems(withIcons, icons)
 
   return (
-    <main className={styles.page}>
+    <main className={styles.page} data-ground={SKIN.projects}>
       <header className={styles.hero}>
         <Blueprint className={styles.blueprint} />
         <BackLink href="/" className={styles.back}>
@@ -102,6 +105,27 @@ const ProjectsIndex = async () => {
           ) : null}
         </div>
       </header>
+
+      {SKIN.illustration ? (
+        <section className="warm-featured" aria-labelledby="featured">
+          <h2 id="featured">Featured</h2>
+          <ul>
+            {ILLUSTRATED.map((slug) => withIcons.find((p) => p.slug === slug))
+              .filter((p) => p !== undefined)
+              .map((p) => (
+                <li key={p.slug}>
+                  {/* No view-transition-name here: the list row below owns
+                      project-<slug>, and a name used twice cancels the morph. */}
+                  <Link href={`/projects/${p.slug}`}>
+                    <IllustrationSlot ratio="4/3" />
+                    <strong>{p.name}</strong>
+                    {p.description ? <p>{p.description}</p> : null}
+                  </Link>
+                </li>
+              ))}
+          </ul>
+        </section>
+      ) : null}
 
       {groups.length === 0 ? (
         <p className={styles.empty}>

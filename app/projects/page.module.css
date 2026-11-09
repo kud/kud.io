@@ -16,10 +16,10 @@
   /* Blueprint graph paper: bold major lines every 140px over a fine 28px grid,
      kept very faint so it reads as a backdrop, not a foreground. */
   background-image:
-    linear-gradient(rgba(79, 116, 236, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(79, 116, 236, 0.035) 1px, transparent 1px),
-    linear-gradient(rgba(79, 116, 236, 0.014) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(79, 116, 236, 0.014) 1px, transparent 1px);
+    linear-gradient(rgb(var(--cool, 79 116 236) / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--cool, 79 116 236) / 0.035) 1px, transparent 1px),
+    linear-gradient(rgb(var(--cool, 79 116 236) / 0.014) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--cool, 79 116 236) / 0.014) 1px, transparent 1px);
   background-size:
     140px 140px,
     140px 140px,
@@ -46,12 +46,12 @@
   background:
     radial-gradient(
       ellipse 50% 60% at 22% 0%,
-      rgba(194, 112, 61, 0.22),
+      rgb(var(--glow, 194 112 61) / 0.22),
       transparent 70%
     ),
     radial-gradient(
       ellipse 45% 55% at 80% 10%,
-      rgba(79, 116, 236, 0.16),
+      rgb(var(--cool, 79 116 236) / 0.16),
       transparent 70%
     );
 }
@@ -136,7 +136,7 @@
   border-radius: 50%;
   border: 2px solid var(--border);
   box-shadow:
-    0 0 0 5px rgba(194, 112, 61, 0.12),
+    0 0 0 5px rgb(var(--glow, 194 112 61) / 0.12),
     0 18px 40px -16px rgba(0, 0, 0, 0.7);
 }
 
@@ -151,7 +151,7 @@
      reduced to keep the gap to the intro unchanged. */
   padding-bottom: 0.16em;
   margin: 0 0 6px;
-  background: linear-gradient(135deg, #f1f5f9 0%, #e0a87e 55%, #c2703d 100%);
+  background: linear-gradient(135deg, var(--title-a, #f1f5f9) 0%, var(--primary-light, #e0a87e) 55%, var(--primary, #c2703d) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
