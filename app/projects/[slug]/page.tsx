@@ -23,7 +23,7 @@ import { getIcons } from "@/lib/icons"
 import { landingComponents } from "@/components/landing-kit"
 import { getMDXComponents } from "@/components/mdx"
 import { Reveal } from "@/components/reveal"
-import { getNpmRelease, type NpmRelease } from "@/lib/npm-version"
+import { getRelease, type Release } from "@/lib/release"
 import styles from "./page.module.css"
 
 export const generateStaticParams = async () =>
@@ -372,7 +372,7 @@ const ReadmeLanding = ({
 }: {
   project: Project
   icon: string | null
-  release: NpmRelease | null
+  release: Release | null
 }) => {
   const readme = getProjectReadme(project.readmeSlug ?? project.slug)
   const Body = readme?.data.body
@@ -583,7 +583,7 @@ const ProjectLanding = async ({
         <ReadmeLanding
           project={project}
           icon={icon}
-          release={await getNpmRelease(project.slug)}
+          release={await getRelease(project.slug)}
         />
       )}
     </main>
