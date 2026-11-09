@@ -1,0 +1,340 @@
+/* PROTOTYPE: the top of /projects, pinned then recently released (?t=1..3).
+   Tokens come from the page's Dusk scope, so both lights follow for free. */
+.top {
+  max-width: 1040px;
+  margin: 24px auto 0;
+}
+
+.block + .block {
+  margin-top: 40px;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pin {
+  flex-shrink: 0;
+  color: var(--primary);
+}
+
+.icon,
+.monogram {
+  flex-shrink: 0;
+  border-radius: 22%;
+}
+
+.icon {
+  object-fit: contain;
+  background: var(--surface-2);
+  padding: 3px;
+}
+
+.monogram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 32%, transparent);
+}
+
+.release {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.version {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--text);
+}
+
+.age {
+  white-space: nowrap;
+}
+
+.freshDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--primary);
+}
+
+.pinName {
+  display: block;
+  margin-top: 12px;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.pinDesc {
+  display: -webkit-box;
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 1 shelf ------------------------------------------------------------------ */
+.pinGrid,
+.recentGrid,
+.splitPins,
+.timeline,
+.oneGrid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pinGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.pinCard {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.pinPlate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface-2);
+}
+
+.recentGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.recentRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 100%;
+  padding: 16px 20px;
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.recentRow:hover {
+  background: var(--surface-2);
+}
+
+.recentBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.recentName {
+  overflow: hidden;
+  font-size: 15px;
+  color: var(--text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .pinGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .recentGrid {
+    grid-template-columns: 1fr;
+  }
+  .pinName {
+    font-size: 16px;
+  }
+}
+
+/* 2 split ------------------------------------------------------------------ */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 48px;
+  align-items: start;
+}
+
+.splitPins {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 20px;
+}
+
+.splitPin {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.splitArt.splitArt {
+  border-radius: 16px;
+}
+
+.splitPlate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface-2);
+}
+
+.timeline {
+  border-top: 1px solid var(--border);
+}
+
+.tick {
+  display: grid;
+  grid-template-columns: 52px 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 4px;
+  border-bottom: 1px solid var(--border);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.tick:hover {
+  background: var(--surface-2);
+}
+
+.tickDate {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.tickName {
+  overflow: hidden;
+  font-size: 15px;
+  color: var(--text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .split {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .splitPins {
+    gap: 20px 14px;
+  }
+  .splitPins .pinName {
+    font-size: 15px;
+  }
+  .splitPins .pinDesc {
+    font-size: 13px;
+  }
+}
+
+/* 3 one shelf -------------------------------------------------------------- */
+.oneGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.oneCard {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.oneCard:hover {
+  background: var(--surface-2);
+}
+
+.oneHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.oneTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.oneName {
+  margin-top: 14px;
+  font-size: 16px;
+  color: var(--text);
+}
+
+.oneDesc {
+  display: -webkit-box;
+  margin-top: 4px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted);
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (max-width: 860px) {
+  .oneGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .oneGrid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .oneCard {
+    padding: 16px 18px;
+  }
+}

@@ -21,9 +21,8 @@ import {
 } from "@/components/project-list"
 import { getRelease, releaseAge } from "@/lib/release"
 import { Contributions } from "@/components/contributions"
-import { Link } from "next-view-transitions"
-import { IllustrationSlot } from "@/components/illustration-slot"
-import { FEATURED } from "@/lib/art"
+import { ProjectsTop, type TopLayout } from "@/components/projects-top"
+import { PINNED, RECENT_COUNT } from "@/lib/pinned"
 import styles from "./page.module.css"
 
 export const metadata: Metadata = {
@@ -42,16 +41,22 @@ export const revalidate = 3600
 const TREATMENTS: ReleaseTreatment[] = [1, 2, 3, 4]
 const DEFAULT_TREATMENT: ReleaseTreatment = 2
 
+// PROTOTYPE: `?t=1..3` previews the layouts for the top of the page, pinned
+// then recently released (components/projects-top.tsx).
+const LAYOUTS: TopLayout[] = [1, 2, 3]
+const DEFAULT_LAYOUT: TopLayout = 2
+
 const AVATAR =
   "https://www.gravatar.com/avatar/e6eaeaa6da69e804c27c2d4cd55107e0?s=512"
 
 const ProjectsIndex = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ v?: string }>
+  searchParams: Promise<{ v?: string; t?: string }>
 }) => {
-  const { v } = await searchParams
-  const treatment = TREATMENTS.find((t) => String(t) === v) ?? DEFAULT_TREATMENT
+  const { v, t } = await searchParams
+  const treatment = TREATMENTS.find((n) => String(n) === v) ?? DEFAULT_TREATMENT
+  const layout = LAYOUTS.find((n) => String(n) === t) ?? DEFAULT_LAYOUT
   const [projects, icons] = await Promise.all([getProjects(), getIcons()])
   // Fetched here, never in the client list: one map of slug to release, with
   // freshness decided on the server so the client never disagrees with it.
@@ -99,6 +104,23 @@ const ProjectsIndex = async ({
   // (qobuz lib + CLI + MCP). Derived from the same projects, surfaced as tiles
   // that filter the grid rather than as their own section.
   const ecosystems = getEcosystems(withIcons, icons)
+  // Pins first, in their own order. "Recently released" is the latest
+  // release date, never the last push: pushes include dependency bumps and
+  // fleet-wide sweeps, so most repos would read as fresh on any given day. A
+  // pinned project is not repeated in the recent list.
+  const pinned = PINNED.map((slug) =>
+    withIcons.find((p) => p.slug === slug),
+  ).filter((p) => p !== undefined)
+  const recent = withIcons
+    .filter((p) => !PINNED.includes(p.slug))
+    .flatMap((p) => {
+      const release = releases[p.slug]
+      return release?.publishedAt
+        ? [{ ...p, release: { ...release, publishedAt: release.publishedAt } }]
+        : []
+    })
+    .sort((a, b) => b.release.publishedAt.localeCompare(a.release.publishedAt))
+    .slice(0, RECENT_COUNT)
 
   return (
     <main
@@ -159,26 +181,7 @@ const ProjectsIndex = async ({
         </div>
       </header>
 
-      {FEATURED.length > 0 ? (
-        <section className="warm-featured" aria-labelledby="featured">
-          <h2 id="featured">Featured</h2>
-          <ul>
-            {FEATURED.map((slug) => withIcons.find((p) => p.slug === slug))
-              .filter((p) => p !== undefined)
-              .map((p) => (
-                <li key={p.slug}>
-                  {/* No view-transition-name here: the list row below owns
-                      project-<slug>, and a name used twice cancels the morph. */}
-                  <Link href={`/projects/${p.slug}`}>
-                    <IllustrationSlot ratio="4/3" slug={p.slug} />
-                    <strong>{p.name}</strong>
-                    {p.description ? <p>{p.description}</p> : null}
-                  </Link>
-                </li>
-              ))}
-          </ul>
-        </section>
-      ) : null}
+      <ProjectsTop layout={layout} pinned={pinned} recent={recent} />
 
       {groups.length === 0 ? (
         <p className={styles.empty}>
