@@ -2,8 +2,8 @@
 // apart from ART: a pin should not wait on a commissioned drawing, and a
 // drawing should not pin a project by itself. Pinned projects with art show it.
 export const PINNED: string[] = [
+  "smart-tv-for-browser",
   "planning-poker",
-  "duux",
   "mcp-jenkins",
   "soap-cli",
 ]
