@@ -65,11 +65,12 @@ export const viewport: Viewport = {
   themeColor: "#fdfbf8",
 }
 
-// Preview switchboard for Dusk: ?n=1..3 picks the night candidate and
+// Preview switchboard for Dusk: ?n=1..5 picks the night candidate (5 when
+// none is given) and
 // ?mode=light|dark|system pins the light. Both stick for the session's later
 // pages. Runs before paint so nothing flashes; without it the system
 // preference decides, which is the behaviour the prototype recommends.
-const DUSK_PREVIEW = `(function(){try{var q=new URLSearchParams(location.search),s=sessionStorage,d=document.documentElement,n=q.get("n"),m=q.get("mode");if(n)s.setItem("dusk-n",n);else n=s.getItem("dusk-n");if(m)s.setItem("dusk-mode",m);else m=s.getItem("dusk-mode");if(n&&n!=="1")d.dataset.night=n;if(m==="light"||m==="dark")d.dataset.mode=m}catch(e){}})()`
+const DUSK_PREVIEW = `(function(){try{var q=new URLSearchParams(location.search),s=sessionStorage,d=document.documentElement,n=q.get("n"),m=q.get("mode");if(n)s.setItem("dusk-n",n);else n=s.getItem("dusk-n")||"5";if(m)s.setItem("dusk-mode",m);else m=s.getItem("dusk-mode");if(n&&n!=="1")d.dataset.night=n;if(m==="light"||m==="dark")d.dataset.mode=m}catch(e){}})()`
 
 const RootLayout = ({ children }: { children: ReactNode }) => (
   <ViewTransitions>
