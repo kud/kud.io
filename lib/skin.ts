@@ -12,9 +12,9 @@ export type Skin = {
 }
 
 export const SKIN: Skin = {
-  projects: "current",
-  docs: "current",
-  illustration: false,
+  projects: "day",
+  docs: "day",
+  illustration: true,
 }
 
 // Projects that would carry a commissioned illustration. Until the art exists
