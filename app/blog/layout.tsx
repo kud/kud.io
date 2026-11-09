@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { Link } from "next-view-transitions"
+import { InkLink as Link } from "@/components/ink-link"
 import {
   BLOG_ROOT_ID,
   ThemeControl,

@@ -1,6 +1,6 @@
 "use client"
 
-import { Link } from "next-view-transitions"
+import { InkLink as Link } from "@/components/ink-link"
 import { postPath } from "@/lib/blog-path"
 import { useEffect, useMemo, useState, type CSSProperties } from "react"
 import { CoverImage } from "@/components/blog-cover"

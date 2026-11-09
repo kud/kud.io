@@ -1,4 +1,4 @@
-import { Link } from "next-view-transitions"
+import { InkLink as Link } from "@/components/ink-link"
 import { ART } from "@/lib/art"
 import { IllustrationSlot } from "@/components/illustration-slot"
 import styles from "./projects-top.module.css"

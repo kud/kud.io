@@ -3,7 +3,7 @@ import type { CSSProperties } from "react"
 import { notFound } from "next/navigation"
 // The same Link the index uses — next/link here would drop the view
 // transition on every in-blog hop.
-import { Link } from "next-view-transitions"
+import { InkLink as Link } from "@/components/ink-link"
 import type { Components } from "hast-util-to-jsx-runtime"
 import type { Post } from "@/lib/blog"
 import {

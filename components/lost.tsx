@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
-import { Link } from "next-view-transitions";
+import { InkLink as Link } from "@/components/ink-link";
 import styles from "./lost.module.css";
 import { Cat } from "./lost-cat";
 

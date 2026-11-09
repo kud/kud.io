@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import Link from "next/link"
+import { InkLink as Link } from "@/components/ink-link"
 import { Reveal } from "./reveal"
 import { Terminal } from "./terminal"
 import styles from "./landing-kit.module.css"

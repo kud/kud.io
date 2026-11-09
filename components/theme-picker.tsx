@@ -29,7 +29,7 @@ export const ThemePicker = ({ className }: { className?: string }) => {
           aria-checked={theme === value}
           aria-label={label}
           title={label}
-          onClick={() => setTheme(value)}
+          onClick={(event) => setTheme(value, event.currentTarget)}
         >
           <Icon aria-hidden size={14} strokeWidth={2} />
           <span>{label}</span>

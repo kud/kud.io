@@ -1,6 +1,6 @@
 import { type CSSProperties } from "react"
 import type { Metadata } from "next"
-import { Link } from "next-view-transitions"
+import { InkLink as Link } from "@/components/ink-link"
 import { MorphLink } from "@/components/morph-link"
 import { IllustrationSlot } from "@/components/illustration-slot"
 import { ART } from "@/lib/art"

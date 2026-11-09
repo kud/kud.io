@@ -229,3 +229,24 @@ html[data-vt="morph"]::view-transition-new(root) {
     animation: none;
   }
 }
+
+/* ?arrive=2 on home (components/ink-transition.tsx → ArriveScript): a plain
+   cover in the home ground, painted before first paint and swapped for the ink
+   reveal once the page hydrates. The 3s fade is a failsafe only: if the script
+   never lifts it, the page still shows. */
+@keyframes arrive-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+html[data-arrive="ink"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  background: #fdfbf8;
+  pointer-events: none;
+  animation: arrive-failsafe 0.3s ease-out 3s forwards;
+}

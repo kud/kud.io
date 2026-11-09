@@ -1,5 +1,4 @@
-import { RevealLink } from "@/components/reveal-link"
-import { blogInkCover } from "@/components/scoped-theme"
+import { InkLink } from "@/components/ink-link"
 import { AvatarImage } from "@/components/avatar-image"
 import {
   GitHubIcon,
@@ -118,20 +117,16 @@ const Personal = () => (
 )
 
 const Cta = () => (
-  <RevealLink href="/projects" className={styles.primary}>
+  <InkLink href="/projects" className={styles.primary}>
     Explore my projects
     <span aria-hidden>→</span>
-  </RevealLink>
+  </InkLink>
 )
 
 const Writing = () => (
-  <RevealLink
-    href="/blog"
-    className={styles.secondary}
-    resolveCover={blogInkCover}
-  >
+  <InkLink href="/blog" className={styles.secondary}>
     Writing
-  </RevealLink>
+  </InkLink>
 )
 
 const SocialLinks = () => (

@@ -4,6 +4,7 @@ import type { MouseEvent, ReactNode } from "react"
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useTransitionRouter } from "next-view-transitions"
+import { inkNavigate } from "@/components/ink"
 
 type Props = {
   href: string
@@ -12,9 +13,10 @@ type Props = {
   children: ReactNode
 }
 
-// /projects → home. The Dusk ground follows the reader's light, so there is no
-// ink to cover the change with: it is the flat cross-fade + avatar morph,
-// flagged as a "back" move so global.css drops the forward-only zoom.
+// /projects → home. Home has one fixed ground, so on desktop this inks like
+// every other move (components/ink.ts). Where ink does not apply it is the flat
+// cross-fade + avatar morph, flagged as a "back" move so global.css drops the
+// forward-only zoom.
 export const BackLink = ({
   href,
   className,
@@ -31,7 +33,9 @@ export const BackLink = ({
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0)
       return
+    const inked = inkNavigate(event, href)
     event.preventDefault()
+    if (inked) return
 
     document.documentElement.dataset.vt = "back"
     vtRouter.push(href, {

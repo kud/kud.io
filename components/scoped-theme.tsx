@@ -7,6 +7,7 @@ import {
   useSyncExternalStore,
 } from "react"
 import type { ReactNode } from "react"
+import { inkSwap, scopeGroundFor } from "@/components/ink"
 
 // Scoped visitor themes: each themed surface (the blog, the Dusk pages under
 // /projects) owns its own light/dark/system choice, stamped as data-theme on
@@ -31,7 +32,6 @@ const LEGACY_THEME_KEY = "kud.blog.theme"
 export const THEME_SCOPE_ATTR = "data-theme-scope"
 
 export const BLOG_ROOT_ID = "blog-root"
-export const BLOG_INK = "#0e1418"
 
 export type ScopedTheme = "light" | "dark" | "system"
 
@@ -48,27 +48,6 @@ const readStorage = (): string | null => {
   localStorage.setItem(THEME_KEY, legacy)
   localStorage.removeItem(LEGACY_THEME_KEY)
   return legacy
-}
-
-/* The ground /blog will paint on arrival, but only when it's dark — the one
-   case the ink reveal has something to cover. Returns null for a light
-   destination and for anything we can't determine, both of which mean
-   "navigate plainly" rather than "guess a colour".
-
-   The three branches mirror the blog's CSS exactly: an explicit stamp wins in
-   either direction, and everything else (including "system") falls to the same
-   prefers-color-scheme query that #blog-root:not([data-theme="light"]) resolves
-   with. Re-derive this from that block if the tokens ever move, and never from
-   memory of what the blog looks like. */
-export const blogInkCover = (): string | null => {
-  try {
-    const stored = readStorage()
-    if (stored === "light") return null
-    if (stored === "dark") return BLOG_INK
-    return matchMedia("(prefers-color-scheme: dark)").matches ? BLOG_INK : null
-  } catch {
-    return null
-  }
 }
 
 // "system" is a real CSS state, not a JavaScript resolution: each scope's CSS
@@ -98,7 +77,7 @@ const subscribeToTheme = (listener: () => void) => {
   }
 }
 
-const readStoredTheme = (): ScopedTheme => {
+export const readStoredTheme = (): ScopedTheme => {
   try {
     const stored = readStorage()
     return isTheme(stored) ? stored : "system"
@@ -128,9 +107,17 @@ export const useScopedTheme = () => {
     serverTheme,
   )
 
-  const setTheme = useCallback((next: ScopedTheme) => {
+  // origin is the pressed control: the new light spreads out of it as ink in
+  // the new ground (components/ink.ts). Storage and the control update at once;
+  // only the stamp, the one thing that repaints the page, waits for the cover.
+  // A choice that resolves to the ground already showing (Dark to Auto on a
+  // dark OS) has nothing to cover and swaps plainly.
+  const setTheme = useCallback((next: ScopedTheme, origin?: Element | null) => {
+    const before = readStoredTheme()
     unpersistedTheme = next
-    stampScopes(next)
+    const from = scopeGroundFor(before)
+    const to = scopeGroundFor(next)
+    void inkSwap(from === to ? null : origin, to, () => stampScopes(next))
     try {
       localStorage.setItem(THEME_KEY, next)
     } catch {
@@ -256,7 +243,7 @@ export const ThemeControl = ({ className }: { className?: string }) => {
         <button
           key={option}
           type="button"
-          onClick={() => setTheme(option)}
+          onClick={(event) => setTheme(option, event.currentTarget)}
           aria-pressed={theme === option}
           data-active={theme === option || undefined}
         >
