@@ -46,7 +46,7 @@
   "decisions": [
     "An installable PWA with all learning and progress state on the client in Zustand, so it works offline once installed.",
     "Questions follow the real exam's format, so practice and the test feel the same.",
-    "A readiness model tracks accuracy per topic and says when you're prepared, rather than leaving you to guess."
+    "One readiness score blends your recent mock exams, how much of the material you have mastered, your weakest important facts and how regularly you practise, so it says when you are prepared rather than leaving you to guess."
   ],
   "writing": []
 }
