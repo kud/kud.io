@@ -112,50 +112,6 @@
   }
 }
 
-/* Featured cards on /projects: 4:3 art over name and line. */
-.warm-featured {
-  max-width: 1040px;
-  margin: 24px auto 0;
-}
-.warm-featured h2 {
-  margin: 0 0 16px;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.warm-featured ul {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-@media (max-width: 860px) {
-  .warm-featured ul {
-    grid-template-columns: 1fr;
-  }
-}
-.warm-featured a {
-  display: block;
-  color: inherit;
-  text-decoration: none;
-}
-.warm-featured strong {
-  display: block;
-  margin-top: 12px;
-  font-size: 18px;
-  color: var(--text);
-}
-.warm-featured p {
-  margin: 4px 0 0;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--muted);
-}
-
 /* It comes in two lights. <html> is forced .dark site-wide, so Dusk never
    keys on it: the wrapper's data-theme does (components/scoped-theme.tsx),
    "dark" or "light" from the picker, or "system", which follows
