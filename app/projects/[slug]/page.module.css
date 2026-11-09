@@ -1039,3 +1039,22 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* The latest release, between the pitch and the calls to action: a quiet
+   fact the tagline's bottom margin hands over to. */
+.version {
+  display: inline-block;
+  margin: -24px auto 32px;
+  padding: 2px 10px;
+  border: 1px solid var(--border, rgba(148, 163, 184, 0.2));
+  border-radius: 6px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  animation: fadeUp 0.6s ease both;
+  animation-delay: 0.15s;
+}
+.version:hover {
+  color: var(--primary-light);
+}

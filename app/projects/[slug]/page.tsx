@@ -420,7 +420,6 @@ const ReadmeLanding = ({
             <span className={styles.badgeDot} />
             {project.license ? `${project.license} · ` : ""}
             {badgeLabel}
-            {release ? ` · v${release.version}` : ""}
           </div>
           <h1
             className={`${styles.title} ${styles.titleReadme}`}
@@ -430,6 +429,16 @@ const ReadmeLanding = ({
           </h1>
           {project.description ? (
             <p className={styles.tagline}>{project.description}</p>
+          ) : null}
+          {release ? (
+            <a
+              href={release.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.version}
+            >
+              v{release.version}
+            </a>
           ) : null}
           <div className={styles.actions}>
             {isRaycast ? (
