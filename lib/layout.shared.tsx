@@ -6,7 +6,6 @@ export const baseOptions = (): BaseLayoutProps => ({
     url: "/projects",
   },
   // fumadocs' own switch stays off: <html> is forced dark, and the Dusk docs
-  // carry their own scoped ThemePicker at the
-  // head of the sidebar, the same control as on the project pages.
+  // carry their own scoped ThemePicker, top right as on the project pages.
   themeSwitch: { enabled: false },
 })

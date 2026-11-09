@@ -42,10 +42,15 @@ const Layout = async ({
       style={{ display: "contents" }}
     >
       <ThemeScopeScript />
+      <ThemePicker className="dusk-picker-docs-top" />
       <DocsLayout
         tree={getProjectDocsTree(slug)}
         {...base}
         nav={{ ...base.nav, title, url: `/projects/${slug}` }}
+        // No search: a project's docs are a handful of pages the sidebar
+        // already lists. The picker sits top right like every themed page;
+        // the drawer copy is for phones, where fumadocs' bar owns that corner.
+        searchToggle={{ enabled: false }}
         sidebar={{ banner: <ThemePicker className="dusk-picker-docs" /> }}
       >
         {children}

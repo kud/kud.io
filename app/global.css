@@ -165,15 +165,19 @@ html[data-vt="back"]::view-transition-new(root) {
   }
 }
 
-/* Hold the OUTGOING page fully opaque until the incoming one has begun revealing
-   (45%), then hand off. Without this the old page fades from t=0 while the new one
-   is still hidden, leaving a gap where the dark page background flashes through
-   behind the morphing icon — the "blink". The overlap removes it. */
+/* Clear the OUTGOING page first, then let the title travel over bare ground.
+   The old hold (opaque to 55%, then fading while the new page faded in) left
+   both pages half-transparent at once from 55% on: the list's cards and grid
+   ghosted through the landing's hero, with the title morphing across text
+   that was still there. Both Dusk pages share one ground, and <html> paints
+   it (app/warm.css, html:has([data-ground])), so an empty frame is the
+   page colour, not a blink. Out by 35%, the new page in from 45%: never two
+   pages on screen at once. */
 @keyframes vt-content-hold {
-  0%,
-  55% {
+  0% {
     opacity: 1;
   }
+  35%,
   100% {
     opacity: 0;
   }

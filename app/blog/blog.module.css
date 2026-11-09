@@ -321,3 +321,14 @@
   border-color: color-mix(in srgb, var(--tag-hue) 60%, var(--fg));
   font-weight: 500;
 }
+
+/* The shared theme picker (components/theme-picker.tsx, styled in
+   app/warm.css) reads Dusk's token names; the blog lends it its own. */
+:global(#blog-root) :global(.blog-picker) {
+  --border: var(--line-2);
+  --surface: var(--bg);
+  --surface-3: var(--bg-2);
+  --muted: var(--fg-2);
+  --text: var(--fg);
+  --primary-light: var(--fg-2);
+}

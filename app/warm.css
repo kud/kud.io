@@ -307,22 +307,6 @@ body:has([data-ground="dusk"]) {
   --accent: var(--dk-cat-theme);
 }
 
-/* Code: <html> stays .dark, so fumadocs paints --shiki-dark everywhere. The
-   scope's light decides instead: day Dusk takes the light theme, night keeps
-   the dark one. Both themes are the dusk pair in lib/code-themes.ts. */
-[data-ground="dusk"][data-theme="light"] .shiki,
-[data-ground="dusk"][data-theme="light"] .shiki span {
-  color: var(--shiki-light) !important;
-  font-style: var(--shiki-light-font-style) !important;
-}
-@media not (prefers-color-scheme: dark) {
-  [data-ground="dusk"]:not([data-theme="dark"]) .shiki,
-  [data-ground="dusk"]:not([data-theme="dark"]) .shiki span {
-    color: var(--shiki-light) !important;
-    font-style: var(--shiki-light-font-style) !important;
-  }
-}
-
 /* Theme picker: a quiet segmented pill, top right of the Dusk pages, across
    from the back link; in the docs it heads the sidebar. Labels show from
    720px; below, the icons carry it, named for assistive tech. */
@@ -393,5 +377,128 @@ body:has([data-ground="dusk"]) {
   .dusk-picker-top {
     top: 12px;
     right: 14px;
+  }
+}
+
+/* Polish -------------------------------------------------------------------- */
+/* Shade: the colour shadows are cast in. Plum ink by day, near-black plum by
+   night, so a lifted card sits on the ground instead of glowing off it. */
+:root {
+  --dk-shade: 43 28 34;
+}
+html:has([data-ground="dusk"][data-theme="dark"]),
+[data-ground="dusk"][data-theme="dark"] {
+  --dk-shade: 14 8 11;
+}
+@media (prefers-color-scheme: dark) {
+  html:has([data-ground="dusk"]:not([data-theme="light"])),
+  [data-ground="dusk"]:not([data-theme="light"]) {
+    --dk-shade: 14 8 11;
+  }
+}
+
+/* Focus: the browser's blue ring is the last of the old palette. */
+[data-ground="dusk"] :focus-visible {
+  outline: 2px solid var(--dk-primary-light);
+  outline-offset: 2px;
+}
+
+/* App tiles: the shadow took 70–85% of each app's own accent, which on plum
+   read as a blue neon halo. The accent stays inside the glass; the shadow is
+   the ground's shade. */
+[data-ground="dusk"] [class*="appIconWrap"][class*="appIconWrap"] {
+  box-shadow: 0 18px 36px -20px rgb(var(--dk-shade) / 0.55);
+}
+[data-ground="dusk"] [class*="appTile"]:hover [class*="appIconWrap"],
+[data-ground="dusk"] [class*="appTile"]:focus-visible [class*="appIconWrap"] {
+  box-shadow: 0 26px 48px -22px rgb(var(--dk-shade) / 0.7);
+}
+
+/* Primary buttons: a solid fill already says "press me"; the same colour
+   bloomed underneath made it neon. A tight shade grounds it instead. */
+[data-ground="dusk"] a[class*="__primary"][class*="__primary"],
+[data-ground="dusk"] a[class*="__cta"][class*="__cta"] {
+  box-shadow:
+    0 1px 2px rgb(var(--dk-shade) / 0.18),
+    0 6px 14px -8px rgb(var(--dk-shade) / 0.45);
+}
+/* Inside the readme the prose link colour (near-black by day) outranked the
+   button's own ink: dark text on terracotta. */
+[data-ground="dusk"] [class*="__readme"] a[class*="__primary"][class*="__primary"],
+[data-ground="dusk"] [class*="__readme"] a[class*="__primary"][class*="__primary"]:hover {
+  color: var(--dk-on-primary);
+  text-decoration: none;
+}
+
+/* The open-source pill: a 10% peach wash with a 30% peach rim all but
+   vanished on paper. A real surface and the page border, plum ink. */
+[data-ground="dusk"] [class*="__badge"][class*="__badge"] {
+  border-color: var(--dk-border);
+  background: var(--dk-surface-2);
+  color: var(--dk-primary-light);
+}
+
+/* Docs: the sidebar was a filled, bordered slab carrying a search box the
+   docs don't need; the slab's edge pulled the eye left of the page's centre.
+   On wide screens it is now just the nav, on the ground, mirroring the toc. */
+@media (min-width: 768px) {
+  [data-ground="dusk"] #nd-sidebar#nd-sidebar {
+    border-color: transparent;
+    background: transparent;
+  }
+}
+
+/* The picker sits top right on every themed page. In the docs that corner is
+   free on wide screens; on phones fumadocs' own bar owns it, so the picker
+   moves into the drawer there. */
+.dusk-picker-docs-top {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  z-index: 30;
+}
+@media (max-width: 767px) {
+  .dusk-picker-docs-top {
+    display: none;
+  }
+}
+@media (min-width: 768px) {
+  .dusk-picker-docs {
+    display: none;
+  }
+}
+
+/* Code: dark in both lights, as Erwann prefers, in the ground's own plum
+   rather than a stock editor's. lib/code-themes.ts holds the tokens; the
+   block's ground and rim are set here so they read the same on paper and at
+   night. */
+[data-ground="dusk"] {
+  --code-bg: #241820;
+  --code-rim: var(--dk-border);
+}
+[data-ground="dusk"] figure.shiki,
+[data-ground="dusk"] pre.shiki {
+  border-color: var(--code-rim);
+  background: var(--code-bg);
+  --color-fd-muted-foreground: #b9a1a8;
+  --color-fd-accent: #3a2a33;
+  --color-fd-accent-foreground: #f4e7e1;
+}
+[data-ground="dusk"] figure.shiki > div:first-child:not(:only-child) {
+  border-color: var(--code-rim);
+}
+html[data-code="2"] [data-ground="dusk"] {
+  --code-bg: #1d1714;
+  --code-rim: #352a24;
+}
+html[data-code="2"] [data-ground="dusk"] .shiki,
+html[data-code="2"] [data-ground="dusk"] .shiki span {
+  color: var(--shiki-ember) !important;
+  font-style: var(--shiki-ember-font-style) !important;
+}
+/* The toc's heading sat in the picker's corner; it starts below it now. */
+@media (min-width: 1280px) {
+  [data-ground="dusk"] #nd-toc {
+    padding-top: 76px;
   }
 }

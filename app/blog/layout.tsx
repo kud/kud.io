@@ -2,9 +2,9 @@ import type { ReactNode } from "react"
 import { InkLink as Link } from "@/components/ink-link"
 import {
   BLOG_ROOT_ID,
-  ThemeControl,
   ThemeScopeScript,
 } from "@/components/scoped-theme"
+import { ThemePicker } from "@/components/theme-picker"
 import { mono } from "./fonts"
 import styles from "./blog.module.css"
 
@@ -21,10 +21,9 @@ const BlogLayout = ({ children }: { children: ReactNode }) => (
     className={mono.variable}
   >
     <ThemeScopeScript />
+    {/* The same picker, in the same corner, as every other themed page. */}
+    <ThemePicker className="dusk-picker-top blog-picker" />
     <div className={styles.wrap}>
-      {/* A div, not a p: ThemeControl renders a div, and a div inside a
-          p makes the browser close the paragraph early — which silently
-          drops the pill out of the flex row it is meant to sit in. */}
       <div className={styles.site}>
         <Link href="/" className={styles.who}>
           kud.io
@@ -32,7 +31,6 @@ const BlogLayout = ({ children }: { children: ReactNode }) => (
         <Link href="/blog" className={styles.where}>
           /writing
         </Link>
-        <ThemeControl className={styles.theme} />
       </div>
       {children}
     </div>

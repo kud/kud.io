@@ -90,9 +90,11 @@ const theme = (
   ] satisfies Rule[],
 })
 
-// The Dusk pair, each on its own light's card surface: night on late dusk's
-// #33252c, day on #fdf5ef. Both clear AA there and on the page ground.
-export const duskNight = theme("dusk-night", "dark", "#33252c", {
+// Code stays dark in both lights, on a deep plum block (#241820, set in
+// app/warm.css) that sits on paper and at night alike. Palette 1, "plum": the
+// ground's own mauves and peaches; every token clears 7:1 on the block.
+// duskDay stays for surfaces outside Dusk that still read --shiki-light.
+export const duskNight = theme("dusk-night", "dark", "#241820", {
   fg: "#f4e7e1",
   comment: "#b9a1a8",
   keyword: "#dfa0c4",
@@ -112,4 +114,18 @@ export const duskDay = theme("dusk-day", "light", "#fdf5ef", {
   fn: "#914426",
   type: "#6b4a3f",
   punct: "#5e4448",
+})
+
+// Palette 2, "ember": a warmer umber block (#1d1714) with terracotta keywords
+// and lamp-amber numbers. Emitted as a third Shiki theme (--shiki-ember) so
+// the preview can compare it live with ?code=2; every token clears 6:1.
+export const duskEmber = theme("dusk-ember", "dark", "#1d1714", {
+  fg: "#efe4d8",
+  comment: "#a8978b",
+  keyword: "#e8906f",
+  string: "#c8c07e",
+  number: "#f0b46e",
+  fn: "#f3cfa6",
+  type: "#d9a6b9",
+  punct: "#c2b2a5",
 })

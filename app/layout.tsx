@@ -65,6 +65,14 @@ export const viewport: Viewport = {
   themeColor: "#fdfbf8",
 }
 
+// Preview-only comparison of the two Dusk code palettes: ?code=1 or ?code=2
+// stamps data-code on <html> for the session (app/warm.css). Never shipped to
+// production, where palette 1 is simply the default.
+const CODE_PALETTE_SCRIPT =
+  process.env.VERCEL_ENV === "production"
+    ? null
+    : `try{var q=new URLSearchParams(location.search).get("code");if(q)sessionStorage.setItem("kud.code",q);var c=sessionStorage.getItem("kud.code");if(c)document.documentElement.dataset.code=c}catch(e){}`
+
 const RootLayout = ({ children }: { children: ReactNode }) => (
   <ViewTransitions>
     <html
@@ -75,6 +83,9 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
     >
       <body className="flex min-h-screen flex-col">
         <ArriveScript />
+        {CODE_PALETTE_SCRIPT ? (
+          <script dangerouslySetInnerHTML={{ __html: CODE_PALETTE_SCRIPT }} />
+        ) : null}
         <InkTransition />
         <RootProvider
           theme={{
