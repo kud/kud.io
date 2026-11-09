@@ -4,4 +4,5 @@
 export const ART: Partial<Record<string, string>> = {
   "planning-poker": "/projects/art/planning-poker.webp",
   duux: "/projects/art/duux.webp",
+  "smart-tv-for-browser": "/projects/art/smart-tv-for-browser.webp",
 }
