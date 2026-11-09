@@ -1,4 +1,4 @@
-import { Link } from "next-view-transitions"
+import { InkLink } from "@/components/ink-link"
 import type { Project } from "@/lib/projects"
 import type { AppMeta } from "@/lib/app"
 import type { Release } from "@/lib/release"
@@ -133,7 +133,9 @@ const Infobox = ({
       ? {
           label: "Documentation",
           value: (
-            <Link href={`/projects/${project.slug}/docs`}>Read the docs</Link>
+            <InkLink href={`/projects/${project.slug}/docs`}>
+              Read the docs
+            </InkLink>
           ),
         }
       : null,
@@ -247,7 +249,7 @@ export const RecordSheet = (props: SheetProps) => {
             <ul className={styles.writing}>
               {writing.map((post) => (
                 <li key={post.slug}>
-                  <Link href={post.href}>{post.title}</Link>
+                  <InkLink href={post.href}>{post.title}</InkLink>
                   <span>{post.description}</span>
                 </li>
               ))}
