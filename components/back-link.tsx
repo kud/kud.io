@@ -13,7 +13,7 @@ type Props = {
   children: ReactNode
 }
 
-// /projects → home. Home has one fixed ground, so on desktop this inks like
+// /projects → home. Home has one fixed ground, so this inks like
 // every other move (components/ink.ts). Where ink does not apply it is the flat
 // cross-fade + avatar morph, flagged as a "back" move so global.css drops the
 // forward-only zoom.

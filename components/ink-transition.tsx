@@ -28,8 +28,8 @@ const ARRIVE_DURATION = 760
 //   navigates under the full cover, holds it until the pathname confirms the
 //   destination committed, then lifts it;
 // - the theme switch: components/ink.ts → inkSwap drives the same element by id;
-// - the ?arrive=2 first-load reveal on home: ArriveScript paints a plain cover
-//   before first paint, and this lifts it as ink once hydrated.
+// - the first-load reveal on home: ArriveScript paints a plain cover before
+//   first paint, and this lifts it as ink once hydrated.
 export const InkTransition = () => {
   const router = useRouter()
   const pathname = usePathname()
@@ -117,12 +117,12 @@ export const InkTransition = () => {
   return <div id={INK_OVERLAY_ID} ref={overlayRef} aria-hidden />
 }
 
-// First arrival on home, for Erwann to feel both: ?arrive=1 (or nothing) is
-// today's plain load; ?arrive=2 holds a cover in the home ground from before
-// first paint and InkTransition lifts it as ink once hydrated. Reduced motion
+// First arrival on home: a cover in the home ground is held from before first
+// paint and InkTransition lifts it as ink once hydrated. Decided in the
+// browser, never from searchParams, so the page stays static. Reduced motion
 // never gets the cover. global.css paints it and drops it after 3s whatever
 // happens, so a script failure can't leave the page hidden.
-const ARRIVE_SCRIPT = `try{if(location.pathname==="/"&&/[?&]arrive=2(&|$)/.test(location.search)&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.arrive="ink"}catch(e){}`
+const ARRIVE_SCRIPT = `try{if(location.pathname==="/"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.arrive="ink"}catch(e){}`
 
 export const ArriveScript = () => (
   <script dangerouslySetInnerHTML={{ __html: ARRIVE_SCRIPT }} />

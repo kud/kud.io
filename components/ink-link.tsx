@@ -4,9 +4,9 @@ import { Link } from "next-view-transitions"
 import type { ComponentProps, MouseEvent } from "react"
 import { inkNavigate } from "@/components/ink"
 
-// The site's default internal link. On desktop it hands the move to the ink
-// overlay (components/ink-transition.tsx), in the destination's ground; when
-// ink doesn't apply (a phone, reduced motion, same page, a route whose ground
+// The site's default internal link. It hands the move to the ink overlay
+// (components/ink-transition.tsx), in the destination's ground; when ink
+// doesn't apply (reduced motion, same page, a route whose ground
 // isn't known) it falls through to the view-transition Link it wraps, which
 // stops on defaultPrevented, so the two never both run.
 export const InkLink = ({

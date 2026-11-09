@@ -230,7 +230,7 @@ html[data-vt="morph"]::view-transition-new(root) {
   }
 }
 
-/* ?arrive=2 on home (components/ink-transition.tsx → ArriveScript): a plain
+/* First load of home (components/ink-transition.tsx → ArriveScript): a plain
    cover in the home ground, painted before first paint and swapped for the ink
    reveal once the page hydrates. The 3s fade is a failsafe only: if the script
    never lifts it, the page still shows. */

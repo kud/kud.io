@@ -46,11 +46,6 @@ export const groundFor = (pathname: string): string | null => {
 export const reducedMotion = () =>
   matchMedia("(prefers-reduced-motion: reduce)").matches
 
-// Page moves ink on desktop only: narrower viewports keep the flat cross-fade
-// and the shared-avatar morph, which read better on a phone than a full-screen
-// cover. The theme switch has no such alternative, so it inks everywhere.
-const desktop = () => matchMedia("(min-width: 861px)").matches
-
 export const INK_OVERLAY_ID = "ink-overlay"
 
 export type InkNavigateDetail = {
@@ -73,7 +68,7 @@ export const inkNavigate = (
   if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
     return false
   if (event.button !== 0) return false
-  if (!desktop() || reducedMotion()) return false
+  if (reducedMotion()) return false
 
   const url = new URL(href, window.location.href)
   if (url.origin !== window.location.origin) return false
