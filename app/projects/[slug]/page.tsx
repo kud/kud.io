@@ -28,6 +28,8 @@ import { Reveal } from "@/components/reveal"
 import { getRelease, releaseAge, type Release } from "@/lib/release"
 import { ThemePicker } from "@/components/theme-picker"
 import { ThemeScopeScript } from "@/components/scoped-theme"
+import { AppRecordProto } from "@/components/app-record-proto"
+import { APP_PROTO } from "@/lib/app-proto"
 import styles from "./page.module.css"
 
 // The release pill says how old the latest version is, so rebuild hourly.
@@ -614,7 +616,9 @@ const ProjectLanding = async ({
     >
       <ThemeScopeScript />
       <ThemePicker className="dusk-picker-top" />
-      {showRecord ? (
+      {showRecord && APP_PROTO[slug] ? (
+        <ProtoRecord project={project} />
+      ) : showRecord ? (
         <ProductRecord project={project} />
       ) : showAppLanding ? (
         <AppLanding project={project} />
@@ -636,3 +640,32 @@ const ProjectLanding = async ({
 }
 
 export default ProjectLanding
+
+// Prototype (feat/proto-app-pages): today's record plus three richer candidates,
+// switched by ?p=1..3, for the products with a fixture in lib/app-proto.ts.
+const ProtoRecord = async ({ project }: { project: Project }) => {
+  const app = getApp(project.slug)
+  const posts = await getAllPosts()
+  const writing = app.writing
+    .map((slug) => posts.find((post) => post.slug === slug))
+    .filter((post) => post !== undefined)
+    .map((post) => ({
+      slug: post.slug,
+      title: post.title,
+      description: post.description,
+      href: postPath(post),
+    }))
+  return (
+    <AppRecordProto
+      project={project}
+      app={app}
+      proto={APP_PROTO[project.slug]}
+      name={appDisplayName(project.slug, app)}
+      url={productUrl(app)}
+      host={productHost(app)}
+      hasDocs={projectHasDocs(project.slug)}
+      writing={writing}
+      current={<ProductRecord project={project} />}
+    />
+  )
+}
