@@ -231,7 +231,7 @@
 
 .primary {
   background: var(--primary);
-  color: #fff;
+  color: var(--on-primary, #fff);
   box-shadow: 0 8px 24px -8px var(--primary);
 }
 
@@ -357,7 +357,7 @@
   padding: 14px 28px;
   border-radius: 12px;
   background: var(--primary);
-  color: #fff;
+  color: var(--on-primary, #fff);
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;

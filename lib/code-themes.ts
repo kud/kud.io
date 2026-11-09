@@ -112,3 +112,27 @@ export const warmDay = theme("warm-day", "light", "#fbf6ee", {
   type: "#6b4a2f",
   punct: "#5a4f45",
 })
+
+// The Dusk pair. Night clears AA on all three night candidates' card and
+// raised surfaces; day clears it on day Dusk's card and its blush ground.
+export const duskNight = theme("dusk-night", "dark", "#261b21", {
+  fg: "#f4e7e1",
+  comment: "#b9a1a8",
+  keyword: "#dfa0c4",
+  string: "#e3c486",
+  number: "#f29a86",
+  fn: "#f5b791",
+  type: "#dcbcae",
+  punct: "#cfbabe",
+})
+
+export const duskDay = theme("dusk-day", "light", "#fdf5ef", {
+  fg: "#3a2830",
+  comment: "#76605f",
+  keyword: "#80485f",
+  string: "#6e5410",
+  number: "#a03a4e",
+  fn: "#914426",
+  type: "#6b4a3f",
+  punct: "#5e4448",
+})

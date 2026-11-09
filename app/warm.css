@@ -139,36 +139,28 @@ body:has([data-ground="day"]) {
 [data-ground="palette"] [data-cat="theme"][data-cat] {
   --accent: #e89a86;
 }
-[data-ground="day"] [data-cat][data-cat],
-[data-ground="dusk"] [data-cat][data-cat] {
+[data-ground="day"] [data-cat][data-cat] {
   --accent: #66584b;
 }
-[data-ground="day"] [data-cat="product"][data-cat],
-[data-ground="dusk"] [data-cat="product"][data-cat] {
+[data-ground="day"] [data-cat="product"][data-cat] {
   --accent: #a3472b;
 }
-[data-ground="day"] [data-cat="cli"][data-cat],
-[data-ground="dusk"] [data-cat="cli"][data-cat] {
+[data-ground="day"] [data-cat="cli"][data-cat] {
   --accent: #8a5f12;
 }
-[data-ground="day"] [data-cat="mcp"][data-cat],
-[data-ground="dusk"] [data-cat="mcp"][data-cat] {
+[data-ground="day"] [data-cat="mcp"][data-cat] {
   --accent: #4a6636;
 }
-[data-ground="day"] [data-cat="claude"][data-cat],
-[data-ground="dusk"] [data-cat="claude"][data-cat] {
+[data-ground="day"] [data-cat="claude"][data-cat] {
   --accent: #8a4f2e;
 }
-[data-ground="day"] [data-cat="ui"][data-cat],
-[data-ground="dusk"] [data-cat="ui"][data-cat] {
+[data-ground="day"] [data-cat="ui"][data-cat] {
   --accent: #2f6a4a;
 }
-[data-ground="day"] [data-cat="vscode"][data-cat],
-[data-ground="dusk"] [data-cat="vscode"][data-cat] {
+[data-ground="day"] [data-cat="vscode"][data-cat] {
   --accent: #6b4a2f;
 }
-[data-ground="day"] [data-cat="theme"][data-cat],
-[data-ground="dusk"] [data-cat="theme"][data-cat] {
+[data-ground="day"] [data-cat="theme"][data-cat] {
   --accent: #9c4256;
 }
 
@@ -346,52 +338,256 @@ body:has([data-ground="day"]) {
 
 /* Dusk: the palette sampled from the delivered heroes. Blush ground lifted
    from the rose walls, plum ink, terracotta from the throws, mauve from the
-   cards and screens, peach and amber from the lamps. */
-[data-ground="dusk"][data-ground] {
-  --bg: #f8ece4;
-  --surface: #fdf5ef;
-  --surface-2: #f1e2e6;
-  --surface-3: #f3e0d6;
-  --border: #ead6cc;
-  --border-dim: #f1e2e6;
-  --text: #3a2830;
-  --muted: #765a5c;
-  --dim: #b09a9a;
-  --primary: #914426;
-  --primary-light: #80485f;
-  --title-a: #3a2830;
-  --hi: 58 40 48;
-  --glow: 249 189 116;
-  --cool: 175 123 136;
-  --color-fd-background: #f8ece4;
-  --color-fd-foreground: #3a2830;
-  --color-fd-card: #fdf5ef;
-  --color-fd-card-foreground: #3a2830;
-  --color-fd-popover: #fdf5ef;
-  --color-fd-popover-foreground: #3a2830;
-  --color-fd-muted: #f1e2e6;
-  --color-fd-muted-foreground: #765a5c;
-  --color-fd-border: #ead6cc;
-  --color-fd-secondary: #f1e2e6;
-  --color-fd-secondary-foreground: #3a2830;
-  --color-fd-accent: #f3e0d6;
-  --color-fd-accent-foreground: #3a2830;
-  --color-fd-primary: #914426;
-  --color-fd-primary-foreground: #fdf5ef;
-  --color-fd-ring: #80485f;
+   cards and screens, peach and amber from the lamps.
+
+   It comes in two lights. --dk-* holds whichever one is showing: day by
+   default, night when the reader's system asks for dark. ?mode=light|dark
+   pins one for the preview and ?n=1..3 picks the night candidate; the inline
+   script in app/layout.tsx turns both into attributes on <html>. */
+:root {
+  --dk-bg: #f8ece4;
+  --dk-surface: #fdf5ef;
+  --dk-surface-2: #f1e2e6;
+  --dk-surface-3: #f3e0d6;
+  --dk-border: #ead6cc;
+  --dk-border-dim: #f1e2e6;
+  --dk-text: #3a2830;
+  --dk-muted: #765a5c;
+  --dk-dim: #7f6669;
+  --dk-primary: #914426;
+  --dk-primary-light: #80485f;
+  --dk-on-primary: #fff;
+  --dk-title-a: #3a2830;
+  --dk-hi: 58 40 48;
+  --dk-glow: 249 189 116;
+  --dk-cool: 175 123 136;
+  --dk-scheme: light;
+  --dk-cat: #66584b;
+  --dk-cat-product: #a3472b;
+  --dk-cat-cli: #8a5f12;
+  --dk-cat-mcp: #4a6636;
+  --dk-cat-claude: #8a4f2e;
+  --dk-cat-ui: #2f6a4a;
+  --dk-cat-vscode: #6b4a2f;
+  --dk-cat-theme: #9c4256;
+
+  /* Night 1, plum: the shadow under the throws and behind the screens. The
+     art's shadows run brown-red; this keeps their warmth but turns the hue
+     towards aubergine, so it reads as a room at night and not as mud. */
+  --dn-bg: #1d1519;
+  --dn-surface: #261b21;
+  --dn-surface-2: #30232a;
+  --dn-surface-3: #3a2a32;
+  --dn-border: #463440;
+  --dn-border-dim: #2a1e24;
+  --dn-text: #f6e9e2;
+  --dn-muted: #c9afb2;
+  --dn-dim: #a88f96;
+  --dn-primary: #ef9d77;
+  --dn-primary-light: #e8acc2;
+  --dn-on-primary: #1d1519;
+  --dn-title-a: #fdf1ea;
+  --dn-hi: 246 233 226;
+  --dn-glow: 232 150 175;
+  --dn-cool: 214 150 170;
+}
+/* Night 2, low lamp: the plum code panel of day Dusk as the whole ground.
+   Lighter and softer, closer to dusk than to midnight. */
+:root[data-night="2"] {
+  --dn-bg: #2e2026;
+  --dn-surface: #382830;
+  --dn-surface-2: #43313a;
+  --dn-surface-3: #4c3842;
+  --dn-border: #57424d;
+  --dn-border-dim: #3a2a31;
+  --dn-text: #fbefe8;
+  --dn-muted: #dcc2c4;
+  --dn-dim: #bfa4aa;
+  --dn-primary: #f2a682;
+  --dn-primary-light: #efb7cb;
+  --dn-on-primary: #2e2026;
+  --dn-title-a: #fff5ef;
+  --dn-hi: 251 239 232;
+}
+/* Night 3, blue hour: the window after sunset. A cool slate ground with the
+   same lamp-lit accents, so the warmth lives in the light, not the walls. */
+:root[data-night="3"] {
+  --dn-glow: 249 189 116;
+  --dn-bg: #181922;
+  --dn-surface: #20212c;
+  --dn-surface-2: #292a37;
+  --dn-surface-3: #313242;
+  --dn-border: #3b3d4f;
+  --dn-border-dim: #22232e;
+  --dn-text: #f3e9e4;
+  --dn-muted: #bdb2ba;
+  --dn-dim: #9d93a0;
+  --dn-primary: #ef9d77;
+  --dn-primary-light: #e8acc2;
+  --dn-on-primary: #181922;
+  --dn-title-a: #fbf2ec;
+  --dn-hi: 243 233 228;
+  --dn-cool: 150 160 200;
+}
+
+/* Night is the same swap twice: once for the system preference, once for the
+   preview's ?mode=dark. Production needs only the first. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode="light"]) {
+    --dk-bg: var(--dn-bg);
+    --dk-surface: var(--dn-surface);
+    --dk-surface-2: var(--dn-surface-2);
+    --dk-surface-3: var(--dn-surface-3);
+    --dk-border: var(--dn-border);
+    --dk-border-dim: var(--dn-border-dim);
+    --dk-text: var(--dn-text);
+    --dk-muted: var(--dn-muted);
+    --dk-dim: var(--dn-dim);
+    --dk-primary: var(--dn-primary);
+    --dk-primary-light: var(--dn-primary-light);
+    --dk-on-primary: var(--dn-on-primary);
+    --dk-title-a: var(--dn-title-a);
+    --dk-hi: var(--dn-hi);
+    --dk-glow: var(--dn-glow);
+    --dk-cool: var(--dn-cool);
+    --dk-scheme: dark;
+    --dk-cat: #c4a9ad;
+    --dk-cat-product: #ef9a74;
+    --dk-cat-cli: #e6be6e;
+    --dk-cat-mcp: #b4c49a;
+    --dk-cat-claude: #e9a9a0;
+    --dk-cat-ui: #9fc4a8;
+    --dk-cat-vscode: #d8a982;
+    --dk-cat-theme: #e7a3bd;
+  }
+}
+:root[data-mode="dark"] {
+  --dk-bg: var(--dn-bg);
+  --dk-surface: var(--dn-surface);
+  --dk-surface-2: var(--dn-surface-2);
+  --dk-surface-3: var(--dn-surface-3);
+  --dk-border: var(--dn-border);
+  --dk-border-dim: var(--dn-border-dim);
+  --dk-text: var(--dn-text);
+  --dk-muted: var(--dn-muted);
+  --dk-dim: var(--dn-dim);
+  --dk-primary: var(--dn-primary);
+  --dk-primary-light: var(--dn-primary-light);
+  --dk-on-primary: var(--dn-on-primary);
+  --dk-title-a: var(--dn-title-a);
+  --dk-hi: var(--dn-hi);
+  --dk-glow: var(--dn-glow);
+  --dk-cool: var(--dn-cool);
+  --dk-scheme: dark;
+  --dk-cat: #c4a9ad;
+  --dk-cat-product: #ef9a74;
+  --dk-cat-cli: #e6be6e;
+  --dk-cat-mcp: #b4c49a;
+  --dk-cat-claude: #e9a9a0;
+  --dk-cat-ui: #9fc4a8;
+  --dk-cat-vscode: #d8a982;
+  --dk-cat-theme: #e7a3bd;
+}
+
+/* fumadocs redefines its tokens on .dark #nd-sidebar, so the sidebar is
+   named here too, with the id doubled to outrank it. */
+[data-ground="dusk"][data-ground],
+[data-ground="dusk"] #nd-sidebar#nd-sidebar {
+  --bg: var(--dk-bg);
+  --surface: var(--dk-surface);
+  --surface-2: var(--dk-surface-2);
+  --surface-3: var(--dk-surface-3);
+  --border: var(--dk-border);
+  --border-dim: var(--dk-border-dim);
+  --text: var(--dk-text);
+  --muted: var(--dk-muted);
+  --dim: var(--dk-dim);
+  --primary: var(--dk-primary);
+  --primary-light: var(--dk-primary-light);
+  --on-primary: var(--dk-on-primary);
+  --title-a: var(--dk-title-a);
+  --hi: var(--dk-hi);
+  --glow: var(--dk-glow);
+  --cool: var(--dk-cool);
+  --color-fd-background: var(--dk-bg);
+  --color-fd-foreground: var(--dk-text);
+  --color-fd-card: var(--dk-surface);
+  --color-fd-card-foreground: var(--dk-text);
+  --color-fd-popover: var(--dk-surface);
+  --color-fd-popover-foreground: var(--dk-text);
+  --color-fd-muted: var(--dk-surface-2);
+  --color-fd-muted-foreground: var(--dk-muted);
+  --color-fd-border: var(--dk-border);
+  --color-fd-secondary: var(--dk-surface-2);
+  --color-fd-secondary-foreground: var(--dk-text);
+  --color-fd-accent: var(--dk-surface-3);
+  --color-fd-accent-foreground: var(--dk-text);
+  --color-fd-primary: var(--dk-primary);
+  --color-fd-primary-foreground: var(--dk-on-primary);
+  --color-fd-ring: var(--dk-primary-light);
   background-color: var(--bg);
   color: var(--text);
-  color-scheme: light;
+  color-scheme: var(--dk-scheme);
 }
 body:has([data-ground="dusk"]) {
-  background: #f8ece4;
+  background: var(--dk-bg);
 }
+[data-ground="dusk"] [data-cat][data-cat] {
+  --accent: var(--dk-cat);
+}
+[data-ground="dusk"] [data-cat="product"][data-cat] {
+  --accent: var(--dk-cat-product);
+}
+[data-ground="dusk"] [data-cat="cli"][data-cat] {
+  --accent: var(--dk-cat-cli);
+}
+[data-ground="dusk"] [data-cat="mcp"][data-cat] {
+  --accent: var(--dk-cat-mcp);
+}
+[data-ground="dusk"] [data-cat="claude"][data-cat] {
+  --accent: var(--dk-cat-claude);
+}
+[data-ground="dusk"] [data-cat="ui"][data-cat] {
+  --accent: var(--dk-cat-ui);
+}
+[data-ground="dusk"] [data-cat="vscode"][data-cat] {
+  --accent: var(--dk-cat-vscode);
+}
+[data-ground="dusk"] [data-cat="theme"][data-cat] {
+  --accent: var(--dk-cat-theme);
+}
+
+/* Code: <html> is forced .dark, so fumadocs paints --shiki-dark everywhere.
+   The ground decides instead: day Dusk takes the light theme, night keeps the
+   dark one. Both themes are the dusk pair in lib/code-themes.ts. */
+[data-ground="dusk"] .shiki,
+[data-ground="dusk"] .shiki span {
+  color: var(--shiki-light) !important;
+  font-style: var(--shiki-light-font-style) !important;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode="light"]) [data-ground="dusk"] .shiki,
+  :root:not([data-mode="light"]) [data-ground="dusk"] .shiki span {
+    color: var(--shiki-dark) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+  }
+}
+:root[data-mode="dark"] [data-ground="dusk"] .shiki,
+:root[data-mode="dark"] [data-ground="dusk"] .shiki span {
+  color: var(--shiki-dark) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+}
+
+/* The hero copy sits on the drawing's cream wash on wide screens, so it keeps
+   day ink in both lights. Stacked under 860px it is on the page again and
+   takes the page's own tokens. */
 [data-ground="dusk"] .warm-hero-copy.warm-hero-copy {
   --title-a: #3a2830;
   --text: #3a2830;
   --muted: #5e4448;
   --primary: #914426;
   --primary-light: #80485f;
+  --on-primary: #fff;
   --surface: #fdf5ef;
   --surface-2: #f1e2e6;
   --border: #ead6cc;
@@ -399,4 +595,21 @@ body:has([data-ground="dusk"]) {
 }
 [data-ground="dusk"] .warm-hero.warm-hero > a {
   color: #5e4448;
+}
+@media (max-width: 860px) {
+  [data-ground="dusk"] .warm-hero-copy.warm-hero-copy {
+    --title-a: inherit;
+    --text: inherit;
+    --muted: inherit;
+    --primary: inherit;
+    --primary-light: inherit;
+    --on-primary: inherit;
+    --surface: inherit;
+    --surface-2: inherit;
+    --border: inherit;
+    color: inherit;
+  }
+  [data-ground="dusk"] .warm-hero.warm-hero > a {
+    color: var(--muted);
+  }
 }
