@@ -8,6 +8,7 @@
   --text: #e2e8f0;
   --muted: #8892a4;
   --dim: #3d4560;
+  --mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, monospace;
   --accent: var(--primary);
 
   position: relative;
