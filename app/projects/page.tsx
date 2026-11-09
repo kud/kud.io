@@ -14,14 +14,10 @@ import {
   LinkedInIcon,
   BlueskyIcon,
 } from "@/components/social-icons"
-import {
-  ProjectList,
-  type ReleaseTreatment,
-  type ReleaseSummary,
-} from "@/components/project-list"
+import { ProjectList, type ReleaseSummary } from "@/components/project-list"
 import { getRelease, releaseAge } from "@/lib/release"
 import { Contributions } from "@/components/contributions"
-import { ProjectsTop, type TopLayout } from "@/components/projects-top"
+import { ProjectsTop } from "@/components/projects-top"
 import { PINNED, RECENT_COUNT } from "@/lib/pinned"
 import styles from "./page.module.css"
 
@@ -31,32 +27,13 @@ export const metadata: Metadata = {
     "Everything Erwann Mest (kud) has built: how the beansontoast apps are made, and the open-source CLIs, MCP servers, libraries and extensions he maintains.",
 }
 
-// Release dates age by the hour, so rebuild hourly.
+// Static, rebuilt hourly: release dates and their "fresh" flag age by the hour.
 export const revalidate = 3600
-
-// PROTOTYPE: `?v=1..4` previews the release treatments side by side. Reading
-// searchParams makes the page dynamic, so every request fetches all ~95
-// releases. Remove the switch once a treatment is picked; the page then
-// renders statically and revalidates hourly.
-const TREATMENTS: ReleaseTreatment[] = [1, 2, 3, 4]
-const DEFAULT_TREATMENT: ReleaseTreatment = 2
-
-// PROTOTYPE: `?t=1..3` previews the layouts for the top of the page, pinned
-// then recently released (components/projects-top.tsx).
-const LAYOUTS: TopLayout[] = [1, 2, 3]
-const DEFAULT_LAYOUT: TopLayout = 2
 
 const AVATAR =
   "https://www.gravatar.com/avatar/e6eaeaa6da69e804c27c2d4cd55107e0?s=512"
 
-const ProjectsIndex = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{ v?: string; t?: string }>
-}) => {
-  const { v, t } = await searchParams
-  const treatment = TREATMENTS.find((n) => String(n) === v) ?? DEFAULT_TREATMENT
-  const layout = LAYOUTS.find((n) => String(n) === t) ?? DEFAULT_LAYOUT
+const ProjectsIndex = async () => {
   const [projects, icons] = await Promise.all([getProjects(), getIcons()])
   // Fetched here, never in the client list: one map of slug to release, with
   // freshness decided on the server so the client never disagrees with it.
@@ -181,7 +158,7 @@ const ProjectsIndex = async ({
         </div>
       </header>
 
-      <ProjectsTop layout={layout} pinned={pinned} recent={recent} />
+      <ProjectsTop pinned={pinned} recent={recent} />
 
       {groups.length === 0 ? (
         <p className={styles.empty}>
@@ -192,7 +169,6 @@ const ProjectsIndex = async ({
           groups={groups}
           ecosystems={ecosystems}
           releases={releases}
-          treatment={treatment}
         >
           <Contributions />
         </ProjectList>

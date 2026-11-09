@@ -33,13 +33,6 @@ export type ReleaseSummary = {
   age: string | null
 }
 
-// PROTOTYPE: which release treatment the index shows (see app/projects/page.tsx).
-// 1 quiet version on every row · 2 fresh-only "New" pill · 3 "Recently
-// released" strip · 4 quiet version everywhere, the pill on fresh rows.
-export type ReleaseTreatment = 1 | 2 | 3 | 4
-
-const STRIP_SIZE = 4
-
 const FreshPill = ({ version }: { version: string }) => (
   <span className={styles.freshPill}>
     <span className={styles.freshDot} aria-hidden />
@@ -49,32 +42,15 @@ const FreshPill = ({ version }: { version: string }) => (
 )
 
 // A row's release line, under the description: the meta line beside the name
-// has no width to spare in the two-column grid.
-const RowRelease = ({
-  release,
-  showFresh,
-  showVersion,
-}: {
-  release: ReleaseSummary | undefined
-  showFresh: boolean
-  showVersion: boolean
-}) => {
-  if (!release) return null
-  const fresh = showFresh && release.fresh
-  if (!fresh && !showVersion) return null
-  return (
+// has no width to spare in the two-column grid. Only a release under two weeks
+// old earns one.
+const RowRelease = ({ release }: { release: ReleaseSummary | undefined }) =>
+  release?.fresh ? (
     <span className={styles.rowRelease}>
-      {fresh ? (
-        <FreshPill version={release.version} />
-      ) : (
-        <span className={styles.version}>v{release.version}</span>
-      )}
-      {release.age ? (
-        <span className={styles.releaseAge}>{release.age}</span>
-      ) : null}
+      <FreshPill version={release.version} />
+      {release.age ? <span>{release.age}</span> : null}
     </span>
-  )
-}
+  ) : null
 
 type SortKey = "updated" | "stars" | "name"
 
@@ -187,13 +163,11 @@ export const ProjectList = ({
   groups,
   ecosystems,
   releases,
-  treatment,
   children,
 }: {
   groups: Group[]
   ecosystems: Ecosystem[]
   releases: Record<string, ReleaseSummary>
-  treatment: ReleaseTreatment
   // Footer content (the Contributions graph) rendered on the server and hidden
   // once the grid is narrowed to a filtered subset.
   children?: ReactNode
@@ -320,22 +294,6 @@ export const ProjectList = ({
   const isFiltered = Boolean(
     needle || category || lang || activeTags.length > 0 || activeEcosystem,
   )
-  // The freshest few releases, for the strip above the grid (treatment 3).
-  const recent = useMemo(
-    () =>
-      groups
-        .flatMap((group) => group.items)
-        .filter((project) => releases[project.slug]?.publishedAt)
-        .sort((a, b) =>
-          (releases[b.slug].publishedAt ?? "").localeCompare(
-            releases[a.slug].publishedAt ?? "",
-          ),
-        )
-        .slice(0, STRIP_SIZE),
-    [groups, releases],
-  )
-  const showVersion = treatment === 1 || treatment === 4
-  const showFresh = treatment === 2 || treatment === 4
   const filterKey = [
     needle,
     category ?? "all-types",
@@ -356,35 +314,6 @@ export const ProjectList = ({
             className={styles.revealSentinel}
             aria-hidden
           />
-          {treatment === 3 && !isFiltered && recent.length > 0 ? (
-            <section className={styles.recent} aria-labelledby="recent-title">
-              <h2 id="recent-title" className={styles.recentTitle}>
-                Recently released
-              </h2>
-              <div className={styles.recentPills}>
-                {recent.map((project) => {
-                  const release = releases[project.slug]
-                  return (
-                    <MorphLink
-                      key={project.slug}
-                      href={`/projects/${project.slug}`}
-                      className={styles.recentPill}
-                      data-fresh={release.fresh ? "" : undefined}
-                    >
-                      <span className={styles.recentDot} aria-hidden />
-                      <span className={styles.recentName}>{project.name}</span>
-                      <span className={styles.recentVersion}>
-                        v{release.version}
-                      </span>
-                      {release.age ? (
-                        <span className={styles.recentAge}>{release.age}</span>
-                      ) : null}
-                    </MorphLink>
-                  )
-                })}
-              </div>
-            </section>
-          ) : null}
           <div
             key={filterKey}
             className={`${styles.results} ${hasFilterInteraction ? styles.resultsAnimated : ""}`}
@@ -457,7 +386,7 @@ export const ProjectList = ({
                             )}
                           </span>
                           <span className={styles.appName}>
-                            {showFresh && releases[project.slug]?.fresh ? (
+                            {releases[project.slug]?.fresh ? (
                               <span
                                 className={styles.freshDot}
                                 role="img"
@@ -530,11 +459,7 @@ export const ProjectList = ({
                                 {project.description}
                               </p>
                             ) : null}
-                            <RowRelease
-                              release={releases[project.slug]}
-                              showFresh={showFresh}
-                              showVersion={showVersion}
-                            />
+                            <RowRelease release={releases[project.slug]} />
                           </span>
                         </MorphLink>
                       ))}

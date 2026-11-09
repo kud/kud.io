@@ -1196,10 +1196,10 @@
   }
 }
 
-/* Releases (PROTOTYPE) -------------------------------------------------------*/
+/* Releases -------------------------------------------------------------------*/
 /* One language with the project landing's release pill: a copper dot that
-   pings only for a release under two weeks old, the version in mono copper.
-   Nothing else on the index moves. */
+   pings, shown only for a release under two weeks old, the version in mono
+   copper. Nothing else on the index moves. */
 
 /* A row's release line sits under the description. */
 .rowRelease {
@@ -1211,21 +1211,6 @@
   color: var(--muted);
 }
 
-/* 1, 4: the quiet version every published row carries. */
-.version {
-  font-family: var(--mono);
-}
-
-.releaseAge::before {
-  content: "·";
-  margin-right: 10px;
-  color: var(--dim);
-}
-
-.freshPill + .releaseAge::before {
-  content: none;
-}
-
 @media (max-width: 640px) {
   .rowRelease {
     grid-column: 1 / -1;
@@ -1233,7 +1218,7 @@
   }
 }
 
-/* 2, 4: the fresh pill, a small cut of the landing's. */
+/* The fresh pill, a small cut of the landing's. */
 .freshPill {
   display: inline-flex;
   align-items: center;
@@ -1277,110 +1262,6 @@
   vertical-align: 0.15em;
 }
 
-/* 3: the strip of the freshest releases above the grid. */
-.recent {
-  padding-top: 48px;
-}
-
-.recentTitle {
-  margin: 0 0 14px;
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.recentPills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.recentPill {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  max-width: 100%;
-  padding: 6px 14px 6px 12px;
-  border: 1px solid transparent;
-  border-radius: 100px;
-  background:
-    linear-gradient(var(--surface), var(--surface)) padding-box,
-    linear-gradient(
-        120deg,
-        color-mix(in srgb, var(--primary) 70%, transparent),
-        var(--border) 45%,
-        var(--border) 60%,
-        color-mix(in srgb, var(--primary-light) 45%, transparent)
-      )
-      border-box;
-  font-size: 13px;
-  color: var(--muted);
-  text-decoration: none;
-  white-space: nowrap;
-  transition:
-    transform 0.18s,
-    box-shadow 0.18s;
-}
-
-.recentPill:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 28px -16px
-    color-mix(in srgb, var(--primary) 85%, transparent);
-}
-
-.recentDot {
-  position: relative;
-  flex-shrink: 0;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--muted) 60%, transparent);
-}
-
-.recentPill[data-fresh] .recentDot {
-  background: var(--primary-light);
-}
-
-.recentPill[data-fresh] .recentDot::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: var(--primary-light);
-  animation: ping 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-.recentName {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.recentVersion {
-  font-family: var(--mono);
-  font-weight: 600;
-  color: var(--primary-light);
-}
-
-.recentAge::before {
-  content: "·";
-  margin-right: 9px;
-  color: var(--dim);
-}
-
-@media (max-width: 640px) {
-  .recent {
-    padding-top: 36px;
-  }
-
-  .recentAge {
-    display: none;
-  }
-}
-
 @keyframes ping {
   0% {
     transform: scale(1);
@@ -1394,8 +1275,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .freshDot::after,
-  .recentPill[data-fresh] .recentDot::after {
+  .freshDot::after {
     animation: none;
   }
 }
