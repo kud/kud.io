@@ -487,15 +487,6 @@ html:has([data-ground="dusk"][data-theme="dark"]),
 [data-ground="dusk"] figure.shiki > div:first-child:not(:only-child) {
   border-color: var(--code-rim);
 }
-html[data-code="2"] [data-ground="dusk"] {
-  --code-bg: #1d1714;
-  --code-rim: #352a24;
-}
-html[data-code="2"] [data-ground="dusk"] .shiki,
-html[data-code="2"] [data-ground="dusk"] .shiki span {
-  color: var(--shiki-ember) !important;
-  font-style: var(--shiki-ember-font-style) !important;
-}
 /* The toc's heading sat in the picker's corner; it starts below it now. */
 @media (min-width: 1280px) {
   [data-ground="dusk"] #nd-toc {
