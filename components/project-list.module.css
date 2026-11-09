@@ -1201,10 +1201,36 @@
    pings only for a release under two weeks old, the version in mono copper.
    Nothing else on the index moves. */
 
+/* A row's release line sits under the description. */
+.rowRelease {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
 /* 1, 4: the quiet version every published row carries. */
 .version {
   font-family: var(--mono);
-  font-size: 13px;
+}
+
+.releaseAge::before {
+  content: "·";
+  margin-right: 10px;
+  color: var(--dim);
+}
+
+.freshPill + .releaseAge::before {
+  content: none;
+}
+
+@media (max-width: 640px) {
+  .rowRelease {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
 }
 
 /* 2, 4: the fresh pill, a small cut of the landing's. */

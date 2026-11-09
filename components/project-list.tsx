@@ -48,6 +48,34 @@ const FreshPill = ({ version }: { version: string }) => (
   </span>
 )
 
+// A row's release line, under the description: the meta line beside the name
+// has no width to spare in the two-column grid.
+const RowRelease = ({
+  release,
+  showFresh,
+  showVersion,
+}: {
+  release: ReleaseSummary | undefined
+  showFresh: boolean
+  showVersion: boolean
+}) => {
+  if (!release) return null
+  const fresh = showFresh && release.fresh
+  if (!fresh && !showVersion) return null
+  return (
+    <span className={styles.rowRelease}>
+      {fresh ? (
+        <FreshPill version={release.version} />
+      ) : (
+        <span className={styles.version}>v{release.version}</span>
+      )}
+      {release.age ? (
+        <span className={styles.releaseAge}>{release.age}</span>
+      ) : null}
+    </span>
+  )
+}
+
 type SortKey = "updated" | "stars" | "name"
 
 const SORTS: Record<
@@ -473,15 +501,6 @@ export const ProjectList = ({
                                 {project.name}
                               </span>
                               <span className={styles.rowMeta}>
-                                {showFresh && releases[project.slug]?.fresh ? (
-                                  <FreshPill
-                                    version={releases[project.slug].version}
-                                  />
-                                ) : showVersion && releases[project.slug] ? (
-                                  <span className={styles.version}>
-                                    v{releases[project.slug].version}
-                                  </span>
-                                ) : null}
                                 {project.stars > 0 ? (
                                   <span className={styles.stars}>
                                     ★ {project.stars}
@@ -511,6 +530,11 @@ export const ProjectList = ({
                                 {project.description}
                               </p>
                             ) : null}
+                            <RowRelease
+                              release={releases[project.slug]}
+                              showFresh={showFresh}
+                              showVersion={showVersion}
+                            />
                           </span>
                         </MorphLink>
                       ))}
