@@ -198,9 +198,15 @@ body:has([data-ground="day"]) {
 }
 
 /* Hero: the title block sits in the drawing's quiet zone, top-left. Under
-   720px the drawing is too short to hold it, so they stack. */
+   860px the drawing is too short to hold it, so they stack. The module hero
+   centres with flex, which would shrink a grid track to its content, so the
+   track is pinned to the full width. */
 .warm-hero.warm-hero {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-content: stretch;
+  align-items: start;
+  width: 100%;
   max-width: 1120px;
   margin: 0 auto;
   text-align: left;
@@ -208,8 +214,10 @@ body:has([data-ground="day"]) {
 .warm-hero.warm-hero > * {
   grid-area: 1 / 1;
 }
-.warm-hero-copy {
+.warm-hero-copy.warm-hero-copy {
   position: relative;
+  justify-self: start;
+  text-align: left;
   --title-a: #2b2420;
   --text: #2b2420;
   --muted: #5b4e42;
@@ -217,8 +225,8 @@ body:has([data-ground="day"]) {
   --primary-light: #8a4f2e;
   z-index: 1;
   align-self: start;
-  max-width: 440px;
-  padding: 48px 0 0 48px;
+  max-width: 420px;
+  padding: 40px 0 0 44px;
   color: #2b2420;
 }
 .warm-hero-copy > * {
@@ -227,15 +235,18 @@ body:has([data-ground="day"]) {
   margin-right: 0 !important;
 }
 @media (max-width: 860px) {
-  .warm-hero > * {
+  .warm-hero.warm-hero > * {
     grid-area: auto;
   }
-  .warm-hero-copy {
+  .warm-hero-copy.warm-hero-copy {
     max-width: none;
     padding: 24px 0 0;
     color: inherit;
     --title-a: inherit;
     --text: inherit;
+    --muted: inherit;
+    --primary: inherit;
+    --primary-light: inherit;
   }
 }
 
