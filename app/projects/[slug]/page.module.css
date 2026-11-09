@@ -927,26 +927,7 @@
 /* Product record ------------------------------------------------------------
    A beansontoast product's page on kud.io: a plain record of how it was built,
    read top to bottom, rather than the centred pitch of an app landing. */
-.recordIcon {
-  display: grid;
-  width: 72px;
-  height: 72px;
-  margin: 0 auto 20px;
-  border-radius: 27%;
-  overflow: hidden;
-  border: 1px solid var(--border);
-}
-
-.recordIcon img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-/* Three icon placements for review, one shown at a time: ?i=1 (the default)
-   puts it in the infobox, ?i=2 above the badge, ?i=3 beside the title. */
-:global(:root:not([data-infobox="2"])) .recordIcon {
-  display: none;
-}
+/* The app icon sits inline before the title, the one place it shows. */
 .recordTitleRow {
   display: flex;
   align-items: center;
@@ -955,7 +936,7 @@
   font-size: clamp(30px, 4.5vw, 52px);
 }
 .recordTitleIcon {
-  display: none;
+  display: block;
   flex: none;
   width: 1.12em;
   height: 1.12em;
@@ -971,9 +952,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-:global(:root[data-infobox="3"]) .recordTitleIcon {
-  display: block;
 }
 
 /* Release version in the README hero ----------------------------------------

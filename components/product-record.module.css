@@ -223,22 +223,6 @@
   border-bottom: 1px solid var(--border-dim, var(--border));
   text-align: center;
 }
-.infoIcon {
-  display: block;
-  width: 84px;
-  height: 84px;
-  margin: 4px 0 2px;
-  border-radius: 27%;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  box-shadow: 0 14px 26px -16px rgb(0 0 0 / 0.55);
-}
-.infoIcon img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 .infoName {
   margin: 0;
   color: var(--text);
@@ -315,10 +299,12 @@
   color: var(--text);
   font-weight: 650;
 }
+/* Whole words wrap; a long unbroken value (a repo path) breaks only as a last
+   resort, never mid-word with a hyphen. */
 .infoRows dd {
   margin: 0;
   color: var(--text);
-  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 .chips {
@@ -343,12 +329,6 @@
   color: var(--muted);
 }
 
-/* ?i=2 and ?i=3 keep the icon in the hero, so the box opens on the name. */
-:root[data-infobox="2"] .infoIcon,
-:root[data-infobox="3"] .infoIcon {
-  display: none;
-}
-
 /* Narrow -------------------------------------------------------------------- */
 @media (max-width: 860px) {
   .sheet {
@@ -363,10 +343,9 @@
     padding-top: 0;
   }
 }
+/* The sheet keeps the hero's 24px gutter on a phone, so the card's edge lines
+   up with the hero copy above it. */
 @media (max-width: 560px) {
-  .sheet {
-    padding-inline: 16px;
-  }
   .timeline > div {
     padding: 0 14px;
   }
