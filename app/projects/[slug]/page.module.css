@@ -942,9 +942,38 @@
   height: 100%;
   object-fit: cover;
 }
-/* Infobox ?i=1 (the default) carries the icon, so the hero lets it go. */
+/* Three icon placements for review, one shown at a time: ?i=1 (the default)
+   puts it in the infobox, ?i=2 above the badge, ?i=3 beside the title. */
 :global(:root:not([data-infobox="2"])) .recordIcon {
   display: none;
+}
+.recordTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.36em;
+  font-size: clamp(30px, 4.5vw, 52px);
+}
+.recordTitleIcon {
+  display: none;
+  flex: none;
+  width: 1.12em;
+  height: 1.12em;
+  /* Sit on the title's glyphs, not on its descender padding. */
+  margin-bottom: 0.2em;
+  border-radius: 27%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 22px -14px rgb(0 0 0 / 0.5);
+}
+.recordTitleIcon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+:global(:root[data-infobox="3"]) .recordTitleIcon {
+  display: block;
 }
 
 /* Release version in the README hero ----------------------------------------

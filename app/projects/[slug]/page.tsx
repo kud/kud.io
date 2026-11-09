@@ -286,12 +286,23 @@ const ProductRecord = async ({ project }: { project: Project }) => {
             <span className={styles.badgeDot} />
             A beansontoast product
           </div>
-          <h1
-            className={`${styles.title} ${styles.titleReadme}`}
-            style={{ viewTransitionName: `project-${project.slug}` }}
-          >
-            {name}
-          </h1>
+          <div className={styles.recordTitleRow}>
+            {app.icon ? (
+              <span
+                className={styles.recordTitleIcon}
+                style={{ viewTransitionName: `app-icon-${project.slug}` }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={app.icon} alt="" />
+              </span>
+            ) : null}
+            <h1
+              className={`${styles.title} ${styles.titleReadme}`}
+              style={{ viewTransitionName: `project-${project.slug}` }}
+            >
+              {name}
+            </h1>
+          </div>
           {app.summary ? <p className={styles.tagline}>{app.summary}</p> : null}
           <div
             className={`${styles.actions} ${styles.actionsRecord} warm-hero-actions`}

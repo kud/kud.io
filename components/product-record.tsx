@@ -70,10 +70,11 @@ type SheetProps = {
   writing: Post[]
 }
 
-// Two infobox treatments for review: ?i=1 (or none) heads the box with the app
-// icon and drops the hero's, so the icon shows once; ?i=2 keeps the icon in the
-// hero and the box opens on the name. Picked before first paint.
-const PICK = `(function(){try{if(new URLSearchParams(location.search).get("i")==="2")document.documentElement.setAttribute("data-infobox","2")}catch(e){}})()`
+// Three icon placements for review: ?i=1 (or none) heads the box with the app
+// icon and drops the hero's, so the icon shows once; ?i=2 keeps it above the
+// hero's badge; ?i=3 sets it beside the title. In 2 and 3 the box opens on the
+// name. Picked before first paint.
+const PICK = `(function(){try{var i=new URLSearchParams(location.search).get("i");if(i==="2"||i==="3")document.documentElement.setAttribute("data-infobox",i)}catch(e){}})()`
 
 const Section = ({
   title,
@@ -88,10 +89,10 @@ const Section = ({
   </section>
 )
 
-// The infobox: every fact the story does not tell, in a card on the Dusk
-// ground. A head with the product's name (and, in ?i=1, its icon) and its live
-// status as a pill, then three quiet sections: what the product is, what it is
-// built with, and where the project lives.
+// The infobox: an encyclopaedia's summary panel, dressed for Dusk. A title
+// band with the name (and, in ?i=1, the icon) and the live status as a pill,
+// then three sections under soft rounded headers: what the product is, what it
+// is built with, and where the project lives, as label and value rows.
 const Infobox = ({
   project,
   app,
