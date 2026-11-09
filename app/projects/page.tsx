@@ -117,7 +117,7 @@ const ProjectsIndex = async () => {
                   {/* No view-transition-name here: the list row below owns
                       project-<slug>, and a name used twice cancels the morph. */}
                   <Link href={`/projects/${p.slug}`}>
-                    <IllustrationSlot ratio="4/3" />
+                    <IllustrationSlot ratio="4/3" slug={p.slug} />
                     <strong>{p.name}</strong>
                     {p.description ? <p>{p.description}</p> : null}
                   </Link>

@@ -1,8 +1,34 @@
-// Stand-in for a commissioned illustration: a flat composition in the warm
-// palette at the slot's real ratio, honestly labelled. The top-left stays
-// empty — the quiet zone the hero title sits in. One drawing serves both
-// ratios: the 4:3 card is a centred crop of the 16:9 hero.
+import { ART } from "@/lib/skin"
+
+// A project's commissioned illustration at the slot's ratio; one 16:9 drawing
+// serves both, the 4:3 card being its centred crop.
 export const IllustrationSlot = ({
+  ratio,
+  slug,
+  className,
+}: {
+  ratio: "16/9" | "4/3"
+  slug?: string
+  className?: string
+}) => {
+  const art = slug ? ART[slug] : undefined
+  if (!art) return <Placeholder ratio={ratio} className={className} />
+  return (
+    <div
+      className={`illus-slot illus-art ${className ?? ""}`}
+      style={{ aspectRatio: ratio }}
+      aria-hidden
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={art} alt="" decoding="async" />
+    </div>
+  )
+}
+
+// Stand-in until the art exists: a flat composition in the warm palette at the
+// slot's real ratio, honestly labelled. The top-left stays empty — the quiet
+// zone the hero title sits in.
+const Placeholder = ({
   ratio,
   className,
 }: {

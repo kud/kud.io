@@ -416,7 +416,7 @@ const ReadmeLanding = ({
         <MorphLink href="/projects" className={styles.back}>
           ← Projects
         </MorphLink>
-        {art ? <IllustrationSlot ratio="16/9" /> : null}
+        {art ? <IllustrationSlot ratio="16/9" slug={project.slug} /> : null}
         <div className={`${styles.heroContent} ${art ? "warm-hero-copy" : ""}`}>
           {icon ? (
             <span className={styles.readmeIcon}>

@@ -184,6 +184,12 @@ body:has([data-ground="day"]) {
   width: 100%;
   height: 100%;
 }
+.illus-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .illus-label {
   position: absolute;
   right: 12px;
@@ -241,6 +247,22 @@ body:has([data-ground="day"]) {
   justify-self: start;
   margin: 32px 0 0 44px;
   color: #5b4e42;
+}
+/* Real art is busier than the placeholder: its top-left is a mid-tone wall,
+   too dark for the muted line. A soft cream wash from the left keeps the copy
+   at AA without boxing it; stacked layouts need none. */
+@media (min-width: 861px) {
+  .warm-hero > .illus-art::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      rgb(251 241 233 / 0.86) 0%,
+      rgb(251 241 233 / 0.62) 32%,
+      rgb(251 241 233 / 0) 58%
+    );
+  }
 }
 .warm-hero-copy > * {
   justify-content: flex-start !important;

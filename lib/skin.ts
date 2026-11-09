@@ -21,6 +21,13 @@ export const SKIN: Skin = {
 // each slot renders a labelled placeholder at the real ratio.
 export const ILLUSTRATED = ["jenkins-cli", "planning-poker", "duux"]
 
+// Delivered art, one 16:9 drawing per project; the 4:3 card is its centred
+// crop. A project in ILLUSTRATED without an entry keeps the placeholder.
+export const ART: Partial<Record<string, string>> = {
+  "planning-poker": "/projects/art/planning-poker.webp",
+  duux: "/projects/art/duux.webp",
+}
+
 // The ink cover for home → /projects is the destination's own ground. null
 // means the ground barely changes, so the link navigates without ink.
 const COVERS: Record<Ground, string | null> = {
