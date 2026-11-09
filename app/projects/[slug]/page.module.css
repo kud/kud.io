@@ -1040,21 +1040,259 @@
   }
 }
 
-/* The latest release, between the pitch and the calls to action: a quiet
-   fact the tagline's bottom margin hands over to. */
-.version {
-  display: inline-block;
-  margin: -24px auto 32px;
-  padding: 2px 10px;
-  border: 1px solid var(--border, rgba(148, 163, 184, 0.2));
-  border-radius: 6px;
-  font-family: var(--font-mono, ui-monospace, monospace);
+/* Release version in the README hero ----------------------------------------
+   Prototype: four treatments, picked by `?v=`. Each is one element built on the
+   hero's tokens, so a palette change restyles it without touching this block. */
+
+/* 2 · Release pill, between the pitch and the calls to action. The tagline
+   gives up some of its bottom margin so the pill belongs to the buttons. */
+.taglineTight {
+  margin-bottom: 24px;
+}
+
+.releasePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto 32px;
+  padding: 5px 5px 5px 14px;
+  border: 1px solid transparent;
+  border-radius: 100px;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(
+        120deg,
+        color-mix(in srgb, var(--primary) 70%, transparent),
+        var(--border) 45%,
+        var(--border) 60%,
+        color-mix(in srgb, var(--primary-light) 45%, transparent)
+      )
+      border-box;
+  box-shadow: 0 12px 32px -16px
+    color-mix(in srgb, var(--primary) 70%, transparent);
   font-size: 13px;
   color: var(--muted);
   text-decoration: none;
+  white-space: nowrap;
   animation: fadeUp 0.6s ease both;
   animation-delay: 0.15s;
+  transition:
+    transform 0.18s,
+    box-shadow 0.18s;
 }
-.version:hover {
+
+.releasePill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 36px -14px
+    color-mix(in srgb, var(--primary) 85%, transparent);
+}
+
+.releasePillDot {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--muted) 60%, transparent);
+}
+
+.releasePill[data-fresh] .releasePillDot {
+  background: var(--primary-light);
+}
+
+/* Only a release under two weeks old earns the ping. */
+.releasePill[data-fresh] .releasePillDot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--primary-light);
+  animation: ping 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.releasePillLabel {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.releasePillVersion {
+  font-family: var(--mono);
+  font-weight: 600;
   color: var(--primary-light);
+}
+
+.releasePillAge::before {
+  content: "·";
+  margin-right: 10px;
+  color: var(--border);
+}
+
+.releasePillArrow {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  color: var(--primary-light);
+  font-size: 12px;
+  transition:
+    transform 0.18s,
+    background 0.18s;
+}
+
+.releasePill:hover .releasePillArrow {
+  transform: translateX(2px);
+  background: color-mix(in srgb, var(--primary) 35%, var(--surface-3));
+}
+
+@media (max-width: 420px) {
+  .releasePillAge {
+    display: none;
+  }
+}
+
+/* 3 · A joined tail on the source button: the version reads as a property of
+   the code it links to. */
+.split {
+  display: inline-flex;
+  align-items: stretch;
+}
+
+.split > :first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.split > :first-child:hover {
+  transform: none;
+}
+
+.splitTail {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 0 16px 0 14px;
+  border: 1px solid var(--border);
+  border-left: 0;
+  border-radius: 0 11px 11px 0;
+  background: var(--surface-2);
+  text-decoration: none;
+  line-height: 1;
+  transition:
+    background 0.18s,
+    border-color 0.18s;
+}
+
+.splitTail:hover {
+  background: var(--surface-3);
+}
+
+.splitFilled .splitTail {
+  border-color: color-mix(in srgb, var(--primary) 55%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--primary) 60%, var(--bg));
+  background: color-mix(in srgb, var(--primary) 18%, var(--surface));
+}
+
+.splitFilled .splitTail:hover {
+  background: color-mix(in srgb, var(--primary) 30%, var(--surface));
+}
+
+.splitTailLabel {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.splitFilled .splitTailLabel,
+.splitTail[data-fresh] .splitTailLabel {
+  color: var(--primary-light);
+}
+
+.splitTailVersion {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* 4 · The version as the title's superscript, in the title's own gradient. */
+.titleRow {
+  position: relative;
+  display: table;
+  margin: 0 auto;
+}
+
+.versionSup {
+  position: absolute;
+  top: 4px;
+  left: 100%;
+  margin-left: 12px;
+  padding-bottom: 3px;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  background: linear-gradient(
+    135deg,
+    var(--text) 0%,
+    var(--primary-light) 55%,
+    var(--primary) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: fadeUp 0.6s ease both;
+  animation-delay: 0.1s;
+}
+
+.versionSup::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--primary-light), transparent);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.25s ease;
+}
+
+.versionSup:hover::after {
+  transform: scaleX(1);
+}
+
+@media (max-width: 640px) {
+  .titleRow {
+    display: block;
+  }
+
+  .versionSup {
+    position: static;
+    display: inline-block;
+    margin: 0 0 14px;
+  }
+}
+
+@keyframes ping {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  80%,
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .releasePill[data-fresh] .releasePillDot::after {
+    animation: none;
+  }
 }

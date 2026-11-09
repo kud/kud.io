@@ -5,9 +5,16 @@ const OWNER = "kud"
 export type Release = {
   version: string
   url: string
+  // ISO date the version shipped; null when the source does not say.
+  publishedAt: string | null
 }
 
 type PackageJson = { name?: string; private?: boolean }
+
+type Packument = {
+  "dist-tags"?: { latest?: string }
+  time?: Record<string, string>
+}
 
 const SEMVER_TAG = /^v?(\d+)\.(\d+)\.(\d+)$/
 
@@ -29,14 +36,21 @@ const fromNpm = async (slug: string): Promise<Release | null> => {
   const pkg = (await pkgRes.json()) as PackageJson
   if (!pkg.name || pkg.private) return null
 
+  // The full packument carries `time[version]`, the publish date; the
+  // `/latest` shortcut does not.
   const npmRes = await fetch(
-    `https://registry.npmjs.org/${pkg.name.replace("/", "%2F")}/latest`,
+    `https://registry.npmjs.org/${pkg.name.replace("/", "%2F")}`,
     { next: { revalidate: 3600 } },
   )
   if (!npmRes.ok) return null
-  const { version } = (await npmRes.json()) as { version?: string }
+  const packument = (await npmRes.json()) as Packument
+  const version = packument["dist-tags"]?.latest
   return version
-    ? { version, url: `https://www.npmjs.com/package/${pkg.name}` }
+    ? {
+        version,
+        url: `https://www.npmjs.com/package/${pkg.name}`,
+        publishedAt: packument.time?.[version] ?? null,
+      }
     : null
 }
 
@@ -49,18 +63,34 @@ const fromTags = async (slug: string): Promise<Release | null> => {
     { headers: ghHeaders(), next: { revalidate: 3600 } },
   )
   if (!res.ok) return null
-  const tags = (await res.json()) as { name: string }[]
+  const tags = (await res.json()) as { name: string; commit: { sha: string } }[]
   const latest = tags
-    .map((tag) => ({ tag: tag.name, parts: SEMVER_TAG.exec(tag.name) }))
-    .filter((t): t is { tag: string; parts: RegExpExecArray } => !!t.parts)
+    .map((tag) => ({ tag, parts: SEMVER_TAG.exec(tag.name) }))
+    .filter((t): t is { tag: (typeof tags)[number]; parts: RegExpExecArray } =>
+      Boolean(t.parts),
+    )
     .map((t) => ({ tag: t.tag, version: t.parts.slice(1).map(Number) }))
     .sort((a, b) => compareSemver(b.version, a.version))[0]
-  return latest
-    ? {
-        version: latest.version.join("."),
-        url: `https://github.com/${OWNER}/${slug}/releases/tag/${latest.tag}`,
-      }
-    : null
+  if (!latest) return null
+  return {
+    version: latest.version.join("."),
+    url: `https://github.com/${OWNER}/${slug}/releases/tag/${latest.tag.name}`,
+    publishedAt: await tagDate(slug, latest.tag.commit.sha),
+  }
+}
+
+// A tag has no date of its own in the tags list; its commit's does. A failed
+// lookup costs only the date, never the version.
+const tagDate = async (slug: string, sha: string): Promise<string | null> => {
+  const res = await fetch(
+    `https://api.github.com/repos/${OWNER}/${slug}/commits/${sha}`,
+    { headers: ghHeaders(), next: { revalidate: 3600 } },
+  )
+  if (!res.ok) return null
+  const commit = (await res.json()) as {
+    commit?: { committer?: { date?: string } }
+  }
+  return commit.commit?.committer?.date ?? null
 }
 
 // The latest version of a project, for its landing hero: npm when published
@@ -71,4 +101,25 @@ export const getRelease = async (slug: string): Promise<Release | null> => {
   } catch {
     return null
   }
+}
+
+const DAY = 86_400_000
+const FRESH_DAYS = 14
+
+// "3 days ago", and whether the release is new enough to call out.
+export const releaseAge = (
+  publishedAt: string | null,
+  now = Date.now(),
+): { label: string; fresh: boolean } | null => {
+  const at = publishedAt ? Date.parse(publishedAt) : NaN
+  if (Number.isNaN(at)) return null
+  const days = Math.max(0, Math.floor((now - at) / DAY))
+  const rtf = new Intl.RelativeTimeFormat("en-GB", { numeric: "auto" })
+  const label =
+    days < 30
+      ? rtf.format(-days, "day")
+      : days < 365
+        ? rtf.format(-Math.floor(days / 30), "month")
+        : rtf.format(-Math.floor(days / 365), "year")
+  return { label, fresh: days < FRESH_DAYS }
 }
