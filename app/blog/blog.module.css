@@ -35,15 +35,12 @@
   --line: #e0e4e8;
   --line-2: #c3cad0;
 
-  /* Card grounds, light. #132a3e sits at 13.8:1 on this page, under the
-   * writing's 15.3:1, so the card stays quieter than the text; it is Cobalt2's
-   * own blue at half saturation, which is what keeps it from reading dusty.
-   * (Was #223442 at 12.1:1, which went grey; before that #062335 at 15.2:1, a
-   * slab.) The other three re-derive off it: the dots hold their ~1.5:1
-   * whisper, and the diff grounds sit at or above the card ground so a marked
-   * line reads as lifted rather than as a darker patch. */
-  --c-bg: #132a3e;
-  --c-dot: #30465a;
+  /* Card grounds: November's own blue-grey, the same block as the project
+   * pages and docs, so code is one family across the site (Erwann,
+   * 2026-11-10). The dots hold a ~1.5:1 whisper on it, and the diff grounds
+   * sit at or above it so a marked line reads as lifted. */
+  --c-bg: #21222c;
+  --c-dot: #3a3c4e;
   --c-add: #1a3f26;
   --c-del: #4c272f;
 
@@ -78,8 +75,8 @@
     --line: #202a32;
     --line-2: #324858;
 
-    --c-bg: #062335;
-    --c-dot: #16394f;
+    --c-bg: #21222c;
+    --c-dot: #3a3c4e;
     --c-add: #14351f;
     --c-del: #3a1b21;
   }
@@ -94,8 +91,8 @@
   --line: #202a32;
   --line-2: #324858;
 
-  --c-bg: #062335;
-  --c-dot: #16394f;
+  --c-bg: #21222c;
+  --c-dot: #3a3c4e;
   --c-add: #14351f;
   --c-del: #3a1b21;
 }
@@ -110,8 +107,8 @@
  * lighter light-mode ground. The lift lands in both themes, which is a straight
  * improvement in dark. */
 :global(#blog-root) {
-  --c-txt: #d6dadd;
-  --c-mut: #94a3b4;
+  --c-txt: #bfc7d5;
+  --c-mut: #8d95be;
   --c-cm: #959ec0;
   --c-str: #c3e88d;
   --c-num: #f78c6c;

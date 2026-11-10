@@ -877,8 +877,8 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 38px;
-  background: var(--surface-2);
-  border-bottom: 1px solid var(--border);
+  background: var(--code-bar, var(--surface-2));
+  border-bottom: 1px solid rgb(255 255 255 / 0.05);
 }
 .readme :global(figure.shiki)::after {
   content: "";

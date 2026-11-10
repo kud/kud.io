@@ -7,6 +7,8 @@ import { Fragment, jsx, jsxs } from "react/jsx-runtime"
 import type { ReactNode } from "react"
 import rehypeReact from "rehype-react"
 import rehypeShiki from "@shikijs/rehype"
+import type { ThemeRegistration } from "shiki"
+import novemberJson from "@/lib/themes/november.json"
 import rehypeSlug from "rehype-slug"
 import remarkGfm from "remark-gfm"
 import remarkParse from "remark-parse"
@@ -145,47 +147,29 @@ export const getPost = async (slug: string): Promise<Post | null> => {
 // themes, by design — so a dual-theme Shiki config has nothing to switch
 // between and everything to get wrong: it emits both palettes as custom
 // properties and lets whichever selector wins paint light tokens onto the dark
-// card. The card palette is a design decision (Iris), reproduced here as a
-// TextMate theme so the highlighter and the CSS cannot disagree about it.
-const CARD = {
-  bg: "#062335",
-  txt: "#d6dadd",
-  mut: "#7e8fa0",
-  cm: "#7e88ac",
-  str: "#c3e88d",
-  num: "#f78c6c",
-  kw: "#c792ea",
-  fn: "#82aaff",
-  tag: "#ff5572",
-  att: "#c49a3c",
-  // --c-txt at 62% over --c-bg, resolved to an opaque hex: a TextMate theme has
-  // no opacity channel, and punctuation must recede without going transparent.
-  pn: "#89949d",
-} as const
-
+// card. The card is Erwann's November theme (lib/themes/november.json), the
+// same as project pages and docs, so code is one family across the site; the
+// card's ground lives in app/blog/blog.module.css (--c-bg).
+const november = novemberJson as ThemeRegistration
 export const SHIKI_THEME = {
-  name: "kud-blog-card",
-  type: "dark",
-  colors: {
-    "editor.background": CARD.bg,
-    "editor.foreground": CARD.txt,
-  },
-  settings: [
-    { scope: ["comment", "punctuation.definition.comment"], settings: { foreground: CARD.cm, fontStyle: "italic" } },
-    { scope: ["string", "string.quoted", "constant.other.symbol", "meta.embedded.assembly"], settings: { foreground: CARD.str } },
-    { scope: ["constant.numeric", "constant.language", "constant.character.escape", "keyword.other.unit"], settings: { foreground: CARD.num } },
-    { scope: ["keyword", "storage", "storage.type", "storage.modifier", "keyword.control", "keyword.operator.expression", "variable.language.this", "variable.language.super"], settings: { foreground: CARD.kw } },
-    { scope: ["entity.name.function", "support.function", "meta.function-call.generic", "entity.name.class", "entity.name.type", "support.class"], settings: { foreground: CARD.fn } },
-    { scope: ["entity.name.tag", "keyword.other.important", "punctuation.definition.tag"], settings: { foreground: CARD.tag } },
-    { scope: ["entity.other.attribute-name", "variable.other.property", "meta.object-literal.key", "support.type.property-name", "variable.other.readwrite.alias"], settings: { foreground: CARD.att } },
-    { scope: ["punctuation", "meta.brace", "keyword.operator"], settings: { foreground: CARD.pn } },
-    { scope: ["variable", "support.variable", "meta.definition.variable"], settings: { foreground: CARD.txt } },
+  ...november,
+  name: "kud-blog-november",
+  tokenColors: [
+    ...(november.tokenColors ?? []),
     // A diff line is carried by its ground, its edge bar and its gutter sign —
     // three signals, none of them colour alone. Tinting the text as well would
     // be a fourth saying the same thing, and the least legible of the four.
-    { scope: ["markup.inserted", "markup.deleted", "markup.changed", "meta.diff"], settings: { foreground: CARD.txt } },
+    {
+      scope: [
+        "markup.inserted",
+        "markup.deleted",
+        "markup.changed",
+        "meta.diff",
+      ],
+      settings: { foreground: "#bfc7d5" },
+    },
   ],
-} as const
+} as ThemeRegistration
 
 const DIFF_SIGNS: Record<string, "add" | "del" | "ctx"> = {
   "+": "add",
@@ -221,7 +205,10 @@ const stripLeadingCharacter = (node: {
 // the line's own syntax against.
 const diffTransformer = {
   name: "kud-blog-diff",
-  pre(this: { options: { lang: string } }, node: { properties: Record<string, unknown> }) {
+  pre(
+    this: { options: { lang: string } },
+    node: { properties: Record<string, unknown> },
+  ) {
     node.properties["data-lang"] = this.options.lang
   },
   line(
@@ -246,7 +233,6 @@ const diffTransformer = {
   },
 }
 
-
 // Mermaid is content, not code highlighting. Pull it out of the normal
 // <pre><code> path before Shiki sees the tree, keeping the original source on a data
 // attribute so the React layer can render it client-side and still offer a
@@ -261,7 +247,7 @@ type HastNode = {
 
 const hastText = (node: HastNode): string =>
   node.type === "text"
-    ? node.value ?? ""
+    ? (node.value ?? "")
     : (node.children ?? []).map(hastText).join("")
 
 const rehypeBlogMermaid = () => (tree: HastNode) => {
