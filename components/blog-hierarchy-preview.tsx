@@ -172,7 +172,13 @@ const setChoice = (next: Choice | null) => {
   for (const listener of listeners) listener()
 }
 
+// The order the copied line reads in: the heading pair first, then the page
+// from top to bottom. Locked rows are included, so the line is the whole
+// decision, not just the open question.
+const COPY_ORDER: Param[] = ["h", "n", "s", "toc", "more", "picks"]
+
 export const BlogHierarchyPreview = () => {
+  const [copied, setCopied] = useState(false)
   const raw = useSyncExternalStore(subscribe, getSnapshot, () => "")
   const choice: Choice | null = raw ? JSON.parse(raw) : null
 
@@ -191,6 +197,23 @@ export const BlogHierarchyPreview = () => {
   }, [raw])
 
   if (!choice) return null
+
+  // One pasteable line: every row and its choice, then the page URL without
+  // the share token, so the pick comes back as text rather than a screenshot.
+  const copy = async () => {
+    if (!choice) return
+    const url = new URL(window.location.href)
+    url.searchParams.delete("_vercel_share")
+    const line = `${COPY_ORDER.map((param) => {
+      const row = ROWS.find((entry) => entry.param === param)
+      return `${row?.label} ${choice[param] === "0" ? "now" : choice[param]}`
+    }).join(" · ")} — ${url}`
+    try {
+      await navigator.clipboard.writeText(line)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 1600)
+    } catch {}
+  }
 
   const leave = () => {
     const root = document.getElementById(BLOG_ROOT_ID)
@@ -234,6 +257,15 @@ export const BlogHierarchyPreview = () => {
             </div>
           ),
         )}
+        <button
+          type="button"
+          className={styles.copy}
+          onClick={copy}
+          aria-live="polite"
+          title="Copy these picks as one line"
+        >
+          {copied ? "Copied" : "Copy"}
+        </button>
         <button
           type="button"
           className={styles.close}
