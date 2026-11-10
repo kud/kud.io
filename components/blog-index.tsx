@@ -46,6 +46,7 @@ export const BlogIndex = ({
   // every click becoming a history entry.
   useEffect(() => {
     const requested = new URLSearchParams(location.search).get("tag")
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- the URL only exists after mount, and reading it there is what keeps the page static
     if (requested && tags.includes(requested)) setTag(requested)
   }, [tags])
 
@@ -124,7 +125,9 @@ export const BlogIndex = ({
                   data-cover={post.cover ? true : undefined}
                   style={
                     post.cover?.preview
-                      ? ({ "--preview": `url(${post.cover.preview})` } as CSSProperties)
+                      ? ({
+                          "--preview": `url(${post.cover.preview})`,
+                        } as CSSProperties)
                       : undefined
                   }
                   tabIndex={-1}
@@ -136,7 +139,8 @@ export const BlogIndex = ({
                       {...(post.slug === leadSlug
                         ? {
                             srcSet: `${post.cover.thumb} 320w, ${post.cover.hero} 1600w`,
-                            sizes: "(max-width: 580px) calc(100vw - 36px), 754px",
+                            sizes:
+                              "(max-width: 580px) calc(100vw - 36px), 754px",
                             loading: "eager",
                           }
                         : { loading: "lazy" })}
