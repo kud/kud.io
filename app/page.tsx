@@ -91,9 +91,10 @@ const Bio = () => (
         Sony&nbsp;Music
       </a>{" "}
       I spent years on the mobile team, building the apps people carry in their
-      pocket. Now I&apos;m on the accounting team, working on the systems behind
-      the numbers. A different kind of complexity, quieter and just as human:
-      when the figures are right, people can trust them.
+      pocket. Now I&apos;m on the accounting team, working on the systems that
+      make sure the people behind the music get paid. A different kind of
+      complexity, quieter and just as human: when the figures are right, people
+      can trust them.
     </p>
   </>
 )
