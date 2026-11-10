@@ -1,0 +1,10 @@
+[
+  {
+    "slug": "retro",
+    "name": "Retro",
+    "description": "A retrospective your team will actually enjoy. Free, anonymous, and no account to make.",
+    "url": "https://retro.beansontoast.app",
+    "icon": "/apps/retro.png",
+    "section": "product"
+  }
+]

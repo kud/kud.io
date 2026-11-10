@@ -121,7 +121,6 @@ const Cta = () => (
   <InkLink href="/projects" className={styles.primary}>
     <ButtonIcon name="projects" />
     Explore my projects
-    <span aria-hidden>→</span>
   </InkLink>
 )
 
