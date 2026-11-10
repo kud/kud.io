@@ -5,6 +5,8 @@ import { RootProvider } from "fumadocs-ui/provider/next"
 import { ViewTransitions } from "next-view-transitions"
 import { ArriveScript, InkTransition } from "@/components/ink-transition"
 import { HashScroll } from "@/components/hash-scroll"
+import { InkCandidateScript } from "@/components/ink-candidate"
+import { CandidateBanner } from "@/components/candidate-banner"
 import { Hanken_Grotesk } from "next/font/google"
 
 // Hanken Grotesk — a refined, elegant grotesque: subtle squared character with
@@ -75,6 +77,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
       className={sans.variable}
     >
       <body className="flex min-h-screen flex-col">
+        <InkCandidateScript />
         <ArriveScript />
         <InkTransition />
         <HashScroll />
@@ -89,6 +92,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
           search={{ enabled: false }}
         >
           {children}
+          <CandidateBanner />
         </RootProvider>
       </body>
     </html>

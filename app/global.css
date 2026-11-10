@@ -2,6 +2,7 @@
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
 @import "./warm.css";
+@import "./docs-motion.css";
 
 /* Generate the Tailwind utilities used by Fumadocs UI components. */
 @source "../node_modules/fumadocs-ui/dist/**/*.js";

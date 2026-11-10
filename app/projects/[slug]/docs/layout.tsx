@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import { DocsMotion } from "@/components/docs-motion"
 import { SiteFooter } from "@/components/site-footer"
 import { DocsLayout } from "fumadocs-ui/layouts/docs"
 import { SearchProvider } from "fumadocs-ui/contexts/search"
@@ -45,6 +46,7 @@ const Layout = async ({
       style={{ display: "contents" }}
     >
       <ThemeScopeScript />
+      <DocsMotion />
       <ThemePicker className="dusk-picker-docs-top" />
       {/* Search covers this project's docs only: /api/search?tag=<slug>, the
           slug being each page's index tag. Other projects and the blog would
