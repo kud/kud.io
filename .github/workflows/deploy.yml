@@ -49,6 +49,6 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to production
-        run: npx --yes vercel@65.14.0 deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+        run: npx --yes vercel@65.14.0 deploy --prebuilt --prod --archive=tgz --token="$VERCEL_TOKEN"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
