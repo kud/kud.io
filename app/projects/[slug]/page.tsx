@@ -433,7 +433,7 @@ const ReadmeLanding = async ({
           <div className={styles.recordTitleRow}>
             {icon ? (
               <span
-                className={`${styles.recordTitleIcon} ${styles.recordTitleGlyph}`}
+                className={`${styles.recordTitleIcon} ${icon.endsWith(".svg") ? styles.recordTitleGlyph : ""}`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={icon} alt="" />

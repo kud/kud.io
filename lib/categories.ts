@@ -112,7 +112,7 @@ const CATEGORY_TYPE: Record<string, string> = {
   product: "Product",
   app: "Web app",
   desktop: "Desktop app",
-  cli: "Command-line tool",
+  cli: "CLI",
   mcp: "MCP server",
   claude: "Claude Code companion",
   lib: "Library",

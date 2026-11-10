@@ -373,7 +373,11 @@ export const ReadmeInfobox = ({
             <code>{facts.name}</code>
           ),
         },
-        facts.commands.length > 0
+        // A command named after the package says nothing the Package row
+        // has not; one that differs (jenkins-cli installs `jenkins`) does.
+        facts.commands.some(
+          (command) => command !== facts.name.replace(/^@[^/]+\//, ""),
+        )
           ? {
               label: facts.commands.length > 1 ? "Commands" : "Command",
               value: facts.commands.map((command, index) => (
