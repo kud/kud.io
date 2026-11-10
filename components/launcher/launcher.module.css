@@ -196,7 +196,7 @@
 .group + .group {
   margin-top: 4px;
 }
-.heading {
+.group [cmdk-group-heading] {
   padding: 12px 10px 6px;
   color: var(--l-dim);
   font-size: 11.5px;
@@ -218,11 +218,11 @@
   border-radius: 10px;
   cursor: pointer;
 }
-.option[aria-selected="true"] {
+.option[data-selected="true"] {
   background: var(--l-hover);
 }
 @media (forced-colors: active) {
-  .option[aria-selected="true"] {
+  .option[data-selected="true"] {
     outline: 2px solid Highlight;
   }
 }

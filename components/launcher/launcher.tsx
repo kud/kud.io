@@ -3,7 +3,6 @@
 import {
   Fragment,
   useEffect,
-  useId,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -11,6 +10,7 @@ import {
 } from "react"
 import type { KeyboardEvent, ReactNode } from "react"
 import { createPortal } from "react-dom"
+import { Command } from "cmdk"
 import { usePathname, useRouter } from "next/navigation"
 import {
   ArrowUpRight,
@@ -316,7 +316,6 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
-  const baseId = useId()
 
   // Rendered inside the page's themed wrapper, so the palette is the page's
   // own and follows a theme switch live. Home has none and takes the Dusk day palette.
@@ -519,34 +518,27 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   ])
 
   const flat = sections.flatMap((section) => section.items)
-  const activeIndex = Math.max(
-    0,
-    flat.findIndex((item) => item.id === activeId),
-  )
-  const active = flat[activeIndex]
-  const optionId = (item: Item) => `${baseId}-${item.id}`
+  const active = flat.find((item) => item.id === activeId) ?? flat[0]
 
+  // cmdk scrolls on its own arrow moves; a Tab jump is ours, so is its scroll.
   useEffect(() => {
-    if (!active) return
-    document
-      .getElementById(`${baseId}-${active.id}`)
+    listRef.current
+      ?.querySelector('[cmdk-item][data-selected="true"]')
       ?.scrollIntoView({ block: "nearest" })
-  }, [active, baseId])
+  }, [active])
 
-  const activate = (item: Item, newTab = false) => {
+  // cmdk's onSelect carries no event, so ⌘/Ctrl is read off the key or
+  // pointer that led to it: held, a link opens in a new tab.
+  const newTab = useRef(false)
+
+  const activate = (item: Item) => {
     if (item.run) return item.run()
     if (!item.href) return
-    if (item.external || newTab)
+    if (item.external || newTab.current)
       window.open(item.href, "_blank", "noopener,noreferrer")
     else if (item.hard) window.location.assign(item.href)
     else router.push(item.href)
     onClose()
-  }
-
-  const move = (delta: number) => {
-    if (flat.length === 0) return
-    const next = (activeIndex + delta + flat.length) % flat.length
-    setActiveId(flat[next].id)
   }
 
   // Tab jumps to the first result of the next section, Shift+Tab back.
@@ -557,35 +549,18 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     setActiveId(sections[next].items[0].id)
   }
 
-  const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.nativeEvent.isComposing) return
-    switch (event.key) {
-      case "ArrowDown":
-        event.preventDefault()
-        move(1)
-        break
-      case "ArrowUp":
-        event.preventDefault()
-        move(-1)
-        break
-      case "Tab":
-        event.preventDefault()
-        jumpSection(event.shiftKey ? -1 : 1)
-        break
-      case "Enter":
-        event.preventDefault()
-        if (active) activate(active, event.metaKey || event.ctrlKey)
-        break
-      case "Backspace":
-        if (!query && docsTag) {
-          setDocsWide(true)
-          setAnnounce("Searching all docs")
-        }
-        break
+  // Runs before cmdk's own handler, which leaves alone what this prevents.
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    newTab.current = event.metaKey || event.ctrlKey
+    if (event.key === "Tab") {
+      event.preventDefault()
+      jumpSection(event.shiftKey ? -1 : 1)
+    } else if (event.key === "Backspace" && !query && docsTag) {
+      setDocsWide(true)
+      setAnnounce("Searching all docs")
     }
   }
 
-  const listId = `${baseId}-list`
   const status = failed
     ? "Projects and posts could not load. Docs search still works."
     : !index
@@ -597,7 +572,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   const placeholder = currentProject
     ? currentProject.hasDocs
       ? "Search docs, projects, writing…"
-      : `Search projects, writing, actions…`
+      : "Search projects, writing, actions…"
     : onPost
       ? "Search writing, projects, docs…"
       : "Search pages, projects, writing, docs…"
@@ -615,27 +590,30 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
         if (event.target === event.currentTarget) onClose()
       }}
     >
-      <div className={styles.panel}>
+      {/* cmdk drives the list: arrows, Enter, pointer selection and the
+          combobox/listbox wiring. Ranking stays ours (shouldFilter off),
+          because the order follows the page, not only the match. */}
+      <Command
+        className={styles.panel}
+        label="Search kud.io"
+        shouldFilter={false}
+        loop
+        value={active?.id ?? ""}
+        onValueChange={setActiveId}
+        onKeyDown={onKeyDown}
+      >
         <div className={styles.bar}>
           <Search className={styles.barIcon} aria-hidden />
-          <input
+          <Command.Input
             ref={inputRef}
             className={styles.input}
-            role="combobox"
-            aria-expanded="true"
-            aria-controls={listId}
-            aria-autocomplete="list"
-            aria-activedescendant={active ? optionId(active) : undefined}
-            aria-label="Search kud.io"
             placeholder={placeholder}
             value={query}
-            onChange={(event) => {
-              setQuery(event.target.value)
+            onValueChange={(value) => {
+              setQuery(value)
               setActiveId(null)
               setCopiedId(null)
             }}
-            onKeyDown={onKeyDown}
-            autoComplete="off"
             autoCorrect="off"
             autoCapitalize="off"
             spellCheck={false}
@@ -679,23 +657,20 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
           </button>
         </div>
 
-        <div
+        <Command.List
           ref={listRef}
-          id={listId}
-          role="listbox"
-          aria-label="Results"
           className={styles.list}
+          label="Results"
+          onPointerDown={(event) => {
+            newTab.current = event.metaKey || event.ctrlKey
+          }}
         >
-          {sections.map((section) => {
-            const headingId = `${baseId}-h-${section.key}`
-            return (
-              <div
-                key={section.key}
-                role="group"
-                aria-labelledby={headingId}
-                className={styles.group}
-              >
-                <div id={headingId} className={styles.heading}>
+          {sections.map((section) => (
+            <Command.Group
+              key={section.key}
+              className={styles.group}
+              heading={
+                <>
                   {SECTION_LABEL[section.key]}
                   {section.key === "docs" && currentProject && docsTag ? (
                     <span className={styles.headingNote}>
@@ -703,44 +678,37 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
                       · {currentProject.name}
                     </span>
                   ) : null}
-                </div>
-                {section.items.map((item) => (
-                  <div
-                    key={item.id}
-                    id={optionId(item)}
-                    role="option"
-                    aria-selected={item.id === active?.id}
-                    className={styles.option}
-                    onPointerMove={() => {
-                      if (item.id !== active?.id) setActiveId(item.id)
-                    }}
-                    onMouseDown={(event) => event.preventDefault()}
-                    onClick={(event) =>
-                      activate(item, event.metaKey || event.ctrlKey)
-                    }
-                  >
-                    <VisualMark visual={item.visual} />
-                    <span className={styles.text}>
-                      <span className={styles.title}>{item.title}</span>
-                      {item.meta ? (
-                        <span className={styles.meta}>{item.meta}</span>
-                      ) : null}
-                    </span>
-                    {item.external ? (
-                      <ArrowUpRight className={styles.trail} aria-hidden />
+                </>
+              }
+            >
+              {section.items.map((item) => (
+                <Command.Item
+                  key={item.id}
+                  value={item.id}
+                  className={styles.option}
+                  onSelect={() => activate(item)}
+                >
+                  <VisualMark visual={item.visual} />
+                  <span className={styles.text}>
+                    <span className={styles.title}>{item.title}</span>
+                    {item.meta ? (
+                      <span className={styles.meta}>{item.meta}</span>
                     ) : null}
-                  </div>
-                ))}
-              </div>
-            )
-          })}
+                  </span>
+                  {item.external ? (
+                    <ArrowUpRight className={styles.trail} aria-hidden />
+                  ) : null}
+                </Command.Item>
+              ))}
+            </Command.Group>
+          ))}
           {trimmed && flat.length === 0 && index ? (
-            <p className={styles.empty}>
+            <Command.Empty className={styles.empty}>
               Nothing matches “{trimmed}”. Try a project, a post title, or a
               word from the docs.
-            </p>
+            </Command.Empty>
           ) : null}
-        </div>
+        </Command.List>
 
         <div className={styles.foot} aria-hidden>
           <span>
@@ -758,7 +726,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
         <div role="status" aria-live="polite" className={styles.visuallyHidden}>
           {announce || status}
         </div>
-      </div>
+      </Command>
     </dialog>,
     container,
   )
