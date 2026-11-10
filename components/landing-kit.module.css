@@ -187,9 +187,9 @@
   box-shadow: 0 8px 24px -8px var(--primary);
 }
 
-.primary:hover {
+.primary:is(:hover, :focus-visible) {
   background: var(--primary-light);
-  transform: translateY(-1px);
+  transform: var(--hover-lift);
 }
 
 .secondary {
@@ -198,7 +198,8 @@
   color: var(--text);
 }
 
-.secondary:hover {
+.secondary:is(:hover, :focus-visible) {
+  transform: var(--hover-lift);
   border-color: var(--primary);
   background: var(--surface-2);
 }
@@ -504,7 +505,7 @@
     transform 0.18s;
 }
 
-.cta:hover {
+.cta:is(:hover, :focus-visible) {
   background: var(--primary-light);
-  transform: translateY(-1px);
+  transform: var(--hover-lift);
 }

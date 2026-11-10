@@ -182,9 +182,10 @@
   font-weight: 500;
   text-decoration: none;
   transition:
-    background-color 0.15s ease,
-    border-color 0.15s ease,
-    transform 0.15s ease;
+    background-color var(--hover-speed) ease,
+    border-color var(--hover-speed) ease,
+    color var(--hover-speed) ease,
+    transform var(--hover-speed) ease;
 }
 .primary {
   min-width: 160px;
@@ -192,16 +193,20 @@
   color: var(--primary-fg);
   border: 1px solid var(--primary-bg);
 }
-.primary:hover {
-  transform: translateY(-1px);
+.primary:is(:hover, :focus-visible) {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: var(--hover-lift);
 }
 .secondary {
   background: var(--button);
   color: var(--fg);
   border: 1px solid var(--line);
 }
-.secondary:hover {
-  border-color: var(--fg-3);
+.secondary:is(:hover, :focus-visible) {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: var(--hover-lift);
 }
 
 .footnote {

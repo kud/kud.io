@@ -223,7 +223,8 @@ a.badge:focus-visible {
   text-decoration: none;
   transition:
     background 0.18s,
-    border-color 0.18s;
+    border-color 0.18s,
+    transform var(--hover-speed);
 }
 
 /* The service mark leads the label (components/button-icon.tsx); the side it
@@ -234,15 +235,16 @@ a.badge:focus-visible {
   padding-left: 20px;
 }
 
-/* Every hero button is the same light plate with one quiet hover; the lead
-   one is told apart only by a rim half-way to the accent, never a filled slab
-   or a lift (Erwann, 2026-11-10). */
+/* Every hero button is the same light plate; the lead one is told apart only
+   by a rim half-way to the accent, never a filled slab (Erwann, 2026-11-10).
+   Hover is the site-wide lift plus a full-accent rim (global.css). */
 .lead {
   border-color: color-mix(in srgb, var(--primary) 50%, var(--border));
 }
 
-.lead:hover,
-.secondary:hover {
+.lead:is(:hover, :focus-visible),
+.secondary:is(:hover, :focus-visible) {
+  transform: var(--hover-lift);
   border-color: var(--primary);
   background: var(--surface-2);
 }
@@ -363,9 +365,9 @@ a.badge:focus-visible {
     transform 0.18s;
 }
 
-.cta:hover {
+.cta:is(:hover, :focus-visible) {
   background: var(--primary-light);
-  transform: translateY(-1px);
+  transform: var(--hover-lift);
 }
 
 .topics {
@@ -536,8 +538,8 @@ a.badge:focus-visible {
     filter 0.18s;
 }
 
-.launch:hover {
-  transform: translateY(-1px);
+.launch:is(:hover, :focus-visible) {
+  transform: var(--hover-lift);
   filter: brightness(1.08);
   box-shadow: 0 18px 40px -12px color-mix(in srgb, var(--app-accent) 90%, #000);
 }
@@ -680,13 +682,15 @@ a.badge:focus-visible {
   margin: 0 0 16px;
 }
 
-.readme :global(a) {
+/* The docs CTA (.lead) sits inside the readme but is a button, not prose.
+   :where keeps the specificity where it was, so Ink's prose links still win. */
+.readme :global(a):where(:not(.lead)) {
   color: var(--text);
   font-weight: 700;
   text-decoration: none;
   transition: color 0.15s;
 }
-.readme :global(a:hover) {
+.readme :global(a):where(:not(.lead)):hover {
   color: var(--primary-light);
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -926,8 +930,8 @@ a.badge:focus-visible {
     box-shadow 0.18s;
 }
 
-.releasePill:hover {
-  transform: translateY(-1px);
+.releasePill:is(:hover, :focus-visible) {
+  transform: var(--hover-lift);
   box-shadow: 0 16px 36px -14px
     color-mix(in srgb, var(--primary) 85%, transparent);
 }
@@ -985,9 +989,15 @@ a.badge:focus-visible {
     background 0.18s;
 }
 
-.releasePill:hover .releasePillArrow {
+.releasePill:is(:hover, :focus-visible) .releasePillArrow {
   transform: translateX(2px);
   background: color-mix(in srgb, var(--primary) 35%, var(--surface-3));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .releasePill:is(:hover, :focus-visible) .releasePillArrow {
+    transform: none;
+  }
 }
 
 @media (max-width: 420px) {

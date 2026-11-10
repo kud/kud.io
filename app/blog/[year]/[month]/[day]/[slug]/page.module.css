@@ -797,7 +797,8 @@
     color 130ms,
     border-color 130ms,
     background 130ms,
-    opacity 130ms;
+    opacity 130ms,
+    transform var(--hover-speed);
 }
 
 .diagramZoom {
@@ -861,6 +862,13 @@
 .diagramViewerToolbar button:hover {
   border-color: var(--c-gold);
   color: var(--fg);
+}
+
+/* The standalone badges take the site-wide lift; the toolbar is a segmented
+ * control and the diagram sticker keeps its own press (above), so neither does. */
+.diagramZoom:not(.diagram .diagramZoom):is(:hover, :focus-visible),
+.diagramViewerClose:is(:hover, :focus-visible) {
+  transform: var(--hover-lift);
 }
 
 .diagramZoom svg,

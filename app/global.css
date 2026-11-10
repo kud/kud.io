@@ -75,6 +75,24 @@ body {
   }
 }
 
+/* Button hover -------------------------------------------------------------- */
+/* One hover for every button-like control, taken from the home hero: a 2px
+   lift and a highlight, on hover or keyboard focus only (Erwann, 2026-11-10).
+   The motion lives here; each surface keeps its own highlight colour, since
+   the home's terracotta, Dusk's primary and the blog's gold are different
+   palettes. Under reduced motion the lift goes and the highlight stays.
+   Inline links, tiles and cards, and segmented pickers keep their own. */
+:root {
+  --hover-lift: translateY(-2px);
+  --hover-speed: 0.18s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --hover-lift: none;
+  }
+}
+
 /* Cross-route theme transition --------------------------------------------- */
 /* Home (warm light) and /projects (dark) are visually very different, so a
    hard cut between them jars. next-view-transitions wraps these navigations in

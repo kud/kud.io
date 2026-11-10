@@ -69,11 +69,15 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--surface);
+  transition:
+    border-color var(--hover-speed),
+    transform var(--hover-speed);
 }
 
 .marks a:hover,
 .marks a:focus-visible {
   border-color: var(--primary-light);
+  transform: var(--hover-lift);
 }
 
 .mark {

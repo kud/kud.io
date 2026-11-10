@@ -871,8 +871,13 @@
   font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
+  transition:
+    border-color var(--hover-speed),
+    background var(--hover-speed),
+    transform var(--hover-speed);
 }
-.open:hover {
+.open:is(:hover, :focus-visible) {
+  transform: var(--hover-lift);
   border-color: var(--l-muted);
   background: var(--l-hover);
 }
