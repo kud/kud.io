@@ -115,25 +115,28 @@ export const useScopedTheme = () => {
     serverTheme,
   )
 
-  // origin is the pressed control: the old light merges into the new one, from
-  // there when the take is radial (components/theme-merge.ts). Ink is for
-  // changing world, never for a theme. A choice that resolves to the ground
-  // already showing (Dark to Auto on a dark OS) has nothing to blend and swaps
-  // plainly.
-  const setTheme = useCallback((next: ScopedTheme, origin?: Element | null) => {
-    const before = readStoredTheme()
-    unpersistedTheme = next
-    const from = scopeGroundFor(before)
-    const to = scopeGroundFor(next)
-    if (from === to) stampScopes(next)
-    else themeMerge(origin, () => stampScopes(next))
-    try {
-      localStorage.setItem(THEME_KEY, next)
-    } catch {
-      // Preference simply won't persist; the session still themes correctly.
-    }
-    themeListeners.forEach((listener) => listener())
-  }, [])
+  // The old light merges into the new one (components/theme-merge.ts). Ink is
+  // for changing world, never for a theme. A choice that resolves to the
+  // ground already showing (Dark to Auto on a dark OS) has nothing to blend
+  // and swaps plainly. The pressed control is still accepted from callers but
+  // a crossfade has no origin.
+  const setTheme = useCallback(
+    (next: ScopedTheme, _origin?: Element | null) => {
+      const before = readStoredTheme()
+      unpersistedTheme = next
+      const from = scopeGroundFor(before)
+      const to = scopeGroundFor(next)
+      if (from === to) stampScopes(next)
+      else themeMerge(() => stampScopes(next))
+      try {
+        localStorage.setItem(THEME_KEY, next)
+      } catch {
+        // Preference simply won't persist; the session still themes correctly.
+      }
+      themeListeners.forEach((listener) => listener())
+    },
+    [],
+  )
 
   return { theme, setTheme }
 }

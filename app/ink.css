@@ -10,13 +10,8 @@
    link is underlined, the primary action is a black fill, a selected thing is
    inverted, a diff line keeps its sign.
 
-   Preview choices live on <html> (components/ink-preview.tsx):
-   data-ink-paper="white" | "pearl", data-ink-image="grey" | "crush" |
-   "dither", data-ink-motion="flash" | "cut". :root holds the recommended
-   picks, so a page without the preview paints those.
-
    Every text pair clears 4.5:1 on paper, card, wash and blot (measured,
-   2026-11-10): the lowest is dim on Pearl's blot at 5.12. */
+   2026-11-10): the lowest is dim on blot at 5.81. */
 :root {
   --ik-paper: #ffffff;
   --ik-card: #ffffff;
@@ -40,21 +35,6 @@
      panel flattens a photo's midtones. */
   --ik-image: grayscale(1) contrast(1.18) brightness(1.04);
 }
-html[data-ink-paper="pearl"] {
-  --ik-paper: #efefed;
-  --ik-card: #f7f7f6;
-  --ik-wash: #e3e3e1;
-  --ik-blot: #d6d6d4;
-}
-html[data-ink-image="grey"] {
-  --ik-image: grayscale(1);
-}
-/* Sixteen-ish greys and a fine grain: the panel's own limit, drawn by the
-   filter in components/ink-filters.tsx. */
-html[data-ink-image="dither"] {
-  --ik-image: url(#ink-dither);
-}
-
 /* Shared by every ink scope ------------------------------------------------- */
 /* The safety net: whatever a token missed (a vendor colour, a hard-coded hex,
    an inline SVG), the whole document is printed in greys. Filter on the root

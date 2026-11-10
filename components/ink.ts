@@ -141,11 +141,11 @@ let refreshTimer: number | undefined
 
 // The Ink world's page move: a panel refresh. One inverted frame, then paper,
 // then the page (app/ink.css, html[data-ink-refresh]). Theme switches never
-// use it; they merge (components/theme-merge.ts). Under reduced motion, or
-// with the preview's "cut", nothing plays.
+// use it; they merge (components/theme-merge.ts). Under reduced motion
+// nothing plays.
 export const inkRefresh = () => {
   const root = document.documentElement
-  if (reducedMotion() || root.dataset.inkMotion === "cut") return
+  if (reducedMotion()) return
   delete root.dataset.inkRefresh
   // Restart the animation when two moves land inside one flash.
   void root.offsetWidth

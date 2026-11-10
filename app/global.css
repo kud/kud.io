@@ -240,79 +240,15 @@ html[data-vt="ink-morph"]::view-transition-group(*) {
 }
 
 /* Theme merge (components/theme-merge.ts): the same page in another light, so
-   no zoom and no cover, only the two lights blending. Fade keeps the
+   no zoom and no cover, only the two lights crossfading. It keeps the
    plus-lighter pair above, so the dissolve never dips through a third colour. */
-@property --merge-r {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0px;
-}
-
-html[data-vt^="merge"]::view-transition-old(root),
-html[data-vt^="merge"]::view-transition-new(root) {
+html[data-vt="merge"]::view-transition-old(root),
+html[data-vt="merge"]::view-transition-new(root) {
   animation-duration: 0.45s;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
-html[data-vt="merge-fade"]::view-transition-new(root) {
+html[data-vt="merge"]::view-transition-new(root) {
   animation-name: vt-fade-in-flat;
-}
-
-/* Radial: the old light holds still underneath; the new one soaks outward from
-   the pressed control behind a soft 160px edge, so the front blends rather
-   than wipes. Normal blending: the old snapshot is opaque throughout. */
-html[data-vt="merge-radial"]::view-transition-old(root),
-html[data-vt="merge-radial"]::view-transition-new(root) {
-  mix-blend-mode: normal;
-  animation-duration: 0.7s;
-}
-html[data-vt="merge-radial"]::view-transition-old(root) {
-  animation-name: vt-hold;
-}
-html[data-vt="merge-radial"]::view-transition-new(root) {
-  animation-name: merge-radial;
-  animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1);
-  mask-image: radial-gradient(
-    circle at var(--merge-x, 50%) var(--merge-y, 50%),
-    #000 calc(var(--merge-r) - 160px),
-    transparent var(--merge-r)
-  );
-}
-@keyframes merge-radial {
-  from {
-    --merge-r: 0px;
-  }
-  to {
-    --merge-r: calc(150vmax + 160px);
-  }
-}
-@keyframes vt-hold {
-  to {
-    opacity: 1;
-  }
-}
-
-/* Blur: both lights soften through each other, then the new one settles. */
-html[data-vt="merge-blur"]::view-transition-old(root),
-html[data-vt="merge-blur"]::view-transition-new(root) {
-  animation-duration: 0.55s;
-}
-html[data-vt="merge-blur"]::view-transition-old(root) {
-  animation-name: merge-blur-out;
-}
-html[data-vt="merge-blur"]::view-transition-new(root) {
-  animation-name: merge-blur-in;
-}
-@keyframes merge-blur-out {
-  to {
-    opacity: 0;
-    filter: blur(8px);
-  }
-}
-@keyframes merge-blur-in {
-  from {
-    opacity: 0;
-    filter: blur(8px);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
