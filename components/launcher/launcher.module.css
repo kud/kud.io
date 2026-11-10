@@ -647,15 +647,6 @@
   overflow-y: auto;
   padding: 14px 16px 16px;
 }
-.formTo {
-  margin: 0;
-  color: var(--l-dim);
-  font-size: 13px;
-}
-.formAddress {
-  color: var(--l-muted);
-  font-weight: 500;
-}
 .field {
   display: flex;
   flex-direction: column;
@@ -715,8 +706,7 @@
   padding: 10px 12px 10px 16px;
   border-top: 1px solid var(--l-line);
 }
-.ghost,
-.primary {
+.ghost {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -726,8 +716,6 @@
   font-size: 13.5px;
   font-weight: 550;
   cursor: pointer;
-}
-.ghost {
   padding: 0 10px;
   margin-left: -10px;
   border: 0;
@@ -742,29 +730,13 @@
   width: 14px;
   height: 14px;
 }
-.primary {
-  padding: 0 6px 0 14px;
-  border: 1px solid transparent;
-  background: var(--l-fg);
-  color: var(--l-bg);
-}
-.primary:hover {
-  background: color-mix(in srgb, var(--l-fg) 86%, var(--l-bg));
-}
 .primaryKeys {
   display: inline-flex;
 }
 .primaryKeys kbd {
   margin-right: 0;
   margin-left: 3px;
-  border-color: color-mix(in srgb, var(--l-bg) 30%, transparent);
-  background: transparent;
-  color: inherit;
-}
-@media (forced-colors: active) {
-  .primary {
-    border-color: ButtonText;
-  }
+  color: var(--l-muted);
 }
 
 /* Phone: the sheet keeps its full height, the field grows into it, and the
@@ -776,10 +748,6 @@
   }
   .formFoot {
     padding-bottom: max(10px, env(safe-area-inset-bottom));
-  }
-  .primary {
-    height: 40px;
-    padding: 0 16px;
   }
 }
 
@@ -924,4 +892,22 @@
     height: 40px;
     padding: 0 16px;
   }
+}
+
+/* Message topic: the settings rows' segments, as real buttons so Tab reaches
+   them. Pressing the chosen one again clears it. */
+.topics {
+  flex-wrap: wrap;
+  align-self: flex-start;
+  margin-left: 0;
+}
+.topics .segment {
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.topics .segment[data-active] {
+  background: var(--l-raise);
 }

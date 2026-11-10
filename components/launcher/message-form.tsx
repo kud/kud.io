@@ -12,15 +12,36 @@ const FALLBACK_SUBJECT = "A message from kud.io"
 
 // RFC 6068 wants line breaks as CRLF; encodeURIComponent then makes them
 // %0D%0A, which every mail client keeps as a new line.
-export const mailtoHref = (subject: string, body: string) => {
+// What the message is about, shown as a bracketed tag at the head of the
+// subject: short, scannable in an inbox, and easy to filter on.
+export const TOPICS = [
+  { value: "project", label: "Project" },
+  { value: "bug", label: "Bug" },
+  { value: "work", label: "Work together" },
+  { value: "hello", label: "Hello" },
+] as const
+
+export type Topic = (typeof TOPICS)[number]["value"]
+
+export const mailtoHref = (
+  subject: string,
+  body: string,
+  topic: Topic | null,
+) => {
   const encode = (text: string) =>
     encodeURIComponent(text.replace(/\r?\n/g, "\r\n"))
+  const tag = TOPICS.find(({ value }) => value === topic)?.label
+  const line = subject.trim() || FALLBACK_SUBJECT
   return `mailto:${CONTACT_ADDRESS}?subject=${encode(
-    subject.trim() || FALLBACK_SUBJECT,
+    tag ? `[${tag}] ${line}` : line,
   )}&body=${encode(body)}`
 }
 
-export type MessageDraft = { subject: string; body: string }
+export type MessageDraft = {
+  topic: Topic | null
+  subject: string
+  body: string
+}
 
 type Props = {
   draft: MessageDraft
@@ -59,7 +80,7 @@ export const MessageForm = ({
       bodyRef.current?.focus()
       return
     }
-    window.location.href = mailtoHref(draft.subject, draft.body)
+    window.location.href = mailtoHref(draft.subject, draft.body, draft.topic)
     setHanded(true)
     announce("Opening your mail app")
   }
@@ -111,9 +132,34 @@ export const MessageForm = ({
       </div>
 
       <div className={styles.form}>
-        <p className={styles.formTo}>
-          To <span className={styles.formAddress}>{CONTACT_ADDRESS}</span>
-        </p>
+        <div className={styles.field}>
+          <span className={styles.fieldLabel} id="launcher-message-topic">
+            About <span className={styles.fieldHint}>optional</span>
+          </span>
+          <span
+            className={`${styles.segments} ${styles.topics}`}
+            role="group"
+            aria-labelledby="launcher-message-topic"
+          >
+            {TOPICS.map(({ value, label }) => (
+              <button
+                key={value}
+                type="button"
+                className={styles.segment}
+                aria-pressed={draft.topic === value}
+                data-active={draft.topic === value || undefined}
+                onClick={() =>
+                  onDraft({
+                    ...draft,
+                    topic: draft.topic === value ? null : value,
+                  })
+                }
+              >
+                {label}
+              </button>
+            ))}
+          </span>
+        </div>
         <label className={styles.field}>
           <span className={styles.fieldLabel}>
             Subject <span className={styles.fieldHint}>optional</span>
@@ -160,7 +206,7 @@ export const MessageForm = ({
           )}
           {copied ? "Copied" : "Copy address"}
         </button>
-        <button type="submit" className={styles.primary}>
+        <button type="submit" className={styles.open}>
           Open in mail app
           <span className={styles.primaryKeys} aria-hidden>
             <kbd>{mod}</kbd>

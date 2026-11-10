@@ -392,7 +392,11 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   // and so does the draft.
   const [view, setView] = useState<"list" | "message" | "detail">("list")
   const [detail, setDetail] = useState<Detail | null>(null)
-  const [draft, setDraft] = useState<MessageDraft>({ subject: "", body: "" })
+  const [draft, setDraft] = useState<MessageDraft>({
+    topic: null,
+    subject: "",
+    body: "",
+  })
 
   const backToList = () => {
     setView("list")
@@ -688,6 +692,13 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       extras: ["email", "mail", "contact", "message", "write", "hello"],
       visual: { kind: "glyph", Icon: Mail },
       run: () => {
+        // On a project page, a fresh message starts as a question about it.
+        if (currentProject)
+          setDraft((draft) =>
+            draft.subject || draft.body || draft.topic
+              ? draft
+              : { ...draft, topic: "project" },
+          )
         setView("message")
         setAnnounce("Send me a message")
       },
