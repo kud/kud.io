@@ -21,6 +21,7 @@ import {
   countWords,
   filterLanding,
 } from "./lib/landing-filter.js"
+import { prepareDoc } from "./lib/doc-file.js"
 
 const CONTENT_DIR = "content/projects"
 const README_DIR = "content/readmes"
@@ -259,47 +260,51 @@ const findIcon = (slug, tree) => {
 
 // Pull a repo's docs/ folder; returns whether it provides its own docs index
 // (docs/index.md or .mdx) and whether it ships any authored .mdx doc. The two
-// are tracked separately because the landing's hasDocs answers either.
-const syncRepoDocs = async (slug, tree) => {
+// are tracked separately because the landing's hasDocs answers either. A file
+// that cannot build is skipped and reported in `warnings`, never written.
+const syncRepoDocs = async (slug, tree, warnings) => {
   let hasIndex = false
   const docFiles = tree.filter(
     (node) => node.type === "blob" && /^docs\/.+\.(mdx?|json)$/.test(node.path),
   )
-  // Prefer .mdx over a legacy .md sibling (GitHub Pages leftovers): drop any
-  // docs/<name>.md that has a docs/<name>.mdx alongside it, so the stale Pages
-  // index can't shadow the authored docs or collide on the same route.
-  const mdxStems = new Set(
-    docFiles
-      .filter((file) => file.path.endsWith(".mdx"))
-      .map((file) => file.path.slice(0, -".mdx".length)),
-  )
-  const liveDocFiles = docFiles.filter(
-    (file) =>
-      !(
-        file.path.endsWith(".md") &&
-        mdxStems.has(file.path.slice(0, -".md".length))
-      ),
-  )
+  // Site docs are docs/*.mdx (REPO-CONVENTIONS §6). Once a repo ships any, its
+  // .md files are something else: GitHub Pages leftovers, or engineering notes
+  // (ADRs, release notes, reverse-engineering maps) that live beside the docs
+  // without being them. Only an all-.md docs/ (a legacy docs/index.md) is
+  // published as markdown.
+  const hasAuthoredMdx = docFiles.some((file) => file.path.endsWith(".mdx"))
+  const liveDocFiles = hasAuthoredMdx
+    ? docFiles.filter((file) => !file.path.endsWith(".md"))
+    : docFiles
   for (const file of liveDocFiles) {
     const rel = file.path.replace(/^docs\//, "")
+    const raw = await rawFile(slug, file.path)
+    if (!raw) continue
+    const doc = await prepareDoc(rel, raw)
+    if (doc.skip) {
+      warnings.push(`${slug}/docs/${rel}: skipped, ${doc.skip}`)
+      continue
+    }
+    if (doc.note) warnings.push(`${slug}/docs/${rel}: ${doc.note}`)
     if (/^index\.mdx?$/i.test(rel)) hasIndex = true
-    const text = await rawFile(slug, file.path)
-    if (!text) continue
     await writeDoc(
       slug,
       rel,
-      rewriteLinks(text, slug, `${dirname(file.path)}/`),
+      rewriteLinks(doc.text, slug, `${dirname(file.path)}/`),
     )
   }
-  const hasMdx = liveDocFiles.some((file) => file.path.endsWith(".mdx"))
-  return { hasIndex, hasMdx }
+  return { hasIndex, hasMdx: hasAuthoredMdx }
 }
 
-const syncRepo = async (repo) => {
+const syncRepo = async (repo, warnings) => {
   const slug = repo.name
 
   const tree = await getTree(slug)
-  const { hasIndex: hasDocsIndex, hasMdx } = await syncRepoDocs(slug, tree)
+  const { hasIndex: hasDocsIndex, hasMdx } = await syncRepoDocs(
+    slug,
+    tree,
+    warnings,
+  )
   // The one hasDocs value the landing filter and the page both read: true when
   // the repo ships its own docs index (docs/index.md counts — the .mdx-only
   // render-time test missed those, e.g. jira-cli) or any authored .mdx doc.
@@ -529,11 +534,19 @@ const main = async () => {
   // can't wipe icons synced on an earlier run; this run's results overlay it.
   const icons = await readJson(join(CONTENT_DIR, "icons.json"))
   const synced = []
+  const warnings = []
   for (const repo of repos) {
     spinner.text = repo.name
-    const { slug, icon } = await syncRepo(repo)
-    synced.push(slug)
-    if (icon) icons[slug] = icon
+    // One repo's failure never stops the others. Its slug still counts as
+    // synced, so pruneOrphans keeps its last good content instead of deleting it.
+    try {
+      const { slug, icon } = await syncRepo(repo, warnings)
+      synced.push(slug)
+      if (icon) icons[slug] = icon
+    } catch (error) {
+      synced.push(repo.name)
+      warnings.push(`${repo.name}: sync failed, kept previous content (${error.message})`)
+    }
   }
 
   const raycastIcons = await syncRaycast(spinner)
@@ -564,6 +577,8 @@ const main = async () => {
     join(CONTENT_DIR, "icons.json"),
     `${JSON.stringify(sorted, null, 2)}\n`,
   )
+
+  for (const warning of warnings) spinner.warn(warning)
 
   const elapsed = ((Date.now() - start) / 1000).toFixed(1)
   spinner.succeed(
