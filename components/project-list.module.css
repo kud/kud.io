@@ -36,10 +36,25 @@
   margin: 12px auto 0;
   padding: 0 24px;
   display: grid;
-  gap: 40px;
+  /* Rows carry no gap: the sections bring their own top padding, and the
+     products row (.lead) may be absent, so a gap would double up or dangle. */
+  column-gap: 40px;
+  row-gap: 0;
   grid-template-columns: 1fr;
   /* Mobile: filters stack above the grid so they stay reachable. */
-  grid-template-areas: "filters" "main";
+  grid-template-areas: "filters" "lead" "main";
+}
+
+/* Products lead the browse area in a row of their own (project-list.tsx), so
+   on wide screens they can run full width while the rail starts beside the
+   list proper. The reveal sentinel shares the row, at its top edge. */
+.lead,
+.revealSentinel {
+  grid-area: lead;
+  min-width: 0;
+}
+.revealSentinel {
+  align-self: start;
 }
 
 @media (min-width: 1100px) {
@@ -50,7 +65,9 @@
     grid-template-columns:
       minmax(0, var(--rail-width)) minmax(0, var(--content-max))
       minmax(0, var(--rail-width));
-    grid-template-areas: "spacer main filters";
+    grid-template-areas:
+      "spacer lead filters"
+      "spacer main filters";
     align-items: start;
   }
 }
@@ -71,6 +88,7 @@
 /* Inside the two-column layout the sections fill the main column, so drop the
    full-width era's own centering (max-width + auto side margins). */
 .main .section,
+.lead .section,
 .main .ecoSection,
 .main .noResults {
   max-width: none;
@@ -87,6 +105,12 @@
   height: fit-content;
 }
 
+@media (max-width: 1099px) {
+  .sidebar {
+    margin-bottom: 40px;
+  }
+}
+
 @media (min-width: 1100px) {
   .sidebar {
     align-self: start;
@@ -97,6 +121,55 @@
     overscroll-behavior: contain;
     margin-top: 60px;
     padding-bottom: 20px;
+    /* The rail scrolls as one when it outgrows the viewport. Its scrollbar is
+       thin and quiet, shows only while the pointer is over the rail, and has
+       a gutter of its own so it never sits on a count or a highlighted row
+       (Erwann, 2026-11-10). */
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    padding-right: 4px;
+  }
+  .sidebar:is(:hover, :focus-within) {
+    scrollbar-color: color-mix(in srgb, var(--muted) 45%, transparent)
+      transparent;
+  }
+  .sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .sidebar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .sidebar::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: transparent;
+  }
+  .sidebar:is(:hover, :focus-within)::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--muted) 45%, transparent);
+  }
+
+  /* Scroll shadows: the rail's edge fades where more of it lies that way, top
+     once scrolled, bottom until the end, so nothing reads as cut mid-row.
+     Driven by the rail's own scroll; a rail that fits never fades. Where
+     scroll-driven animation isn't supported, a fixed bottom fade over the
+     rail's bottom padding stands in, and covers no row at the end. */
+  .sidebar {
+    --rail-fade-top: 0px;
+    --rail-fade-bottom: 20px;
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 var(--rail-fade-top),
+      #000 calc(100% - var(--rail-fade-bottom)),
+      transparent 100%
+    );
+  }
+  @supports (animation-timeline: scroll()) {
+    .sidebar {
+      --rail-fade-bottom: 0px;
+      animation: railFade linear both;
+      animation-timeline: scroll(self);
+    }
   }
 
   /* Scroll-reveal (desktop only): keep the hero clean by holding the rail back
@@ -115,6 +188,33 @@
     opacity: 1;
     transform: none;
     pointer-events: auto;
+  }
+}
+
+@property --rail-fade-top {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --rail-fade-bottom {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@keyframes railFade {
+  0% {
+    --rail-fade-top: 0px;
+    --rail-fade-bottom: 36px;
+  }
+  8% {
+    --rail-fade-top: 36px;
+  }
+  92% {
+    --rail-fade-bottom: 36px;
+  }
+  100% {
+    --rail-fade-top: 36px;
+    --rail-fade-bottom: 0px;
   }
 }
 
@@ -693,7 +793,14 @@
   .layout {
     max-width: calc(1640px + var(--rail-width) + 88px);
     grid-template-columns: minmax(0, 1fr) minmax(0, var(--rail-width));
-    grid-template-areas: "main filters";
+    grid-template-areas:
+      "lead lead"
+      "main filters";
+  }
+  /* Full width, the products keep their tile size: columns fill from the
+     left at the usual rhythm instead of stretching a handful of tiles apart. */
+  .lead .appGrid {
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   }
 }
 @media (min-width: 1700px) {

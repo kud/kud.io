@@ -226,7 +226,7 @@ export const ProjectList = ({
   // Keep the rail hidden over the hero, then reveal it once the top of the
   // browse area has climbed near the top of the viewport — i.e. the hero has
   // scrolled away and you're into the Apps grid. The sentinel sits at the top of
-  // `.main`, so its `top` starts at the hero's height and shrinks as you scroll;
+  // the browse grid, so its `top` starts at the hero's height and shrinks as you scroll;
   // once it drops below ~15% of the viewport the hero is essentially gone. It
   // recedes again on the way back up. Read on every scroll frame (rAF-throttled)
   // rather than on observer crossings, so it can't get stuck between boundaries.
@@ -336,17 +336,181 @@ export const ProjectList = ({
     sort,
   ].join("|")
 
+  // Products lead the browse area in their own row, so on wide screens they
+  // run the full width and the filter rail starts level with the list below.
+  const leadGroup = visibleGroups.find((group) => group.key === "product")
+  const restGroups = visibleGroups.filter((group) => group !== leadGroup)
+  const renderGroup = (group: (typeof visibleGroups)[number]) => (
+    <section
+      key={group.key}
+      id={
+        group.key === "product"
+          ? "products"
+          : group.key === "app"
+            ? "apps"
+            : group.key === "desktop"
+              ? "desktop"
+              : undefined
+      }
+      className={styles.section}
+      data-cat={group.key}
+    >
+      <h2 className={styles.sectionTitle}>
+        <span className={styles.dot} />
+        {group.name}
+        <span className={styles.count}>{group.items.length}</span>
+      </h2>
+      {group.blurb ? <p className={styles.blurb}>{group.blurb}</p> : null}
+      {isAppCategory(group.key) ? (
+        <div className={styles.appGrid}>
+          {group.items.map((project) => (
+            <TileLink
+              key={project.slug}
+              project={project}
+              className={styles.appTile}
+              style={
+                project.accent
+                  ? ({
+                      "--app-accent": project.accent,
+                    } as CSSProperties)
+                  : undefined
+              }
+            >
+              <span
+                className={styles.appIconWrap}
+                style={{
+                  viewTransitionName: `app-icon-${project.slug}`,
+                }}
+              >
+                {project.icon ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    className={styles.appIconImg}
+                    src={project.icon}
+                    alt=""
+                    loading="lazy"
+                    data-bleed={Boolean(
+                      project.icon && !project.icon.endsWith(".svg"),
+                    )}
+                  />
+                ) : (
+                  <span className={styles.appMonogram} aria-hidden>
+                    {project.name.charAt(0).toUpperCase()}
+                  </span>
+                )}
+              </span>
+              <span className={styles.appName}>
+                {releases[project.slug]?.fresh ? (
+                  <span
+                    className={styles.freshDot}
+                    role="img"
+                    aria-label={`New release, v${releases[project.slug].version}`}
+                  />
+                ) : null}
+                {project.name}
+              </span>
+            </TileLink>
+          ))}
+        </div>
+      ) : (
+        <div className={styles.list}>
+          {group.items.map((project) => (
+            <MorphLink
+              key={project.slug}
+              href={`/projects/${project.slug}`}
+              className={styles.row}
+            >
+              {project.icon ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  className={styles.icon}
+                  src={project.icon}
+                  alt=""
+                  loading="lazy"
+                />
+              ) : (
+                <span className={styles.monogram} aria-hidden>
+                  {project.name.charAt(0).toUpperCase()}
+                </span>
+              )}
+              <span className={styles.rowBody}>
+                <span className={styles.rowHead}>
+                  <span
+                    className={styles.rowName}
+                    style={{
+                      viewTransitionName: `project-${project.slug}`,
+                    }}
+                  >
+                    {project.name}
+                  </span>
+                  <span className={styles.rowMeta}>
+                    {project.stars > 0 ? (
+                      <span
+                        className={styles.stars}
+                        aria-label={`${project.stars} GitHub star${project.stars === 1 ? "" : "s"}`}
+                      >
+                        <span aria-hidden>★</span> {project.stars}
+                      </span>
+                    ) : null}
+                    {project.downloads ? (
+                      <span className={styles.downloads}>
+                        {project.downloads.toLocaleString()} installs
+                      </span>
+                    ) : null}
+                    {project.users ? (
+                      <span className={styles.downloads}>
+                        {project.users.toLocaleString()} user
+                        {project.users === 1 ? "" : "s"}
+                      </span>
+                    ) : null}
+                    {project.language ? (
+                      <span className={styles.lang}>{project.language}</span>
+                    ) : null}
+                  </span>
+                </span>
+                {project.description ? (
+                  <p className={styles.rowDesc}>{project.description}</p>
+                ) : null}
+                <RowRelease release={releases[project.slug]} />
+              </span>
+            </MorphLink>
+          ))}
+          {/* Odd trailing slots read as intentional, not broken:
+              one per empty cell, for two columns and for three
+              (the wide layout). */}
+          {group.items.length % 2 === 1 ? (
+            <div className={styles.filler} aria-hidden />
+          ) : null}
+          {Array.from(
+            { length: (3 - (group.items.length % 3)) % 3 },
+            (_, index) => (
+              <div key={index} className={styles.filler3} aria-hidden />
+            ),
+          )}
+        </div>
+      )}
+    </section>
+  )
+
   return (
     <>
       <div
         className={`${styles.layout} ${scrollReveal ? styles.scrollReveal : ""}`}
       >
-        <div className={styles.main}>
+        <div
+          ref={revealSentinelRef}
+          className={styles.revealSentinel}
+          aria-hidden
+        />
+        {leadGroup ? (
           <div
-            ref={revealSentinelRef}
-            className={styles.revealSentinel}
-            aria-hidden
-          />
+            key={filterKey}
+            className={`${styles.lead} ${hasFilterInteraction ? styles.resultsAnimated : ""}`}
+          >
+            {renderGroup(leadGroup)}
+          </div>
+        ) : null}
+        <div className={styles.main}>
           <div
             key={filterKey}
             className={`${styles.results} ${hasFilterInteraction ? styles.resultsAnimated : ""}`}
@@ -356,169 +520,7 @@ export const ProjectList = ({
                 No projects match “{query.trim()}”{lang ? ` in ${lang}` : ""}.
               </p>
             ) : (
-              visibleGroups.map((group) => (
-                <section
-                  key={group.key}
-                  id={
-                    group.key === "product"
-                      ? "products"
-                      : group.key === "app"
-                        ? "apps"
-                        : group.key === "desktop"
-                          ? "desktop"
-                          : undefined
-                  }
-                  className={styles.section}
-                  data-cat={group.key}
-                >
-                  <h2 className={styles.sectionTitle}>
-                    <span className={styles.dot} />
-                    {group.name}
-                    <span className={styles.count}>{group.items.length}</span>
-                  </h2>
-                  {group.blurb ? (
-                    <p className={styles.blurb}>{group.blurb}</p>
-                  ) : null}
-                  {isAppCategory(group.key) ? (
-                    <div className={styles.appGrid}>
-                      {group.items.map((project) => (
-                        <TileLink
-                          key={project.slug}
-                          project={project}
-                          className={styles.appTile}
-                          style={
-                            project.accent
-                              ? ({
-                                  "--app-accent": project.accent,
-                                } as CSSProperties)
-                              : undefined
-                          }
-                        >
-                          <span
-                            className={styles.appIconWrap}
-                            style={{
-                              viewTransitionName: `app-icon-${project.slug}`,
-                            }}
-                          >
-                            {project.icon ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                className={styles.appIconImg}
-                                src={project.icon}
-                                alt=""
-                                loading="lazy"
-                                data-bleed={Boolean(
-                                  project.icon &&
-                                  !project.icon.endsWith(".svg"),
-                                )}
-                              />
-                            ) : (
-                              <span className={styles.appMonogram} aria-hidden>
-                                {project.name.charAt(0).toUpperCase()}
-                              </span>
-                            )}
-                          </span>
-                          <span className={styles.appName}>
-                            {releases[project.slug]?.fresh ? (
-                              <span
-                                className={styles.freshDot}
-                                role="img"
-                                aria-label={`New release, v${releases[project.slug].version}`}
-                              />
-                            ) : null}
-                            {project.name}
-                          </span>
-                        </TileLink>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className={styles.list}>
-                      {group.items.map((project) => (
-                        <MorphLink
-                          key={project.slug}
-                          href={`/projects/${project.slug}`}
-                          className={styles.row}
-                        >
-                          {project.icon ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              className={styles.icon}
-                              src={project.icon}
-                              alt=""
-                              loading="lazy"
-                            />
-                          ) : (
-                            <span className={styles.monogram} aria-hidden>
-                              {project.name.charAt(0).toUpperCase()}
-                            </span>
-                          )}
-                          <span className={styles.rowBody}>
-                            <span className={styles.rowHead}>
-                              <span
-                                className={styles.rowName}
-                                style={{
-                                  viewTransitionName: `project-${project.slug}`,
-                                }}
-                              >
-                                {project.name}
-                              </span>
-                              <span className={styles.rowMeta}>
-                                {project.stars > 0 ? (
-                                  <span
-                                    className={styles.stars}
-                                    aria-label={`${project.stars} GitHub star${project.stars === 1 ? "" : "s"}`}
-                                  >
-                                    <span aria-hidden>★</span> {project.stars}
-                                  </span>
-                                ) : null}
-                                {project.downloads ? (
-                                  <span className={styles.downloads}>
-                                    {project.downloads.toLocaleString()}{" "}
-                                    installs
-                                  </span>
-                                ) : null}
-                                {project.users ? (
-                                  <span className={styles.downloads}>
-                                    {project.users.toLocaleString()} user
-                                    {project.users === 1 ? "" : "s"}
-                                  </span>
-                                ) : null}
-                                {project.language ? (
-                                  <span className={styles.lang}>
-                                    {project.language}
-                                  </span>
-                                ) : null}
-                              </span>
-                            </span>
-                            {project.description ? (
-                              <p className={styles.rowDesc}>
-                                {project.description}
-                              </p>
-                            ) : null}
-                            <RowRelease release={releases[project.slug]} />
-                          </span>
-                        </MorphLink>
-                      ))}
-                      {/* Odd trailing slots read as intentional, not broken:
-                          one per empty cell, for two columns and for three
-                          (the wide layout). */}
-                      {group.items.length % 2 === 1 ? (
-                        <div className={styles.filler} aria-hidden />
-                      ) : null}
-                      {Array.from(
-                        { length: (3 - (group.items.length % 3)) % 3 },
-                        (_, index) => (
-                          <div
-                            key={index}
-                            className={styles.filler3}
-                            aria-hidden
-                          />
-                        ),
-                      )}
-                    </div>
-                  )}
-                </section>
-              ))
+              restGroups.map(renderGroup)
             )}
           </div>
 

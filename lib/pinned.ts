@@ -12,4 +12,4 @@ export const PINNED: string[] = [
 // on a wide screen, where the top runs full width, it shows more rows to
 // match the pinned cards' height, up to this many
 // (components/projects-top.module.css).
-export const RECENT_COUNT = 16
+export const RECENT_COUNT = 18

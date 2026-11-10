@@ -185,8 +185,12 @@
   transition: background 0.15s;
 }
 
-.tick:hover {
+.tick:is(:hover, :focus-visible) {
   background: var(--surface-2);
+}
+/* On hover the row brightens: the date steps up from muted to full ink. */
+.tick:is(:hover, :focus-visible) .tickDate {
+  color: var(--text);
 }
 
 .tickDate {
@@ -230,15 +234,25 @@
 }
 
 /* Cover hover: the window. The frame rises 2px and the drawing leans in
-   behind it, like stepping closer to a print; the name takes the plum. No
-   shade: nothing is lifted off the page (Erwann, 2026-11-10). Keyboard focus
+   behind it, like stepping closer to a print. No
+   shade: nothing is lifted off the page (Erwann, 2026-11-10). Hover brightens,
+   never dims: the title keeps its full ink and gains a faint plum glow, and
+   the drawing lifts a touch in brightness (Erwann, 2026-11-10). Keyboard focus
    gets exactly what hover gets. Under reduced motion nothing moves and the
    name still answers. The blog's covers zoom the same way but keep their frame still (app/blog/page.module.css). */
 .pinCard .pinName {
-  transition: color 0.18s;
+  transition: text-shadow 0.18s;
 }
 .pinCard:is(:hover, :focus-visible) .pinName {
-  color: var(--primary-light);
+  color: var(--text);
+  text-shadow: 0 0 14px
+    color-mix(in srgb, var(--primary-light) 40%, transparent);
+}
+.pinCard :is(.pinArt, .pinPlate) {
+  transition: filter 0.28s;
+}
+.pinCard:is(:hover, :focus-visible) :is(.pinArt, .pinPlate) {
+  filter: brightness(1.08);
 }
 .pinCard:focus-visible {
   outline-offset: 6px;
@@ -247,7 +261,9 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .pinCard :is(.pinArt, .pinPlate) {
-    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+      filter 0.28s;
   }
   .pinCard .pinArt img {
     transition: transform 0.6s cubic-bezier(0.2, 0, 0, 1);
@@ -326,6 +342,16 @@
     display: block;
   }
 }
+@container (min-width: 1824px) {
+  .timeline > li:nth-child(-n + 17) {
+    display: block;
+  }
+}
+@container (min-width: 1961px) {
+  .timeline > li:nth-child(-n + 18) {
+    display: block;
+  }
+}
 
 .relDate {
   display: none;
@@ -338,13 +364,14 @@
 }
 
 /* At large screens the browse block drops its empty left track and widens,
-   rail on the right. Kept in step with .layout in project-list.module.css. */
+   rail on the right. Kept in step with .layout in project-list.module.css;
+   the band still spans both tracks, rail included, like the products row. */
 @media (min-width: 1500px) {
   .top {
     max-width: calc(1640px + var(--rail-width) + 88px);
     grid-template-columns: minmax(0, 1fr) minmax(0, var(--rail-width));
   }
   .band {
-    grid-column: 1;
+    grid-column: 1 / -1;
   }
 }
