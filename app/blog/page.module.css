@@ -255,9 +255,10 @@ section:first-of-type .year {
   }
 }
 
-/* Cover hover: the window, as on the Pinned covers of /projects
-   (projects-top.module.css). The frame rises 2px, the cover leans in behind
-   it and the title takes its hover underline. The thumb is a pointer-only twin
+/* Cover hover: the cover leans in behind a frame that stays put, and the title
+   takes its hover underline. Unlike the Pinned covers of /projects, the frame
+   doesn't rise: in a list it would break the line with the date and the
+   neighbouring thumbs (Erwann, 2026-11-10). The thumb is a pointer-only twin
    of the title link, so keyboard focus on the title drives the cover too.
    Under reduced motion only the underline answers. */
 .list li:has(.thumb:hover) h2 a {
@@ -265,16 +266,10 @@ section:first-of-type .year {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .thumb {
-    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  }
   .thumb img {
     transition:
       opacity 320ms ease-out,
       transform 0.6s cubic-bezier(0.2, 0, 0, 1);
-  }
-  .list li:has(.thumb:hover, h2 a:focus-visible) .thumb {
-    transform: translateY(-2px);
   }
   .list li:has(.thumb:hover, h2 a:focus-visible) .thumb img {
     transform: scale(1.06);

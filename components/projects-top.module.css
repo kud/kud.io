@@ -207,7 +207,7 @@
    behind it, like stepping closer to a print; the name takes the plum. No
    shade: nothing is lifted off the page (Erwann, 2026-11-10). Keyboard focus
    gets exactly what hover gets. Under reduced motion nothing moves and the
-   name still answers. The blog's covers do the same (app/blog/page.module.css). */
+   name still answers. The blog's covers zoom the same way but keep their frame still (app/blog/page.module.css). */
 .pinCard .pinName {
   transition: color 0.18s;
 }
