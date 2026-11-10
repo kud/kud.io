@@ -467,8 +467,11 @@ export const ProjectList = ({
                               </span>
                               <span className={styles.rowMeta}>
                                 {project.stars > 0 ? (
-                                  <span className={styles.stars}>
-                                    ★ {project.stars}
+                                  <span
+                                    className={styles.stars}
+                                    aria-label={`${project.stars} GitHub star${project.stars === 1 ? "" : "s"}`}
+                                  >
+                                    <span aria-hidden>★</span> {project.stars}
                                   </span>
                                 ) : null}
                                 {project.downloads ? (
