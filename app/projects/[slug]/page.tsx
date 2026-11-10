@@ -1,4 +1,5 @@
 import { type CSSProperties } from "react"
+import { ButtonIcon } from "@/components/button-icon"
 import type { Metadata } from "next"
 import { InkLink as Link } from "@/components/ink-link"
 import { MorphLink } from "@/components/morph-link"
@@ -129,6 +130,7 @@ const AppLanding = ({ project }: { project: Project }) => {
                 target="_blank"
                 rel="noreferrer"
               >
+                <ButtonIcon name="web" />
                 {launchLabel} →
               </a>
             ) : null}
@@ -138,6 +140,7 @@ const AppLanding = ({ project }: { project: Project }) => {
               target="_blank"
               rel="noreferrer"
             >
+              <ButtonIcon name="github" />
               GitHub ↗
             </a>
           </div>
@@ -225,6 +228,7 @@ const AppLanding = ({ project }: { project: Project }) => {
               target="_blank"
               rel="noreferrer"
             >
+              <ButtonIcon name="web" />
               {launchLabel} →
             </a>
           </Reveal>
@@ -310,6 +314,7 @@ const ProductRecord = async ({ project }: { project: Project }) => {
                 target="_blank"
                 rel="noreferrer"
               >
+                <ButtonIcon name="web" />
                 Open {host} ↗
               </a>
             ) : null}
@@ -319,6 +324,7 @@ const ProductRecord = async ({ project }: { project: Project }) => {
               target="_blank"
               rel="noreferrer"
             >
+              <ButtonIcon name="github" />
               Source ↗
             </a>
             {hasDocs ? (
@@ -326,6 +332,7 @@ const ProductRecord = async ({ project }: { project: Project }) => {
                 href={`/projects/${project.slug}/docs`}
                 className={styles.secondary}
               >
+                <ButtonIcon name="docs" />
                 Documentation →
               </Link>
             ) : null}
@@ -485,6 +492,7 @@ const ReadmeLanding = async ({
                   // raycast:// protocol link — opens the extension in the Raycast
                   // app; no target=_blank so it doesn't leave a blank tab behind.
                   <a href={project.installUrl} className={styles.primary}>
+                    <ButtonIcon name="raycast" />
                     Install Extension ↓
                   </a>
                 ) : null}
@@ -494,6 +502,7 @@ const ReadmeLanding = async ({
                   target="_blank"
                   rel="noreferrer"
                 >
+                  <ButtonIcon name="raycast" />
                   Raycast Store ↗
                 </a>
                 <a
@@ -502,6 +511,7 @@ const ReadmeLanding = async ({
                   target="_blank"
                   rel="noreferrer"
                 >
+                  <ButtonIcon name="github" />
                   View source ↗
                 </a>
               </>
@@ -514,6 +524,7 @@ const ReadmeLanding = async ({
                     target="_blank"
                     rel="noreferrer"
                   >
+                    <ButtonIcon name="firefox" />
                     Add to Firefox ↗
                   </a>
                 ) : null}
@@ -525,6 +536,7 @@ const ReadmeLanding = async ({
                   target="_blank"
                   rel="noreferrer"
                 >
+                  <ButtonIcon name="github" />
                   View source ↗
                 </a>
               </>
@@ -535,6 +547,7 @@ const ReadmeLanding = async ({
                     href={`/projects/${project.slug}/docs`}
                     className={styles.primary}
                   >
+                    <ButtonIcon name="docs" />
                     Documentation →
                   </Link>
                 ) : null}
@@ -544,6 +557,7 @@ const ReadmeLanding = async ({
                   target="_blank"
                   rel="noreferrer"
                 >
+                  <ButtonIcon name="github" />
                   {hasDocs ? "GitHub ↗" : "View on GitHub ↗"}
                 </a>
               </>

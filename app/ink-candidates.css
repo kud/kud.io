@@ -150,3 +150,46 @@ html:is([data-code-candidate="2"], [data-code-candidate="3"])
   background: var(--code-bar);
   border-bottom-color: rgb(255 255 255 / 0.05);
 }
+
+/* Infobox candidates, ?box=N.
+     1 · flat head: everything as now, minus the gradient behind the title.
+     2 · flat and quiet: also section labels as a small caption over a
+         hairline instead of filled pills, the inner gloss gone, and a
+         barely-there shadow. */
+html:is([data-box-candidate="1"], [data-box-candidate="2"])
+  [data-ground="dusk"]
+  [class*="__infoHead"] {
+  background: var(--surface);
+}
+html[data-box-candidate="2"] [data-ground="dusk"] [class*="__infobox"] {
+  box-shadow: 0 1px 2px rgb(var(--dk-shade) / 0.06);
+}
+html[data-box-candidate="2"] [data-ground="dusk"] [class*="__infoSection"] {
+  padding-top: 18px;
+}
+html[data-box-candidate="2"] [data-ground="dusk"] [class*="__infoLabel"] {
+  margin: 0 4px 2px;
+  padding: 0 2px 7px;
+  border-radius: 0;
+  border-bottom: 1px solid var(--border);
+  background: none;
+  color: var(--dim);
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 1px;
+  text-align: left;
+}
+
+/* Button candidate, ?btn=1: the service's mark leads each hero button, in
+   the button's own ink (components/button-icon.tsx). */
+.btn-icon {
+  display: none;
+}
+html[data-btn-candidate="1"] .btn-icon {
+  display: block;
+  flex: none;
+}
+html[data-btn-candidate="1"] a:has(> .btn-icon) {
+  gap: 9px;
+  padding-left: 20px;
+}

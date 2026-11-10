@@ -1,11 +1,18 @@
-// Preview only (app/ink-candidates.css): ?ink=1..5 picks a day-ink candidate
-// for this tab and keeps it across navigation; ?ink=0 clears it. Runs before
-// any themed wrapper is parsed, so their own scripts can read it.
+// Preview only (app/ink-candidates.css): each query param picks a numbered
+// candidate for this tab and keeps it across navigation; 0 clears it.
+//   ?ink=1..5   day ink and ground
+//   ?code=1..3  code blocks
+//   ?box=1..2   README infobox
+//   ?btn=1      leading icons on the hero buttons
+// Stamped on <html> as data-<name>-candidate, before any themed wrapper is
+// parsed, so their own scripts can read it.
 export const INK_CANDIDATE_KEY = "kud.inkCandidate"
 
-const SCRIPT = `try{var k=${JSON.stringify(
+const PARAMS = { ink: 5, code: 3, box: 2, btn: 1 }
+
+const SCRIPT = `try{var p=${JSON.stringify(PARAMS)},k=${JSON.stringify(
   INK_CANDIDATE_KEY,
-)},q=new URLSearchParams(location.search).get("ink");if(q!==null){if(/^[1-5]$/.test(q))sessionStorage.setItem(k,q);else sessionStorage.removeItem(k)}var v=sessionStorage.getItem(k);if(v)document.documentElement.dataset.inkCandidate=v;var c=new URLSearchParams(location.search).get("code");if(c!==null){if(/^[1-3]$/.test(c))sessionStorage.setItem(k+".code",c);else sessionStorage.removeItem(k+".code")}var w=sessionStorage.getItem(k+".code");if(w)document.documentElement.dataset.codeCandidate=w}catch(e){}`
+)},q=new URLSearchParams(location.search),d=document.documentElement.dataset;Object.keys(p).forEach(function(n){var s=k+"."+n,v=q.get(n);if(v!==null){if(/^[1-9]$/.test(v)&&+v<=p[n])sessionStorage.setItem(s,v);else sessionStorage.removeItem(s)}v=sessionStorage.getItem(s);if(v)d[n+"Candidate"]=v})}catch(e){}`
 
 // Candidate 4 is "dark everywhere": the themed scopes read this and paint
 // their night palette whatever the stored choice.
