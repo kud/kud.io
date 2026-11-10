@@ -1,16 +1,7 @@
-/* Preview only: the move between docs pages, ?docs=N (components/docs-motion.tsx
-   marks the direction, components/candidate-banner.tsx switches). Delete with
-   its import once chosen.
-     1 · today: a cut.
-     2 · rise: the article fades in, rising 6px.
-     3 · slide: the article slides 16px in from the side you travelled
-         towards (the sidebar's order), fading in. */
-@keyframes docs-rise {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-}
+/* The move between docs pages: the article slides 16px in from the side the
+   reader travelled towards (the sidebar's order), fading in.
+   components/docs-motion.tsx marks the direction; the first load is never
+   marked, so only a move animates. */
 @keyframes docs-slide {
   from {
     opacity: 0;
@@ -25,18 +16,13 @@
 html[data-docs-dir="back"] {
   --docs-dx: -16px;
 }
-html[data-docs-candidate="2"][data-docs-dir] [data-ground="dusk"] #nd-page {
-  animation: docs-rise 280ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-}
-html[data-docs-candidate="3"][data-docs-dir] [data-ground="dusk"] #nd-page {
+html[data-docs-dir] [data-ground="dusk"] #nd-page {
   animation: docs-slide 300ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 /* Reduced motion keeps only a short fade: the change still registers, nothing
    travels. */
 @media (prefers-reduced-motion: reduce) {
-  html:is([data-docs-candidate="2"], [data-docs-candidate="3"])[data-docs-dir]
-    [data-ground="dusk"]
-    #nd-page {
+  html[data-docs-dir] [data-ground="dusk"] #nd-page {
     animation: docs-fade 160ms ease both;
   }
 }

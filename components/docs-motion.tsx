@@ -1,13 +1,12 @@
 "use client"
 
-import { useLayoutEffect, useRef } from "react"
+import { useEffect, useLayoutEffect, useRef } from "react"
 import { usePathname } from "next/navigation"
 
-// Preview only (?docs=N, app/docs-motion.css): moving between docs pages
-// stays inside one world, so it gets a quiet motion rather than ink. This
-// marks each in-docs move with its direction, by the pages' order in the
-// sidebar, so a candidate can travel the way the reader went. The first load
-// is never marked: only a move animates.
+// Moving between docs pages stays inside one world, so it gets a quiet slide
+// rather than ink (app/docs-motion.css). This marks each in-docs move with its
+// direction, by the pages' order in the sidebar, so the article travels the
+// way the reader went. The first load is never marked: only a move animates.
 export const DocsMotion = () => {
   const pathname = usePathname()
   const previous = useRef<string | null>(null)
@@ -24,6 +23,14 @@ export const DocsMotion = () => {
     document.documentElement.dataset.docsDir =
       a !== -1 && b !== -1 && b < a ? "back" : "fwd"
   }, [pathname])
+
+  // Leaving the docs clears the mark, so coming back is a first load again.
+  useEffect(
+    () => () => {
+      delete document.documentElement.dataset.docsDir
+    },
+    [],
+  )
 
   return null
 }
