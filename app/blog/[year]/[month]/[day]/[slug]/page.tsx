@@ -20,6 +20,7 @@ import { BlogImage } from "@/components/blog-image"
 import { CoverImage } from "@/components/blog-cover"
 import { imageDimensions } from "@/lib/image-dimensions"
 import { BlogMermaid } from "@/components/blog-mermaid"
+import { BlogHierarchyPreview } from "@/components/blog-hierarchy-preview"
 import styles from "./page.module.css"
 
 const FEED_TITLE = "Writing — kud.io"
@@ -230,6 +231,7 @@ const BlogPostPage = async ({ params }: Params) => {
         </div>
         <div className={styles.body}>{body}</div>
       </article>
+      <BlogHierarchyPreview />
 
       {neighbours.length > 0 && (
         <nav className={styles.more} aria-label="More posts">

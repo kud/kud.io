@@ -1138,3 +1138,121 @@
 :global(#blog-root[data-theme="dark"]) .progress {
   background: var(--c-gold);
 }
+
+/* Hierarchy candidates (preview only) ---------------------------------------- */
+/* Keyed on data-h / data-s, stamped on #blog-root by BlogHierarchyPreview only
+ * when a preview choice is present; without them the rules above stand. h=0
+ * and s=0 are today's values. Pixel margins rather than em, so a larger
+ * heading does not drag the spacing row along with it. */
+
+/* h=1 — a real step up in size and weight; the hairline stays. */
+:global(#blog-root[data-h="1"]) .body h2 {
+  font-size: 26px;
+  font-weight: 650;
+  letter-spacing: -0.016em;
+  line-height: 1.2;
+}
+
+/* h=2 — the same step, a touch heavier, and no rule: air does the dividing. */
+:global(#blog-root[data-h="2"]) .body h2 {
+  padding-top: 0;
+  border-top: 0;
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -0.018em;
+  line-height: 1.2;
+}
+
+/* h=3 — h=2's heading under a quiet mono numeral, the blog's metadata voice. */
+:global(#blog-root[data-h="3"]) .body {
+  counter-reset: section;
+}
+
+:global(#blog-root[data-h="3"]) .body h2 {
+  padding-top: 0;
+  border-top: 0;
+  font-size: 26px;
+  font-weight: 650;
+  letter-spacing: -0.016em;
+  line-height: 1.2;
+  counter-increment: section;
+}
+
+:global(#blog-root[data-h="3"]) .body h2::before {
+  content: counter(section, decimal-leading-zero);
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--fg-3);
+}
+
+:global(#blog-root:is([data-h="1"], [data-h="2"], [data-h="3"])) .body h3 {
+  font-size: 20px;
+  letter-spacing: -0.01em;
+}
+
+/* s=1 — about 96px from the last line of a section to the next heading
+ * (rule included), 18px under it. */
+:global(#blog-root[data-s="1"]) .body h2 {
+  margin-top: 96px;
+  margin-bottom: 18px;
+}
+
+:global(#blog-root[data-s="1"]:is([data-h="0"], [data-h="1"])) .body h2 {
+  margin-top: 68px;
+  padding-top: 28px;
+}
+
+/* s=2 — about 128px, 20px under, and paragraphs a little further apart. */
+:global(#blog-root[data-s="2"]) .body h2 {
+  margin-top: 128px;
+  margin-bottom: 20px;
+}
+
+:global(#blog-root[data-s="2"]:is([data-h="0"], [data-h="1"])) .body h2 {
+  margin-top: 92px;
+  padding-top: 36px;
+}
+
+:global(#blog-root[data-s="2"]) .body p {
+  margin-bottom: 1.2em;
+}
+
+/* Phones get two-thirds of the air: 128px between short screens is a gap. */
+@media (max-width: 580px) {
+  :global(#blog-root[data-s="1"]) .body h2 {
+    margin-top: 72px;
+  }
+
+  :global(#blog-root[data-s="1"]:is([data-h="0"], [data-h="1"])) .body h2 {
+    margin-top: 50px;
+    padding-top: 22px;
+  }
+
+  :global(#blog-root[data-s="2"]) .body h2 {
+    margin-top: 88px;
+  }
+
+  :global(#blog-root[data-s="2"]:is([data-h="0"], [data-h="1"])) .body h2 {
+    margin-top: 62px;
+    padding-top: 26px;
+  }
+
+  :global(#blog-root:is([data-h="1"], [data-h="2"], [data-h="3"])) .body h2 {
+    font-size: 23px;
+  }
+}
+
+:global(#blog-root[data-s]) .body > h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* Clears the fixed reading-progress bar when a contents link jumps here. */
+.body h2 {
+  scroll-margin-top: 32px;
+}
