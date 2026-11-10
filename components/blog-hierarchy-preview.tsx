@@ -21,7 +21,7 @@ const ROWS = [
   {
     param: "n",
     label: "Numeral",
-    values: ["above", "gutter", "inline", "rule"],
+    values: ["above", "gutter", "inline", "rule", "gutter-rule"],
   },
 ] as const
 

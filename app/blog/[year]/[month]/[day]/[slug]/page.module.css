@@ -1461,3 +1461,46 @@
     font-size: 12px;
   }
 }
+
+/* gutter-rule: gutter's hung numeral, sitting on a hairline that runs across
+ * the column above the heading. The heading keeps the text edge, the line
+ * marks the section, and the numeral is centred on that line in the margin.
+ * The rule's padding is taken out of the margin, so the section rhythm holds.
+ * Phones fall back to "rule": no margin to hang it in. */
+:global(#blog-root[data-h="3"][data-n="gutter-rule"]) .body h2 {
+  position: relative;
+  margin-top: 74px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+:global(#blog-root[data-h="3"][data-n="gutter-rule"]) .body h2::before {
+  position: absolute;
+  top: 0;
+  right: calc(100% + 14px);
+  margin: 0;
+  font-size: 12px;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+:global(#blog-root[data-h="3"][data-n="gutter-rule"]) .body > h2:first-child {
+  margin-top: 0;
+}
+
+@media (max-width: 920px) {
+  :global(#blog-root[data-h="3"][data-n="gutter-rule"]) .body h2 {
+    margin-top: 72px;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  :global(#blog-root[data-h="3"][data-n="gutter-rule"]) .body h2::before {
+    position: static;
+    margin-bottom: 12px;
+    line-height: inherit;
+    transform: none;
+    background: linear-gradient(var(--line), var(--line)) no-repeat right
+      center / calc(100% - 2ch - 14px) 1px;
+  }
+}
