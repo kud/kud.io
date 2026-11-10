@@ -54,13 +54,18 @@ const Name = () => (
 
 const Tagline = () => (
   <p className={styles.tagline}>
-    Less friction, more clarity, for the people who use software, and the people
+    Less to hold in your head, for the people who use software and the people
     who build it.
   </p>
 )
 
 const Bio = () => (
   <>
+    <p className={styles.bio}>
+      What I love most is taking load off people&apos;s minds: mine, the
+      engineers I work with, my team&apos;s, and the people who use what we
+      build. Fewer things to remember, fewer steps, fewer surprises.
+    </p>
     <p className={styles.bio}>
       I think beyond <span data-mascot="tickets">{"tickets "}</span>and lines of
       code: in systems, workflows, and the people they serve. Software
