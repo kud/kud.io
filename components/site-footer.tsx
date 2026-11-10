@@ -1,4 +1,4 @@
-import Link from "next/link"
+import { InkLink as Link } from "@/components/ink-link"
 import {
   BlueskyIcon,
   GitHubIcon,
@@ -12,10 +12,13 @@ import styles from "./site-footer.module.css"
 // © on a line of its own (Erwann, 2026-11-10).
 const YEAR = new Date().getFullYear()
 
+// Internal pages go through InkLink, which inks only on a change of world
+// (components/ink.ts). The feed is a plain <a>: it is a route handler, not a
+// page, so there is nothing for a client route to prefetch or ink into.
 const SITE = [
   { href: "/blog", label: "Writing", external: false },
   { href: "/projects", label: "Projects", external: false },
-  { href: "/blog/feed.xml", label: "RSS", external: false },
+  { href: "/blog/feed.xml", label: "RSS", external: false, plain: true },
   { href: "https://referrals.kud.io", label: "Referrals", external: true },
 ]
 
@@ -30,10 +33,14 @@ export const SiteFooter = ({ className }: { className?: string }) => (
     className={className ? `${styles.footer} ${className}` : styles.footer}
   >
     <nav className={styles.links} aria-label="Site">
-      {SITE.map(({ href, label, external }) =>
+      {SITE.map(({ href, label, external, plain }) =>
         external ? (
           <a key={href} href={href}>
             {label} <span aria-hidden>↗</span>
+          </a>
+        ) : plain ? (
+          <a key={href} href={href}>
+            {label}
           </a>
         ) : (
           <Link key={href} href={href}>
