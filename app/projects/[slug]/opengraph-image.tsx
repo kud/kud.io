@@ -18,9 +18,10 @@ export const size = { width: 1200, height: 630 }
 export const contentType = "image/png"
 
 // Satori renders raster images but not remote SVGs reliably, so the icon is only
-// drawn when it's a PNG/JPEG — SVG-only projects fall back to the text card.
+// drawn when it's an absolute PNG/JPEG URL — SVG-only projects, and local
+// public/icons paths Satori cannot resolve, fall back to the text card.
 const isRaster = (url: string | null | undefined): url is string =>
-  Boolean(url && /\.(png|jpe?g)$/i.test(url))
+  Boolean(url && /^https?:\/\//.test(url) && /\.(png|jpe?g)$/i.test(url))
 
 const Image = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params

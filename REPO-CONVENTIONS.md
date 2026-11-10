@@ -57,6 +57,11 @@ extensions/themes may use their packaging icon at **`images/icon.png`**. No icon
 - **Transparent background**, **the mark only** (no product-name text baked in).
 - Designed to read on a **dark** surface.
 
+A card with no repo of its own to carry the file (a synthesised monorepo surface
+such as `foxhop-cli`) keeps its icon on the website side instead:
+**`public/icons/<slug>.svg`** and/or **`.png`**, same rules, SVG preferred. A
+local icon wins over a synced one, so only add one where no repo can hold it.
+
 ## 4. The landing is a pitch distilled from your README
 
 `/projects/<slug>` pitches your README. kud.io supplies its own hero (title from
