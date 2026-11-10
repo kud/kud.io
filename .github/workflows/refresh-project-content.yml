@@ -56,8 +56,12 @@ jobs:
           git commit -m "📝 docs(content): refresh project content"
           # Humans and agents push to this branch too, so a bare push races the
           # hourly run and rejects. Rebase onto whatever landed since checkout.
-          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
-          git push
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push && break
+            [ "$attempt" = 5 ] && exit 1
+            sleep $((attempt * 5))
+          done
           # A GITHUB_TOKEN push triggers no workflow, so start the deploy here.
           gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"
         env:
