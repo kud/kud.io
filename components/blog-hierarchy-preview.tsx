@@ -16,12 +16,14 @@ const ROWS = [
   { param: "h", label: "Headings", values: ["0", "1", "2", "3"] },
   { param: "s", label: "Spacing", values: ["0", "1", "2"] },
   { param: "toc", label: "Contents", values: ["off", "right", "left"] },
+  { param: "more", label: "More", values: ["0", "thumbs", "cards"] },
+  { param: "picks", label: "Picks", values: ["0", "mixed"] },
 ] as const
 
 type Param = (typeof ROWS)[number]["param"]
 type Choice = Record<Param, string>
 
-const DEFAULTS: Choice = { h: "0", s: "0", toc: "off" }
+const DEFAULTS: Choice = { h: "0", s: "0", toc: "off", more: "0", picks: "0" }
 
 const readChoice = (): Choice | null => {
   const query = new URLSearchParams(window.location.search)
@@ -156,9 +158,7 @@ export const BlogHierarchyPreview = () => {
     const choice: Choice = JSON.parse(raw)
     const root = document.getElementById(BLOG_ROOT_ID)
     if (!root) return
-    root.dataset.h = choice.h
-    root.dataset.s = choice.s
-    root.dataset.toc = choice.toc
+    for (const { param } of ROWS) root.dataset[param] = choice[param]
     try {
       window.localStorage.setItem(KEY, JSON.stringify(choice))
     } catch {}
@@ -171,7 +171,7 @@ export const BlogHierarchyPreview = () => {
 
   const leave = () => {
     const root = document.getElementById(BLOG_ROOT_ID)
-    if (root) for (const key of ["h", "s", "toc"]) delete root.dataset[key]
+    if (root) for (const { param } of ROWS) delete root.dataset[param]
     try {
       window.localStorage.removeItem(KEY)
     } catch {}
