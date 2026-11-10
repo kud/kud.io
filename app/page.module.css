@@ -292,17 +292,6 @@
   transform: translateY(-2px);
 }
 
-/* Nudge the arrow up 1px to optically centre it with the text, and forward on
-   hover — a small, obvious "go" cue. */
-.primary span {
-  transition: transform 0.18s ease;
-  transform: translateY(-1px);
-}
-
-.primary:hover span {
-  transform: translateX(3px) translateY(-1px);
-}
-
 .secondary {
   display: inline-flex;
   align-items: center;
