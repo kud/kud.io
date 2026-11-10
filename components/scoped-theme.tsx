@@ -1,5 +1,6 @@
 "use client"
 
+import { usePathname } from "next/navigation"
 import {
   useCallback,
   useLayoutEffect,
@@ -24,8 +25,12 @@ import { themeMerge } from "@/components/theme-merge"
 // exclusively; a second instance would contend with the first over <html> and
 // over style.colorScheme. (ADR: scoped themes under a forced-dark root.)
 //
-// One stored choice covers every scope: picking Light on the blog means Light
-// on /projects too.
+// By default one stored choice covers every scope: picking Light on the blog
+// means Light on /projects too. A visitor can opt into a theme per section
+// (Erwann, 2026-11-10: "my blog in light but projects in dark"): Writing and
+// Projects then each keep their own key, which wins over the shared one. The
+// opt-in is the presence of a section key, so there is no third flag to drift
+// out of step with the values it describes.
 export const THEME_KEY = "kud.theme"
 // The blog's key before the choice was shared. Read once, moved, removed.
 const LEGACY_THEME_KEY = "kud.blog.theme"
@@ -43,18 +48,63 @@ export const SCOPED_THEMES = ["system", "light", "dark", "ink"] as const
 
 export type ScopedTheme = (typeof SCOPED_THEMES)[number]
 
+// The sections a visitor may theme apart. Home and anything unclaimed always
+// follow the shared choice.
+export const THEME_SECTIONS = ["writing", "projects"] as const
+
+export type ThemeSection = (typeof THEME_SECTIONS)[number]
+
+export const SECTION_LABEL: Record<ThemeSection, string> = {
+  writing: "Writing",
+  projects: "Projects",
+}
+
+const sectionKey = (section: ThemeSection) => `${THEME_KEY}.${section}`
+
+// The section a path belongs to. The pre-paint script repeats this test as a
+// string; change one, change both.
+export const sectionOf = (pathname: string): ThemeSection | null => {
+  if (pathname === "/blog" || pathname.startsWith("/blog/")) return "writing"
+  if (pathname === "/projects" || pathname.startsWith("/projects/"))
+    return "projects"
+  return null
+}
+
 const isTheme = (value: unknown): value is ScopedTheme =>
   (SCOPED_THEMES as readonly unknown[]).includes(value)
 
-// Returns the stored choice, moving a legacy blog value to the shared key the
-// first time it is seen. Throws when storage is blocked; callers catch.
-const readStorage = (): string | null => {
-  const stored = localStorage.getItem(THEME_KEY)
+// Holds every choice for this page load when storage is blocked, so the
+// controls still reflect what was picked even though it cannot persist.
+const unpersisted = new Map<string, string>()
+
+const read = (key: string): string | null => {
+  try {
+    return localStorage.getItem(key)
+  } catch {
+    return unpersisted.get(key) ?? null
+  }
+}
+
+const write = (key: string, value: string | null) => {
+  if (value === null) unpersisted.delete(key)
+  else unpersisted.set(key, value)
+  try {
+    if (value === null) localStorage.removeItem(key)
+    else localStorage.setItem(key, value)
+  } catch {
+    // Preference simply won't persist; the session still themes correctly.
+  }
+}
+
+// The shared choice, moving a legacy blog value to the shared key the first
+// time it is seen.
+const readShared = (): string | null => {
+  const stored = read(THEME_KEY)
   if (stored !== null) return stored
-  const legacy = localStorage.getItem(LEGACY_THEME_KEY)
+  const legacy = read(LEGACY_THEME_KEY)
   if (legacy === null) return null
-  localStorage.setItem(THEME_KEY, legacy)
-  localStorage.removeItem(LEGACY_THEME_KEY)
+  write(THEME_KEY, legacy)
+  write(LEGACY_THEME_KEY, null)
   return legacy
 }
 
@@ -63,18 +113,18 @@ const readStorage = (): string | null => {
 // first-time visitor needs no JavaScript at all — the server-rendered default is
 // already correct — and the OS flipping mid-session needs no matchMedia
 // listener. This script only has to replay an explicit stored choice onto the
-// wrapper it sits in, before first paint. It reads the legacy key without
-// moving it; the first client read moves it.
-const THEME_SCRIPT = `try{var t=localStorage.getItem(${JSON.stringify(
+// wrapper it sits in, before first paint: the section's own when there is one,
+// else the shared one. It reads the legacy key without moving it; the first
+// client read moves it.
+const THEME_SCRIPT = `try{var p=location.pathname,s=p==="/blog"||p.indexOf("/blog/")===0?"writing":p==="/projects"||p.indexOf("/projects/")===0?"projects":null,v=function(x){return x==="system"||x==="light"||x==="dark"||x==="ink"},t=s?localStorage.getItem(${JSON.stringify(
+  THEME_KEY,
+)}+"."+s):null;if(!v(t))t=localStorage.getItem(${JSON.stringify(
   THEME_KEY,
 )});if(t===null)t=localStorage.getItem(${JSON.stringify(
   LEGACY_THEME_KEY,
 )});if(t==="light"||t==="dark"||t==="ink")document.currentScript.parentElement.dataset.theme=t}catch(e){}`
 
 const themeListeners = new Set<() => void>()
-// Holds the choice for this page load when storage is blocked, so the control
-// still reflects what was picked even though it cannot persist.
-let unpersistedTheme: ScopedTheme = "system"
 
 const subscribeToTheme = (listener: () => void) => {
   themeListeners.add(listener)
@@ -85,18 +135,30 @@ const subscribeToTheme = (listener: () => void) => {
   }
 }
 
-export const readStoredTheme = (): ScopedTheme => {
-  try {
-    const stored = readStorage()
-    return isTheme(stored) ? stored : "system"
-  } catch {
-    // Private browsing or blocked storage — "system" is a fine answer.
-    return unpersistedTheme
+const notify = () => themeListeners.forEach((listener) => listener())
+
+// True once the visitor has opted into a theme per section.
+export const readSplit = (): boolean =>
+  THEME_SECTIONS.some((section) => read(sectionKey(section)) !== null)
+
+// The theme a section actually shows: its own when it has one, else the
+// shared choice. No section (home) means the shared choice.
+export const readStoredTheme = (
+  section: ThemeSection | null = null,
+): ScopedTheme => {
+  if (section) {
+    const own = read(sectionKey(section))
+    if (isTheme(own)) return own
   }
+  const shared = readShared()
+  return isTheme(shared) ? shared : "system"
 }
 
 const serverTheme = (): ScopedTheme => "system"
+const serverSplit = () => false
 
+// Every scope on the page belongs to the page's section, so one value covers
+// them all.
 const stampScopes = (theme: ScopedTheme) => {
   document
     .querySelectorAll<HTMLElement>(`[${THEME_SCOPE_ATTR}]`)
@@ -105,40 +167,61 @@ const stampScopes = (theme: ScopedTheme) => {
     })
 }
 
+// Picks a theme and stamps it, crossfading when the ground changes. The old
+// light merges into the new one (components/theme-merge.ts). Ink is for
+// changing world, never for a theme. A choice that resolves to the ground
+// already showing (Dark to Auto on a dark OS) has nothing to blend and swaps
+// plainly.
+const applyTheme = (before: ScopedTheme, after: ScopedTheme) => {
+  if (scopeGroundFor(before) === scopeGroundFor(after)) stampScopes(after)
+  else themeMerge(() => stampScopes(after))
+}
+
+// A picker shows and sets the theme of the section it sits in. While the
+// choice is shared that is the shared one, so a pick lands everywhere; once
+// split, it is the section's own, and home keeps the shared one.
 export const useScopedTheme = () => {
+  const section = sectionOf(usePathname() ?? "")
+  const readSection = useCallback(() => readStoredTheme(section), [section])
+
   // The pre-paint script has already applied the stored value to the DOM; the
   // server snapshot keeps hydration on "system" and React then re-reads storage
   // on the client, which is why each wrapper carries suppressHydrationWarning.
-  const theme = useSyncExternalStore(
-    subscribeToTheme,
-    readStoredTheme,
-    serverTheme,
-  )
+  const theme = useSyncExternalStore(subscribeToTheme, readSection, serverTheme)
+  const split = useSyncExternalStore(subscribeToTheme, readSplit, serverSplit)
 
-  // The old light merges into the new one (components/theme-merge.ts). Ink is
-  // for changing world, never for a theme. A choice that resolves to the
-  // ground already showing (Dark to Auto on a dark OS) has nothing to blend
-  // and swaps plainly. The pressed control is still accepted from callers but
-  // a crossfade has no origin.
+  // The pressed control is still accepted from callers but a crossfade has no
+  // origin.
   const setTheme = useCallback(
     (next: ScopedTheme, _origin?: Element | null) => {
-      const before = readStoredTheme()
-      unpersistedTheme = next
-      const from = scopeGroundFor(before)
-      const to = scopeGroundFor(next)
-      if (from === to) stampScopes(next)
-      else themeMerge(() => stampScopes(next))
-      try {
-        localStorage.setItem(THEME_KEY, next)
-      } catch {
-        // Preference simply won't persist; the session still themes correctly.
-      }
-      themeListeners.forEach((listener) => listener())
+      const before = readStoredTheme(section)
+      write(section && readSplit() ? sectionKey(section) : THEME_KEY, next)
+      applyTheme(before, readStoredTheme(section))
+      notify()
     },
-    [],
+    [section],
   )
 
-  return { theme, setTheme }
+  // Going separate copies the current choice into each section, so nothing
+  // moves until a section is picked on its own. Going back to the same theme
+  // everywhere keeps the one on screen and drops the rest.
+  const setSplit = useCallback(
+    (next: boolean) => {
+      if (next === readSplit()) return
+      const current = readStoredTheme(section)
+      if (next) {
+        THEME_SECTIONS.forEach((each) => write(sectionKey(each), current))
+      } else {
+        write(THEME_KEY, current)
+        THEME_SECTIONS.forEach((each) => write(sectionKey(each), null))
+      }
+      stampScopes(current)
+      notify()
+    },
+    [section],
+  )
+
+  return { theme, setTheme, split, setSplit, section }
 }
 
 // The first child of every themed wrapper. The wrapper itself carries
@@ -149,16 +232,17 @@ export const useScopedTheme = () => {
 // client-side navigation (home → /projects, home → /blog) React inserts the
 // <script> as inert DOM and it never runs, so the wrapper would paint
 // "system" over a stored choice; the layout effect re-applies it after commit
-// and before paint. On a full load the effect is a no-op restamp.
+// and before paint. On a full load the effect is a no-op restamp. The section
+// comes from the router, not location, which may not have moved yet.
 export const ThemeScopeScript = () => {
   const ref = useRef<HTMLScriptElement>(null)
+  const section = sectionOf(usePathname() ?? "")
 
   useLayoutEffect(() => {
     const scope = ref.current?.parentElement
     if (!scope) return
-    const stored = readStoredTheme()
-    if (stored !== "system") scope.dataset.theme = stored
-  }, [])
+    scope.dataset.theme = readStoredTheme(section)
+  }, [section])
 
   return (
     <script

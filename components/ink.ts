@@ -1,7 +1,11 @@
 "use client"
 
 import type { MouseEvent } from "react"
-import { readStoredTheme, type ScopedTheme } from "@/components/scoped-theme"
+import {
+  readStoredTheme,
+  sectionOf,
+  type ScopedTheme,
+} from "@/components/scoped-theme"
 
 // Every ground a page can paint, mirrored from the CSS that paints it. The ink
 // is always the DESTINATION's ground, so the cover and the page it lifts off
@@ -40,15 +44,19 @@ const scopeGround = (pathname: string, scheme: Scheme): string | null => {
 
 // The ground a route will paint on arrival, or null when it isn't known (the
 // 404, anything new), which means "navigate plainly", never "guess a colour".
+// It reads the destination's own theme: with a theme per section, Writing can
+// be light while Projects is dark.
 export const groundFor = (pathname: string): string | null => {
+  let theme: ScopedTheme
   try {
-    if (readStoredTheme() === "ink") return inkGround()
+    theme = readStoredTheme(sectionOf(pathname))
   } catch {
     return null
   }
+  if (theme === "ink") return inkGround()
   if (pathname === "/") return HOME_GROUND
   try {
-    return scopeGround(pathname, resolveScheme(readStoredTheme()))
+    return scopeGround(pathname, resolveScheme(theme))
   } catch {
     return null
   }
@@ -112,8 +120,11 @@ export const inkNavigate = (
   if (worldOf(url.pathname) === worldOf(window.location.pathname)) return false
 
   // E-paper never spills: the link navigates as it would anyway, under a
-  // refresh flash.
-  if (readStoredTheme() === "ink") {
+  // refresh flash. Either end being paper is enough.
+  if (
+    readStoredTheme(sectionOf(window.location.pathname)) === "ink" ||
+    readStoredTheme(sectionOf(url.pathname)) === "ink"
+  ) {
     inkRefresh()
     return false
   }

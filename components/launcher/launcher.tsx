@@ -16,6 +16,7 @@ import {
   ArrowUpRight,
   BookOpen,
   Check,
+  Columns2,
   Copy,
   FileText,
   Hash,
@@ -34,7 +35,11 @@ import {
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { GitHubIcon } from "@/components/social-icons"
-import { SCOPED_THEMES, useScopedTheme } from "@/components/scoped-theme"
+import {
+  SCOPED_THEMES,
+  SECTION_LABEL as THEME_SECTION_LABEL,
+  useScopedTheme,
+} from "@/components/scoped-theme"
 import type { ScopedTheme } from "@/components/scoped-theme"
 import type { LauncherIndex, LauncherProject } from "@/lib/launcher-index"
 import { fuzzyScore } from "./fuzzy"
@@ -196,7 +201,7 @@ const LIMIT: Record<SectionKey, number> = {
   writing: 6,
   docs: 8,
   actions: 6,
-  settings: 1,
+  settings: 2,
 }
 
 // Where the visitor is decides what comes first: on a post, writing; on a
@@ -364,7 +369,7 @@ type PanelProps = { onClose: () => void }
 const LauncherPanel = ({ onClose }: PanelProps) => {
   const pathname = usePathname()
   const router = useRouter()
-  const { theme, setTheme } = useScopedTheme()
+  const { theme, setTheme, split, setSplit, section } = useScopedTheme()
   const dialogRef = useRef<HTMLDialogElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
@@ -545,16 +550,72 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     }
     const CurrentIcon =
       THEMES.find(({ value }) => value === theme)?.Icon ?? Monitor
+    // Once themes are set per section, the row names the one it changes.
+    const themeName =
+      split && section ? `${THEME_SECTION_LABEL[section]} theme` : "Theme"
+    // The opt-in for a theme per section: a second row, the same quiet
+    // segments, Same by default. Enter flips it.
+    const pickSplit = (value: boolean) => {
+      setSplit(value)
+      setAnnounce(
+        value
+          ? "Writing and projects: separate themes"
+          : "Writing and projects: same theme",
+      )
+    }
+    const splitRow: Item = {
+      id: "setting:theme-split",
+      label: `Writing and projects: ${split ? "Separate" : "Same"}. Enter to change.`,
+      section: "settings",
+      text: "Theme per section",
+      title: (
+        <span className={styles.setting}>
+          Writing &amp; projects
+          <span className={styles.segments}>
+            {[
+              { value: false, label: "Same" },
+              { value: true, label: "Separate" },
+            ].map(({ value, label }) => (
+              <span
+                key={label}
+                className={styles.segment}
+                data-active={value === split || undefined}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  pickSplit(value)
+                }}
+              >
+                {label}
+              </span>
+            ))}
+          </span>
+        </span>
+      ),
+      extras: [
+        "writing",
+        "projects",
+        "blog",
+        "section",
+        "separate",
+        "same",
+        "split",
+        "appearance",
+        "colour",
+        "color",
+      ],
+      visual: { kind: "glyph", Icon: Columns2 },
+      run: () => pickSplit(!split),
+    }
     const settings: Item[] = themed
       ? [
           {
             id: "setting:theme",
-            label: `Theme: ${THEME_OPTION[theme].label}. Enter to change.`,
+            label: `${themeName}: ${THEME_OPTION[theme].label}. Enter to change.`,
             section: "settings",
-            text: "Theme",
+            text: themeName,
             title: (
               <span className={styles.setting}>
-                Theme
+                {themeName}
                 <span className={styles.segments}>
                   {THEMES.map(({ value, label, Icon }) => (
                     <span
@@ -586,6 +647,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
             visual: { kind: "glyph", Icon: CurrentIcon },
             run: () => pickTheme(nextTheme()),
           },
+          splitRow,
         ]
       : []
 
@@ -670,6 +732,8 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     copiedId,
     themed,
     theme,
+    split,
+    section,
     projectSlug,
     onPost,
   ])
