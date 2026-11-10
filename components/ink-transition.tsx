@@ -25,12 +25,12 @@ const ARRIVE_DURATION = 760
 // An ink-morph holds the cover while the view transition glides the icon.
 const MORPH_DURATION = 550
 
-// The ink overlay, rendered once in the root layout. Three jobs:
+// The ink overlay, rendered once in the root layout. Two jobs (a theme switch
+// merges instead, components/theme-merge.ts):
 // - page moves: listens for `ink:reveal` (components/ink.ts → inkNavigate),
 //   spills cover ink in the destination's ground out of the pressed control,
 //   navigates under the full cover, holds it until the pathname confirms the
 //   destination committed, then lifts it;
-// - the theme switch: components/ink.ts → inkSwap drives the same element by id;
 // - the first-load reveal on home: ArriveScript paints a plain cover before
 //   first paint, and this lifts it as ink once hydrated.
 export const InkTransition = () => {

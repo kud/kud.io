@@ -1,7 +1,6 @@
 "use client"
 
 import type { MouseEvent } from "react"
-import { spill } from "@kud/inkblot"
 import { readStoredTheme, type ScopedTheme } from "@/components/scoped-theme"
 
 // Every ground a page can paint, mirrored from the CSS that paints it. The ink
@@ -130,42 +129,6 @@ export const inkNavigate = (
   return true
 }
 
-let swapRun = 0
-
-// The theme switch: ink in the new light's ground spreads out of the pressed
-// control, the scope is restamped only once it fully covers the page (so the
-// old theme never shows in the new colour, nor the reverse), then lifts. With
-// reduced motion, or when the overlay is missing, it is a plain swap.
-export const inkSwap = async (
-  origin: Element | null | undefined,
-  color: string,
-  apply: () => void,
-) => {
-  const el = document.getElementById(INK_OVERLAY_ID)
-  if (!el || !origin || reducedMotion()) {
-    apply()
-    return
-  }
-  swapRun += 1
-  const run = swapRun
-  const ink = inkFor(color)
-  await spill(el, { mode: "cover", from: origin, colour: ink, duration: 380 })
-  // A newer press took over mid-spread: its own apply decides the end state.
-  if (run !== swapRun) return
-  apply()
-  requestAnimationFrame(() =>
-    requestAnimationFrame(() => {
-      if (run !== swapRun) return
-      void spill(el, {
-        mode: "reveal",
-        from: origin,
-        colour: ink,
-        duration: 420,
-      })
-    }),
-  )
-}
-
 // The ground a scoped page paints under a given choice: the blog's own, or
 // Dusk's for /projects and the docs.
 export const scopeGroundFor = (theme: ScopedTheme): string => {
@@ -176,21 +139,17 @@ export const scopeGroundFor = (theme: ScopedTheme): string => {
 
 let refreshTimer: number | undefined
 
-// The Ink world's only motion: a panel refresh. One inverted frame, then
-// paper, then the page (app/ink.css, html[data-ink-refresh]). `apply` runs
-// under the black frame, so a theme swap never shows half-painted. Under
-// reduced motion, or with the preview's "cut", it is a plain swap.
-export const inkRefresh = (apply?: () => void) => {
+// The Ink world's page move: a panel refresh. One inverted frame, then paper,
+// then the page (app/ink.css, html[data-ink-refresh]). Theme switches never
+// use it; they merge (components/theme-merge.ts). Under reduced motion, or
+// with the preview's "cut", nothing plays.
+export const inkRefresh = () => {
   const root = document.documentElement
-  if (reducedMotion() || root.dataset.inkMotion === "cut") {
-    apply?.()
-    return
-  }
+  if (reducedMotion() || root.dataset.inkMotion === "cut") return
   delete root.dataset.inkRefresh
   // Restart the animation when two moves land inside one flash.
   void root.offsetWidth
   root.dataset.inkRefresh = ""
-  if (apply) window.setTimeout(apply, 40)
   window.clearTimeout(refreshTimer)
   refreshTimer = window.setTimeout(() => {
     delete root.dataset.inkRefresh

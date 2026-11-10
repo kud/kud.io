@@ -7,7 +7,8 @@ import {
   useSyncExternalStore,
 } from "react"
 import type { ReactNode } from "react"
-import { inkRefresh, inkSwap, scopeGroundFor } from "@/components/ink"
+import { scopeGroundFor } from "@/components/ink"
+import { themeMerge } from "@/components/theme-merge"
 
 // Scoped visitor themes: each themed surface (the blog, the Dusk pages under
 // /projects) owns its own light/dark/system choice, stamped as data-theme on
@@ -114,19 +115,18 @@ export const useScopedTheme = () => {
     serverTheme,
   )
 
-  // origin is the pressed control: the new light spreads out of it as ink in
-  // the new ground (components/ink.ts). Storage and the control update at once;
-  // only the stamp, the one thing that repaints the page, waits for the cover.
-  // A choice that resolves to the ground already showing (Dark to Auto on a
-  // dark OS) has nothing to cover and swaps plainly.
+  // origin is the pressed control: the old light merges into the new one, from
+  // there when the take is radial (components/theme-merge.ts). Ink is for
+  // changing world, never for a theme. A choice that resolves to the ground
+  // already showing (Dark to Auto on a dark OS) has nothing to blend and swaps
+  // plainly.
   const setTheme = useCallback((next: ScopedTheme, origin?: Element | null) => {
     const before = readStoredTheme()
     unpersistedTheme = next
     const from = scopeGroundFor(before)
     const to = scopeGroundFor(next)
-    // Into or out of Ink the panel refreshes instead: e-paper never spills.
-    if (next === "ink" || before === "ink") inkRefresh(() => stampScopes(next))
-    else void inkSwap(from === to ? null : origin, to, () => stampScopes(next))
+    if (from === to) stampScopes(next)
+    else themeMerge(origin, () => stampScopes(next))
     try {
       localStorage.setItem(THEME_KEY, next)
     } catch {

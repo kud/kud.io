@@ -5,10 +5,11 @@ import { readStoredTheme, useScopedTheme } from "@/components/scoped-theme"
 import styles from "./ink-preview.module.css"
 
 // Preview-only: the open questions on the Ink (e-ink) theme, tried on the real
-// pages. Opened by any of ?paper= ?image= ?motion= in the URL, remembered for
-// the tab (sessionStorage) until closed. Picking anything turns the Ink theme
-// on. Remove this file, its CSS, its mount in app/layout.tsx and the
-// non-chosen options in app/ink.css once the picks are settled.
+// pages, plus how any theme switch merges. Opened by any of ?paper= ?image=
+// ?motion= ?merge= in the URL, remembered for the tab (sessionStorage) until
+// closed. Picking an Ink row turns the Ink theme on. Remove this file, its
+// CSS, its mount in app/layout.tsx, the non-chosen options in app/ink.css and
+// the non-chosen merges in app/global.css once the picks are settled.
 
 const KEY = "kud.ink-preview"
 
@@ -31,12 +32,24 @@ const ROWS = [
     values: ["flash", "cut"],
     recommended: "flash",
   },
+  {
+    // How every theme switch blends, not only Ink's (components/theme-merge.ts).
+    param: "merge",
+    label: "Theme switch",
+    values: ["fade", "radial", "blur"],
+    recommended: "fade",
+  },
 ] as const
 
 type Param = (typeof ROWS)[number]["param"]
 type Choice = Record<Param, string>
 
-const DEFAULTS: Choice = { paper: "white", image: "crush", motion: "flash" }
+const DEFAULTS: Choice = {
+  paper: "white",
+  image: "crush",
+  motion: "flash",
+  merge: "fade",
+}
 
 // Runs before first paint, ahead of every scope's own script: picks in the
 // URL are stored and stamp <html>, and turns the Ink theme on so the scopes
@@ -45,7 +58,7 @@ const DEFAULTS: Choice = { paper: "white", image: "crush", motion: "flash" }
 // one param keeps the rest of the session's picks.
 const PREVIEW_SCRIPT = `try{var q=new URLSearchParams(location.search),k=${JSON.stringify(
   KEY,
-)},d=${JSON.stringify(DEFAULTS)},s=JSON.parse(sessionStorage.getItem(k)||"null");if(q.has("paper")||q.has("image")||q.has("motion")){var b=s||d;s={paper:q.get("paper")||b.paper,image:q.get("image")||b.image,motion:q.get("motion")||b.motion};sessionStorage.setItem(k,JSON.stringify(s));localStorage.setItem("kud.theme","ink")}if(s){var h=document.documentElement.dataset;h.inkPaper=s.paper;h.inkImage=s.image;h.inkMotion=s.motion}}catch(e){}`
+)},d=${JSON.stringify(DEFAULTS)},s=JSON.parse(sessionStorage.getItem(k)||"null");if(q.has("paper")||q.has("image")||q.has("motion")||q.has("merge")){var b=s||d;s={paper:q.get("paper")||b.paper,image:q.get("image")||b.image,motion:q.get("motion")||b.motion,merge:q.get("merge")||b.merge||d.merge};sessionStorage.setItem(k,JSON.stringify(s));localStorage.setItem("kud.theme","ink")}if(s){var h=document.documentElement.dataset;h.inkPaper=s.paper;h.inkImage=s.image;h.inkMotion=s.motion;h.themeMerge=s.merge||d.merge}}catch(e){}`
 
 const readChoice = (): Choice | null => {
   try {
@@ -67,10 +80,12 @@ const stamp = (choice: Choice | null) => {
     html.dataset.inkPaper = choice.paper
     html.dataset.inkImage = choice.image
     html.dataset.inkMotion = choice.motion
+    html.dataset.themeMerge = choice.merge
   } else {
     delete html.dataset.inkPaper
     delete html.dataset.inkImage
     delete html.dataset.inkMotion
+    delete html.dataset.themeMerge
   }
 }
 
@@ -132,7 +147,9 @@ export const InkPreview = () => {
 
   const pick = (param: Param, value: string, origin: Element) => {
     setChoice({ ...choice, [param]: value })
-    if (readStoredTheme() !== "ink") setTheme("ink", origin)
+    // The switch row is tried with the theme picker, so it leaves the theme be.
+    if (param !== "merge" && readStoredTheme() !== "ink")
+      setTheme("ink", origin)
   }
 
   const copy = async () => {
