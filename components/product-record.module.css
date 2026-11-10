@@ -382,12 +382,12 @@
 }
 
 /* The facts stay in reach while the long column reads on: the card rides
-   along at a small offset. Only side by side, and only on screens tall
+   along at the docs TOC's 28px offset. Only side by side, and only on screens tall
    enough to hold the whole card, so it never pins a box you can't finish
    reading (Erwann, 2026-11-10). */
 @media (min-width: 861px) and (min-height: 760px) {
   .infobox {
     position: sticky;
-    top: 24px;
+    top: 28px;
   }
 }
