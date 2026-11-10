@@ -73,6 +73,10 @@ export type InkNavigateDetail = {
   href: string
   pathname: string
   color: string
+  // The view-transition-name of a shared element the move carries (the app
+  // icon): it navigates inside a view transition so the icon glides over the
+  // ink, and the ink lifts outward from where the icon lands.
+  morph?: string
 }
 
 // Called from a link's click handler. Returns true when it took the
@@ -82,6 +86,7 @@ export type InkNavigateDetail = {
 export const inkNavigate = (
   event: MouseEvent<HTMLAnchorElement>,
   href: string,
+  { morph }: { morph?: string } = {},
 ): boolean => {
   if (event.defaultPrevented) return false
   if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
@@ -106,6 +111,7 @@ export const inkNavigate = (
         href,
         pathname: url.pathname,
         color,
+        morph,
       },
     }),
   )

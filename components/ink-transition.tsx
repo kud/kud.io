@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
+import { useTransitionRouter } from "next-view-transitions"
 import { clear, spill } from "@kud/inkblot"
 import {
   HOME_GROUND,
@@ -21,6 +22,8 @@ const COVER_DURATION = 420
 // same path), lift the cover anyway: ink must never strand a visitor.
 const COMMIT_TIMEOUT = 2500
 const ARRIVE_DURATION = 760
+// An ink-morph holds the cover while the view transition glides the icon.
+const MORPH_DURATION = 550
 
 // The ink overlay, rendered once in the root layout. Three jobs:
 // - page moves: listens for `ink:reveal` (components/ink.ts → inkNavigate),
@@ -32,6 +35,7 @@ const ARRIVE_DURATION = 760
 //   first paint, and this lifts it as ink once hydrated.
 export const InkTransition = () => {
   const router = useRouter()
+  const vtRouter = useTransitionRouter()
   const pathname = usePathname()
   const overlayRef = useRef<HTMLDivElement>(null)
   const runRef = useRef(0)
@@ -59,14 +63,17 @@ export const InkTransition = () => {
           duration: COVER_DURATION,
         })
         if (runRef.current !== run) return
-        router.push(detail.href)
+        if (detail.morph) {
+          document.documentElement.dataset.vt = "ink-morph"
+          vtRouter.push(detail.href)
+        } else router.push(detail.href)
         setCovered({ ...detail, run })
       }
       void coverPage()
     }
     window.addEventListener("ink:reveal", onReveal)
     return () => window.removeEventListener("ink:reveal", onReveal)
-  }, [router])
+  }, [router, vtRouter])
 
   useEffect(() => {
     if (!covered) return
@@ -74,17 +81,40 @@ export const InkTransition = () => {
     const lift = () => {
       if (runRef.current !== arrival.run) return
       setCovered(null)
+      // The flag outlives the view transition, so the root never falls back
+      // to the cross-fade mid-glide.
+      window.setTimeout(() => {
+        if (document.documentElement.dataset.vt === "ink-morph")
+          delete document.documentElement.dataset.vt
+      }, 400)
       const el = overlayRef.current
       if (!el) return
+      // After an icon glide the ink opens outward from where the icon landed.
+      const landed = arrival.morph
+        ? document
+            .querySelector<HTMLElement>(`[style*=""]`)
+            ?.getBoundingClientRect()
+        : undefined
       void spill(el, {
         mode: "reveal",
-        from: { x: arrival.x, y: arrival.y },
+        from: landed
+          ? {
+              x: landed.left + landed.width / 2,
+              y: landed.top + landed.height / 2,
+            }
+          : { x: arrival.x, y: arrival.y },
         colour: arrival.color,
         duration: REVEAL_DURATION,
       })
     }
     if (pathname !== arrival.pathname) {
       const timer = window.setTimeout(lift, COMMIT_TIMEOUT)
+      return () => window.clearTimeout(timer)
+    }
+    if (arrival.morph) {
+      // Start opening just before the glide ends, so the landing icon is never
+      // left under the ink for a frame.
+      const timer = window.setTimeout(lift, MORPH_DURATION - 70)
       return () => window.clearTimeout(timer)
     }
     const frame = requestAnimationFrame(() => requestAnimationFrame(lift))
