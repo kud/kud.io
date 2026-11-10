@@ -315,7 +315,6 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   const { setTheme } = useScopedTheme()
   const dialogRef = useRef<HTMLDialogElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const listRef = useRef<HTMLDivElement>(null)
 
   // Rendered inside the page's themed wrapper, so the palette is the page's
   // own and follows a theme switch live. Home has none and takes the Dusk day palette.
@@ -330,7 +329,6 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   const [index, setIndex] = useState<LauncherIndex | null>(cachedIndex)
   const [failed, setFailed] = useState(false)
   const [query, setQuery] = useState("")
-  const [activeId, setActiveId] = useState<string | null>(null)
   const [docsWide, setDocsWide] = useState(false)
   const [docs, setDocs] = useState<{ key: string; hits: DocHit[] } | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
@@ -518,15 +516,6 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   ])
 
   const flat = sections.flatMap((section) => section.items)
-  const active = flat.find((item) => item.id === activeId) ?? flat[0]
-
-  // cmdk scrolls on its own arrow moves; a Tab jump is ours, so is its scroll.
-  useEffect(() => {
-    listRef.current
-      ?.querySelector('[cmdk-item][data-selected="true"]')
-      ?.scrollIntoView({ block: "nearest" })
-  }, [active])
-
   // cmdk's onSelect carries no event, so ⌘/Ctrl is read off the key or
   // pointer that led to it: held, a link opens in a new tab.
   const newTab = useRef(false)
@@ -541,20 +530,20 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     onClose()
   }
 
-  // Tab jumps to the first result of the next section, Shift+Tab back.
-  const jumpSection = (delta: number) => {
-    if (sections.length < 2 || !active) return
-    const at = sections.findIndex((section) => section.key === active.section)
-    const next = (at + delta + sections.length) % sections.length
-    setActiveId(sections[next].items[0].id)
-  }
-
   // Runs before cmdk's own handler, which leaves alone what this prevents.
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     newTab.current = event.metaKey || event.ctrlKey
     if (event.key === "Tab") {
+      // Tab hops sections through cmdk's own group move (Alt+arrow), so its
+      // selection, scroll and aria-activedescendant stay the one source.
       event.preventDefault()
-      jumpSection(event.shiftKey ? -1 : 1)
+      event.target.dispatchEvent(
+        new window.KeyboardEvent("keydown", {
+          key: event.shiftKey ? "ArrowUp" : "ArrowDown",
+          altKey: true,
+          bubbles: true,
+        }),
+      )
     } else if (event.key === "Backspace" && !query && docsTag) {
       setDocsWide(true)
       setAnnounce("Searching all docs")
@@ -598,8 +587,6 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
         label="Search kud.io"
         shouldFilter={false}
         loop
-        value={active?.id ?? ""}
-        onValueChange={setActiveId}
         onKeyDown={onKeyDown}
       >
         <div className={styles.bar}>
@@ -611,7 +598,6 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
             value={query}
             onValueChange={(value) => {
               setQuery(value)
-              setActiveId(null)
               setCopiedId(null)
             }}
             autoCorrect="off"
@@ -658,7 +644,6 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
         </div>
 
         <Command.List
-          ref={listRef}
           className={styles.list}
           label="Results"
           onPointerDown={(event) => {
