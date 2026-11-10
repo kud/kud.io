@@ -596,7 +596,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
 
   const placeholder = currentProject
     ? currentProject.hasDocs
-      ? `Search ${currentProject.name} docs, projects, writing…`
+      ? "Search docs, projects, writing…"
       : `Search projects, writing, actions…`
     : onPost
       ? "Search writing, projects, docs…"

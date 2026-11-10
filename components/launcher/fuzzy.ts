@@ -7,7 +7,7 @@ const fold = (text: string) =>
     .replace(/\p{Diacritic}/gu, "")
     .toLowerCase()
 
-const scoreOne = (query: string, text: string): number => {
+const scoreOne = (query: string, text: string, loose = true): number => {
   const target = fold(text)
   if (!target) return 0
   if (target === query) return 100
@@ -15,8 +15,12 @@ const scoreOne = (query: string, text: string): number => {
   const at = target.indexOf(query)
   if (at > 0) {
     const wordStart = /[\s\-_/.:]/.test(target[at - 1])
+    // One or two letters inside a word are noise ("cv" in "recovery").
+    if (!wordStart && query.length < 3) return 0
     return (wordStart ? 75 : 55) - Math.min(at / 4, 10)
   }
+
+  if (!loose || query.length < 3) return 0
 
   // Letters in order: each consecutive run and each word-start hit earns,
   // each gap costs, so "mcpj" finds "mcp-jenkins" well above a scattered hit.
@@ -33,10 +37,15 @@ const scoreOne = (query: string, text: string): number => {
     previous = index
     from = index + 1
   }
+  // Scattered letters are a coincidence, not a match: the hit must stay
+  // compact, about the length of what was typed.
+  const first = target.indexOf(query.replace(/ /g, "")[0])
+  if (previous - first + 1 > query.length * 1.6 + 2) return 0
   return Math.max(1, 20 + score)
 }
 
-// The best of the title and its extra words, the extras weighed lower: a
+// The best of the title and its extra words, the extras weighed lower
+// and matched only as words or substrings, never as scattered letters: a
 // project found by its type should sit under one found by its name.
 export const fuzzyScore = (
   rawQuery: string,
@@ -46,6 +55,6 @@ export const fuzzyScore = (
   const query = fold(rawQuery.trim())
   if (!query) return 0
   const best = scoreOne(query, title)
-  const extra = Math.max(0, ...extras.map((text) => scoreOne(query, text)))
+  const extra = Math.max(0, ...extras.map((text) => scoreOne(query, text, false)))
   return Math.max(best, extra * 0.7)
 }

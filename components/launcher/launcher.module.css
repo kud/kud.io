@@ -460,3 +460,9 @@
     display: none;
   }
 }
+
+/* The whole bar reads as the field; a ring round the bare input would draw a
+   box inside the box. Doubled to outrank the Dusk pages' global ring. */
+.input.input:focus-visible {
+  outline: none;
+}
