@@ -1,7 +1,42 @@
 {
   "name": "tutti",
   "icon": "/apps/tutti.png",
+  "accent": "#e3a35b",
   "beansontoast": "tutti",
   "summary": "One phone remote for a Sony BRAVIA TV and Theatre Bar, the whole living room on one screen.",
-  "stack": ["Kotlin", "Jetpack Compose", "Android"]
+  "what": "An Android remote for one living room: a Sony BRAVIA TV on Google TV and a BRAVIA Theatre Bar, plus the computer shown on the TV. Touchpad or D-pad, a live keyboard, voice, the soundbar's volume and sound modes, and scenes that set the input, picture mode and a volume cap in one tap. Built to replace BRAVIA Connect for everyday use.",
+  "who": "Anyone with a BRAVIA TV on Google TV and a Theatre Bar who wants one remote for both.",
+  "facts": [
+    { "label": "Runs on", "value": "Android 10 or later" },
+    {
+      "label": "Works with",
+      "value": "BRAVIA TVs on Google TV and BRAVIA Theatre Bars"
+    },
+    { "label": "Account", "value": "None, no Sony account and no cloud" },
+    { "label": "Network", "value": "Your local network only" },
+    { "label": "Get it", "value": "APK on GitHub Releases, F-Droid coming" }
+  ],
+  "flow": [
+    {
+      "label": "The remote, scenes and widgets",
+      "note": "Jetpack Compose and Material 3, with a Glance widget, a Quick Settings tile and a media notification"
+    },
+    {
+      "label": "Talking to the TV",
+      "note": "the Android TV Remote v2 protocol over TLS, paired once with a code shown on the TV, plus Sony's IP control for picture and inputs"
+    },
+    {
+      "label": "Talking to the Theatre Bar",
+      "note": "the bar's IP control over TCP, for volume, sound field, night mode, bass and rear level"
+    }
+  ],
+  "screenshots": ["/apps/tutti-shot.webp"],
+  "stack": ["Kotlin", "Jetpack Compose", "Android"],
+  "decisions": [
+    "Local protocols only: it speaks Sony's and Google TV's own protocols on the LAN, so there is no account, no cloud and nothing to sign in to.",
+    "Devices are pinned on first use, and pairing material is encrypted with an Android Keystore key.",
+    "A pure Kotlin protocol module with a device simulator, so the wire formats and state machines are tested without a TV.",
+    "Setup, room calibration and speaker placement stay in BRAVIA Connect, which tutti opens when you need it."
+  ],
+  "writing": []
 }
