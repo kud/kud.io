@@ -1,0 +1,41 @@
+---
+title: 🔒 Privacy and security
+description: What tutti keeps on the phone, how it trusts the devices, and what it never does.
+---
+
+tutti talks to the devices on the local network, and keeps everything it needs on the phone. The only exceptions are an optional Sony sign-in, the check for updates on GitHub, and the picture of what the TV is playing.
+
+## Local network first
+
+The TV, the bar and the computer are reached on private LAN addresses. Plain HTTP is refused for anything else.
+
+## Updates
+
+About › Version, and the app when it opens or comes back to the screen (at most once an hour for a test build, once a day for a final release; never in the background), asks GitHub for tutti's newer releases (`api.github.com`, then the release download). Only HTTPS, no account, nothing about you or your devices is sent. A download is checked against the digest GitHub publishes and against tutti's own package before Android asks you to confirm the install. Nothing installs without that confirmation.
+
+## What the TV is playing
+
+While the remote is open, tutti asks the TV over Google Cast what it is playing, for apps that report it (YouTube does, Netflix doesn't). The title and channel stay on the phone: never saved, logged or put in a diagnostic.
+
+When that report names a picture, the card shows it. To get it, tutti asks one of these hosts, and no other:
+
+- `i.ytimg.com`: YouTube's video thumbnails.
+- `lh3.googleusercontent.com`: Google's image service, where YouTube Music keeps its artwork.
+
+Only HTTPS, only while the remote is open and a picture on one of those hosts is reported, at most once per item. No account, cookie or identifier of yours goes with it; the request names the video, which is how the TV fetched it too. The picture is kept in memory until the app closes, never written to storage, and its address is never logged. Any other address in the report is ignored, and the card keeps the app's icon.
+
+## Trust on first use
+
+The TV is trusted explicitly. Android TV Remote v2 keeps the exact certificate established by pairing. BRAVIA REST over HTTPS pins the TV's public key, so a reissued certificate using the same key keeps working; a new key is refused until you pair the TV again. TLS verification is never switched off. The soundbar's TCP 33336 protocol has no device authentication, so tutti does not claim one.
+
+## Secrets on the phone
+
+The pairing material, the Pre-Shared Key and any Sony tokens are encrypted with an Android Keystore key and excluded from backups. "Forget device" wipes the pairing; signing out of Sony wipes the tokens.
+
+## Sony account
+
+Sony sign-in is optional. When used, it goes through OAuth with PKCE in a Custom Tab: tutti never sees the password and never uses a WebView for it.
+
+## Developer mode
+
+With developer mode on, errors show their technical details with a Copy button. Addresses, keys and tokens are redacted before anything is shown or copied.

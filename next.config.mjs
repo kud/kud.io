@@ -37,6 +37,13 @@ const config = {
       destination: "/blog/2020/06/08/ssh-config-include",
       permanent: true,
     },
+    // Referrals left the catalogue for a footer link; its old landing goes
+    // straight to the site.
+    {
+      source: "/projects/referrals",
+      destination: "https://referrals.kud.io",
+      permanent: true,
+    },
     ...readBlogRedirects().map((redirect) => ({
       ...redirect,
       permanent: true,

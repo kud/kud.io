@@ -4,8 +4,8 @@ description: "Why a small, predictable CLI can make SonarQube quality gates easi
 date: "2026-11-10"
 slug: "a-quality-gate-should-tell-you-why-it-failed"
 tags: ["engineering","tools"]
-cover: "/blog/a-quality-gate-should-tell-you-why-it-failed/77b13386a80e.png"
-updated: "2026-11-10T18:37:00.000Z"
+cover: "/blog/a-quality-gate-should-tell-you-why-it-failed/72ba5991d2d8.png"
+updated: "2026-11-10T19:01:00.000Z"
 ---
 
 A red quality gate tells you something is wrong. It doesn't necessarily tell you what to do about it.

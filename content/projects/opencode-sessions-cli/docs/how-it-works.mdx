@@ -1,0 +1,59 @@
+---
+title: 🔍 How it works
+description: How opencode sessions finds servers, builds and orders the session list, and stops a headless instance.
+---
+
+opencode sessions speaks the opencode v2 API through [`@opencode/client`](https://www.npmjs.com/package/@opencode/client). opencode v1 servers are not supported.
+
+## Three kinds of server
+
+| Kind         | Found through                                                                                            | Stoppable |
+| ------------ | -------------------------------------------------------------------------------------------------------- | --------- |
+| **Service**  | the background service's registration file                                                               | never     |
+| **Headless** | the [`@kud/mcp-opencode`](https://github.com/kud/mcp-opencode) registry                                  | yes       |
+| **Window**   | any other opencode server answering on a local port, such as `opencode serve` or `opencode --standalone` | never     |
+
+### The background service
+
+opencode v2 runs one shared background service (`opencode service`) by default. It is found through its registration file, `$XDG_STATE_HOME/opencode/service.json` (`~/.local/state/opencode/service.json` by default), which also holds its password. It is only listed when it answers and its process matches the file.
+
+### Headless instances
+
+They are read from `~/.local/state/mcp-opencode/instances.json`, or from `$MCP_OPENCODE_STATE_DIR/instances.json` when that variable is set. A missing or unreadable file simply means no instances. A record may carry a `password`, used to authenticate to that instance.
+
+### Windows
+
+Listening ports are found with `lsof`, restricted to processes named `opencode` on local addresses (`127.0.0.1`, `::1`, `localhost` or a wildcard bind). Each candidate is probed at `/api/info` with a 300 ms timeout, and only a port that answers with server info counts. Anything already in the registry is headless, the service's port is the service, and the rest are windows.
+
+## Passwords
+
+v2 servers ask for HTTP basic auth (user `opencode`). The service's password comes from its registration file and a headless instance's from its registry record. Anything else is tried with `OPENCODE_PASSWORD` (or `OPENCODE_SERVER_PASSWORD`) from your environment.
+
+A server that still refuses is reported rather than dropped:
+
+- `port N: registered but not answering` for a registered port that is gone
+- `port N: registered but refused its password` for a registered port with a stale password
+- `ports N, M: need a password (set OPENCODE_PASSWORD)` for unregistered servers it could not open, such as a standalone window with its own private password
+
+## Building the list
+
+Each server is queried in parallel for its root sessions and for the sessions it is running right now (`session.active`). A headless instance is asked about its own directory; the service and windows are asked for their 40 most recent sessions. If one server fails, the others still render and the failure is reported as an error line.
+
+State is `busy` when the server reports the session active, `idle` otherwise.
+
+v2 servers on one machine share a session store, so the same session can come back from several servers. It is listed once: on the server running it, or else on a headless instance, then the service, then a window.
+
+## Attaching
+
+`↵` runs `opencode --server <url> --session <id> <directory>` for the selected row, with the server's password in `OPENCODE_PASSWORD` when one is known. On a headless instance with no sessions yet it starts a new one in that instance's directory.
+
+## Stopping
+
+`x` on a headless row, then `y`, runs these steps in order:
+
+1. interrupt the instance's active sessions
+2. send `SIGTERM` to the process, only if it really is opencode
+3. remove its row from the registry
+4. wait up to five seconds for the port to close
+
+On a service or window row nothing happens.

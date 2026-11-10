@@ -1,0 +1,62 @@
+---
+title: ⌨️ Usage
+description: Reading the session list, the key bindings, stopping headless instances and the demo flags.
+---
+
+Run it with no arguments:
+
+```console
+$ ocs
+```
+
+`opencode-sessions` does the same thing. The list refreshes every three seconds on its own.
+
+## The list
+
+One row per session, with:
+
+- the repo (the basename of the session's directory)
+- the session title
+- its state: `busy` or `idle`
+- its age, such as `now`, `12m`, `3h`, `4d` or `2w`
+- whether the server is the background service, a headless instance or a window, and its port
+
+By default the list shows only sessions that are **busy** or **updated within the last 2 hours**. Headless instances from the registry always show all their sessions. Press `a` to toggle between this filtered view and all sessions. The header shows `X of Y sessions` when filtered.
+
+Busy sessions come first, then idle ones. Within each group the most recently updated session wins. A headless instance with no sessions yet still gets a row, titled `(no sessions yet)`, so you can stop it.
+
+## Keys
+
+| Key               | Action                                                           |
+| ----------------- | ---------------------------------------------------------------- |
+| `↑` `↓` / `j` `k` | Move                                                             |
+| `↵`               | Attach to the session; quitting opencode returns you to the list |
+| `x`               | Stop a headless instance (asks for `y` to confirm)               |
+| `r`               | Refresh                                                          |
+| `a`               | Toggle all sessions / recent only                                |
+| `q`               | Quit                                                             |
+
+While the stop confirmation is open, the other keys are ignored until you answer.
+
+## Attaching
+
+`↵` hands the terminal over to `opencode --server <url> --session <id>` for the selected session, passing the server password along when it knows one. When you quit opencode, you land back in the list.
+
+## Stopping an instance
+
+Press `x` on a headless row and confirm with `y`. On a service or window row it says so and does nothing: neither is ever touched from here. The steps behind a stop are in [How it works](/projects/opencode-sessions-cli/docs/how-it-works#stopping).
+
+## Demo flags
+
+```console
+$ ocs --mock
+$ ocs --screen list
+sessions
+$ ocs --screen sessions
+```
+
+- `--mock` runs on fixtures, with no live data
+- `--screen list` prints the screen names and exits
+- `--screen <name>` opens directly on that screen; an unknown name is an error
+
+These are handy for trying the interface without any opencode server running.
