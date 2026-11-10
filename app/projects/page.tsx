@@ -7,6 +7,7 @@ import { getProjects } from "@/lib/projects"
 import { getEcosystems } from "@/lib/ecosystems"
 import { getIcons } from "@/lib/icons"
 import { getApp, appDisplayName, isProduct } from "@/lib/app"
+import { getListedApps } from "@/lib/listed-apps"
 import { isAppCategory, groupByCategory } from "@/lib/categories"
 import { Blueprint } from "@/components/blueprint"
 import {
@@ -76,7 +77,12 @@ const ProjectsIndex = async () => {
     }
     return { ...project, icon: icons[project.slug] ?? project.icon ?? null }
   })
-  const groups = groupByCategory(withIcons)
+  // Live apps with no public source join their section here and nowhere else:
+  // no release lookup, no pin, no page of their own (lib/listed-apps.ts).
+  const listed = getListedApps().filter(
+    (app) => !withIcons.some((project) => project.slug === app.slug),
+  )
+  const groups = groupByCategory([...withIcons, ...listed])
   // Ecosystems are an orthogonal facet: families spanning several categories
   // (qobuz lib + CLI + MCP). Derived from the same projects, surfaced as tiles
   // that filter the grid rather than as their own section.
