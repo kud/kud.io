@@ -155,6 +155,31 @@
   color: var(--primary-light);
   letter-spacing: 0.3px;
   margin-bottom: 28px;
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+a.badge:hover,
+a.badge:focus-visible {
+  background: rgb(var(--glow, 194 112 61) / 0.18);
+  border-color: rgb(var(--glow, 194 112 61) / 0.5);
+}
+
+a.badge:focus-visible {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
+}
+
+/* beansontoast's own pixel mark, copied from its favicon. 13px is its native
+   grid, so every pixel lands on one device pixel (two on a 2x screen). */
+.badgeMark {
+  display: block;
+  flex: none;
+  width: 13px;
+  height: 13px;
+  image-rendering: pixelated;
 }
 
 .badgeDot {

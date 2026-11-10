@@ -292,9 +292,17 @@ const ProductRecord = async ({ project }: { project: Project }) => {
         </MorphLink>
         {art ? <IllustrationSlot ratio="16/9" slug={project.slug} /> : null}
         <div className={`${styles.heroContent} ${art ? "warm-hero-copy" : ""}`}>
-          <div className={styles.badge}>
-            <span className={styles.badgeDot} />A beansontoast product
-          </div>
+          <a className={styles.badge} href="https://beansontoast.app">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className={styles.badgeMark}
+              src="/beansontoast-mark.svg"
+              alt=""
+              width={13}
+              height={13}
+            />
+            A beansontoast product
+          </a>
           <div className={styles.recordTitleRow}>
             {app.icon ? (
               <span
