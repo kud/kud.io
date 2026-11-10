@@ -553,13 +553,6 @@ const ReadmeLanding = async ({
         </div>
       </section>
 
-      {/* ?r=2 moves the release from the hero pill into the infobox. Read in
-          the browser so the page stays static. */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `(function(){var q=new URLSearchParams(location.search),m=document.currentScript.closest("main");var r=q.get("r");if(r)m.dataset.r=r})()`,
-        }}
-      />
       {Body ? (
         <div className={`${styles.readmeLayout} ${styles.readmeRecord}`}>
           <article className={styles.readme}>

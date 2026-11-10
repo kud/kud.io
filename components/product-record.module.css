@@ -352,13 +352,8 @@
 }
 
 /* README landing ------------------------------------------------------------
-   The same card beside a README instead of a story. The release lives in one
-   place per variant: ?r=1 (default) keeps the hero's release pill, ?r=2 moves
-   the release into the box as on a product record. */
-/* Inside the rail the card is one row of a plain grid, not a named area. */
+   The same card beside a README instead of a story. Inside the rail it is
+   one row of a plain grid, not a named area. */
 .readmeBox {
   grid-area: auto;
-}
-:global(main:not([data-r="2"])) .releaseRow {
-  display: none;
 }

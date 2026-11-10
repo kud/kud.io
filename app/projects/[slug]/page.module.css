@@ -1117,7 +1117,3 @@
 .recordTitleGlyph img {
   object-fit: contain;
 }
-
-:global(main[data-r="2"]) .releasePill {
-  display: none;
-}

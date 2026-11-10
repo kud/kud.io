@@ -279,16 +279,13 @@ type ReadmeBoxProps = {
 const Rows = ({
   rows,
 }: {
-  rows: ({ label: string; value: React.ReactNode; release?: boolean } | null)[]
+  rows: ({ label: string; value: React.ReactNode } | null)[]
 }) => (
   <dl className={styles.infoRows}>
     {rows
       .filter((row) => row !== null)
       .map((row) => (
-        <div
-          key={row.label}
-          className={row.release ? styles.releaseRow : undefined}
-        >
+        <div key={row.label}>
           <dt>{row.label}</dt>
           <dd>{row.value}</dd>
         </div>
@@ -306,8 +303,8 @@ const projectLinks = (links: Link[]) =>
 
 // The README landing's infobox: the same card as a product record, filled only
 // from what the repo already states (package.json, the registry, the topics,
-// GitHub's own fields). Time and terms sit in the hero's timeline and the
-// story is the README, so neither is repeated here.
+// GitHub's own fields). Time and terms sit in the hero's timeline, the
+// release in its pill, and the story is the README, so none is repeated here.
 export const ReadmeInfobox = ({
   project,
   facts,
@@ -317,31 +314,7 @@ export const ReadmeInfobox = ({
   builtOn,
   family,
 }: ReadmeBoxProps) => {
-  const released = release
-    ? formatDate(release.publishedAt, dayMonthYear)
-    : null
   const onNpm = Boolean(release?.url.startsWith("https://www.npmjs.com/"))
-  const releaseRow = release
-    ? {
-        label: "Latest release",
-        release: true,
-        value: (
-          <>
-            <a href={release.url} target="_blank" rel="noreferrer">
-              v{release.version}
-            </a>
-            {released ? (
-              <span className={styles.infoMuted}>
-                {" · "}
-                <time dateTime={release.publishedAt ?? undefined}>
-                  {released}
-                </time>
-              </span>
-            ) : null}
-          </>
-        ),
-      }
-    : null
   const isStore =
     project.category === "raycast" || project.category === "webext"
   const storeRows = isStore
@@ -358,7 +331,6 @@ export const ReadmeInfobox = ({
               value: project.users.toLocaleString("en-GB"),
             }
           : null,
-        releaseRow,
       ]
     : []
   const packageRows = facts
@@ -395,7 +367,6 @@ export const ReadmeInfobox = ({
         builtOn.length > 0
           ? { label: "Built on", value: projectLinks(builtOn) }
           : null,
-        releaseRow,
       ]
     : []
   const chips = [language, ...frameworks].filter((chip): chip is string =>
@@ -450,9 +421,6 @@ export const ReadmeInfobox = ({
                 </a>
               ),
             },
-            // No package and no store (a theme, a tagged Swift app): the
-            // release, read from tags, lands here instead.
-            !isStore && !facts ? releaseRow : null,
           ]}
         />
       </Section>
