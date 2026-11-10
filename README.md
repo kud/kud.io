@@ -92,9 +92,9 @@ This is a personal portfolio project, but suggestions and feedback are welcome! 
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
+## 📝 Licence
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+The code is MIT: learn from it, borrow pieces. The writing is CC BY-NC-ND 4.0: share it with credit, not commercially and not edited. The illustrations, photos, logos and the site's design are all rights reserved, so please don't redeploy the site as your own. Details in [LICENSE](LICENSE).
 
 ## 👤 Author
 
