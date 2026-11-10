@@ -32,13 +32,14 @@ import {
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { GitHubIcon } from "@/components/social-icons"
-import { readStoredTheme, useScopedTheme } from "@/components/scoped-theme"
+import { useScopedTheme } from "@/components/scoped-theme"
 import type { ScopedTheme } from "@/components/scoped-theme"
 import type { LauncherIndex, LauncherProject } from "@/lib/launcher-index"
 import { fuzzyScore } from "./fuzzy"
 import styles from "./launcher.module.css"
 
-type SectionKey = "pages" | "projects" | "writing" | "docs" | "actions"
+type SectionKey =
+  "pages" | "projects" | "writing" | "docs" | "actions" | "settings"
 
 const SECTION_LABEL: Record<SectionKey, string> = {
   pages: "Pages",
@@ -46,6 +47,7 @@ const SECTION_LABEL: Record<SectionKey, string> = {
   writing: "Writing",
   docs: "Docs",
   actions: "Actions",
+  settings: "Settings",
 }
 
 type Visual =
@@ -67,6 +69,8 @@ type Item = {
   // A same-site URL that is not a page (the feed), so no client navigation.
   hard?: boolean
   run?: () => void
+  // The option's spoken name, when its visible content says it less well.
+  label?: string
   score?: number
 }
 
@@ -171,6 +175,12 @@ const PAGES: Item[] = [
   },
 ]
 
+const THEME_LABEL: Record<ScopedTheme, string> = {
+  light: "Light",
+  dark: "Dark",
+  system: "System",
+}
+
 const THEMES: { value: ScopedTheme; label: string; Icon: LucideIcon }[] = [
   { value: "light", label: "Light", Icon: Sun },
   { value: "dark", label: "Dark", Icon: Moon },
@@ -183,16 +193,17 @@ const LIMIT: Record<SectionKey, number> = {
   writing: 6,
   docs: 8,
   actions: 6,
+  settings: 1,
 }
 
 // Where the visitor is decides what comes first: on a post, writing; on a
 // project, that project's actions and docs; elsewhere, the site's own map.
 const sectionOrder = (projectSlug: string | null, onPost: boolean) =>
   projectSlug
-    ? (["actions", "docs", "projects", "writing", "pages"] as const)
+    ? (["actions", "docs", "projects", "writing", "pages", "settings"] as const)
     : onPost
-      ? (["writing", "pages", "projects", "docs", "actions"] as const)
-      : (["pages", "projects", "writing", "docs", "actions"] as const)
+      ? (["writing", "pages", "projects", "docs", "settings"] as const)
+      : (["pages", "projects", "writing", "docs", "settings"] as const)
 
 const rank = (query: string, items: Item[], limit: number) =>
   items
@@ -350,7 +361,7 @@ type PanelProps = { onClose: () => void }
 const LauncherPanel = ({ onClose }: PanelProps) => {
   const pathname = usePathname()
   const router = useRouter()
-  const { setTheme } = useScopedTheme()
+  const { theme, setTheme } = useScopedTheme()
   const dialogRef = useRef<HTMLDialogElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
@@ -480,38 +491,88 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       href: post.href,
     }))
 
-    const current = themed ? readStoredTheme() : null
-    const actions: Item[] = [
-      ...(currentProject ? projectActions(currentProject, copy, copiedId) : []),
-      // Home has no theme of its own, so a switch there would change
-      // nothing the visitor can see.
-      ...(themed
-        ? THEMES.map(({ value, label, Icon }) => ({
-            id: `theme:${value}`,
-            section: "actions" as const,
-            title: `${label} theme`,
-            text: `${label} theme`,
-            meta: current === value ? "Current" : "Appearance",
-            extras: ["theme", "appearance", "mode", "colour", "color"],
-            visual: { kind: "glyph" as const, Icon },
-            run: () => {
-              onClose()
-              setTheme(value, document.querySelector("[data-launcher-trigger]"))
-            },
-          }))
-        : []),
-      {
-        id: "action:rss",
-        section: "actions",
-        title: "RSS feed",
-        text: "RSS feed",
-        meta: "Writing",
-        extras: ["rss", "feed", "subscribe", "atom"],
-        visual: { kind: "glyph", Icon: Rss },
-        href: "/blog/feed.xml",
-        hard: true,
-      },
-    ]
+    // Actions are only what can be done to this project. The theme is a
+    // setting, kept in its own section after the content.
+    const actions: Item[] = currentProject
+      ? projectActions(currentProject, copy, copiedId)
+      : []
+
+    const rss: Item = {
+      id: "writing:rss",
+      section: "writing",
+      title: "RSS feed",
+      text: "RSS feed",
+      meta: "Subscribe",
+      extras: ["rss", "feed", "subscribe", "atom"],
+      visual: { kind: "glyph", Icon: Rss },
+      href: "/blog/feed.xml",
+      hard: true,
+    }
+
+    // One row with the three choices in it: Enter steps to the next, a typed
+    // choice ("dark") is taken directly, and each choice is clickable. The
+    // launcher stays open so the change is seen, page and palette both.
+    // Home has no theme of its own, so the row would change nothing there.
+    const pickTheme = (value: ScopedTheme) => {
+      setTheme(value, document.querySelector("[data-launcher-trigger]"))
+      setAnnounce(`Theme: ${THEME_LABEL[value]}`)
+    }
+    const nextTheme = (): ScopedTheme => {
+      const typed = THEMES.find(({ value, label }) =>
+        [label, value].some(
+          (name) =>
+            trimmed && name.toLowerCase().startsWith(trimmed.toLowerCase()),
+        ),
+      )
+      if (typed && typed.value !== theme) return typed.value
+      const at = THEMES.findIndex(({ value }) => value === theme)
+      return THEMES[(at + 1) % THEMES.length].value
+    }
+    const CurrentIcon =
+      THEMES.find(({ value }) => value === theme)?.Icon ?? Monitor
+    const settings: Item[] = themed
+      ? [
+          {
+            id: "setting:theme",
+            label: `Theme: ${THEME_LABEL[theme]}. Enter to change.`,
+            section: "settings",
+            text: "Theme",
+            title: (
+              <span className={styles.setting}>
+                Theme
+                <span className={styles.segments}>
+                  {THEMES.map(({ value, label, Icon }) => (
+                    <span
+                      key={value}
+                      className={styles.segment}
+                      data-active={value === theme || undefined}
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        pickTheme(value)
+                      }}
+                    >
+                      <Icon aria-hidden className={styles.segmentIcon} />
+                      {label}
+                    </span>
+                  ))}
+                </span>
+              </span>
+            ),
+            extras: [
+              "light",
+              "dark",
+              "system",
+              "auto",
+              "appearance",
+              "mode",
+              "colour",
+              "color",
+            ],
+            visual: { kind: "glyph", Icon: CurrentIcon },
+            run: () => pickTheme(nextTheme()),
+          },
+        ]
+      : []
 
     // Docs hits come grouped page first; each heading or passage borrows its
     // page's title as its caption, and its project's name when widened.
@@ -546,9 +607,10 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     const pools: Record<SectionKey, Item[]> = {
       pages: PAGES,
       projects,
-      writing,
+      writing: [...writing, rss],
       docs: docItems,
       actions,
+      settings,
     }
 
     const pick = (key: SectionKey): Item[] => {
@@ -560,7 +622,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
         return projects.filter(
           (item) => projectsById.get(item.id.slice(8))?.pinned,
         )
-      if (key === "writing") return writing.slice(0, onPost ? 5 : 3)
+      if (key === "writing") return [...writing.slice(0, onPost ? 5 : 3), rss]
       return pools[key]
     }
 
@@ -578,6 +640,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     currentProject,
     copiedId,
     themed,
+    theme,
     projectSlug,
     onPost,
   ])
@@ -766,6 +829,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
                   <Command.Item
                     key={item.id}
                     value={item.id}
+                    aria-label={item.label}
                     className={styles.option}
                     onSelect={() => activate(item)}
                   >

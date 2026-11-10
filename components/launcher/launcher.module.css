@@ -530,3 +530,53 @@
     background-position: -50% 0;
   }
 }
+
+/* Settings: one row per setting, its choices inline as a small segmented
+   control. The active choice is marked by ground and weight, not colour
+   alone. */
+.setting {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.segments {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: auto;
+  padding: 2px;
+  border: 1px solid var(--l-line);
+  border-radius: 999px;
+}
+.segment {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 999px;
+  color: var(--l-muted);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.segment:hover {
+  color: var(--l-fg);
+}
+.segment[data-active] {
+  background: var(--l-raise);
+  box-shadow: inset 0 0 0 1px var(--l-line);
+  color: var(--l-fg);
+  font-weight: 600;
+}
+.segmentIcon {
+  width: 12px;
+  height: 12px;
+}
+.title:has(.setting) {
+  flex: 1;
+  overflow: visible;
+}
+@media (max-width: 640px) {
+  .segment {
+    padding: 0 8px;
+  }
+}
