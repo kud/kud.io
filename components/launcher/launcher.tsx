@@ -348,6 +348,32 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     return () => dialog.close()
   }, [])
 
+  // cmdk (1.1.1) only names the active option to assistive tech after an
+  // arrow key: the first result it selects by itself, on open and on every
+  // search, is shown but never announced. Mirror whatever it marks selected
+  // onto the input; once cmdk sets the attribute itself, React's write wins.
+  useEffect(() => {
+    const dialog = dialogRef.current
+    const input = inputRef.current
+    if (!dialog || !input) return
+    const sync = () => {
+      const selected = dialog.querySelector('[cmdk-item][data-selected="true"]')
+      if (
+        selected?.id &&
+        input.getAttribute("aria-activedescendant") !== selected.id
+      )
+        input.setAttribute("aria-activedescendant", selected.id)
+    }
+    const observer = new MutationObserver(sync)
+    observer.observe(dialog, {
+      subtree: true,
+      childList: true,
+      attributeFilter: ["data-selected"],
+    })
+    sync()
+    return () => observer.disconnect()
+  }, [])
+
   useEffect(() => {
     if (cachedIndex) return
     preloadLauncherIndex().then(setIndex, () => setFailed(true))
