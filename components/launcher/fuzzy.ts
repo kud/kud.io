@@ -55,6 +55,9 @@ export const fuzzyScore = (
   const query = fold(rawQuery.trim())
   if (!query) return 0
   const best = scoreOne(query, title)
-  const extra = Math.max(0, ...extras.map((text) => scoreOne(query, text, false)))
+  const extra = Math.max(
+    0,
+    ...extras.map((text) => scoreOne(query, text, false)),
+  )
   return Math.max(best, extra * 0.7)
 }
