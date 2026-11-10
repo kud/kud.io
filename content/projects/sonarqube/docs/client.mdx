@@ -1,0 +1,75 @@
+---
+title: 🔌 Client
+description: Every SonarQubeClient method, the options it takes and what comes back.
+---
+
+`SonarQubeClient` talks to the SonarQube web API on global `fetch`, with no runtime dependencies. Build it from a resolved config.
+
+```ts
+import { SonarQubeClient, resolveConfig } from "@kud/sonarqube"
+
+const client = new SonarQubeClient(resolveConfig())
+```
+
+The constructor throws `MissingHostError` without a host. Trailing slashes on the host are trimmed. When a token is set it is sent as the basic-auth username with an empty password.
+
+## Gate and measures
+
+| Method | Purpose |
+| --- | --- |
+| `getProjectStatus({ project, branch?, pullRequest? })` | Raw quality gate status |
+| `explainGate({ project, branch?, pullRequest? })` | The same status as a `GateExplanation`, see [Quality gate](/projects/sonarqube/docs/quality-gate) |
+| `getMeasures({ project, metricKeys, branch?, pullRequest? })` | Current measures, or `null` when there is no component |
+| `getMeasuresHistory({ component, metrics, branch?, pullRequest?, from?, to?, limit? })` | Measure history; `limit` defaults to 100 |
+
+`metricKeys` and `metrics` accept a string or an array of strings.
+
+## Issues
+
+```ts
+const result = await client.getIssues({
+  project: "acme-api",
+  severities: ["CRITICAL", "BLOCKER"],
+  newCode: true,
+  limit: 20,
+})
+```
+
+| Method | Purpose |
+| --- | --- |
+| `getIssues(query)` | Issue search by `project`, `branch`, `pullRequest`, `severities`, `types`, `statuses`, `page`, `limit`, `newCode` |
+| `getIssue(key)` | One issue by key, or `null` |
+| `getIssuesSummary({ project, branch?, pullRequest?, facets? })` | Counts per facet without fetching the list; facets default to `severities,types,statuses` |
+| `getIssueSource(issue, contextLines = 5)` | Source lines around an issue, or `null` when the source cannot be fetched |
+
+Details worth knowing:
+
+- Issues are filtered to `resolved=false` unless `statuses` is given.
+- `limit` defaults to 10 and is capped at 500.
+- With `newCode: true` the client sends `inNewCodePeriod=true`, and retries once with `sinceLeakPeriod=true` if an older server answers 400.
+- `getIssueSource` returns `{ content, snippet, start, end, focus }`. The snippet marks the focus line with `>` and pads line numbers. Without a line it returns the content and a `null` snippet.
+
+## Hotspots, rules and duplications
+
+| Method | Purpose |
+| --- | --- |
+| `searchHotspots({ project, branch?, pullRequest?, status?, severity?, page?, limit? })` | Security hotspots; `limit` defaults to 50 |
+| `getHotspot(key)` | One hotspot, or `null` |
+| `searchRules({ query?, languages?, tags?, repositories?, severities?, page?, limit? })` | Rule search |
+| `getRule(key)` | One rule, or `null` |
+| `getDuplications({ key, branch?, pullRequest? })` | Duplication blocks and their files |
+
+## Structure and catalogue
+
+| Method | Purpose |
+| --- | --- |
+| `getComponentTree({ component, branch?, pullRequest?, qualifiers?, metricKeys?, strategy?, limit? })` | Component tree; qualifiers default to `FIL`, strategy to `leaves` |
+| `getBranches(project)` | Branches of a project |
+| `searchProjects({ query?, page?, limit? })` | Projects (`TRK`) matching a query |
+| `searchQualityProfiles({ language?, project? })` | Quality profiles |
+
+`getComponentTree` only returns measures when `metricKeys` is given, because that uses a different endpoint (`/api/measures/component_tree` rather than `/api/components/tree`).
+
+## Failures
+
+A non-2xx response throws `SonarQubeHttpError` carrying `status` and `path`. See [Helpers and errors](/projects/sonarqube/docs/helpers).

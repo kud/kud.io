@@ -1,7 +1,7 @@
 ---
 title: "sonarqube-cli"
 description: "A fast, focused CLI & TUI for SonarQube metrics, quality gates, issues and code snippets — with branch awareness and zero config friction."
-hasDocs: false
+hasDocs: true
 ---
 
 > SonarQube from the terminal: why the quality gate is red, metrics, issues, hotspots and rules, plus an interactive issues dashboard.

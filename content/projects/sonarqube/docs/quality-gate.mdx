@@ -1,0 +1,41 @@
+---
+title: 🚦 Quality gate
+description: Turn a project status into a "why is the gate red" answer.
+---
+
+`explainGate` converts the raw `ProjectStatus` into something you can print directly. The client exposes it as `client.explainGate(...)`, and the pure function is exported for use on a status you already hold.
+
+```ts
+import { SonarQubeClient, resolveConfig } from "@kud/sonarqube"
+
+const config = resolveConfig()
+const client = new SonarQubeClient(config)
+
+const why = await client.explainGate({ project: config.project! })
+console.log(why.status, why.newCodePeriod)
+for (const c of why.conditions)
+  console.log(c.failing ? "x" : "ok", c.metric, c.actual, c.comparator, c.threshold)
+```
+
+## The result
+
+| Field | Meaning |
+| --- | --- |
+| `status` | `OK`, `FAILED`, `warning` or `no gate result` |
+| `rawStatus` | The server's value: `OK`, `ERROR`, `WARN` or `NONE` |
+| `newCodePeriod` | `{ mode, parameter, date }` from the status period, when present |
+| `conditions` | One entry per condition, failing ones first |
+
+Each condition carries `metric`, `status`, `failing`, `comparator`, `threshold` and `actual`. A condition is failing when its status is anything other than `OK`. Order is otherwise preserved.
+
+## Ratings as letters
+
+SonarQube stores ratings as 1 to 5. For any metric ending in `_rating`, `threshold` and `actual` are shown as A to E. Other metrics are returned as strings unchanged.
+
+## Helpers
+
+| Export | Purpose |
+| --- | --- |
+| `explainGate(projectStatus)` | The model above |
+| `gateStatusWord(status?)` | Maps `OK`, `ERROR`, `WARN`, `NONE` to the status word |
+| `formatMetricValue(metricKey, value?)` | Rating letter or plain string; `undefined` for a missing value |

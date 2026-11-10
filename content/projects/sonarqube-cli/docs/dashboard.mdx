@@ -1,0 +1,28 @@
+---
+title: 🖥️ Dashboard
+description: The interactive issues view opened by a bare sonarqube.
+---
+
+Running `sonarqube` with no command opens a terminal dashboard for the configured project: an issues list, the selected issue's detail, and a highlighted snippet of the code around it.
+
+```sh
+sonarqube
+sonarqube issues -i --new-code --severities CRITICAL,MAJOR
+```
+
+`issues -i` (or `--interactive`) is the same dashboard, started with filters. Outside a terminal, bare `sonarqube` prints the help instead of trying to draw.
+
+## Keys
+
+| Key             | Action                                           |
+| --------------- | ------------------------------------------------ |
+| `↑` / `↓`, `j` / `k` | Move through the issues, loading each snippet |
+| `enter`         | View the selected issue                          |
+| `r`             | Refresh the code snippet                         |
+| `b`             | Switch branch, keeping your filters              |
+| `h` or `?`      | Show the key help                                |
+| `q` or `Ctrl-C` | Quit                                             |
+
+## Filters
+
+The dashboard takes the same issue filters as `sonarqube issues`: `--severities`, `--types`, `--statuses`, `--new-code`, `-l, --limit`. See [Commands](/projects/sonarqube-cli/docs/commands). The project and branch come from the usual [configuration](/projects/sonarqube-cli/docs/configuration), and `b` changes the branch without restarting.

@@ -1,0 +1,78 @@
+---
+title: 🧰 Commands
+description: Every command, its flags, and the options shared by all of them.
+---
+
+## Shared flags
+
+Every command that talks to SonarQube accepts these.
+
+| Flag                  | Meaning                                   |
+| --------------------- | ----------------------------------------- |
+| `-H, --host <url>`    | Server URL (`-h` is always help)          |
+| `-t, --token <token>` | Auth token                                |
+| `-p, --project <key>` | Project key                               |
+| `-b, --branch <name>` | Branch                                    |
+| `-c, --config <path>` | Config file to use instead of the default |
+| `-j, --json`          | JSON output                               |
+
+Commands that show a single object (`issue`, `hotspot`, `rule`, `duplications`) also take `--url` to print its web URL and `--open` to open it in the browser.
+
+## Issues
+
+```sh
+sonarqube issues --new-code --severities CRITICAL,MAJOR -l 25
+sonarqube issues:summary
+sonarqube issue <key> --open
+```
+
+| Flag           | Values                                                          |
+| -------------- | --------------------------------------------------------------- |
+| `--severities` | `BLOCKER,CRITICAL,MAJOR,MINOR,INFO`                             |
+| `--types`      | `BUG,VULNERABILITY,CODE_SMELL,SECURITY_HOTSPOT`                 |
+| `--statuses`   | `OPEN,CONFIRMED,REOPENED,RESOLVED,CLOSED` (default: unresolved) |
+| `--new-code`   | Only issues in the new-code period                              |
+| `-l, --limit`  | Max issues (default 10)                                         |
+| `-i`           | Open the dashboard instead of printing                          |
+
+Each issue shows its author (the part before `@`) and creation date as `YYYY-MM-DD`. `issues:summary` prints counts by severity, type and status; `--facets <list>` changes the facets.
+
+## Hotspots
+
+```sh
+sonarqube hotspots --status TO_REVIEW --severity HIGH
+sonarqube hotspot <key>
+```
+
+`hotspots` takes `--status` (`TO_REVIEW` or `REVIEWED`), `--severity` (`LOW`, `MEDIUM`, `HIGH`) and `-l, --limit` (default 50).
+
+## Rules
+
+```sh
+sonarqube rules -q "cognitive complexity" --languages ts
+sonarqube rule <key>
+```
+
+`rules` takes `-q, --query`, `--languages`, `--tags`, `--repository`, `--severities` and `-l, --limit` (default 50).
+
+## Measures and files
+
+| Command                | Purpose                                                    |
+| ---------------------- | ---------------------------------------------------------- |
+| `measures -C <key>`    | Measures for a component; `-m` picks metrics               |
+| `measures:history -C <key>` | History with sparklines; `--from` and `--to` as `YYYY-MM-DD` |
+| `component-tree -C <key>`   | Files under a component; `-q` qualifiers, `--strategy leaves\|children` |
+| `duplications -f <file>`    | Duplicated blocks in one file                         |
+| `quality-profiles`          | Quality profiles; `--language` filters                |
+
+`-m` defaults to `coverage,bugs,vulnerabilities,code_smells`.
+
+## Config helpers
+
+| Command         | Purpose                                                  |
+| --------------- | -------------------------------------------------------- |
+| `print-config`  | The resolved configuration after every layer, token redacted |
+| `config set k=v…` | Write `host`, `token`, `project` or `branch` to the file |
+| `config get <key>` | Print one stored value (the token prints as `***`)    |
+| `config show`   | The stored file, token redacted                          |
+| `config path`   | Where the file lives                                     |

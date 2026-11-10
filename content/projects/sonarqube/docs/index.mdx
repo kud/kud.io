@@ -1,0 +1,13 @@
+---
+title: 👋 Introduction
+description: A headless SonarQube core for Node, shared by the CLI and MCP surfaces.
+---
+
+`@kud/sonarqube` is the surface-agnostic core behind kud's SonarQube tools: a typed client, a layered config resolver and a model that explains why a quality gate is red. It has no CLI, no prompts and no rendering, so any front end can sit on top of it.
+
+## What's here
+
+- [🔌 Client](/projects/sonarqube/docs/client) — every `SonarQubeClient` method, its query and what it returns
+- [⚙️ Configuration](/projects/sonarqube/docs/configuration) — config file, environment, explicit options and the project-key fallback
+- [🚦 Quality gate](/projects/sonarqube/docs/quality-gate) — `explainGate`, status words and A–E ratings
+- [🧰 Helpers and errors](/projects/sonarqube/docs/helpers) — redaction, formatters and the typed errors

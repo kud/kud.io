@@ -1,0 +1,43 @@
+---
+title: ⚙️ Configuration
+description: Host, token, project and branch, and how flags, environment and files layer.
+---
+
+Settings resolve in layers, each overriding the last:
+
+1. The config file
+2. Environment variables
+3. Flags
+
+Without a project key from any of those, `sonar.projectKey` is read from `sonar-project.properties` in the current directory. There is no default host: set one or the command stops.
+
+| Setting | Environment (first set wins)                             | File key  | Flag                |
+| ------- | -------------------------------------------------------- | --------- | ------------------- |
+| host    | `SONARQUBE_DASH_HOST`, `SONAR_HOST_URL`                  | `host`    | `-H, --host`        |
+| token   | `SONARQUBE_DASH_TOKEN`, `SONARQUBE_TOKEN`, `SONAR_TOKEN` | `token`   | `-t, --token`       |
+| project | `SONARQUBE_DASH_PROJECT`                                 | `project` | `-p, --project`     |
+| branch  | `SONARQUBE_DASH_BRANCH`                                  | `branch`  | `-b, --branch`      |
+
+The host flag is `-H` because `-h` always means help.
+
+## Config file
+
+The file lives at `$XDG_CONFIG_HOME/sonarqube-dash-cli/config.json`, or `~/.config/sonarqube-dash-cli/config.json` when that variable is unset. Use `-c, --config <path>` for another file.
+
+```sh
+sonarqube config set host=https://sonarqube.example.com token=abc project=my-project
+sonarqube config show
+sonarqube config path
+```
+
+## Check what was resolved
+
+```sh
+sonarqube print-config -p other-project
+```
+
+Prints the final values after all layers, with the token redacted. Useful when a CI job talks to the wrong project.
+
+## Upgrading from sonarqube-dash
+
+The package was `sonarqube-dash` and is now `@kud/sonarqube-cli`. Both `sonarqube` and `sonarqube-dash` binaries are installed, and the config file path is unchanged. Scripts that passed the host as `-h <url>` must now use `-H <url>`.

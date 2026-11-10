@@ -1,0 +1,60 @@
+---
+title: ⚙️ Configuration
+description: How host, token, project and branch are resolved from file, environment and options.
+---
+
+`resolveConfig()` builds a `SonarQubeConfig` (`host`, `token`, `project`, `branch`) in layers, each overriding the last:
+
+1. the config file
+2. the environment
+3. explicit options
+
+Undefined and empty values never overwrite a lower layer.
+
+```ts
+import { resolveConfig } from "@kud/sonarqube"
+
+const config = resolveConfig({ branch: "main" })
+```
+
+## Settings
+
+| Setting | Environment (first set wins) | File key |
+| --- | --- | --- |
+| host | `SONARQUBE_DASH_HOST`, `SONAR_HOST_URL` | `host` |
+| token | `SONARQUBE_DASH_TOKEN`, `SONARQUBE_TOKEN`, `SONAR_TOKEN` | `token` |
+| project | `SONARQUBE_DASH_PROJECT` | `project` |
+| branch | `SONARQUBE_DASH_BRANCH` | `branch` |
+
+There is no default host. Constructing a client without one throws `MissingHostError`.
+
+## Config file
+
+The file is `$XDG_CONFIG_HOME/sonarqube-dash-cli/config.json`, defaulting to `~/.config/sonarqube-dash-cli/config.json`. The path is resolved on every call, so changes to `XDG_CONFIG_HOME` are honoured.
+
+```json
+{
+  "host": "https://sonarqube.example.com",
+  "project": "acme-api"
+}
+```
+
+| Function | Purpose |
+| --- | --- |
+| `configFilePath(env?)` | The config file location |
+| `readConfigFile(file)` | Parsed file, or `{}` when missing or invalid |
+| `writeConfig(data, file?)` | Merges `data` over the existing file, creates the directory, returns `{ path, data }` |
+
+## Project-key fallback
+
+With no project from any layer, `resolveConfig` reads `sonar.projectKey` from `sonar-project.properties`. `readSonarProjectKey(dir?)` does that lookup on its own and skips blank and `#` or `!` comment lines.
+
+## Resolve options
+
+`resolveConfig` accepts the four settings plus three testing hooks:
+
+| Option | Default |
+| --- | --- |
+| `configPath` | The XDG location |
+| `cwd` | `process.cwd()`, where `sonar-project.properties` is looked up |
+| `env` | `process.env` |

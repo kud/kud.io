@@ -1,0 +1,52 @@
+---
+title: 🚦 Quality gate
+description: Explain why the gate is red, and use it as a CI check.
+---
+
+`sonarqube quality-gate` (alias `gate`) fetches the gate for a project and branch and prints the status, the new-code period, and every condition with the failing ones first.
+
+```sh
+sonarqube quality-gate -p my-project -b main
+```
+
+```
+🚦 Quality gate: FAILED  my-project (main)
+   New code: PREVIOUS_VERSION 1.2.0, since 2026-10-01
+
+  ✖ new_coverage                   62.1, needs ≥ 80
+  ✖ new_reliability_rating         C, needs A
+  ✔ new_duplicated_lines_density   0.5, needs ≤ 3
+
+2 failing conditions
+```
+
+Rating metrics show as letters, A to E, rather than the raw 1 to 5 the API returns.
+
+## Use it in CI
+
+`--fail` sets the exit code to 1 when the gate status is `ERROR`. Without it, the command always exits 0 once it has printed.
+
+```sh
+sonarqube gate --fail
+```
+
+Pass the connection through the environment so no token lands in the job definition:
+
+```sh
+SONARQUBE_DASH_HOST=https://sonarqube.example.com \
+SONARQUBE_DASH_TOKEN="$SONAR_TOKEN" \
+SONARQUBE_DASH_PROJECT=my-project \
+sonarqube gate --fail
+```
+
+## JSON output
+
+`--json` prints the same explanation as data, with `projectKey` and `branch` added. It combines with `--fail`.
+
+```sh
+sonarqube gate --json --fail
+```
+
+## A quicker overview
+
+`sonarqube metrics` (alias `m`) prints the gate status next to the headline metrics: bugs, vulnerabilities, code smells, coverage and duplicated lines density. Use `--print-config` to see the resolved configuration instead.
