@@ -1274,13 +1274,13 @@
   display: grid;
 }
 
-.moreList li[data-pick="1"] {
+:global(#blog-root[data-picks="mixed"]) .moreList li[data-pick="1"] {
   order: 1;
 }
-.moreList li[data-pick="2"] {
+:global(#blog-root[data-picks="mixed"]) .moreList li[data-pick="2"] {
   order: 2;
 }
-.moreList li[data-pick="3"] {
+:global(#blog-root[data-picks="mixed"]) .moreList li[data-pick="3"] {
   order: 3;
 }
 
