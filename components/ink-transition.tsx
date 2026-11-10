@@ -22,12 +22,12 @@ const COVER_DURATION = 420
 const COMMIT_TIMEOUT = 2500
 const ARRIVE_DURATION = 760
 
-// The ink overlay, rendered once in the root layout. Three jobs:
+// The ink overlay, rendered once in the root layout. Two jobs (a theme switch
+// merges instead, components/theme-merge.ts):
 // - page moves: listens for `ink:reveal` (components/ink.ts → inkNavigate),
 //   spills cover ink in the destination's ground out of the pressed control,
 //   navigates under the full cover, holds it until the pathname confirms the
 //   destination committed, then lifts it;
-// - the theme switch: components/ink.ts → inkSwap drives the same element by id;
 // - the first-load reveal on home: ArriveScript paints a plain cover before
 //   first paint, and this lifts it as ink once hydrated.
 export const InkTransition = () => {
@@ -120,9 +120,10 @@ export const InkTransition = () => {
 // First arrival on home: a cover in the home ground is held from before first
 // paint and InkTransition lifts it as ink once hydrated. Decided in the
 // browser, never from searchParams, so the page stays static. Reduced motion
-// never gets the cover. global.css paints it and drops it after 3s whatever
-// happens, so a script failure can't leave the page hidden.
-const ARRIVE_SCRIPT = `try{if(location.pathname==="/"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.arrive="ink"}catch(e){}`
+// never gets the cover, nor does Ink, whose paper never spills. global.css
+// paints it and drops it after 3s whatever happens, so a script failure can't
+// leave the page hidden.
+const ARRIVE_SCRIPT = `try{if(location.pathname==="/"&&localStorage.getItem("kud.theme")!=="ink"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.arrive="ink"}catch(e){}`
 
 export const ArriveScript = () => (
   <script dangerouslySetInnerHTML={{ __html: ARRIVE_SCRIPT }} />

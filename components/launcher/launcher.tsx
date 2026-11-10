@@ -23,6 +23,7 @@ import {
   LayoutGrid,
   Mail,
   Monitor,
+  Droplet,
   Moon,
   Package,
   PenLine,
@@ -184,6 +185,7 @@ const THEME_OPTION: Record<ScopedTheme, { label: string; Icon: LucideIcon }> = {
   system: { label: "System", Icon: Monitor },
   light: { label: "Light", Icon: Sun },
   dark: { label: "Dark", Icon: Moon },
+  ink: { label: "Ink", Icon: Droplet },
 }
 
 const THEMES = SCOPED_THEMES.map((value) => ({ value, ...THEME_OPTION[value] }))

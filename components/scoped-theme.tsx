@@ -7,7 +7,8 @@ import {
   useSyncExternalStore,
 } from "react"
 import type { ReactNode } from "react"
-import { inkSwap, scopeGroundFor } from "@/components/ink"
+import { scopeGroundFor } from "@/components/ink"
+import { themeMerge } from "@/components/theme-merge"
 
 // Scoped visitor themes: each themed surface (the blog, the Dusk pages under
 // /projects) owns its own light/dark/system choice, stamped as data-theme on
@@ -36,13 +37,14 @@ export const BLOG_ROOT_ID = "blog-root"
 // Every choice a picker offers. Anything that lists themes (the Dusk picker,
 // the blog control, the command launcher's settings) maps over this and keeps
 // its own word and mark in a Record<ScopedTheme, …>, so a theme added here
-// fails the build until every list has something to say for it.
-export const SCOPED_THEMES = ["system", "light", "dark"] as const
+// fails the build until every list has something to say for it. Ink is the
+// third world: an e-ink reader, white paper and greys only (app/ink.css).
+export const SCOPED_THEMES = ["system", "light", "dark", "ink"] as const
 
 export type ScopedTheme = (typeof SCOPED_THEMES)[number]
 
 const isTheme = (value: unknown): value is ScopedTheme =>
-  value === "light" || value === "dark" || value === "system"
+  (SCOPED_THEMES as readonly unknown[]).includes(value)
 
 // Returns the stored choice, moving a legacy blog value to the shared key the
 // first time it is seen. Throws when storage is blocked; callers catch.
@@ -67,7 +69,7 @@ const THEME_SCRIPT = `try{var t=localStorage.getItem(${JSON.stringify(
   THEME_KEY,
 )});if(t===null)t=localStorage.getItem(${JSON.stringify(
   LEGACY_THEME_KEY,
-)});if(t==="light"||t==="dark")document.currentScript.parentElement.dataset.theme=t}catch(e){}`
+)});if(t==="light"||t==="dark"||t==="ink")document.currentScript.parentElement.dataset.theme=t}catch(e){}`
 
 const themeListeners = new Set<() => void>()
 // Holds the choice for this page load when storage is blocked, so the control
@@ -113,24 +115,28 @@ export const useScopedTheme = () => {
     serverTheme,
   )
 
-  // origin is the pressed control: the new light spreads out of it as ink in
-  // the new ground (components/ink.ts). Storage and the control update at once;
-  // only the stamp, the one thing that repaints the page, waits for the cover.
-  // A choice that resolves to the ground already showing (Dark to Auto on a
-  // dark OS) has nothing to cover and swaps plainly.
-  const setTheme = useCallback((next: ScopedTheme, origin?: Element | null) => {
-    const before = readStoredTheme()
-    unpersistedTheme = next
-    const from = scopeGroundFor(before)
-    const to = scopeGroundFor(next)
-    void inkSwap(from === to ? null : origin, to, () => stampScopes(next))
-    try {
-      localStorage.setItem(THEME_KEY, next)
-    } catch {
-      // Preference simply won't persist; the session still themes correctly.
-    }
-    themeListeners.forEach((listener) => listener())
-  }, [])
+  // The old light merges into the new one (components/theme-merge.ts). Ink is
+  // for changing world, never for a theme. A choice that resolves to the
+  // ground already showing (Dark to Auto on a dark OS) has nothing to blend
+  // and swaps plainly. The pressed control is still accepted from callers but
+  // a crossfade has no origin.
+  const setTheme = useCallback(
+    (next: ScopedTheme, _origin?: Element | null) => {
+      const before = readStoredTheme()
+      unpersistedTheme = next
+      const from = scopeGroundFor(before)
+      const to = scopeGroundFor(next)
+      if (from === to) stampScopes(next)
+      else themeMerge(() => stampScopes(next))
+      try {
+        localStorage.setItem(THEME_KEY, next)
+      } catch {
+        // Preference simply won't persist; the session still themes correctly.
+      }
+      themeListeners.forEach((listener) => listener())
+    },
+    [],
+  )
 
   return { theme, setTheme }
 }
@@ -230,12 +236,25 @@ const themeGlyph: Record<ScopedTheme, ReactNode> = {
       <path d="M8 1.499a6.501 6.501 0 0 0 0 13.002Z" />
     </svg>
   ),
+  // A drop of ink, sized to the same circle as Moon and Auto at its belly.
+  ink: (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M8 1.25c-.26 0-.5.14-.63.37C6.1 3.84 3.5 7.1 3.5 10a4.5 4.5 0 0 0 9 0c0-2.9-2.6-6.16-3.87-8.38A.73.73 0 0 0 8 1.25Z" />
+    </svg>
+  ),
 }
 
 const themeLabel: Record<ScopedTheme, string> = {
   light: "Light",
   dark: "Dark",
   system: "Auto",
+  ink: "Ink",
 }
 
 // Deliberately unstyled beyond the marks themselves: Iris owns how this looks
@@ -245,7 +264,7 @@ export const ThemeControl = ({ className }: { className?: string }) => {
 
   return (
     <div className={className} role="group" aria-label="Colour theme">
-      {(["light", "dark", "system"] as const).map((option) => (
+      {SCOPED_THEMES.map((option) => (
         <button
           key={option}
           type="button"

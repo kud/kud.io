@@ -1,7 +1,6 @@
 "use client"
 
 import type { MouseEvent } from "react"
-import { spill } from "@kud/inkblot"
 import { readStoredTheme, type ScopedTheme } from "@/components/scoped-theme"
 
 // Every ground a page can paint, mirrored from the CSS that paints it. The ink
@@ -18,8 +17,15 @@ const BLOG_GROUND = { light: "#f7f8f9", dark: "#0e1418" } as const
 
 type Scheme = "light" | "dark"
 
+// Ink paints its own paper (app/ink.css, --ik-paper), read live because the
+// paper is a preview choice.
+const inkVar = (name: string): string =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+const inkGround = (): string => inkVar("--ik-paper") || "#ffffff"
+
 // "system" resolves the way each scope's CSS does: prefers-color-scheme.
 export const resolveScheme = (theme: ScopedTheme): Scheme => {
+  if (theme === "ink") return isLightGround(inkGround()) ? "light" : "dark"
   if (theme !== "system") return theme
   return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
 }
@@ -35,6 +41,11 @@ const scopeGround = (pathname: string, scheme: Scheme): string | null => {
 // The ground a route will paint on arrival, or null when it isn't known (the
 // 404, anything new), which means "navigate plainly", never "guess a colour".
 export const groundFor = (pathname: string): string | null => {
+  try {
+    if (readStoredTheme() === "ink") return inkGround()
+  } catch {
+    return null
+  }
   if (pathname === "/") return HOME_GROUND
   try {
     return scopeGround(pathname, resolveScheme(readStoredTheme()))
@@ -49,8 +60,11 @@ export const groundFor = (pathname: string): string | null => {
 // deliberate seam: the ink reads as ink, not as the page arriving early.
 const isLightGround = (hex: string) =>
   parseInt(hex.slice(1, 3), 16) + parseInt(hex.slice(3, 5), 16) > 300
-export const inkFor = (ground: string): string =>
-  isLightGround(ground) ? "#ffffff" : ground
+// In the Ink world the cover is the ink itself, lifting off onto paper.
+export const inkFor = (ground: string): string => {
+  if (ground === inkGround()) return inkVar("--ik-ink") || "#111111"
+  return isLightGround(ground) ? "#ffffff" : ground
+}
 
 // The site's worlds, by first path segment: "/" is home, the rest are named
 // by their section. A path no world claims is its own.
@@ -97,6 +111,13 @@ export const inkNavigate = (
   // 2026-11-10). The icon glide rides on that one.
   if (worldOf(url.pathname) === worldOf(window.location.pathname)) return false
 
+  // E-paper never spills: the link navigates as it would anyway, under a
+  // refresh flash.
+  if (readStoredTheme() === "ink") {
+    inkRefresh()
+    return false
+  }
+
   const ground = groundFor(url.pathname)
   if (!ground) return false
   const color = inkFor(ground)
@@ -116,45 +137,29 @@ export const inkNavigate = (
   return true
 }
 
-let swapRun = 0
-
-// The theme switch: ink in the new light's ground spreads out of the pressed
-// control, the scope is restamped only once it fully covers the page (so the
-// old theme never shows in the new colour, nor the reverse), then lifts. With
-// reduced motion, or when the overlay is missing, it is a plain swap.
-export const inkSwap = async (
-  origin: Element | null | undefined,
-  color: string,
-  apply: () => void,
-) => {
-  const el = document.getElementById(INK_OVERLAY_ID)
-  if (!el || !origin || reducedMotion()) {
-    apply()
-    return
-  }
-  swapRun += 1
-  const run = swapRun
-  const ink = inkFor(color)
-  await spill(el, { mode: "cover", from: origin, colour: ink, duration: 380 })
-  // A newer press took over mid-spread: its own apply decides the end state.
-  if (run !== swapRun) return
-  apply()
-  requestAnimationFrame(() =>
-    requestAnimationFrame(() => {
-      if (run !== swapRun) return
-      void spill(el, {
-        mode: "reveal",
-        from: origin,
-        colour: ink,
-        duration: 420,
-      })
-    }),
-  )
-}
-
 // The ground a scoped page paints under a given choice: the blog's own, or
 // Dusk's for /projects and the docs.
 export const scopeGroundFor = (theme: ScopedTheme): string => {
+  if (theme === "ink") return inkGround()
   const blog = document.getElementById("blog-root") !== null
   return (blog ? BLOG_GROUND : DUSK_GROUND)[resolveScheme(theme)]
+}
+
+let refreshTimer: number | undefined
+
+// The Ink world's page move: a panel refresh. One inverted frame, then paper,
+// then the page (app/ink.css, html[data-ink-refresh]). Theme switches never
+// use it; they merge (components/theme-merge.ts). Under reduced motion
+// nothing plays.
+export const inkRefresh = () => {
+  const root = document.documentElement
+  if (reducedMotion()) return
+  delete root.dataset.inkRefresh
+  // Restart the animation when two moves land inside one flash.
+  void root.offsetWidth
+  root.dataset.inkRefresh = ""
+  window.clearTimeout(refreshTimer)
+  refreshTimer = window.setTimeout(() => {
+    delete root.dataset.inkRefresh
+  }, 300)
 }

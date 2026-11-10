@@ -1,0 +1,220 @@
+/* Ink ----------------------------------------------------------------------- */
+/* The third theme: an e-ink reader. White paper, black ink, and nothing in
+   between but greys: text, chrome, code and every image. It is stamped like
+   Light and Dark, as data-theme="ink" on a [data-theme-scope] wrapper
+   (components/scoped-theme.tsx), and home carries a scope only so it can take
+   this one; home ignores Light and Dark.
+
+   No hue survives, so nothing may have been saying anything with one. What
+   colour used to tell apart, weight, underline and fill tell apart here: a
+   link is underlined, the primary action is a black fill, a selected thing is
+   inverted, a diff line keeps its sign.
+
+   Every text pair clears 4.5:1 on paper, card, wash and blot (measured,
+   2026-11-10): the lowest is dim on blot at 5.81. */
+:root {
+  --ik-paper: #ffffff;
+  --ik-card: #ffffff;
+  --ik-wash: #f0f0f0;
+  --ik-blot: #e3e3e3;
+  --ik-ink: #111111;
+  --ik-muted: #3d3d3d;
+  --ik-dim: #555555;
+  /* The accent is the ink itself: emphasis is weight, underline or fill. */
+  --ik-accent: #111111;
+  --ik-on-accent: #ffffff;
+  /* A pressed or hovered black fill: one step off the ink, still 10:1. */
+  --ik-press: #3d3d3d;
+  --ik-line: #111111;
+  --ik-line-dim: #c4c4c4;
+  --ik-scheme: light;
+  /* No hand-drawn wobble on a screen that draws in pixels. */
+  --ik-wobble: 4px;
+  --ik-wobble-sm: 3px;
+  /* Images: greyscale with the contrast pressed a little, the way an e-paper
+     panel flattens a photo's midtones. */
+  --ik-image: grayscale(1) contrast(1.18) brightness(1.04);
+}
+/* Shared by every ink scope ------------------------------------------------- */
+/* The safety net: whatever a token missed (a vendor colour, a hard-coded hex,
+   an inline SVG), the whole document is printed in greys. Filter on the root
+   element does not become a containing block, so fixed elements stay put. */
+html:has([data-theme-scope][data-theme="ink"]) {
+  filter: grayscale(1);
+}
+html:has([data-theme-scope][data-theme="ink"]),
+body:has([data-theme-scope][data-theme="ink"]) {
+  background-color: var(--ik-paper);
+}
+[data-theme-scope][data-theme="ink"] {
+  background-color: var(--ik-paper);
+  color: var(--ik-ink);
+}
+
+/* Images, covers, avatars, icons and logos: every raster on the page. */
+[data-theme="ink"] :is(img, video, picture, canvas, svg image) {
+  filter: var(--ik-image);
+}
+
+/* Dusk: /projects, a project page and its docs. Doubled attributes outrank
+   warm.css's prefers-color-scheme block, which would otherwise read "ink" as
+   "not light" and paint the night. */
+html:has([data-ground="dusk"][data-theme="ink"][data-theme="ink"]),
+[data-ground="dusk"][data-theme="ink"][data-theme="ink"] {
+  --dk-bg: var(--ik-paper);
+  --dk-surface: var(--ik-card);
+  --dk-surface-2: var(--ik-wash);
+  --dk-surface-3: var(--ik-blot);
+  --dk-border: var(--ik-line-dim);
+  --dk-border-dim: var(--ik-line-dim);
+  --dk-text: var(--ik-ink);
+  --dk-muted: var(--ik-muted);
+  --dk-dim: var(--ik-dim);
+  --dk-primary: var(--ik-accent);
+  --dk-primary-light: var(--ik-accent);
+  --dk-on-primary: var(--ik-on-accent);
+  --dk-title-a: var(--ik-ink);
+  --dk-hi: 0 0 0;
+  --dk-glow: 0 0 0;
+  --dk-cool: 0 0 0;
+  --dk-scheme: var(--ik-scheme);
+  /* Categories were never only colours: each carries its word. In one ink
+     they stay words; the product category alone keeps the full black. */
+  --dk-cat: var(--ik-muted);
+  --dk-cat-product: var(--ik-ink);
+  --dk-cat-cli: var(--ik-muted);
+  --dk-cat-mcp: var(--ik-muted);
+  --dk-cat-claude: var(--ik-muted);
+  --dk-cat-ui: var(--ik-muted);
+  --dk-cat-vscode: var(--ik-muted);
+  --dk-cat-theme: var(--ik-muted);
+}
+
+/* Blog. Its tokens live on #blog-root (app/blog/blog.module.css). Code is a
+   light grey panel: ink for the code, dim italic for comments. */
+#blog-root[data-theme="ink"][data-theme="ink"] {
+  --bg: var(--ik-paper);
+  --bg-2: var(--ik-wash);
+  --fg: var(--ik-ink);
+  --fg-2: var(--ik-muted);
+  --fg-3: var(--ik-dim);
+  --line: var(--ik-line-dim);
+  --line-2: var(--ik-line);
+  --c-bg: var(--ik-wash);
+  --c-dot: var(--ik-line-dim);
+  /* A diff keeps its sign column; the fill only reinforces it by lightness. */
+  --c-add: var(--ik-blot);
+  --c-del: var(--ik-paper);
+  --c-txt: var(--ik-ink);
+  --c-mut: var(--ik-muted);
+  --c-cm: var(--ik-dim);
+  --c-str: var(--ik-ink);
+  --c-num: var(--ik-ink);
+  --c-kw: var(--ik-ink);
+  --c-fn: var(--ik-ink);
+  --c-tag: var(--ik-dim);
+  --c-att: var(--ik-muted);
+  --c-gold: var(--ik-ink);
+  color-scheme: var(--ik-scheme);
+}
+[data-theme="ink"] ::selection {
+  background: var(--ik-ink);
+  color: var(--ik-paper);
+}
+
+/* Code: shiki's token colours are drawn for a dark slab. On paper they all
+   become ink; comments step back to dim italic. */
+[data-theme="ink"] pre,
+[data-theme="ink"] figure:has(> pre) {
+  background: var(--ik-wash) !important;
+  border: 1px solid var(--ik-line-dim) !important;
+  border-radius: var(--ik-wobble) !important;
+}
+[data-theme="ink"] pre :is(span, code) {
+  color: var(--ik-ink) !important;
+}
+[data-theme="ink"] pre span[style*="italic"] {
+  color: var(--ik-dim) !important;
+}
+
+/* Rules and boxes: a hairline, no shadow. Light has no direction on e-paper. */
+[data-theme="ink"] hr {
+  height: 0;
+  border: 0;
+  border-top: 1px solid var(--ik-line);
+}
+[data-theme="ink"]
+  :is(
+    [class*="card" i],
+    [class*="tile" i],
+    [data-card],
+    blockquote,
+    table,
+    .warm-hero > .illus-art
+  ) {
+  border-color: var(--ik-line-dim) !important;
+  box-shadow: none !important;
+}
+
+/* Links in running text are always underlined, since hue can no longer pick
+   them out. Hover thickens the line; nothing slides or fades. */
+[data-theme="ink"] :is(p, li, dd, td) a,
+[data-theme="ink"] [data-ink-blot] {
+  color: var(--ik-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: none;
+}
+[data-theme="ink"] :is(p, li, dd, td) a:hover,
+[data-theme="ink"] [data-ink-blot]:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Keyboard focus: a solid black ring, never a hue. */
+[data-theme="ink"] :focus-visible {
+  outline: 2px solid var(--ik-ink) !important;
+  outline-offset: 2px;
+}
+
+/* E-paper does not glide, so neither does a hover here: every transition
+   lands in one step. Animations (a spinner) keep their own timing, since a
+   stepped loop would freeze. The page move itself is a refresh flash
+   (components/ink.ts → inkRefresh). */
+[data-theme="ink"] *,
+[data-theme="ink"] *::before,
+[data-theme="ink"] *::after {
+  transition-timing-function: steps(1, end) !important;
+}
+
+/* The refresh: one inverted frame, then paper, then the page, as a panel
+   clears its ghosting. A single flash per move, well under three a second. */
+html[data-ink-refresh]::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  animation: ink-refresh 260ms steps(1, end) forwards;
+}
+@keyframes ink-refresh {
+  0% {
+    background: var(--ik-ink);
+  }
+  35% {
+    background: var(--ik-paper);
+  }
+  100% {
+    background: transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-ink-refresh]::after {
+    display: none;
+  }
+}
+
+/* Drawings: printed in the same ink. */
+[data-theme="ink"] .illus-art img {
+  mix-blend-mode: multiply;
+}

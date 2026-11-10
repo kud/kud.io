@@ -1204,3 +1204,126 @@
     height: clamp(46px, 7svh, 54px);
   }
 }
+
+/* Ink ------------------------------------------------------------------------*/
+/* Home has no light or dark of its own, but it does take Ink (app/ink.css):
+   the wrapper is a theme scope only for this. One ink for every word, underlined
+   links, paper for every ground, every border drawn in ink. */
+.home[data-theme="ink"] {
+  --avatar-placeholder-background: var(--ik-wash);
+}
+.home[data-theme="ink"] ::selection {
+  background: var(--ik-ink);
+  color: var(--ik-paper);
+}
+.home[data-theme="ink"] * {
+  color: var(--ik-ink);
+  border-color: var(--ik-line);
+}
+.home[data-theme="ink"] :is(.hero, .timeline, .slideAbout, .modalCard) {
+  background: transparent;
+}
+.home[data-theme="ink"] .modalCard {
+  background: var(--ik-card);
+  border: 1px solid var(--ik-line);
+  border-radius: var(--ik-wobble);
+}
+.home[data-theme="ink"] .modal::backdrop {
+  background: color-mix(in srgb, var(--ik-ink) 45%, transparent);
+}
+.home[data-theme="ink"]
+  :is(
+    .eyebrow,
+    .tagline,
+    .entryPeriod,
+    .entryPlace,
+    .entryNote,
+    .timelineEyebrow,
+    .modalPeriod,
+    .modalMeta,
+    .modalSectionLabel,
+    .scrollHint
+  ) {
+  color: var(--ik-muted);
+}
+.home[data-theme="ink"]
+  :is(.bio, .modalSummary, .modalHighlights li, .entryOrg) {
+  color: var(--ik-muted);
+}
+.home[data-theme="ink"] :is(.bio strong, .entryRole, .modalRole, .name) {
+  color: var(--ik-ink);
+}
+.home[data-theme="ink"] :is(.personal a, .entryOrgLink, .entryMore) {
+  color: var(--ik-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+.home[data-theme="ink"]
+  :is(
+    .eyebrow::before,
+    .timelineEyebrow::before,
+    .entry::before,
+    .entry:first-child::after,
+    .modalHighlights li::before
+  ) {
+  background: var(--ik-ink);
+  border-color: var(--ik-paper);
+  box-shadow: none;
+}
+.home[data-theme="ink"] .track::before {
+  background: var(--ik-line-dim);
+}
+
+/* Buttons: one black-filled primary per row, the rest an outline. Hover is a
+   grey step, never a hue. */
+.home[data-theme="ink"] :is(.primary, .timelineButtonPrimary) {
+  background: var(--ik-ink);
+  border: 1.5px solid var(--ik-ink);
+  border-radius: var(--ik-wobble-sm);
+  color: var(--ik-paper);
+}
+.home[data-theme="ink"] :is(.primary, .timelineButtonPrimary) * {
+  color: var(--ik-paper);
+}
+.home[data-theme="ink"] :is(.primary, .timelineButtonPrimary):hover {
+  background: var(--ik-press);
+  border-color: var(--ik-press);
+  color: var(--ik-on-accent);
+}
+.home[data-theme="ink"]
+  :is(
+    .secondary,
+    .timelineButton:not(.timelineButtonPrimary),
+    .focusTag,
+    .socials a,
+    .stackChip,
+    .modalClose,
+    .modalVisit
+  ) {
+  background: transparent;
+  border: 1.5px solid var(--ik-line);
+  border-radius: var(--ik-wobble-sm);
+  color: var(--ik-ink);
+  box-shadow: none;
+}
+.home[data-theme="ink"]
+  :is(
+    .secondary,
+    .timelineButton:not(.timelineButtonPrimary),
+    .focusTag,
+    .socials a,
+    .modalClose,
+    .modalVisit
+  ):hover {
+  background: var(--ik-blot);
+  color: var(--ik-ink);
+}
+.home[data-theme="ink"] .photo img,
+.home[data-theme="ink"] .cardAvatar img {
+  filter: var(--ik-image);
+}
+.home[data-theme="ink"] .spinner {
+  border-color: color-mix(in srgb, var(--ik-paper) 35%, transparent);
+  border-top-color: var(--ik-paper);
+}

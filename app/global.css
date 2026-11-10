@@ -2,6 +2,7 @@
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
 @import "./warm.css";
+@import "./ink.css";
 @import "./docs-motion.css";
 
 /* Generate the Tailwind utilities used by Fumadocs UI components. */
@@ -221,6 +222,18 @@ html[data-vt="morph"]::view-transition-new(root) {
 ::view-transition-new(site-avatar) {
   animation-duration: 0.5s;
   animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Theme merge (components/theme-merge.ts): the same page in another light, so
+   no zoom and no cover, only the two lights crossfading. It keeps the
+   plus-lighter pair above, so the dissolve never dips through a third colour. */
+html[data-vt="merge"]::view-transition-old(root),
+html[data-vt="merge"]::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+html[data-vt="merge"]::view-transition-new(root) {
+  animation-name: vt-fade-in-flat;
 }
 
 @media (prefers-reduced-motion: reduce) {
