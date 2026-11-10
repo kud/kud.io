@@ -298,6 +298,9 @@ body:has([data-ground="dusk"]) {
 [data-ground="dusk"] [data-cat="claude"][data-cat] {
   --accent: var(--dk-cat-claude);
 }
+[data-ground="dusk"] [data-cat="opencode"][data-cat] {
+  --accent: var(--dk-cat-claude);
+}
 [data-ground="dusk"] [data-cat="ui"][data-cat] {
   --accent: var(--dk-cat-ui);
 }

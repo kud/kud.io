@@ -42,9 +42,13 @@ export const CATEGORY_META: Record<string, { name: string; blurb: string }> = {
       "Model Context Protocol servers that connect Claude and other AI assistants to the tools you already use.",
   },
   claude: {
-    name: "Coding agents",
+    name: "Claude Code",
     blurb:
-      "Companions for AI coding agents like Claude Code and opencode: session managers, live dashboards, and curated plugin collections.",
+      "Companions for Claude Code: a session manager, a live dashboard, and a curated plugin marketplace.",
+  },
+  opencode: {
+    name: "opencode",
+    blurb: "Companions for opencode: plugins, a session manager, and a theme.",
   },
   lib: {
     name: "Libraries",
@@ -114,7 +118,8 @@ const CATEGORY_TYPE: Record<string, string> = {
   desktop: "Desktop app",
   cli: "CLI",
   mcp: "MCP server",
-  claude: "Coding agent companion",
+  claude: "Claude Code companion",
+  opencode: "opencode companion",
   lib: "Library",
   ui: "UI library",
   vscode: "VS Code extension",

@@ -16,6 +16,7 @@ export const GROUPS = [
   "cli",
   "mcp",
   "claude",
+  "opencode",
   "lib",
   "ui",
   "vscode",

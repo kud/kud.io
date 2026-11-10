@@ -15,6 +15,8 @@ const ECOSYSTEM_META: Record<string, { name: string }> = {
   "macos-media-keys": { name: "macOS Media Keys" },
   foxhop: { name: "Fox Hop" },
   sonarqube: { name: "SonarQube" },
+  claude: { name: "Claude Code" },
+  opencode: { name: "opencode" },
 }
 
 export const ecosystemName = (key: string): string =>

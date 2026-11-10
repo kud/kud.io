@@ -580,6 +580,9 @@
 .section[data-cat="claude"] {
   --accent: #e0a87e;
 }
+.section[data-cat="opencode"] {
+  --accent: #e0a87e;
+}
 .section[data-cat="ui"] {
   --accent: #10b981;
 }

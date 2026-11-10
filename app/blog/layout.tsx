@@ -1,9 +1,6 @@
 import type { ReactNode } from "react"
 import { InkLink as Link } from "@/components/ink-link"
-import {
-  BLOG_ROOT_ID,
-  ThemeScopeScript,
-} from "@/components/scoped-theme"
+import { BLOG_ROOT_ID, ThemeScopeScript } from "@/components/scoped-theme"
 import { ThemePicker } from "@/components/theme-picker"
 import { mono } from "./fonts"
 import styles from "./blog.module.css"
@@ -40,6 +37,9 @@ const BlogLayout = ({ children }: { children: ReactNode }) => (
         not a page, so there is no client route for Link to prefetch. */}
     <footer className={styles.footer}>
       <a href="/blog/feed.xml">RSS</a>
+      <a href="https://referrals.kud.io">
+        Referrals <span aria-hidden>↗</span>
+      </a>
       <Link href="/">
         kud.io <span aria-hidden>↗</span>
       </Link>
