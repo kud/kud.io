@@ -1,14 +1,17 @@
 "use client"
 
 import { useSyncExternalStore } from "react"
+import { usePathname } from "next/navigation"
 import { INK_CANDIDATE_KEY } from "@/components/ink-candidate"
+import { InkLink } from "@/components/ink-link"
 import styles from "./candidate-banner.module.css"
 
 // Preview only: a floating switcher for the numbered candidates in
 // app/ink-candidates.css, so they compare in one tab. It renders nothing
 // unless the page was opened with a candidate (components/ink-candidate.tsx
 // has stamped one on <html>), so production never shows it. Every switch is
-// live, except into or out of ink 4, which re-themes the scopes and reloads.
+// live. The ink row is the page-transition ink: "Play" moves between two pages
+// so the transition shows without hunting for a link.
 type Row = {
   name: "ink" | "code" | "box" | "btn"
   title: string
@@ -21,10 +24,9 @@ const ROWS: Row[] = [
     title: "Ink",
     options: [
       { value: "1", label: "today" },
-      { value: "2", label: "firmer" },
-      { value: "3", label: "darkest" },
-      { value: "4", label: "dark everywhere" },
-      { value: "5", label: "white" },
+      { value: "2", label: "dark everywhere" },
+      { value: "3", label: "white by day" },
+      { value: "4", label: "contrast" },
     ],
   },
   {
@@ -85,8 +87,6 @@ const serverSnapshot = () => ""
 
 const choose = (name: Row["name"], value: string) => {
   const root = document.documentElement
-  const attr = `${name}Candidate` as const
-  const before = root.dataset[attr]
   try {
     const key = `${INK_CANDIDATE_KEY}.${name}`
     if (value === "0") sessionStorage.removeItem(key)
@@ -94,18 +94,17 @@ const choose = (name: Row["name"], value: string) => {
   } catch {
     // Blocked storage: the switch still applies to this page view.
   }
-  if (name === "ink" && (before === "4" || value === "4")) {
-    const url = new URL(location.href)
-    url.searchParams.set("ink", value)
-    location.replace(url)
-    return
-  }
   if (value === "0") root.removeAttribute(`data-${name}-candidate`)
   else root.setAttribute(`data-${name}-candidate`, value)
   listeners.forEach((listener) => listener())
 }
 
+// Two pages to bounce between, so Play always has somewhere to go.
+const PLAY_A = "/projects/sonarqube-cli"
+const PLAY_B = "/projects"
+
 export const CandidateBanner = () => {
+  const pathname = usePathname()
   const snap = useSyncExternalStore(subscribe, snapshot, serverSnapshot)
   if (!snap) return null
   const [ink, code, box, btn] = snap.split(",")
@@ -144,6 +143,14 @@ export const CandidateBanner = () => {
             <span className={styles.label}>
               {active ? `${active.value} · ${active.label}` : ""}
             </span>
+            {row.name === "ink" ? (
+              <InkLink
+                href={pathname === PLAY_A ? PLAY_B : PLAY_A}
+                className={styles.play}
+              >
+                Play ▸
+              </InkLink>
+            ) : null}
           </div>
         )
       })}

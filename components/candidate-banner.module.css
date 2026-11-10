@@ -62,3 +62,20 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.play {
+  grid-column: 2 / -1;
+  justify-self: start;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: #e9e6ee;
+  color: #18161c;
+  font-weight: 700;
+  text-decoration: none;
+}
+.play:hover {
+  background: #ffffff;
+}
+.play:focus-visible {
+  outline: 2px solid #a6d0f3;
+  outline-offset: 1px;
+}

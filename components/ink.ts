@@ -43,6 +43,25 @@ export const groundFor = (pathname: string): string | null => {
   }
 }
 
+// Preview only (?ink=N, components/candidate-banner.tsx): which ink the
+// transition spills, given the ground it is heading to.
+//   1 · today: the destination's own ground, so cover and page meet seamlessly.
+//   2 · dark everywhere: one plum ink, in both lights.
+//   3 · white by day: pure white where today is beige; night unchanged.
+//   4 · contrast: dark plum by day, pale cream by night, so the ink always
+//       reads against the page it leaves.
+const DARK_INK = "#2a1d23"
+const isLightGround = (hex: string) =>
+  parseInt(hex.slice(1, 3), 16) + parseInt(hex.slice(3, 5), 16) > 300
+export const inkFor = (ground: string): string => {
+  const candidate = document.documentElement.dataset.inkCandidate
+  const light = isLightGround(ground)
+  if (candidate === "2") return DARK_INK
+  if (candidate === "3") return light ? "#ffffff" : ground
+  if (candidate === "4") return light ? DARK_INK : "#fbf7f3"
+  return ground
+}
+
 export const reducedMotion = () =>
   matchMedia("(prefers-reduced-motion: reduce)").matches
 
@@ -74,8 +93,9 @@ export const inkNavigate = (
   if (url.origin !== window.location.origin) return false
   if (url.pathname === window.location.pathname) return false
 
-  const color = groundFor(url.pathname)
-  if (!color) return false
+  const ground = groundFor(url.pathname)
+  if (!ground) return false
+  const color = inkFor(ground)
 
   const rect = event.currentTarget.getBoundingClientRect()
   window.dispatchEvent(
@@ -110,7 +130,8 @@ export const inkSwap = async (
   }
   swapRun += 1
   const run = swapRun
-  await spill(el, { mode: "cover", from: origin, colour: color, duration: 380 })
+  const ink = inkFor(color)
+  await spill(el, { mode: "cover", from: origin, colour: ink, duration: 380 })
   // A newer press took over mid-spread: its own apply decides the end state.
   if (run !== swapRun) return
   apply()
@@ -120,7 +141,7 @@ export const inkSwap = async (
       void spill(el, {
         mode: "reveal",
         from: origin,
-        colour: color,
+        colour: ink,
         duration: 420,
       })
     }),
@@ -131,11 +152,5 @@ export const inkSwap = async (
 // Dusk's for /projects and the docs.
 export const scopeGroundFor = (theme: ScopedTheme): string => {
   const blog = document.getElementById("blog-root") !== null
-  // Preview only: candidate 5 (app/ink-candidates.css) paints white grounds.
-  if (
-    document.documentElement.dataset.inkCandidate === "5" &&
-    resolveScheme(theme) === "light"
-  )
-    return blog ? "#fcfcfc" : "#fafafa"
   return (blog ? BLOG_GROUND : DUSK_GROUND)[resolveScheme(theme)]
 }
