@@ -43,6 +43,8 @@ import {
 import type { ScopedTheme } from "@/components/scoped-theme"
 import type { LauncherIndex, LauncherProject } from "@/lib/launcher-index"
 import { fuzzyScore } from "./fuzzy"
+import { DetailView, formatDate } from "./detail-view"
+import type { Detail } from "./detail-view"
 import { CONTACT_ADDRESS, MessageForm } from "./message-form"
 import type { MessageDraft } from "./message-form"
 import styles from "./launcher.module.css"
@@ -78,6 +80,8 @@ type Item = {
   // A same-site URL that is not a page (the feed), so no client navigation.
   hard?: boolean
   run?: () => void
+  // A project or a post: Enter shows what it is first, a second Enter goes.
+  detail?: Detail
   // The option's spoken name, when its visible content says it less well.
   label?: string
   score?: number
@@ -130,15 +134,6 @@ const highlighted = (content: string): ReactNode =>
     )
 
 const plain = (content: string) => cleanDoc(content).replace(/<\/?mark>/g, "")
-
-const formatDate = (date: string) =>
-  date
-    ? new Date(`${date}T12:00:00Z`).toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
-    : ""
 
 const PAGES: Item[] = [
   {
@@ -392,10 +387,11 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   const [docs, setDocs] = useState<{ key: string; hits: DocHit[] } | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [announce, setAnnounce] = useState("")
-  // The message view replaces the list in the same panel; the list stays
+  // The message and detail views replace the list in the same panel; the list stays
   // mounted underneath, so the query and the selection survive a round trip,
   // and so does the draft.
-  const [view, setView] = useState<"list" | "message">("list")
+  const [view, setView] = useState<"list" | "message" | "detail">("list")
+  const [detail, setDetail] = useState<Detail | null>(null)
   const [draft, setDraft] = useState<MessageDraft>({ subject: "", body: "" })
 
   const backToList = () => {
@@ -498,6 +494,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       },
       href: project.href ?? `/projects/${project.slug}`,
       external: Boolean(project.href),
+      detail: { kind: "project" as const, project },
     }))
 
     const writing: Item[] = (index?.posts ?? []).map((post) => ({
@@ -509,6 +506,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       extras: [...post.tags, post.description],
       visual: { kind: "cover", src: post.thumb },
       href: post.href,
+      detail: { kind: "post" as const, post },
     }))
 
     // Actions are only what can be done to this project. The theme is a
@@ -761,14 +759,31 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   // pointer that led to it: held, a link opens in a new tab.
   const newTab = useRef(false)
 
+  const go = (
+    target: { href: string; external?: boolean; hard?: boolean },
+    inNewTab: boolean,
+  ) => {
+    if (target.external || inNewTab)
+      window.open(target.href, "_blank", "noopener,noreferrer")
+    else if (target.hard) window.location.assign(target.href)
+    else router.push(target.href)
+    onClose()
+  }
+
+  // ⌘↵ on a project or a post skips its detail and opens it in a new tab.
   const activate = (item: Item) => {
     if (item.run) return item.run()
-    if (!item.href) return
-    if (item.external || newTab.current)
-      window.open(item.href, "_blank", "noopener,noreferrer")
-    else if (item.hard) window.location.assign(item.href)
-    else router.push(item.href)
-    onClose()
+    if (item.detail && !newTab.current) {
+      setDetail(item.detail)
+      setView("detail")
+      setAnnounce(
+        item.detail.kind === "project"
+          ? item.detail.project.name
+          : item.detail.post.title,
+      )
+      return
+    }
+    if (item.href) go({ ...item, href: item.href }, newTab.current)
   }
 
   // Tab jumps to the first result of the next section, Shift+Tab back.
@@ -811,10 +826,16 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     <dialog
       ref={dialogRef}
       className={styles.dialog}
-      aria-label={view === "message" ? "Send me a message" : "Search kud.io"}
+      aria-label={
+        view === "message"
+          ? "Send me a message"
+          : view === "detail"
+            ? "Details"
+            : "Search kud.io"
+      }
       onCancel={(event) => {
         event.preventDefault()
-        if (view === "message") backToList()
+        if (view !== "list") backToList()
         else onClose()
       }}
       onClick={(event) => {
@@ -828,7 +849,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
           because the order follows the page, not only the match. */}
       <Command
         className={styles.panel}
-        hidden={view === "message"}
+        hidden={view !== "list"}
         label="Search kud.io"
         shouldFilter={false}
         loop
@@ -962,11 +983,23 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
             <kbd>tab</kbd> next section
           </span>
           <span>
-            <kbd>↵</kbd> open
+            <kbd>↵</kbd> {active?.detail ? "details" : "open"}
           </span>
           <span className={styles.footStatus}>{status}</span>
         </div>
       </Command>
+      {view === "detail" && detail ? (
+        <DetailView
+          key={
+            detail.kind === "project" ? detail.project.slug : detail.post.href
+          }
+          detail={detail}
+          onBack={backToList}
+          onOpen={go}
+          copy={copy}
+          copied={copiedId}
+        />
+      ) : null}
       {view === "message" ? (
         <MessageForm
           draft={draft}

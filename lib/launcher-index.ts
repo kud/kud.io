@@ -2,7 +2,8 @@ import { getProjects } from "@/lib/projects"
 import { getIcons } from "@/lib/icons"
 import { getApp, appDisplayName, isProduct } from "@/lib/app"
 import { isAppCategory, typeFor } from "@/lib/categories"
-import { getAllPosts, coverImages, postPath } from "@/lib/blog"
+import { ART } from "@/lib/art"
+import { getAllPosts, coverImages, postPath, readingMinutes } from "@/lib/blog"
 import { getPackageFacts } from "@/lib/package-facts"
 import { projectHasDocs } from "@/lib/source"
 import { PINNED } from "@/lib/pinned"
@@ -18,6 +19,8 @@ export type LauncherProject = {
   category: string
   description: string | null
   icon: string | null
+  // The project's 16:9 drawing, when one has been delivered (lib/art.ts).
+  art: string | null
   pinned: boolean
   hasDocs: boolean
   repoUrl: string | null
@@ -35,6 +38,9 @@ export type LauncherPost = {
   date: string
   href: string
   thumb: string | null
+  // The full-size cover, fetched only when the launcher shows the post's detail.
+  cover: string | null
+  minutes: number
   tags: string[]
 }
 
@@ -68,6 +74,7 @@ export const getLauncherIndex = async (): Promise<LauncherIndex> => {
         category,
         description: project.description,
         icon: (app?.icon ?? icons[project.slug] ?? project.icon) || null,
+        art: ART[project.slug] ?? null,
         pinned: PINNED.includes(project.slug),
         hasDocs: !project.readmeLanding && projectHasDocs(project.slug),
         repoUrl: project.isPrivate ? null : project.repoUrl,
@@ -95,6 +102,7 @@ export const getLauncherIndex = async (): Promise<LauncherIndex> => {
       category: app.category,
       description: app.description,
       icon: app.icon ?? null,
+      art: ART[app.slug] ?? null,
       pinned: false,
       hasDocs: false,
       repoUrl: null,
@@ -115,6 +123,8 @@ export const getLauncherIndex = async (): Promise<LauncherIndex> => {
       date: post.date,
       href: postPath(post),
       thumb: coverImages(post.cover)?.thumb ?? null,
+      cover: coverImages(post.cover)?.hero ?? null,
+      minutes: readingMinutes(post.body),
       tags: post.tags,
     })),
   }
