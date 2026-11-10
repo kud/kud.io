@@ -1,5 +1,4 @@
-// Leading marks for the project hero buttons. Preview only for now: hidden
-// unless ?btn=1 (app/ink-candidates.css). Brand marks are Simple Icons
+// Leading marks for the project hero buttons (Erwann, 2026-11-10). Brand marks are Simple Icons
 // (CC0-1.0), the docs and web marks Heroicons 16/solid (MIT), inlined rather
 // than packaged for five glyphs. All draw in currentColor, so they take the
 // button ink, never a brand colour.
@@ -57,7 +56,7 @@ export const ButtonIcon = ({ name }: { name: ButtonIconName }) => {
   const icon = ICONS[name]
   return (
     <svg
-      className="btn-icon"
+      style={{ flex: "none" }}
       width="16"
       height="16"
       viewBox={icon.vb}

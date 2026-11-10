@@ -43,24 +43,14 @@ export const groundFor = (pathname: string): string | null => {
   }
 }
 
-// Preview only (?ink=N, components/candidate-banner.tsx): which ink the
-// transition spills, given the ground it is heading to.
-//   1 · today: the destination's own ground, so cover and page meet seamlessly.
-//   2 · dark everywhere: one plum ink, in both lights.
-//   3 · white by day: pure white where today is beige; night unchanged.
-//   4 · contrast: dark plum by day, pale cream by night, so the ink always
-//       reads against the page it leaves.
-const DARK_INK = "#2a1d23"
+// The ink a move spills, given the ground it is heading to: white by day,
+// where the ground itself would be beige, and the night ground by night
+// (Erwann, 2026-11-10). By day the cover lifts off white onto the page, a
+// deliberate seam: the ink reads as ink, not as the page arriving early.
 const isLightGround = (hex: string) =>
   parseInt(hex.slice(1, 3), 16) + parseInt(hex.slice(3, 5), 16) > 300
-export const inkFor = (ground: string): string => {
-  const candidate = document.documentElement.dataset.inkCandidate
-  const light = isLightGround(ground)
-  if (candidate === "2") return DARK_INK
-  if (candidate === "3") return light ? "#ffffff" : ground
-  if (candidate === "4") return light ? DARK_INK : "#fbf7f3"
-  return ground
-}
+export const inkFor = (ground: string): string =>
+  isLightGround(ground) ? "#ffffff" : ground
 
 export const reducedMotion = () =>
   matchMedia("(prefers-reduced-motion: reduce)").matches

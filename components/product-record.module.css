@@ -184,7 +184,8 @@
 /* Infobox ---------------------------------------------------------------------
    An encyclopaedia's summary panel, dressed for Dusk: the same frame, title,
    sections and label and value rows, but on rounded corners and soft surfaces.
-   The title sits in a band washed with the page's own warmth; each section
+   The title sits in a flat band (the warm wash read as gloss, Erwann,
+   2026-11-10); each section
    opens on a rounded header tinted from --surface-2; hairlines, not rules,
    part the rows; one low shadow lifts the card off the ground. */
 .infobox {
@@ -215,11 +216,7 @@
   justify-items: center;
   gap: 10px;
   padding: 20px 18px 18px;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--primary) 11%, var(--surface)) 0%,
-    color-mix(in srgb, var(--primary) 3%, var(--surface)) 100%
-  );
+  background: var(--surface);
   border-bottom: 1px solid var(--border-dim, var(--border));
   text-align: center;
 }

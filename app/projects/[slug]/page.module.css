@@ -211,6 +211,7 @@
 .secondary {
   display: inline-flex;
   align-items: center;
+  gap: 9px;
   padding: 13px 24px;
   border-radius: 11px;
   font-size: 15px;
@@ -220,6 +221,14 @@
     background 0.18s,
     border-color 0.18s,
     transform 0.18s;
+}
+
+/* The service mark leads the label (components/button-icon.tsx); the side it
+   sits on gives back a little padding so the button stays optically centred. */
+.primary:has(> svg),
+.secondary:has(> svg),
+.launch:has(> svg) {
+  padding-left: 20px;
 }
 
 .primary {
@@ -520,6 +529,7 @@
 .launch {
   display: inline-flex;
   align-items: center;
+  gap: 9px;
   padding: 14px 28px;
   border-radius: 12px;
   background: color-mix(in srgb, var(--app-accent) 94%, #fff);
@@ -867,8 +877,8 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 38px;
-  background: var(--surface-2);
-  border-bottom: 1px solid var(--border);
+  background: var(--code-bar, var(--surface-2));
+  border-bottom: 1px solid rgb(255 255 255 / 0.05);
 }
 .readme :global(figure.shiki)::after {
   content: "";

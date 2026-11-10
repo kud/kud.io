@@ -1,9 +1,9 @@
 import { defineDocs, defineConfig } from "fumadocs-mdx/config"
 import { rehypeCodeDefaultOptions } from "fumadocs-core/mdx-plugins"
 import rehypeRaw from "rehype-raw"
-import { duskDay, duskNight } from "./lib/code-themes"
-// Preview only (app/ink-candidates.css, ?code=2|3): Erwann's November theme
-// (kud/november-vscode, MIT), comments and parameters lifted to clear 4.5:1.
+import { duskDay } from "./lib/code-themes"
+// Code is Erwann's own November theme (kud/november-vscode, MIT), as in his
+// editor, with comments and parameters lifted to clear 4.5:1 on its ground.
 import novemberJson from "./lib/themes/november.json"
 import type { ThemeRegistration } from "shiki"
 
@@ -50,7 +50,7 @@ export default defineConfig({
     // whole static build.
     rehypeCodeOptions: {
       ...rehypeCodeDefaultOptions,
-      themes: { light: duskDay, dark: duskNight, november },
+      themes: { light: duskDay, dark: november },
       fallbackLanguage: "text",
     },
     rehypePlugins: (plugins) => [
