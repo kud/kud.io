@@ -116,18 +116,3 @@ export const duskDay = theme("dusk-day", "light", "#fdf5ef", {
   punct: "#5e4448",
 })
 
-// Preview only (app/ink-candidates.css, ?code=2|3): the same block in two
-// hue bins, so the tokens part for a deutan/protan eye. Commands and keywords
-// go cool (blue, lavender), arguments and strings warm (sand), comments step
-// down in lightness. Every token clears 4.5:1 on the softest candidate ground
-// (#43333c) and its title bar, and 7:1 on the night block.
-export const duskSoft = theme("dusk-soft", "dark", "#33262d", {
-  fg: "#f5ece8",
-  comment: "#bcaab0",
-  keyword: "#cdbdf6",
-  string: "#f0d39c",
-  number: "#f7b598",
-  fn: "#a6d0f3",
-  type: "#ade0d3",
-  punct: "#d3c4c8",
-})

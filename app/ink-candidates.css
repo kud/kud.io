@@ -100,45 +100,53 @@ html[data-ink-candidate="5"] #blog-root[data-theme="light"] {
   }
 }
 
-/* Code candidates, ?code=N (combinable with ?ink=N): the block stays dark in
-   both lights.
-     1 · today: near-black plum block, cream title bar, warm tokens only.
-     2 · softer: a lifted plum block by day, the title bar in the block's own
-         colour, tokens in two hue bins (lib/code-themes.ts duskSoft).
-     3 · softest: a mauve-plum block by day, same bar and tokens.
-   By night 2 and 3 keep the night block and take the new tokens and bar. */
-html[data-code-candidate="2"] [data-ground="dusk"][data-theme="light"] {
-  --code-bg: #33262d;
+/* Code candidates, ?code=N (combinable with ?ink=N): Erwann's November
+   theme (lib/themes/november.json), dark in both lights.
+     1 · today: near-black plum block, cream title bar, plum tokens.
+     2 · November: its own blue-grey ground #21222c in both lights, the
+         title bar its tab grey #2a2b38.
+     3 · November on plum: the same tokens on a ground leaned towards the
+         page's plum, softer by day (#2d2a3a) than by night (#262230).
+   Comments and parameters are lifted from November's own to clear 4.5:1. */
+html[data-code-candidate="2"] [data-ground="dusk"] {
+  --code-bg: #21222c;
+  --code-bar: #2a2b38;
+}
+html[data-code-candidate="3"] [data-ground="dusk"] {
+  --code-bg: #262230;
+  --code-bar: #2e2a3a;
 }
 html[data-code-candidate="3"] [data-ground="dusk"][data-theme="light"] {
-  --code-bg: #43333c;
+  --code-bg: #2d2a3a;
+  --code-bar: #353244;
 }
 @media (prefers-color-scheme: light) {
-  html[data-code-candidate="2"] [data-ground="dusk"][data-theme="system"] {
-    --code-bg: #33262d;
-  }
   html[data-code-candidate="3"] [data-ground="dusk"][data-theme="system"] {
-    --code-bg: #43333c;
+    --code-bg: #2d2a3a;
+    --code-bar: #353244;
   }
 }
 html:is([data-code-candidate="2"], [data-code-candidate="3"])
   [data-ground="dusk"]
   :is(figure.shiki, pre.shiki) {
-  color: #f5ece8;
-  --color-fd-muted-foreground: #bcaab0;
+  border-color: var(--code-bar);
+  color: #bfc7d5;
+  --color-fd-muted-foreground: #8d95be;
+  --color-fd-accent: var(--code-bar);
+  --color-fd-accent-foreground: #eeffff;
 }
 html:is([data-code-candidate="2"], [data-code-candidate="3"])
   [data-ground="dusk"]
   .shiki
-  span[style*="--shiki-soft"] {
-  color: var(--shiki-soft) !important;
-  font-style: var(--shiki-soft-font-style) !important;
+  span[style*="--shiki-november"] {
+  color: var(--shiki-november) !important;
+  font-style: var(--shiki-november-font-style) !important;
 }
-/* The README's terminal bar: the block's own colour a step lighter, so bar
-   and body read as one object rather than a cream lid on a dark box. */
+/* The README's terminal bar in the block's own family, so bar and body read
+   as one object rather than a lid of another colour. */
 html:is([data-code-candidate="2"], [data-code-candidate="3"])
   [data-ground="dusk"]
   figure.shiki::before {
-  background: color-mix(in oklab, var(--code-bg), white 5%);
-  border-bottom-color: rgb(255 255 255 / 0.06);
+  background: var(--code-bar);
+  border-bottom-color: rgb(255 255 255 / 0.05);
 }

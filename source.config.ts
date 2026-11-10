@@ -1,7 +1,13 @@
 import { defineDocs, defineConfig } from "fumadocs-mdx/config"
 import { rehypeCodeDefaultOptions } from "fumadocs-core/mdx-plugins"
 import rehypeRaw from "rehype-raw"
-import { duskDay, duskNight, duskSoft } from "./lib/code-themes"
+import { duskDay, duskNight } from "./lib/code-themes"
+// Preview only (app/ink-candidates.css, ?code=2|3): Erwann's November theme
+// (kud/november-vscode, MIT), comments and parameters lifted to clear 4.5:1.
+import novemberJson from "./lib/themes/november.json"
+import type { ThemeRegistration } from "shiki"
+
+const november = novemberJson as ThemeRegistration
 
 // Per-project documentation is synced from each repo's markdown into
 // content/projects/<slug>/... at build time; Fumadocs indexes it for the
@@ -44,7 +50,7 @@ export default defineConfig({
     // whole static build.
     rehypeCodeOptions: {
       ...rehypeCodeDefaultOptions,
-      themes: { light: duskDay, dark: duskNight, soft: duskSoft },
+      themes: { light: duskDay, dark: duskNight, november },
       fallbackLanguage: "text",
     },
     rehypePlugins: (plugins) => [
