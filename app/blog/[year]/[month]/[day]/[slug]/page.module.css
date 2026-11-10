@@ -1426,7 +1426,7 @@
  * gutter: hung in the left margin, outside the text column, on the heading's
  *   own baseline: an inline-block pulled back by its own width, so baselines
  *   align without measuring anything. Phones have no margin to hang it in, so
- *   it falls back to inline there.
+ *   it falls back to "above" there, keeping the heading on the text edge.
  * inline: before the heading text on the same line, muted.
  * rule: over the heading, followed by a hairline to the column's edge. */
 :global(#blog-root[data-h="3"]:is([data-n="gutter"], [data-n="inline"]))
@@ -1455,8 +1455,9 @@
 
 @media (max-width: 920px) {
   :global(#blog-root[data-h="3"][data-n="gutter"]) .body h2::before {
+    display: block;
     width: auto;
-    margin-left: 0;
-    margin-right: 10px;
+    margin: 0 0 8px;
+    font-size: 12px;
   }
 }
