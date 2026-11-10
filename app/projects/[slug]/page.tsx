@@ -24,6 +24,7 @@ import { getAllPosts } from "@/lib/blog"
 import { postPath } from "@/lib/blog-path"
 import { isAppCategory, typeFor } from "@/lib/categories"
 import { ecosystemName } from "@/lib/ecosystems"
+import { ProjectFamily, type FamilyMember } from "@/components/project-family"
 import { frameworksOf, getPackageFacts } from "@/lib/package-facts"
 import { getLandingMdx } from "@/lib/landings"
 import { getProjectReadme, projectHasDocs } from "@/lib/source"
@@ -396,29 +397,17 @@ const ReadmeLanding = async ({
     name: other.name,
     type: typeFor(other.category),
   })
-  const siblings = project.ecosystem
-    ? projects.filter(
-        (other) =>
-          other.ecosystem === project.ecosystem && other.slug !== project.slug,
-      )
-    : []
-  const family =
-    project.ecosystem && siblings.length > 0
-      ? {
-          name: ecosystemName(project.ecosystem),
-          members: siblings.map(linkTo),
-        }
-      : null
-  // Other kud projects this package depends on, by their npm name; a sibling
-  // already listed under the family is not named twice.
+  // Other kud projects this package depends on, by their npm name. The family
+  // has its own row of tiles at the foot of the page, so it is not repeated
+  // in the infobox; a sibling it is built on still is, as that is a fact the
+  // family row does not state.
   const builtOn = (facts?.dependencies ?? [])
     .filter((dep) => dep.startsWith("@kud/"))
     .map((dep) => projects.find((other) => other.slug === dep.slice(5)))
     .filter(
       (other): other is Project =>
         other !== undefined &&
-        other.slug !== project.slug &&
-        !siblings.includes(other),
+        other.slug !== project.slug,
     )
     .map(linkTo)
   const readme = getProjectReadme(project.readmeSlug ?? project.slug)
@@ -615,7 +604,6 @@ const ReadmeLanding = async ({
               language={project.language}
               frameworks={facts ? frameworksOf(facts) : []}
               builtOn={builtOn}
-              family={family}
             />
             {showToc ? <RailToc items={toc} /> : null}
           </div>
@@ -631,6 +619,44 @@ const ReadmeLanding = async ({
 // sparse app shell, so it can be tagged kud-site-desktop from day one.
 const appHasContent = (app: AppMeta): boolean =>
   Boolean(app.launchUrl || app.why || app.how || app.features.length > 0)
+
+// The other members of a project's family, each as its own page presents it:
+// an app or product by its app.json name, icon and summary, anything else by
+// its repo. The shared core leads, then the rest by name.
+const getFamily = async (
+  project: Project,
+): Promise<{ name: string; members: FamilyMember[] } | null> => {
+  if (!project.ecosystem) return null
+  const [projects, icons] = await Promise.all([getProjects(), getIcons()])
+  const members = projects
+    .filter(
+      (other) =>
+        other.ecosystem === project.ecosystem && other.slug !== project.slug,
+    )
+    .sort(
+      (a, b) =>
+        Number(b.category === "lib") - Number(a.category === "lib") ||
+        a.name.localeCompare(b.name),
+    )
+    .map((other): FamilyMember => {
+      const app = isAppCategory(other.category) ? getApp(other.slug) : null
+      const product = app !== null && isProduct(app)
+      const icon = app?.icon ?? icons[other.slug] ?? other.icon ?? null
+      return {
+        slug: other.slug,
+        name: app ? appDisplayName(other.slug, app) : other.name,
+        type: typeFor(other.category),
+        summary: (product ? app.summary : null) ?? other.description ?? null,
+        icon,
+        morphIcon: Boolean(
+          app?.icon && (product || appHasContent(app)) && icon === app.icon,
+        ),
+      }
+    })
+  return members.length > 0
+    ? { name: ecosystemName(project.ecosystem), members }
+    : null
+}
 
 const ProjectLanding = async ({
   params,
@@ -651,6 +677,7 @@ const ProjectLanding = async ({
     showAppLanding || showRecord
       ? null
       : ((await getIcons())[slug] ?? project.icon ?? null)
+  const family = await getFamily(project)
 
   return (
     <main
@@ -679,6 +706,9 @@ const ProjectLanding = async ({
           release={await getRelease(project.slug)}
         />
       )}
+      {family ? (
+        <ProjectFamily name={family.name} members={family.members} />
+      ) : null}
       <SiteFooter />
     </main>
   )

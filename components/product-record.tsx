@@ -282,10 +282,8 @@ type ReadmeBoxProps = {
   release: Release | null
   language: string | null
   frameworks: string[]
-  // Other kud projects this one depends on, outside its own family.
+  // Other kud projects this one depends on, its own family included.
   builtOn: Link[]
-  // The other members of its `kud-site-eco-*` family, with that family's name.
-  family: { name: string; members: Link[] } | null
 }
 
 const Rows = ({
@@ -324,7 +322,6 @@ export const ReadmeInfobox = ({
   language,
   frameworks,
   builtOn,
-  family,
 }: ReadmeBoxProps) => {
   const onNpm = Boolean(release?.url.startsWith("https://www.npmjs.com/"))
   const isStore =
@@ -406,20 +403,6 @@ export const ReadmeInfobox = ({
               <li key={chip}>{chip}</li>
             ))}
           </ul>
-        </Section>
-      ) : null}
-      {family ? (
-        <Section title={`${family.name} family`}>
-          <Rows
-            rows={family.members.map((member) => ({
-              label: member.type,
-              value: (
-                <InkLink href={`/projects/${member.slug}`}>
-                  {member.name}
-                </InkLink>
-              ),
-            }))}
-          />
         </Section>
       ) : null}
       <Section title="Project">
