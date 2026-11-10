@@ -765,7 +765,7 @@
   position: relative;
   margin: 0;
   padding: 16px 18px;
-  background: var(--surface);
+  background: var(--dk-w-card, var(--surface));
   font-size: 14px;
   line-height: 1.55;
   color: var(--muted);
@@ -788,7 +788,7 @@
    the /projects grid. */
 .readme :global(ul:not(li ul):has(> li:last-child:nth-child(odd)))::after {
   content: "";
-  background-color: var(--surface);
+  background-color: var(--dk-w-card, var(--surface));
   background-image: repeating-linear-gradient(
     -45deg,
     transparent 0,
@@ -867,8 +867,8 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 38px;
-  background: var(--surface-2);
-  border-bottom: 1px solid var(--border);
+  background: var(--dk-w-bar, var(--surface-2));
+  border-bottom: 1px solid var(--dk-w-bar-rim, var(--border));
 }
 .readme :global(figure.shiki)::after {
   content: "";

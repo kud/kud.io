@@ -553,11 +553,11 @@ const ReadmeLanding = async ({
         </div>
       </section>
 
-      {/* ?r=2 moves the release from the hero pill into the infobox; read in
+      {/* ?r=2 moves the release into the infobox; ?w=1..3 tries day warmth (app/warm.css). Read in
           the browser so the page stays static. */}
       <script
         dangerouslySetInnerHTML={{
-          __html: `(function(){var r=new URLSearchParams(location.search).get("r");if(r)document.currentScript.closest("main").dataset.r=r})()`,
+          __html: `(function(){var q=new URLSearchParams(location.search),m=document.currentScript.closest("main");["r","w"].forEach(function(k){var v=q.get(k);if(v)m.dataset[k]=v})})()`,
         }}
       />
       {Body ? (
