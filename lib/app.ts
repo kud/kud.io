@@ -16,8 +16,10 @@ export type FlowStep = { label: string; note?: string }
 // Two shapes share the file:
 // - A beansontoast product sets `beansontoast` (its subdomain). The product's
 //   pitch lives at <subdomain>.beansontoast.app; kud.io keeps an engineering
-//   record only: `summary`, `stack`, `decisions`, `writing`. It never carries a
-//   tagline, a feature list or screenshots, which would make it a second landing.
+//   record: `summary`, `what`, `who`, `facts`, `flow`, `stack`, `decisions`,
+//   `writing`, and at most one screenshot of the app itself (only the first is
+//   shown). It never carries a tagline or a feature list, and never a shot of
+//   the product's landing page, which would make it a second landing.
 // - Any other app keeps the landing fields (`tagline`, `why`, `how`, `features`,
 //   `screenshots`, `launchUrl`, the CTA copy).
 export type AppMeta = {
