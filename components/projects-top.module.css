@@ -202,3 +202,34 @@
     font-size: 13px;
   }
 }
+
+/* Cover hover: the window. The frame rises 2px and the drawing leans in
+   behind it, like stepping closer to a print; the name takes the plum. No
+   shade: nothing is lifted off the page (Erwann, 2026-11-10). Keyboard focus
+   gets exactly what hover gets. Under reduced motion nothing moves and the
+   name still answers. The blog's covers do the same (app/blog/page.module.css). */
+.pinCard .pinName {
+  transition: color 0.18s;
+}
+.pinCard:is(:hover, :focus-visible) .pinName {
+  color: var(--primary-light);
+}
+.pinCard:focus-visible {
+  outline-offset: 6px;
+  border-radius: 18px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pinCard :is(.pinArt, .pinPlate) {
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .pinCard .pinArt img {
+    transition: transform 0.6s cubic-bezier(0.2, 0, 0, 1);
+  }
+  .pinCard:is(:hover, :focus-visible) :is(.pinArt, .pinPlate) {
+    transform: translateY(-2px);
+  }
+  .pinCard:is(:hover, :focus-visible) .pinArt img {
+    transform: scale(1.06);
+  }
+}
