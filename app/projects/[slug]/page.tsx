@@ -1,4 +1,5 @@
 import { type CSSProperties } from "react"
+import { SiteFooter } from "@/components/site-footer"
 import { ButtonIcon } from "@/components/button-icon"
 import type { Metadata } from "next"
 import { InkLink as Link } from "@/components/ink-link"
@@ -310,7 +311,7 @@ const ProductRecord = async ({ project }: { project: Project }) => {
             {url ? (
               <a
                 href={url}
-                className={styles.primary}
+                className={styles.lead}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -491,7 +492,7 @@ const ReadmeLanding = async ({
                 {project.installUrl ? (
                   // raycast:// protocol link — opens the extension in the Raycast
                   // app; no target=_blank so it doesn't leave a blank tab behind.
-                  <a href={project.installUrl} className={styles.primary}>
+                  <a href={project.installUrl} className={styles.lead}>
                     <ButtonIcon name="raycast" />
                     Install Extension ↓
                   </a>
@@ -520,7 +521,7 @@ const ReadmeLanding = async ({
                 {project.storeUrl ? (
                   <a
                     href={project.storeUrl}
-                    className={styles.primary}
+                    className={styles.lead}
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -531,7 +532,7 @@ const ReadmeLanding = async ({
                 <a
                   href={project.repoUrl}
                   className={
-                    project.storeUrl ? styles.secondary : styles.primary
+                    project.storeUrl ? styles.secondary : styles.lead
                   }
                   target="_blank"
                   rel="noreferrer"
@@ -545,7 +546,7 @@ const ReadmeLanding = async ({
                 {hasDocs ? (
                   <Link
                     href={`/projects/${project.slug}/docs`}
-                    className={styles.primary}
+                    className={styles.lead}
                   >
                     <ButtonIcon name="docs" />
                     Documentation →
@@ -553,7 +554,7 @@ const ReadmeLanding = async ({
                 ) : null}
                 <a
                   href={project.repoUrl}
-                  className={hasDocs ? styles.secondary : styles.primary}
+                  className={hasDocs ? styles.secondary : styles.lead}
                   target="_blank"
                   rel="noreferrer"
                 >
@@ -577,7 +578,7 @@ const ReadmeLanding = async ({
               <div className={styles.landingCta}>
                 <Link
                   href={`/projects/${project.slug}/docs`}
-                  className={styles.primary}
+                  className={styles.lead}
                 >
                   Read the documentation →
                 </Link>
@@ -667,6 +668,7 @@ const ProjectLanding = async ({
           release={await getRelease(project.slug)}
         />
       )}
+      <SiteFooter />
     </main>
   )
 }

@@ -83,7 +83,7 @@
   grid-area: filters;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
   height: fit-content;
 }
 
@@ -240,194 +240,96 @@
   color: var(--muted);
 }
 
+/* The rail reads as an index: ecosystems and languages are a plain text list
+   with a quiet count on the right; tags flow as inline text. */
 .chips {
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1px;
+}
+
+.chips:has(.tagChip) {
+  flex-direction: row;
   flex-wrap: wrap;
-  gap: 6px;
   align-items: center;
+  gap: 4px 6px;
 }
 
-.chip {
-  background: var(--surface);
-  color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 8px 15px;
-  font-family: inherit;
-  font-size: 13.5px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    color 0.14s,
-    background 0.14s,
-    border-color 0.14s;
-}
-
-.chip:hover {
-  color: var(--text);
-  border-color: var(--primary);
-}
-
-.chip[data-active="true"] {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
-}
-
+.chip,
+.ecosystemChip,
 .languageChip {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  background: var(--surface);
+  gap: 10px;
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
   color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 7px 15px 7px 10px;
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 500;
+  text-align: left;
   cursor: pointer;
   transition:
     color 0.14s,
-    background 0.14s,
-    border-color 0.14s;
+    background 0.14s;
 }
 
+.chip:hover,
+.ecosystemChip:hover,
 .languageChip:hover {
+  background: var(--surface-2);
   color: var(--text);
-  border-color: var(--primary);
 }
 
+.chip[data-active="true"],
+.ecosystemChip[data-active="true"],
 .languageChip[data-active="true"] {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
+  background: rgb(var(--glow, 194 112 61) / 0.14);
+  color: var(--text);
+  font-weight: 650;
 }
 
-.languageIcon {
-  display: inline-grid;
-  place-items: center;
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-}
-
-.languageIcon img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
-}
-
-.ecosystemChip {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  background: var(--surface);
+.chipCount,
+.languageCount {
+  margin-left: auto;
   color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 5px 10px 5px 5px;
-  font-family: inherit;
-  font-size: 13.5px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    color 0.14s,
-    background 0.14s,
-    border-color 0.14s;
-}
-
-.ecosystemChip:hover {
-  color: var(--text);
-  border-color: var(--primary);
-}
-
-.ecosystemChip[data-active="true"] {
-  background: rgb(var(--glow, 194 112 61) / 0.16);
-  border-color: var(--primary);
-  color: var(--primary-light);
-}
-
-.chipIcon {
-  display: inline-grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  flex-shrink: 0;
-  overflow: hidden;
-  border-radius: 999px;
-  background:
-    radial-gradient(
-      110% 110% at 50% 0%,
-      rgb(var(--hi, 255 255 255) / 0.12),
-      transparent 58%
-    ),
-    var(--surface-2);
-  color: var(--text);
   font-size: 12px;
-  font-weight: 700;
-  box-shadow: inset 0 0 0 1px rgb(var(--hi, 255 255 255) / 0.08);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
-.chipIcon img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.chipIcon img[data-bleed="false"] {
-  width: 64%;
-  height: 64%;
-  object-fit: contain;
-  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.45));
-}
-
-.chipCount {
-  display: inline-grid;
-  place-items: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 999px;
-  background: rgb(var(--hi, 255 255 255) / 0.07);
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1;
-}
-
-.ecosystemChip[data-active="true"] .chipCount {
-  background: rgb(var(--hi, 255 255 255) / 0.12);
-  color: var(--text);
-}
-
-/* Content tags (multi-select) */
+/* Content tags (multi-select). Selected: a solid fill with ink that reads on
+   it. By day the terracotta with white (7.3:1); by night a deeper orange with
+   near-black ink (6.9:1), where white on peach fell to 2.0:1 (Erwann,
+   2026-11-10). The tokens live in app/warm.css. */
 .tagChip {
   background: transparent;
   color: var(--muted);
-  border: 1px dashed var(--border);
+  border: none;
   border-radius: 8px;
-  padding: 5px 11px;
+  padding: 2px 4px;
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   transition:
     color 0.14s,
-    background 0.14s,
-    border-color 0.14s;
+    background 0.14s;
 }
 
 .tagChip:hover {
   color: var(--text);
-  border-color: var(--primary-light);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .tagChip[data-active="true"] {
-  background: rgb(var(--glow, 194 112 61) / 0.16);
-  border-style: solid;
-  border-color: var(--primary);
-  color: var(--primary-light);
+  background: var(--sel-fill, var(--primary));
+  color: var(--sel-ink, #fff);
 }
 
 .tagClear {
@@ -673,56 +575,25 @@
   place-items: center;
   overflow: hidden;
   isolation: isolate;
-  /* Accent-tinted glass — visible behind contained glyphs, hidden under
-     full-bleed raster icons (which fill the squircle). */
-  background:
-    radial-gradient(
-      130% 120% at 50% -10%,
-      color-mix(in srgb, var(--app-accent) 42%, transparent),
-      transparent 62%
-    ),
-    var(--surface-2);
-  box-shadow: 0 20px 44px -20px color-mix(in srgb, var(--app-accent) 70%, #000);
-  transition:
-    transform 0.28s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Flat: a plain plate with a hairline edge, so full-bleed icons read as
+     themselves and a contained glyph sits on a flat ground, not a bevel. */
+  background: var(--surface-2);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Diagonal specular sweep — the liquid-glass highlight, kept subtle so it reads
-   as a sheen rather than a smudge. Sits above the icon. */
-.appIconWrap::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background: linear-gradient(
-    133deg,
-    rgb(var(--hi, 255 255 255) / 0.34) 0%,
-    rgb(var(--hi, 255 255 255) / 0.06) 14%,
-    transparent 34%
-  );
-  mix-blend-mode: screen;
-  pointer-events: none;
-}
-
-/* Glass rim — top edge highlight + soft bottom shade + a 1px inner ring, layered
-   over the icon so the squircle keeps its glassy edge even when full-bleed. */
 .appIconWrap::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 3;
   border-radius: inherit;
-  box-shadow:
-    inset 0 1.5px 0 rgb(var(--hi, 255 255 255) / 0.45),
-    inset 0 -16px 30px -18px rgba(0, 0, 0, 0.6),
-    inset 0 0 0 1px rgb(var(--hi, 255 255 255) / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(var(--hi, 255 255 255) / 0.08);
   pointer-events: none;
 }
 
-.appTile:hover .appIconWrap {
-  transform: translateY(-6px) scale(1.03);
-  box-shadow: 0 30px 60px -22px color-mix(in srgb, var(--app-accent) 85%, #000);
+.appTile:hover .appIconWrap,
+.appTile:focus-visible .appIconWrap {
+  transform: translateY(-3px);
 }
 
 .appIconImg {
@@ -737,7 +608,6 @@
   width: 64%;
   height: 64%;
   object-fit: contain;
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.4));
 }
 
 .appMonogram {
@@ -761,7 +631,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .appTile:hover .appIconWrap {
+  .appTile:hover .appIconWrap,
+  .appTile:focus-visible .appIconWrap {
     transform: none;
   }
 }
@@ -793,7 +664,8 @@
 }
 
 /* Fills the odd trailing slot so it reads as intentional, not a broken cell. */
-.filler {
+.filler,
+.filler3 {
   background-color: var(--surface);
   background-image: repeating-linear-gradient(
     -45deg,
@@ -804,9 +676,35 @@
   );
 }
 
+.filler3 {
+  display: none;
+}
+
 @media (max-width: 640px) {
   .filler {
     display: none;
+  }
+}
+
+/* Wide screens: the empty left track goes and the grid takes the room, rail
+   on the right; past 1700px the list runs three across, so the filler follows
+   the three-column remainder instead. */
+@media (min-width: 1500px) {
+  .layout {
+    max-width: calc(1640px + var(--rail-width) + 88px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--rail-width));
+    grid-template-areas: "main filters";
+  }
+}
+@media (min-width: 1700px) {
+  .list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .filler {
+    display: none;
+  }
+  .filler3 {
+    display: block;
   }
 }
 

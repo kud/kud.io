@@ -207,47 +207,40 @@
   margin-bottom: 56px;
 }
 
-.primary,
+.lead,
 .secondary {
   display: inline-flex;
   align-items: center;
   gap: 9px;
   padding: 13px 24px;
   border-radius: 11px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;
   transition:
     background 0.18s,
-    border-color 0.18s,
-    transform 0.18s;
+    border-color 0.18s;
 }
 
 /* The service mark leads the label (components/button-icon.tsx); the side it
    sits on gives back a little padding so the button stays optically centred. */
-.primary:has(> svg),
+.lead:has(> svg),
 .secondary:has(> svg),
 .launch:has(> svg) {
   padding-left: 20px;
 }
 
-.primary {
-  background: var(--primary);
-  color: var(--on-primary, #fff);
-  box-shadow: 0 8px 24px -8px var(--primary);
+/* Every hero button is the same light plate with one quiet hover; the lead
+   one is told apart only by a rim half-way to the accent, never a filled slab
+   or a lift (Erwann, 2026-11-10). */
+.lead {
+  border-color: color-mix(in srgb, var(--primary) 50%, var(--border));
 }
 
-.primary:hover {
-  background: var(--primary-light);
-  transform: translateY(-1px);
-}
-
-.secondary {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text);
-}
-
+.lead:hover,
 .secondary:hover {
   border-color: var(--primary);
   background: var(--surface-2);
@@ -518,7 +511,7 @@
   animation-delay: 0.06s;
 }
 
-/* Prominent, accent-coloured launch button (distinct from the orange .primary). */
+/* Prominent, accent-coloured launch button (distinct from the light .lead). */
 /* The one place an accent becomes a solid ground for text, so the one place it
    has to clear 4.5:1 at 15px/700. White fails it on four of the six accents
    shipping today (referrals at 2.15, your-move at 3.10) — these accents were
@@ -877,8 +870,8 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 38px;
-  background: var(--surface-2);
-  border-bottom: 1px solid var(--border);
+  background: var(--code-bar, var(--surface-2));
+  border-bottom: 1px solid rgb(255 255 255 / 0.05);
 }
 .readme :global(figure.shiki)::after {
   content: "";

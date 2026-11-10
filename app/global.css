@@ -3,6 +3,7 @@
 @import "fumadocs-ui/css/preset.css";
 @import "./warm.css";
 @import "./ink.css";
+@import "./docs-motion.css";
 
 /* Generate the Tailwind utilities used by Fumadocs UI components. */
 @source "../node_modules/fumadocs-ui/dist/**/*.js";
@@ -192,22 +193,6 @@ html[data-vt="morph"]::view-transition-old(root) {
 html[data-vt="morph"]::view-transition-new(root) {
   animation-name: vt-content-reveal;
   animation-duration: 0.55s;
-}
-
-/* Ink-morph (components/morph-link.tsx): the ink already covers both pages, so
-   the root swaps under it at once, with no fade and no blend; only the app
-   icon travels, over the ink. */
-html[data-vt="ink-morph"]::view-transition-old(root) {
-  animation: none;
-  opacity: 0;
-}
-html[data-vt="ink-morph"]::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-html[data-vt="ink-morph"]::view-transition-group(*) {
-  animation-duration: 0.55s;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* The home ↔ /projects "ink" transition is handled on desktop by the

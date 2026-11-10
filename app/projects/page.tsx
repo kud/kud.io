@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { SiteFooter } from "@/components/site-footer"
 import { AvatarImage } from "@/components/avatar-image"
 import { BackLink } from "@/components/back-link"
 import { ThemePicker } from "@/components/theme-picker"
@@ -185,6 +186,7 @@ const ProjectsIndex = async () => {
           <Contributions />
         </ProjectList>
       )}
+      <SiteFooter />
     </main>
   )
 }

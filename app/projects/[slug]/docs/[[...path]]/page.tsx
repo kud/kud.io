@@ -33,7 +33,12 @@ const Page = async ({ params }: { params: Promise<Params> }) => {
   const MDX = page.data.body
 
   return (
-    <DocsPage toc={page.data.toc} full={page.data.full}>
+    // Keyed by path so each page mounts afresh and its entrance replays.
+    <DocsPage
+      key={(path ?? []).join("/")}
+      toc={page.data.toc}
+      full={page.data.full}
+    >
       <DocsTitle>{page.data.title}</DocsTitle>
       <DocsDescription>{page.data.description}</DocsDescription>
       <DocsBody>

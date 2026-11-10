@@ -120,3 +120,22 @@
     animation: none;
   }
 }
+
+/* Hover and tap turn the portrait to marble, like the bust in his hand. Only
+   the inner photo changes, so the home <-> /projects glide
+   (view-transition-name on the circle) is untouched. */
+.loaded .image {
+  transition:
+    opacity 0.45s ease,
+    filter 0.6s ease;
+}
+.avatar:hover .image,
+.avatar:active .image,
+a:focus-visible .avatar .image {
+  filter: grayscale(1) sepia(0.14) contrast(1.08) brightness(1.08);
+}
+@media (prefers-reduced-motion: reduce) {
+  .loaded .image {
+    transition: opacity 0.45s ease;
+  }
+}

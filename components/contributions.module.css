@@ -243,3 +243,19 @@
     font-size: 13px;
   }
 }
+
+/* Install and command counts, compact, under the description on phones, where
+   .meta is hidden for room. */
+.phoneMeta {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .phoneMeta {
+    display: flex;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+}
