@@ -1,4 +1,5 @@
 import { InkLink as Link } from "@/components/ink-link"
+import { RelativeDate } from "@/components/relative-date"
 import { ART } from "@/lib/art"
 import { IllustrationSlot } from "@/components/illustration-slot"
 import styles from "./projects-top.module.css"
@@ -123,7 +124,13 @@ export const ProjectsTop = ({
                         className={styles.tickDate}
                         dateTime={p.release.publishedAt}
                       >
-                        {shortDate(p.release.publishedAt)}
+                        <RelativeDate
+                          iso={p.release.publishedAt}
+                          className={styles.relDate}
+                        />
+                        <span className={styles.absDate}>
+                          {shortDate(p.release.publishedAt)}
+                        </span>
                       </time>
                       <Icon project={p} size={28} />
                       <strong className={styles.tickName}>{p.name}</strong>

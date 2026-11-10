@@ -268,10 +268,18 @@
   border-color: var(--primary);
 }
 
-.chip[data-active="true"] {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
+/* Selected, in every filter group: a solid fill with ink that reads on it.
+   By day the terracotta with white (7.3:1); by night a deeper orange with
+   near-black ink (6.9:1), where white on peach fell to 2.0:1 (Erwann,
+   2026-11-10). The tokens live in app/warm.css. */
+.chip[data-active="true"],
+.languageChip[data-active="true"],
+.ecosystemChip[data-active="true"],
+.tagChip[data-active="true"] {
+  border-style: solid;
+  border-color: var(--sel-fill, var(--primary));
+  background: var(--sel-fill, var(--primary));
+  color: var(--sel-ink, #fff);
 }
 
 .languageChip {
@@ -296,12 +304,6 @@
 .languageChip:hover {
   color: var(--text);
   border-color: var(--primary);
-}
-
-.languageChip[data-active="true"] {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
 }
 
 .languageIcon {
@@ -341,12 +343,6 @@
 .ecosystemChip:hover {
   color: var(--text);
   border-color: var(--primary);
-}
-
-.ecosystemChip[data-active="true"] {
-  background: rgb(var(--glow, 194 112 61) / 0.16);
-  border-color: var(--primary);
-  color: var(--primary-light);
 }
 
 .chipIcon {
@@ -396,9 +392,12 @@
   line-height: 1;
 }
 
+/* The count takes the pill's own ink on a 14% wash of it: 5.3:1 by day,
+   5.4:1 by night. */
 .ecosystemChip[data-active="true"] .chipCount {
-  background: rgb(var(--hi, 255 255 255) / 0.12);
-  color: var(--text);
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  color: inherit;
+  font-weight: 700;
 }
 
 /* Content tags (multi-select) */
@@ -421,13 +420,6 @@
 .tagChip:hover {
   color: var(--text);
   border-color: var(--primary-light);
-}
-
-.tagChip[data-active="true"] {
-  background: rgb(var(--glow, 194 112 61) / 0.16);
-  border-style: solid;
-  border-color: var(--primary);
-  color: var(--primary-light);
 }
 
 .tagClear {

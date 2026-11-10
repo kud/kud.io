@@ -197,6 +197,8 @@ html:has([data-ground="dusk"][data-theme="dark"]),
   --dk-hi: var(--dn-hi);
   --dk-glow: var(--dn-glow);
   --dk-cool: var(--dn-cool);
+  --sel-fill: #e0895f;
+  --sel-ink: #1c1216;
   --dk-scheme: dark;
   --dk-cat: #c4a9ad;
   --dk-cat-product: #ef9a74;
@@ -226,6 +228,8 @@ html:has([data-ground="dusk"][data-theme="dark"]),
     --dk-hi: var(--dn-hi);
     --dk-glow: var(--dn-glow);
     --dk-cool: var(--dn-cool);
+    --sel-fill: #e0895f;
+    --sel-ink: #1c1216;
     --dk-scheme: dark;
     --dk-cat: #c4a9ad;
     --dk-cat-product: #ef9a74;
@@ -476,21 +480,23 @@ html:has([data-ground="dusk"][data-theme="dark"]),
   }
 }
 
-/* Code: dark in both lights, as Erwann prefers, in the ground's own plum
-   rather than a stock editor's. lib/code-themes.ts holds the tokens; the
-   block's ground and rim are set here so they read the same on paper and at
-   night. */
+/* Code: dark in both lights, as Erwann prefers, in his own November theme
+   (lib/themes/november.json): its blue-grey ground, the title bar and rim in
+   its tab grey, so bar and body read as one object on paper and at night
+   (Erwann, 2026-11-10). */
 [data-ground="dusk"] {
-  --code-bg: #241820;
-  --code-rim: var(--dk-border);
+  --code-bg: #21222c;
+  --code-bar: #2a2b38;
+  --code-rim: var(--code-bar);
 }
 [data-ground="dusk"] figure.shiki,
 [data-ground="dusk"] pre.shiki {
   border-color: var(--code-rim);
   background: var(--code-bg);
-  --color-fd-muted-foreground: #b9a1a8;
-  --color-fd-accent: #3a2a33;
-  --color-fd-accent-foreground: #f4e7e1;
+  color: #bfc7d5;
+  --color-fd-muted-foreground: #8d95be;
+  --color-fd-accent: var(--code-bar);
+  --color-fd-accent-foreground: #eeffff;
 }
 [data-ground="dusk"] figure.shiki > div:first-child:not(:only-child) {
   border-color: var(--code-rim);
