@@ -9,6 +9,8 @@ on:
 
 permissions:
   contents: write
+  # To start the production deploy after a refresh commit.
+  actions: write
 
 concurrency:
   group: refresh-project-content
@@ -56,3 +58,7 @@ jobs:
           # hourly run and rejects. Rebase onto whatever landed since checkout.
           git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
           git push
+          # A GITHUB_TOKEN push triggers no workflow, so start the deploy here.
+          gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
