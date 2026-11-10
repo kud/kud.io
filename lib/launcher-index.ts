@@ -6,6 +6,7 @@ import { getAllPosts, coverImages, postPath } from "@/lib/blog"
 import { getPackageFacts } from "@/lib/package-facts"
 import { projectHasDocs } from "@/lib/source"
 import { PINNED } from "@/lib/pinned"
+import { getListedApps } from "@/lib/listed-apps"
 
 // Everything the command launcher matches on without a round trip: the
 // projects exactly as /projects lists them, every post, and the few facts a
@@ -23,6 +24,9 @@ export type LauncherProject = {
   homepage: string | null
   storeUrl: string | null
   npm: { name: string; install: string } | null
+  // A live app with no public source (lib/listed-apps.ts): its card opens the
+  // app itself, as on /projects, since there is no kud.io page behind it.
+  href?: string
 }
 
 export type LauncherPost = {
@@ -82,8 +86,26 @@ export const getLauncherIndex = async (): Promise<LauncherIndex> => {
     }),
   )
 
+  const listed = getListedApps()
+    .filter((app) => !projects.some((project) => project.slug === app.slug))
+    .map((app): LauncherProject => ({
+      slug: app.slug,
+      name: app.name,
+      type: typeFor(app.category),
+      category: app.category,
+      description: app.description,
+      icon: app.icon ?? null,
+      pinned: false,
+      hasDocs: false,
+      repoUrl: null,
+      homepage: app.href,
+      storeUrl: null,
+      npm: null,
+      href: app.href,
+    }))
+
   return {
-    projects: launcherProjects.sort(
+    projects: [...launcherProjects, ...listed].sort(
       (a, b) =>
         Number(b.pinned) - Number(a.pinned) || a.name.localeCompare(b.name),
     ),

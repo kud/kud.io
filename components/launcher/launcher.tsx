@@ -465,7 +465,8 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
         src: project.icon,
         letter: project.name.charAt(0).toUpperCase(),
       },
-      href: `/projects/${project.slug}`,
+      href: project.href ?? `/projects/${project.slug}`,
+      external: Boolean(project.href),
     }))
 
     const writing: Item[] = (index?.posts ?? []).map((post) => ({
