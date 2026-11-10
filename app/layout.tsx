@@ -5,7 +5,8 @@ import { RootProvider } from "fumadocs-ui/provider/next"
 import { ViewTransitions } from "next-view-transitions"
 import { ArriveScript, InkTransition } from "@/components/ink-transition"
 import { HashScroll } from "@/components/hash-scroll"
-import { ProjectSearchDialog } from "@/components/project-search-dialog"
+import { Launcher } from "@/components/launcher/launcher"
+import { LauncherTrigger } from "@/components/launcher/launcher-trigger"
 import { Hanken_Grotesk } from "next/font/google"
 
 // Hanken Grotesk — a refined, elegant grotesque: subtle squared character with
@@ -85,9 +86,10 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
             enableSystem: false,
             forcedTheme: "dark",
           }}
-          search={{ SearchDialog: ProjectSearchDialog }}
+          search={{ SearchDialog: Launcher }}
         >
           {children}
+          <LauncherTrigger />
         </RootProvider>
       </body>
     </html>

@@ -47,9 +47,9 @@ const Layout = async ({
         tree={getProjectDocsTree(slug)}
         {...base}
         nav={{ ...base.nav, title, url: `/projects/${slug}` }}
-        // Search covers this project's docs only (ProjectSearchDialog tags the
-        // query with the slug): other projects and the blog would be noise. ⌘K
-        // opens it too. The picker sits top right like every themed page;
+        // The sidebar's search field and ⌘K open the site-wide launcher,
+        // which scopes its docs results to this project until widened. The
+        // picker sits top right like every themed page;
         // the drawer copy is for phones, where fumadocs' bar owns that corner.
         sidebar={{ banner: <ThemePicker className="dusk-picker-docs" /> }}
       >
