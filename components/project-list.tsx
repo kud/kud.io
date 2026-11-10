@@ -10,7 +10,43 @@ import {
   type ReactNode,
 } from "react"
 import { MorphLink } from "@/components/morph-link"
-import type { Project } from "@/lib/projects"
+import type { Project as RepoProject } from "@/lib/projects"
+
+// A tile in the list: a tagged repo, or a listed app with no public source
+// (lib/listed-apps.ts), which opens its live address instead of a kud.io page.
+type Project = Omit<RepoProject, "repoUrl"> & { href?: string }
+
+// Where a tile goes: its kud.io page, or, for a listed app, the app itself.
+const TileLink = ({
+  project,
+  className,
+  style,
+  children,
+}: {
+  project: Project
+  className: string
+  style?: CSSProperties
+  children: ReactNode
+}) =>
+  project.href ? (
+    <a
+      href={project.href}
+      className={className}
+      style={style}
+      target="_blank"
+      rel="noreferrer"
+    >
+      {children}
+    </a>
+  ) : (
+    <MorphLink
+      href={`/projects/${project.slug}`}
+      className={className}
+      style={style}
+    >
+      {children}
+    </MorphLink>
+  )
 
 const subscribeToNothing = () => () => {}
 import type { Ecosystem } from "@/lib/ecosystems"
@@ -355,9 +391,9 @@ export const ProjectList = ({
                   {isAppCategory(group.key) ? (
                     <div className={styles.appGrid}>
                       {group.items.map((project) => (
-                        <MorphLink
+                        <TileLink
                           key={project.slug}
-                          href={`/projects/${project.slug}`}
+                          project={project}
                           className={styles.appTile}
                           style={
                             project.accent
@@ -401,7 +437,7 @@ export const ProjectList = ({
                             ) : null}
                             {project.name}
                           </span>
-                        </MorphLink>
+                        </TileLink>
                       ))}
                     </div>
                   ) : (
@@ -437,8 +473,11 @@ export const ProjectList = ({
                               </span>
                               <span className={styles.rowMeta}>
                                 {project.stars > 0 ? (
-                                  <span className={styles.stars}>
-                                    ★ {project.stars}
+                                  <span
+                                    className={styles.stars}
+                                    aria-label={`${project.stars} GitHub star${project.stars === 1 ? "" : "s"}`}
+                                  >
+                                    <span aria-hidden>★</span> {project.stars}
                                   </span>
                                 ) : null}
                                 {project.downloads ? (

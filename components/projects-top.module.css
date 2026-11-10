@@ -80,8 +80,10 @@
   justify-content: center;
   font-weight: 700;
   color: var(--primary);
-  background: color-mix(in srgb, var(--primary) 14%, transparent);
-  border: 1px solid color-mix(in srgb, var(--primary) 32%, transparent);
+  /* Mixed into the page ground rather than transparent, so the tile is
+     opaque: the release timeline's line never shows through a letter. */
+  background: color-mix(in srgb, var(--primary) 14%, var(--bg));
+  border: 1px solid color-mix(in srgb, var(--primary) 32%, var(--bg));
 }
 
 /* The version as a quiet pill, kin to the README hero's release pill: mono,
@@ -155,17 +157,19 @@
 }
 
 /* Recently released -------------------------------------------------------- */
-.timeline {
-  border-top: 1px solid var(--border);
-}
-
+/* A timeline: each release is a node, its icon, and a short line joins one
+   node to the next. The line is drawn per row and stops 4px short of each
+   icon, so it never crosses a logo (Erwann, 2026-11-10). Dates read relative
+   ("today", "3 days ago"), worked out in the browser; past two months, or
+   before hydration, the short date shows instead. */
 .tick {
+  position: relative;
   display: grid;
-  grid-template-columns: 52px 28px minmax(0, 1fr) auto;
+  grid-template-columns: 80px 28px minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
-  padding: 13px 4px;
-  border-bottom: 1px solid var(--border);
+  padding: 9px 4px;
+  border-radius: 10px;
   color: inherit;
   text-decoration: none;
   transition: background 0.15s;
@@ -261,17 +265,36 @@
   font-weight: 700;
 }
 
-/* Preview candidates (components/polish-candidate.tsx): at large screens the
-   browse block drops its empty left track and widens, rail on the right. Kept
-   in step with .layout in project-list.module.css. */
+/* The joining line: from 4px under this row's icon to 4px over the next
+   one's. Rows share one height, so the segment lands on the next node. */
+.timeline li:not(:last-child) .tick::after {
+  content: "";
+  position: absolute;
+  left: calc(4px + 80px + 12px + 14px - 0.5px);
+  top: calc(50% + 18px);
+  height: calc(100% - 36px);
+  width: 1px;
+  background: var(--border);
+}
+
+.relDate {
+  display: none;
+}
+.relDate:not(:empty) {
+  display: inline;
+}
+.relDate:not(:empty) + .absDate {
+  display: none;
+}
+
+/* At large screens the browse block drops its empty left track and widens,
+   rail on the right. Kept in step with .layout in project-list.module.css. */
 @media (min-width: 1500px) {
-  :global(html[data-layout-candidate="2"]) .top,
-  :global(html[data-layout-candidate="3"]) .top {
+  .top {
     max-width: calc(1640px + var(--rail-width) + 88px);
     grid-template-columns: minmax(0, 1fr) minmax(0, var(--rail-width));
   }
-  :global(html[data-layout-candidate="2"]) .band,
-  :global(html[data-layout-candidate="3"]) .band {
+  .band {
     grid-column: 1;
   }
 }

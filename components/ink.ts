@@ -52,6 +52,15 @@ const isLightGround = (hex: string) =>
 export const inkFor = (ground: string): string =>
   isLightGround(ground) ? "#ffffff" : ground
 
+// The site's worlds, by first path segment: "/" is home, the rest are named
+// by their section. A path no world claims is its own.
+const WORLDS = ["projects", "blog"]
+const worldOf = (pathname: string): string => {
+  const head = pathname.split("/")[1] ?? ""
+  if (head === "") return "home"
+  return WORLDS.includes(head) ? head : pathname
+}
+
 export const reducedMotion = () =>
   matchMedia("(prefers-reduced-motion: reduce)").matches
 
@@ -63,10 +72,6 @@ export type InkNavigateDetail = {
   href: string
   pathname: string
   color: string
-  // The view-transition-name of a shared element the move carries (the app
-  // icon): it navigates inside a view transition so the icon glides over the
-  // ink, and the ink lifts outward from where the icon lands.
-  morph?: string
 }
 
 // Called from a link's click handler. Returns true when it took the
@@ -76,7 +81,6 @@ export type InkNavigateDetail = {
 export const inkNavigate = (
   event: MouseEvent<HTMLAnchorElement>,
   href: string,
-  { morph }: { morph?: string } = {},
 ): boolean => {
   if (event.defaultPrevented) return false
   if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
@@ -87,6 +91,11 @@ export const inkNavigate = (
   const url = new URL(href, window.location.href)
   if (url.origin !== window.location.origin) return false
   if (url.pathname === window.location.pathname) return false
+  // Ink marks a change of world (home, projects, blog), never a move inside
+  // one: /projects to a project page or its docs is the same place, so it
+  // takes the quieter view transition the link falls through to (Erwann,
+  // 2026-11-10). The icon glide rides on that one.
+  if (worldOf(url.pathname) === worldOf(window.location.pathname)) return false
 
   const ground = groundFor(url.pathname)
   if (!ground) return false
@@ -101,7 +110,6 @@ export const inkNavigate = (
         href,
         pathname: url.pathname,
         color,
-        morph,
       },
     }),
   )

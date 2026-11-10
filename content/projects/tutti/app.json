@@ -1,0 +1,7 @@
+{
+  "name": "tutti",
+  "icon": "/apps/tutti.png",
+  "beansontoast": "tutti",
+  "summary": "One phone remote for a Sony BRAVIA TV and Theatre Bar, the whole living room on one screen.",
+  "stack": ["Kotlin", "Jetpack Compose", "Android"]
+}

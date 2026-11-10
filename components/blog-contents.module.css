@@ -1,0 +1,84 @@
+/* "On this page" rail. Tokens come from #blog-root (app/blog/blog.module.css);
+ * nothing here declares a colour. */
+
+/* Fixed in the right gutter beside .wrap (790px, centred), 32px clear of it,
+ * and only where that gutter is wide enough to hold it without crowding the
+ * column: below 1280px it simply isn't there. */
+.contents {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .contents {
+    position: fixed;
+    top: 104px;
+    left: calc(50% + 395px + 32px);
+    z-index: 4;
+    display: block;
+    width: min(208px, calc(50vw - 395px - 56px));
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 220ms ease-out,
+      visibility 0s 220ms;
+  }
+
+  .contents[data-shown] {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 220ms ease-out;
+  }
+}
+
+.label {
+  margin: 0 0 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--fg-3);
+}
+
+.contents ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid var(--line);
+}
+
+.contents a {
+  display: block;
+  margin-left: -1px;
+  padding: 5px 0 5px 13px;
+  border-left: 1px solid transparent;
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--fg-3);
+  text-decoration: none;
+  transition:
+    color 140ms,
+    border-color 140ms;
+}
+
+.contents a:hover {
+  color: var(--fg);
+}
+
+.contents a[aria-current="location"] {
+  border-left-color: var(--fg);
+  color: var(--fg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contents,
+  .contents[data-shown] {
+    transition: none;
+  }
+}
+
+@media print {
+  .contents {
+    display: none;
+  }
+}

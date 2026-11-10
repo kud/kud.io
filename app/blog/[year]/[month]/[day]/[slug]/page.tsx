@@ -20,6 +20,9 @@ import { BlogImage } from "@/components/blog-image"
 import { CoverImage } from "@/components/blog-cover"
 import { imageDimensions } from "@/lib/image-dimensions"
 import { BlogMermaid } from "@/components/blog-mermaid"
+import { BlogContents } from "@/components/blog-contents"
+import { BlogMorePicks } from "@/components/blog-more-picks"
+import { pickMore } from "@/lib/blog-more"
 import styles from "./page.module.css"
 
 const FEED_TITLE = "Writing — kud.io"
@@ -176,7 +179,11 @@ const BlogPostPage = async ({ params }: Params) => {
   if (index === -1) notFound()
 
   const post = posts[index]
-  const neighbours = neighboursOf(posts, index)
+  // Every other post, newest first, goes into the list: today's two
+  // neighbours are the no-script default, and the inline script draws the
+  // mixed picks from the rest (lib/blog-more.ts).
+  const defaults = new Set(neighboursOf(posts, index).map((p) => p.slug))
+  const others = posts.filter((entry) => entry.slug !== slug)
   const body = await renderMarkdown(post.body, components)
   const cover = coverImages(post.cover)
   const coverSize = cover ? imageDimensions(cover.hero) : null
@@ -230,20 +237,66 @@ const BlogPostPage = async ({ params }: Params) => {
         </div>
         <div className={styles.body}>{body}</div>
       </article>
+      <BlogContents key={slug} />
 
-      {neighbours.length > 0 && (
-        <nav className={styles.more} aria-label="More posts">
+      {others.length > 0 && (
+        // suppressHydrationWarning on the nav and rows: the inline script
+        // below marks them (data-for, data-pick) before React hydrates.
+        <nav
+          className={styles.more}
+          aria-label="More posts"
+          data-more
+          suppressHydrationWarning
+        >
           <p className={styles.moreLabel}>More</p>
           <ul className={styles.moreList}>
-            {neighbours.map((entry) => (
-              <li key={entry.slug}>
-                <time dateTime={entry.date}>{entry.date}</time>
-                <h2>
-                  <Link href={postPath(entry)}>{entry.title}</Link>
-                </h2>
-              </li>
-            ))}
+            {others.map((entry) => {
+              const thumb = coverImages(entry.cover)
+              return (
+                <li
+                  key={entry.slug}
+                  data-slug={entry.slug}
+                  data-default={defaults.has(entry.slug) || undefined}
+                  data-recent={entry.slug === others[0].slug || undefined}
+                  suppressHydrationWarning
+                >
+                  <time dateTime={entry.date}>{entry.date}</time>
+                  <Link
+                    href={postPath(entry)}
+                    className={styles.moreThumb}
+                    data-tag={entry.tags[0]}
+                    data-cover={thumb ? true : undefined}
+                    style={
+                      thumb?.preview
+                        ? ({
+                            "--preview": `url(${thumb.preview})`,
+                          } as CSSProperties)
+                        : undefined
+                    }
+                    tabIndex={-1}
+                    aria-hidden="true"
+                  >
+                    {thumb && (
+                      <CoverImage
+                        src={thumb.thumb}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    )}
+                  </Link>
+                  <h2>
+                    <Link href={postPath(entry)}>{entry.title}</Link>
+                  </h2>
+                </li>
+              )
+            })}
           </ul>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(${pickMore.toString()})(document.currentScript.parentElement, ${JSON.stringify(slug)})`,
+            }}
+          />
+          <BlogMorePicks slug={slug} />
         </nav>
       )}
     </>

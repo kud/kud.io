@@ -1,6 +1,38 @@
 import { getContributions } from "@/lib/contributions"
 import styles from "./contributions.module.css"
 
+const plural = (count: number, word: string) =>
+  `${word}${count === 1 ? "" : "s"}`
+
+// "14,978" on a wide row, "15k" on a phone, where the row has less room.
+const compact = (count: number) =>
+  new Intl.NumberFormat("en-GB", { notation: "compact" })
+    .format(count)
+    .toLowerCase()
+
+// Raycast store stats in words, not glyphs: "↓ 14,978 ⌘ 3" read as nothing in
+// particular. `full` shows on wide rows (in .meta), `short` on phones (under
+// the description), so each viewport exposes one copy to screen readers.
+const RayStats = ({
+  installs,
+  commands,
+  short,
+}: {
+  installs: number
+  commands: number
+  short?: boolean
+}) => (
+  <>
+    <span className={styles.metric}>
+      {short ? compact(installs) : installs.toLocaleString("en-GB")}{" "}
+      {plural(installs, "install")}
+    </span>
+    <span className={styles.metric}>
+      {commands} {plural(commands, "command")}
+    </span>
+  </>
+)
+
 // "Contributions" — work I've upstreamed beyond my own projects, at the end of
 // /projects. Raycast extensions I contribute to render store-style (icon,
 // downloads, commands, Install); external repos show a live merged-PR count.
@@ -49,14 +81,16 @@ export const Contributions = async () => {
                 {item.description ? (
                   <span className={styles.note}>{item.description}</span>
                 ) : null}
+                <span className={styles.phoneMeta}>
+                  <RayStats
+                    installs={item.downloads}
+                    commands={item.commands}
+                    short
+                  />
+                </span>
               </span>
               <span className={styles.meta}>
-                <span className={styles.metric} title="Downloads">
-                  ↓ {item.downloads.toLocaleString()}
-                </span>
-                <span className={styles.metric} title="Commands">
-                  ⌘ {item.commands}
-                </span>
+                <RayStats installs={item.downloads} commands={item.commands} />
               </span>
               <a className={styles.action} href={item.installUrl}>
                 Install
@@ -96,8 +130,12 @@ export const Contributions = async () => {
                   </span>
                 ) : null}
                 {item.stars > 0 ? (
-                  <span className={styles.metric}>
-                    ★ {item.stars.toLocaleString()}
+                  <span
+                    className={styles.metric}
+                    aria-label={`${item.stars.toLocaleString("en-GB")} GitHub ${plural(item.stars, "star")}`}
+                  >
+                    <span aria-hidden>★</span>{" "}
+                    {item.stars.toLocaleString("en-GB")}
                   </span>
                 ) : null}
               </span>

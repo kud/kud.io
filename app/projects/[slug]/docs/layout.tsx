@@ -1,7 +1,6 @@
 import type { ReactNode } from "react"
+import { SiteFooter } from "@/components/site-footer"
 import { DocsLayout } from "fumadocs-ui/layouts/docs"
-import { SearchProvider } from "fumadocs-ui/contexts/search"
-import type { DefaultSearchDialogProps } from "fumadocs-ui/components/dialog/search-default"
 import { getProjectDocsTree } from "@/lib/source"
 import { getIcons } from "@/lib/icons"
 import { baseOptions } from "@/lib/layout.shared"
@@ -45,22 +44,19 @@ const Layout = async ({
     >
       <ThemeScopeScript />
       <ThemePicker className="dusk-picker-docs-top" />
-      {/* Search covers this project's docs only: /api/search?tag=<slug>, the
-          slug being each page's index tag. Other projects and the blog would
-          be noise. The provider lives here, not in the root layout, so ⌘K is
-          bound only inside project docs. */}
-      <SearchProvider<DefaultSearchDialogProps> options={{ defaultTag: slug }}>
-        <DocsLayout
-          tree={getProjectDocsTree(slug)}
-          {...base}
-          nav={{ ...base.nav, title, url: `/projects/${slug}` }}
-          // The picker sits top right like every themed page;
-          // the drawer copy is for phones, where fumadocs' bar owns that corner.
-          sidebar={{ banner: <ThemePicker className="dusk-picker-docs" /> }}
-        >
-          {children}
-        </DocsLayout>
-      </SearchProvider>
+      <DocsLayout
+        tree={getProjectDocsTree(slug)}
+        {...base}
+        nav={{ ...base.nav, title, url: `/projects/${slug}` }}
+        // The sidebar's search field and ⌘K open the site-wide launcher,
+        // which scopes its docs results to this project until widened. The
+        // picker sits top right like every themed page;
+        // the drawer copy is for phones, where fumadocs' bar owns that corner.
+        sidebar={{ banner: <ThemePicker className="dusk-picker-docs" /> }}
+      >
+        {children}
+      </DocsLayout>
+      <SiteFooter />
     </div>
   )
 }
