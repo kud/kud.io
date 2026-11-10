@@ -99,3 +99,46 @@ html[data-ink-candidate="5"] #blog-root[data-theme="light"] {
     --line-2: #b3bcc4;
   }
 }
+
+/* Code candidates, ?code=N (combinable with ?ink=N): the block stays dark in
+   both lights.
+     1 · today: near-black plum block, cream title bar, warm tokens only.
+     2 · softer: a lifted plum block by day, the title bar in the block's own
+         colour, tokens in two hue bins (lib/code-themes.ts duskSoft).
+     3 · softest: a mauve-plum block by day, same bar and tokens.
+   By night 2 and 3 keep the night block and take the new tokens and bar. */
+html[data-code-candidate="2"] [data-ground="dusk"][data-theme="light"] {
+  --code-bg: #33262d;
+}
+html[data-code-candidate="3"] [data-ground="dusk"][data-theme="light"] {
+  --code-bg: #43333c;
+}
+@media (prefers-color-scheme: light) {
+  html[data-code-candidate="2"] [data-ground="dusk"][data-theme="system"] {
+    --code-bg: #33262d;
+  }
+  html[data-code-candidate="3"] [data-ground="dusk"][data-theme="system"] {
+    --code-bg: #43333c;
+  }
+}
+html:is([data-code-candidate="2"], [data-code-candidate="3"])
+  [data-ground="dusk"]
+  :is(figure.shiki, pre.shiki) {
+  color: #f5ece8;
+  --color-fd-muted-foreground: #bcaab0;
+}
+html:is([data-code-candidate="2"], [data-code-candidate="3"])
+  [data-ground="dusk"]
+  .shiki
+  span[style*="--shiki-soft"] {
+  color: var(--shiki-soft) !important;
+  font-style: var(--shiki-soft-font-style) !important;
+}
+/* The README's terminal bar: the block's own colour a step lighter, so bar
+   and body read as one object rather than a cream lid on a dark box. */
+html:is([data-code-candidate="2"], [data-code-candidate="3"])
+  [data-ground="dusk"]
+  figure.shiki::before {
+  background: color-mix(in oklab, var(--code-bg), white 5%);
+  border-bottom-color: rgb(255 255 255 / 0.06);
+}

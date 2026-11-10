@@ -5,7 +5,7 @@ export const INK_CANDIDATE_KEY = "kud.inkCandidate"
 
 const SCRIPT = `try{var k=${JSON.stringify(
   INK_CANDIDATE_KEY,
-)},q=new URLSearchParams(location.search).get("ink");if(q!==null){if(/^[1-5]$/.test(q))sessionStorage.setItem(k,q);else sessionStorage.removeItem(k)}var v=sessionStorage.getItem(k);if(v)document.documentElement.dataset.inkCandidate=v}catch(e){}`
+)},q=new URLSearchParams(location.search).get("ink");if(q!==null){if(/^[1-5]$/.test(q))sessionStorage.setItem(k,q);else sessionStorage.removeItem(k)}var v=sessionStorage.getItem(k);if(v)document.documentElement.dataset.inkCandidate=v;var c=new URLSearchParams(location.search).get("code");if(c!==null){if(/^[1-3]$/.test(c))sessionStorage.setItem(k+".code",c);else sessionStorage.removeItem(k+".code")}var w=sessionStorage.getItem(k+".code");if(w)document.documentElement.dataset.codeCandidate=w}catch(e){}`
 
 // Candidate 4 is "dark everywhere": the themed scopes read this and paint
 // their night palette whatever the stored choice.
