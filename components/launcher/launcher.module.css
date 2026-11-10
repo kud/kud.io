@@ -1,0 +1,582 @@
+/* Command launcher. Both the dialog and its trigger are rendered inside the
+ * page's themed wrapper ([data-theme-scope]), so they read that page's own
+ * tokens and follow a theme switch live. The --l-* layer below maps each
+ * surface's vocabulary onto one set: home (always light, no wrapper)
+ * takes the Dusk day palette from :root, the Dusk pages their warm ground,
+ * the blog its cool greys. Nothing here keys on .dark: that would drag light pages half-dark. */
+.dialog,
+.trigger {
+  --l-bg: var(--dl-surface);
+  --l-raise: var(--dl-surface-2);
+  --l-hover: var(--dl-surface-3);
+  --l-fg: var(--dl-text);
+  --l-muted: var(--dl-muted);
+  --l-dim: var(--dl-dim);
+  --l-line: var(--dl-border);
+  --l-ring: var(--dl-primary-light);
+  --l-accent: var(--dl-primary);
+  --l-shade: 43 28 34;
+  font-family:
+    var(--font-sans),
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
+}
+
+:global([data-ground="dusk"]) .dialog,
+:global([data-ground="dusk"]) .trigger {
+  --l-bg: var(--surface);
+  --l-raise: var(--surface-2);
+  --l-hover: var(--surface-3);
+  --l-fg: var(--text);
+  --l-muted: var(--muted);
+  --l-dim: var(--dim);
+  --l-line: var(--border);
+  --l-ring: var(--primary-light);
+  --l-accent: var(--primary);
+  --l-shade: var(--dk-shade);
+}
+
+:global(#blog-root) .dialog,
+:global(#blog-root) .trigger {
+  --l-bg: var(--bg);
+  --l-raise: var(--bg-2);
+  --l-hover: var(--bg-2);
+  --l-fg: var(--fg);
+  --l-muted: var(--fg-2);
+  --l-dim: var(--fg-3);
+  --l-line: var(--line);
+  --l-ring: var(--fg-2);
+  --l-accent: var(--fg-2);
+  --l-shade: 10 14 18;
+}
+
+:global(html):has(.dialog[open]) {
+  overflow: hidden;
+}
+
+/* The <dialog> is the whole viewport, transparent, so a click on it that is
+ * not on the panel is a click outside. */
+.dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 12vh 16px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--l-fg);
+  overflow: hidden;
+}
+.dialog[open] {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.dialog::backdrop {
+  background: rgb(14 10 14 / 0.38);
+  backdrop-filter: blur(3px);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  width: min(640px, 100%);
+  max-height: min(580px, 76vh);
+  overflow: hidden;
+  border: 1px solid var(--l-line);
+  border-radius: 16px;
+  background: var(--l-bg);
+  box-shadow:
+    0 28px 70px -24px rgb(var(--l-shade) / 0.55),
+    0 2px 8px rgb(var(--l-shade) / 0.08);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  min-height: 56px;
+  padding: 0 10px 0 16px;
+  border-bottom: 1px solid var(--l-line);
+}
+.barIcon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--l-dim);
+}
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 54px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  /* 16px, or iOS zooms the page on focus. */
+  font-size: 16px;
+}
+.input::placeholder {
+  color: var(--l-dim);
+  opacity: 1;
+}
+.input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.chip {
+  display: inline-flex;
+  flex-shrink: 1;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 42%;
+  height: 28px;
+  padding: 0 10px 0 11px;
+  border: 1px solid var(--l-line);
+  border-radius: 999px;
+  background: var(--l-raise);
+  color: var(--l-fg);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 550;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.chip[aria-pressed="false"] {
+  background: transparent;
+  color: var(--l-muted);
+}
+.chip:hover {
+  border-color: var(--l-muted);
+}
+.chipSwap {
+  color: var(--l-dim);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.esc {
+  flex-shrink: 0;
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--l-line);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--l-dim);
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.esc:hover {
+  color: var(--l-fg);
+}
+.escWord {
+  display: none;
+}
+
+.list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px 8px 10px;
+  scroll-padding: 34px 0 8px;
+}
+
+.group + .group {
+  margin-top: 4px;
+}
+.group [cmdk-group-heading] {
+  padding: 12px 10px 6px;
+  color: var(--l-dim);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.headingNote {
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.option[data-selected="true"] {
+  background: var(--l-hover);
+}
+@media (forced-colors: active) {
+  .option[data-selected="true"] {
+    outline: 2px solid Highlight;
+  }
+}
+
+.mark,
+.cover {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--l-line);
+  background: var(--l-raise);
+}
+.mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+.cover {
+  width: 48px;
+  height: 30px;
+  border-radius: 7px;
+}
+.mark img,
+.cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.glyph {
+  width: 15px;
+  height: 15px;
+  color: var(--l-muted);
+}
+.letter {
+  color: var(--l-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  gap: 12px;
+  min-width: 0;
+}
+.title {
+  overflow: hidden;
+  color: var(--l-fg);
+  font-size: 14.5px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.title mark {
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--l-accent) 24%, transparent);
+  color: inherit;
+}
+.meta {
+  flex-shrink: 0;
+  max-width: 45%;
+  margin-left: auto;
+  overflow: hidden;
+  color: var(--l-dim);
+  font-size: 12.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.trail {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  color: var(--l-dim);
+}
+
+.empty {
+  margin: 0;
+  padding: 32px 20px;
+  color: var(--l-muted);
+  font-size: 14px;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.foot {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 16px;
+  padding: 9px 16px;
+  border-top: 1px solid var(--l-line);
+  color: var(--l-dim);
+  font-size: 12px;
+}
+.foot kbd,
+.triggerKey {
+  display: inline-grid;
+  min-width: 20px;
+  height: 20px;
+  margin-right: 3px;
+  padding: 0 5px;
+  place-items: center;
+  border: 1px solid var(--l-line);
+  border-radius: 5px;
+  background: var(--l-raise);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+}
+.footStatus {
+  margin-left: auto;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.dialog :focus-visible,
+.trigger:focus-visible {
+  outline: 2px solid var(--l-ring);
+  outline-offset: 2px;
+}
+
+/* Trigger: a quiet pill, bottom right, where a thumb reaches it. */
+.trigger {
+  position: fixed;
+  right: max(18px, env(safe-area-inset-right));
+  bottom: max(18px, env(safe-area-inset-bottom));
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 7px 0 14px;
+  border: 1px solid var(--l-line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--l-bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px -14px rgb(var(--l-shade) / 0.5);
+  color: var(--l-muted);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+}
+.trigger:hover {
+  border-color: var(--l-muted);
+  color: var(--l-fg);
+}
+.triggerIcon {
+  width: 16px;
+  height: 16px;
+}
+.triggerKey {
+  margin: 0;
+  color: var(--l-muted);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dialog[open] .panel {
+    animation: launcher-rise 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .dialog[open]::backdrop {
+    animation: launcher-fade 0.16s ease-out;
+  }
+}
+@keyframes launcher-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+}
+@keyframes launcher-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Phone: a full-height sheet, the keyboard hints swapped for a Close word. */
+@media (max-width: 640px) {
+  .dialog {
+    padding: 0;
+  }
+  .panel {
+    width: 100%;
+    height: 100dvh;
+    max-height: none;
+    border: 0;
+    border-radius: 0;
+  }
+  .bar {
+    min-height: 60px;
+    padding-top: env(safe-area-inset-top);
+  }
+  .foot,
+  .escKey {
+    display: none;
+  }
+  .escWord {
+    display: inline;
+  }
+  .esc {
+    border: 0;
+    color: var(--l-fg);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .option {
+    min-height: 52px;
+  }
+  .meta {
+    max-width: 38%;
+  }
+  .trigger {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    justify-content: center;
+  }
+  .triggerIcon {
+    width: 19px;
+    height: 19px;
+  }
+  .triggerWord,
+  .triggerKey {
+    display: none;
+  }
+}
+
+/* The whole bar reads as the field; a ring round the bare input would draw a
+   box inside the box. Doubled to outrank the Dusk pages' global ring. */
+.input.input:focus-visible,
+:global(#blog-root) .input:focus-visible {
+  outline: none;
+}
+
+/* Skeletons: the section's own rows, drawn in the raised ground. The shimmer
+   is a slow highlight sweep; under reduced motion the bars simply stand. */
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 7px 10px;
+}
+.skeleton {
+  display: block;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--l-raise);
+}
+.skeletonMark {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+.skeletonCover {
+  flex-shrink: 0;
+  width: 48px;
+  height: 30px;
+  border-radius: 7px;
+}
+.skeletonText {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.skeletonMeta {
+  width: 64px;
+  height: 8px;
+  margin-left: auto;
+  opacity: 0.7;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton {
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in srgb, var(--l-hover) 85%, var(--l-fg) 15%) 50%,
+        transparent 100%
+      )
+      var(--l-raise);
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    animation: launcher-shimmer 1.4s ease-in-out infinite;
+  }
+}
+@keyframes launcher-shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+
+/* Settings: one row per setting, its choices inline as a small segmented
+   control. The active choice is marked by ground and weight, not colour
+   alone. */
+.setting {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.segments {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: auto;
+  padding: 2px;
+  border: 1px solid var(--l-line);
+  border-radius: 999px;
+}
+.segment {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 9px;
+  border-radius: 999px;
+  color: var(--l-muted);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.segment:hover {
+  color: var(--l-fg);
+}
+.segment[data-active] {
+  background: var(--l-raise);
+  box-shadow: inset 0 0 0 1px var(--l-line);
+  color: var(--l-fg);
+  font-weight: 600;
+}
+.segmentIcon {
+  width: 12px;
+  height: 12px;
+}
+.title:has(.setting) {
+  flex: 1;
+  overflow: visible;
+}
+@media (max-width: 640px) {
+  .segment {
+    padding: 0 8px;
+  }
+}

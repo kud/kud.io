@@ -42,6 +42,9 @@ export type Project = {
   // Firefox add-ons (`kud-site-webext`) only: the live "average daily users"
   // figure from AMO, shown in place of stars/installs.
   users?: number | null
+  // Private repos may still appear on the site as products, but are never
+  // named or linked by their repo anywhere a visitor could follow it.
+  isPrivate?: boolean
 }
 
 // Reserved `kud-site-*` topics that are NOT categories: behaviour flags and the
@@ -79,6 +82,7 @@ type Repo = {
   language: string | null
   license: { spdx_id: string | null } | null
   archived?: boolean
+  private?: boolean
   pushed_at: string
   created_at: string
 }
@@ -132,6 +136,7 @@ const toProject = (repo: Repo): Project => ({
       : null,
   pushedAt: repo.pushed_at,
   createdAt: repo.created_at,
+  isPrivate: repo.private ?? false,
 })
 
 export const getProjects = async (): Promise<Project[]> => {
