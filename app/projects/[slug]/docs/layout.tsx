@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import { SiteFooter } from "@/components/site-footer"
 import { DocsLayout } from "fumadocs-ui/layouts/docs"
 import { getProjectDocsTree } from "@/lib/source"
 import { getIcons } from "@/lib/icons"
@@ -55,6 +56,7 @@ const Layout = async ({
       >
         {children}
       </DocsLayout>
+      <SiteFooter />
     </div>
   )
 }

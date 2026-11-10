@@ -1,4 +1,5 @@
 import { type CSSProperties } from "react"
+import { SiteFooter } from "@/components/site-footer"
 import { ButtonIcon } from "@/components/button-icon"
 import type { Metadata } from "next"
 import { InkLink as Link } from "@/components/ink-link"
@@ -667,6 +668,7 @@ const ProjectLanding = async ({
           release={await getRelease(project.slug)}
         />
       )}
+      <SiteFooter />
     </main>
   )
 }
