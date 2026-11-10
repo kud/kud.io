@@ -78,6 +78,7 @@ type Repo = {
   stargazers_count: number
   language: string | null
   license: { spdx_id: string | null } | null
+  archived?: boolean
   pushed_at: string
   created_at: string
 }
@@ -135,7 +136,7 @@ const toProject = (repo: Repo): Project => ({
 
 export const getProjects = async (): Promise<Project[]> => {
   const res = await fetch(
-    `https://api.github.com/search/repositories?q=user:${OWNER}+topic:${TOPIC}&sort=updated&per_page=100`,
+    `https://api.github.com/search/repositories?q=user:${OWNER}+topic:${TOPIC}+archived:false&sort=updated&per_page=100`,
     { headers: ghHeaders(), next: { revalidate: 3600 } },
   )
   // Raycast extensions come from content/raycast.json (no GitHub repo to tag), so
@@ -161,5 +162,6 @@ export const getProject = async (slug: string): Promise<Project | null> => {
     next: { revalidate: 3600 },
   })
   if (!res.ok) return null
-  return toProject((await res.json()) as Repo)
+  const repo = (await res.json()) as Repo
+  return repo.archived ? null : toProject(repo)
 }
