@@ -121,52 +121,21 @@
   }
 }
 
-/* Preview candidates (components/polish-candidate.tsx): a playful hover and
-   tap on the portrait. Only the inner photo or the circle's own rotation moves,
-   so the home <-> /projects glide (view-transition-name on the circle) is
-   untouched. */
-:global(html[data-avatar-candidate="2"]) .loaded .image {
+/* Hover and tap turn the portrait to marble, like the bust in his hand. Only
+   the inner photo changes, so the home <-> /projects glide
+   (view-transition-name on the circle) is untouched. */
+.loaded .image {
   transition:
     opacity 0.45s ease,
     filter 0.6s ease;
 }
-/* 2 — turns to marble, like the bust in his hand. */
-:global(html[data-avatar-candidate="2"]) .avatar:hover .image,
-:global(html[data-avatar-candidate="2"]) .avatar:active .image,
-:global(html[data-avatar-candidate="2"]) a:focus-visible .avatar .image {
+.avatar:hover .image,
+.avatar:active .image,
+a:focus-visible .avatar .image {
   filter: grayscale(1) sepia(0.14) contrast(1.08) brightness(1.08);
 }
-/* 3 — a small nod, pivoting low like a head on its neck. */
-:global(html[data-avatar-candidate="3"]) .avatar:hover,
-:global(html[data-avatar-candidate="3"]) .avatar:active,
-:global(html[data-avatar-candidate="3"]) a:focus-visible .avatar {
-  animation: avatarNod 0.9s cubic-bezier(0.3, 0.7, 0.4, 1);
-  transform-origin: 50% 85%;
-}
-@keyframes avatarNod {
-  0% {
-    transform: rotate(0);
-  }
-  25% {
-    transform: rotate(-9deg);
-  }
-  50% {
-    transform: rotate(6deg);
-  }
-  75% {
-    transform: rotate(-2.5deg);
-  }
-  100% {
-    transform: rotate(0);
-  }
-}
 @media (prefers-reduced-motion: reduce) {
-  :global(html[data-avatar-candidate="2"]) .loaded .image {
+  .loaded .image {
     transition: opacity 0.45s ease;
-  }
-  :global(html[data-avatar-candidate="3"]) .avatar:hover,
-  :global(html[data-avatar-candidate="3"]) .avatar:active,
-  :global(html[data-avatar-candidate="3"]) a:focus-visible .avatar {
-    animation: none;
   }
 }

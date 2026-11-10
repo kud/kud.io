@@ -411,17 +411,6 @@ html:has([data-ground="dusk"][data-theme="dark"]),
   outline-offset: 2px;
 }
 
-/* App tiles: the shadow took 70–85% of each app's own accent, which on plum
-   read as a blue neon halo. The accent stays inside the glass; the shadow is
-   the ground's shade. */
-[data-ground="dusk"] [class*="appIconWrap"][class*="appIconWrap"] {
-  box-shadow: 0 18px 36px -20px rgb(var(--dk-shade) / 0.55);
-}
-[data-ground="dusk"] [class*="appTile"]:hover [class*="appIconWrap"],
-[data-ground="dusk"] [class*="appTile"]:focus-visible [class*="appIconWrap"] {
-  box-shadow: 0 26px 48px -22px rgb(var(--dk-shade) / 0.7);
-}
-
 /* Primary buttons: a solid fill already says "press me"; the same colour
    bloomed underneath made it neon. A tight shade grounds it instead. */
 [data-ground="dusk"] a[class*="__primary"][class*="__primary"],
