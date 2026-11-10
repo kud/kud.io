@@ -1207,8 +1207,8 @@
 
 /* Ink ------------------------------------------------------------------------*/
 /* Home has no light or dark of its own, but it does take Ink (app/ink.css):
-   the wrapper is a theme scope only for this. One ink for every word, the
-   accent for links, paper for every ground, every border drawn in ink. */
+   the wrapper is a theme scope only for this. One ink for every word, underlined
+   links, paper for every ground, every border drawn in ink. */
 .home[data-theme="ink"] {
   --avatar-placeholder-background: var(--ik-wash);
 }
@@ -1225,7 +1225,7 @@
 }
 .home[data-theme="ink"] .modalCard {
   background: var(--ik-card);
-  border: 1.5px solid var(--ik-line);
+  border: 1px solid var(--ik-line);
   border-radius: var(--ik-wobble);
 }
 .home[data-theme="ink"] .modal::backdrop {
@@ -1255,6 +1255,9 @@
 }
 .home[data-theme="ink"] :is(.personal a, .entryOrgLink, .entryMore) {
   color: var(--ik-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
 }
 .home[data-theme="ink"]
   :is(
@@ -1272,8 +1275,8 @@
   background: var(--ik-line-dim);
 }
 
-/* Buttons are drawn, not filled: one ink-filled primary per row, the rest an
-   inked outline. A blot answers the hover. */
+/* Buttons: one black-filled primary per row, the rest an outline. Hover is a
+   grey step, never a hue. */
 .home[data-theme="ink"] :is(.primary, .timelineButtonPrimary) {
   background: var(--ik-ink);
   border: 1.5px solid var(--ik-ink);
@@ -1284,8 +1287,8 @@
   color: var(--ik-paper);
 }
 .home[data-theme="ink"] :is(.primary, .timelineButtonPrimary):hover {
-  background: var(--ik-accent);
-  border-color: var(--ik-accent);
+  background: var(--ik-press);
+  border-color: var(--ik-press);
   color: var(--ik-on-accent);
 }
 .home[data-theme="ink"]
@@ -1318,7 +1321,7 @@
 }
 .home[data-theme="ink"] .photo img,
 .home[data-theme="ink"] .cardAvatar img {
-  filter: grayscale(1) contrast(1.08);
+  filter: var(--ik-image);
 }
 .home[data-theme="ink"] .spinner {
   border-color: color-mix(in srgb, var(--ik-paper) 35%, transparent);

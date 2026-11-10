@@ -4,46 +4,52 @@ import { useEffect, useState, useSyncExternalStore } from "react"
 import { readStoredTheme, useScopedTheme } from "@/components/scoped-theme"
 import styles from "./ink-preview.module.css"
 
-// Preview-only: the three takes on the Ink theme, side by side on the real
-// pages. Opened by ?ink=<take> in the URL, remembered across pages until
-// closed. Picking a take turns the Ink theme on. Remove this file, its CSS,
-// its mount in app/layout.tsx and the non-chosen takes in app/ink.css once a
-// take is picked.
+// Preview-only: the open questions on the Ink (e-ink) theme, tried on the real
+// pages. Opened by any of ?paper= ?image= ?motion= in the URL, remembered for
+// the tab (sessionStorage) until closed. Picking anything turns the Ink theme
+// on. Remove this file, its CSS, its mount in app/layout.tsx and the
+// non-chosen options in app/ink.css once the picks are settled.
 
 const KEY = "kud.ink-preview"
 
 const ROWS = [
   {
-    param: "ink",
-    label: "Take",
-    values: ["fountain", "sumi", "negative"],
-    recommended: "fountain",
+    param: "paper",
+    label: "Paper",
+    values: ["white", "pearl"],
+    recommended: "white",
   },
   {
-    param: "hand",
-    label: "Hand",
-    values: ["wobbly", "straight"],
-    recommended: "wobbly",
+    param: "image",
+    label: "Images",
+    values: ["grey", "crush", "dither"],
+    recommended: "crush",
+  },
+  {
+    param: "motion",
+    label: "Motion",
+    values: ["flash", "cut"],
+    recommended: "flash",
   },
 ] as const
 
 type Param = (typeof ROWS)[number]["param"]
 type Choice = Record<Param, string>
 
-const DEFAULTS: Choice = { ink: "fountain", hand: "wobbly" }
+const DEFAULTS: Choice = { paper: "white", image: "crush", motion: "flash" }
 
-// Runs before first paint, ahead of every scope's own script: a take in the
-// URL is stored and stamps <html>, and turns the Ink theme on so the scopes
+// Runs before first paint, ahead of every scope's own script: picks in the
+// URL are stored and stamp <html>, and turns the Ink theme on so the scopes
 // paint it straight away rather than after hydration.
-const PREVIEW_SCRIPT = `try{var q=new URLSearchParams(location.search),s=JSON.parse(localStorage.getItem(${JSON.stringify(
+// Each param falls back to the stored pick, then the default, so a link with
+// one param keeps the rest of the session's picks.
+const PREVIEW_SCRIPT = `try{var q=new URLSearchParams(location.search),k=${JSON.stringify(
   KEY,
-)})||"null");if(q.has("ink")){s={ink:q.get("ink"),hand:q.get("hand")||(s&&s.hand)||"wobbly"};localStorage.setItem(${JSON.stringify(
-  KEY,
-)},JSON.stringify(s));localStorage.setItem("kud.theme","ink")}if(s){document.documentElement.dataset.inkTake=s.ink;document.documentElement.dataset.inkHand=s.hand}}catch(e){}`
+)},d=${JSON.stringify(DEFAULTS)},s=JSON.parse(sessionStorage.getItem(k)||"null");if(q.has("paper")||q.has("image")||q.has("motion")){var b=s||d;s={paper:q.get("paper")||b.paper,image:q.get("image")||b.image,motion:q.get("motion")||b.motion};sessionStorage.setItem(k,JSON.stringify(s));localStorage.setItem("kud.theme","ink")}if(s){var h=document.documentElement.dataset;h.inkPaper=s.paper;h.inkImage=s.image;h.inkMotion=s.motion}}catch(e){}`
 
 const readChoice = (): Choice | null => {
   try {
-    const stored = window.localStorage.getItem(KEY)
+    const stored = window.sessionStorage.getItem(KEY)
     if (!stored) return null
     const parsed = { ...DEFAULTS, ...JSON.parse(stored) } as Choice
     for (const { param, values } of ROWS)
@@ -58,11 +64,13 @@ const readChoice = (): Choice | null => {
 const stamp = (choice: Choice | null) => {
   const html = document.documentElement
   if (choice) {
-    html.dataset.inkTake = choice.ink
-    html.dataset.inkHand = choice.hand
+    html.dataset.inkPaper = choice.paper
+    html.dataset.inkImage = choice.image
+    html.dataset.inkMotion = choice.motion
   } else {
-    delete html.dataset.inkTake
-    delete html.dataset.inkHand
+    delete html.dataset.inkPaper
+    delete html.dataset.inkImage
+    delete html.dataset.inkMotion
   }
 }
 
@@ -115,7 +123,7 @@ export const InkPreview = () => {
     const choice: Choice = JSON.parse(raw)
     stamp(choice)
     try {
-      window.localStorage.setItem(KEY, JSON.stringify(choice))
+      window.sessionStorage.setItem(KEY, JSON.stringify(choice))
     } catch {}
     window.history.replaceState(null, "", pageUrl(choice))
   }, [raw])
@@ -140,7 +148,7 @@ export const InkPreview = () => {
 
   const leave = () => {
     try {
-      window.localStorage.removeItem(KEY)
+      window.sessionStorage.removeItem(KEY)
     } catch {}
     stamp(null)
     window.history.replaceState(null, "", pageUrl(null))

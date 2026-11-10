@@ -6,6 +6,7 @@ import { ViewTransitions } from "next-view-transitions"
 import { ArriveScript, InkTransition } from "@/components/ink-transition"
 import { HashScroll } from "@/components/hash-scroll"
 import { InkPreview, InkPreviewScript } from "@/components/ink-preview"
+import { InkFilters } from "@/components/ink-filters"
 import { Hanken_Grotesk } from "next/font/google"
 
 // Hanken Grotesk — a refined, elegant grotesque: subtle squared character with
@@ -81,6 +82,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
         <InkTransition />
         <HashScroll />
         <InkPreview />
+        <InkFilters />
         <RootProvider
           theme={{
             defaultTheme: "dark",

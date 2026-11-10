@@ -19,10 +19,10 @@ const BLOG_GROUND = { light: "#f7f8f9", dark: "#0e1418" } as const
 type Scheme = "light" | "dark"
 
 // Ink paints its own paper (app/ink.css, --ik-paper), read live because the
-// take is a preview choice; its scheme follows the take.
+// paper is a preview choice.
 const inkVar = (name: string): string =>
   getComputedStyle(document.documentElement).getPropertyValue(name).trim()
-const inkGround = (): string => inkVar("--ik-paper") || "#f4eedf"
+const inkGround = (): string => inkVar("--ik-paper") || "#ffffff"
 
 // "system" resolves the way each scope's CSS does: prefers-color-scheme.
 export const resolveScheme = (theme: ScopedTheme): Scheme => {
@@ -63,7 +63,7 @@ const isLightGround = (hex: string) =>
   parseInt(hex.slice(1, 3), 16) + parseInt(hex.slice(3, 5), 16) > 300
 // In the Ink world the cover is the ink itself, lifting off onto paper.
 export const inkFor = (ground: string): string => {
-  if (ground === inkGround()) return inkVar("--ik-ink") || "#1b2333"
+  if (ground === inkGround()) return inkVar("--ik-ink") || "#111111"
   return isLightGround(ground) ? "#ffffff" : ground
 }
 
@@ -102,6 +102,13 @@ export const inkNavigate = (
   const url = new URL(href, window.location.href)
   if (url.origin !== window.location.origin) return false
   if (url.pathname === window.location.pathname) return false
+
+  // E-paper never spills: the link navigates as it would anyway, under a
+  // refresh flash.
+  if (readStoredTheme() === "ink") {
+    inkRefresh()
+    return false
+  }
 
   const ground = groundFor(url.pathname)
   if (!ground) return false
@@ -165,4 +172,27 @@ export const scopeGroundFor = (theme: ScopedTheme): string => {
   if (theme === "ink") return inkGround()
   const blog = document.getElementById("blog-root") !== null
   return (blog ? BLOG_GROUND : DUSK_GROUND)[resolveScheme(theme)]
+}
+
+let refreshTimer: number | undefined
+
+// The Ink world's only motion: a panel refresh. One inverted frame, then
+// paper, then the page (app/ink.css, html[data-ink-refresh]). `apply` runs
+// under the black frame, so a theme swap never shows half-painted. Under
+// reduced motion, or with the preview's "cut", it is a plain swap.
+export const inkRefresh = (apply?: () => void) => {
+  const root = document.documentElement
+  if (reducedMotion() || root.dataset.inkMotion === "cut") {
+    apply?.()
+    return
+  }
+  delete root.dataset.inkRefresh
+  // Restart the animation when two moves land inside one flash.
+  void root.offsetWidth
+  root.dataset.inkRefresh = ""
+  if (apply) window.setTimeout(apply, 40)
+  window.clearTimeout(refreshTimer)
+  refreshTimer = window.setTimeout(() => {
+    delete root.dataset.inkRefresh
+  }, 300)
 }

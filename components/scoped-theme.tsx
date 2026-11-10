@@ -7,7 +7,7 @@ import {
   useSyncExternalStore,
 } from "react"
 import type { ReactNode } from "react"
-import { inkSwap, scopeGroundFor } from "@/components/ink"
+import { inkRefresh, inkSwap, scopeGroundFor } from "@/components/ink"
 
 // Scoped visitor themes: each themed surface (the blog, the Dusk pages under
 // /projects) owns its own light/dark/system choice, stamped as data-theme on
@@ -37,7 +37,7 @@ export const BLOG_ROOT_ID = "blog-root"
 // the blog control, the command launcher's settings) maps over this and keeps
 // its own word and mark in a Record<ScopedTheme, …>, so a theme added here
 // fails the build until every list has something to say for it. Ink is the
-// third world: everything drawn in ink (app/ink.css).
+// third world: an e-ink reader, white paper and greys only (app/ink.css).
 export const SCOPED_THEMES = ["system", "light", "dark", "ink"] as const
 
 export type ScopedTheme = (typeof SCOPED_THEMES)[number]
@@ -124,7 +124,9 @@ export const useScopedTheme = () => {
     unpersistedTheme = next
     const from = scopeGroundFor(before)
     const to = scopeGroundFor(next)
-    void inkSwap(from === to ? null : origin, to, () => stampScopes(next))
+    // Into or out of Ink the panel refreshes instead: e-paper never spills.
+    if (next === "ink" || before === "ink") inkRefresh(() => stampScopes(next))
+    else void inkSwap(from === to ? null : origin, to, () => stampScopes(next))
     try {
       localStorage.setItem(THEME_KEY, next)
     } catch {

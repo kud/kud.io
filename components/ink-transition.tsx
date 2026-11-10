@@ -150,9 +150,10 @@ export const InkTransition = () => {
 // First arrival on home: a cover in the home ground is held from before first
 // paint and InkTransition lifts it as ink once hydrated. Decided in the
 // browser, never from searchParams, so the page stays static. Reduced motion
-// never gets the cover. global.css paints it and drops it after 3s whatever
-// happens, so a script failure can't leave the page hidden.
-const ARRIVE_SCRIPT = `try{if(location.pathname==="/"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.arrive="ink"}catch(e){}`
+// never gets the cover, nor does Ink, whose paper never spills. global.css
+// paints it and drops it after 3s whatever happens, so a script failure can't
+// leave the page hidden.
+const ARRIVE_SCRIPT = `try{if(location.pathname==="/"&&localStorage.getItem("kud.theme")!=="ink"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.arrive="ink"}catch(e){}`
 
 export const ArriveScript = () => (
   <script dangerouslySetInnerHTML={{ __html: ARRIVE_SCRIPT }} />

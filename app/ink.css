@@ -1,78 +1,79 @@
 /* Ink ----------------------------------------------------------------------- */
-/* The third theme: everything as if drawn in ink. Two colours do the work, the
-   ink and the paper it sits on, plus one accent the pen carries. It is stamped
-   like Light and Dark, as data-theme="ink" on a [data-theme-scope] wrapper
+/* The third theme: an e-ink reader. White paper, black ink, and nothing in
+   between but greys: text, chrome, code and every image. It is stamped like
+   Light and Dark, as data-theme="ink" on a [data-theme-scope] wrapper
    (components/scoped-theme.tsx), and home carries a scope only so it can take
    this one; home ignores Light and Dark.
 
-   The take (which ink, which paper) is a preview choice on <html>:
-   data-ink-take="fountain" | "sumi" | "negative", and data-ink-hand="straight"
-   turns the hand-drawn borders off. :root holds Fountain, so a page without
-   the preview paints that one.
+   No hue survives, so nothing may have been saying anything with one. What
+   colour used to tell apart, weight, underline and fill tell apart here: a
+   link is underlined, the primary action is a black fill, a selected thing is
+   inverted, a diff line keeps its sign.
 
-   Every text pair clears 4.5:1 on paper, card, wash and blot alike (measured,
-   2026-11-10); the lowest is Fountain's dim on wash at 4.59. --ik-* is the
-   take, the scope selectors below map it onto each surface's own tokens. */
+   Preview choices live on <html> (components/ink-preview.tsx):
+   data-ink-paper="white" | "pearl", data-ink-image="grey" | "crush" |
+   "dither", data-ink-motion="flash" | "cut". :root holds the recommended
+   picks, so a page without the preview paints those.
+
+   Every text pair clears 4.5:1 on paper, card, wash and blot (measured,
+   2026-11-10): the lowest is dim on Pearl's blot at 5.12. */
 :root {
-  --ik-paper: #f4eedf;
-  --ik-card: #faf6ec;
-  --ik-wash: #e9e1cc;
-  --ik-blot: #dde2ee;
-  --ik-ink: #1b2333;
-  --ik-muted: #4a5163;
-  --ik-dim: #5d6375;
-  --ik-accent: #1f3d8f;
-  --ik-on-accent: #faf6ec;
-  --ik-line: #1b2333;
-  --ik-line-dim: #cfc6ae;
+  --ik-paper: #ffffff;
+  --ik-card: #ffffff;
+  --ik-wash: #f0f0f0;
+  --ik-blot: #e3e3e3;
+  --ik-ink: #111111;
+  --ik-muted: #3d3d3d;
+  --ik-dim: #555555;
+  /* The accent is the ink itself: emphasis is weight, underline or fill. */
+  --ik-accent: #111111;
+  --ik-on-accent: #ffffff;
+  /* A pressed or hovered black fill: one step off the ink, still 10:1. */
+  --ik-press: #3d3d3d;
+  --ik-line: #111111;
+  --ik-line-dim: #c4c4c4;
   --ik-scheme: light;
-  --ik-grain-opacity: 0.07;
-  /* A hand-drawn box: four uneven radii, after the sketchy-border trick. Big
-     enough to read as drawn, small enough that a card never looks like a
-     bubble. */
-  --ik-wobble: 14px 4px 12px 5px / 5px 12px 4px 14px;
-  --ik-wobble-sm: 8px 3px 7px 3px / 3px 7px 3px 8px;
+  /* No hand-drawn wobble on a screen that draws in pixels. */
+  --ik-wobble: 4px;
+  --ik-wobble-sm: 3px;
+  /* Images: greyscale with the contrast pressed a little, the way an e-paper
+     panel flattens a photo's midtones. */
+  --ik-image: grayscale(1) contrast(1.18) brightness(1.04);
 }
-html[data-ink-take="sumi"] {
-  --ik-paper: #f1ede3;
-  --ik-card: #f8f5ee;
-  --ik-wash: #e2dccf;
-  --ik-blot: #efd9cf;
-  --ik-ink: #151413;
-  --ik-muted: #47433e;
-  --ik-dim: #5c5751;
-  --ik-accent: #a3301c;
-  --ik-on-accent: #f8f5ee;
-  --ik-line: #151413;
-  --ik-line-dim: #d3ccbd;
+html[data-ink-paper="pearl"] {
+  --ik-paper: #efefed;
+  --ik-card: #f7f7f6;
+  --ik-wash: #e3e3e1;
+  --ik-blot: #d6d6d4;
 }
-html[data-ink-take="negative"] {
-  --ik-paper: #111215;
-  --ik-card: #18191d;
-  --ik-wash: #1f2228;
-  --ik-blot: #222b40;
-  --ik-ink: #eee8da;
-  --ik-muted: #bdb6a8;
-  --ik-dim: #a29b8f;
-  --ik-accent: #a3bdff;
-  --ik-on-accent: #111215;
-  --ik-line: #eee8da;
-  --ik-line-dim: #34363c;
-  --ik-scheme: dark;
-  --ik-grain-opacity: 0.05;
+html[data-ink-image="grey"] {
+  --ik-image: grayscale(1);
 }
-html[data-ink-hand="straight"] {
-  --ik-wobble: 10px;
-  --ik-wobble-sm: 6px;
+/* Sixteen-ish greys and a fine grain: the panel's own limit, drawn by the
+   filter in components/ink-filters.tsx. */
+html[data-ink-image="dither"] {
+  --ik-image: url(#ink-dither);
 }
 
-/* Paper grain, used sparingly: one fractal-noise tile under everything, at a
-   few percent. It is the only texture on a page; rules and boxes carry the
-   hand. */
-:root {
-  --ik-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
-  /* A rule drawn with a pen: a line that thickens and thins, tiled sideways. */
-  --ik-rule: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='6' viewBox='0 0 240 6'%3E%3Cpath d='M0 3.2C20 2.4 38 3.9 60 3.1S101 2.2 122 3.3 160 4 181 3s40-.9 59 .2' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+/* Shared by every ink scope ------------------------------------------------- */
+/* The safety net: whatever a token missed (a vendor colour, a hard-coded hex,
+   an inline SVG), the whole document is printed in greys. Filter on the root
+   element does not become a containing block, so fixed elements stay put. */
+html:has([data-theme-scope][data-theme="ink"]) {
+  filter: grayscale(1);
+}
+html:has([data-theme-scope][data-theme="ink"]),
+body:has([data-theme-scope][data-theme="ink"]) {
+  background-color: var(--ik-paper);
+}
+[data-theme-scope][data-theme="ink"] {
+  background-color: var(--ik-paper);
+  color: var(--ik-ink);
+}
+
+/* Images, covers, avatars, icons and logos: every raster on the page. */
+[data-theme="ink"] :is(img, video, picture, canvas, svg image) {
+  filter: var(--ik-image);
 }
 
 /* Dusk: /projects, a project page and its docs. Doubled attributes outrank
@@ -84,7 +85,7 @@ html:has([data-ground="dusk"][data-theme="ink"][data-theme="ink"]),
   --dk-surface: var(--ik-card);
   --dk-surface-2: var(--ik-wash);
   --dk-surface-3: var(--ik-blot);
-  --dk-border: var(--ik-line);
+  --dk-border: var(--ik-line-dim);
   --dk-border-dim: var(--ik-line-dim);
   --dk-text: var(--ik-ink);
   --dk-muted: var(--ik-muted);
@@ -97,19 +98,20 @@ html:has([data-ground="dusk"][data-theme="ink"][data-theme="ink"]),
   --dk-glow: 0 0 0;
   --dk-cool: 0 0 0;
   --dk-scheme: var(--ik-scheme);
-  /* One ink: categories stop being colours and stay words. */
+  /* Categories were never only colours: each carries its word. In one ink
+     they stay words; the product category alone keeps the full black. */
   --dk-cat: var(--ik-muted);
-  --dk-cat-product: var(--ik-accent);
-  --dk-cat-cli: var(--ik-ink);
-  --dk-cat-mcp: var(--ik-ink);
-  --dk-cat-claude: var(--ik-ink);
-  --dk-cat-ui: var(--ik-ink);
-  --dk-cat-vscode: var(--ik-ink);
-  --dk-cat-theme: var(--ik-ink);
+  --dk-cat-product: var(--ik-ink);
+  --dk-cat-cli: var(--ik-muted);
+  --dk-cat-mcp: var(--ik-muted);
+  --dk-cat-claude: var(--ik-muted);
+  --dk-cat-ui: var(--ik-muted);
+  --dk-cat-vscode: var(--ik-muted);
+  --dk-cat-theme: var(--ik-muted);
 }
 
-/* Blog. Its tokens live on #blog-root (app/blog/blog.module.css). Code is an
-   ink wash, not a dark slab: two tones, the ink and the accent. */
+/* Blog. Its tokens live on #blog-root (app/blog/blog.module.css). Code is a
+   light grey panel: ink for the code, dim italic for comments. */
 #blog-root[data-theme="ink"][data-theme="ink"] {
   --bg: var(--ik-paper);
   --bg-2: var(--ik-wash);
@@ -120,49 +122,32 @@ html:has([data-ground="dusk"][data-theme="ink"][data-theme="ink"]),
   --line-2: var(--ik-line);
   --c-bg: var(--ik-wash);
   --c-dot: var(--ik-line-dim);
+  /* A diff keeps its sign column; the fill only reinforces it by lightness. */
   --c-add: var(--ik-blot);
-  --c-del: var(--ik-blot);
+  --c-del: var(--ik-paper);
   --c-txt: var(--ik-ink);
   --c-mut: var(--ik-muted);
   --c-cm: var(--ik-dim);
-  --c-str: var(--ik-muted);
-  --c-num: var(--ik-accent);
-  --c-kw: var(--ik-accent);
+  --c-str: var(--ik-ink);
+  --c-num: var(--ik-ink);
+  --c-kw: var(--ik-ink);
   --c-fn: var(--ik-ink);
-  --c-tag: var(--ik-accent);
+  --c-tag: var(--ik-dim);
   --c-att: var(--ik-muted);
-  --c-gold: var(--ik-accent);
+  --c-gold: var(--ik-ink);
   color-scheme: var(--ik-scheme);
 }
-#blog-root[data-theme="ink"] ::selection {
+[data-theme="ink"] ::selection {
   background: var(--ik-ink);
   color: var(--ik-paper);
 }
 
-/* Shared by every ink scope ------------------------------------------------- */
-html:has([data-theme-scope][data-theme="ink"]),
-body:has([data-theme-scope][data-theme="ink"]) {
-  background-color: var(--ik-paper);
-}
-body:has([data-theme-scope][data-theme="ink"]) {
-  background-image: var(--ik-grain);
-  background-size: 160px;
-}
-[data-theme-scope][data-theme="ink"] {
-  background-image: var(--ik-grain);
-  background-size: 160px;
-  background-blend-mode: multiply;
-}
-html[data-ink-take="negative"] [data-theme-scope][data-theme="ink"] {
-  background-blend-mode: screen;
-}
-
-/* Code: shiki's token colours are drawn for a dark slab, so on paper they all
-   become ink, comments one step quieter. The wash is the block itself. */
+/* Code: shiki's token colours are drawn for a dark slab. On paper they all
+   become ink; comments step back to dim italic. */
 [data-theme="ink"] pre,
 [data-theme="ink"] figure:has(> pre) {
   background: var(--ik-wash) !important;
-  border: 1.5px solid var(--ik-line) !important;
+  border: 1px solid var(--ik-line-dim) !important;
   border-radius: var(--ik-wobble) !important;
 }
 [data-theme="ink"] pre :is(span, code) {
@@ -172,12 +157,11 @@ html[data-ink-take="negative"] [data-theme-scope][data-theme="ink"] {
   color: var(--ik-dim) !important;
 }
 
-/* Hand-inked rules and boxes. */
+/* Rules and boxes: a hairline, no shadow. Light has no direction on e-paper. */
 [data-theme="ink"] hr {
-  height: 6px;
+  height: 0;
   border: 0;
-  background-color: var(--ik-line);
-  mask: var(--ik-rule) repeat-x left center / 240px 6px;
+  border-top: 1px solid var(--ik-line);
 }
 [data-theme="ink"]
   :is(
@@ -188,51 +172,69 @@ html[data-ink-take="negative"] [data-theme-scope][data-theme="ink"] {
     table,
     .warm-hero > .illus-art
   ) {
-  border-color: var(--ik-line) !important;
-  border-radius: var(--ik-wobble) !important;
+  border-color: var(--ik-line-dim) !important;
   box-shadow: none !important;
 }
-[data-theme="ink"] .dusk-picker,
-[data-theme="ink"] .dusk-picker button {
-  border-radius: var(--ik-wobble-sm);
-}
 
-/* Blotted hover: a pale blot of the accent soaks out from under the link.
-   The text keeps its colour, so the pair never drops below the contrast it
-   had on paper (blot pairs are measured too). */
+/* Links in running text are always underlined, since hue can no longer pick
+   them out. Hover thickens the line; nothing slides or fades. */
 [data-theme="ink"] :is(p, li, dd, td) a,
 [data-theme="ink"] [data-ink-blot] {
-  color: var(--ik-accent);
-  text-decoration-color: currentColor;
-  background-image: radial-gradient(
-    closest-side,
-    var(--ik-blot) 0 70%,
-    color-mix(in srgb, var(--ik-blot) 60%, transparent) 85%,
-    transparent 100%
-  );
-  background-repeat: no-repeat;
-  background-position: 50% 55%;
-  background-size: 0% 0%;
-  border-radius: 40% 55% 45% 60% / 60% 45% 55% 40%;
-  transition: background-size 220ms ease-out;
+  color: var(--ik-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: none;
 }
 [data-theme="ink"] :is(p, li, dd, td) a:hover,
 [data-theme="ink"] [data-ink-blot]:hover {
-  background-size: 125% 170%;
+  text-decoration-thickness: 2px;
+}
+
+/* Keyboard focus: a solid black ring, never a hue. */
+[data-theme="ink"] :focus-visible {
+  outline: 2px solid var(--ik-ink) !important;
+  outline-offset: 2px;
+}
+
+/* E-paper does not glide, so neither does a hover here: every transition
+   lands in one step. Animations (a spinner) keep their own timing, since a
+   stepped loop would freeze. The page move itself is a refresh flash
+   (components/ink.ts → inkRefresh). */
+[data-theme="ink"] *,
+[data-theme="ink"] *::before,
+[data-theme="ink"] *::after {
+  transition-timing-function: steps(1, end) !important;
+}
+
+/* The refresh: one inverted frame, then paper, then the page, as a panel
+   clears its ghosting. A single flash per move, well under three a second. */
+html[data-ink-refresh]::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  animation: ink-refresh 260ms steps(1, end) forwards;
+}
+@keyframes ink-refresh {
+  0% {
+    background: var(--ik-ink);
+  }
+  35% {
+    background: var(--ik-paper);
+  }
+  100% {
+    background: transparent;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  [data-theme="ink"] :is(p, li, dd, td) a,
-  [data-theme="ink"] [data-ink-blot] {
-    transition: none;
+  html[data-ink-refresh]::after {
+    display: none;
   }
 }
 
-/* Drawings: printed in the same ink, not in colour. */
+/* Drawings: printed in the same ink. */
 [data-theme="ink"] .illus-art img {
-  filter: grayscale(1) contrast(1.05);
   mix-blend-mode: multiply;
-}
-html[data-ink-take="negative"] [data-theme="ink"] .illus-art img {
-  filter: grayscale(1) invert(1) contrast(0.95);
-  mix-blend-mode: screen;
 }

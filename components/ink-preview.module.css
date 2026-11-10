@@ -1,4 +1,4 @@
-/* The preview banner for the Ink takes, drawn in the take it is showing. */
+/* The preview banner for the Ink picks, drawn in the paper it is showing. */
 .banner {
   position: fixed;
   bottom: 14px;
@@ -13,10 +13,9 @@
   width: max-content;
   max-width: calc(100vw - 32px);
   padding: 7px 10px 7px 12px;
-  border: 1.5px solid var(--ik-line);
+  border: 1px solid var(--ik-line);
   border-radius: var(--ik-wobble);
   background: var(--ik-card);
-  box-shadow: 3px 3px 0 var(--ik-line);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 11px;
   color: var(--ik-muted);
@@ -74,7 +73,7 @@
 /* Fixed width: "Copied" must not nudge its neighbours. */
 .copy {
   min-width: 11ch;
-  box-shadow: inset 0 0 0 1.5px var(--ik-line);
+  box-shadow: inset 0 0 0 1px var(--ik-line);
   color: var(--ik-ink);
 }
 
