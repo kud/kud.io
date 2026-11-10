@@ -467,3 +467,66 @@
 :global(#blog-root) .input:focus-visible {
   outline: none;
 }
+
+/* Skeletons: the section's own rows, drawn in the raised ground. The shimmer
+   is a slow highlight sweep; under reduced motion the bars simply stand. */
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 7px 10px;
+}
+.skeleton {
+  display: block;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--l-raise);
+}
+.skeletonMark {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+.skeletonCover {
+  flex-shrink: 0;
+  width: 48px;
+  height: 30px;
+  border-radius: 7px;
+}
+.skeletonText {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.skeletonMeta {
+  width: 64px;
+  height: 8px;
+  margin-left: auto;
+  opacity: 0.7;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton {
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in srgb, var(--l-hover) 85%, var(--l-fg) 15%) 50%,
+        transparent 100%
+      )
+      var(--l-raise);
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    animation: launcher-shimmer 1.4s ease-in-out infinite;
+  }
+}
+@keyframes launcher-shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}

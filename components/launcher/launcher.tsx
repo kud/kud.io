@@ -305,6 +305,44 @@ const VisualMark = ({ visual }: { visual: Visual }) => {
   )
 }
 
+// True once `key` has stayed set for `ms`: a load that settles sooner never
+// shows its placeholder, so a warm index or a quick docs hit does not flash.
+// Keyed, so each new docs query waits its own delay.
+const useDelayed = (key: string | null, ms: number) => {
+  const [ready, setReady] = useState<string | null>(null)
+  useEffect(() => {
+    if (key === null) return
+    const timer = window.setTimeout(() => setReady(key), ms)
+    return () => window.clearTimeout(timer)
+  }, [key, ms])
+  return key !== null && ready === key
+}
+
+const SKELETON_WIDTHS = ["62%", "48%", "71%"]
+
+// Stand-ins in the section's own layout while its results are on their way.
+// Hidden from assistive tech: the list says aria-busy instead.
+const SkeletonGroup = ({ section }: { section: SectionKey }) => (
+  <div className={styles.group} aria-hidden>
+    <div cmdk-group-heading="">{SECTION_LABEL[section]}</div>
+    {SKELETON_WIDTHS.map((width) => (
+      <div key={width} className={styles.skeletonRow}>
+        <span
+          className={`${styles.skeleton} ${
+            section === "writing" ? styles.skeletonCover : styles.skeletonMark
+          }`}
+        />
+        <span className={styles.skeletonText}>
+          <span className={styles.skeleton} style={{ width }} />
+          {section !== "docs" ? (
+            <span className={`${styles.skeleton} ${styles.skeletonMeta}`} />
+          ) : null}
+        </span>
+      </div>
+    ))}
+  </div>
+)
+
 type PanelProps = { onClose: () => void }
 
 // Mounted fresh for every opening, so the query, the selection and the docs
@@ -546,6 +584,15 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   const flat = sections.flatMap((section) => section.items)
   const active = flat.find((item) => item.id === activeId) ?? flat[0]
 
+  const indexPending = !index && !failed
+  const docsPending = trimmed.length >= 2 && docs?.key !== docsKey
+  const showIndexSkeleton = useDelayed(indexPending ? "index" : null, 150)
+  const showDocsSkeleton = useDelayed(docsPending ? docsKey : null, 150)
+  const skeletonFor = (key: SectionKey) =>
+    key === "docs"
+      ? showDocsSkeleton
+      : (key === "projects" || key === "writing") && showIndexSkeleton
+
   // cmdk scrolls on its own arrow moves; a Tab jump is ours, so is its scroll.
   useEffect(() => {
     listRef.current
@@ -687,48 +734,56 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
           ref={listRef}
           className={styles.list}
           label="Results"
+          aria-busy={indexPending || docsPending}
           onPointerDown={(event) => {
             newTab.current = event.metaKey || event.ctrlKey
           }}
         >
-          {sections.map((section) => (
-            <Command.Group
-              key={section.key}
-              className={styles.group}
-              heading={
-                <>
-                  {SECTION_LABEL[section.key]}
-                  {section.key === "docs" && currentProject && docsTag ? (
-                    <span className={styles.headingNote}>
-                      {" "}
-                      · {currentProject.name}
-                    </span>
-                  ) : null}
-                </>
-              }
-            >
-              {section.items.map((item) => (
-                <Command.Item
-                  key={item.id}
-                  value={item.id}
-                  className={styles.option}
-                  onSelect={() => activate(item)}
-                >
-                  <VisualMark visual={item.visual} />
-                  <span className={styles.text}>
-                    <span className={styles.title}>{item.title}</span>
-                    {item.meta ? (
-                      <span className={styles.meta}>{item.meta}</span>
+          {sectionOrder(projectSlug, onPost).map((key) => {
+            const section = sections.find((each) => each.key === key)
+            if (!section)
+              return skeletonFor(key) ? (
+                <SkeletonGroup key={key} section={key} />
+              ) : null
+            return (
+              <Command.Group
+                key={section.key}
+                className={styles.group}
+                heading={
+                  <>
+                    {SECTION_LABEL[section.key]}
+                    {section.key === "docs" && currentProject && docsTag ? (
+                      <span className={styles.headingNote}>
+                        {" "}
+                        · {currentProject.name}
+                      </span>
                     ) : null}
-                  </span>
-                  {item.external ? (
-                    <ArrowUpRight className={styles.trail} aria-hidden />
-                  ) : null}
-                </Command.Item>
-              ))}
-            </Command.Group>
-          ))}
-          {trimmed && flat.length === 0 && index ? (
+                  </>
+                }
+              >
+                {section.items.map((item) => (
+                  <Command.Item
+                    key={item.id}
+                    value={item.id}
+                    className={styles.option}
+                    onSelect={() => activate(item)}
+                  >
+                    <VisualMark visual={item.visual} />
+                    <span className={styles.text}>
+                      <span className={styles.title}>{item.title}</span>
+                      {item.meta ? (
+                        <span className={styles.meta}>{item.meta}</span>
+                      ) : null}
+                    </span>
+                    {item.external ? (
+                      <ArrowUpRight className={styles.trail} aria-hidden />
+                    ) : null}
+                  </Command.Item>
+                ))}
+              </Command.Group>
+            )
+          })}
+          {trimmed && flat.length === 0 && index && !docsPending ? (
             <Command.Empty className={styles.empty}>
               Nothing matches “{trimmed}”. Try a project, a post title, or a
               word from the docs.

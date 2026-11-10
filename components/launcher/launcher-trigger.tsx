@@ -21,6 +21,18 @@ export const LauncherTrigger = () => {
   const apple = useSyncExternalStore(noop, isApple, () => true)
   const [scope, setScope] = useState<Element | null>(null)
 
+  // Fetch the index once the page has gone quiet, so the first ⌘K usually
+  // opens on a warm cache and the skeletons are only a fallback.
+  useEffect(() => {
+    const warm = () => void preloadLauncherIndex().catch(() => {})
+    if (typeof window.requestIdleCallback === "function") {
+      const handle = window.requestIdleCallback(warm, { timeout: 4000 })
+      return () => window.cancelIdleCallback(handle)
+    }
+    const timer = window.setTimeout(warm, 2000)
+    return () => window.clearTimeout(timer)
+  }, [])
+
   // Read after the new page has committed, or a client navigation would hand
   // back the wrapper of the page just left.
   useEffect(() => {
