@@ -55,6 +55,14 @@
   }
 }
 
+/* On a phone the page's own 16px gutter is enough (the top band in
+   projects-top.module.css drops its padding at the same width). */
+@media (max-width: 600px) {
+  .layout {
+    padding: 0;
+  }
+}
+
 .main {
   grid-area: main;
   min-width: 0;

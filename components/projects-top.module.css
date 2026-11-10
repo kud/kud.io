@@ -30,6 +30,14 @@
   container-type: inline-size;
 }
 
+/* On a phone the page's own 16px gutter is enough; the browse layout drops
+   its padding there too, so both keep the same edge. */
+@media (max-width: 600px) {
+  .top {
+    padding: 0;
+  }
+}
+
 .split {
   display: grid;
   grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
