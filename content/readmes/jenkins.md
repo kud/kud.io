@@ -88,6 +88,7 @@ listServers() // [{ name: "prod", url: "...", current: true }]
 | `getPipelineStages(job, buildNumber)` | Pipeline stage breakdown (Workflow API)                       |
 | `getTestReport(job, buildNumber)`     | Test report for a build                                       |
 | `diagnoseBuild(job, buildNumber?, opts?)` | Diagnose a failed build: failed stages, steps with log tails, test failures, hints |
+| `resolveJobPath(job)`                 | REST path for a job, keeping a multibranch branch's slashes in one segment (for `tree()` callers) |
 
 ### Logs
 
@@ -136,7 +137,7 @@ listServers() // [{ name: "prod", url: "...", current: true }]
 
 `JenkinsJob`, `JenkinsBuild`, `JenkinsBuildRef`, `JenkinsArtifact`, `JenkinsCrumb`, `JenkinsParameterDefinition`, `JenkinsCommit`, `JenkinsBuildChanges` — exported from `src/types.ts` and used across every method above.
 
-Auth is HTTP Basic (username + API token) — no OAuth, no sessions. Every mutating call (`triggerBuild`, `stopBuild`, `cancelQueueItem`, …) fetches a CSRF crumb first and attaches it automatically, so callers never manage crumbs themselves.
+Auth is HTTP Basic (username + API token), or a bearer token with `new JenkinsClient(url, "", "", { auth: { bearer: token } })`; with neither, no `Authorization` header is sent. Every mutating call (`triggerBuild`, `stopBuild`, `cancelQueueItem`, …) attaches a CSRF crumb and the session cookie it was issued with, and re-issues both once if Jenkins expires the session (a 403), so callers never manage crumbs themselves.
 
 ## 🔧 Development
 

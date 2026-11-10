@@ -9,6 +9,7 @@
   "gpuswitch-cli": "https://raw.githubusercontent.com/kud/gpuswitch-cli/HEAD/assets/icon.png",
   "jenkins-cli": "https://raw.githubusercontent.com/kud/jenkins-cli/HEAD/assets/icon.png",
   "mcp-jenkins": "https://raw.githubusercontent.com/kud/mcp-jenkins/HEAD/assets/icon.png",
+  "mcp-sonarqube": "https://raw.githubusercontent.com/kud/mcp-sonarqube/HEAD/assets/icon.svg",
   "modern-cobalt2-vscode": "https://raw.githubusercontent.com/kud/modern-cobalt2-vscode/HEAD/images/icon.png",
   "november-vscode": "https://raw.githubusercontent.com/kud/november-vscode/HEAD/images/icon.png",
   "pcloud-cli": "https://raw.githubusercontent.com/kud/pcloud-cli/HEAD/assets/icon.svg",
@@ -26,5 +27,6 @@
   "revu-cli": "https://raw.githubusercontent.com/kud/revu-cli/HEAD/assets/icon.png",
   "revu-vscode": "https://raw.githubusercontent.com/kud/revu-vscode/HEAD/assets/icon.png",
   "shui": "https://raw.githubusercontent.com/kud/shui/HEAD/icon.png",
+  "sonarqube-cli": "https://raw.githubusercontent.com/kud/sonarqube-cli/HEAD/assets/icon.svg",
   "your-move": "https://raw.githubusercontent.com/kud/your-move/HEAD/assets/icon.svg"
 }
