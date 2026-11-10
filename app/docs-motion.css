@@ -1,11 +1,12 @@
-/* The move between docs pages: the article slides 16px in from the side the
-   reader travelled towards (the sidebar's order), fading in.
-   components/docs-motion.tsx marks the direction; the first load is never
-   marked, so only a move animates. */
-@keyframes docs-slide {
+/* The move between docs pages: the article fades in and settles 4px upwards
+   into place. No sideways travel: the sidebar and the table of contents stay
+   put, so a horizontal slide read as the middle column coming loose rather
+   than the page changing (Erwann, 2026-11-10). components/docs-motion.tsx
+   marks a move; the first load is never marked, so only a move animates. */
+@keyframes docs-settle {
   from {
     opacity: 0;
-    transform: translateX(var(--docs-dx, 16px));
+    transform: translateY(4px);
   }
 }
 @keyframes docs-fade {
@@ -13,16 +14,13 @@
     opacity: 0;
   }
 }
-html[data-docs-dir="back"] {
-  --docs-dx: -16px;
-}
-html[data-docs-dir] [data-ground="dusk"] #nd-page {
-  animation: docs-slide 300ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+html[data-docs-moved] [data-ground="dusk"] #nd-page {
+  animation: docs-settle 240ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 /* Reduced motion keeps only a short fade: the change still registers, nothing
    travels. */
 @media (prefers-reduced-motion: reduce) {
-  html[data-docs-dir] [data-ground="dusk"] #nd-page {
+  html[data-docs-moved] [data-ground="dusk"] #nd-page {
     animation: docs-fade 160ms ease both;
   }
 }
