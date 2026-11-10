@@ -3,6 +3,8 @@ import type { Project } from "@/lib/projects"
 import type { AppMeta } from "@/lib/app"
 import type { Release } from "@/lib/release"
 import { formatNode, type PackageFacts } from "@/lib/package-facts"
+import { InfoboxFit } from "@/components/infobox-fit"
+import { RailToc } from "@/components/rail-toc"
 import styles from "./product-record.module.css"
 
 type Post = { slug: string; title: string; description: string; href: string }
@@ -197,9 +199,19 @@ const Infobox = ({
 export const RecordSheet = (props: SheetProps) => {
   const { app, name, writing } = props
   const shot = app.screenshots[0]
+  const chapters = [
+    app.what ? { url: "#what-it-is", title: "What it is" } : null,
+    app.flow.length > 0 ? { url: "#how-it-works", title: "How it works" } : null,
+    app.decisions.length > 0 ? { url: "#decisions", title: "Decisions" } : null,
+    writing.length > 0 ? { url: "#writing", title: "Writing" } : null,
+  ].filter((item) => item !== null)
   return (
     <div className={styles.sheet}>
-      <Infobox {...props} />
+      <div className={styles.rail} data-infobox>
+        <InfoboxFit />
+        <Infobox {...props} />
+        <RailToc items={chapters} />
+      </div>
       <div className={styles.main}>
         {shot ? (
           <figure className={styles.shot}>
@@ -209,7 +221,7 @@ export const RecordSheet = (props: SheetProps) => {
         ) : null}
         {app.what ? (
           <section className={styles.chapter}>
-            <h2>What it is</h2>
+            <h2 id="what-it-is">What it is</h2>
             <p className={styles.lead}>{app.what}</p>
             {app.who ? (
               <p className={styles.who}>
@@ -220,7 +232,7 @@ export const RecordSheet = (props: SheetProps) => {
         ) : null}
         {app.flow.length > 0 ? (
           <section className={styles.chapter}>
-            <h2>How it works</h2>
+            <h2 id="how-it-works">How it works</h2>
             <ol className={styles.flow}>
               {app.flow.map((step) => (
                 <li key={step.label}>
@@ -236,7 +248,7 @@ export const RecordSheet = (props: SheetProps) => {
         ) : null}
         {app.decisions.length > 0 ? (
           <section className={styles.chapter}>
-            <h2>Decisions</h2>
+            <h2 id="decisions">Decisions</h2>
             <ul className={styles.decisions}>
               {app.decisions.map((decision) => (
                 <li key={decision}>{decision}</li>
@@ -246,7 +258,7 @@ export const RecordSheet = (props: SheetProps) => {
         ) : null}
         {writing.length > 0 ? (
           <section className={styles.chapter}>
-            <h2>Writing</h2>
+            <h2 id="writing">Writing</h2>
             <ul className={styles.writing}>
               {writing.map((post) => (
                 <li key={post.slug}>

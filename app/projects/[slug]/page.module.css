@@ -654,61 +654,6 @@ a.badge:focus-visible {
   margin-top: 44px;
 }
 
-/* Right-rail table of contents */
-.toc {
-  position: sticky;
-  top: 28px;
-  align-self: start;
-}
-
-@media (max-width: 900px) {
-  .toc {
-    display: none;
-  }
-}
-
-.tocTitle {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  margin: 0 0 12px;
-}
-
-.toc ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  border-left: 1px solid var(--border);
-}
-
-.toc li {
-  margin: 0;
-}
-
-.toc a {
-  display: block;
-  padding-left: 14px;
-  margin-left: -1px;
-  border-left: 2px solid transparent;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.4;
-  text-decoration: none;
-  transition:
-    color 0.15s,
-    border-color 0.15s;
-}
-
-.toc a:hover {
-  color: var(--text);
-  border-left-color: var(--primary);
-}
-
 /* Section headers — accent dot + uppercase, matching /projects sections */
 .readme :global(h2) {
   display: flex;
@@ -1119,10 +1064,13 @@ a.badge:focus-visible {
   grid-area: box;
   display: grid;
   gap: 36px;
+  align-self: start;
 }
-.recordRail .toc {
-  position: static;
-  padding: 0 6px;
+@media (min-width: 901px) {
+  .recordRail {
+    position: sticky;
+    top: min(28px, calc(100dvh - var(--box-h, 0px) - 28px));
+  }
 }
 @media (max-width: 900px) {
   .readmeRecord {

@@ -381,13 +381,23 @@
   grid-area: auto;
 }
 
-/* The facts stay in reach while the long column reads on: the card rides
-   along at the docs TOC's 28px offset. Only side by side, and only on screens tall
-   enough to hold the whole card, so it never pins a box you can't finish
-   reading (Erwann, 2026-11-10). */
-@media (min-width: 861px) and (min-height: 760px) {
-  .infobox {
+/* The facts and the contents stay in reach while the long column reads on: the
+   rail (card, then "On this page") rides along at the docs TOC's 28px offset.
+   A rail taller than the window scrolls until its last row shows, then holds
+   28px off the bottom (--box-h comes from InfoboxFit), so no row is ever
+   pinned out of reach. */
+.rail {
+  grid-area: box;
+  display: grid;
+  gap: 36px;
+  align-self: start;
+}
+.rail .infobox {
+  grid-area: auto;
+}
+@media (min-width: 861px) {
+  .rail {
     position: sticky;
-    top: 28px;
+    top: min(28px, calc(100dvh - var(--box-h, 0px) - 28px));
   }
 }

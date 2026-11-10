@@ -1,4 +1,6 @@
 import { type CSSProperties } from "react"
+import { RailToc } from "@/components/rail-toc"
+import { InfoboxFit } from "@/components/infobox-fit"
 import { SiteFooter } from "@/components/site-footer"
 import { ButtonIcon } from "@/components/button-icon"
 import type { Metadata } from "next"
@@ -433,9 +435,8 @@ const ReadmeLanding = async ({
   const isWebext = project.category === "webext"
   const hasDocs =
     !isList && !isRaycast && !isWebext && projectHasDocs(project.slug)
-  // A pitch landing (distilled from the README because the repo ships docs) is
-  // short enough to need no TOC; curated lists keep theirs.
-  const showToc = toc.length > 0 && (isList || !hasDocs)
+  // Every landing with sections gets its "On this page", pitch landings too.
+  const showToc = toc.length > 1
   const age = release ? releaseAge(release.publishedAt) : null
   // The badge says what the project is; the licence moved to the timeline and
   // install or user counts to the infobox.
@@ -605,7 +606,8 @@ const ReadmeLanding = async ({
               </div>
             ) : null}
           </article>
-          <div className={styles.recordRail}>
+          <div className={styles.recordRail} data-infobox>
+            <InfoboxFit />
             <ReadmeInfobox
               project={project}
               facts={facts}
@@ -615,18 +617,7 @@ const ReadmeLanding = async ({
               builtOn={builtOn}
               family={family}
             />
-            {showToc ? (
-              <nav className={styles.toc} aria-label="On this page">
-                <p className={styles.tocTitle}>On this page</p>
-                <ul>
-                  {toc.map((item) => (
-                    <li key={item.url}>
-                      <a href={item.url}>{item.title}</a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            ) : null}
+            {showToc ? <RailToc items={toc} /> : null}
           </div>
         </div>
       ) : null}
