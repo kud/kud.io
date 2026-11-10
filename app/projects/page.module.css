@@ -10,6 +10,10 @@
   --dim: #3d4560;
   --mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, monospace;
   --accent: var(--primary);
+  /* The browse grid, shared by the top band (components/projects-top) and
+     the sections (components/project-list): one column width, one edge. */
+  --content-max: 1180px;
+  --rail-width: clamp(280px, 18vw, 340px);
 
   position: relative;
   min-height: 100vh;

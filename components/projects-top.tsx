@@ -71,62 +71,69 @@ export const ProjectsTop = ({
   if (pinned.length === 0 && recent.length === 0) return null
   return (
     <div className={styles.top}>
-      <div className={styles.split}>
-        {pinned.length > 0 ? (
-          <section aria-labelledby="top-pinned">
-            <h2 id="top-pinned" className={styles.heading}>
-              <PinGlyph />
-              Pinned
-            </h2>
-            <ul className={styles.pins}>
-              {pinned.map((p) => (
-                <li key={p.slug}>
-                  <Link href={`/projects/${p.slug}`} className={styles.pinCard}>
-                    {ART[p.slug] ? (
-                      <IllustrationSlot
-                        ratio="16/9"
-                        slug={p.slug}
-                        className={styles.pinArt}
-                      />
-                    ) : (
-                      <span className={styles.pinPlate}>
-                        <Icon project={p} size={48} />
-                      </span>
-                    )}
-                    <strong className={styles.pinName}>{p.name}</strong>
-                    {p.description ? (
-                      <span className={styles.pinDesc}>{p.description}</span>
-                    ) : null}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
-        {recent.length > 0 ? (
-          <section aria-labelledby="top-recent">
-            <h2 id="top-recent" className={styles.heading}>
-              Recently released
-            </h2>
-            <ol className={styles.timeline}>
-              {recent.map((p) => (
-                <li key={p.slug}>
-                  <Link href={`/projects/${p.slug}`} className={styles.tick}>
-                    <time
-                      className={styles.tickDate}
-                      dateTime={p.release.publishedAt}
+      <div className={styles.band}>
+        <div className={styles.split}>
+          {pinned.length > 0 ? (
+            <section aria-labelledby="top-pinned">
+              <h2 id="top-pinned" className={styles.heading}>
+                <PinGlyph />
+                Pinned
+              </h2>
+              <ul className={styles.pins}>
+                {pinned.map((p) => (
+                  <li key={p.slug}>
+                    <Link
+                      href={`/projects/${p.slug}`}
+                      className={styles.pinCard}
                     >
-                      {shortDate(p.release.publishedAt)}
-                    </time>
-                    <Icon project={p} size={28} />
-                    <strong className={styles.tickName}>{p.name}</strong>
-                    <span className={styles.version}>v{p.release.version}</span>
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </section>
-        ) : null}
+                      {ART[p.slug] ? (
+                        <IllustrationSlot
+                          ratio="16/9"
+                          slug={p.slug}
+                          className={styles.pinArt}
+                        />
+                      ) : (
+                        <span className={styles.pinPlate}>
+                          <Icon project={p} size={48} />
+                        </span>
+                      )}
+                      <strong className={styles.pinName}>{p.name}</strong>
+                      {p.description ? (
+                        <span className={styles.pinDesc}>{p.description}</span>
+                      ) : null}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+          {recent.length > 0 ? (
+            <section aria-labelledby="top-recent">
+              <h2 id="top-recent" className={styles.heading}>
+                Recently released
+              </h2>
+              <ol className={styles.timeline}>
+                {recent.map((p) => (
+                  <li key={p.slug}>
+                    <Link href={`/projects/${p.slug}`} className={styles.tick}>
+                      <time
+                        className={styles.tickDate}
+                        dateTime={p.release.publishedAt}
+                      >
+                        {shortDate(p.release.publishedAt)}
+                      </time>
+                      <Icon project={p} size={28} />
+                      <strong className={styles.tickName}>{p.name}</strong>
+                      <span className={styles.version}>
+                        v{p.release.version}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ) : null}
+        </div>
       </div>
     </div>
   )

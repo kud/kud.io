@@ -1,8 +1,33 @@
 /* The top of /projects: pinned beside a dated release list. Tokens come from
    the page's Dusk scope, so both lights follow for free. */
+/* The band sits on the browse layout's own grid (project-list.module.css,
+   .layout): the same outer width, gutter and three tracks, the band in the
+   middle one. So pinned, recent and every section below share one left edge
+   and one width at every viewport, rather than two blocks centred at two
+   different widths. */
 .top {
-  max-width: 1040px;
+  max-width: calc(var(--content-max) + (var(--rail-width) * 2) + 80px);
   margin: 24px auto 0;
+  padding: 0 24px;
+  display: grid;
+  column-gap: 40px;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 1100px) {
+  .top {
+    grid-template-columns:
+      minmax(0, var(--rail-width)) minmax(0, var(--content-max))
+      minmax(0, var(--rail-width));
+  }
+  .band {
+    grid-column: 2;
+  }
+}
+
+/* The column narrows with the rails (about 700px on a 1440 screen), so the
+   split answers to its own width rather than the viewport's. */
+.band {
+  container-type: inline-size;
 }
 
 .split {
@@ -145,11 +170,14 @@
   white-space: nowrap;
 }
 
-@media (max-width: 860px) {
+@container (max-width: 820px) {
   .split {
     grid-template-columns: 1fr;
     gap: 40px;
   }
+}
+
+@media (max-width: 860px) {
   .pinName {
     font-size: 16px;
   }

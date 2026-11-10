@@ -626,14 +626,10 @@ const ProjectLanding = async ({
       ? null
       : ((await getIcons())[slug] ?? project.icon ?? null)
 
-  // README landings take the Paper day (app/warm.css); other Dusk pages try
-  // it with ?dusk=paper.
-  const paper = !showRecord && !showAppLanding && !authored
   return (
     <main
       className={styles.page}
       data-ground="dusk"
-      data-paper={paper ? "" : undefined}
       data-theme="system"
       data-theme-scope
       suppressHydrationWarning

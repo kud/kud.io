@@ -56,9 +56,8 @@ const readStorage = (): string | null => {
 // already correct — and the OS flipping mid-session needs no matchMedia
 // listener. This script only has to replay an explicit stored choice onto the
 // wrapper it sits in, before first paint. It reads the legacy key without
-// moving it; the first client read moves it. ?dusk=paper previews the Paper
-// day on a Dusk scope (app/warm.css) before it is adopted everywhere.
-const THEME_SCRIPT = `if(/[?&]dusk=paper(&|$)/.test(location.search))document.currentScript.parentElement.dataset.paper="";try{var t=localStorage.getItem(${JSON.stringify(
+// moving it; the first client read moves it.
+const THEME_SCRIPT = `try{var t=localStorage.getItem(${JSON.stringify(
   THEME_KEY,
 )});if(t===null)t=localStorage.getItem(${JSON.stringify(
   LEGACY_THEME_KEY,

@@ -102,17 +102,18 @@
    for the search dialog and popovers fumadocs portals out of the scope.
    --dl-* is the day, --dn-* the night, --dk-* whichever is showing.
 
-   Day reads like paper in a warm room: near-black plum ink, a pale ground
-   with white cards drawn by a visible border, and the lamp glow kept to a
-   whisper so nothing hazes the text. */
+   Day reads like paper in a warm room: plum ink, a pale ground with cream
+   cards drawn by a soft warm border, and the lamp glow kept to a whisper so
+   nothing hazes the text. Pure white and near-black read as foreign on the
+   warm ground, so neither is used (Paper, Erwann, 2026-11-10). */
 :root {
   --dl-bg: #fbf7f3;
-  --dl-surface: #ffffff;
-  --dl-surface-2: #f4ebe6;
+  --dl-surface: #fffbf7;
+  --dl-surface-2: #f6ebe3;
   --dl-surface-3: #f6e6dc;
-  --dl-border: #e3d2c8;
-  --dl-border-dim: #efe4dd;
-  --dl-text: #2b1c22;
+  --dl-border: #e9dad0;
+  --dl-border-dim: #f2e7df;
+  --dl-text: #3a2830;
   --dl-muted: #5c4549;
   --dl-dim: #6b5357;
   --dl-primary: #8e3f20;
@@ -424,12 +425,8 @@ html:has([data-ground="dusk"][data-theme="dark"]),
 }
 /* Inside the readme the prose link colour (near-black by day) outranked the
    button's own ink: dark text on terracotta. */
-[data-ground="dusk"]
-  [class*="__readme"]
-  a[class*="__primary"][class*="__primary"],
-[data-ground="dusk"]
-  [class*="__readme"]
-  a[class*="__primary"][class*="__primary"]:hover {
+[data-ground="dusk"] [class*="__readme"] a[class*="__primary"][class*="__primary"],
+[data-ground="dusk"] [class*="__readme"] a[class*="__primary"][class*="__primary"]:hover {
   color: var(--dk-on-primary);
   text-decoration: none;
 }
@@ -495,35 +492,5 @@ html:has([data-ground="dusk"][data-theme="dark"]),
 @media (min-width: 1280px) {
   [data-ground="dusk"] #nd-toc {
     padding-top: 76px;
-  }
-}
-
-/* Paper: the day in cream rather than white. Cards are #fffbf7 instead of
-   #fff, the ink a softer plum, the rules a little warmer, so white and black
-   stop reading as foreign on the warm ground (Erwann, 2026-11-10). README
-   landings take it now (data-paper on their wrapper); the rest of Dusk tries
-   it with ?dusk=paper (components/scoped-theme.tsx) until it is adopted
-   everywhere. Day only: the night selectors put the night tokens back. */
-[data-ground="dusk"][data-paper] {
-  --dk-surface: #fffbf7;
-  --dk-surface-2: #f6ebe3;
-  --dk-border: #e9dad0;
-  --dk-border-dim: #f2e7df;
-  --dk-text: #3a2830;
-}
-[data-ground="dusk"][data-theme="dark"][data-paper] {
-  --dk-surface: var(--dn-surface);
-  --dk-surface-2: var(--dn-surface-2);
-  --dk-border: var(--dn-border);
-  --dk-border-dim: var(--dn-border-dim);
-  --dk-text: var(--dn-text);
-}
-@media (prefers-color-scheme: dark) {
-  [data-ground="dusk"]:not([data-theme="light"])[data-paper] {
-    --dk-surface: var(--dn-surface);
-    --dk-surface-2: var(--dn-surface-2);
-    --dk-border: var(--dn-border);
-    --dk-border-dim: var(--dn-border-dim);
-    --dk-text: var(--dn-text);
   }
 }
