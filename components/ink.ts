@@ -131,5 +131,11 @@ export const inkSwap = async (
 // Dusk's for /projects and the docs.
 export const scopeGroundFor = (theme: ScopedTheme): string => {
   const blog = document.getElementById("blog-root") !== null
+  // Preview only: candidate 5 (app/ink-candidates.css) paints white grounds.
+  if (
+    document.documentElement.dataset.inkCandidate === "5" &&
+    resolveScheme(theme) === "light"
+  )
+    return blog ? "#fcfcfc" : "#fafafa"
   return (blog ? BLOG_GROUND : DUSK_GROUND)[resolveScheme(theme)]
 }
