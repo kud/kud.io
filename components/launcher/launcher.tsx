@@ -21,6 +21,7 @@ import {
   Hash,
   House,
   LayoutGrid,
+  Mail,
   Monitor,
   Moon,
   Package,
@@ -36,6 +37,8 @@ import { SCOPED_THEMES, useScopedTheme } from "@/components/scoped-theme"
 import type { ScopedTheme } from "@/components/scoped-theme"
 import type { LauncherIndex, LauncherProject } from "@/lib/launcher-index"
 import { fuzzyScore } from "./fuzzy"
+import { CONTACT_ADDRESS, MessageForm } from "./message-form"
+import type { MessageDraft } from "./message-form"
 import styles from "./launcher.module.css"
 
 type SectionKey =
@@ -186,7 +189,7 @@ const THEME_OPTION: Record<ScopedTheme, { label: string; Icon: LucideIcon }> = {
 const THEMES = SCOPED_THEMES.map((value) => ({ value, ...THEME_OPTION[value] }))
 
 const LIMIT: Record<SectionKey, number> = {
-  pages: 4,
+  pages: 5,
   projects: 6,
   writing: 6,
   docs: 8,
@@ -382,6 +385,18 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   const [docs, setDocs] = useState<{ key: string; hits: DocHit[] } | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [announce, setAnnounce] = useState("")
+  // The message view replaces the list in the same panel; the list stays
+  // mounted underneath, so the query and the selection survive a round trip,
+  // and so does the draft.
+  const [view, setView] = useState<"list" | "message">("list")
+  const [draft, setDraft] = useState<MessageDraft>({ subject: "", body: "" })
+
+  const backToList = () => {
+    setView("list")
+    setAnnounce("Back to search")
+    // After the list is shown again, or focus lands on a hidden input.
+    window.requestAnimationFrame(() => inputRef.current?.focus())
+  }
 
   const currentProject =
     index?.projects.find((project) => project.slug === projectSlug) ?? null
@@ -602,8 +617,22 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
           })
         : []
 
+    const message: Item = {
+      id: "page:message",
+      section: "pages",
+      title: "Send me a message",
+      text: "Send me a message",
+      meta: "Email",
+      extras: ["email", "mail", "contact", "message", "write", "hello"],
+      visual: { kind: "glyph", Icon: Mail },
+      run: () => {
+        setView("message")
+        setAnnounce("Send me a message")
+      },
+    }
+
     const pools: Record<SectionKey, Item[]> = {
-      pages: PAGES,
+      pages: [...PAGES, message],
       projects,
       writing: [...writing, rss],
       docs: docItems,
@@ -716,13 +745,16 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     <dialog
       ref={dialogRef}
       className={styles.dialog}
-      aria-label="Search kud.io"
+      aria-label={view === "message" ? "Send me a message" : "Search kud.io"}
       onCancel={(event) => {
         event.preventDefault()
-        onClose()
+        if (view === "message") backToList()
+        else onClose()
       }}
       onClick={(event) => {
-        if (event.target === event.currentTarget) onClose()
+        // A stray click outside must not throw away a half-written message.
+        const writing = view === "message" && (draft.subject || draft.body)
+        if (event.target === event.currentTarget && !writing) onClose()
       }}
     >
       {/* cmdk drives the list: arrows, Enter, pointer selection and the
@@ -730,6 +762,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
           because the order follows the page, not only the match. */}
       <Command
         className={styles.panel}
+        hidden={view === "message"}
         label="Search kud.io"
         shouldFilter={false}
         loop
@@ -867,10 +900,20 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
           </span>
           <span className={styles.footStatus}>{status}</span>
         </div>
-        <div role="status" aria-live="polite" className={styles.visuallyHidden}>
-          {announce || status}
-        </div>
       </Command>
+      {view === "message" ? (
+        <MessageForm
+          draft={draft}
+          onDraft={setDraft}
+          onBack={backToList}
+          onCopy={() => copy(CONTACT_ADDRESS, "message:address")}
+          copied={copiedId === "message:address"}
+          announce={setAnnounce}
+        />
+      ) : null}
+      <div role="status" aria-live="polite" className={styles.visuallyHidden}>
+        {announce || status}
+      </div>
     </dialog>,
     container,
   )

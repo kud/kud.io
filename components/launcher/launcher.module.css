@@ -580,3 +580,205 @@
     padding: 0 8px;
   }
 }
+
+/* Message view: a detail page pushed over the list, Raycast-style. Same
+   panel, same bar height, the fields drawn in the raised ground so they read
+   as fields without a box in a box. */
+.panel[hidden] {
+  display: none;
+}
+.back {
+  display: grid;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  margin-left: -6px;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--l-muted);
+  cursor: pointer;
+}
+.back:hover {
+  background: var(--l-hover);
+  color: var(--l-fg);
+}
+.backIcon {
+  width: 18px;
+  height: 18px;
+}
+.formTitle {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  color: var(--l-fg);
+  font-size: 16px;
+  font-weight: 600;
+}
+.formHint {
+  flex-shrink: 0;
+  padding-right: 6px;
+  color: var(--l-dim);
+  font-size: 12px;
+}
+.formHint kbd,
+.primaryKeys kbd {
+  display: inline-grid;
+  min-width: 20px;
+  height: 20px;
+  margin-right: 3px;
+  padding: 0 5px;
+  place-items: center;
+  border: 1px solid var(--l-line);
+  border-radius: 5px;
+  background: var(--l-raise);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 16px 16px;
+}
+.formTo {
+  margin: 0;
+  color: var(--l-dim);
+  font-size: 13px;
+}
+.formAddress {
+  color: var(--l-muted);
+  font-weight: 500;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.fieldGrow {
+  flex: 1;
+}
+.fieldLabel {
+  color: var(--l-muted);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.fieldHint {
+  color: var(--l-dim);
+  font-weight: 400;
+}
+.fieldInput {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--l-line);
+  border-radius: 10px;
+  background: var(--l-raise);
+  color: var(--l-fg);
+  font: inherit;
+  /* 16px, or iOS zooms the page on focus. */
+  font-size: 16px;
+  line-height: 1.45;
+}
+.fieldInput::placeholder {
+  color: var(--l-dim);
+  opacity: 1;
+}
+.fieldInput.fieldInput:focus-visible {
+  border-color: var(--l-ring);
+  outline: 0;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--l-ring) 28%, transparent);
+}
+.fieldArea {
+  flex: 1;
+  min-height: 140px;
+  resize: none;
+}
+.formNote {
+  margin: 0;
+  color: var(--l-muted);
+  font-size: 13px;
+  text-wrap: pretty;
+}
+
+.formFoot {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px 10px 16px;
+  border-top: 1px solid var(--l-line);
+}
+.ghost,
+.primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  border-radius: 9px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 550;
+  cursor: pointer;
+}
+.ghost {
+  padding: 0 10px;
+  margin-left: -10px;
+  border: 0;
+  background: transparent;
+  color: var(--l-muted);
+}
+.ghost:hover {
+  background: var(--l-hover);
+  color: var(--l-fg);
+}
+.ghostIcon {
+  width: 14px;
+  height: 14px;
+}
+.primary {
+  padding: 0 6px 0 14px;
+  border: 1px solid transparent;
+  background: var(--l-fg);
+  color: var(--l-bg);
+}
+.primary:hover {
+  background: color-mix(in srgb, var(--l-fg) 86%, var(--l-bg));
+}
+.primaryKeys {
+  display: inline-flex;
+}
+.primaryKeys kbd {
+  margin-right: 0;
+  margin-left: 3px;
+  border-color: color-mix(in srgb, var(--l-bg) 30%, transparent);
+  background: transparent;
+  color: inherit;
+}
+@media (forced-colors: active) {
+  .primary {
+    border-color: ButtonText;
+  }
+}
+
+/* Phone: the sheet keeps its full height, the field grows into it, and the
+   primary action sits above the keyboard rather than hiding behind hints. */
+@media (max-width: 640px) {
+  .formHint,
+  .primaryKeys {
+    display: none;
+  }
+  .formFoot {
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
+  .primary {
+    height: 40px;
+    padding: 0 16px;
+  }
+}
