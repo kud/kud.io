@@ -1,4 +1,5 @@
 import { InkLink } from "@/components/ink-link"
+import { ButtonIcon } from "@/components/button-icon"
 import { AvatarImage } from "@/components/avatar-image"
 import {
   GitHubIcon,
@@ -118,6 +119,7 @@ const Personal = () => (
 
 const Cta = () => (
   <InkLink href="/projects" className={styles.primary}>
+    <ButtonIcon name="projects" />
     Explore my projects
     <span aria-hidden>→</span>
   </InkLink>
@@ -125,6 +127,7 @@ const Cta = () => (
 
 const Writing = () => (
   <InkLink href="/blog" className={styles.secondary}>
+    <ButtonIcon name="docs" />
     Writing
   </InkLink>
 )

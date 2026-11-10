@@ -33,7 +33,11 @@
 }
 
 .photo {
-  --avatar-placeholder-background: linear-gradient(135deg, #f0efed 0%, #dedbd7 100%);
+  --avatar-placeholder-background: linear-gradient(
+    135deg,
+    #f0efed 0%,
+    #dedbd7 100%
+  );
 
   flex: 1 1 42%;
 }
@@ -302,6 +306,7 @@
 .secondary {
   display: inline-flex;
   align-items: center;
+  gap: 9px;
   padding: 12px 21px;
   border: 1px solid rgba(20, 20, 32, 0.22);
   border-radius: 12px;
@@ -319,6 +324,13 @@
   color: #c2703d;
   border-color: #c2703d;
   transform: translateY(-2px);
+}
+
+/* A leading mark gives back a little padding on its side, as on the project
+   pages' buttons. */
+.primary:has(> svg),
+.secondary:has(> svg) {
+  padding-left: 18px;
 }
 
 /* Socials -------------------------------------------------------------------*/
@@ -1163,5 +1175,43 @@
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+
+/* Mobile fit: the carte de visite fits one phone screen, social row included,
+   from an iPhone SE (375×667) up (Erwann, 2026-11-10). Everything vertical
+   scales with the small viewport height, so Safari's bars never push the
+   socials off. The avatar's top offset and size are shared verbatim with
+   /projects' .hero and .avatar (app/projects/page.module.css), which keeps it
+   still through the route transition: change one, change both. */
+@media (max-width: 860px) {
+  .slideCard {
+    padding-top: clamp(28px, 7svh, 72px);
+    padding-bottom: calc(clamp(18px, 3svh, 40px) + env(safe-area-inset-bottom));
+  }
+  .cardAvatar {
+    width: clamp(104px, 19svh, 156px);
+    height: clamp(104px, 19svh, 156px);
+    margin-bottom: clamp(16px, 3.5svh, 34px);
+  }
+  .slideCard .eyebrow {
+    margin-bottom: clamp(10px, 2.4svh, 26px);
+  }
+  .slideCard .name {
+    margin-bottom: clamp(10px, 2.2svh, 24px);
+  }
+  .slideCard .tagline {
+    margin-bottom: 0;
+  }
+  .cardLinks {
+    gap: clamp(14px, 2.8svh, 26px);
+    margin-top: clamp(18px, 3.6svh, 38px);
+  }
+  .cardLinks .actions {
+    margin-bottom: 0;
+  }
+  .cardLinks .socials a {
+    width: clamp(46px, 7svh, 54px);
+    height: clamp(46px, 7svh, 54px);
   }
 }

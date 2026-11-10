@@ -276,12 +276,12 @@
    breakpoint) so both ends exist together across the whole mobile range. */
 @media (max-width: 860px) {
   .hero {
-    padding-top: clamp(64px, 16svh, 190px);
+    padding-top: clamp(28px, 7svh, 72px);
   }
 
   .avatar {
-    width: 156px;
-    height: 156px;
+    width: clamp(104px, 19svh, 156px);
+    height: clamp(104px, 19svh, 156px);
     view-transition-name: site-avatar;
   }
 }
