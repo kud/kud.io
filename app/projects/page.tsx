@@ -22,12 +22,26 @@ import { getRelease, releaseAge } from "@/lib/release"
 import { Contributions } from "@/components/contributions"
 import { ProjectsTop } from "@/components/projects-top"
 import { PINNED, RECENT_COUNT } from "@/lib/pinned"
+import { PROJECTS_COPY } from "@/lib/section-copy"
 import styles from "./page.module.css"
 
+const TITLE = `${PROJECTS_COPY.title} — Erwann Mest`
+
+// Its own canonical URL and copy for the unfurl; the card is the file-based
+// opengraph-image.tsx beside this page.
 export const metadata: Metadata = {
-  title: "Projects — Erwann Mest",
-  description:
-    "Everything Erwann Mest (kud) has built: how the beansontoast apps are made, and the open-source CLIs, MCP servers, libraries and extensions he maintains.",
+  title: TITLE,
+  description: PROJECTS_COPY.description,
+  alternates: { canonical: "/projects" },
+  openGraph: {
+    type: "website",
+    url: "https://kud.io/projects",
+    siteName: "kud.io",
+    locale: "en_GB",
+    title: TITLE,
+    description: PROJECTS_COPY.description,
+  },
+  twitter: { title: TITLE, description: PROJECTS_COPY.description },
 }
 
 // Static, rebuilt hourly: release dates and their "fresh" flag age by the hour.

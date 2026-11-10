@@ -9,15 +9,10 @@ import {
 import { createRelativeLink } from "fumadocs-ui/mdx"
 import { source } from "@/lib/source"
 import { getProject } from "@/lib/projects"
+import { docsPageTitle, projectShare } from "@/lib/project-share"
 import { getMDXComponents } from "@/components/mdx"
 
 type Params = { slug: string; path?: string[] }
-
-// Link unfurlers render a title's emoji as text: Slack shows `🖼️ image-view`
-// as `:frame_with_picture: image-view`. The page keeps its emoji; the shared
-// title drops a leading one.
-const withoutLeadingEmoji = (title: string) =>
-  title.replace(/^(?:\p{Extended_Pictographic}|️|‍|\s)+/u, "")
 
 const resolvePage = (slug: string, path?: string[]) =>
   source.getPage([slug, "docs", ...(path ?? [])])
@@ -70,14 +65,22 @@ export const generateMetadata = async ({
   if (!page) notFound()
 
   const project = await getProject(slug)
-  const title = `${withoutLeadingEmoji(page.data.title)} — ${project?.name ?? slug} docs`
-  const description = page.data.description
-  const url = `https://kud.io/projects/${slug}/docs${path?.length ? `/${path.join("/")}` : ""}`
+  const share = project ? projectShare(project) : null
+  const name = share?.name ?? slug
+  const own = docsPageTitle(page.data.title, name)
+  const title = own ? `${own} — ${name} docs` : `${name} docs — Erwann Mest`
+  const description = page.data.description ?? share?.summary ?? undefined
+  const rest = path?.length ? `/${path.join("/")}` : ""
+  const url = `https://kud.io/projects/${slug}/docs${rest}`
+  // Listed explicitly: this page's own openGraph replaces the project card it
+  // would otherwise inherit. The card is a static route (app/og/docs), like
+  // the blog's, so it renders per docs page rather than per project.
+  const images = [`/og/docs/${slug}${rest}`]
 
   return {
     title,
     description,
-    openGraph: { type: "article", url, title, description },
-    twitter: { title, description },
+    openGraph: { type: "article", url, title, description, images },
+    twitter: { title, description, images },
   }
 }

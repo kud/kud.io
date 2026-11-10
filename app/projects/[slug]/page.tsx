@@ -27,6 +27,7 @@ import { ecosystemName } from "@/lib/ecosystems"
 import { ProjectFamily, type FamilyMember } from "@/components/project-family"
 import { frameworksOf, getPackageFacts } from "@/lib/package-facts"
 import { getLandingMdx } from "@/lib/landings"
+import { projectShare } from "@/lib/project-share"
 import { getProjectReadme, projectHasDocs } from "@/lib/source"
 import { getIcons } from "@/lib/icons"
 import { landingComponents } from "@/components/landing-kit"
@@ -56,13 +57,9 @@ export const generateMetadata = async ({
   const { slug } = await params
   const project = await getProject(slug)
   if (!project) return { title: slug }
-  const app = isAppCategory(project.category) ? getApp(project.slug) : null
-  const name = app ? appDisplayName(project.slug, app) : project.name
-  const title = `${name} — Erwann Mest`
-  const description =
-    (app && isProduct(app) ? app.summary : null) ??
-    project.description ??
-    undefined
+  const share = projectShare(project)
+  const title = `${share.name} — Erwann Mest`
+  const description = share.summary ?? undefined
   // The opengraph-image.tsx / twitter-image.tsx in this segment are attached by
   // Next automatically; here we just override the canonical URL so the share card
   // points at the project, not the site root inherited from the root metadata.
@@ -406,8 +403,7 @@ const ReadmeLanding = async ({
     .map((dep) => projects.find((other) => other.slug === dep.slice(5)))
     .filter(
       (other): other is Project =>
-        other !== undefined &&
-        other.slug !== project.slug,
+        other !== undefined && other.slug !== project.slug,
     )
     .map(linkTo)
   const readme = getProjectReadme(project.readmeSlug ?? project.slug)
@@ -435,11 +431,7 @@ const ReadmeLanding = async ({
     <>
       <section className={`${styles.hero} ${art ? "warm-hero" : ""}`}>
         <div className={styles.heroGrid} />
-        <MorphLink
-          href="/projects"
-          slug={project.slug}
-          className={styles.back}
-        >
+        <MorphLink href="/projects" slug={project.slug} className={styles.back}>
           ← Projects
         </MorphLink>
         {art ? <IllustrationSlot ratio="16/9" slug={project.slug} /> : null}
@@ -541,9 +533,7 @@ const ReadmeLanding = async ({
                 ) : null}
                 <a
                   href={project.repoUrl}
-                  className={
-                    project.storeUrl ? styles.secondary : styles.lead
-                  }
+                  className={project.storeUrl ? styles.secondary : styles.lead}
                   target="_blank"
                   rel="noreferrer"
                 >

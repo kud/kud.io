@@ -17,6 +17,18 @@ const config = {
   // runtime Node dependency rather than letting the bundler inline it.
   serverExternalPackages: ["@react-pdf/renderer"],
 
+  // The share cards regenerate with their pages (hourly, the GitHub fetch's
+  // revalidate), so the function that redraws one needs the card font and the
+  // icons and art it reads from disk; public/ is not in a function by default.
+  outputFileTracingIncludes: {
+    "/projects/**/*-image": [
+      "./lib/og/fonts/**",
+      "./public/apps/**",
+      "./public/projects/art/**",
+    ],
+    "/og/docs/**": ["./lib/og/fonts/**", "./public/apps/**"],
+  },
+
   // Post URLs nest by date, so a reader can truncate to /blog/2020/06/ or
   // /blog/2020/. Those are meant to become archive pages; until they do a
   // redirect is the honest placeholder, because the alternative is a URL

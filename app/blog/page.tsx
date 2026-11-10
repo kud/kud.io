@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
 import { coverImages, getAllPosts } from "@/lib/blog"
 import { BlogIndex } from "@/components/blog-index"
+import { WRITING_COPY } from "@/lib/section-copy"
 import styles from "./page.module.css"
 
-const TITLE = "Writing"
+const TITLE = WRITING_COPY.title
 const FEED_TITLE = "Writing — kud.io"
-const DESCRIPTION =
-  "Notes on systems, tooling, and the trade-offs behind them — by Erwann Mest."
+const DESCRIPTION = WRITING_COPY.description
 
 export const metadata: Metadata = {
   title: `${TITLE} — kud.io`,
@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     title: `${TITLE} — kud.io`,
     description: DESCRIPTION,
   },
+  twitter: { title: `${TITLE} — kud.io`, description: DESCRIPTION },
 }
 
 // The index needs the whole list in the browser to filter it, and the list is
