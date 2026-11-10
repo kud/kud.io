@@ -319,7 +319,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   const baseId = useId()
 
   // Rendered inside the page's themed wrapper, so the palette is the page's
-  // own and follows a theme switch live. Home has none and keeps the root's.
+  // own and follows a theme switch live. Home has none and takes the Dusk day palette.
   const [container] = useState<Element>(
     () => document.querySelector("[data-theme-scope]") ?? document.body,
   )
@@ -419,8 +419,8 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     const current = themed ? readStoredTheme() : null
     const actions: Item[] = [
       ...(currentProject ? projectActions(currentProject, copy, copiedId) : []),
-      // Home is always dark, so a theme switch there would change nothing
-      // the visitor can see.
+      // Home has no theme of its own, so a switch there would change
+      // nothing the visitor can see.
       ...(themed
         ? THEMES.map(({ value, label, Icon }) => ({
             id: `theme:${value}`,
