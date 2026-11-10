@@ -18,8 +18,15 @@ const BLOG_GROUND = { light: "#f7f8f9", dark: "#0e1418" } as const
 
 type Scheme = "light" | "dark"
 
+// Ink paints its own paper (app/ink.css, --ik-paper), read live because the
+// take is a preview choice; its scheme follows the take.
+const inkVar = (name: string): string =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+const inkGround = (): string => inkVar("--ik-paper") || "#f4eedf"
+
 // "system" resolves the way each scope's CSS does: prefers-color-scheme.
 export const resolveScheme = (theme: ScopedTheme): Scheme => {
+  if (theme === "ink") return isLightGround(inkGround()) ? "light" : "dark"
   if (theme !== "system") return theme
   return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
 }
@@ -35,6 +42,11 @@ const scopeGround = (pathname: string, scheme: Scheme): string | null => {
 // The ground a route will paint on arrival, or null when it isn't known (the
 // 404, anything new), which means "navigate plainly", never "guess a colour".
 export const groundFor = (pathname: string): string | null => {
+  try {
+    if (readStoredTheme() === "ink") return inkGround()
+  } catch {
+    return null
+  }
   if (pathname === "/") return HOME_GROUND
   try {
     return scopeGround(pathname, resolveScheme(readStoredTheme()))
@@ -49,8 +61,11 @@ export const groundFor = (pathname: string): string | null => {
 // deliberate seam: the ink reads as ink, not as the page arriving early.
 const isLightGround = (hex: string) =>
   parseInt(hex.slice(1, 3), 16) + parseInt(hex.slice(3, 5), 16) > 300
-export const inkFor = (ground: string): string =>
-  isLightGround(ground) ? "#ffffff" : ground
+// In the Ink world the cover is the ink itself, lifting off onto paper.
+export const inkFor = (ground: string): string => {
+  if (ground === inkGround()) return inkVar("--ik-ink") || "#1b2333"
+  return isLightGround(ground) ? "#ffffff" : ground
+}
 
 export const reducedMotion = () =>
   matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -147,6 +162,7 @@ export const inkSwap = async (
 // The ground a scoped page paints under a given choice: the blog's own, or
 // Dusk's for /projects and the docs.
 export const scopeGroundFor = (theme: ScopedTheme): string => {
+  if (theme === "ink") return inkGround()
   const blog = document.getElementById("blog-root") !== null
   return (blog ? BLOG_GROUND : DUSK_GROUND)[resolveScheme(theme)]
 }

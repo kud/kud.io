@@ -1,0 +1,238 @@
+/* Ink ----------------------------------------------------------------------- */
+/* The third theme: everything as if drawn in ink. Two colours do the work, the
+   ink and the paper it sits on, plus one accent the pen carries. It is stamped
+   like Light and Dark, as data-theme="ink" on a [data-theme-scope] wrapper
+   (components/scoped-theme.tsx), and home carries a scope only so it can take
+   this one; home ignores Light and Dark.
+
+   The take (which ink, which paper) is a preview choice on <html>:
+   data-ink-take="fountain" | "sumi" | "negative", and data-ink-hand="straight"
+   turns the hand-drawn borders off. :root holds Fountain, so a page without
+   the preview paints that one.
+
+   Every text pair clears 4.5:1 on paper, card, wash and blot alike (measured,
+   2026-11-10); the lowest is Fountain's dim on wash at 4.59. --ik-* is the
+   take, the scope selectors below map it onto each surface's own tokens. */
+:root {
+  --ik-paper: #f4eedf;
+  --ik-card: #faf6ec;
+  --ik-wash: #e9e1cc;
+  --ik-blot: #dde2ee;
+  --ik-ink: #1b2333;
+  --ik-muted: #4a5163;
+  --ik-dim: #5d6375;
+  --ik-accent: #1f3d8f;
+  --ik-on-accent: #faf6ec;
+  --ik-line: #1b2333;
+  --ik-line-dim: #cfc6ae;
+  --ik-scheme: light;
+  --ik-grain-opacity: 0.07;
+  /* A hand-drawn box: four uneven radii, after the sketchy-border trick. Big
+     enough to read as drawn, small enough that a card never looks like a
+     bubble. */
+  --ik-wobble: 14px 4px 12px 5px / 5px 12px 4px 14px;
+  --ik-wobble-sm: 8px 3px 7px 3px / 3px 7px 3px 8px;
+}
+html[data-ink-take="sumi"] {
+  --ik-paper: #f1ede3;
+  --ik-card: #f8f5ee;
+  --ik-wash: #e2dccf;
+  --ik-blot: #efd9cf;
+  --ik-ink: #151413;
+  --ik-muted: #47433e;
+  --ik-dim: #5c5751;
+  --ik-accent: #a3301c;
+  --ik-on-accent: #f8f5ee;
+  --ik-line: #151413;
+  --ik-line-dim: #d3ccbd;
+}
+html[data-ink-take="negative"] {
+  --ik-paper: #111215;
+  --ik-card: #18191d;
+  --ik-wash: #1f2228;
+  --ik-blot: #222b40;
+  --ik-ink: #eee8da;
+  --ik-muted: #bdb6a8;
+  --ik-dim: #a29b8f;
+  --ik-accent: #a3bdff;
+  --ik-on-accent: #111215;
+  --ik-line: #eee8da;
+  --ik-line-dim: #34363c;
+  --ik-scheme: dark;
+  --ik-grain-opacity: 0.05;
+}
+html[data-ink-hand="straight"] {
+  --ik-wobble: 10px;
+  --ik-wobble-sm: 6px;
+}
+
+/* Paper grain, used sparingly: one fractal-noise tile under everything, at a
+   few percent. It is the only texture on a page; rules and boxes carry the
+   hand. */
+:root {
+  --ik-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* A rule drawn with a pen: a line that thickens and thins, tiled sideways. */
+  --ik-rule: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='6' viewBox='0 0 240 6'%3E%3Cpath d='M0 3.2C20 2.4 38 3.9 60 3.1S101 2.2 122 3.3 160 4 181 3s40-.9 59 .2' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Dusk: /projects, a project page and its docs. Doubled attributes outrank
+   warm.css's prefers-color-scheme block, which would otherwise read "ink" as
+   "not light" and paint the night. */
+html:has([data-ground="dusk"][data-theme="ink"][data-theme="ink"]),
+[data-ground="dusk"][data-theme="ink"][data-theme="ink"] {
+  --dk-bg: var(--ik-paper);
+  --dk-surface: var(--ik-card);
+  --dk-surface-2: var(--ik-wash);
+  --dk-surface-3: var(--ik-blot);
+  --dk-border: var(--ik-line);
+  --dk-border-dim: var(--ik-line-dim);
+  --dk-text: var(--ik-ink);
+  --dk-muted: var(--ik-muted);
+  --dk-dim: var(--ik-dim);
+  --dk-primary: var(--ik-accent);
+  --dk-primary-light: var(--ik-accent);
+  --dk-on-primary: var(--ik-on-accent);
+  --dk-title-a: var(--ik-ink);
+  --dk-hi: 0 0 0;
+  --dk-glow: 0 0 0;
+  --dk-cool: 0 0 0;
+  --dk-scheme: var(--ik-scheme);
+  /* One ink: categories stop being colours and stay words. */
+  --dk-cat: var(--ik-muted);
+  --dk-cat-product: var(--ik-accent);
+  --dk-cat-cli: var(--ik-ink);
+  --dk-cat-mcp: var(--ik-ink);
+  --dk-cat-claude: var(--ik-ink);
+  --dk-cat-ui: var(--ik-ink);
+  --dk-cat-vscode: var(--ik-ink);
+  --dk-cat-theme: var(--ik-ink);
+}
+
+/* Blog. Its tokens live on #blog-root (app/blog/blog.module.css). Code is an
+   ink wash, not a dark slab: two tones, the ink and the accent. */
+#blog-root[data-theme="ink"][data-theme="ink"] {
+  --bg: var(--ik-paper);
+  --bg-2: var(--ik-wash);
+  --fg: var(--ik-ink);
+  --fg-2: var(--ik-muted);
+  --fg-3: var(--ik-dim);
+  --line: var(--ik-line-dim);
+  --line-2: var(--ik-line);
+  --c-bg: var(--ik-wash);
+  --c-dot: var(--ik-line-dim);
+  --c-add: var(--ik-blot);
+  --c-del: var(--ik-blot);
+  --c-txt: var(--ik-ink);
+  --c-mut: var(--ik-muted);
+  --c-cm: var(--ik-dim);
+  --c-str: var(--ik-muted);
+  --c-num: var(--ik-accent);
+  --c-kw: var(--ik-accent);
+  --c-fn: var(--ik-ink);
+  --c-tag: var(--ik-accent);
+  --c-att: var(--ik-muted);
+  --c-gold: var(--ik-accent);
+  color-scheme: var(--ik-scheme);
+}
+#blog-root[data-theme="ink"] ::selection {
+  background: var(--ik-ink);
+  color: var(--ik-paper);
+}
+
+/* Shared by every ink scope ------------------------------------------------- */
+html:has([data-theme-scope][data-theme="ink"]),
+body:has([data-theme-scope][data-theme="ink"]) {
+  background-color: var(--ik-paper);
+}
+body:has([data-theme-scope][data-theme="ink"]) {
+  background-image: var(--ik-grain);
+  background-size: 160px;
+}
+[data-theme-scope][data-theme="ink"] {
+  background-image: var(--ik-grain);
+  background-size: 160px;
+  background-blend-mode: multiply;
+}
+html[data-ink-take="negative"] [data-theme-scope][data-theme="ink"] {
+  background-blend-mode: screen;
+}
+
+/* Code: shiki's token colours are drawn for a dark slab, so on paper they all
+   become ink, comments one step quieter. The wash is the block itself. */
+[data-theme="ink"] pre,
+[data-theme="ink"] figure:has(> pre) {
+  background: var(--ik-wash) !important;
+  border: 1.5px solid var(--ik-line) !important;
+  border-radius: var(--ik-wobble) !important;
+}
+[data-theme="ink"] pre :is(span, code) {
+  color: var(--ik-ink) !important;
+}
+[data-theme="ink"] pre span[style*="italic"] {
+  color: var(--ik-dim) !important;
+}
+
+/* Hand-inked rules and boxes. */
+[data-theme="ink"] hr {
+  height: 6px;
+  border: 0;
+  background-color: var(--ik-line);
+  mask: var(--ik-rule) repeat-x left center / 240px 6px;
+}
+[data-theme="ink"]
+  :is(
+    [class*="card" i],
+    [class*="tile" i],
+    [data-card],
+    blockquote,
+    table,
+    .warm-hero > .illus-art
+  ) {
+  border-color: var(--ik-line) !important;
+  border-radius: var(--ik-wobble) !important;
+  box-shadow: none !important;
+}
+[data-theme="ink"] .dusk-picker,
+[data-theme="ink"] .dusk-picker button {
+  border-radius: var(--ik-wobble-sm);
+}
+
+/* Blotted hover: a pale blot of the accent soaks out from under the link.
+   The text keeps its colour, so the pair never drops below the contrast it
+   had on paper (blot pairs are measured too). */
+[data-theme="ink"] :is(p, li, dd, td) a,
+[data-theme="ink"] [data-ink-blot] {
+  color: var(--ik-accent);
+  text-decoration-color: currentColor;
+  background-image: radial-gradient(
+    closest-side,
+    var(--ik-blot) 0 70%,
+    color-mix(in srgb, var(--ik-blot) 60%, transparent) 85%,
+    transparent 100%
+  );
+  background-repeat: no-repeat;
+  background-position: 50% 55%;
+  background-size: 0% 0%;
+  border-radius: 40% 55% 45% 60% / 60% 45% 55% 40%;
+  transition: background-size 220ms ease-out;
+}
+[data-theme="ink"] :is(p, li, dd, td) a:hover,
+[data-theme="ink"] [data-ink-blot]:hover {
+  background-size: 125% 170%;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="ink"] :is(p, li, dd, td) a,
+  [data-theme="ink"] [data-ink-blot] {
+    transition: none;
+  }
+}
+
+/* Drawings: printed in the same ink, not in colour. */
+[data-theme="ink"] .illus-art img {
+  filter: grayscale(1) contrast(1.05);
+  mix-blend-mode: multiply;
+}
+html[data-ink-take="negative"] [data-theme="ink"] .illus-art img {
+  filter: grayscale(1) invert(1) contrast(0.95);
+  mix-blend-mode: screen;
+}

@@ -13,6 +13,7 @@ import { FocusTags } from "@/components/focus-tags"
 import { PromptMascot } from "@/components/prompt-mascot"
 import { ScrollHint } from "@/components/scroll-hint"
 import { yearsOfExperience } from "@/lib/experience"
+import { ThemeScopeScript } from "@/components/scoped-theme"
 import styles from "./page.module.css"
 
 const socials = [
@@ -213,7 +214,14 @@ const HeroMobile = () => (
 )
 
 const Home = () => (
-  <div className={styles.home}>
+  // A theme scope for Ink only; home keeps one look under Light and Dark.
+  <div
+    className={styles.home}
+    data-theme-scope
+    data-theme="system"
+    suppressHydrationWarning
+  >
+    <ThemeScopeScript />
     <HeroDesktop />
     <HeroMobile />
     <ExperienceTimeline />
