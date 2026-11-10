@@ -21,17 +21,6 @@
   overflow-x: clip;
 }
 
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
 @keyframes pulse {
   0%,
   100% {
@@ -122,25 +111,12 @@
   }
 }
 
-.badge,
-.title,
-.tagline,
-.actions,
-.stats {
-  animation: fadeUp 0.6s ease both;
-}
-.title {
-  animation-delay: 0.06s;
-}
-.tagline {
-  animation-delay: 0.12s;
-}
-.actions {
-  animation-delay: 0.18s;
-}
-.stats {
-  animation-delay: 0.24s;
-}
+/* No entrance animation anywhere in the hero. Arriving on a project page is the
+   navigation's job, and the page arrives as one: from /projects the icon and
+   title morph and everything else fades in together (html[data-vt="morph"] in
+   app/global.css); a first load does not animate. A hero-only
+   entrance would move the header while the body sat still, and play inside
+   the title's morph group as a second journey (Erwann, 2026-11-10). */
 
 .badge {
   display: inline-flex;
@@ -532,8 +508,6 @@ a.badge:focus-visible {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: fadeUp 0.6s ease both;
-  animation-delay: 0.06s;
 }
 
 /* Prominent, accent-coloured launch button (distinct from the light .lead). */
@@ -947,8 +921,6 @@ a.badge:focus-visible {
   color: var(--muted);
   text-decoration: none;
   white-space: nowrap;
-  animation: fadeUp 0.6s ease both;
-  animation-delay: 0.15s;
   transition:
     transform 0.18s,
     box-shadow 0.18s;
@@ -1037,6 +1009,7 @@ a.badge:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .badgeDot,
   .releasePill[data-fresh] .releasePillDot::after {
     animation: none;
   }
