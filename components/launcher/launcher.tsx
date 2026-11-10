@@ -32,7 +32,7 @@ import {
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import { GitHubIcon } from "@/components/social-icons"
-import { useScopedTheme } from "@/components/scoped-theme"
+import { SCOPED_THEMES, useScopedTheme } from "@/components/scoped-theme"
 import type { ScopedTheme } from "@/components/scoped-theme"
 import type { LauncherIndex, LauncherProject } from "@/lib/launcher-index"
 import { fuzzyScore } from "./fuzzy"
@@ -175,17 +175,15 @@ const PAGES: Item[] = [
   },
 ]
 
-const THEME_LABEL: Record<ScopedTheme, string> = {
-  light: "Light",
-  dark: "Dark",
-  system: "System",
+// The list is SCOPED_THEMES, shared with the pickers; only the word and the
+// mark live here, so a new theme fails the build until it has both.
+const THEME_OPTION: Record<ScopedTheme, { label: string; Icon: LucideIcon }> = {
+  system: { label: "System", Icon: Monitor },
+  light: { label: "Light", Icon: Sun },
+  dark: { label: "Dark", Icon: Moon },
 }
 
-const THEMES: { value: ScopedTheme; label: string; Icon: LucideIcon }[] = [
-  { value: "light", label: "Light", Icon: Sun },
-  { value: "dark", label: "Dark", Icon: Moon },
-  { value: "system", label: "System", Icon: Monitor },
-]
+const THEMES = SCOPED_THEMES.map((value) => ({ value, ...THEME_OPTION[value] }))
 
 const LIMIT: Record<SectionKey, number> = {
   pages: 4,
@@ -515,7 +513,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     // Home has no theme of its own, so the row would change nothing there.
     const pickTheme = (value: ScopedTheme) => {
       setTheme(value, document.querySelector("[data-launcher-trigger]"))
-      setAnnounce(`Theme: ${THEME_LABEL[value]}`)
+      setAnnounce(`Theme: ${THEME_OPTION[value].label}`)
     }
     const nextTheme = (): ScopedTheme => {
       const typed = THEMES.find(({ value, label }) =>
@@ -534,7 +532,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       ? [
           {
             id: "setting:theme",
-            label: `Theme: ${THEME_LABEL[theme]}. Enter to change.`,
+            label: `Theme: ${THEME_OPTION[theme].label}. Enter to change.`,
             section: "settings",
             text: "Theme",
             title: (

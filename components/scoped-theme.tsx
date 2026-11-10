@@ -33,7 +33,13 @@ export const THEME_SCOPE_ATTR = "data-theme-scope"
 
 export const BLOG_ROOT_ID = "blog-root"
 
-export type ScopedTheme = "light" | "dark" | "system"
+// Every choice a picker offers. Anything that lists themes (the Dusk picker,
+// the blog control, the command launcher's settings) maps over this and keeps
+// its own word and mark in a Record<ScopedTheme, …>, so a theme added here
+// fails the build until every list has something to say for it.
+export const SCOPED_THEMES = ["system", "light", "dark"] as const
+
+export type ScopedTheme = (typeof SCOPED_THEMES)[number]
 
 const isTheme = (value: unknown): value is ScopedTheme =>
   value === "light" || value === "dark" || value === "system"
