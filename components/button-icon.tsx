@@ -1,6 +1,6 @@
 // Leading marks for the project hero buttons (Erwann, 2026-11-10). Brand marks are Simple Icons
-// (CC0-1.0), the docs and web marks Heroicons 16/solid (MIT), inlined rather
-// than packaged for five glyphs. All draw in currentColor, so they take the
+// (CC0-1.0), the docs, projects and web marks Heroicons 16/solid (MIT), inlined rather
+// than packaged for a handful of glyphs. All draw in currentColor, so they take the
 // button ink, never a brand colour.
 const ICONS = {
   github: {
@@ -35,6 +35,15 @@ const ICONS = {
     paths: [
       {
         d: "M7.25 3.688a8.035 8.035 0 0 0-4.872-.523A.48.48 0 0 0 2 3.64v7.994c0 .345.342.588.679.512a6.02 6.02 0 0 1 4.571.81V3.688ZM8.75 12.956a6.02 6.02 0 0 1 4.571-.81c.337.075.679-.167.679-.512V3.64a.48.48 0 0 0-.378-.475 8.034 8.034 0 0 0-4.872.523v9.268Z",
+        evenodd: false,
+      },
+    ],
+  },
+  projects: {
+    vb: "0 0 16 16",
+    paths: [
+      {
+        d: "M3.5 2A1.5 1.5 0 0 0 2 3.5v2A1.5 1.5 0 0 0 3.5 7h2A1.5 1.5 0 0 0 7 5.5v-2A1.5 1.5 0 0 0 5.5 2h-2ZM3.5 9A1.5 1.5 0 0 0 2 10.5v2A1.5 1.5 0 0 0 3.5 14h2A1.5 1.5 0 0 0 7 12.5v-2A1.5 1.5 0 0 0 5.5 9h-2ZM9 3.5A1.5 1.5 0 0 1 10.5 2h2A1.5 1.5 0 0 1 14 3.5v2A1.5 1.5 0 0 1 12.5 7h-2A1.5 1.5 0 0 1 9 5.5v-2ZM10.5 9A1.5 1.5 0 0 0 9 10.5v2a1.5 1.5 0 0 0 1.5 1.5h2a1.5 1.5 0 0 0 1.5-1.5v-2A1.5 1.5 0 0 0 12.5 9h-2Z",
         evenodd: false,
       },
     ],
