@@ -163,5 +163,8 @@ export const getProject = async (slug: string): Promise<Project | null> => {
   })
   if (!res.ok) return null
   const repo = (await res.json()) as Repo
-  return repo.archived ? null : toProject(repo)
+  // Only catalogue repos get a page: a public repo without the topic (one that
+  // is just a link elsewhere, like referrals) must 404, not render a landing.
+  if (repo.archived || !repo.topics?.includes(TOPIC)) return null
+  return toProject(repo)
 }
