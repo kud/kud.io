@@ -23,6 +23,16 @@
     grid-column: 2;
   }
 }
+/* Wide screens: the top runs the full width of that same grid, from the
+   empty left track to the filter rail's right edge, while the list below
+   stays in the centred middle column (Erwann, 2026-11-10). The edges are the
+   browse layout's own, so the band reads as framing the list, not as a
+   second, wider page. */
+@media (min-width: 1280px) {
+  .band {
+    grid-column: 1 / -1;
+  }
+}
 
 /* The column narrows with the rails (about 700px on a 1440 screen), so the
    split answers to its own width rather than the viewport's. */
@@ -265,16 +275,56 @@
   font-weight: 700;
 }
 
-/* The joining line: from 4px under this row's icon to 4px over the next
-   one's. Rows share one height, so the segment lands on the next node. */
-.timeline li:not(:last-child) .tick::after {
+/* The joining line: from 4px over this row's icon up to 4px under the
+   previous one's. Rows share one height, so the segment lands on the previous
+   node. Drawn upward so the last row shown, wherever the width cuts the
+   list, never trails a line toward a hidden row. */
+.timeline li + li .tick::before {
   content: "";
   position: absolute;
   left: calc(4px + 80px + 12px + 14px - 0.5px);
-  top: calc(50% + 18px);
+  top: calc(-50% + 18px);
   height: calc(100% - 36px);
   width: 1px;
   background: var(--border);
+}
+
+/* Full width: the list shows six releases, and on a band wide enough to sit
+   beside the pinned 2x2 it shows as many as the cards are tall. A row is 46px
+   (28px icon + 18px padding); the cards' height grows with the band, about
+   0.34px per px of width plus 166px, so each threshold is where one more row
+   fits. Rows past the count are display: none, out of tab order too. With more
+   than four pins, the cards run three across instead of growing. */
+.timeline > li:nth-child(n + 7) {
+  display: none;
+}
+@container (min-width: 1142px) {
+  .timeline > li:nth-child(-n + 12) {
+    display: block;
+  }
+  .pins:has(> li:nth-child(5)) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@container (min-width: 1279px) {
+  .timeline > li:nth-child(-n + 13) {
+    display: block;
+  }
+}
+@container (min-width: 1415px) {
+  .timeline > li:nth-child(-n + 14) {
+    display: block;
+  }
+}
+@container (min-width: 1551px) {
+  .timeline > li:nth-child(-n + 15) {
+    display: block;
+  }
+}
+@container (min-width: 1688px) {
+  .timeline > li:nth-child(-n + 16) {
+    display: block;
+  }
 }
 
 .relDate {

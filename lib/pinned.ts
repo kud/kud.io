@@ -8,5 +8,8 @@ export const PINNED: string[] = [
   "soap-cli",
 ]
 
-// How many recently released projects follow the pins.
-export const RECENT_COUNT = 6
+// How many recently released projects follow the pins. The list shows six;
+// on a wide screen, where the top runs full width, it shows more rows to
+// match the pinned cards' height, up to this many
+// (components/projects-top.module.css).
+export const RECENT_COUNT = 16
