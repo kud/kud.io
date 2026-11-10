@@ -8,6 +8,7 @@ import {
 } from "react"
 import type { ReactNode } from "react"
 import { inkSwap, scopeGroundFor } from "@/components/ink"
+import { forcesDark } from "@/components/ink-candidate"
 
 // Scoped visitor themes: each themed surface (the blog, the Dusk pages under
 // /projects) owns its own light/dark/system choice, stamped as data-theme on
@@ -57,7 +58,7 @@ const readStorage = (): string | null => {
 // listener. This script only has to replay an explicit stored choice onto the
 // wrapper it sits in, before first paint. It reads the legacy key without
 // moving it; the first client read moves it.
-const THEME_SCRIPT = `try{var t=localStorage.getItem(${JSON.stringify(
+const THEME_SCRIPT = `try{if(document.documentElement.dataset.inkCandidate==="4"){document.currentScript.parentElement.dataset.theme="dark";throw 0}var t=localStorage.getItem(${JSON.stringify(
   THEME_KEY,
 )});if(t===null)t=localStorage.getItem(${JSON.stringify(
   LEGACY_THEME_KEY,
@@ -78,6 +79,7 @@ const subscribeToTheme = (listener: () => void) => {
 }
 
 export const readStoredTheme = (): ScopedTheme => {
+  if (forcesDark()) return "dark"
   try {
     const stored = readStorage()
     return isTheme(stored) ? stored : "system"
