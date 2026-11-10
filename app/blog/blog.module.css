@@ -140,30 +140,23 @@
 
 /* Footer ------------------------------------------------------------------ */
 
-/* A sibling of .wrap, not a child: it restates .wrap's own max-width and
- * horizontal padding so the two text measures line up, while the rule above it
- * runs the full 790px box. */
+/* The shared SiteFooter (components/site-footer.tsx), the same one /projects
+ * and the docs end on. Like the picker below, it reads Dusk's token names and
+ * the blog lends it its own, on the footer element so nothing leaks. It sits
+ * outside .wrap and restates .wrap's 790px measure and 18px inset so the two
+ * text edges line up; .wrap's bottom padding is the gap above it. */
 .footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  max-width: 790px;
-  margin: 0 auto;
-  padding: 18px 18px 44px;
-  border-top: 1px solid var(--line);
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--fg-3);
-}
-
-.footer a {
-  color: inherit;
-  text-decoration: none;
-  transition: color 130ms;
-}
-
-.footer a:hover {
-  color: var(--fg);
+  --border: var(--line);
+  --surface: var(--bg-2);
+  --dim: var(--fg-3);
+  --text: var(--fg);
+  --primary-light: var(--fg-2);
+  --footer-max: 790px;
+  --footer-gap: 0;
+  --footer-gap-narrow: 0;
+  --footer-inset: 18px;
+  --footer-inset-narrow: 18px;
+  --footer-mono: var(--mono);
 }
 
 /* Site line ---------------------------------------------------------------- */

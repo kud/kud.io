@@ -1,6 +1,12 @@
 /* Built on Dusk tokens only, so it follows Paper and night with the page. The
    blog's footer is the model: mono 12px, the quiet text tier (6.6:1 in both
-   lights), a hairline above, nothing filled but the marks' own tiles. */
+   lights), a hairline above, nothing filled but the marks' own tiles.
+
+   A host whose ground is not Dusk (the blog) lends its own greys under these
+   token names on the className it passes, the way it already does for the
+   theme picker. It may also set --footer-max and --footer-mono, plus
+   --footer-gap and --footer-inset with their -narrow twins, to sit on its own
+   column and type. One footer; a host varies it through tokens, never a copy. */
 .footer {
   display: flex;
   flex-wrap: wrap;
@@ -8,11 +14,18 @@
   align-items: center;
   gap: 14px 24px;
   width: 100%;
-  max-width: 1180px;
-  margin: 96px auto 0;
-  padding: 18px 24px 44px;
+  max-width: var(--footer-max, 1180px);
+  margin: var(--footer-gap, 96px) auto 0;
+  padding: 18px var(--footer-inset, 24px) 44px;
   border-top: 1px solid var(--border);
-  font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+  font-family: var(
+    --footer-mono,
+    ui-monospace,
+    "SF Mono",
+    SFMono-Regular,
+    Menlo,
+    monospace
+  );
   font-size: 12px;
   line-height: 1.6;
   color: var(--dim);
@@ -30,7 +43,8 @@
   transition: color 130ms;
 }
 
-.footer a:hover {
+.footer a:hover,
+.footer a:focus-visible {
   color: var(--text);
 }
 
@@ -57,7 +71,8 @@
   background: var(--surface);
 }
 
-.marks a:hover {
+.marks a:hover,
+.marks a:focus-visible {
   border-color: var(--primary-light);
 }
 
@@ -68,7 +83,7 @@
 
 @media (max-width: 720px) {
   .footer {
-    margin-top: 64px;
-    padding: 16px 20px 40px;
+    margin-top: var(--footer-gap-narrow, 64px);
+    padding: 16px var(--footer-inset-narrow, 20px) 40px;
   }
 }

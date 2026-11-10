@@ -6,9 +6,10 @@ import {
 } from "@/components/social-icons"
 import styles from "./site-footer.module.css"
 
-// The footer for /projects, the project pages and their docs, in the blog's
-// footer family on Dusk tokens: site links on the left, the social marks on
-// the right, © on a line of its own (Erwann, 2026-11-10).
+// The one footer for the whole site: /projects, the project pages, their docs
+// and the blog, which lends it its own greys (app/blog/blog.module.css). On Dusk
+// tokens by default: site links on the left, the social marks on the right,
+// © on a line of its own (Erwann, 2026-11-10).
 const YEAR = new Date().getFullYear()
 
 const SITE = [
@@ -24,8 +25,10 @@ const SOCIAL = [
   { href: "https://linkedin.kud.io/", label: "LinkedIn", Icon: LinkedInIcon },
 ]
 
-export const SiteFooter = () => (
-  <footer className={styles.footer}>
+export const SiteFooter = ({ className }: { className?: string }) => (
+  <footer
+    className={className ? `${styles.footer} ${className}` : styles.footer}
+  >
     <nav className={styles.links} aria-label="Site">
       {SITE.map(({ href, label, external }) =>
         external ? (
