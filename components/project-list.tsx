@@ -499,10 +499,22 @@ export const ProjectList = ({
                           </span>
                         </MorphLink>
                       ))}
-                      {/* An odd trailing slot reads as intentional, not broken. */}
+                      {/* Odd trailing slots read as intentional, not broken:
+                          one per empty cell, for two columns and for three
+                          (the wide layout). */}
                       {group.items.length % 2 === 1 ? (
                         <div className={styles.filler} aria-hidden />
                       ) : null}
+                      {Array.from(
+                        { length: (3 - (group.items.length % 3)) % 3 },
+                        (_, index) => (
+                          <div
+                            key={index}
+                            className={styles.filler3}
+                            aria-hidden
+                          />
+                        ),
+                      )}
                     </div>
                   )}
                 </section>
