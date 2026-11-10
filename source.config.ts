@@ -32,6 +32,12 @@ const MDX_NODES = [
 
 export default defineConfig({
   mdxOptions: {
+    // Remote README images (raw.githubusercontent.com, shields.io) would be
+    // fetched at build time just to read their size, and GitHub rate-limits
+    // Vercel's build network: one 429 failed the whole build. Our <img> is a
+    // plain element (components/mdx.tsx), so it needs no width/height; local
+    // images are still sized.
+    remarkImageOptions: { external: false },
     // Docs are synced from 30+ community repos, so a fence may carry a language
     // Shiki has no grammar for (e.g. ```sudoers). Without a fallback that's a
     // hard build error; fall back to plain text so one stray tag can't fail the
