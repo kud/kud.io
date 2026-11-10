@@ -20,9 +20,9 @@ import { BlogImage } from "@/components/blog-image"
 import { CoverImage } from "@/components/blog-cover"
 import { imageDimensions } from "@/lib/image-dimensions"
 import { BlogMermaid } from "@/components/blog-mermaid"
-import { BlogHierarchyPreview } from "@/components/blog-hierarchy-preview"
+import { BlogContents } from "@/components/blog-contents"
 import { BlogMorePicks } from "@/components/blog-more-picks"
-import { pickMore, stampPreview } from "@/lib/blog-more"
+import { pickMore } from "@/lib/blog-more"
 import styles from "./page.module.css"
 
 const FEED_TITLE = "Writing — kud.io"
@@ -191,9 +191,6 @@ const BlogPostPage = async ({ params }: Params) => {
   return (
     <>
       <div className={styles.progress} aria-hidden="true" />
-      <script
-        dangerouslySetInnerHTML={{ __html: `(${stampPreview.toString()})()` }}
-      />
       <article>
         {cover && (
           <figure
@@ -240,7 +237,7 @@ const BlogPostPage = async ({ params }: Params) => {
         </div>
         <div className={styles.body}>{body}</div>
       </article>
-      <BlogHierarchyPreview />
+      <BlogContents key={slug} />
 
       {others.length > 0 && (
         // suppressHydrationWarning on the nav and rows: the inline script

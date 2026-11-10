@@ -159,34 +159,71 @@
   text-wrap: pretty;
 }
 
-/* A level marker, not emphasis: +4.5px over the text it governs, a hairline
- * above it, and roughly 4x the local rhythm in air above against less below.
- * Marking a level by weight alone reads as a loud paragraph. */
-.body h2 {
-  margin: 2.4em 0 0.75em;
-  padding-top: 1.05em;
-  border-top: 1px solid var(--line);
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.25;
+/* Section headings (Erwann's pick, 2026-11-10). A real step up from the body:
+ * 26px at 650 against 17.5px, where 22px read as a loud paragraph. No rule:
+ * about 96px of air above and 18px below does the dividing, and a rule there
+ * chopped the post into slabs. Pixel margins, so the rhythm doesn't scale
+ * with the heading. scroll-margin keeps a contents jump clear of the
+ * reading-progress bar. */
+.body {
+  counter-reset: section;
 }
 
-/* A rule directly under the post's own metadata line would be a second divider
- * saying the same thing. */
+.body h2 {
+  margin: 96px 0 18px;
+  font-size: 26px;
+  font-weight: 650;
+  letter-spacing: -0.016em;
+  line-height: 1.2;
+  counter-increment: section;
+  scroll-margin-top: 32px;
+}
+
+/* The section numeral hangs in the left margin, outside the text column, on
+ * the heading's own baseline: an inline-block pulled back by its own width,
+ * so the baselines align without measuring anything, and the heading keeps
+ * the text edge. In the blog's mono metadata voice. */
+.body h2::before {
+  content: counter(section, decimal-leading-zero);
+  display: inline-block;
+  width: 44px;
+  margin-left: -44px;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--fg-3);
+  vertical-align: baseline;
+}
+
 .body > h2:first-child {
   margin-top: 0;
-  padding-top: 0;
-  border-top: 0;
 }
 
-/* No rule and no padding — the absence of the h2's hairline is what puts h3
- * underneath it, rather than a weight both levels already share. */
+/* Below 920px there is no margin to hang the numeral in, so it sits on its
+ * own line over the heading instead. */
+@media (max-width: 920px) {
+  .body h2::before {
+    display: block;
+    width: auto;
+    margin: 0 0 8px;
+    font-size: 12px;
+  }
+}
+
+/* Phones get three-quarters of the air: 96px between short screens is a gap. */
+@media (max-width: 580px) {
+  .body h2 {
+    margin-top: 72px;
+    font-size: 23px;
+  }
+}
+
 .body h3 {
   margin: 2.2em 0 0.5em;
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 600;
-  letter-spacing: -0.006em;
+  letter-spacing: -0.01em;
   line-height: 1.35;
 }
 
@@ -1032,10 +1069,12 @@
   color: var(--fg-3);
 }
 
+/* Small cards: cover, date, title (Erwann's pick, 2026-11-10). On a phone
+ * they fall back to the index's phone row (below). */
 .moreList {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 28px 22px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -1043,9 +1082,100 @@
 
 .moreList li {
   display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  gap: 20px;
-  align-items: baseline;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  align-content: start;
+}
+
+/* Which rows show. The list carries every other post. Without scripting only
+ * the two date neighbours ([data-default]) show. The inline script
+ * (lib/blog-more.ts) marks the nav data-for and three rows data-pick before
+ * first paint: the newest other post, then two at random, in that order. */
+.moreList li:not([data-default]) {
+  display: none;
+}
+
+.more[data-for] .moreList li {
+  display: none;
+}
+
+.more[data-for] .moreList li[data-pick] {
+  display: grid;
+}
+
+.more[data-for] .moreList li[data-pick="1"] {
+  order: 1;
+}
+
+.more[data-for] .moreList li[data-pick="2"] {
+  order: 2;
+}
+
+.more[data-for] .moreList li[data-pick="3"] {
+  order: 3;
+}
+
+/* The index's thumb: same frame, the cover's blurred preview while it loads,
+ * and a tag-hue tile for a post without a cover. Lazy, so a hidden row's
+ * cover is never fetched. */
+.moreThumb {
+  --tag-hue: var(--fg-3);
+  position: relative;
+  display: block;
+  order: -1;
+  width: 100%;
+  margin-bottom: 6px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 8px;
+  outline: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
+  outline-offset: -1px;
+  background-color: color-mix(in srgb, var(--tag-hue) 18%, var(--bg));
+}
+
+.moreThumb[data-cover] {
+  background-color: var(--bg-2);
+}
+
+.moreThumb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--preview, none) center / cover no-repeat;
+  filter: blur(4px);
+  transform: scale(1.15);
+}
+
+.moreThumb img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (scripting: enabled) {
+  .moreThumb img:not([data-loaded]) {
+    opacity: 0;
+  }
+}
+
+/* The index's hover: the cover leans in behind a frame that stays put, and
+ * the title takes its underline. Keyboard focus on the title drives it too. */
+.moreList li:has(.moreThumb:hover) h2 a {
+  border-bottom-color: var(--c-gold);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .moreThumb img {
+    transition:
+      opacity 320ms ease-out,
+      transform 0.6s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .moreList li:has(.moreThumb:hover, h2 a:focus-visible) .moreThumb img {
+    transform: scale(1.06);
+  }
 }
 
 .moreList time {
@@ -1058,7 +1188,7 @@
 
 .moreList h2 {
   margin: 0;
-  font-size: 17.5px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.35;
   letter-spacing: -0.008em;
@@ -1075,10 +1205,36 @@
   border-bottom-color: var(--c-gold);
 }
 
+/* On a phone the cards become the index's phone row: date over title on the
+ * left, the thumb top-aligned on the right. */
 @media (max-width: 580px) {
+  .moreList {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
   .moreList li {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 3px;
+    grid-template-columns: minmax(0, 1fr) 72px;
+    gap: 3px 14px;
+    align-items: start;
+  }
+
+  .moreList li > * {
+    grid-column: 1;
+  }
+
+  .moreList li > .moreThumb {
+    order: 0;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    width: 72px;
+    margin: 2px 0 0;
+    border-radius: 4px;
+  }
+
+  .moreList h2 {
+    font-size: 17px;
   }
 
   .title {
@@ -1137,370 +1293,4 @@
 
 :global(#blog-root[data-theme="dark"]) .progress {
   background: var(--c-gold);
-}
-
-/* Hierarchy candidates (preview only) ---------------------------------------- */
-/* Keyed on data-h / data-s, stamped on #blog-root by BlogHierarchyPreview only
- * when a preview choice is present; without them the rules above stand. h=0
- * and s=0 are today's values. Pixel margins rather than em, so a larger
- * heading does not drag the spacing row along with it. */
-
-/* h=1 — a real step up in size and weight; the hairline stays. */
-:global(#blog-root[data-h="1"]) .body h2 {
-  font-size: 26px;
-  font-weight: 650;
-  letter-spacing: -0.016em;
-  line-height: 1.2;
-}
-
-/* h=2 — the same step, a touch heavier, and no rule: air does the dividing. */
-:global(#blog-root[data-h="2"]) .body h2 {
-  padding-top: 0;
-  border-top: 0;
-  font-size: 27px;
-  font-weight: 700;
-  letter-spacing: -0.018em;
-  line-height: 1.2;
-}
-
-/* h=3 — h=2's heading under a quiet mono numeral, the blog's metadata voice. */
-:global(#blog-root[data-h="3"]) .body {
-  counter-reset: section;
-}
-
-:global(#blog-root[data-h="3"]) .body h2 {
-  padding-top: 0;
-  border-top: 0;
-  font-size: 26px;
-  font-weight: 650;
-  letter-spacing: -0.016em;
-  line-height: 1.2;
-  counter-increment: section;
-}
-
-:global(#blog-root[data-h="3"]) .body h2::before {
-  content: counter(section, decimal-leading-zero);
-  display: block;
-  margin-bottom: 8px;
-  font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  color: var(--fg-3);
-}
-
-:global(#blog-root:is([data-h="1"], [data-h="2"], [data-h="3"])) .body h3 {
-  font-size: 20px;
-  letter-spacing: -0.01em;
-}
-
-/* s=1 — about 96px from the last line of a section to the next heading
- * (rule included), 18px under it. */
-:global(#blog-root[data-s="1"]) .body h2 {
-  margin-top: 96px;
-  margin-bottom: 18px;
-}
-
-:global(#blog-root[data-s="1"]:is([data-h="0"], [data-h="1"])) .body h2 {
-  margin-top: 68px;
-  padding-top: 28px;
-}
-
-/* s=2 — about 128px, 20px under, and paragraphs a little further apart. */
-:global(#blog-root[data-s="2"]) .body h2 {
-  margin-top: 128px;
-  margin-bottom: 20px;
-}
-
-:global(#blog-root[data-s="2"]:is([data-h="0"], [data-h="1"])) .body h2 {
-  margin-top: 92px;
-  padding-top: 36px;
-}
-
-:global(#blog-root[data-s="2"]) .body p {
-  margin-bottom: 1.2em;
-}
-
-/* Phones get two-thirds of the air: 128px between short screens is a gap. */
-@media (max-width: 580px) {
-  :global(#blog-root[data-s="1"]) .body h2 {
-    margin-top: 72px;
-  }
-
-  :global(#blog-root[data-s="1"]:is([data-h="0"], [data-h="1"])) .body h2 {
-    margin-top: 50px;
-    padding-top: 22px;
-  }
-
-  :global(#blog-root[data-s="2"]) .body h2 {
-    margin-top: 88px;
-  }
-
-  :global(#blog-root[data-s="2"]:is([data-h="0"], [data-h="1"])) .body h2 {
-    margin-top: 62px;
-    padding-top: 26px;
-  }
-
-  :global(#blog-root:is([data-h="1"], [data-h="2"], [data-h="3"])) .body h2 {
-    font-size: 23px;
-  }
-}
-
-:global(#blog-root[data-s]) .body > h2:first-child {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: 0;
-}
-
-/* Clears the fixed reading-progress bar when a contents link jumps here. */
-.body h2 {
-  scroll-margin-top: 32px;
-}
-
-/* More: picks and thumbs (preview candidates) ------------------------------ */
-/* The list carries every other post. Without a pick, only today's two
- * neighbours ([data-default]) show — also what a no-JS reader gets. With
- * picks=mixed, the rows the inline script marked show instead, in its order
- * (lib/blog-more.ts). */
-.moreList li:not([data-default]) {
-  display: none;
-}
-
-:global(#blog-root[data-picks="mixed"]) .moreList li {
-  display: none;
-}
-
-:global(#blog-root[data-picks="mixed"]) .moreList li[data-pick] {
-  display: grid;
-}
-
-:global(#blog-root[data-picks="mixed"]) .moreList li[data-pick="1"] {
-  order: 1;
-}
-:global(#blog-root[data-picks="mixed"]) .moreList li[data-pick="2"] {
-  order: 2;
-}
-:global(#blog-root[data-picks="mixed"]) .moreList li[data-pick="3"] {
-  order: 3;
-}
-
-/* The index's thumb, smaller: same frame, same blurred preview while it
- * loads, same tag-hue tile for a post without a cover. Hidden until a "More"
- * candidate asks for it, and lazy, so a hidden one is never fetched. */
-.moreThumb {
-  --tag-hue: var(--fg-3);
-  position: relative;
-  display: none;
-  width: 72px;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  border-radius: 4px;
-  outline: 1px solid color-mix(in srgb, var(--fg) 12%, transparent);
-  outline-offset: -1px;
-  background-color: color-mix(in srgb, var(--tag-hue) 18%, var(--bg));
-}
-
-.moreThumb[data-cover] {
-  background-color: var(--bg-2);
-}
-
-.moreThumb::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--preview, none) center / cover no-repeat;
-  filter: blur(4px);
-  transform: scale(1.15);
-}
-
-.moreThumb img {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-@media (scripting: enabled) {
-  .moreThumb img:not([data-loaded]) {
-    opacity: 0;
-  }
-}
-
-/* The index's hover: the cover leans in behind a frame that stays put, and
- * the title takes its underline. Keyboard focus on the title drives it too. */
-.moreList li:has(.moreThumb:hover) h2 a {
-  border-bottom-color: var(--c-gold);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .moreThumb img {
-    transition:
-      opacity 320ms ease-out,
-      transform 0.6s cubic-bezier(0.2, 0, 0, 1);
-  }
-
-  .moreList li:has(.moreThumb:hover, h2 a:focus-visible) .moreThumb img {
-    transform: scale(1.06);
-  }
-}
-
-/* more=thumbs — date · tiny cover · title, one row each. */
-:global(#blog-root[data-more="thumbs"]) .moreList {
-  gap: 12px;
-}
-
-:global(#blog-root[data-more="thumbs"]) .moreList li {
-  grid-template-columns: 88px 72px minmax(0, 1fr);
-  gap: 18px;
-  align-items: center;
-}
-
-:global(#blog-root:is([data-more="thumbs"], [data-more="cards"])) .moreThumb {
-  display: block;
-}
-
-/* more=cards — a row of small cards: cover, date, title. */
-:global(#blog-root[data-more="cards"]) .moreList {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 28px 22px;
-}
-
-:global(#blog-root[data-more="cards"]) .moreList li {
-  grid-template-columns: minmax(0, 1fr);
-  gap: 6px;
-  align-items: start;
-  align-content: start;
-}
-
-:global(#blog-root[data-more="cards"]) .moreThumb {
-  order: -1;
-  width: 100%;
-  margin-bottom: 6px;
-  border-radius: 8px;
-}
-
-:global(#blog-root[data-more="cards"]) .moreList h2 {
-  font-size: 16px;
-}
-
-/* On a phone both fall back to the index's phone row: date over title on
- * the left, the thumb top-aligned on the right. */
-@media (max-width: 580px) {
-  :global(#blog-root:is([data-more="thumbs"], [data-more="cards"])) .moreList {
-    display: flex;
-    gap: 18px;
-  }
-
-  :global(#blog-root:is([data-more="thumbs"], [data-more="cards"]))
-    .moreList
-    li {
-    grid-template-columns: minmax(0, 1fr) 72px;
-    gap: 3px 14px;
-    align-items: start;
-  }
-
-  :global(#blog-root:is([data-more="thumbs"], [data-more="cards"]))
-    .moreList
-    li
-    > * {
-    grid-column: 1;
-  }
-
-  :global(#blog-root:is([data-more="thumbs"], [data-more="cards"]))
-    .moreList
-    li
-    > .moreThumb {
-    order: 0;
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    width: 72px;
-    margin: 2px 0 0;
-    border-radius: 4px;
-  }
-}
-
-/* Numeral placement for h=3 (preview row "Numeral") ------------------------ */
-/* above (today's h=3): the numeral on its own line over the heading.
- * gutter: hung in the left margin, outside the text column, on the heading's
- *   own baseline: an inline-block pulled back by its own width, so baselines
- *   align without measuring anything. Phones have no margin to hang it in, so
- *   it falls back to "above" there, keeping the heading on the text edge.
- * inline: before the heading text on the same line, muted.
- * rule: over the heading, followed by a hairline to the column's edge. */
-:global(#blog-root[data-h="3"]:is([data-n="gutter"], [data-n="inline"]))
-  .body
-  h2::before {
-  display: inline-block;
-  margin-bottom: 0;
-  font-size: 13px;
-  vertical-align: baseline;
-}
-
-:global(#blog-root[data-h="3"][data-n="gutter"]) .body h2::before {
-  width: 44px;
-  margin-left: -44px;
-}
-
-:global(#blog-root[data-h="3"][data-n="inline"]) .body h2::before {
-  margin-right: 12px;
-}
-
-:global(#blog-root[data-h="3"][data-n="rule"]) .body h2::before {
-  margin-bottom: 12px;
-  background: linear-gradient(var(--line), var(--line)) no-repeat right center /
-    calc(100% - 2ch - 14px) 1px;
-}
-
-@media (max-width: 920px) {
-  :global(#blog-root[data-h="3"][data-n="gutter"]) .body h2::before {
-    display: block;
-    width: auto;
-    margin: 0 0 8px;
-    font-size: 12px;
-  }
-}
-
-/* gutter-rule: gutter's hung numeral, sitting on a hairline that runs across
- * the column above the heading. The heading keeps the text edge, the line
- * marks the section, and the numeral is centred on that line in the margin.
- * The rule's padding is taken out of the margin, so the section rhythm holds.
- * Phones fall back to "rule": no margin to hang it in. */
-:global(#blog-root[data-h="3"][data-n="gutter-rule"]) .body h2 {
-  position: relative;
-  margin-top: 74px;
-  padding-top: 22px;
-  border-top: 1px solid var(--line);
-}
-
-:global(#blog-root[data-h="3"][data-n="gutter-rule"]) .body h2::before {
-  position: absolute;
-  top: 0;
-  right: calc(100% + 14px);
-  margin: 0;
-  font-size: 12px;
-  line-height: 1;
-  transform: translateY(-50%);
-}
-
-:global(#blog-root[data-h="3"][data-n="gutter-rule"]) .body > h2:first-child {
-  margin-top: 0;
-}
-
-@media (max-width: 920px) {
-  :global(#blog-root[data-h="3"][data-n="gutter-rule"]) .body h2 {
-    margin-top: 72px;
-    padding-top: 0;
-    border-top: 0;
-  }
-
-  :global(#blog-root[data-h="3"][data-n="gutter-rule"]) .body h2::before {
-    position: static;
-    margin-bottom: 12px;
-    line-height: inherit;
-    transform: none;
-    background: linear-gradient(var(--line), var(--line)) no-repeat right
-      center / calc(100% - 2ch - 14px) 1px;
-  }
 }
