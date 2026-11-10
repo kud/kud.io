@@ -1,0 +1,41 @@
+---
+title: 🚚 Adoption
+description: How an app takes the source-only kit, the order of rollout, and what visibly changes.
+---
+
+## How the kit ships
+
+Gamme is source-only, MIT licensed. Each app copies it into its own `:design` module and compiles it with its own toolchain, so apps on different Android Gradle Plugin and Kotlin versions can share it and F-Droid builds stay reproducible from source. A sync script stamps the version, and a check fails on drift.
+
+## Rollout order
+
+The kit repo first, then [pastille](https://github.com/kud/pastille) after its first F-Droid release (in a later tag), then [tutti](https://github.com/kud/tutti).
+
+Each adoption follows the same steps: copy the kit into `:design`, wrap the app in `GammeTheme`, swap the components, delete the app's own copies, run the app's full check (tests, lint, build), and compare before and after screenshots at phone size, light and dark.
+
+## What visibly changes
+
+**pastille**
+- Row text starts 16 dp further left (72 to 56 dp from the card edge).
+- Group headings move from 20 to 32 dp from the screen edge.
+- Disabled rows fade to 0.6 instead of 0.38 and carry a warning-led reason line.
+- Selected segments turn `secondaryContainer` instead of `primaryContainer`.
+- Theme shapes: chips 8 to 12 dp, text fields and stock menus 4 to 8 dp, extended FAB 16 to 20 dp.
+- Switch rows gain a click haptic and become one TalkBack target.
+
+**tutti**
+- The tonal discs behind settings glyphs go; glyphs are plain 24 dp.
+- Row text starts 16 dp further left, and one-line rows shrink from 64 to 56 dp.
+- A disabled row's reason no longer fades, and a disabled switch is faded once.
+- Theme shapes shift as in pastille; tabular figures apply to every label style.
+- The double TalkBack target on switch rows is fixed.
+
+## Migration notes
+
+- Every disabled row needs a reason string to compile: `enabled = false` becomes `unavailable = "<reason>"`.
+- A row's chevron becomes `opens = true`; radio rows use `selected`; toggles use `SwitchRow`.
+- Colour schemes stay in the app, passed through `GammeColors`.
+
+## Open points
+
+The name "Gamme" is still a working title, dynamic colour and true-black defaults per app are undecided, and tutti's icon family (baseline filled to Rounded) is pending, so its glyphs sit beside the kit's Rounded marks until then.

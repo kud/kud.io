@@ -1,7 +1,7 @@
 ---
 title: "macos-media-keys-cli"
 description: "CLI to send macOS system media keys — play/pause, next, previous, fast-forward, rewind"
-hasDocs: false
+hasDocs: true
 ---
 
 ## Features
@@ -31,18 +31,3 @@ $ media-keys previous
 $ media-keys forward    # fast-forward within the track
 $ media-keys rewind
 ```
-
-## Development
-
-```sh
-git clone https://github.com/kud/macos-media-keys-cli.git
-cd macos-media-keys-cli
-npm install
-npm run dev
-```
-
-| Script              | What it does                            |
-| ------------------- | --------------------------------------- |
-| `npm run build`     | Compile TypeScript to `dist/` via tsup  |
-| `npm run dev`       | Run from source via tsx (no build step) |
-| `npm run typecheck` | Type-check without emitting             |

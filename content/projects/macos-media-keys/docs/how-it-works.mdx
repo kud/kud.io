@@ -1,0 +1,46 @@
+---
+title: ⚙️ How it works
+description: The Swift helper behind sendMediaKey, when it is compiled and what the platform requirements are.
+---
+
+The package has no runtime npm dependencies. The work is done by a short Swift program shipped as source in `native/media-key.swift`.
+
+## The helper
+
+Given a key name as its only argument, the helper looks up the matching IOKit key code, checks `AXIsProcessTrusted()` and then posts two `systemDefined` events, key down and key up, through `cghidEventTap`. These are the same events a keyboard's media keys produce, which is why any app listening for them responds.
+
+| Exit status | Meaning |
+| --- | --- |
+| `0` | The key was posted |
+| `64` | Missing or unknown key name |
+| `77` | Accessibility permission not granted |
+
+## Lazy compilation
+
+There are no prebuilt binaries. On the first call, the library compiles the helper with `swiftc -O` and writes it to:
+
+```text
+<os.tmpdir()>/macos-media-keys/media-key
+```
+
+Later calls find the file and skip compilation, so only the first call pays the cost of the compile. Because the cache lives in the system temporary directory, macOS may clear it eventually and the next call quietly rebuilds it. The cache is keyed by path only: a newer version of the package will reuse an existing binary until it is deleted.
+
+## Requirements
+
+- macOS, checked at call time as well as by the `os: ["darwin"]` field in `package.json`
+- Node.js 20 or later
+- `swiftc` on the `PATH`, which comes with Xcode or the Command Line Tools (`xcode-select --install`)
+- Accessibility permission for the calling process, see [Permissions](/projects/macos-media-keys/docs/permissions)
+
+If `swiftc` is missing, the first call rejects with the compiler's failure rather than the friendlier messages described in [Usage](/projects/macos-media-keys/docs/usage).
+
+## Development
+
+```sh
+npm install
+npm run dev        # tsup in watch mode
+npm run typecheck
+npm test           # vitest
+```
+
+The published package contains `dist` and `native/media-key.swift`.

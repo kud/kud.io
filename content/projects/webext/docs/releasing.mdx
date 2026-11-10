@@ -1,0 +1,53 @@
+---
+title: 🚀 Releasing extensions
+description: Reusable GitHub workflows that sign, upload and list any Firefox extension on AMO.
+---
+
+Two reusable workflows in this repo's `.github/workflows` release any Firefox extension without copying them. The extension repo keeps its own version (`git lzv` or a repo script); the workflows never bump anything.
+
+## release-extension.yml
+
+Builds the extension (WXT, or plain web-ext, detected from `package.json`), signs and uploads the listed AMO version, attaches the artefacts to the GitHub release, then applies the AMO listing. It is tag-triggered:
+
+```yaml
+# .github/workflows/release.yml
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+jobs:
+  release:
+    uses: kud/webext/.github/workflows/release-extension.yml@main
+    secrets: inherit
+```
+
+Inputs: `root` (default `.`), `node-version`, `mode` (`auto`, `wxt` or `web-ext`), `source-dir` and `ignore-files` (web-ext mode only), `amo-metadata`, `listing` and `icon`.
+
+The caller needs the `WEB_EXT_API_KEY` and `WEB_EXT_API_SECRET` secrets, or `MOZILLA_ADDONS_JWT_ISSUER` and `MOZILLA_ADDONS_JWT_SECRET` as a fallback, plus `contents: write`.
+
+## amo-listing.yml
+
+Pushes `<root>/amo/listing.json`, the icon and `<root>/amo/screenshots` to AMO. A dry run writes the diff to the job summary; `apply` sends it and commits `.amo-previews.json` back. `force` replaces every screenshot and only takes effect on `workflow_dispatch`, never on a tag. The add-on id comes from `<root>/manifest.json`; a WXT project, which has none checked in, passes it as `guid`.
+
+```yaml
+# .github/workflows/amo-listing.yml
+on:
+  push:
+    branches: [main]
+    paths: ["amo/**"]
+  workflow_dispatch:
+    inputs:
+      apply: { type: boolean, default: false }
+      force: { type: boolean, default: false }
+permissions:
+  contents: write
+jobs:
+  listing:
+    uses: kud/webext/.github/workflows/amo-listing.yml@main
+    with:
+      apply: ${{ inputs.apply == true }}
+      force: ${{ inputs.force == true }}
+      icon: assets/icon-128.png
+    secrets: inherit
+```

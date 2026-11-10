@@ -1,0 +1,109 @@
+---
+title: 📚 API reference
+description: Every method on the Jira client, grouped by area.
+---
+
+All methods live on the object returned by `createJiraClient`. Keys are issue keys such as `ACME-1234`; they are URL-encoded for you. Methods returning `void` resolve once Jira accepts the change.
+
+## Issues
+
+| Method                                        | Description                                                                                  |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `getIssue(key)`                               | Issue with summary, status, description, comments, attachments, links, subtasks and reporter. |
+| `createIssue(fields)`                         | Creates an issue from a Jira `fields` object. Returns the created key.                       |
+| `updateIssue(key, fields)`                    | Updates fields.                                                                              |
+| `deleteIssue(key, deleteSubtasks = false)`    | Deletes an issue, and its subtasks if asked.                                                 |
+| `assignIssue(key, accountId \| null)`         | Assigns, or unassigns with `null`.                                                           |
+| `getTransitions(key)`                         | Transitions available from the current status.                                               |
+| `transitionIssue(key, transitionId, fields?)` | Runs a transition. `fields` travel with it, so screen-required fields such as `resolution` can be set. |
+| `getChangelog(key)`                           | Changelog entries.                                                                           |
+
+## Comments
+
+| Method                                | Description                                  |
+| ------------------------------------- | -------------------------------------------- |
+| `getComments(key)`                    | Lists comments.                              |
+| `addComment(key, body)`               | Adds a comment. The body is ADF.             |
+| `updateComment(key, commentId, body)` | Replaces a comment's ADF body.               |
+| `deleteComment(key, commentId)`       | Deletes a comment.                           |
+
+Use [`markdownToAdf`](/projects/jira/docs/content) to produce the body from Markdown.
+
+## Attachments
+
+`uploadAttachment(key, file)` accepts a file path, or `{ data, filename }` where `data` is a `Buffer`, `Uint8Array` or `Blob`. It sends the multipart form with the `X-Atlassian-Token: no-check` header Jira requires and returns the created attachments. Downloading is covered under [Content and attachments](/projects/jira/docs/content).
+
+## Worklogs, watchers and links
+
+| Method                                    | Description                                              |
+| ----------------------------------------- | -------------------------------------------------------- |
+| `getWorklogs(key)`                        | Lists worklogs.                                          |
+| `addWorklog(key, body)`                   | `body` is `{ timeSpent, comment?, started? }`.           |
+| `updateWorklog(key, worklogId, body)`     | Same fields, all optional.                               |
+| `deleteWorklog(key, worklogId)`           | Deletes a worklog.                                       |
+| `getWatchers(key)`                        | Lists watchers.                                          |
+| `addWatcher(key, accountId)`              | Adds a watcher.                                          |
+| `removeWatcher(key, accountId)`           | Removes a watcher.                                       |
+| `getIssueLinkTypes()`                     | Lists link types.                                        |
+| `linkIssues(type, inwardKey, outwardKey)` | Links two issues by link type name.                      |
+| `getRemoteLinks(key)`                     | Lists remote (external URL) links.                       |
+| `createRemoteLink(key, link)`             | `link` is `{ url, title, summary?, globalId?, relationship? }`. |
+| `deleteRemoteLink(key, linkId)`           | Deletes a remote link.                                   |
+
+`flattenIssueLinks(issue)` is a standalone helper. It turns an issue's `issuelinks` into one entry per link: `{ direction, type, key, summary, status }`, where `type` is the readable inward or outward label.
+
+## Projects
+
+| Method                      | Description                                      |
+| --------------------------- | ------------------------------------------------ |
+| `getProjects()`             | All projects, description expanded.              |
+| `getProject(key)`           | One project with description, lead and URL.      |
+| `getProjectVersions(key)`   | Versions.                                        |
+| `getProjectComponents(key)` | Components.                                      |
+| `getProjectStatuses(key)`   | Statuses per issue type.                         |
+
+## Agile
+
+| Method                             | Description                                                                  |
+| ---------------------------------- | ---------------------------------------------------------------------------- |
+| `getBoards()` / `getBoard(id)`     | Boards.                                                                      |
+| `getBoardConfiguration(id)`        | Columns and the status ids each one claims.                                  |
+| `getBoardIssues(id, jql?)`         | Board issues, optionally filtered.                                           |
+| `getBacklog(id)`                   | Backlog issues.                                                              |
+| `getSprints(boardId, state?)`      | Sprints, optionally by state.                                                |
+| `getSprint(id)`                    | One sprint.                                                                  |
+| `getSprintIssues(id)`              | Issues in a sprint.                                                          |
+| `getBoardEpics(id)`                | Epics on a board.                                                            |
+| `getEpicIssues(id)`                | Issues in an epic.                                                           |
+| `moveIssuesToSprint(sprintId, keys)` | Moves issues into a sprint.                                                |
+| `moveIssuesToBacklog(keys)`        | Moves issues back to the backlog.                                            |
+| `rankIssues(keys, { before } \| { after })` | Ranks issues relative to another. Jira answers 207 when only some succeed; this throws and names each refused issue and why. |
+
+`isContainerType(type)` tells you whether an issue type heads children. It uses `hierarchyLevel > 0` when Jira provides it, so a renamed Epic or an Initiative still counts, and falls back to the name `Epic` otherwise.
+
+## People
+
+| Method                                                  | Description                         |
+| ------------------------------------------------------- | ----------------------------------- |
+| `searchUsers(query, maxResults = 20)`                   | Instance-wide user search.          |
+| `searchAssignableUsers(query, projectKey, maxResults = 20)` | Users assignable in a project.  |
+
+## Instance metadata
+
+| Method                          | Description                                              |
+| ------------------------------- | -------------------------------------------------------- |
+| `getMe()`                       | The authenticated user.                                  |
+| `getFields()`                   | Standard and custom fields. Use it to discover ids for `customFields` and `sprintField`. |
+| `getIssueTypes()`               | Issue types.                                             |
+| `getPriorities()`               | Priorities.                                              |
+| `getResolutions()`              | Resolutions.                                             |
+| `getStatuses()`                 | Statuses.                                                |
+| `getLabels()`                   | Up to 1000 labels.                                       |
+| `getFilters()`                  | Up to 50 saved filters, JQL expanded.                    |
+| `getDashboards()`               | Dashboards.                                              |
+| `getServerInfo()`               | Instance information.                                    |
+| `getMyPermissions(projectKey?)` | Your permissions, optionally per project.                |
+
+## Search
+
+`searchPage`, `searchIssues` and `approximateCount` are described on the [usage page](/projects/jira/docs/usage#searching).

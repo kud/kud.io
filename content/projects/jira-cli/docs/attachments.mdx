@@ -1,0 +1,49 @@
+---
+title: 📎 Attachments
+description: List, read, download and upload files attached to an issue, with the comment each came from.
+---
+
+Attachments are the part most Jira CLIs skip. They are listed alongside the comment or description they were embedded in, and text files print straight to stdout. `attach` is an alias for `attachment`.
+
+```sh
+jira attachment list ABC-123
+# ID      FILENAME     SIZE   TYPE        FROM
+# 292542  error.log    22.0KB text/plain  comment by Ada Lovelace
+# 292731  screen.png   118KB  image/png   description
+```
+
+## Commands
+
+| Command                                  | Does                                            |
+| ---------------------------------------- | ----------------------------------------------- |
+| `jira attachment list <key>`             | list attachments (`--json` available)           |
+| `jira attachment read <key> <selector>`  | print a text attachment to stdout (alias `cat`) |
+| `jira attachment get <key> <selector>`   | download to a file (alias `download`)           |
+| `jira attachment upload <key> <file...>` | upload one or more files (`--json` available)   |
+
+The `<selector>` picks which attachment you mean, for example a filename such as `error.log`.
+
+```sh
+jira attachment read ABC-123 error.log | grep -i timeout
+jira attachment get ABC-123 screen.png --output ~/Desktop/
+jira attachment get ABC-123 screen.png -o -        # raw bytes to stdout
+jira attachment upload ABC-123 ./build.log ./screenshot.png
+```
+
+`read` refuses non-text files and tells you the `get` command to use instead. `get` takes `-o, --output <path>` for the destination, or `-` for stdout; the server-supplied filename is never trusted as a path.
+
+## Descriptions and comments
+
+`jira issue view ABC-123 --comments` renders descriptions and comments as Markdown, with embedded files named rather than left as opaque ids.
+
+## Alongside the Atlassian MCP
+
+The Atlassian MCP returns an issue's fields and comments but not the content of its attachments. When the answer is inside a screenshot, a log or a CSV, this fills the gap:
+
+```sh
+jira attachment list ABC-123
+jira attachment read ABC-123 error.log
+jira attachment get ABC-123 shot.png -o /tmp/shot.png
+```
+
+`get` writes a real file, so an agent can then open an image and reason about it instead of skipping it.

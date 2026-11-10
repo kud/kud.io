@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "index",
+    "configuration",
+    "client",
+    "logs",
+    "artefacts-and-queue",
+    "lifecycle-and-admin",
+    "errors-and-retries",
+    "utilities"
+  ]
+}

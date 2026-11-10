@@ -1,7 +1,7 @@
 ---
 title: "bsky"
 description: "A Bluesky (AT Protocol) client library for Node — post, thread, reply, quote, engage, read, and search"
-hasDocs: false
+hasDocs: true
 ---
 
 ## Features
@@ -39,17 +39,4 @@ await createPost("nice thread!", {
   replyTo: "https://bsky.app/profile/…/post/…",
 })
 await createThread(["1/", "2/", "3/"])
-```
-
-## Powers
-
-This core backs [`@kud/bsky-cli`](https://www.npmjs.com/package/@kud/bsky-cli) (a terminal client) and `@kud/mcp-bsky` (an MCP server) — the CLI and MCP are thin surfaces over this one library.
-
-## Development
-
-```sh
-git clone https://github.com/kud/bsky.git
-cd bsky
-npm install
-npm run dev
 ```

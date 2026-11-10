@@ -1,0 +1,56 @@
+---
+title: 📦 Vendoring
+description: How to consume webext in an extension that has no build step.
+---
+
+`web-ext build` zips the source directory as-is, so there is no bundler to resolve `import "@kud/webext"` at runtime. Instead you copy the built IIFE file into the extension repo and load it as a classic script.
+
+## Copy the file
+
+```sh
+cp node_modules/@kud/webext/dist/index.global.js src/vendor/webext.js
+```
+
+Commit `src/vendor/webext.js`. The IIFE build exposes a `webext` global, so every script that uses it must be listed after it.
+
+## Content scripts
+
+List the vendored file before your own script in `manifest.json`:
+
+```json
+{
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/vendor/webext.js", "src/content.js"]
+    }
+  ]
+}
+```
+
+`webext.defineSettings(...)` is then a global inside `src/content.js`.
+
+## Popup and options pages
+
+Use plain `<script>` tags, not a module:
+
+```html
+<script src="https://raw.githubusercontent.com/kud/webext/HEAD/docs/vendor/webext.js"></script>
+<script src="https://raw.githubusercontent.com/kud/webext/HEAD/docs/settings.js"></script>
+<script src="https://raw.githubusercontent.com/kud/webext/HEAD/docs/popup.js"></script>
+```
+
+A `<script type="module">` has its own scope and cannot see the vendored global. Working around that means a second copy of the settings schema, which is exactly the duplication the library exists to remove.
+
+## The cost
+
+You commit a vendored file and re-copy it by hand whenever the library changes. There is no watcher and no registry resolution. That is the price of a no-build extension.
+
+## Package outputs
+
+`npm run build` (tsup) emits two files in `dist/`:
+
+| File | Format | Use |
+| --- | --- | --- |
+| `index.js` | ESM | Bundled consumers; `import` from `@kud/webext` |
+| `index.global.js` | IIFE | Vendoring; exposes the `webext` global |

@@ -1,0 +1,46 @@
+---
+title: ⌨️ CLIs
+description: The gh-pr-comments, gh-pr-health and gh-webhook-replay commands.
+---
+
+Three thin CLIs, each arg-parsing and mounting an Ink body over the core. Install any globally and make sure `gh` is authenticated.
+
+```sh
+npm install -g @kud/gh-pr-comments @kud/gh-pr-health @kud/gh-webhook-replay
+```
+
+## gh-pr-comments
+
+Browse, reply to and resolve review threads.
+
+```sh
+gh-pr-comments                  # the current branch's PR
+gh-pr-comments acme/api-gateway#42
+```
+
+Keys: `↑↓` move, `x` resolve or unresolve, `r` reply, `R` show or hide resolved, `q` quit. The PR argument also accepts `acme/api-gateway 42`. With no match it exits with `No PR found`.
+
+## gh-pr-health
+
+Checks, reviews and merge state for a PR.
+
+```sh
+gh-pr-health                    # the current branch's PR
+gh-pr-health acme/api-gateway#42
+gh-pr-health --retrigger        # headless: re-fire the Jenkins PR-builder webhook
+```
+
+Keys: `↑↓` move, `↵` open the selected check, `r` retrigger failed CI, `m` merge (with confirmation), `q` quit. `--retrigger` finds the repo's Jenkins hook (a URL containing `ghprbhook` or `jenkins`), replays its latest `pull_request` delivery and prints the delivery id.
+
+## gh-webhook-replay
+
+Replay the latest `pull_request` delivery on a repo webhook, useful when a PR builder missed an event.
+
+```sh
+gh-webhook-replay                          # pick a hook interactively (current repo)
+gh-webhook-replay acme/api-gateway         # a specific repo
+gh-webhook-replay --hook ghprbhook         # headless: replay on the matched hook
+gh-webhook-replay acme/api-gateway --hook 42   # match by URL substring or hook id
+```
+
+Interactively, `↑↓` (or `j`/`k`) move, `↵` replays and `q` quits. Each hook is listed with the status contexts its latest delivery produced.

@@ -1,7 +1,7 @@
 ---
 title: "qobuz-bridge"
 description: "Background daemon that bridges Qobuz into macOS Now Playing — Control Center tile, artwork, and working media buttons"
-hasDocs: false
+hasDocs: true
 ---
 
 ## Features
@@ -55,24 +55,6 @@ removed login item → ~/Library/LaunchAgents/io.kud.qobuz-bridge.plist
 Logs from the background daemon are written to `~/Library/Logs/qobuz-bridge.log`.
 
 > **Known limitation:** `player-0.json` exposes the playback position but not a discrete play/pause flag, so the bridge reports state as `"playing"` whenever a track is detected. Pause detection will improve once the underlying state file exposes it.
-
-## Development
-
-```sh
-git clone https://github.com/kud/qobuz-bridge.git
-cd qobuz-bridge
-npm install
-npm run dev
-```
-
-| Script              | Purpose                      |
-| ------------------- | ---------------------------- |
-| `npm run build`     | Compile TypeScript with tsup |
-| `npm run dev`       | Watch mode                   |
-| `npm run typecheck` | Type-check without emitting  |
-| `npm start`         | Run the compiled output      |
-
-📚 **Full documentation → [qobuz-bridge/docs](https://kud.io/projects/qobuz-bridge/docs)**
 
 ## Disclaimer
 

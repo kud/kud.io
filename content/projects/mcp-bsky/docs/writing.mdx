@@ -1,0 +1,65 @@
+---
+title: ✍️ Writing
+description: The six write tools and the confirm gate that stops any of them acting by accident.
+---
+
+## The confirm gate
+
+Every write tool takes a `confirm` boolean that defaults to `false`. Called without `confirm: true`, a tool does nothing and returns:
+
+```
+Error: Set confirm: true to perform this write action.
+```
+
+This lets a client propose an action, show it to you, and only then repeat the call with `confirm: true`.
+
+## Tools
+
+| Tool          | Parameters                              | Effect                                              |
+| ------------- | --------------------------------------- | --------------------------------------------------- |
+| `post`        | `text`, `confirm`                       | Publish a post                                      |
+| `thread_post` | `posts`, `confirm`                      | Publish a self-thread                               |
+| `reply`       | `url`, `text`, `confirm`                | Reply to a post                                     |
+| `like`        | `url`, `confirm`                        | Like a post                                         |
+| `repost`      | `url`, `confirm`                        | Repost a post                                       |
+| `follow`      | `handle`, `confirm`                     | Follow an account                                   |
+
+Posts are limited to 300 characters, as stated in the tool descriptions for `post` and `reply`. The server itself does not check the length; an over-long post is rejected downstream and comes back as an `Error:` message.
+
+## post
+
+```json
+{ "text": "Shipped a new MCP server.", "confirm": true }
+```
+
+## thread_post
+
+`posts` is an ordered array of texts. Each post replies to the previous one.
+
+```json
+{ "posts": ["First post of the thread.", "Second post, replying to the first."], "confirm": true }
+```
+
+## reply
+
+`url` is the post to reply to, as a URL or an `at://` URI.
+
+```json
+{ "url": "https://bsky.app/profile/alice.example.com/post/3kexample", "text": "Agreed.", "confirm": true }
+```
+
+## like and repost
+
+Both take a post URL or `at://` URI. On success they return `{ "liked": "<url>" }` or `{ "reposted": "<url>" }`.
+
+```json
+{ "url": "at://alice.example.com/app.bsky.feed.post/3kexample", "confirm": true }
+```
+
+## follow
+
+`handle` is the account to follow. On success it returns `{ "followed": "<handle>" }`.
+
+```json
+{ "handle": "bob.example.com", "confirm": true }
+```

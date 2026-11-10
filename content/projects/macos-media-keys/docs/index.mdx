@@ -1,0 +1,14 @@
+---
+title: 👋 Introduction
+description: A tiny Node library that posts macOS system media keys to whichever app is playing.
+---
+
+`@kud/macos-media-keys` exposes one async function, `sendMediaKey`, that fires the same system events as the media keys on a Mac keyboard. Whatever app currently owns media focus (Music, Spotify, Qobuz, a browser tab) reacts as if you had pressed the physical key.
+
+For a ready-made command line, see [macos-media-keys-cli](/projects/macos-media-keys-cli/docs).
+
+## What's here
+
+- [🎛️ Usage](/projects/macos-media-keys/docs/usage) — the `sendMediaKey` function, the five key names and how failures surface
+- [🔐 Permissions](/projects/macos-media-keys/docs/permissions) — the Accessibility grant, which process needs it and how to fix a rejection
+- [⚙️ How it works](/projects/macos-media-keys/docs/how-it-works) — the Swift helper, lazy compilation, the cached binary and platform requirements

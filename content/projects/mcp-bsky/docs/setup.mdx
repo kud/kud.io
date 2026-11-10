@@ -1,0 +1,70 @@
+---
+title: 🔐 Setup
+description: Create an App Password, set the two environment variables and register the server with an MCP client.
+---
+
+## Requirements
+
+- Node.js 20 or later
+- A Bluesky account and an App Password
+
+## Create an App Password
+
+1. Sign in at [bsky.app](https://bsky.app).
+2. Open **Settings → App Passwords → Add App Password**.
+3. Copy the generated password. Use it here, never your main account password.
+
+## Environment variables
+
+The server reads two variables. They are the `@kud/bsky` contract and deliberately not `MCP_`-prefixed, so the same credentials work with `@kud/bsky-cli`.
+
+| Variable               | Example                | Meaning                          |
+| ---------------------- | ---------------------- | -------------------------------- |
+| `BLUESKY_HANDLE`       | `alice.example.com`    | Your Bluesky handle              |
+| `BLUESKY_APP_PASSWORD` | `<your-app-password>`  | The App Password you generated   |
+
+If either is missing the server prints an error to stderr and exits with status 1 before accepting any connection.
+
+## Register with a client
+
+Add the server to your MCP client's configuration:
+
+```json
+{
+  "mcpServers": {
+    "bsky": {
+      "command": "npx",
+      "args": ["@kud/mcp-bsky"],
+      "env": {
+        "BLUESKY_HANDLE": "alice.example.com",
+        "BLUESKY_APP_PASSWORD": "<your-app-password>"
+      }
+    }
+  }
+}
+```
+
+Restart the client and the `bsky` tools appear. The package also installs a `mcp-bsky` binary, so `npx @kud/mcp-bsky` runs the server directly over stdio.
+
+## Responses and errors
+
+Every tool returns one text block. On success it is the result as indented JSON. On failure it is `Error: <message>`, so a rejected call (a bad handle, a missing post, an expired session) comes back as readable text rather than a protocol error.
+
+## Trying it with the Inspector
+
+From a clone of the repository:
+
+```sh
+npm install
+export BLUESKY_HANDLE=alice.example.com
+export BLUESKY_APP_PASSWORD=<your-app-password>
+npm run inspect:dev
+```
+
+| Script                | What it does                            |
+| --------------------- | --------------------------------------- |
+| `npm run build`       | Compile TypeScript to `dist/`           |
+| `npm run dev`         | Run from source with tsx                |
+| `npm test`            | Run the vitest suite                    |
+| `npm run inspect`     | Inspector against the built `dist/`     |
+| `npm run inspect:dev` | Inspector against the source            |

@@ -1,0 +1,14 @@
+---
+title: 👋 Introduction
+description: A typed, headless client for Gandi's v5 API covering domains, LiveDNS and web redirects.
+---
+
+`@kud/gandi` is the request layer for Gandi's v5 REST API. Every call is a plain async function that takes your API key and returns typed data, so a CLI, an MCP server or a terminal UI can all sit on top of it without re-implementing the HTTP details.
+
+## What's here
+
+- [🔑 Authentication](/projects/gandi/docs/authentication) — where the API key comes from, and how to inspect what a token can do
+- [🌐 Domains](/projects/gandi/docs/domains) — list, fetch, availability checks, renewal and autorenew
+- [📡 DNS records](/projects/gandi/docs/dns-records) — read, replace, append to and delete LiveDNS rrsets, and export a zone
+- [↪️ Web redirects](/projects/gandi/docs/web-redirects) — paginated listing, host normalisation, add, patch and delete
+- [🧪 Client and errors](/projects/gandi/docs/client-and-errors) — the injectable `GandiAPI` object and tagged auth errors

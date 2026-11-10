@@ -1,0 +1,64 @@
+---
+title: 🔤 TypeScript API
+description: Look up glyphs by name and variant, and render zsh assignments from Node.
+---
+
+The package is ESM only and needs Node 20 or later.
+
+```ts
+import { glyphs, glyph, renderZsh } from "@kud/glyphs"
+import type { GlyphName, Variant } from "@kud/glyphs"
+```
+
+## `glyphs`
+
+A readonly record of every glyph, keyed by camelCase name. Each entry holds the variants that exist for it, written as `\u{XXXX}` escapes in the generated source.
+
+```ts
+glyphs.check.nerd // nerd-font check mark
+glyphs.bullet.unicode // "›"
+glyphs.warning.emoji // multi-scalar emoji stay intact
+```
+
+Every glyph has a `nerd` variant. `unicode` and `emoji` are optional, so reading one directly can give `undefined`.
+
+## `glyph(name, variant?)`
+
+Resolves a glyph to a string. `variant` defaults to `"nerd"`.
+
+```ts
+glyph("check") // nerd variant
+glyph("check", "emoji") // "✓"
+glyph("plArrowRight", "unicode") // "" — no such variant
+```
+
+A variant the glyph does not have resolves to an empty string rather than throwing. The fallback is yours to choose, for example unicode first and nerd second on a terminal without a Nerd Font:
+
+```ts
+const icon = (name: GlyphName) => glyph(name, "unicode") || glyph(name)
+```
+
+## Types
+
+| Type        | Definition                                |
+| ----------- | ----------------------------------------- |
+| `GlyphName` | `keyof typeof glyphs`, so typos fail to compile |
+| `Variant`   | `"nerd" \| "unicode" \| "emoji"`          |
+
+Names are camelCase here: the `arrow-down` entry in `glyphs.json` is `arrowDown`, and `pl-cap-left-thin` is `plCapLeftThin`.
+
+## `renderZsh(options?)`
+
+Returns a string of zsh assignments, one per line, using `$'\U0000XXXX'` escapes. It is the in-code equivalent of the published [zsh files](/projects/glyphs/docs/zsh).
+
+| Option    | Default       | Meaning                                         |
+| --------- | ------------- | ----------------------------------------------- |
+| `prefix`  | `"ICON"`      | Variable namespace: `SHUI_ICON` gives `SHUI_ICON_CHECK` |
+| `variant` | `"nerd"`      | Which variant to emit                           |
+| `names`   | every glyph   | Restrict and order the output                   |
+
+```ts
+renderZsh({ prefix: "APP", variant: "emoji", names: ["check", "cross"] })
+```
+
+A glyph that lacks the requested variant is emitted empty (`APP_NAME=''`), so every token stays declared and sets keep parity. Variable names are the camelCase name converted to upper snake case: `arrowDown` becomes `ARROW_DOWN`.

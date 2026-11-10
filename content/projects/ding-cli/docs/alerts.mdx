@@ -1,0 +1,49 @@
+---
+title: 🔔 Sounds and notifications
+description: Choosing the alarm sound, tuning the desktop banner and making it open a link.
+---
+
+When a timer fires, ding does two independent things: it plays an alarm through `afplay`, and it posts a macOS desktop notification. Each can be changed or switched off on its own.
+
+## Alarm sound
+
+`--sound <value>` (`-s`) takes one of four kinds of value. The default is `bell`.
+
+| Kind              | Examples                                            |
+| ----------------- | --------------------------------------------------- |
+| Built-in preset   | `beep`, `digital`, `radar`, `bell`, `siren`, `chime` |
+| Clock ringtone    | `Daybreak`, `Radial`, `Arpeggio`, `"Milky Way"`      |
+| macOS system sound | `Glass`, `Ping`                                    |
+| Audio file path   | `~/Downloads/alert.aiff`                            |
+
+The presets are synthesised by ding itself, so they need no files. Ringtones and system sounds are read from macOS. Quote any name that contains a space.
+
+In the foreground the chosen sound loops until you press a key. `--no-sound` turns the alarm off entirely.
+
+```sh
+ding 5h "wake" --sound Daybreak
+ding 5h "wake" --sound "Milky Way"
+ding 20m "deploy done" --sound ~/Downloads/alert.aiff
+```
+
+## Desktop notification
+
+| Flag                    | Effect                                                         |
+| ----------------------- | -------------------------------------------------------------- |
+| `--no-notify`           | Skip the notification                                          |
+| `--title <text>`        | Banner title (default `ding`)                                  |
+| `--subtitle <text>`     | Banner subtitle                                                |
+| `--icon <path>`         | Absolute path to a custom icon image                           |
+| `--notify-sound <name>` | The banner's own macOS sound, such as `Glass` or `Ping`        |
+| `--open <url>`          | URL opened when the banner is clicked                          |
+
+`--notify-sound` is separate from `--sound`. The first is the sound macOS attaches to the banner; the second is the alarm ding plays itself. Use both, or silence either.
+
+`--open` must start with `http://` or `https://`. Anything else prints an error and exits with status 1 before the timer starts.
+
+```sh
+ding 5h "quota is back" --open https://claude.ai --subtitle "Anthropic"
+ding 30m "stand-up" --notify-sound Glass
+```
+
+Notifications go through `node-notifier`, which bundles its own `terminal-notifier`, so there is nothing extra to install.

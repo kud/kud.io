@@ -1,0 +1,81 @@
+---
+title: 🧱 Core
+description: The surface-agnostic @kud/gh package, which shells out to gh and returns plain data.
+---
+
+`@kud/gh` knows nothing about a terminal. Every export shells out to `gh` and returns plain data, so a CLI, an Ink dashboard or an MCP server can all consume it.
+
+```sh
+npm install @kud/gh
+```
+
+## Transport
+
+Two routes to GitHub, chosen per need. `gh <cmd> --json` is used for single-resource reads and workflow actions; `gh api` (through `ghGraphql` and `ghRest`) is used when a query has to be shaped, or when there is no porcelain equivalent.
+
+```ts
+import { ghGraphql, ghRest } from "@kud/gh"
+
+const data = await ghGraphql<T>(query, { owner: "acme", name: "api-gateway", number: 42 })
+const raw = await ghRest("repos/acme/api-gateway/pulls/42/comments", {
+  method: "POST",
+  fields: { body: "Thanks!", in_reply_to: 123 },
+})
+```
+
+`ghGraphql` returns the unwrapped `data` field; `ghRest` returns raw stdout. String fields pass as `-f`, numbers as `-F`, matching `gh api`. `GhRestMethod` is `GET`, `POST`, `PATCH` or `DELETE`.
+
+## Review threads
+
+```ts
+import { fetchPrComments, replyToThread, resolveThread, unresolveThread } from "@kud/gh"
+
+const { headRef, conversation, threads } = await fetchPrComments("acme", "api-gateway", 42)
+await replyToThread({ repo: "acme/api-gateway", pull: 42, inReplyTo: 123, body: "Fixed." })
+await resolveThread(threads[0].id) // resolves to the new isResolved boolean
+await unresolveThread(threads[0].id)
+```
+
+Types: `PrComments`, `ReviewThread`, `Comment`, `ReplyToThreadOptions`.
+
+## Health
+
+`@kud/gh/health` collapses a PR to one semantic token. The core only picks the token; colour and glyph belong to the surface (see [Ink components](/projects/gh/docs/ink)).
+
+| Token | Meaning |
+| --- | --- |
+| `ci-fail` | a check reached a bad verdict |
+| `conflict` | the PR cannot merge cleanly |
+| `changes-req` | changes requested |
+| `threads` | unresolved review threads |
+| `pending` | checks still running |
+| `approved` / `waiting` | approved, or nobody has reviewed yet |
+| `draft` · `merged` · `closed` · `none` | terminal or non-PR states |
+
+`computeHealth` applies them in that order of precedence. Four predicates partition GitHub's check conclusions: `isFailCheck`, `isPendingCheck`, `isInconclusiveCheck` and `isPassCheck`. A cancelled or stale run is inconclusive, not a failure, because no verdict on the code was reached. `latestChecks` keeps the newest run per check, and `fetchHealth(repo, number)` returns the `PrHealthData` a detail panel renders.
+
+## Inbox and pulse
+
+`@kud/gh/inbox` builds the one GraphQL document behind a dashboard.
+
+- `fetchInbox(options)` runs every source in parallel, merges them, and pages `myPRs` past its first window (25 rows a page, up to 20 pages).
+- `buildInboxQuery`, `buildInboxQueries` and `mergeInboxData` are the lower-level pieces.
+- Sources are `myPRs`, `reviewRequests`, `reviewed`, `assigned`, `repoIssues`, `authoredIssues`, `repoPRs` and `recentlyDone`. Five more are opt-in by name: `repoIssuesUnassigned`, `repoIssuesAssigned`, `authoredIssuesUnassigned`, `authoredIssuesAssigned` and `othersDone`.
+- `SOURCE_LIMITS` exposes each source's row cap, and `sourceCoverage` / `cappedSources` compare it with GitHub's `issueCount`, so a truncated source can say so rather than truncate silently.
+- `fetchItemNode(repo, number)` fetches a single PR or issue node.
+
+`@kud/gh/pulse` is the cheap question asked between full reads. `buildPulseQuery` costs about one rate-limit point, and `pulseFingerprint` reduces the answer to a string: compare it with the last one and pay for a full inbox read only when it differs. It is a cursor, never a source to render from.
+
+## Actions, references and webhooks
+
+```ts
+import { mergePr, rerunFailedRun, reRequestReviewer } from "@kud/gh"
+import { parseRef, formatRef } from "@kud/gh/ref"
+```
+
+- `mergePr` merges with a merge commit, `rerunFailedRun` re-runs only the failed jobs of an Actions run, and `reRequestReviewer` adds a reviewer back.
+- `parseRef` reads a github.com URL, `acme/api-gateway#42` or a bare `#42`, and returns `null` for anything else. It has no PR-or-issue flag on purpose: only the fetched node can say which it is.
+- `resolveCurrentPr()` and `resolveCurrentRepo()` read the branch or repo you are standing in.
+- Webhooks: `fetchHooks`, `findHook` (by URL substring or id), `findJenkinsHook`, `fetchLatestPrDeliveryId`, `replayDelivery`, `replayLatestPrDelivery` and `retriggerJenkinsWebhook`.
+
+The `./ref`, `./health`, `./inbox` and `./pulse` subpaths exist so transport-free code can import a single concern without pulling in `execa`.

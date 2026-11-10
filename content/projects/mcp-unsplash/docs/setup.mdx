@@ -1,0 +1,62 @@
+---
+title: 🔑 Setup
+description: Obtain an Unsplash Access Key, register the server with an MCP client, and know what to expect from the API.
+---
+
+## Get an Access Key
+
+Create a free application at [unsplash.com/developers](https://unsplash.com/developers) and copy its Access Key. New applications start in the **Demo** tier (50 requests per hour). Applying for **Production** access raises that to 5,000 requests per hour.
+
+## Environment
+
+The server needs exactly one environment variable.
+
+| Variable                  | Required | Description                                                   |
+| ------------------------- | -------- | ------------------------------------------------------------- |
+| `MCP_UNSPLASH_ACCESS_KEY` | yes      | Unsplash Access Key, sent as `Authorization: Client-ID <key>` |
+
+If it is missing, the process prints `MCP_UNSPLASH_ACCESS_KEY env var is required` to stderr and exits with status 1.
+
+Access is read-only against public endpoints. There is no OAuth flow, no write action and no user-scoped data.
+
+## Install
+
+```sh
+npm install -g @kud/mcp-unsplash
+```
+
+Node 20 or later is required. To check that it starts:
+
+```console
+$ MCP_UNSPLASH_ACCESS_KEY=your-access-key npx @kud/mcp-unsplash
+mcp-unsplash running
+```
+
+The server speaks MCP over stdio, so in practice a client launches it for you.
+
+## Register with a client
+
+Add it to your client's MCP configuration, for example a `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "mcp-unsplash": {
+      "command": "npx",
+      "args": ["-y", "@kud/mcp-unsplash"],
+      "env": {
+        "MCP_UNSPLASH_ACCESS_KEY": "your-access-key"
+      }
+    }
+  }
+}
+```
+
+Keep real keys out of version control; use a local, untracked config.
+
+## Behaviour worth knowing
+
+- Every request carries `Accept-Version: v1`.
+- When Unsplash returns a non-2xx response or the request fails, the tool replies with a text result of the form `Error: failed to <do the thing>` (for example `Error: failed to search photos`). The HTTP status is logged to stderr, not returned, so a rate-limit rejection looks the same as any other failure.
+- Results are JSON, pretty-printed, and trimmed. See [Photos](/projects/mcp-unsplash/docs/photos) for the exact shape.
+- Paginated tools default to `page` 1 and `per_page` 10, with `per_page` capped at 30.

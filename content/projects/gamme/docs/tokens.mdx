@@ -1,0 +1,70 @@
+---
+title: 🎨 Tokens
+description: Colour roles, shape, spacing, type, motion, haptics and glyphs in package app.beansontoast.design.
+---
+
+Everything lives in the package `app.beansontoast.design`. Apps supply colour **values**; Gamme fixes what each role **means**.
+
+The kit compiles against the oldest app (Compose BOM 2024.10.01, Material3 1.3.1, Kotlin 2.0.21, AGP 8.7, minSdk 28), so it uses no Material 3 Expressive APIs, and dynamic colour sits behind an API 31 check. It holds no user-facing strings: every label, reason and detail comes from the caller.
+
+## Colour roles
+
+| Role | Means | Rule |
+| --- | --- | --- |
+| `primary` / `onPrimary` | On | A checked switch track, an active toggle, links. Never a selection. |
+| `secondaryContainer` / `onSecondaryContainer` | Selected | A selected chip or segment, the extended FAB. Never decoration. |
+| `primaryContainer` | Emphasis, sparingly | A "Done" disc, a "Recommended" card. Never a selection. |
+| `surface` = `background` | The ground | Screens, and the 2 dp gap between grouped rows. |
+| `surfaceContainer` | A group or card | Settings rows, list cards. |
+| `surfaceContainerHigh` | A quiet control | An unselected chip, the empty-state disc. |
+| `onSurface` | Text and icons on the ground | Set as `LocalContentColor` at the theme root. |
+| `onSurfaceVariant` | Quiet text and glyphs | Detail and reason lines, row glyphs, chevrons. |
+| `outline` | A boundary that must read (3:1) | The dashed "not known" ring. |
+| `error` | Destructive | Title and glyph of a destructive row only. |
+
+Contrast floor, light and dark: 4.5:1 for text, 3:1 for a state or boundary.
+
+## Shape
+
+| Slot | Radius | Used for |
+| --- | --- | --- |
+| `extraSmall` | 8 dp | Value tags, thumbnails, text fields |
+| `small` | 12 dp | An app's own menus, assist and filter chips |
+| `medium` | 16 dp | List cards, inner cards |
+| `large` | 20 dp | Settings groups, the extended FAB |
+| `extraLarge` | 28 dp | Sheet top corners, dialogs |
+
+## Spacing and sizes
+
+`GammeSpace`: `hair` 2, `xs` 4, `s` 8, `m` 12, `l` 16 (page margin, row padding), `xl` 24, `xxl` 32 dp.
+
+`GammeSize`: `target` 48, `rowMin` 56, `rowGlyph` 24, `rowInset` 56, `headingInset` 32, `mark` 16, `markGap` 6, `chipHeight` 36, `chipGlyph` 18, `chipPadding` 14, `emptyDisc` 56, `emptyGlyph` 28 dp.
+
+`GammeAlpha.DISABLED` is `0.6f`, for the title and glyph of an unavailable row, never its reason line.
+
+## Type
+
+Material 3's default scale and system face, with tabular figures (`"tnum"`) added to `labelLarge`, `labelMedium`, `labelSmall` and `bodySmall` through `gammeTypography()`. `TextStyle.tabular()` does the same for a larger number that changes under a finger, such as a volume level.
+
+Group headings use `titleSmall` in `onSurface`, row titles `bodyLarge`, detail and reason lines `bodyMedium`, chips `labelLarge`, SemiBold only when selected. Nothing is Bold.
+
+## Motion
+
+`GammeMotion` durations: `SHORT` 150 ms, `EXIT` 120, `MEDIUM` 250 (the ceiling for anything the user waits through), `REDUCED_OUT` 90, `REDUCED_IN` 120. Easings: `Emphasized`, `EmphasizedDecelerate`, `EmphasizedAccelerate`.
+
+| Spring | Damping / stiffness | Use |
+| --- | --- | --- |
+| `press()` | 1.0 / high | A press landing, no overshoot |
+| `settle()` | 1.0 / 800 | Anything that moves the page |
+| `snappy()` | 0.8 / 600 | A control changing its own shape |
+| `bouncy()` | 0.6 / 400 | A success landing, at most once a screen |
+
+Under reduced motion every movement becomes an opacity fade, sizes snap, and haptics stay.
+
+## Haptics
+
+One haptic ships in v0.1, inside `SwitchRow`: select, via `View.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)`, which honours the system's touch-feedback setting.
+
+## Glyphs
+
+Vector drawables prefixed `gamme_` (the app's `:design` module sets `resourcePrefix = "gamme_"`), from Material Symbols Rounded, filled, 24 dp viewports: `gamme_check`, `gamme_check_circle`, `gamme_ring`, `gamme_sync`, `gamme_moon`, `gamme_warning`, `gamme_ring_dashed` and `gamme_chevron_end` (auto-mirrored). Components take a `Painter`, so an app can pass `painterResource(...)` or `rememberVectorPainter(Icons.Rounded.X)` during migration. Material Symbols are Apache 2.0; the kit ships a `NOTICE` beside its MIT licence.

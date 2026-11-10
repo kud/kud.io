@@ -1,0 +1,98 @@
+---
+title: ⏱ Usage
+description: How to set a timer, the accepted time formats, foreground and detached modes, the wizard and icon sets.
+---
+
+```sh
+ding <time> [message] [options]
+```
+
+`time` is required unless you want the wizard. `message` is the notification body and defaults to `⏰ Time's up`.
+
+## Time formats
+
+| Format        | Example  | Fires                                      |
+| ------------- | -------- | ------------------------------------------ |
+| Hours         | `5h`     | 5 hours from now                           |
+| Minutes       | `90m`    | 90 minutes from now                        |
+| Seconds       | `30s`    | 30 seconds from now                        |
+| Compound      | `1h30m`  | 1 hour 30 minutes from now                 |
+| Bare number   | `45`     | 45 minutes from now                        |
+| 24-hour clock | `14:30`  | at 14:30, or tomorrow if that has passed   |
+| 12-hour clock | `2:30pm` | at 14:30                                   |
+| Hour only     | `9am`    | at 09:00, or tomorrow if that has passed   |
+
+Clock times also accept seconds (`14:30:15`). Anything ding cannot parse prints an error and exits with status 1, as does a zero duration.
+
+## Foreground mode
+
+By default ding prints the fire time and shows a live countdown.
+
+```console
+$ ding 90m "tea is ready"
+ding → 16:37:22 · tea is ready
+01:29:58 ▸ tea is ready
+```
+
+When the timer fires, the notification appears and the alarm loops until you press any key. `Ctrl+C` at any point cancels the timer and exits cleanly.
+
+## Detached mode
+
+`--detach` (`-d`) hands the timer to a background process and returns your prompt straight away. No terminal needs to stay open.
+
+```console
+$ ding 5h "quota is back" --detach
+ding → 21:00:00 (detached)
+$
+```
+
+A detached run fires the notification and alarm on its own. Combine it with `--no-notify` and `--exec` for a silent fire-and-forget command (see [Running commands](/projects/ding-cli/docs/exec)).
+
+## Interactive wizard
+
+Run `ding` with no time, or pass `-i` / `--interactive`, to open a tabbed wizard:
+
+```
+ding  When · Message · Sound · Notify · Mode · Review
+```
+
+| Step    | What you choose                                         |
+| ------- | ------------------------------------------------------- |
+| When    | Any time format from the table above                    |
+| Message | The notification body                                   |
+| Sound   | Off, an alarm preset, a Clock ringtone or a system sound |
+| Notify  | Whether to send a desktop notification                  |
+| Mode    | Foreground or detached                                  |
+| Review  | Confirm with `↵`, or go back to change anything         |
+
+Move between tabs with `←` / `→` (or `Tab` / `Shift+Tab`). On the Sound step, `↑` / `↓` browse the list and `Space` previews the highlighted sound before you confirm with `↵`.
+
+The wizard only collects the six answers above. Flags such as `--title`, `--subtitle`, `--open` or `--sound` are not applied to a wizard run; `--icons`, `--exec` and `--exec-fail-sound` are.
+
+## Icon sets
+
+The countdown and the fired state draw glyphs from one of three sets.
+
+| Mode    | Activate                              | Needs                          |
+| ------- | ------------------------------------- | ------------------------------ |
+| `nerd`  | default                               | a Nerd Font-patched terminal   |
+| `emoji` | `--icons emoji` or `DING_ICONS=emoji` | any modern terminal            |
+| `ascii` | `--icons ascii` or `DING_ICONS=ascii` | nothing                        |
+
+`--icons` wins over `DING_ICONS`. If glyphs render as empty boxes, add `export DING_ICONS=emoji` to your shell profile.
+
+## Examples
+
+```sh
+# Relative timer with a message
+ding 90m "tea is ready"
+
+# Absolute time
+ding 14:30 "stand-up"
+
+# 9 am, rolling to tomorrow if it has passed
+ding 9am
+
+# Quietly background a timer
+ding 30m "check the oven" --no-sound --detach
+```

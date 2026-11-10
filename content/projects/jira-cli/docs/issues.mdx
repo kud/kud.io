@@ -1,0 +1,110 @@
+---
+title: 🎫 Issues
+description: Read and change issues, comments, links, watchers, worklogs and ranking.
+---
+
+All commands live under `jira issue`. `ls` works as an alias for `list` wherever a `list` subcommand exists.
+
+## Reading
+
+```sh
+jira issue list                              # yours, most recently updated first
+jira issue list --status 'In Progress'
+jira issue list --project ABC --sprint current
+jira issue view ABC-123 --comments
+jira issue view ABC-123 --fields status,assignee,issuelinks
+jira issue open ABC-123
+jira issue history ABC-123
+```
+
+`issue list` options:
+
+| Option                  | Meaning                                    |
+| ----------------------- | ------------------------------------------ |
+| `-m, --mine`            | issues assigned to you                     |
+| `-a, --assignee <who>`  | account id, email, or `none`               |
+| `-s, --status <status>` | status name                                |
+| `-p, --project <key>`   | project key                                |
+| `--sprint <name>`       | sprint name, or `current` for open sprints |
+| `-l, --label <label>`   | label                                      |
+| `-q, --jql <jql>`       | raw JQL, replacing all other filters       |
+| `-n, --limit <n>`       | maximum issues (default 50)                |
+| `--json`                | emit JSON                                  |
+
+`issue view` lists links and subtasks. `--fields` takes a comma-separated list and trims both plain text and `--json` output; the key and summary always stay. `issue open --print` prints the URL instead of opening a browser.
+
+## Creating and editing
+
+```sh
+jira issue create -p ABC -t Task -s 'Fix the thing' -b 'Longer **markdown** body' --status 'In Progress'
+jira issue create -p ABC -t Task -s 'A sub-task' --parent ABC-100 --link Relates:ABC-99
+jira issue edit ABC-123 --summary 'Better title' --assignee me --parent ABC-100
+jira issue edit ABC-123 --prepend-description '**Update:** finished QA'
+jira issue assign ABC-123 me
+jira issue delete ABC-123
+```
+
+`create` requires `-p, --project`, `-t, --type` and `-s, --summary`. Optional: `-b, --body`, `-a, --assignee`, `-l, --label <label...>`, `--priority`, `--parent`, `--link <type:key>` (repeatable), `--status` and `--json`.
+
+- Bodies are Markdown, converted to Atlassian Document Format. A body of `-` reads stdin.
+- `--link` types are checked against your instance before anything is created, so a typo costs nothing. If creation works but a link or the `--status` move fails, the new key and the failure are reported and the exit is non-zero.
+- `edit` takes `-s`, `-b`, `-l` (replaces labels), `--priority`, `--parent` (`none` clears it) and `-a`. `--prepend-description` and `--append-description` splice Markdown around the existing description and can be combined, but not with `--body`.
+- People are resolved for you. Names and emails search the project's assignable users first, then everyone. `me` is you, `none` unassigns, and a raw account id passes through. An ambiguous name assigns nothing: matches are printed on stderr and the exit is non-zero.
+
+## Transitions
+
+```sh
+jira issue transition ABC-123              # list what's available
+jira issue transition ABC-123 'In Review'  # by transition name or target status
+```
+
+Matching is case-insensitive and also accepts a transition id. With no status it prints `name → target status`. `--resolution <name>` sets a resolution as part of the move; `move` is an alias.
+
+## Comments
+
+```sh
+jira issue comment list ABC-123 --last 5
+jira issue comment add ABC-123 -            # body from stdin
+jira issue comment edit ABC-123 12345 'Actually fixed in 2.1'
+jira issue comment delete ABC-123 12345
+```
+
+`--last [n]` shows the n most recent comments (default 1), oldest first.
+
+## Links, watchers and remote links
+
+```sh
+jira issue link ABC-1 Blocks ABC-2
+jira issue link list ABC-1
+jira issue watch add ABC-123 [who]       # yourself by default
+jira issue watch remove ABC-123 [who]
+jira issue watch list ABC-123
+jira issue remotelink add ABC-123 https://example.com/page --title 'Spec'
+jira issue remotelink list ABC-123
+jira issue remotelink remove ABC-123 789
+```
+
+`remotelink add` is idempotent: re-adding the same URL updates the existing link.
+
+## Worklogs
+
+```sh
+jira issue worklog add ABC-123 '2h 30m' -b 'Pairing on the fix'
+jira issue worklog list ABC-123
+jira issue worklog edit ABC-123 456 --time '3h' --started 2026-10-27T09:00:00.000+0000
+jira issue worklog delete ABC-123 456
+```
+
+## Ranking
+
+```sh
+jira issue rank ABC-1 ABC-2 --before ABC-3
+jira issue rank ABC-1 ABC-2 --after ABC-3
+jira issue rank ABC-1 ABC-2 --top --jql 'project = ABC AND sprint = 42'
+```
+
+`--top` ranks the keys above the first issue of the JQL scope, so the JQL must order by rank. `ORDER BY Rank ASC` is appended when missing, and any other ordering is refused. If the keys already sit at the top, nothing is sent.
+
+## Deleting safely
+
+`issue delete`, `comment delete`, `worklog delete` and `remotelink remove` ask before acting. Piped or scripted runs refuse unless you pass `--yes`, because Jira has no undo.

@@ -1,0 +1,16 @@
+---
+title: 👋 Introduction
+description: A headless Jenkins client for Node.js, covering jobs, builds, logs, artefacts, the queue and administration.
+---
+
+`@kud/jenkins` is the data, actions and auth layer for talking to a Jenkins server from Node.js: one typed `JenkinsClient`, a layered configuration resolver and a handful of log and URL helpers. It has no CLI, no prompts and no rendering, which makes it the right foundation for command-line tools, TUIs and servers that all need the same behaviour underneath.
+
+## What's here
+
+- [⚙️ Configuration](/projects/jenkins/docs/configuration) — environment variables, multiple instances and stored server profiles
+- [🧩 Client](/projects/jenkins/docs/client) — constructing a client, authentication, jobs, builds and nested paths
+- [📜 Logs and diagnosis](/projects/jenkins/docs/logs) — console text, live streaming, sanitising output and `diagnoseBuild`
+- [📦 Artefacts and queue](/projects/jenkins/docs/artefacts-and-queue) — listing and downloading artefacts, triggering and stopping builds, the queue
+- [🛠 Job lifecycle and admin](/projects/jenkins/docs/lifecycle-and-admin) — create, copy, rename, delete, replay, nodes, views and system controls
+- [🚦 Errors and retries](/projects/jenkins/docs/errors-and-retries) — timeouts, retries, CSRF crumbs and what gets thrown
+- [🔧 Utilities](/projects/jenkins/docs/utilities) — URL helpers and build status formatting

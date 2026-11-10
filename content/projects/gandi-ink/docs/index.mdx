@@ -1,0 +1,11 @@
+---
+title: 👋 Introduction
+description: Ink components for browsing and editing Gandi domains, DNS records and web redirects.
+---
+
+gandi-ink is the presentation layer of the Gandi toolchain: a full-screen browser for domains, DNS records and web redirects, plus the individual list components it is built from. It never calls `render()` and never owns the terminal, so a CLI or a dashboard pane can mount it as one React component.
+
+## What's here
+
+- [🖥️ Browser](/projects/gandi-ink/docs/browser) — the assembled `GandiBody`: props, navigation, keys, editing and what it changes on your account
+- [📋 Components](/projects/gandi-ink/docs/components) — `DomainList`, `DnsList`, `RedirectList` and the `windowSlice` and `fit` helpers, for composing your own screen

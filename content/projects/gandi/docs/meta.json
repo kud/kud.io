@@ -1,0 +1,3 @@
+{
+  "pages": ["index", "authentication", "domains", "dns-records", "web-redirects", "client-and-errors"]
+}

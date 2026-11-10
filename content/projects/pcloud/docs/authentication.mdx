@@ -1,0 +1,88 @@
+---
+title: 🔐 Authentication
+description: How to obtain, store and resolve pCloud credentials, from a plain token to a two-factor login.
+---
+
+pCloud accepts two kinds of credential, and the client treats them differently.
+
+| Credential | Set with | Notes |
+| --- | --- | --- |
+| Session token (`auth`) | `login()`, `sessionLogin()`, `setAuth()` | The more capable tier. Revisions, trash, zip links and downloads only work with this |
+| OAuth access token | `setAccessToken()` | Fine for listing and basic file operations; pCloud answers `result 1000` ("Log in required") to it for the calls above |
+
+When both are present on a client, the access token is the one sent. When resolving stored credentials, the session token wins.
+
+## Direct use
+
+```ts
+import { PCloudAPI } from "@kud/pcloud"
+
+const api = new PCloudAPI() // defaults to https://eapi.pcloud.com
+api.setAccessToken("example-access-token")
+// or: api.setAuth("example-session-token")
+```
+
+`setAccessToken(token, apiServer?)` and `setAuth(token, apiServer?)` both accept an optional API server to override the default EU endpoint. `api.authenticate(username, password)` logs in and keeps the resulting session token on the instance; it also follows the `apiserver` pCloud returns for the account's region.
+
+## Logging in with `sessionLogin`
+
+`sessionLogin` is the higher-level route and handles two-factor authentication.
+
+```ts
+import { sessionLogin, PCloudAPI } from "@kud/pcloud"
+
+const { auth, apiServer, expiresAt } = await sessionLogin({
+  username,
+  password,
+  trustDevice: true,
+  requestCode: async (tfaType) => promptUserForCode(tfaType),
+})
+
+const api = new PCloudAPI(apiServer)
+api.setAuth(auth, apiServer)
+```
+
+| Option | Purpose |
+| --- | --- |
+| `username`, `password` | Account credentials |
+| `apiServer` | Defaults to `https://eapi.pcloud.com` |
+| `trustDevice` | Ask pCloud to remember the device after a two-factor login |
+| `expireSeconds` | Absolute session lifetime. Default is 30 days |
+| `inactiveExpireSeconds` | Idle lifetime. Default is 7 days |
+| `deviceName` | Label shown under pcloud.com, Settings, Devices. Defaults to `pCloud CLI · <host> · <platform>` |
+| `requestCode` | Async callback returning the two-factor code. Required if the account uses 2FA |
+
+pCloud's own defaults are a year-long session and 31 days idle; this package always sends shorter values so a long-lived credential does not land in a dotfile by accident. If the account has two-factor enabled and `requestCode` is missing, `sessionLogin` throws rather than hanging.
+
+The lower-level steps are available on `PCloudAPI` if you need them: `login`, `loginWithCode`, `tfaLogin`, `sendTfaCodeViaSms` and `logout`. `logout()` revokes the token on pCloud's side; deleting your local copy does not.
+
+## OAuth
+
+For callers with a registered pCloud application, `OAuthFlow` runs the browser round trip.
+
+```ts
+import { OAuthFlow } from "@kud/pcloud"
+
+const flow = new OAuthFlow("client-id", "client-secret")
+const { access_token, hostname } = await flow.authenticate()
+```
+
+It starts a local server on port 3000 (the fourth constructor argument changes this), opens `https://my.pcloud.com/oauth2/authorize` in the browser, receives the callback at `/oauth/callback` and exchanges the code for a token. The `open` package is loaded only at that point, so consumers that already hold a token never pay for it.
+
+## Stored credentials
+
+`TokenStore` reads and writes `~/.config/pcloud/tokens.json`, created with mode `0600`. It holds `auth`, `access_token`, `hostname` and `expiresAt`, and offers `save`, `load`, `delete` and `exists`.
+
+## Resolving a client
+
+`resolveStoredAuth()` and `resolveAuth()` build an authenticated `PCloudAPI` from whatever is available, in this order:
+
+1. `PCLOUD_AUTH` environment variable, as a session token
+2. `PCLOUD_ACCESS_TOKEN` environment variable, as an access token
+3. A stored session token (`auth`) from `TokenStore`
+4. A stored `access_token`
+5. `resolveAuth` only: if `PCLOUD_CLIENT_ID` and `PCLOUD_CLIENT_SECRET` are both set, run `OAuthFlow` and store the result
+
+If none apply, `resolveAuth` throws an error naming the variables to set. `resolveStoredAuth` returns `null` instead and is synchronous, never starting an interactive flow. Use it for precondition checks and render paths. Every variable name and the default server can be overridden through `ResolveAuthOptions` (`tokenEnvVar`, `authEnvVar`, `clientIdEnvVar`, `clientSecretEnvVar`, `defaultApiServer`).
+
+If a stored `hostname` is present, it is used as the API server in place of the default.

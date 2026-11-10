@@ -1,0 +1,45 @@
+---
+title: 🎨 Styling
+description: Custom properties, the injected stylesheet, strict CSP setups and reduced-motion behaviour.
+---
+
+Inkblot ships no CSS framework and no dependency. Every class is namespaced `inkblot-*`, so a Tailwind site and a plain one behave identically and neither stylesheet leaks into the other.
+
+## Custom properties
+
+| Property             | Purpose                                                                  |
+| -------------------- | ------------------------------------------------------------------------ |
+| `--inkblot-colour`   | The ink colour. Set for you from the `colour` option.                    |
+| `--inkblot-duration` | Animation length. Set for you from the mode or the `duration` option.    |
+| `--inkblot-z`        | The overlay's `z-index`. Defaults to `2147483646`; set it yourself.      |
+
+```css
+#overlay {
+  --inkblot-z: 50;
+}
+```
+
+## The overlay element
+
+Inkblot fixes the overlay to the viewport, oversized by 60 px on every side (`inset: -60px`), so the displacement never bares a screen edge. It adjusts the origin for that offset, so `from` is always in plain viewport coordinates. The overlay has `pointer-events: none`.
+
+## Injection
+
+By default the stylesheet (about 2 KB) is injected once from JS, along with the SVG filter, on the first `spill()`. A bundler-specific stylesheet import is not portable between a Next.js app and a plain Vite or no-bundler site; a `<style>` tag injected from the module works the same in both, with no config.
+
+## Strict CSP
+
+Under a policy that forbids inline `<style>`, load the stylesheet yourself and skip the injection:
+
+```ts
+import "@kud/inkblot/style.css"
+import { spill } from "@kud/inkblot"
+
+await spill(overlay, { mode: "cover", inject: false })
+```
+
+The filter is still added to the page as an inline SVG element, which a `style-src` policy does not restrict.
+
+## Reduced motion
+
+With `prefers-reduced-motion: reduce`, every mode becomes a plain fade with no spreading edge: 280 ms in, 400 ms out, and 280 ms for the veil. An explicit `duration` still applies.

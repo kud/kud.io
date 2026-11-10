@@ -1,0 +1,50 @@
+---
+title: 📦 Artefacts and queue
+description: Listing and downloading build artefacts, triggering and stopping builds, and managing the build queue.
+---
+
+## Artefacts
+
+```ts
+import { writeFile } from "node:fs/promises"
+
+const { build, artifacts } = await client.getArtifacts("acme/api-gateway", 142)
+
+for (const a of artifacts) console.log(a.fileName, a.relativePath, a.size)
+
+const buf = await client.downloadArtifact("acme/api-gateway", 142, "dist/app.tgz")
+await writeFile("app.tgz", buf)
+```
+
+- `getArtifacts(job, buildNumber?)` returns the build together with its `artifacts` list. Leave the number out for the last build.
+- `downloadArtifact(job, buildNumber, relativePath)` returns a `Buffer`. Use the `relativePath` from the listing, which may include sub-directories. Read retries apply to downloads.
+
+## Triggering builds
+
+```ts
+const { queued, location } = await client.triggerBuild("acme/api-gateway")
+
+await client.triggerBuildWithParameters("acme/api-gateway", {
+  BRANCH: "main",
+  DRY_RUN: "true",
+})
+```
+
+Both return `{ queued: true, location }`, where `location` is the queue item URL from Jenkins' `Location` header, or `null` if none was sent. Parameter values are strings; `getJobParameters(job)` tells you the names, types, choices and defaults. A response other than 200, 201 or 202 throws, for example `Trigger failed: 403 Forbidden`.
+
+## Stopping a build
+
+```ts
+await client.stopBuild("acme/api-gateway", 142) // { stopped: true }
+```
+
+## The queue
+
+```ts
+const queue = await client.getQueue()
+await client.cancelQueueItem(queue.items[0].id) // { cancelled: true }
+```
+
+`getQueue()` returns Jenkins' raw `queue/api/json` response and is typed `any`. `cancelQueueItem(id)` accepts a number or a string and treats 302 as success alongside the 2xx codes.
+
+Like every mutating call, these attach a CSRF crumb and are never retried; see [Errors and retries](/projects/jenkins/docs/errors-and-retries).

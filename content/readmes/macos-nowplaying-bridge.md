@@ -1,7 +1,7 @@
 ---
 title: "macos-nowplaying-bridge"
 description: "Publish Now Playing metadata to macOS Control Center and receive its media-button events, from Node"
-hasDocs: false
+hasDocs: true
 ---
 
 ## Features
@@ -46,50 +46,3 @@ bridge.on("toggle", () => togglePlayback())
 // Tear down the co-process when done
 bridge.stop()
 ```
-
-### API
-
-#### `createNowPlayingBridge(): Promise<NowPlayingBridge>`
-
-Compiles and spawns the Swift co-process on first call (subsequent calls reuse the cached binary). Throws on non-macOS platforms.
-
-#### `bridge.update(info: NowPlayingInfo): void`
-
-Pushes a metadata update. All fields except `title` are optional.
-
-| Field        | Type                    | Description                          |
-| ------------ | ----------------------- | ------------------------------------ |
-| `title`      | `string`                | Track title (required)               |
-| `artist`     | `string`                | Artist name                          |
-| `album`      | `string`                | Album name                           |
-| `artworkUrl` | `string`                | Remote or `file://` artwork URL      |
-| `duration`   | `number`                | Total track length in seconds        |
-| `elapsed`    | `number`                | Current playback position in seconds |
-| `rate`       | `number`                | Playback rate (`1.0` = normal speed) |
-| `state`      | `"playing" \| "paused"` | Playback state                       |
-
-#### `bridge.on(event: RemoteEvent, handler: () => void): void`
-
-Registers a handler for a media-button event. Multiple handlers per event are supported.
-
-`RemoteEvent` values: `"play"` · `"pause"` · `"toggle"` · `"next"` · `"previous"`
-
-#### `bridge.stop(): void`
-
-Kills the Swift co-process and releases the Now Playing slot.
-
-## Development
-
-```sh
-git clone https://github.com/kud/macos-nowplaying-bridge.git
-cd macos-nowplaying-bridge
-npm install
-npm run dev
-```
-
-| Script              | Purpose                      |
-| ------------------- | ---------------------------- |
-| `npm run build`     | Compile TypeScript with tsup |
-| `npm run dev`       | Watch mode                   |
-| `npm run typecheck` | Type-check without emitting  |
-| `npm test`          | Run vitest suite             |

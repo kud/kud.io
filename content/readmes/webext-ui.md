@@ -1,7 +1,7 @@
 ---
 title: "webext-ui"
 description: "A design system for Firefox WebExtension popups and options pages — vendored CSS, not a dependency."
-hasDocs: false
+hasDocs: true
 ---
 
 ## Features
@@ -89,23 +89,3 @@ Each vendored file opens with a stamped header comment giving its version:
 ```
 
 That stamp is the whole point of shipping a version at all — with several consumer repos each holding their own copy, "is repo X still on the latest tokens.css?" is answerable with one `grep` against the first line of the vendored file, rather than diffing bytes against this repo every time.
-
-## CLI Reference
-
-| Command                       | Description                                                                                                                              |
-| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `webext-ui sync <target-dir>` | Copies `tokens.css` and `webext-ui.css` into `<target-dir>`, creating it (and any missing parent directories) if needed. Safe to re-run. |
-
-## Development
-
-```sh
-git clone https://github.com/kud/webext-ui.git
-cd webext-ui
-npm install
-npm run build
-npm test
-```
-
-`src/css/tokens.css` and `src/css/webext-ui.css` are the actual source of truth for styling — extend the design system there, not in `dist/`. `npm run build` runs `tsup` on the CLI entry, then a stamp-css step that copies both source files into `dist/` with the `@VERSION@` placeholder in their header comments replaced by the current `package.json` version. `npm test` builds and then runs Vitest, so the tests always exercise a freshly stamped `dist/` — the build is chained into the `test` script rather than left to a `pretest` hook, because a global `ignore-scripts=true` in npm config silently suppresses lifecycle hooks and would otherwise test a stale `dist/`.
-
-`demo/index.html` is a catalogue of every primitive in both themes. Open it directly from disk after a build — it loads `dist/`, and appending `#f-btn`, `#f-input`, `#f-toggle` or `#f-reveal` forces that control into a focus state so the ring can be reviewed.

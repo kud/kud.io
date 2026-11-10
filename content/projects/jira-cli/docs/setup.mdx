@@ -1,0 +1,73 @@
+---
+title: ⚙️ Setup
+description: Authenticate, write the config file, name custom fields and read the exit codes.
+---
+
+## Authentication
+
+Only the API token is a secret, so only the token comes from the environment. Create one at `id.atlassian.com/manage-profile/security/api-tokens`, then:
+
+```sh
+export ATLASSIAN_API_TOKEN=...
+jira init --base-url myorg.atlassian.net --email you@example.com
+```
+
+`jira init` writes the config file and prints where it went. It refuses to overwrite an existing config unless you pass `--force`. `--base-url` and `--email` fall back to `ATLASSIAN_BASE_URL` and `ATLASSIAN_USER_EMAIL` when omitted.
+
+Check it worked:
+
+```sh
+jira whoami
+```
+
+## Environment variables
+
+| Variable                    | Purpose                                                             |
+| --------------------------- | ------------------------------------------------------------------- |
+| `ATLASSIAN_API_TOKEN`       | The token. Environment only, never the config file.                 |
+| `ATLASSIAN_BASE_URL`        | Overrides `baseUrl`, handy for a second instance.                   |
+| `ATLASSIAN_USER_EMAIL`      | Overrides `email`.                                                  |
+| `ATLASSIAN_CLOUD_ID`        | Skips the cloud ID lookup used by `jira automation`.                |
+| `ATLASSIAN_AUTOMATION_HOST` | `site` or `api`, the default for `jira automation --host`.          |
+| `NO_COLOR`                  | Disables colour. It is also off automatically when stdout is piped. |
+
+## The config file
+
+Everything else lives in `~/.config/jira/config.json`:
+
+```json
+{
+  "baseUrl": "myorg.atlassian.net",
+  "email": "you@example.com",
+  "customFields": [{ "id": "customfield_10002", "label": "points" }],
+  "sprintField": "customfield_10020",
+  "defaultProject": "ABC"
+}
+```
+
+The interactive view also reads `defaultBoard` and hand-written `tabs`; see [Interactive view](/projects/jira-cli/docs/interactive).
+
+## Custom fields
+
+Instances differ, so find the ids on yours with `jira fields`:
+
+```sh
+jira fields points
+# ID                 NAME                   TYPE
+# customfield_10784  Offshore Story Points  string
+# customfield_10002  Story Points           number
+```
+
+`jira fields [filter]` lists custom fields matching the filter; add `--all` to include built-in fields, and `--json` for machine output. Add the ones you care about to `customFields` with a short `label`. Named fields are requested on every search and shown in `jira issue view`.
+
+## Exit codes
+
+| Code | Means                                   |
+| ---- | --------------------------------------- |
+| `0`  | success                                 |
+| `1`  | Jira rejected the request, or bad usage |
+| `2`  | the environment is not set up           |
+| `3`  | `--json` result may be truncated        |
+| `4`  | not authenticated                       |
+
+`jira issue list` and `jira search` stop at `--limit` (50 by default). Jira no longer reports a total, so a full page is the only sign rows were left behind. When that happens both commands warn on stderr, and with `--json` they exit `3`. Stdout is untouched, so the JSON still parses. Raise `--limit` to be sure you have everything.

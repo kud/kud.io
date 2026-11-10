@@ -1,0 +1,57 @@
+---
+title: 🚀 Installation
+description: Install november.json, select it from within opencode, pin it in tui.json, and tweak or validate it.
+---
+
+The theme is a single file. Installing it means placing `november.json` in opencode's themes directory.
+
+## Install
+
+```sh
+mkdir -p ~/.config/opencode/themes
+curl -fsSL https://raw.githubusercontent.com/kud/november-opencode/main/november.json -o ~/.config/opencode/themes/november.json
+```
+
+Restart opencode afterwards so it picks up the new file.
+
+## Select the theme
+
+Inside opencode, run `/theme` and choose `november`. The choice applies straight away.
+
+## Pin it
+
+To make November the default rather than picking it each time, set it in `tui.json`:
+
+```json
+{
+  "theme": "november"
+}
+```
+
+The value is the file name without the `.json` extension, so it must match the name you saved under `themes/`.
+
+## What you should see
+
+Amber selection and borders, blue-grey side panels, and Night Owl-coloured syntax in diffs and previews. The main background is left as `none`, so your terminal's own background shows through; only panels and elements are tinted.
+
+## Update
+
+Run the same `curl` command again. It overwrites the file in place.
+
+## Customise
+
+`november.json` follows the [opencode theme format](https://opencode.ai/docs/themes/): a `$schema` line, a `defs` section of named colours, and a `theme` section that maps opencode's roles onto those names. To change a colour, edit its value in `defs`; every role that references it follows. See [Palette and tokens](/projects/november-opencode/docs/palette) for the full list.
+
+## Validate your edits
+
+If you work from a clone of the repository, there is nothing to build. Check the JSON parses before committing:
+
+```sh
+node -e "JSON.parse(require('fs').readFileSync('november.json', 'utf8')); console.log('november.json: valid')"
+```
+
+CI runs the same check on every push and pull request.
+
+## Using VS Code too?
+
+The same palette is available for the editor. See the [november-vscode docs](/projects/november-vscode/docs).

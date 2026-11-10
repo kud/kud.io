@@ -1,0 +1,94 @@
+---
+title: 🧱 Components
+description: The class-based primitives in webext-ui.css, from layout and rows to forms, the switch, badges and the status dot.
+---
+
+`webext-ui.css` is a reset plus plain classes, with no JavaScript. Selectors that an extension is likely to override are wrapped in `:where()`, so a local rule wins without `!important`. The reset also makes `[hidden]` authoritative, so a component with `display: flex` still hides when the attribute is set.
+
+## Layout
+
+| Class | What it does |
+| --- | --- |
+| `.popup` | Narrow popup body: `--popup-narrow` wide, `--space-4` padding |
+| `.popup-wide` | Full-bleed popup: `--popup-wide` wide, no padding; rows supply their own |
+| `.page` | Options page in a full tab: centred, `--page-width` max, `h1` at 20px |
+| `.card` | Bordered surface with `--radius-xl` and `--space-6` padding |
+| `.stack` | Vertical flex column with `--space-3` gap |
+| `.cluster` | Items on one line, left-aligned, `--space-2` gap |
+
+## Typography
+
+`h1` and `.title` share the base heading style. Others: `.status` (muted), `.hint` (small muted text that reserves its line height so the popup doesn't jump when text arrives late), `.section-title`, and `.state` for centred empty and error messages. `kbd` and `code` are styled too.
+
+## Rows and lists
+
+```html
+<ul class="list rows-divided">
+  <li class="row">
+    <span class="row-name">Dark mode</span>
+    <label class="switch">
+      <input type="checkbox" />
+      <span class="track"><span class="thumb"></span></span>
+    </label>
+  </li>
+</ul>
+```
+
+- `.row` puts a label on the left and a control or value on the right, with consecutive rows spaced apart.
+- `.rows-divided` draws dividers strictly between children. Rebuild the list rather than hiding rows inside it, since a hidden sibling still counts.
+- `.row-bleed` is an edge-to-edge row for `.popup-wide`. It works on an `<li>` or directly on a `<button>`, and its focus ring is inset.
+- `.row-main` is the primary action of a row that also holds secondary buttons. Use a real `<button>`, not a clickable `<li>`, so Tab reaches it.
+- `.row-text`, `.row-name` and `.row-match` lay out and truncate the text.
+- `.list` is a scrollable unstyled list capped at `--list-max-height`.
+- `.reveal-on-hover` fades controls in on hover and on `:focus-within`, so keyboard users never tab through invisible buttons. Add `.is-on` to force it visible.
+
+## Buttons
+
+| Class | Effect |
+| --- | --- |
+| `.btn` | Neutral bordered button at `--control-height` |
+| `.btn-primary` | Accent-filled; hover mixes towards `--accent-fg` so contrast only rises |
+| `.btn-block` | Full width |
+| `.btn-icon` | Small square icon button for controls inside a row |
+
+Disabled `.btn` and `.btn-primary` fall back to a muted, readable label on a `--border` fill.
+
+## Forms
+
+Text-like inputs (`text`, `email`, `search`, `url`, `number`, `password`), `select` and `textarea` are styled by default at full width.
+
+```html
+<label class="field">
+  Email
+  <input type="email" required />
+  <span class="field-error">Enter a valid address.</span>
+</label>
+```
+
+- `.field` stacks a label above its control; `.field-row` puts fields side by side.
+- `.field-inline` pairs a checkbox or radio with its label, using the accent.
+- `.field-note` is helper text.
+- Invalid state uses `:user-invalid`, so an untouched required field isn't red on load. Set `.is-invalid` from script for the same look. The edge doubles in weight so it isn't a colour-only signal, and `.field-error` carries the message in words.
+
+## Switch
+
+```html
+<label class="switch">
+  <input type="checkbox" />
+  <span class="track"><span class="thumb"></span></span>
+</label>
+```
+
+A 38 by 22 track with a 16px thumb. The real input stays focusable but invisible, so the focus ring is drawn on `.track`. The checked thumb uses `--accent-fg`.
+
+## Badge
+
+`.badge` is a neutral uppercase chip. `.badge-accent` and `.badge-success` fill it, with text on the fill, so both clear 4.5:1 and survive greyscale.
+
+## Status dot
+
+```html
+<span class="dot" data-tone="ready"></span>
+```
+
+Set `data-tone` to one of `off` or `idle` (thin ring), `ready` (thick ring, something to act on), `on` (solid accent) or `success` (solid green). States differ by shape as well as colour, so they stay distinct for colourblind readers.

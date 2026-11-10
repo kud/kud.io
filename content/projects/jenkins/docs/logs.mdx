@@ -1,0 +1,89 @@
+---
+title: 📜 Logs and diagnosis
+description: Reading console output, streaming it live, cleaning it for display and diagnosing a failed build.
+---
+
+## Console text
+
+```ts
+const text = await client.getConsoleText("acme/api-gateway") // last build
+const text142 = await client.getConsoleText("acme/api-gateway", 142)
+```
+
+The full log is returned as a string. For a build still in progress, stream it instead.
+
+## Streaming
+
+`streamConsole(job, buildNumber, onChunk, intervalMs = 3000, opts)` polls Jenkins' progressive log endpoint and calls `onChunk` with each new piece of text. It resolves once the log has no more data and the build is no longer running.
+
+```ts
+const controller = new AbortController()
+
+await client.streamConsole(
+  "acme/api-gateway",
+  undefined, // last build
+  (chunk) => process.stdout.write(sanitizeLogChunk(chunk)),
+  2000,
+  { signal: controller.signal },
+)
+```
+
+Pass `undefined` as the build number for the latest build. Aborting the signal ends the loop quietly. A non-2xx response while polling throws `HTTP <status> streaming logs`.
+
+## Sanitising output
+
+Console logs carry ANSI colour codes, carriage returns from progress bars and other control characters that terminal UIs often render as `?`. `sanitizeLogChunk(chunk, opts?)` cleans a string or `Buffer`:
+
+| Option                   | Default | Effect                                                              |
+| ------------------------ | ------- | ------------------------------------------------------------------- |
+| `stripAnsi`              | `true`  | Removes CSI and OSC escape sequences and a few single-character ones |
+| `preserveCarriageReturn` | `false` | Turns a lone `\r` into a newline instead of deleting it             |
+
+CRLF is always normalised to LF, tabs and newlines are kept, and other control characters (including DEL) are removed. `sanitizeAndAppend(previous, next, opts?)` is the same operation for accumulating a stream.
+
+## Stage and step logs
+
+For Pipeline jobs, `getPipelineStages` returns the stage list, `getStageSteps` the steps within a stage, and `getStepLog(job, build, stepId)` the log of one step as plain text. Jenkins returns that log as annotated HTML, so the client strips the tags and decodes entities for you.
+
+## Diagnosing a failed build
+
+`diagnoseBuild(job, build?, opts?)` gathers what you usually look for by hand: the failing stages, the failing step in each, a log tail, the lines that look like errors, and the first failed tests.
+
+```ts
+const d = await client.diagnoseBuild("acme/api-gateway", "lastBuild", {
+  lines: 60,
+  maxTests: 5,
+})
+
+for (const stage of d.failedStages)
+  for (const step of stage.steps)
+    console.log(stage.name, step.name, step.errorLines)
+console.log(d.tests?.failed, d.hints)
+```
+
+`build` can be a number, a permalink such as `"lastBuild"` or `"lastFailedBuild"`, or omitted for the latest.
+
+| Option          | Default | Meaning                                                               |
+| --------------- | ------- | --------------------------------------------------------------------- |
+| `lines`         | `80`    | Lines kept in each `logTail`                                          |
+| `maxBytes`      | `16384` | UTF-8 cap on a `logTail`; the end of the log is kept                  |
+| `maxTests`      | `10`    | Failed test cases listed in `tests.first`                             |
+| `errorPatterns` | built-in | `RegExp[]` that replaces the default error patterns                  |
+
+The result is a `DiagnoseBuildResult`:
+
+- `job`, `build`, `result`, `url` identify the build.
+- `failedStages` lists every stage that is `FAILED` or `UNSTABLE`. Each has the first failed step, or the last step when none is marked failed, with `logTail`, `errorLines`, `logLineCount` and `reportLinks`. A step whose log cannot be fetched gets `logTail: "(log unavailable)"`.
+- `tests` is `{ failed, total, first }`, or `null` when the build has no test report.
+- `hints` explains absences, for example `no pipeline stages (not a Pipeline job)`, `no failing stage found; build result is FAILURE` or `build still running`.
+
+Fields that are `null` mean nothing was available: `errorLines: null` and `reportLinks: null` mean there was no log, whereas `errorLines: []` means the log was scanned and nothing matched.
+
+### Error line helpers
+
+The pieces behind `errorLines` are exported:
+
+- `findErrorLines(log, { patterns, context = 2, maxBlocks = 5, maxBytes = 4096 })` returns `{ line, text[] }` blocks, with 1-based line numbers. Overlapping blocks merge, the last `maxBlocks` are kept, and the earliest are dropped until the total fits `maxBytes`.
+- `DEFAULT_ERROR_PATTERNS` is deliberately conservative: a bare `FAILED` only counts at the start of a line, because tools print it in harmless places.
+- `findReportLinks(log)` extracts URLs printed as `Report Link: https://…` or `report: https://…`. A remote test runner often prints only that pointer rather than the failure itself.
+- `cleanStepLog(log)` sanitises a log and also removes bare colour codes (`[31m`) whose escape byte was lost on the way.

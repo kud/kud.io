@@ -1,0 +1,24 @@
+---
+title: 👋 Introduction
+description: A layered family of GitHub PR tooling for the terminal, from a transport-free core to a configurable cockpit.
+---
+
+The gh family is a set of npm packages that put GitHub pull-request work in the terminal. They are layered so the logic lives once: a core that shells out to the `gh` CLI and returns plain data, a pure workflow layer that decides whose move a row is, Ink components that draw it, and thin CLIs and a cockpit host on top.
+
+```text
+@kud/gh            core: talks to gh, returns plain data
+  @kud/gh-workflow   whose move it is, sorting, grouping, filtering
+    @kud/gh-ink        Ink components and the inbox shell
+      @kud/gh-cockpit    the host that assembles tabs
+@kud/gh-pr-comments · gh-pr-health · gh-webhook-replay    thin CLIs
+```
+
+Everything needs the [`gh`](https://cli.github.com) CLI installed and authenticated, and Node 22 or newer.
+
+## What's here
+
+- [🧱 Core (@kud/gh)](/projects/gh/docs/core) — transport primitives, the inbox query, health, review threads, webhooks
+- [🧭 Workflow (@kud/gh-workflow)](/projects/gh/docs/workflow) — whose-move banding, row layout and search, with no renderer or transport
+- [🎨 Ink components (@kud/gh-ink)](/projects/gh/docs/ink) — panels, health glyphs and the inbox extension API
+- [🛫 Cockpit (@kud/gh-cockpit)](/projects/gh/docs/cockpit) — build your own PR dashboard from tabs, filters and drill-ins
+- [⌨️ CLIs](/projects/gh/docs/clis) — `gh-pr-comments`, `gh-pr-health` and `gh-webhook-replay`

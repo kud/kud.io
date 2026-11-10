@@ -1,0 +1,66 @@
+---
+title: 📐 Rules
+description: The rulings every Gamme app carries, from the settled divergences to field notes taken on a real phone.
+---
+
+## Core rulings
+
+- **No tiles behind glyphs.** A glyph is plain and monochrome; the selection colour is never decoration.
+- **`primary` means on, `secondaryContainer` means selected.** Neither is borrowed for anything else.
+- **Every disabled control says why**, in words at full contrast beside it. The API cannot express disabled without a reason. Read-only is not disabled.
+
+## Settled divergences
+
+Where tutti and pastille differed, v0.1 chose:
+
+| Topic | Ruling |
+| --- | --- |
+| Row icon | 24 dp plain glyph in a 24 dp slot, `onSurfaceVariant` (`error` if destructive), no tile |
+| Row height | 56 dp minimum; content sets the rest |
+| Disabled | Title and glyph at 0.6; reason at full contrast, led by the warning glyph |
+| Group heading inset | 32 dp from the screen edge |
+| Group construction | Clipped column, rows 2 dp apart, each painting its own container; the gap is transparent |
+| Settle spring | `settle` (no overshoot) moves the page; `snappy` only for a control changing its own shape |
+
+The leading column holds a row's glyph and nothing else. A group aligns every row to a glyph slot or none: a glyph-less row in a group with glyphs keeps the empty 24 dp slot.
+
+## Field notes
+
+**Layout**
+- Nothing jumps: a selected chip keeps its width, a screen draws only once its first read lands, headers keep a fixed height.
+- A card's trailing items share one vertical axis, centred on the title line.
+- An add affordance inside a chip row is a chip of the same height and centre.
+- The first group header is never clipped under the top bar.
+- The keyboard never hides the field you are typing into; field, helper or counter and primary action stay together above the IME.
+
+**Controls**
+- A segmented control with four or more options carries no per-option glyphs; if labels still crowd at 360 dp, use wrapping chips.
+- Glyphs match what they describe, and a preview follows the option being changed.
+- Selection never rests on fill alone: add a check or a glyph swap, without reflow.
+- When a setting picks one of the user's own things, show the whole list as visible radios, with unavailable items listed and a way to enable them.
+- Lists of system things match the system's own set and grouping.
+
+**Menus and navigation**
+- An overflow menu is short, holds only actions for the current screen, and never duplicates Settings.
+- A menu follows the mode on screen.
+- Tools sit on the leading side of a toolbar, content tabs on the trailing side.
+- The most immediate content comes first, and a surface reopens where the user left it.
+- A context shows only what belongs to it.
+
+**Metaphors**
+- Right always means later on a timeline. A display-only timeline does not invite a drag, and a jog wheel behaves like a physical wheel.
+
+**State**
+- Hold the last confirmed state through transient gaps for a short grace window, and clear it at once on a confirmed change. Never show stale data indefinitely.
+- Connected or on states carry a mark (check circle or empty ring), across the whole app.
+
+**Colour and icons**
+- No untinted icons: the theme provides `onSurface` as the content colour.
+- One icon family, one weight, one tint per surface.
+
+**Copy**
+- Subtitles are values or one short sentence of 14 words or fewer; an explanatory note goes on one line under the control it explains.
+- Names say what the thing is: "Clipboard", not "Recent", when it holds copies.
+
+**Showing work**
+- Every visual change is shown with a real render or screenshot; a drawing is labelled a mock-up.

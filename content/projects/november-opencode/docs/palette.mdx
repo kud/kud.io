@@ -1,0 +1,85 @@
+---
+title: 🎨 Palette and tokens
+description: The colours defined in november.json and how they map onto opencode's theme roles.
+---
+
+`november.json` has two sections. `defs` names the colours; `theme` assigns those names to opencode's roles. Hex values below are taken directly from the file.
+
+## Core palette
+
+| Role                    | Colour                |
+| ----------------------- | --------------------- |
+| Primary / active border | `#ff8700` orange      |
+| Secondary / accent      | `#ff9e00` amber       |
+| Panel / element         | `#20212e` / `#242533` |
+| Text / muted            | `#e4e4ec` / `#949494` |
+| Success / error         | `#56db3a` / `#dc322f` |
+| Diff added / removed    | `#82aaff` / `#ff5364` |
+
+## Interface roles
+
+| Token                                          | Value                        |
+| ---------------------------------------------- | ---------------------------- |
+| `primary`                                      | orange `#ff8700`             |
+| `secondary`, `accent`, `warning`               | amber `#ff9e00`              |
+| `error`                                        | red `#dc322f`                |
+| `success`                                      | green `#56db3a`              |
+| `info`                                         | blue `#81b2ff`               |
+| `text`                                         | ink `#e4e4ec`                |
+| `textMuted`                                    | grey `#949494`               |
+| `background`                                   | `none` (your terminal's own) |
+| `backgroundPanel`                              | panel `#20212e`              |
+| `backgroundElement`                            | element `#242533`            |
+| `border`                                       | selection `#3c3d57`          |
+| `borderActive`                                 | orange `#ff8700`             |
+| `borderSubtle`                                 | element `#242533`            |
+
+## Diffs
+
+Added and removed lines get a tinted background, and their line-number gutters get a stronger matching one, so the eye does not have to hunt for where a change starts.
+
+| Token                     | Value                |
+| ------------------------- | -------------------- |
+| `diffAdded`               | `#82aaff`            |
+| `diffRemoved`             | `#ff5364`            |
+| `diffHighlightAdded`      | `#9bbdff`            |
+| `diffHighlightRemoved`    | `#ff6f7c`            |
+| `diffAddedBg`             | `#24395a`            |
+| `diffRemovedBg`           | `#5a2a2a`            |
+| `diffAddedLineNumberBg`   | `#33568a`            |
+| `diffRemovedLineNumberBg` | `#763232`            |
+| `diffContext`             | grey `#949494`       |
+| `diffContextBg`           | `none`               |
+| `diffHunkHeader`          | blue `#81b2ff`       |
+| `diffLineNumber`          | greyDim `#5c5e73`    |
+
+## Markdown
+
+| Token                                                                   | Value                |
+| ----------------------------------------------------------------------- | -------------------- |
+| `markdownHeading`, `markdownStrong`, `markdownListItem`, `markdownListEnumeration` | orange `#ff8700` |
+| `markdownLink`, `markdownLinkText`, `markdownCode`, `markdownImage`     | blue `#81b2ff`       |
+| `markdownEmph`, `markdownImageText`                                     | lavender `#ccccff`   |
+| `markdownText`, `markdownCodeBlock`                                     | ink `#e4e4ec`        |
+| `markdownBlockQuote`                                                    | grey `#949494`       |
+| `markdownHorizontalRule`                                                | greyDim `#5c5e73`    |
+
+## Syntax
+
+The syntax colours are the Night Owl-style family used by november-vscode.
+
+| Token               | Value                |
+| ------------------- | -------------------- |
+| `syntaxComment`     | `#697098`            |
+| `syntaxKeyword`     | `#c792ea`            |
+| `syntaxFunction`    | `#82aaff`            |
+| `syntaxVariable`    | ink `#e4e4ec`        |
+| `syntaxString`      | `#c3e88d`            |
+| `syntaxNumber`      | `#f78c6c`            |
+| `syntaxType`        | `#ffcb6b`            |
+| `syntaxOperator`    | `#89ddff`            |
+| `syntaxPunctuation` | `#bfc7d5`            |
+
+## Changing a colour
+
+Edit the value under `defs`, not under `theme`: the `theme` entries only reference names, so one edit recolours every role that uses it. See [Installation](/projects/november-opencode/docs/installation) for where the file lives.

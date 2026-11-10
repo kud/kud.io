@@ -1,0 +1,48 @@
+---
+title: ↪️ Web redirects
+description: Listing, adding, patching and deleting Gandi web redirects, with host normalisation.
+---
+
+| Function | Returns | Description |
+| --- | --- | --- |
+| `listRedirects(apiKey, domain)` | `Promise<WebRedir[]>` | Every redirect, paginated automatically |
+| `addRedirect(apiKey, domain, host, url, type)` | `Promise<void>` | Create a redirect |
+| `updateRedirect(apiKey, domain, host, patch)` | `Promise<void>` | Patch an existing redirect |
+| `deleteRedirect(apiKey, domain, host)` | `Promise<void>` | Remove a redirect |
+| `toRedirectHost(domain, host)` | `string` | Normalise a host; pure, no network call |
+
+```ts
+import { addRedirect, updateRedirect, deleteRedirect, listRedirects } from "@kud/gandi"
+
+await addRedirect(apiKey, "example.com", "www", "https://example.com", "301")
+await updateRedirect(apiKey, "example.com", "www", { url: "https://example.com/home" })
+await deleteRedirect(apiKey, "example.com", "www")
+
+const all = await listRedirects(apiKey, "example.com")
+```
+
+## Complete listings
+
+Gandi caps an unqualified request at 50 redirects, so a larger domain would silently lose the tail. `listRedirects` requests pages of 100 and keeps going until a short page arrives. If it reaches 100 pages without one, it throws rather than return a list that might be incomplete.
+
+## Host normalisation
+
+Gandi identifies a redirect by its fully qualified source host, and a bare label is rejected. You can pass either form; `toRedirectHost` resolves it:
+
+| Input (domain `example.com`) | Result |
+| --- | --- |
+| `www` | `www.example.com` |
+| `www.example.com` | `www.example.com` |
+| `@` | `example.com` |
+| empty string | `example.com` |
+| `example.com` | `example.com` |
+
+`addRedirect`, `updateRedirect` and `deleteRedirect` all apply it, so existing scripts that pass labels keep working.
+
+## Patching
+
+`RedirectPatch` has four optional fields: `url`, `type`, `protocol` and `override`. Omitted keys are left untouched, so leaving `override` out is different from passing `override: false`. `host` is not patchable, because Gandi cannot move a redirect to another source; delete and re-add instead.
+
+## Shape
+
+`WebRedir` has `host`, `type`, and optional `url`, `protocol` and `override`.

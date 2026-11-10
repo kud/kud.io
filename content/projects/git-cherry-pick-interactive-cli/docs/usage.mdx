@@ -1,0 +1,60 @@
+---
+title: ⌨️ Usage
+description: Run the command, choose commits in the checklist and read the result.
+---
+
+## Running it
+
+```bash
+git cherry-pick-interactive <branch>
+```
+
+`<branch>` is the branch to take commits from. Any local or remote-tracking ref that `git log` understands works, for example `feature/search` or `origin/release-2.4`.
+
+The package installs a binary called `git-cherry-pick-interactive`. Because git treats any `git-<name>` executable on your `PATH` as a subcommand, `git cherry-pick-interactive` and `git-cherry-pick-interactive` are the same thing.
+
+The command takes a single argument. The first argument that does not start with `-` is used as the branch; there are no flags, and anything starting with `-` is ignored.
+
+## The checklist
+
+You are shown a prompt, `Select commits to cherry-pick:`, with one line per commit:
+
+```text
+? Select commits to cherry-pick:
+ ◯ (a1b2c3d) Add search endpoint
+ ◉ (e4f5a6b) Validate query length
+ ◯ (9c8d7e6) Update search docs
+```
+
+Each line is the short hash (seven characters) followed by the commit subject.
+
+| Key | Action |
+| --- | --- |
+| `↑` / `↓` | Move the cursor |
+| `Space` | Tick or untick the commit under the cursor |
+| `a` | Tick or untick every commit |
+| `i` | Invert the current selection |
+| `Enter` | Confirm and start cherry-picking |
+
+Pressing `Ctrl+C` abandons the prompt without changing anything.
+
+## What you see afterwards
+
+On success, the selected commits are listed with their short hash and subject:
+
+```text
+✅ Cherry-pick successful!
+Cherry-picked commits:
+
+- (e4f5a6b) Validate query length
+- (9c8d7e6) Update search docs
+```
+
+Other outcomes you may meet:
+
+| Message | Meaning |
+| --- | --- |
+| `🚫 Missing branch.` | No branch was given. Usage is printed and the exit code is `1`. |
+| `🚫 No commits on <branch> that aren't already here.` | Nothing to pick; the current branch already contains everything on `<branch>`. Exit code `0`. |
+| `🚫 No commits selected. Exiting.` | You pressed `Enter` with nothing ticked. Nothing is changed. Exit code `0`. |
+| `❌ Error: <message>` | git failed; see [How it works](/projects/git-cherry-pick-interactive-cli/docs/how-it-works). Exit code `1`. |

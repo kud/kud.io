@@ -1,0 +1,43 @@
+---
+title: 🔐 Permissions and scripting
+description: Granting Accessibility access, understanding failures and exit codes, and calling media-keys from scripts.
+---
+
+## Accessibility permission
+
+Posting system key events requires Accessibility access. Grant it once to the terminal app you run `media-keys` from:
+
+1. Open System Settings, then Privacy & Security, then Accessibility.
+2. Enable your terminal (Terminal, iTerm2, Ghostty and so on).
+3. Restart the terminal if the command still fails.
+
+If the permission is missing, `media-keys` prints a message asking you to enable it and exits with a non-zero status. The wording comes from the underlying library, so see the [`@kud/macos-media-keys` documentation](/projects/macos-media-keys/docs) for the details.
+
+When a script is launched by another app (a launcher, a hotkey daemon, a scheduler), the permission has to be granted to that parent app rather than to your terminal.
+
+## Exit codes
+
+| Code | Meaning                                                              |
+| ---- | -------------------------------------------------------------------- |
+| `0`  | The key event was sent                                               |
+| `1`  | Sending failed; the error message is written to standard error       |
+
+## Using it from scripts
+
+Because errors go to standard error and the exit status is meaningful, `media-keys` composes well in shell scripts.
+
+```sh
+# Pause music when a long job starts, then resume afterwards
+media-keys play
+./long-job.sh
+media-keys play
+
+# Stay quiet if nothing can be sent
+media-keys next 2>/dev/null || echo "could not skip track"
+```
+
+Remember that `play` toggles. A script that wants to guarantee a paused state cannot do so with `media-keys` alone, since it does not read the player's state.
+
+## Platform
+
+The package is macOS only (`"os": ["darwin"]`) and needs Node.js 20 or later.

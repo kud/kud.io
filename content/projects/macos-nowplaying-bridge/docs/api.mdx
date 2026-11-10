@@ -1,0 +1,112 @@
+---
+title: 📖 API reference
+description: Every export of @kud/macos-nowplaying-bridge, with field types and exact behaviour.
+---
+
+The package has a single entry point and one runtime export, `createNowPlayingBridge`, plus three types.
+
+```ts
+import {
+  createNowPlayingBridge,
+  type NowPlayingBridge,
+  type NowPlayingInfo,
+  type RemoteEvent,
+} from "@kud/macos-nowplaying-bridge"
+```
+
+## createNowPlayingBridge
+
+```ts
+createNowPlayingBridge(): Promise<NowPlayingBridge>
+```
+
+Compiles the Swift source if no cached binary exists, then spawns it as a persistent co-process and resolves with the bridge. The first call per machine waits for `swiftc`; later calls start immediately. See [How it works](/projects/macos-nowplaying-bridge/docs/how-it-works).
+
+It rejects with `@kud/macos-nowplaying-bridge only works on macOS` when `process.platform` is not `darwin`, and with the `swiftc` error if compilation fails.
+
+Each call spawns its own co-process, so create one bridge per app and share it.
+
+## NowPlayingBridge
+
+```ts
+type NowPlayingBridge = {
+  update: (info: NowPlayingInfo) => void
+  on: (event: RemoteEvent, handler: () => void) => void
+  stop: () => void
+}
+```
+
+### update
+
+<a id="update"></a>
+
+```ts
+bridge.update(info: NowPlayingInfo): void
+```
+
+Serialises `info` as one JSON line and writes it to the co-process. It returns immediately and does not report errors.
+
+| Field        | Type                    | Notes                                                                 |
+| ------------ | ----------------------- | --------------------------------------------------------------------- |
+| `title`      | `string`                | Required by the type                                                  |
+| `artist`     | `string`                | Optional                                                              |
+| `album`      | `string`                | Optional                                                              |
+| `artworkUrl` | `string`                | Remote or `file://` URL, downloaded once per distinct URL             |
+| `duration`   | `number`                | Track length in seconds                                               |
+| `elapsed`    | `number`                | Current position in seconds                                           |
+| `rate`       | `number`                | Playback rate; `1` is normal speed                                    |
+| `state`      | `"playing" \| "paused"` | Sets the system playback state                                        |
+
+Behaviour worth knowing:
+
+- **Updates merge.** The co-process starts from whatever is already published and overwrites only the fields you send, so an omitted `artist` keeps its last value.
+- **`rate` defaults to `1`.** If you omit it, it is set to `1` on every update, even when `state` is `"paused"`. Send `rate: 0` alongside `state: "paused"` if you want the progress bar to stop advancing.
+- **`state` is only touched when sent.** Leaving it out keeps the current playback state.
+- **Artwork is cached by URL.** A different URL replaces the artwork once the download finishes; a failed download leaves the previous artwork in place.
+
+### on
+
+```ts
+bridge.on(event: RemoteEvent, handler: () => void): void
+```
+
+Registers a handler for a Control Center or media-key press. Handlers receive no arguments. You can register several handlers for the same event and all of them run. There is no `off`; call `stop()` to tear everything down.
+
+### stop
+
+```ts
+bridge.stop(): void
+```
+
+Kills the co-process, which releases the Now Playing slot. Calling `update()` afterwards writes to a dead pipe and has no effect.
+
+## NowPlayingInfo
+
+```ts
+type NowPlayingInfo = {
+  title: string
+  artist?: string
+  album?: string
+  artworkUrl?: string
+  duration?: number
+  elapsed?: number
+  rate?: number
+  state?: "playing" | "paused"
+}
+```
+
+## RemoteEvent
+
+```ts
+type RemoteEvent = "play" | "pause" | "toggle" | "next" | "previous"
+```
+
+| Event      | Fired when                                                       |
+| ---------- | ---------------------------------------------------------------- |
+| `play`     | The system asks to start playback                                |
+| `pause`    | The system asks to pause playback                                |
+| `toggle`   | The system asks to switch between play and pause                 |
+| `next`     | Next track is pressed                                            |
+| `previous` | Previous track is pressed                                        |
+
+The bridge does not change playback itself. It reports the press and leaves the decision, and the follow-up `update()`, to you.

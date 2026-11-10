@@ -1,0 +1,101 @@
+---
+title: 📁 Client
+description: Reference for the PCloudAPI class, grouped by what each method does.
+---
+
+Every method returns a typed promise. A `result` of `0` means success; any other value comes with an `error` string. The client does not throw on a non-zero `result`, so check it. It throws only when pCloud returns something that is not JSON, and the message has `access_token`, `auth`, `password` and `client_secret` values redacted.
+
+```ts
+import { PCloudAPI } from "@kud/pcloud"
+
+const api = new PCloudAPI()
+api.setAuth("example-session-token")
+
+const folder = await api.listFolder("/Documents")
+if (folder.result !== 0) throw new Error(folder.error)
+```
+
+## Account
+
+| Method | Description |
+| --- | --- |
+| `userInfo()` | Account email, quota, used quota and plan |
+| `diff(options?)` | The change log. Options: `after`, `diffid`, `last`, `limit` |
+
+## Files and folders
+
+| Method | Description |
+| --- | --- |
+| `listFolder(path?)` | List a folder by path; defaults to `"/"` |
+| `listFolderById(folderid, { nofiles? })` | List by id. `nofiles: true` returns only the folder's own metadata |
+| `stat(path)` | Metadata for a file or folder |
+| `createFolder(path)` | Create a folder if it does not exist |
+| `deleteFolder(folderid)` | Delete a folder and everything in it |
+| `copyFile(fileid, topath)` | Copy a file to a path |
+| `moveFile(fileid, topath)` | Move a file to a path |
+| `renameFile(fileid, toname)` | Rename in place |
+| `deleteFile(fileid)` | Delete a file |
+| `checksumFile(fileid)` | SHA-256, SHA-1 and MD5 |
+
+## Transfers
+
+| Method | Description |
+| --- | --- |
+| `getFileLink(fileid)` | The raw response: `hosts[]` and a `path` |
+| `getDownloadUrl(fileid)` | A ready `https://` URL built from the first host. Throws if no link comes back |
+| `downloadFile(fileid)` | Fetches the file into an `ArrayBuffer` |
+| `uploadFile(folderid, filename, contents, { noPartial? })` | Multipart upload of a `Uint8Array` or `ArrayBuffer`. `nopartial` is on by default so a failed transfer cannot leave a truncated file; pass `noPartial: false` to disable it |
+| `getZipLink(fileids, folderids?, filename?)` | A download link for a zip of several items |
+
+Downloads and zip links need a session token, not an OAuth access token.
+
+## Revisions
+
+| Method | Description |
+| --- | --- |
+| `listRevisions(fileid)` | Available revisions of a file |
+| `revertRevision(fileid, revisionid)` | Restore a file to an earlier revision |
+
+## Sharing
+
+| Method | Description |
+| --- | --- |
+| `listShares()` | Active shares and pending requests |
+| `shareFolder(folderid, mail, permissions)` | Share a folder; `permissions` is a bitmask |
+| `acceptShare(sharerequestid)` | Accept an incoming request |
+| `declineShare(sharerequestid)` | Decline an incoming request |
+| `removeShare(shareid)` | End an accepted share |
+
+`listShares()` returns `{ shares: { outgoing, incoming }, requests: { outgoing, incoming } }`, not a flat array.
+
+The ids are easy to confuse because both are plain numbers. Accepted shares carry a `shareid` and report permissions as four booleans. Pending requests carry a `sharerequestid` and the permissions bitmask. `removeShare` takes the former; `acceptShare` and `declineShare` take the latter. Sending the wrong one makes pCloud reply `Please provide 'shareid'.` and nothing happens.
+
+## Public links
+
+| Method | Description |
+| --- | --- |
+| `getFilePublink(fileid, expire?, maxdownloads?)` | Public link for a file |
+| `getFolderPublink(folderid, expire?)` | Public link for a folder |
+| `listPublinks()` | All active public links |
+| `deletePublink(code)` | Remove a link by its code |
+
+## Trash
+
+| Method | Description |
+| --- | --- |
+| `listTrash()` | Deleted items. They are lifted from `metadata.contents` to `contents`, matching the other listings |
+| `restoreFromTrash(fileid, { restoreTo? })` | Restore a file |
+| `restoreFolderFromTrash(folderid, { restoreTo? })` | Restore a folder |
+
+Pass `restoreTo` (a folder id) whenever the original parent may have been deleted too, which is the usual case after a folder deletion. Otherwise pCloud chooses the destination itself.
+
+## Low level
+
+| Method | Description |
+| --- | --- |
+| `request<T>(method, params)` | GET against any pCloud endpoint; parameters go in the query string |
+| `post<T>(method, params)` | The same as a form-encoded POST. Used for anything carrying a password, so it stays out of access logs |
+
+## Types
+
+All response and metadata types are exported from the package root and prefixed `PCloud`, for example `PCloudFile`, `PCloudFolderResponse`, `PCloudUserInfo`, `PCloudRevision`, `PCloudPublink`, `PCloudTrashItem`, `PCloudDiffEntry` and the generic `PCloudResponse<T>`.

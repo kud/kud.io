@@ -1,0 +1,104 @@
+---
+title: ⚙️ Configuration
+description: How resolveConfig picks a Jenkins server from the environment, a stored profile or explicit overrides.
+---
+
+`resolveConfig()` turns whatever the process knows about Jenkins into a `{ url, user, token }` triple you can hand to `JenkinsClient`. Callers never need to hardcode credentials.
+
+```ts
+import { JenkinsClient, resolveConfig } from "@kud/jenkins"
+
+const cfg = resolveConfig()
+const client = new JenkinsClient(cfg.url, cfg.user, cfg.token)
+```
+
+## Resolution order
+
+From lowest to highest priority:
+
+1. A stored server profile (see below), or the legacy top-level `url`, `user` and `token` keys when the file has no `servers`.
+2. Instances declared in the environment. When one is found it takes precedence over the stored file.
+3. The non-empty environment variables `JENKINS_SERVER`, `JENKINS_TIMEOUT` and `JENKINS_RETRIES`.
+4. The overrides object you pass to `resolveConfig()`; keys set to `undefined` are ignored.
+
+The overrides accepted are `url`, `user`, `token`, `server`, `timeout` and `retries`. The result can carry `server`, `timeout` and `retries` as well as the credentials, so pass the latter two on to the client yourself:
+
+```ts
+const cfg: any = resolveConfig({ server: "staging" })
+const client = new JenkinsClient(cfg.url, cfg.user, cfg.token, {
+  timeout: cfg.timeout,
+  retries: cfg.retries,
+})
+```
+
+## Environment variables
+
+| Variable            | Meaning                                                              |
+| ------------------- | -------------------------------------------------------------------- |
+| `JENKINS_URL`       | Server URL, or a list of URLs for several instances                  |
+| `JENKINS_USER`      | Username, or a list                                                  |
+| `JENKINS_API_TOKEN` | API token, or a list                                                 |
+| `JENKINS_INSTANCES` | Names for the instances, in the same order as the URLs               |
+| `JENKINS_SERVER`    | Name of the instance or stored profile to use                        |
+| `JENKINS_TIMEOUT`   | Per-request timeout in milliseconds                                  |
+| `JENKINS_RETRIES`   | Retry count for failed reads                                         |
+| `XDG_CONFIG_HOME`   | Base directory for the stored configuration file                     |
+
+A single instance needs only the first three:
+
+```sh
+export JENKINS_URL=https://jenkins.example.com
+export JENKINS_USER=alice
+export JENKINS_API_TOKEN=xxxxxxxxxxxx
+```
+
+## Several instances in the environment
+
+Lists are separated by a comma or a pipe (a pipe is offered because a token is more likely to contain a comma). Entries are matched by position, and the first instance is the default.
+
+```sh
+export JENKINS_INSTANCES=pipeline,scheduler
+export JENKINS_URL=https://pipeline.example.com,https://scheduler.example.com
+export JENKINS_USER=alice
+export JENKINS_API_TOKEN=tok1,tok2
+```
+
+- A user or token list of length one applies to every instance, so a shared account needs stating once.
+- Without `JENKINS_INSTANCES`, each name is derived from the first label of the URL's hostname (`pipeline` for `https://pipeline.example.com`).
+- If `JENKINS_INSTANCES` is set and its length differs from `JENKINS_URL`, `envInstances()` throws rather than guess. A short list would quietly authenticate one server with another's credentials.
+- Trailing slashes are stripped from each URL.
+
+Select a non-default instance with `JENKINS_SERVER` or `resolveConfig({ server: "scheduler" })`. If the name is not an environment instance, resolution falls through to the stored profiles.
+
+`envInstances()` returns just the environment's instances, and `listInstances()` returns the union of environment and stored servers, with the environment winning on a name clash.
+
+## Stored server profiles
+
+Profiles live in `~/.config/jenkins-cli/config.json` (the base moves with `XDG_CONFIG_HOME`; the resolved path is exported as `CONFIG_FILE`).
+
+```ts
+import { addServer, useServer, removeServer, listServers } from "@kud/jenkins"
+
+addServer("prod", {
+  url: "https://jenkins.example.com",
+  user: "alice",
+  token: "xxxx",
+})
+useServer("prod")
+listServers() // [{ name: "prod", url: "…", user: "alice", token: "…", current: true }]
+removeServer("prod")
+```
+
+| Function                          | Behaviour                                                                      |
+| --------------------------------- | ------------------------------------------------------------------------------ |
+| `addServer(name, { url, user, token })` | Adds or overwrites a profile; the first one added becomes current          |
+| `useServer(name)`                 | Makes a profile current; throws `Server '<name>' not found` if it is missing   |
+| `removeServer(name)`              | Deletes a profile; if it was current, the first remaining one takes over       |
+| `listServers()`                   | Profiles with a `current` flag                                                 |
+| `loadConfig()` / `saveConfig(cfg)` | Read and merge-write the raw file                                             |
+
+With no explicit name, the profile used is `current`, falling back to the first one in the file.
+
+The file is read forgivingly: trailing garbage after the closing brace is dropped, a missing or unreadable file yields an empty configuration, and a URL pasted as a Markdown link (`[text](https://…)`) is unwrapped.
+
+The token is stored in plain text in that file, so keep it out of version control and shared machines.

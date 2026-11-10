@@ -1,0 +1,61 @@
+---
+title: 🔐 Authentication
+description: How @kud/bsky signs in with a Bluesky App Password, caches the session, and exposes the raw xrpc helper.
+---
+
+## Credentials
+
+The library reads two environment variables:
+
+| Variable | Value |
+| --- | --- |
+| `BLUESKY_HANDLE` | Your handle, for example `alice.example.com` |
+| `BLUESKY_APP_PASSWORD` | An App Password from Bluesky, Settings, App Passwords |
+
+```sh
+export BLUESKY_HANDLE=alice.example.com
+export BLUESKY_APP_PASSWORD=<app-password>
+```
+
+Use an App Password, never your account password. You can revoke one at any time from the same settings screen.
+
+Both variables are read once, when the package is first imported. Set them before the import runs (or before your process starts); changing `process.env` afterwards has no effect.
+
+## Sessions
+
+`getSession()` calls `com.atproto.server.createSession` on `https://bsky.social` and returns:
+
+```ts
+type Session = { accessJwt: string; did: string; handle: string }
+```
+
+The result is cached for the lifetime of the process, so only the first authenticated call logs in. Every function that needs a session calls `getSession()` for you; you rarely need it directly.
+
+Errors are plain `Error`s:
+
+- Missing variables: `Missing credentials. Set BLUESKY_HANDLE and BLUESKY_APP_PASSWORD ...`
+- Rejected login: `Auth failed (<status>): <body>`
+
+The server is fixed at `PDS = "https://bsky.social"`, which is also exported. Accounts hosted on a different PDS are not configurable.
+
+## The `xrpc` helper
+
+Every other module is built on `xrpc`, which is exported if you need an endpoint the library does not wrap:
+
+```ts
+import { xrpc } from "@kud/bsky"
+
+const result = await xrpc<{ did: string }>(
+  "com.atproto.identity.resolveHandle",
+  { params: { handle: "alice.example.com" }, auth: false },
+)
+```
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `method` | `"GET"` | `"GET"` or `"POST"` |
+| `params` | none | Query string values; `undefined` entries are dropped |
+| `body` | none | JSON body, sent only for `POST` |
+| `auth` | `true` | Attach the bearer token; set `false` for public endpoints |
+
+A non-2xx response throws `<nsid> failed (<status>): <body>`.

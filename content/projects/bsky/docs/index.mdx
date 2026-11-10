@@ -1,0 +1,15 @@
+---
+title: 👋 Introduction
+description: A zero-dependency Bluesky client library for Node, built as plain async functions over the AT Protocol XRPC API.
+---
+
+@kud/bsky is a small, typed library for talking to Bluesky from Node. Every capability is an async function that calls the AT Protocol XRPC endpoints directly, so there is no SDK to learn and nothing to install beyond the package itself.
+
+It is the core behind the `@kud/bsky-cli` terminal client and the `@kud/mcp-bsky` MCP server.
+
+## What's here
+
+- [🔐 Authentication](/projects/bsky/docs/authentication) — App Password credentials, session caching and the low-level `xrpc` helper
+- [✍️ Posting](/projects/bsky/docs/posting) — posts, replies, quotes, images, threads, rich-text facets, deleting and listing your own posts
+- [💜 Engagement](/projects/bsky/docs/engagement) — like, repost and follow, and undoing each
+- [📖 Reading](/projects/bsky/docs/reading) — timeline, author feeds, threads, notifications, profiles and search

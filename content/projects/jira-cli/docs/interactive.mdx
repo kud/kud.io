@@ -1,0 +1,39 @@
+---
+title: 🖥️ Interactive view
+description: The terminal board behind bare jira, with tabs, search and in-place writes.
+---
+
+Run `jira` with no arguments in a terminal to open your issues as a board. Piped or redirected, bare `jira` prints help instead. Ink is loaded only for this view, so `jira issue list | grep` never pays for it.
+
+## Tabs
+
+By default the tabs are Jira's three status categories, **To do**, **In progress** and **Done**, so it works on any instance. Pass `--board <id>`, or set `defaultBoard` in the config file, and the tabs become that board's columns, matched by status id. Statuses no column claims land on an **Off board** tab. Hand-written `tabs` in the config win over both.
+
+Rows hang under their epic and carry a type pill, a priority glyph and how long since the issue last moved. Closed work from the last fortnight is on Done; `a` loads everything.
+
+## Keys
+
+| Key           | Action                                                 |
+| ------------- | ------------------------------------------------------ |
+| `↑` `↓`       | move                                                   |
+| `←` `→` / `⇥` | switch tab                                             |
+| `enter`       | open the issue                                         |
+| `/`           | search                                                 |
+| `?`           | legend                                                 |
+| `r`           | refresh                                                |
+| `q`           | quit from anywhere                                     |
+| `esc` / `⌫`   | back one level: a prompt, then the issue, then nothing |
+
+## Search
+
+Plain words narrow the list as you type and, on `enter`, run as `text ~ "…"` within your issues, so comment matches count. Anything shaped like JQL (`status = Done`, `ORDER BY …`) is sent as-is and replaces the scope. The tag at the end of the line says which reading was used, and `⇥` flips it. A query Jira rejects shows Jira's message and keeps your text. `esc` clears the search.
+
+## Inside an issue
+
+Description, comments and attachments render as Markdown in one scrolling view, with attachments listed against the comment or description they came from. Press `t` to transition, `c` to comment, `a` to assign to yourself and `o` to open the browser. Writes ask before they act.
+
+## Flags
+
+- `--board <id>` picks the board whose columns become tabs.
+- `--screen detail:ABC-123` opens an issue directly; `--screen list` prints the available screens and exits.
+- `--mock` runs against built-in sample data, with no Jira needed.

@@ -1,0 +1,46 @@
+---
+title: 📡 DNS records
+description: Reading, replacing, appending to and deleting LiveDNS rrsets, plus zone export.
+---
+
+DNS functions work on LiveDNS rrsets, identified by domain, record `type` and `name` (for example `A` and `www`, or `@` for the apex).
+
+| Function | Returns | Description |
+| --- | --- | --- |
+| `listDnsRecords(apiKey, domain)` | `Promise<DnsRecord[]>` | All rrsets in the zone |
+| `getDnsRecord(apiKey, domain, type, name)` | `Promise<DnsRecord \| null>` | One rrset, or `null` on a 404 |
+| `setDnsRecord(apiKey, domain, type, name, values, ttl?)` | `Promise<void>` | Replace the rrset's values; TTL defaults to `10800` |
+| `addDnsValue(apiKey, domain, type, name, value, ttl?)` | `Promise<{ added, values }>` | Append one value without replacing the rest |
+| `deleteDnsRecord(apiKey, domain, type, name)` | `Promise<void>` | Delete the rrset |
+| `exportZone(apiKey, domain)` | `Promise<string>` | The whole zone as a BIND master file |
+
+## Replace versus append
+
+`setDnsRecord` issues a `PUT`, so the values you pass become the whole rrset. To add one value to what is already there, use `addDnsValue`: it reads the current rrset, adds the value, and writes the union back, keeping the existing TTL unless you pass one.
+
+```ts
+import { setDnsRecord, addDnsValue } from "@kud/gandi"
+
+await setDnsRecord(apiKey, "example.com", "A", "www", ["192.0.2.10"], 300)
+
+const result = await addDnsValue(apiKey, "example.com", "TXT", "@", "v=spf1 -all")
+// { added: true, values: [...] }
+// { added: false, values: [...] } if the value was already present; nothing is written
+```
+
+If the rrset does not exist yet, `addDnsValue` creates it with just the new value.
+
+## Exporting a zone
+
+`exportZone` requests the records route with `Accept: text/plain` and returns the RFC 1035 master file as a string, ready to save or diff.
+
+```ts
+import { writeFileSync } from "node:fs"
+import { exportZone } from "@kud/gandi"
+
+writeFileSync("example.com.zone", await exportZone(apiKey, "example.com"))
+```
+
+## Shape
+
+`DnsRecord` has `rrset_name`, `rrset_type`, `rrset_ttl`, `rrset_href` and `rrset_values: string[]`.

@@ -1,0 +1,108 @@
+---
+title: 🧩 Client
+description: Creating a JenkinsClient, authenticating, addressing nested jobs and reading jobs, builds and search results.
+---
+
+`JenkinsClient` is the single entry point for every request. It uses the global `fetch`, so Node.js 22 or later is required, and it has no runtime dependencies.
+
+## Constructing a client
+
+```ts
+import { JenkinsClient } from "@kud/jenkins"
+
+const client = new JenkinsClient("https://jenkins.example.com", "alice", "api-token", {
+  timeout: 10_000,
+  retries: 2,
+  retryDelay: 500,
+})
+```
+
+| Option       | Default | Notes                                                                 |
+| ------------ | ------- | --------------------------------------------------------------------- |
+| `timeout`    | `15000` | Milliseconds per request; non-positive or non-finite values fall back |
+| `retries`    | `0`     | Accepted from 0 to 9; anything else becomes 0                         |
+| `retryDelay` | `500`   | Base delay in milliseconds, see [Errors and retries](/projects/jenkins/docs/errors-and-retries) |
+| `auth`       | none    | `{ bearer: string }` to use a bearer token                            |
+
+### Authentication
+
+- Username and API token send HTTP Basic credentials.
+- `auth: { bearer }` sends `Authorization: Bearer <token>` instead, for a Jenkins behind an OIDC or token plugin. It wins over a user and token when both are given.
+- With neither, no `Authorization` header is sent at all, which suits a server that allows anonymous reads.
+
+```ts
+const anonymous = new JenkinsClient("https://jenkins.example.com")
+const bearer = new JenkinsClient("https://jenkins.example.com", "", "", {
+  auth: { bearer: process.env.CI_TOKEN! },
+})
+```
+
+## Naming jobs
+
+Jobs are addressed by their full name: `"api-gateway"`, or `"acme/api-gateway"` for a job inside the `acme` folder. The client turns that into Jenkins' `job/acme/job/api-gateway` form for you. Empty segments are dropped, so a stray leading, trailing or doubled slash in a name does not become a 404 that looks like a missing job.
+
+`jobPath(name)` is exported if you need the REST path yourself.
+
+### Multibranch pipelines
+
+A branch name such as `feature/login` contains a slash that Jenkins keeps inside one path segment. Most methods deal with this automatically: they try the plain path first and, on a 404, walk the hierarchy looking for a `WorkflowMultiBranchProject` or an `OrganizationFolder`, then cache the corrected path for the life of the client.
+
+```ts
+await client.getBuild("acme/api-gateway/feature/login")
+```
+
+`resolveJobPath(job)` exposes that resolution for callers building their own requests.
+
+## Reading jobs and builds
+
+| Method                               | Returns                                                                      |
+| ------------------------------------ | ---------------------------------------------------------------------------- |
+| `getJob(job)`                        | Job metadata at depth 1, including recent `builds` references                |
+| `getBuild(job, buildNumber?)`        | One build; omit the number for the last build                                |
+| `listBuilds(job, limit = 10)`        | Recent builds, fetched concurrently; builds that fail to load are skipped    |
+| `getBuildChanges(job, buildNumber?)` | `{ number, causes, culprits, commits }` for triage                           |
+| `getJobParameters(job)`              | `{ name, type, description, defaultValue, choices }[]`                       |
+| `getTestReport(job, buildNumber)`    | The raw JUnit test report JSON                                               |
+| `getPipelineStages(job, build?)`     | Pipeline stage breakdown from the Workflow API; defaults to `lastBuild`      |
+| `getStageSteps(job, build, nodeId)`  | The steps inside one stage node                                              |
+| `getSpecificJobs(names)`             | Batch fetch, tolerant of failures                                            |
+
+`getBuild`, `getBuildChanges` and the console methods throw `No lastBuild found` when a job has never run.
+
+`getSpecificJobs` never throws for a single bad job. Each failure comes back as a placeholder entry with `color: "disabled"` and a readable `error` such as `Job 'acme/api-gateway' not found` or `Access denied to job '…'`, so a dashboard can still render the rest.
+
+```ts
+const changes = await client.getBuildChanges("acme/api-gateway", 142)
+console.log(changes.causes, changes.culprits)
+for (const c of changes.commits) console.log(c.id, c.author, c.msg)
+```
+
+## Listing and searching
+
+`listJobs()` fetches the top level in one request. Folders appear as entries rather than being expanded.
+
+`searchJobs(query, limit = 50)` does a breadth-first crawl through folders, matching the query as a case-insensitive substring of each job's full name. A `limit` of `0` means unlimited, subject to a safety cap of 5000. If the root cannot be fetched, it throws `Cannot reach Jenkins at <url>` with a hint to check the URL and VPN, rather than returning an empty list that reads as no matches. Failures in individual folders are ignored.
+
+`searchJobsIncremental(query, opts)` walks the same tree with bounded concurrency and reports progress:
+
+```ts
+const jobs = await client.searchJobsIncremental("gateway", {
+  concurrency: 8, // clamped to 1..10, default 5
+  onBatch: (found, { processed, queued, total }) => {
+    console.log(`${total} matches, ${processed} visited, ${queued} waiting`)
+  },
+})
+```
+
+## Custom queries with `tree()`
+
+The methods above fetch fixed fields. When you need another one, such as `healthReport` or the causes of the last build, use `tree()` against any API path instead of writing a second HTTP client:
+
+```ts
+import { jobPath } from "@kud/jenkins"
+
+await client.tree("api/json", "jobs[name,_class,lastBuild[result]]")
+await client.tree(`${jobPath("acme/api-gateway")}/api/json`, "builds[number,result]{0,10}")
+```
+
+`path` is a Jenkins API path, not a job name. For a multibranch branch, build the path with `await client.resolveJobPath(name)` rather than `jobPath`, because `jobPath` splits the branch's slashes into folders. `tree()` gives you the client's authentication, timeout and read retries.

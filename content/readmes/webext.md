@@ -1,7 +1,7 @@
 ---
 title: "webext"
 description: "Typed settings and plumbing for Firefox WebExtensions"
-hasDocs: false
+hasDocs: true
 ---
 
 Typed settings and plumbing for Firefox WebExtensions.

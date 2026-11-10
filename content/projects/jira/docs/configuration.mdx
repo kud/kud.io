@@ -1,0 +1,65 @@
+---
+title: ⚙️ Configuration
+description: How loadConfig resolves the instance URL, email and token from environment and file.
+---
+
+`loadConfig` resolves settings the same way every `@kud` Jira surface does, so a host can build a client without reimplementing the lookup.
+
+```ts
+import { loadConfig, createJiraClient } from "@kud/jira"
+
+const loaded = loadConfig()
+if ("missing" in loaded) {
+  console.error(`Set ${loaded.missing.join(", ")}`)
+  process.exit(1)
+}
+const jira = createJiraClient(loaded.config)
+```
+
+It returns `{ config }`, ready for `createJiraClient`, or `{ missing: string[] }` naming every absent value at once.
+
+## Where each value comes from
+
+| Value      | Environment variable   | Config file key | Notes                                       |
+| ---------- | ---------------------- | --------------- | ------------------------------------------- |
+| Instance   | `ATLASSIAN_BASE_URL`   | `baseUrl`       | Environment wins when both are set.         |
+| Email      | `ATLASSIAN_USER_EMAIL` | `email`         | Environment wins when both are set.         |
+| Token      | `ATLASSIAN_API_TOKEN`  | not allowed     | Environment only.                           |
+
+Only the token is secret, so only the token is environment-only. A file containing `token` or `apiToken` makes `readFileConfig` throw, so a credential cannot end up in something shared or backed up. Because environment wins, a second instance needs one inline override rather than a second file.
+
+## The config file
+
+The file lives at `$XDG_CONFIG_HOME/jira/config.json`, which is `~/.config/jira/config.json` by default. Set `JIRA_CONFIG_FILE` to use another path. A missing file is treated as empty.
+
+```json
+{
+  "baseUrl": "jira.example.com",
+  "email": "me@example.com",
+  "defaultProject": "ACME",
+  "defaultBoard": 42,
+  "sprintField": "customfield_10020",
+  "customFields": [{ "id": "customfield_10016", "label": "Story points" }],
+  "tabs": [
+    { "label": "Doing", "statuses": ["In Progress", "10003"] },
+    { "label": "Review", "statuses": ["Code Review"] }
+  ]
+}
+```
+
+| Key              | Meaning                                                                                              |
+| ---------------- | ---------------------------------------------------------------------------------------------------- |
+| `defaultProject` | Project used when none is given, for example by `buildJql`.                                           |
+| `defaultBoard`   | Board id a host should open by default.                                                              |
+| `sprintField`    | Passed through to the client.                                                                        |
+| `customFields`   | Array of `{ id, label }`. Anything else throws.                                                      |
+| `tabs`           | Hand-written board tabs, each naming statuses by id or name. A TUI can use them over a board's own column configuration, for an instance with no board or a board whose columns do not match how you work. |
+
+The returned `config` includes every file key alongside `baseUrl`, `email` and `token`, and `baseUrl` is normalised to a full `https://` URL.
+
+## Lower-level exports
+
+- `configPath()` returns the resolved file path.
+- `readFileConfig(path?)` reads and validates the file without touching the environment.
+- `loadConfig(env?, path?)` accepts a custom environment object and path, which keeps tests hermetic.
+- `normalizeBaseUrl(raw)` turns a bare host into an `https://` URL and trims trailing slashes.

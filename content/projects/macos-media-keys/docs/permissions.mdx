@@ -1,0 +1,34 @@
+---
+title: 🔐 Permissions
+description: Why Accessibility access is required, which process needs it and how to resolve a rejected call.
+---
+
+Posting system events is something macOS only allows for processes that have been granted Accessibility access. The library cannot request this for you, so the first call from a fresh setup will usually reject.
+
+## Granting access
+
+Open **System Settings → Privacy & Security → Accessibility** and enable the app that is running your code. Then call `sendMediaKey` again; no restart of the library is needed, though the host app may need to be relaunched if it was already running when you toggled the setting.
+
+## Which process needs it
+
+The permission belongs to the **calling process**, not to Node or to this package. In practice that means the app you launched the script from:
+
+| You run it from | Grant access to |
+| --- | --- |
+| Terminal.app | Terminal |
+| iTerm2 | iTerm2 |
+| An editor's integrated terminal | The editor |
+| A launcher or automation app | That app |
+| A background service or `launchd` job | The binary the job executes, which is awkward; run it from a granted app instead |
+
+The native helper is a child of your process and inherits its trust, so you never need to add the helper itself.
+
+## Recognising the failure
+
+A missing grant makes the helper exit with status 77 and the library rejects with:
+
+```text
+not authorized — grant your terminal Accessibility access in System Settings → Privacy & Security → Accessibility
+```
+
+If the setting is already on and you still see it, remove the app from the list and add it again. macOS ties the grant to the app's identity and it can go stale after the app is updated.

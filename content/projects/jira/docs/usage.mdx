@@ -1,0 +1,103 @@
+---
+title: 🧭 Usage
+description: Create a client, run searches, handle typed errors and inject your own fetch.
+---
+
+## Creating a client
+
+`createJiraClient` is a factory. It returns a plain object of methods; there is no class to instantiate or extend.
+
+```ts
+import { createJiraClient } from "@kud/jira"
+
+const jira = createJiraClient({
+  baseUrl: "jira.example.com",
+  email: "me@example.com",
+  token: process.env["JIRA_TOKEN"]!,
+})
+
+const issue = await jira.getIssue("ACME-1234")
+console.log(issue.fields.summary)
+```
+
+| Option         | Type                              | Notes                                                                    |
+| -------------- | --------------------------------- | ------------------------------------------------------------------------ |
+| `baseUrl`      | `string`                          | A bare host or a full URL. A missing `https://` is added for you.        |
+| `email`        | `string`                          | Used with `token` for HTTP Basic auth.                                   |
+| `token`        | `string`                          | An Atlassian API token.                                                  |
+| `customFields` | `{ id: string; label: string }[]` | Extra fields requested on every issue fetch and search.                  |
+| `sprintField`  | `string`                          | Your instance's sprint field id, for example `customfield_10020`.        |
+| `fetch`        | `typeof globalThis.fetch`         | Defaults to the global `fetch`. Pass a fake or a wrapped version.        |
+
+The returned client also exposes `request`, the raw authenticated wrapper, along with `customFields` and `sprintField`. Every request sends `Accept-Language: en`, so error bodies come back in English whatever the account's language.
+
+`request` is the escape hatch for endpoints the client does not wrap:
+
+```ts
+const res = await jira.request<{ values: unknown[] }>("/rest/api/3/label")
+```
+
+A 2xx response with an empty body resolves to `undefined` rather than throwing on JSON parsing.
+
+## Searching
+
+Jira's enhanced JQL search is cursor-based. Two methods cover it.
+
+```ts
+// One page, with the cursor so you can continue yourself
+const page = await jira.searchPage("project = ACME ORDER BY updated DESC", {
+  maxResults: 25,
+})
+
+// Walk the cursor for you, up to a limit (default 50)
+const issues = await jira.searchIssues("project = ACME AND status = 'In Progress'", {
+  limit: 200,
+})
+```
+
+`searchIssues` stops when there is no next token, when a page comes back empty, or when a token repeats, so an instance with a looping cursor cannot make it page forever. Pages are requested 100 at a time at most.
+
+Search options: `fields` (overrides the default field list), `maxResults`, `nextPageToken`, `expand`, and `limit` for `searchIssues`. The default fields are `summary`, `status`, `assignee`, `issuetype`, `priority`, `project`, `labels`, `parent` and `updated`, plus any `customFields` and the `sprintField`.
+
+For a count, `approximateCount(jql)` returns `{ count }`. It is an index estimate and will not always match a full walk.
+
+## Handling errors
+
+Every non-2xx response throws a `JiraApiError`: an `Error` with `name: "JiraApiError"` and `status`, `method`, `url` and `body` properties.
+
+```ts
+import { isJiraApiError, errorMessagesOf } from "@kud/jira"
+
+try {
+  await jira.getIssue("ACME-9999")
+} catch (e) {
+  if (isJiraApiError(e) && e.status === 404) {
+    console.error("no such issue")
+  } else {
+    console.error(errorMessagesOf(e).join("\n"))
+  }
+}
+```
+
+- `isJiraApiError(e)` narrows an unknown catch value.
+- `errorMessagesOf(e)` returns Jira's own wording from `errorMessages[]` and `errors{}` in the response body, falling back to the error message. Use it for anything a person will read; `message` itself carries the method, URL and a body truncated to 400 characters.
+- `jiraApiError(status, method, url, body)` builds one, which is handy in tests.
+
+## Testing with a fake fetch
+
+Because `fetch` is injectable, tests need no network and no module mocking.
+
+```ts
+const calls: string[] = []
+const jira = createJiraClient({
+  baseUrl: "jira.example.com",
+  email: "me@example.com",
+  token: "test",
+  fetch: async (url) => {
+    calls.push(String(url))
+    return new Response(JSON.stringify({ key: "ACME-1234" }), { status: 200 })
+  },
+})
+```
+
+The same hook works for logging or retry wrappers.

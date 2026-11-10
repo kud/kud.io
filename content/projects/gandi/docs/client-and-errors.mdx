@@ -1,0 +1,58 @@
+---
+title: 🧪 Client and errors
+description: The injectable GandiAPI object for testing, and tagged auth errors you can branch on.
+---
+
+## The injectable client
+
+`gandiAPI` bundles every request function into one object typed as `GandiAPI`. It holds no state; each method still takes `apiKey` first. Use it when a consumer should accept the client as a prop and let tests swap it out.
+
+```ts
+import { gandiAPI, type GandiAPI } from "@kud/gandi"
+
+const run = async (api: GandiAPI = gandiAPI, apiKey: string) => {
+  const domain = await api.getDomain(apiKey, "example.com")
+  return domain.status
+}
+```
+
+In a test, spread the real object and override what you need:
+
+```ts
+const fakeApi: GandiAPI = {
+  ...gandiAPI,
+  listDomains: vi.fn().mockResolvedValue([]),
+}
+```
+
+`GandiAPI` has one member per exported request function, typed with `typeof`, so signatures never drift from the implementation.
+
+## Auth errors
+
+Two failures are tagged so you can branch without matching message text:
+
+| Kind | Raised when |
+| --- | --- |
+| `no-token` | `getApiKey()` finds neither `GANDI_API_KEY` nor a config file key |
+| `unauthorized` | Gandi answers `401` or `403` |
+
+```ts
+import { authErrorKind, listDomains } from "@kud/gandi"
+
+try {
+  await listDomains(apiKey)
+} catch (error) {
+  switch (authErrorKind(error)) {
+    case "no-token":
+      // nothing configured: ask the user to set one up
+      break
+    case "unauthorized":
+      // a token exists but was rejected: ask for a new one
+      break
+    default:
+      throw error
+  }
+}
+```
+
+`authErrorKind` returns `null` for anything else. `authError(kind, message)` builds a tagged `Error` if you need to raise the same signal from your own code. Other API failures are plain `Error`s with Gandi's message.

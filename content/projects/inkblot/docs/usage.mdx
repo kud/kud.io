@@ -1,0 +1,103 @@
+---
+title: 🖋️ Usage
+description: How to cover, reveal and veil a page with spill() and clear(), and what each option does.
+---
+
+Inkblot exports two functions and three types.
+
+```ts
+spill(el: HTMLElement, options: SpillOptions): Promise<void>
+clear(el: HTMLElement): void
+
+type Mode = "cover" | "reveal" | "veil"
+type Origin = { x: number; y: number } | Element
+
+type SpillOptions = {
+  mode: Mode
+  from?: Origin
+  colour?: string
+  duration?: number
+  inject?: boolean
+}
+```
+
+## The overlay
+
+Give the page one empty element. Inkblot fixes it to the viewport and does the rest.
+
+```html
+<div id="overlay" aria-hidden="true"></div>
+```
+
+## Leaving a page
+
+Use `cover` from a click, then navigate once the promise resolves.
+
+```ts
+import { spill } from "@kud/inkblot"
+
+const overlay = document.querySelector<HTMLElement>("#overlay")!
+
+document.addEventListener("click", async (event) => {
+  const link = (event.target as Element).closest<HTMLAnchorElement>("a[href]")
+  if (!link) return
+
+  event.preventDefault()
+  await spill(overlay, { mode: "cover", from: link, colour: "#2b1d14" })
+  window.location.href = link.href
+})
+```
+
+## Arriving on a page
+
+Use `reveal` on the new page to lift the ink. Call it before first paint if the page should start covered. Pair it with `clear()` on `pageshow` so a back-forward cache restore does not leave the page inked.
+
+```ts
+import { clear, spill } from "@kud/inkblot"
+
+const overlay = document.querySelector<HTMLElement>("#overlay")!
+
+await spill(overlay, { mode: "reveal", colour: "#2b1d14" })
+
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) clear(overlay)
+})
+```
+
+## Options
+
+| Option     | Description                                                                                                                  |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `mode`     | `cover`, `reveal` or `veil`. Required.                                                                                       |
+| `from`     | Where the ink starts: a viewport `{ x, y }` point, or an element (its centre is used). Defaults to the centre of the screen. |
+| `colour`   | Any CSS colour, set as `--inkblot-colour` on the overlay. Falls back to black.                                               |
+| `duration` | Milliseconds. Overrides the mode's default.                                                                                  |
+| `inject`   | `false` skips the injected style tag, for a strict CSP. Default `true`. See [Styling](/projects/inkblot/docs/styling).       |
+
+## Modes
+
+| Mode     | Default                 | Behaviour                                                                              |
+| -------- | ----------------------- | -------------------------------------------------------------------------------------- |
+| `cover`  | 500 ms                  | Spreads until the screen is covered, then stays covered, so you can navigate under it. |
+| `reveal` | 600 ms                  | Plays in reverse, for arriving on a new page. Clears itself when done.                 |
+| `veil`   | 500 ms, at 0.88 opacity | Washes the page and holds until you call `clear()`.                                    |
+
+A veil is the quiet option while something loads:
+
+```ts
+await spill(overlay, { mode: "veil", from: button, colour: "#2b1d14" })
+await loadSomething()
+clear(overlay)
+```
+
+## Promise behaviour
+
+`spill()` resolves when the overlay is fully covered (`cover`), fully uncovered (`reveal`) or veiled (`veil`). Resolution is also guaranteed by a safety timer of the duration plus 400 ms, so a missed `animationend` never leaves you hanging.
+
+Spilling again on the same element settles the first promise and takes over from it.
+
+`clear(el)` resets the overlay and settles any pending promise. Use it on bfcache restores and to lift a veil.
+
+## Outside the browser
+
+Both functions do nothing when there is no `window` or `document`. `spill()` resolves at once, so server rendering is safe.

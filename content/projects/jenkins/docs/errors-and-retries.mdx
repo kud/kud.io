@@ -1,0 +1,49 @@
+---
+title: 🚦 Errors and retries
+description: How the client handles timeouts, retries and CSRF crumbs, and what it throws when a request fails.
+---
+
+## Timeouts
+
+Every request is aborted after `timeout` milliseconds (15 seconds by default). Set it per client in the constructor, or through `JENKINS_TIMEOUT` and [`resolveConfig`](/projects/jenkins/docs/configuration).
+
+## Retries apply to reads only
+
+When `retries` is above zero, a read is repeated on a network error, a timeout or any 5xx response. 4xx responses are never retried. The wait before each attempt grows linearly: `retryDelay × (attempt + 1)`, so the defaults wait 500 ms, then 1000 ms, and so on.
+
+```ts
+const client = new JenkinsClient(url, user, token, { retries: 3, retryDelay: 1000 })
+```
+
+Writes are never retried. A `createItem` that timed out may already have landed, and a second attempt would then fail on a job that now exists. This covers triggering, stopping, the queue, and everything in [Job lifecycle and admin](/projects/jenkins/docs/lifecycle-and-admin).
+
+## CSRF crumbs
+
+You never handle crumbs. Before the first write, the client asks `crumbIssuer/api/json` and keeps both the crumb and the session cookie that came with it, because Jenkins binds a crumb to its session. Each write sends both. If Jenkins answers a crumbed write with 403 (the session expired), the client re-issues the crumb and cookie and sends that write once more. That is the only automatic retry a write gets, and it is safe because a 403 means nothing landed.
+
+If the crumb issuer is unavailable, writes are sent without one, which is correct for servers with CSRF protection off and for Basic auth with an API token.
+
+## What gets thrown
+
+Reads and most administrative writes throw an `HttpError` carrying `status`, a message of the form `HTTP 404 Not Found: <first 300 characters of the body>`, and the truncated `body`. Network failures and timeouts have `status` of `0`. The class itself is not exported, so check the shape rather than `instanceof`:
+
+```ts
+try {
+  await client.getBuild("acme/api-gateway", 9999)
+} catch (e) {
+  const status = (e as { status?: number }).status
+  if (status === 404) console.log("no such build")
+  else if (status === 401 || status === 403) console.log("check credentials")
+  else throw e
+}
+```
+
+Some methods throw a plain `Error` instead, with no `status`:
+
+- `getBuild`, `getBuildChanges`, `getConsoleText`, `streamConsole`: `No lastBuild found`.
+- `triggerBuild`, `triggerBuildWithParameters`, `stopBuild`, `cancelQueueItem`: `Trigger failed: 403 Forbidden` and similar.
+- `searchJobs`, `searchJobsIncremental`, `listJobs`: `Cannot reach Jenkins at <url>`, so an unreachable server is not mistaken for an empty result.
+- `replayBuild`: `Replay failed: …`.
+- `createJob`, `copyJob`: an empty name.
+
+A 404 on a job path triggers the multibranch path resolution described in [Client](/projects/jenkins/docs/client). If resolution finds nothing different, the original 404 is thrown, naming the URL that was tried.

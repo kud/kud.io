@@ -1,0 +1,85 @@
+---
+title: 🛠 Job lifecycle and admin
+description: Creating, copying, renaming and deleting jobs, replaying builds, and inspecting nodes, views, plugins and the system.
+---
+
+Version 2.7.0 added 21 methods for managing jobs and the server itself. All of them are plain async methods on `JenkinsClient`, return small result objects and throw on failure.
+
+These actions change or remove things on the server. Most are not reversible, and your Jenkins account needs the matching permissions.
+
+## Jobs
+
+| Method                              | Returns                                      |
+| ----------------------------------- | -------------------------------------------- |
+| `getJobConfig(job)`                 | `{ jobName, config }`, the `config.xml` text |
+| `createJob(job, configXml)`         | `{ jobName, created: true }`                 |
+| `copyJob(fromName, newName)`        | `{ fromName, newName, copied: true }`        |
+| `updateJobConfig(job, configXml)`   | `{ jobName, updated: true }`                 |
+| `renameJob(job, newName)`           | `{ oldName, newName, renamed: true }`        |
+| `deleteJob(job)`                    | `{ jobName, deleted: true }`                 |
+| `enableJob(job)`                    | `{ jobName, enabled: true }`                 |
+| `disableJob(job)`                   | `{ jobName, disabled: true }`                |
+
+```ts
+const { config } = await client.getJobConfig("acme/api-gateway")
+
+await client.createJob("acme/api-gateway-canary", config)
+await client.copyJob("acme/api-gateway", "acme/api-gateway-staging")
+await client.updateJobConfig("acme/api-gateway-canary", config.replace("main", "release"))
+await client.renameJob("acme/api-gateway-canary", "api-gateway-preview")
+await client.disableJob("acme/api-gateway-preview")
+await client.deleteJob("acme/api-gateway-preview")
+```
+
+Details worth knowing:
+
+- `createJob` and `copyJob` take the **full** new name. The client posts to the parent folder and passes only the last segment as the item name, so `"acme/api-gateway-canary"` creates `api-gateway-canary` inside `acme`. An empty name throws `Job name must be a non-empty Jenkins full name`.
+- `copyJob` resolves the source from the Jenkins root, so copying across folders finds the right source.
+- `renameJob` takes the new **short** name, not a full path, and drops the cached path for the old name. `deleteJob` clears the cache too.
+- `updateJobConfig` replaces the whole configuration with the XML you send.
+
+## Builds
+
+```ts
+await client.deleteBuild("acme/api-gateway", 140) // { jobName, buildNumber, deleted: true }
+
+const { queueUrl } = await client.replayBuild("acme/api-gateway", 142)
+await client.replayBuild("acme/api-gateway", 142, "pipeline { /* edited script */ }")
+```
+
+`replayBuild` re-runs a Pipeline build, optionally with a replacement main script, and returns the queue item URL. The redirect is deliberately not followed: a followed redirect would turn an authentication bounce into an HTML page that looks like a queued replay. A 3xx response therefore throws `Replay failed: HTTP <status>`, as does a 2xx with no `Location` header.
+
+## Nodes
+
+```ts
+const nodes = await client.listNodes()
+const node = await client.getNode("build-agent-01")
+await client.toggleNodeOffline("build-agent-01", "disk maintenance")
+```
+
+- `listNodes()` returns `{ name, offline, idle, numExecutors, busyExecutors, temporarilyOffline, offlineCauseReason }[]`.
+- `getNode(name)` adds `assignedLabels` and `monitorData`.
+- `toggleNodeOffline(name, message = "")` flips the state, so calling it on an offline node brings it back. It returns `{ nodeName, toggledOffline: true }`.
+
+## Views
+
+`listViews()` returns each view's `name`, `url` and its jobs (name and url). `getView(name)` adds the view `description` and each job's `color`.
+
+## System
+
+| Method                | Returns                                                                                 |
+| --------------------- | --------------------------------------------------------------------------------------- |
+| `getSystemInfo()`     | `{ nodeDescription, nodeName, numExecutors, mode, quietingDown, useCrumbs, useSecurity }` |
+| `getVersion()`        | `{ version }`, read from the `X-Jenkins` response header (`"unknown"` if absent)        |
+| `getPlugins()`        | `{ shortName, longName, version, enabled, active, hasUpdate }[]`                        |
+| `quietDown(reason?)`  | `{ quietingDown: true }`; stops new builds from starting                                |
+| `cancelQuietDown()`   | `{ quietingDown: false }`                                                               |
+| `safeRestart()`       | `{ restarting: true }`; restarts once running builds finish                             |
+
+```ts
+await client.quietDown("upgrading plugins")
+// …wait for running builds, do the work…
+await client.cancelQuietDown()
+```
+
+For anything not covered here, `tree()` reaches any other API path; see [Client](/projects/jenkins/docs/client).

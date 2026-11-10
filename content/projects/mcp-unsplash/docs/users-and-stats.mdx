@@ -1,0 +1,40 @@
+---
+title: 👤 Users and stats
+description: Look up photographers, their photos and collections, and read user and platform statistics.
+---
+
+## Users
+
+| Tool                   | Parameters                                                   | Returns                              |
+| ---------------------- | ------------------------------------------------------------ | ------------------------------------ |
+| `get_user`             | `username`                                                   | One profile summary                  |
+| `get_user_photos`      | `username`, `page`, `per_page`, `order_by`, `orientation`    | Array of photo summaries             |
+| `get_user_collections` | `username`, `page`, `per_page`                               | Array of collection summaries        |
+| `search_users`         | `query`, `page`, `per_page`                                  | `total`, `total_pages`, `results`    |
+| `get_user_statistics`  | `username`, `resolution`, `quantity`                         | Statistics payload                   |
+
+A profile summary contains `name`, `username`, `profile` (link), `bio`, `location`, `total_photos`, `total_likes` and `total_collections`.
+
+`order_by` for `get_user_photos` is one of `latest`, `oldest`, `popular`, `views` or `downloads`. `orientation` is `landscape`, `portrait` or `squarish`.
+
+`username` is the handle without the leading `@`, for example `janeexample`.
+
+## Statistics
+
+`get_photo_statistics`, `get_user_statistics` and `get_stats_month` take the same two optional parameters:
+
+| Parameter    | Type    | Notes                                  |
+| ------------ | ------- | -------------------------------------- |
+| `resolution` | enum    | Only `days`; the default.              |
+| `quantity`   | integer | 1 to 30 data points; default 30.       |
+
+User statistics return `downloads`, `views` and, when present, `likes`, each shaped as a `total` plus a `historical` block (`change`, `resolution`, `quantity` and a `values` list of `{ date, value }`).
+
+### Platform-wide
+
+| Tool              | Parameters               | Returns                                                                                                                                  |
+| ----------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `get_stats_total` | none                     | All-time totals: `photos`, `downloads`, `views`, `likes`, `photographers`, `pixels`, `downloads_per_second`, `views_per_second`, `developers` |
+| `get_stats_month` | `resolution`, `quantity` | Past-month figures: `downloads`, `views`, `likes`, `new_photos`, `new_photographers`, `new_pixels`, `new_developers`, `new_applications`, `new_requests` |
+
+These two are passed through as Unsplash returns them, without trimming.

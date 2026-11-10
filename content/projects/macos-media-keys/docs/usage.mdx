@@ -1,0 +1,68 @@
+---
+title: 🎛️ Usage
+description: The sendMediaKey function, the five media keys it accepts and how errors are reported.
+---
+
+The package has a single named export and a single type. It is ESM only and needs Node.js 20 or later.
+
+```ts
+import { sendMediaKey, type MediaKey } from "@kud/macos-media-keys"
+```
+
+## `sendMediaKey(key)`
+
+```ts
+sendMediaKey(key: MediaKey): Promise<void>
+```
+
+Posts a system media key to whichever app is responding to media keys. The promise resolves once the key press has been delivered and rejects with an `Error` otherwise. There is no return value and nothing to configure.
+
+```ts
+await sendMediaKey("play") // play/pause toggle
+await sendMediaKey("next")
+await sendMediaKey("previous")
+await sendMediaKey("forward") // fast-forward within the track
+await sendMediaKey("rewind")
+```
+
+## `MediaKey`
+
+```ts
+type MediaKey = "play" | "next" | "previous" | "forward" | "rewind"
+```
+
+| Key | System key | Effect |
+| --- | --- | --- |
+| `play` | `NX_KEYTYPE_PLAY` | Toggles play and pause |
+| `next` | `NX_KEYTYPE_NEXT` | Skips to the next track |
+| `previous` | `NX_KEYTYPE_PREVIOUS` | Skips to the previous track |
+| `forward` | `NX_KEYTYPE_FAST` | Fast-forwards within the track |
+| `rewind` | `NX_KEYTYPE_REWIND` | Rewinds within the track |
+
+`play` is a toggle, not a play command: if nothing is playing, it starts the last active player; if something is, it pauses it.
+
+## Error handling
+
+`sendMediaKey` rejects in three situations.
+
+| Situation | Message |
+| --- | --- |
+| Not running on macOS | `@kud/macos-media-keys only works on macOS` |
+| Accessibility permission missing | `not authorized — grant your terminal Accessibility access in System Settings → Privacy & Security → Accessibility` |
+| The helper fails without output | `failed to send media key: <key>` |
+
+```ts
+try {
+  await sendMediaKey("next")
+} catch (error) {
+  console.error((error as Error).message)
+}
+```
+
+The helper's own message is passed through when it has one, so the permission text above comes straight from the native side. See [Permissions](/projects/macos-media-keys/docs/permissions) for how to resolve it.
+
+An unknown key name is a type error in TypeScript. From plain JavaScript it reaches the helper, which prints its usage line and the promise rejects with that text.
+
+## Command line
+
+If you would rather call it from a shell, [macos-media-keys-cli](/projects/macos-media-keys-cli/docs) wraps this library.

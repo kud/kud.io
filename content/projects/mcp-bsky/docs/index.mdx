@@ -1,0 +1,12 @@
+---
+title: 👋 Introduction
+description: An MCP server that lets an MCP client read and post to Bluesky through your App Password.
+---
+
+mcp-bsky is a thin MCP server over the `@kud/bsky` AT Protocol library. It exposes eleven tools: five that read Bluesky and six that write to it, with every write held back until the caller passes an explicit `confirm: true`.
+
+## What's here
+
+- [🔐 Setup](/projects/mcp-bsky/docs/setup) — App Password, environment variables, client configuration and the Inspector
+- [🔭 Reading](/projects/mcp-bsky/docs/reading) — search, timeline, notifications, profiles and threads
+- [✍️ Writing](/projects/mcp-bsky/docs/writing) — posts, threads, replies, likes, reposts, follows and the `confirm` gate

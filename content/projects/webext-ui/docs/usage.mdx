@@ -1,0 +1,83 @@
+---
+title: 🔌 Getting started
+description: Get the two stylesheets into an extension, by vendoring or through a bundler, and link them on every page.
+---
+
+## Two ways in
+
+Which one you use depends on whether your extension has a build step.
+
+| Extension | Use |
+| --- | --- |
+| Plain, unbundled (packaged with `web-ext build`) | Vendor the files with the `sync` CLI |
+| Bundled (WXT, Vite) | Install the package and import the CSS by subpath |
+
+## Vendoring with the CLI
+
+```sh
+npx @kud/webext-ui@latest sync src/vendor/
+```
+
+```console
+$ npx @kud/webext-ui@latest sync src/vendor/
+Synced tokens.css, webext-ui.css to src/vendor/
+```
+
+`webext-ui sync <target-dir>` copies `tokens.css` and `webext-ui.css` into `<target-dir>`, creating it and any missing parent directories. It overwrites existing copies, so re-running it to pick up a new release is always safe. With no directory, or any command other than `sync`, it prints `Usage: webext-ui sync <target-dir>` to stderr and exits with code 1.
+
+Vendoring is the only approach that survives packaging for an unbundled extension. `web-ext build` leaves `node_modules` out of the `.xpi`, so a stylesheet linked from there works in development and silently disappears from the shipped package.
+
+### Checking for stale copies
+
+Each vendored file starts with a version stamp:
+
+```css
+/* @kud/webext-ui — tokens.css v0.3.0 */
+```
+
+With several extensions each holding their own copy, finding the stale ones is a `grep` of the first line rather than a byte diff.
+
+## Importing through a bundler
+
+A bundler copies imported CSS into its own output, so `node_modules` never has to ship. Pin an exact version and import tokens first:
+
+```sh
+npm install --save-exact @kud/webext-ui
+```
+
+```js
+import "@kud/webext-ui/tokens.css"
+import "@kud/webext-ui/webext-ui.css"
+import "./theme.css"
+```
+
+The package exports exactly `./tokens.css`, `./webext-ui.css` and `./package.json`.
+
+## Linking on every page
+
+Link the vendored files, then your own `theme.css`, from every page, popup and options alike. Order matters: `webext-ui.css` needs `tokens.css` first.
+
+```html
+<link rel="stylesheet" href="https://github.com/kud/webext-ui/blob/HEAD/docs/vendor/tokens.css" />
+<link rel="stylesheet" href="https://github.com/kud/webext-ui/blob/HEAD/docs/vendor/webext-ui.css" />
+<link rel="stylesheet" href="https://github.com/kud/webext-ui/blob/HEAD/docs/theme.css" />
+<link rel="stylesheet" href="https://github.com/kud/webext-ui/blob/HEAD/docs/popup.css" />
+```
+
+Keep `theme.css` separate from `popup.css`. A page that links the vendored pair without it quietly falls back to the default orange, which is what happens the day an extension gains an options page. See [Theming](/projects/webext-ui/docs/theming).
+
+## Browser support
+
+The stylesheets use `color-mix()` and relative colour syntax, so they need Firefox 128 or later. If your extension declares `data_collection_permissions` (Firefox 140), set `"strict_min_version": "142.0"` under `browser_specific_settings.gecko` and the floor is stated in the manifest.
+
+## Developing the package
+
+```sh
+git clone https://github.com/kud/webext-ui.git
+cd webext-ui
+npm install
+npm run build
+npm test
+```
+
+Edit `src/css/tokens.css` and `src/css/webext-ui.css`, never `dist/`. `npm run build` bundles the CLI with `tsup`, then copies both CSS files into `dist/` with the `@VERSION@` placeholder in their header replaced by the `package.json` version. `npm test` builds first and then runs Vitest, so tests always see a freshly stamped `dist/`. Open `demo/index.html` after a build to see every primitive in both themes; appending `#f-btn`, `#f-input`, `#f-toggle` or `#f-reveal` forces that control into a focus state.

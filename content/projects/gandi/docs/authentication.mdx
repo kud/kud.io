@@ -1,0 +1,47 @@
+---
+title: 🔑 Authentication
+description: How the library finds your Gandi API key and how to introspect a token.
+---
+
+Every function in the library takes the API key as its first argument. There is no client to construct and no hidden state.
+
+## Resolving the key
+
+`getApiKey()` checks two places, in order:
+
+1. The `GANDI_API_KEY` environment variable.
+2. `~/.config/gandi/config.toml`:
+
+```toml
+api_key = "your-personal-access-token"
+```
+
+If neither yields a key, it throws an error tagged `{ kind: "no-token" }` (see [Client and errors](/projects/gandi/docs/client-and-errors)). A missing or unreadable config file falls through to that error rather than throwing a file-system error.
+
+```ts
+import { getApiKey, listDomains } from "@kud/gandi"
+
+const apiKey = getApiKey()
+const domains = await listDomains(apiKey)
+```
+
+You can also skip `getApiKey` entirely and pass any string you obtained elsewhere.
+
+## Inspecting a token
+
+`getTokenInfo(apiKey)` asks Gandi what the token is and when it lapses, so you find out before a call fails.
+
+```ts
+const info = await getTokenInfo(apiKey)
+
+info.pat_name   // the token's name
+info.scope      // string[] of granted scopes
+info.entities   // { id: string }[]
+info.expires_in // seconds until expiry
+```
+
+It calls `https://id.gandi.net/tokeninfo`, not `api.gandi.net`, and needs no extra scope, so it works even with a least-privilege token.
+
+## Request behaviour
+
+Requests go to `https://api.gandi.net/v5` with a `Bearer` authorisation header. A `401` or `403` response is raised as an `unauthorized` auth error; any other failure becomes an ordinary `Error` carrying Gandi's `message` (or `HTTP <status>` if the body has none). A `204` response resolves to `undefined`.

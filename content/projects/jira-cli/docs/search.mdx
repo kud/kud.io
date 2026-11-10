@@ -1,0 +1,53 @@
+---
+title: 🔎 Search and metadata
+description: Run JQL, find people, inspect what your instance supports and call any REST endpoint.
+---
+
+## Search
+
+```sh
+jira search 'project = ABC AND created >= -7d' --json | jq -r '.[].key'
+jira count 'project = ABC AND status = Done'
+```
+
+`search <jql>` takes `-n, --limit <n>` (default 50) and `--json`. See [Setup](/projects/jira-cli/docs/setup) for the truncation exit code. `count` prints the number of matches.
+
+## People
+
+```sh
+jira whoami
+jira user search ada --project ABC
+```
+
+`user search <query>` takes `-p, --project <key>` to restrict to users assignable on that project, and `-n, --limit <n>` (default 20).
+
+## Instance metadata
+
+`jira meta` shows what your Jira supports, useful for getting names right before creating things:
+
+```sh
+jira meta issuetypes      # also: priorities, statuses, resolutions, linktypes
+jira meta labels
+jira meta filters
+jira meta permissions ABC
+jira meta server
+```
+
+## Escape hatch
+
+Anything not covered goes through `jira api`:
+
+```sh
+jira api /rest/api/3/myself
+jira api /rest/api/3/issue/ABC-123/watchers -X POST -d '{"accountId":"..."}'
+```
+
+`-X, --method` defaults to `GET`, and `-d, --data` takes a JSON body. A 2xx response with an empty body prints nothing and exits 0, so `null` only ever means Jira really answered null. A non-2xx response is an error and shows the body.
+
+## Scripting
+
+Every read command takes `--json`, and colour is off when stdout is not a TTY or `NO_COLOR` is set:
+
+```sh
+jira issue list --mine --json | jq -r '.[].key'
+```

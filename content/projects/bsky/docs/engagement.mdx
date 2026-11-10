@@ -1,0 +1,35 @@
+---
+title: 💜 Engagement
+description: Like, repost and follow, and reverse each one.
+---
+
+Engagement functions take a post URL (a `bsky.app` link or `at://` URI) or, for follows, a handle. All return `Promise<void>`.
+
+```ts
+import { like, repost, follow, unlike, unrepost, unfollow } from "@kud/bsky"
+
+const post = "https://bsky.app/profile/alice.example.com/post/3kexample"
+
+await like(post)
+await repost(post)
+await follow("alice.example.com")
+```
+
+| Function | Argument | Does |
+| --- | --- | --- |
+| `like(url)` | post | Creates an `app.bsky.feed.like` record |
+| `repost(url)` | post | Creates an `app.bsky.feed.repost` record |
+| `follow(handle)` | handle or DID | Creates an `app.bsky.graph.follow` record |
+| `unlike(url)` | post | Deletes your like |
+| `unrepost(url)` | post | Deletes your repost |
+| `unfollow(handle)` | handle or DID | Deletes your follow |
+
+## Undoing
+
+The reversals look up the record you created before deleting it. If there is nothing to undo they throw rather than silently succeeding:
+
+- `unlike`: `You haven't liked that post.`
+- `unrepost`: `You haven't reposted that post.`
+- `unfollow`: `You don't follow <handle>.`
+
+Liking or following something twice is not guarded by the library; the server decides what happens.

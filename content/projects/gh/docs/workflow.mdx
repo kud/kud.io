@@ -1,0 +1,55 @@
+---
+title: 🧭 Workflow
+description: Pure semantics for a GitHub inbox, covering whose move a row is and how rows sort, group and filter.
+---
+
+`@kud/gh-workflow` is the workflow half of an inbox with no surface attached. Everything is a total function over plain data, so a terminal, a browser or a server route can use it. It imports no renderer, transport or filesystem; a test asserts this against the built output.
+
+```sh
+npm install @kud/gh-workflow
+```
+
+## Whose move is it
+
+`whoseMove(health, sectionId, standing?, theySpokeLast?, pinned?, ownsRepo?)` returns `you`, `them` or `unknown`. The third answer is deliberate: a row with no health (an issue, or a minimal fetch) is not "their move", it is a row that declines a verdict.
+
+`standing` says where you stand on the row, and is declared per search because nothing on a row records it:
+
+| Standing | Meaning |
+| --- | --- |
+| `authored` | you wrote the PR |
+| `queued` | a review was requested of you |
+| `spoken` | you have already reviewed it |
+
+`bandOf` adds two bands on top, `merge` and `draft`, for your own approved or draft PRs. Changing the health classifiers in `@kud/gh` moves rows between bands, so pin both ends when you touch them.
+
+## Rows and layout
+
+- `toGHItem(node)` maps a GraphQL node to a `GHItem`, and `computeHealth` / `healthOf` give the token behind it.
+- `sortItems`, `sortByRecency` and `insertRepoHeaders` order and group rows; `layoutGHItems(items, sectionId)` does it per tab, and `layoutSides` splits a tab into named sides.
+- `filterByRepos`, `filterByOrigin` and `filterBySearch` narrow a list.
+- `relativeTime`, `sizeOf`, `sizePartsOf` and `filesOf` format the small labels.
+
+## Configuration
+
+`configureInbox` supplies everything the library refuses to assume. The defaults are empty on purpose, since a ranking of one author's repos is wrong for the next reader.
+
+```ts
+import { configureInbox } from "@kud/gh-workflow"
+
+configureInbox({
+  repoPriority: ["acme/api-gateway", "acme/"],
+  labelPriority: ["bug", "app:*"],
+  impliedLabels: { "acme/plans": ["plan"] },
+  cacheNamespace: "my-cockpit",
+  cacheTtlMs: 20 * 60_000,
+})
+```
+
+An entry in `repoPriority` ending in `/` matches an owner; otherwise it must equal `owner/name`. `profiles` take a `RepoProfile` (`name`, `label`, `match`, `checkoutDir`); two or more turn on a toggle.
+
+## Search and references
+
+`parseSearchQuery` and `matchesSearchQuery` implement the `/` search: whitespace-split terms, quoted phrases, `author:` and `repo:` qualifiers, a leading `-` to negate, everything ANDed. An unknown `key:` falls back to plain text.
+
+`resolveRef` turns a typed reference into a row. The fetch is passed in (`fetchItemNode` from `@kud/gh` in a terminal), which keeps the package browser-safe.

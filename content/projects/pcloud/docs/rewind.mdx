@@ -1,0 +1,45 @@
+---
+title: ⏪ Rewind
+description: Undo recent deletions and edits by replaying pCloud's change log over the trash and revisions.
+---
+
+pCloud's web app has a Rewind feature, but there is no public API behind it. `listRewindFiles` and `restoreFromRewind` remain on `PCloudAPI` only so a caller gets a clear error instead of a missing method; they will fail.
+
+What the API does expose are the pieces Rewind is built from: the change log (`diff`) says what happened and when, the trash holds deletions not yet purged, and revisions hold earlier versions. `planRewind` and `applyRewind` replay the log backwards over those two recovery paths.
+
+## Plan, then apply
+
+```ts
+import { planRewind, applyRewind } from "@kud/pcloud"
+
+const plan = await planRewind(api, new Date("2026-07-30T20:30:00Z"), "/Documents")
+// { actions, since, scanned } and nothing has happened yet
+
+for (const action of plan.actions) console.log(action.kind, action.path)
+
+const outcomes = await applyRewind(api, plan)
+// [{ action, ok, detail }, ...]
+```
+
+Planning is separate so a caller can show the cost first. The optional third argument limits the plan to paths starting with that prefix.
+
+## What each action does
+
+| Event in the log | Action | Effect |
+| --- | --- | --- |
+| A deletion | `restore` | Restored from the trash |
+| `modifyfile` | `revert` | Reverted to the newest revision created at or before the cutoff |
+| A creation | `created` | Reported only, never acted on |
+
+Creations are deliberately left alone. The only way to undo one is to delete data, which is indistinguishable from the accident being repaired. A deleted folder is skipped as an action of its own because its children appear as separate events.
+
+A `revert` outcome reports `no revision from before that time` when nothing old enough exists, and every `ok: false` outcome carries pCloud's error in `detail`.
+
+## Limits
+
+- `planRewind` reads the 5000 most recent events and filters by time itself, because pCloud's `diff` does not parse ISO-8601 `after` values and returns the wrong window without an error.
+- If the cutoff reaches past those 5000 events, it throws and asks for a later time rather than planning over partial history.
+
+## Resolving paths
+
+Change-log entries carry a parent id but often no path. `pathResolver(api, entries?)` returns an async function that turns an entry into a readable path. See [Helpers](/projects/pcloud/docs/helpers).

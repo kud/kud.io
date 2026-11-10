@@ -1,0 +1,55 @@
+---
+title: 📖 Reading
+description: Fetch your timeline, author feeds, threads, notifications and profiles, and search posts and people.
+---
+
+All reads take an optional `limit` (default 25) and return plain, flattened objects.
+
+## Feeds and threads
+
+```ts
+import { getTimeline, getAuthorFeed, getThread } from "@kud/bsky"
+
+const home = await getTimeline(20)
+const theirs = await getAuthorFeed("alice.example.com", 10)
+const thread = await getThread("https://bsky.app/profile/alice.example.com/post/3kexample")
+```
+
+Each entry is a `FeedPost`:
+
+```ts
+type FeedPost = {
+  uri: string
+  handle: string
+  displayName?: string
+  text: string
+  createdAt: string
+  likeCount: number
+  repostCount: number
+  replyCount: number
+}
+```
+
+`getThread` returns the post itself followed by its direct replies. It fetches one level of depth only, and `limit` caps the number of replies, not the total.
+
+## Notifications
+
+`getNotifications(limit)` returns `{ reason, handle, text?, isRead, indexedAt }`. `reason` is the AT Protocol value, for example `like`, `repost`, `follow`, `reply`, `mention` or `quote`.
+
+## Profiles
+
+```ts
+const profile = await getProfile("alice.example.com")
+// { handle, displayName?, description?, followersCount, followsCount, postsCount }
+```
+
+Handles and DIDs are both accepted.
+
+## Search
+
+```ts
+import { searchPosts, searchActors } from "@kud/bsky"
+
+const posts = await searchPosts("at protocol", 10) // FeedPost[]
+const people = await searchActors("alice", 10)     // { handle, displayName?, description? }[]
+```

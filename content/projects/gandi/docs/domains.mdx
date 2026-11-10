@@ -1,0 +1,37 @@
+---
+title: 🌐 Domains
+description: Listing, fetching, checking, renewing and setting autorenew on domains.
+---
+
+All functions take `apiKey` first and talk to the `/domain` endpoints.
+
+| Function | Returns | Description |
+| --- | --- | --- |
+| `listDomains(apiKey)` | `Promise<Domain[]>` | Every domain on the account |
+| `getDomain(apiKey, domain)` | `Promise<Domain>` | One domain by FQDN |
+| `checkDomain(apiKey, name)` | `Promise<DomainCheck>` | Availability and pricing for a name (create process) |
+| `renewDomain(apiKey, domain, duration)` | `Promise<void>` | Renew for `duration` years |
+| `setAutorenew(apiKey, domain, enabled)` | `Promise<void>` | Switch autorenew on or off |
+
+```ts
+import { getDomain, checkDomain, renewDomain, setAutorenew } from "@kud/gandi"
+
+const domain = await getDomain(apiKey, "example.com")
+console.log(domain.status, domain.dates.registry_ends_at)
+
+const check = await checkDomain(apiKey, "example.org")
+for (const product of check.products) {
+  console.log(product.name, product.status, product.prices?.[0]?.price_after_taxes)
+}
+
+await renewDomain(apiKey, "example.com", 1)
+await setAutorenew(apiKey, "example.com", true)
+```
+
+## Shapes
+
+`Domain` carries `fqdn`, `fqdn_unicode`, `id`, `tld`, a `status` string array, a `dates` object (`created_at`, `registry_created_at`, `registry_ends_at`, `updated_at`), and optional `nameservers`, `autorenew` (`enabled`, `duration?`) and `services`.
+
+`DomainCheck` has an optional `currency` and a `products` array. Each product has `name`, `status`, an optional `process`, and optional `prices` entries with `min_duration`, `max_duration`, `duration_unit`, `price_before_taxes` and `price_after_taxes`.
+
+`checkDomain` URL-encodes the name for you.

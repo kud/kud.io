@@ -1,0 +1,81 @@
+---
+title: ⚙️ Settings
+description: Declare a settings schema once and read, write and observe it everywhere.
+---
+
+`defineSettings(defaults, options?)` declares a schema once and returns a typed store over `storage.sync` or `storage.local`. Defaults become a single fact instead of being restated at every read site with `x !== false` or `x || FALLBACK`.
+
+```js
+// src/settings.js
+const settings = webext.defineSettings(
+  { enabled: true, threshold: 30 },
+  { area: "sync" },
+)
+```
+
+A top-level `const` in a classic script lands in the shared global lexical scope, so `settings` is visible to every later script in that context without an import.
+
+## Options
+
+| Option | Values | Default |
+| --- | --- | --- |
+| `area` | `"sync"`, `"local"` | `"sync"` |
+
+## The returned object
+
+| Member | Description |
+| --- | --- |
+| `defaults` | The declared defaults, deep-frozen |
+| `get()` | Resolves every key, with defaults merged under whatever is stored |
+| `set(patch)` | Writes a partial update |
+| `onChange(listener)` | Subscribes to changes; returns an unsubscribe function |
+
+### get
+
+```js
+const values = await settings.get()
+document.querySelector("#enabled").checked = values.enabled
+```
+
+### set
+
+```js
+await settings.set({ enabled: false })
+```
+
+`set` throws synchronously on a key that was not declared, naming the declared keys. In a plain-JS content script a typo would otherwise write under a name nothing reads.
+
+### onChange
+
+```js
+settings.onChange((values, changed) => {
+  if ("enabled" in changed) toggleFeature(values.enabled)
+})
+```
+
+The listener receives the full current values and a `changed` object holding only the declared keys that moved. Changes in the other storage area are ignored. A key removed from storage is reported as its default rather than `undefined`. Call the returned function to unsubscribe.
+
+### defaults
+
+Use `settings.defaults` when a context needs a value before the first `get()` resolves, such as a content script rendering on load:
+
+```js
+let values = settings.defaults
+settings.get().then((stored) => (values = stored))
+```
+
+It is frozen all the way down, so a mutated nested default cannot silently change what every later `get()` merges over.
+
+## Types
+
+`defineSettings` widens literal defaults, so `{ enabled: true }` yields `enabled: boolean`, not the literal `true`. Values must be a `SettingsValue`: a string, number, boolean, `null`, or arrays and plain objects of those. Exported types: `Settings`, `SettingsArea`, `SettingsChangeListener`, `SettingsSchema`, `SettingsValue` and `DefineSettingsOptions`.
+
+## When get() rejects
+
+`get()` deliberately does not swallow storage failures. In Firefox the usual cause is `storage.sync` throwing because the manifest has no `browser_specific_settings.gecko.id`, so check that first. Resolving defaults instead would leave the extension running on defaults while the user's saved settings appear ignored, with nothing to point at the cause.
+
+Where a caller genuinely wants to carry on, take the defaults from the schema:
+
+```js
+const values = await settings.get().catch(() => settings.defaults)
+```

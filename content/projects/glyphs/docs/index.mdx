@@ -1,0 +1,14 @@
+---
+title: 👋 Introduction
+description: A single glyph table that generates typed TypeScript and escape-safe zsh bindings for terminal icons.
+---
+
+@kud/glyphs keeps every terminal glyph in one JSON file and generates the code that uses it, so no project has to hand-map Nerd Font codepoints again. Each glyph can carry up to three variants: a Nerd Font codepoint, a plain-Unicode fallback and an emoji.
+
+The same table feeds a typed TypeScript API and a set of ready-to-source zsh files. Codepoints are always written as escapes, never as raw private-use bytes, which keeps them visible in diffs and safe in editors.
+
+## What's here
+
+- [🔤 TypeScript API](/projects/glyphs/docs/typescript) — `glyphs`, `glyph()`, the `GlyphName` and `Variant` types, and `renderZsh()`.
+- [🐚 zsh](/projects/glyphs/docs/zsh) — the plugin, the per-variant files, and how to re-prefix them for your own namespace.
+- [🧩 Adding glyphs](/projects/glyphs/docs/adding-glyphs) — the `glyphs.json` format, naming rules and the generate step.

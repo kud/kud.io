@@ -1,0 +1,40 @@
+---
+title: 🧰 Helpers
+description: Shared formatting functions, the path resolver and an offline mock account for demos and tests.
+---
+
+## Formatting
+
+Presentation helpers live in the core so every front end renders the same value the same way.
+
+| Function | Example input | Output |
+| --- | --- | --- |
+| `formatBytes(bytes)` | `1048576` | `1 MB` (units: Bytes, KB, MB, GB, TB; `0` gives `0 Bytes`) |
+| `formatTimestamp(time?)` | `Thu, 30 Jul 2026 20:46:27 +0000` | `30 Jul 2026 20:46:27` (weekday and offset dropped; `-` if missing) |
+| `formatDate(time?)` | `Thu, 30 Jul 2026 20:46:27 +0000` | `30 Jul 2026` (built from UTC parts; empty string if unparseable) |
+
+pCloud sends RFC-1123 datetimes, which is why `formatDate` parses rather than slices.
+
+## Path resolver
+
+```ts
+import { pathResolver } from "@kud/pcloud"
+
+const toPath = pathResolver(api, entries)
+const path = await toPath(entries[0]) // "/Documents/Invoices/march.pdf"
+```
+
+Change-log metadata has a `parentfolderid` and a name but no path. The resolver walks parents up to the root and caches each folder. It seeds itself from the log entries first, then falls back to `listFolderById`, because a deleted folder can no longer be listed and its children are exactly what someone is trying to recover. Cycles in a malformed parent chain are detected and yield an empty prefix.
+
+## Mock account
+
+`createMockAPI()` returns a `PCloudAPI`-shaped object backed by fixtures. Reads return plausible data, and writes report success without doing anything, so a demo or test can run end to end with no account. Every name in the fixtures is invented, which makes it safe for screenshots.
+
+```ts
+import { createMockAPI } from "@kud/pcloud"
+
+const api = createMockAPI()
+const root = await api.listFolder("/")
+```
+
+Two companions supply data for a file browser's other tabs: `mockSyncPairs()` (three sync pairs, one deliberately unhealthy) and `mockSettings()` (ignore patterns and ignored paths).

@@ -1,0 +1,46 @@
+---
+title: 🔭 Reading
+description: The five read-only tools for searching posts, the timeline, notifications, profiles and threads.
+---
+
+Read tools never change anything and need no confirmation.
+
+| Tool            | Parameters                                  | Returns                                   |
+| --------------- | ------------------------------------------- | ----------------------------------------- |
+| `search_posts`  | `query` (required), `limit` (default 25)    | Posts matching the query                  |
+| `timeline`      | `limit` (default 25)                        | Your home timeline                        |
+| `notifications` | `limit` (default 25)                        | Your notifications                        |
+| `profile`       | `actor` (required)                          | A profile                                 |
+| `thread`        | `url` (required)                            | A post and its replies                    |
+
+## search_posts
+
+Searches Bluesky for posts matching `query`. `limit` is the maximum number of results.
+
+```json
+{ "query": "AT Protocol", "limit": 10 }
+```
+
+## timeline
+
+Returns the authenticated account's home timeline. Only `limit` is accepted.
+
+## notifications
+
+Returns the authenticated account's notifications. Only `limit` is accepted.
+
+## profile
+
+`actor` is a handle or a DID.
+
+```json
+{ "actor": "alice.example.com" }
+```
+
+## thread
+
+`url` is either a post URL or an `at://` URI. The result is the post together with its replies.
+
+```json
+{ "url": "https://bsky.app/profile/alice.example.com/post/3kexample" }
+```

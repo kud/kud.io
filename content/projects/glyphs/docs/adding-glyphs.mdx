@@ -1,0 +1,52 @@
+---
+title: 🧩 Adding glyphs
+description: How glyphs.json is structured and how to regenerate the bindings after editing it.
+---
+
+`glyphs.json` is the only file edited by hand. Everything else is generated from it.
+
+## Format
+
+Each key is a kebab-case name mapping to its variants:
+
+```json
+"check":  { "nerd": "F00C", "emoji": "✅" },
+"bullet": { "nerd": "2022", "unicode": "203A", "emoji": "•" }
+```
+
+- `nerd` and `unicode` are codepoints as hex strings, a single scalar each. Storing hex means the output is escaped by construction.
+- `emoji` is a literal string and may be a grapheme cluster. `⚠️` is U+26A0 followed by U+FE0F, stored as written and escaped only on output.
+- `nerd` is expected on every glyph. `unicode` and `emoji` are optional.
+
+## Regenerate
+
+```sh
+npm run generate
+```
+
+This rewrites:
+
+- `src/generated.ts`, the typed `glyphs` record.
+- `glyphs.plugin.zsh`, the default plugin entrypoint.
+- `zsh/nerd.zsh`, `zsh/emoji.zsh` and `zsh/unicode.zsh`.
+
+Each carries a "do not edit by hand" banner. Commit the regenerated files alongside the `glyphs.json` change.
+
+## Naming
+
+Kebab-case in the JSON becomes camelCase in TypeScript and upper snake case in zsh:
+
+| `glyphs.json` | TypeScript  | zsh                |
+| ------------- | ----------- | ------------------ |
+| `arrow-down`  | `arrowDown` | `ICON_ARROW_DOWN`  |
+| `key-command` | `keyCommand`| `ICON_KEY_COMMAND` |
+
+## Development
+
+```sh
+npm install
+npm run generate
+npm run typecheck
+npm test
+npm run build   # generate, then tsup into dist
+```

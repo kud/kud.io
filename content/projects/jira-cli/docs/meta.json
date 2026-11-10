@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "index",
+    "setup",
+    "issues",
+    "attachments",
+    "boards",
+    "search",
+    "automation",
+    "interactive"
+  ]
+}

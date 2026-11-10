@@ -1,0 +1,14 @@
+---
+title: 👋 Introduction
+description: A headless, dependency-free Jira Cloud client for Node, with ADF conversion, JQL helpers and shared config loading.
+---
+
+`@kud/jira` is a small TypeScript library that talks to the Jira Cloud REST API through plain `fetch`. It has no runtime dependencies and no hidden state, so the same client behaves identically in a CLI, an MCP server, a TUI or a test.
+
+## What's here
+
+- [🧭 Usage](/projects/jira/docs/usage) — creating a client, paging through searches, handling errors and faking `fetch` in tests
+- [📚 API reference](/projects/jira/docs/api) — every client method, grouped by area: issues, comments, worklogs, links, projects, agile and instance metadata
+- [🔎 JQL and search](/projects/jira/docs/jql) — building queries from options and turning a search box into JQL
+- [📝 Content and attachments](/projects/jira/docs/content) — converting between ADF and Markdown, locating where attachments were used, downloading them safely
+- [⚙️ Configuration](/projects/jira/docs/configuration) — the environment variables and config file that `loadConfig` resolves

@@ -1,0 +1,57 @@
+---
+title: 🧩 Environments
+description: Recipes for vanilla JS, React, Next.js and a CDN with no bundler.
+---
+
+Inkblot has no framework adapters. It is one function and an empty element, so the recipe is the same everywhere: call it from a handler, under your router.
+
+## Vanilla
+
+The [usage](/projects/inkblot/docs/usage) examples are all there is.
+
+## React
+
+```tsx
+const overlay = useRef<HTMLDivElement>(null)
+
+const go = async (event: React.MouseEvent<HTMLAnchorElement>) => {
+  event.preventDefault()
+  await spill(overlay.current!, { mode: "cover", from: event.currentTarget })
+  router.push(event.currentTarget.href)
+}
+
+return <div ref={overlay} aria-hidden />
+```
+
+## Next.js
+
+Use it in a client component. Importing the package on the server is safe: it touches neither `window` nor `document` at import time, and `spill()` and `clear()` do nothing outside a browser.
+
+```tsx
+"use client"
+
+import { spill } from "@kud/inkblot"
+```
+
+## CDN, no bundler
+
+The build is a single dependency-free ES module.
+
+```html
+<div id="overlay" aria-hidden="true"></div>
+<script type="module">
+  import { spill } from "https://cdn.jsdelivr.net/npm/@kud/inkblot/dist/index.js"
+
+  document.querySelector("button").addEventListener("click", (event) => {
+    spill(document.querySelector("#overlay"), {
+      mode: "veil",
+      from: event.currentTarget,
+      colour: "#2b1d14",
+    })
+  })
+</script>
+```
+
+## Out of scope
+
+Colour tokens, themes, typography, routing, sounds, deciding when ink is appropriate, and framework adapters. Inkblot spills the ink; the rest is yours.

@@ -1,0 +1,55 @@
+---
+title: 🐚 zsh
+description: Load glyphs as ICON_* variables, or re-prefix the published files for your own namespace.
+---
+
+Nerd Font glyphs need a [Nerd Font](https://www.nerdfonts.com/) in your terminal. Without one they render as a box.
+
+## The plugin
+
+`glyphs.plugin.zsh` sources `zsh/nerd.zsh`, which defines an `ICON_*` variable per glyph. No Node is involved.
+
+```zsh
+# antidote, in ~/.zsh_plugins.txt
+kud/glyphs
+
+# zinit
+zinit light kud/glyphs
+```
+
+For oh-my-zsh, clone the repo into `$ZSH_CUSTOM/plugins/glyphs` and add `glyphs` to `plugins=()`.
+
+```zsh
+print -P "$ICON_CHECK done"
+echo "$ICON_ARROW_RIGHT next"
+```
+
+Variable names are the glyph name in upper snake case: `arrow-right` becomes `ICON_ARROW_RIGHT`.
+
+## Per-variant files
+
+Each variant is published as a plain file under `zsh/`:
+
+| File               | Contents                                         |
+| ------------------ | ------------------------------------------------ |
+| `zsh/nerd.zsh`     | Every glyph, Nerd Font codepoints                |
+| `zsh/emoji.zsh`    | Every glyph, emoji (empty where a glyph has none) |
+| `zsh/unicode.zsh`  | Only the glyphs that have a plain-Unicode fallback |
+
+Values look like `ICON_CHECK=$'\U0000F00C'`: normalised eight-digit escapes, never raw bytes.
+
+## A custom prefix, without Node
+
+Re-prefix a file with `sed`. Anchoring on `^ICON_` swaps the variable name and leaves the escaped payload alone.
+
+```zsh
+curl -fsSL https://raw.githubusercontent.com/kud/glyphs/v0.4.0/zsh/nerd.zsh \
+  | sed 's/^ICON_/SHUI_ICON_/' > icons.zsh
+
+source icons.zsh
+# SHUI_ICON_CHECK=$'\U0000F00C'
+```
+
+Pin the tag you want in the URL. This is how [shui](https://github.com/kud/shui) builds its icon sets: a re-prefix run only when it bumps this package, then plain literal files sourced at runtime.
+
+From JavaScript, `renderZsh({ prefix })` does the same job; see the [TypeScript API](/projects/glyphs/docs/typescript).

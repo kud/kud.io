@@ -1,7 +1,7 @@
 ---
 title: "gamme"
 description: "🎛️ One Material design system for kud's Android apps: shared rows, marks, motion and rules, each app's own colours."
-hasDocs: false
+hasDocs: true
 ---
 
 The Material design system for kud's Android apps ([tutti](https://github.com/kud/tutti), [pastille](https://github.com/kud/pastille), and the ones to come).

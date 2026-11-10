@@ -1,0 +1,46 @@
+---
+title: 🗂️ Boards and sprints
+description: Browse projects, boards, sprints, epics and the backlog, and move issues into them.
+---
+
+## Projects
+
+```sh
+jira project list
+jira project view ABC
+jira project versions ABC
+jira project components ABC
+jira project statuses ABC
+```
+
+`proj` is an alias for `project`. Every subcommand takes `--json`.
+
+## Boards
+
+```sh
+jira board list --project ABC
+jira board view 42              # columns, their statuses, and the board's filter
+jira board issues 42 --jql 'assignee = currentUser()'
+jira board backlog 42
+jira board epics 42
+```
+
+`board list` takes `--project <key>`; `board issues` takes `-q, --jql <jql>` to narrow results. All take `--json`.
+
+## Sprints
+
+```sh
+jira sprint list 42 --state active
+jira sprint view 1234
+jira sprint issues 1234
+jira sprint add 1234 ABC-1 ABC-2
+```
+
+`sprint list <boardId>` takes `--state active|future|closed`, comma-separated to combine. `sprint add` moves issues into a sprint.
+
+## Epics and backlog
+
+```sh
+jira epic ABC-100               # the epic and its issues
+jira backlog add ABC-1 ABC-2    # move issues to the backlog
+```

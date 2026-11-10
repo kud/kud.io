@@ -1,0 +1,58 @@
+---
+title: ⚙️ How it works
+description: The Swift co-process, the generated app bundle, the stdio protocol and the first-run compile.
+---
+
+macOS only lists a process in Control Center's Now Playing tile when it owns the Now Playing slot, and a Node process cannot do that on its own. The package therefore runs a small native helper next to your code and talks to it over stdio.
+
+## The co-process
+
+`native/nowplaying-bridge.swift` is a faceless program with three jobs:
+
+1. **Claim the slot.** It plays a silent, looping audio buffer through `AVAudioEngine`. This is what makes macOS treat it as the active media app, independent of what else is playing.
+2. **Mirror metadata.** It reads JSON from stdin and writes the values into `MPNowPlayingInfoCenter`.
+3. **Relay buttons.** It enables the `MPRemoteCommandCenter` play, pause, toggle, next and previous commands and prints an event for each press.
+
+It knows nothing about any particular player.
+
+## The stdio protocol
+
+One JSON object per line, in both directions.
+
+**stdin** (Node to Swift) carries what is playing, using the same fields as `NowPlayingInfo`:
+
+```json
+{"title":"Intro","artist":"The xx","duration":126,"elapsed":30,"state":"playing"}
+```
+
+**stdout** (Swift to Node) carries button presses:
+
+```json
+{"event":"next"}
+```
+
+Malformed lines are ignored on both sides. stderr is inherited, so any native diagnostics, such as a failed audio engine start, appear in your terminal.
+
+If stdin closes, the co-process exits, which means it does not outlive a crashed Node process.
+
+## First-run compile and the app bundle
+
+There are no prebuilt binaries. On the first call to `createNowPlayingBridge()` the package:
+
+1. creates `NowPlayingBridge.app` under `$TMPDIR/macos-nowplaying-bridge/`
+2. compiles the Swift source into `Contents/MacOS/nowplaying-bridge` with `swiftc -O -swift-version 5`
+3. writes an `Info.plist` with the bundle identifier `io.kud.macos-nowplaying-bridge`, marked `LSUIElement` so it has no Dock icon
+
+The bundle matters: macOS only surfaces a process in Now Playing when it lives in an app bundle with a `CFBundleIdentifier`.
+
+Later calls find the binary and skip all three steps. The cache is keyed only on the binary existing, so clearing the temporary directory (a reboot usually does) triggers a recompile, and a package upgrade that changes the Swift source will not rebuild until the cached binary is removed:
+
+```sh
+rm -rf "$TMPDIR/macos-nowplaying-bridge"
+```
+
+## Platform limits
+
+- macOS only. The `os` field blocks installation elsewhere, and the factory throws if it is bypassed.
+- `swiftc` must be installed. Without it the first call rejects.
+- Zero npm dependencies at runtime; everything native is the single Swift file shipped in the package.

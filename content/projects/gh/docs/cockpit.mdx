@@ -1,0 +1,82 @@
+---
+title: 🛫 Cockpit
+description: Assemble your own GitHub PR dashboard from tabs, filters, drill-ins and extensions with @kud/gh-cockpit.
+---
+
+`@kud/gh-cockpit` is a library, not a CLI. It has no `bin`, because which searches become tabs and which repos rank first are not portable decisions. You write a short entry point that fetches, assembles and renders.
+
+```sh
+npm install @kud/gh-cockpit
+```
+
+Every tab splits into **Your move** and **Their move**, so the rows you can act on stop hiding among the ones you cannot.
+
+## A minimal entry point
+
+```tsx
+#!/usr/bin/env node
+import React from "react"
+import { render } from "ink"
+import { $ } from "zx"
+import {
+  App,
+  buildInboxQuery,
+  configureInbox,
+  detailFor,
+  layoutGHItems,
+  signalPath,
+  toGHItem,
+  withRetry,
+} from "@kud/gh-cockpit"
+
+$.verbose = false
+configureInbox({ repoPriority: ["acme/api-gateway", "acme/"], cacheNamespace: "my-cockpit" })
+
+const fetchCockpit = async () => {
+  const result = await withRetry(() => $`gh api graphql -f query=${buildInboxQuery({})}`.quiet())
+  const data = JSON.parse(result.stdout).data
+  const rows = (nodes, standing) => (nodes ?? []).map((n) => ({ ...toGHItem(n), standing }))
+  return {
+    login: data.viewer.login,
+    sections: [
+      { id: "mine", label: "Mine", items: layoutGHItems(rows(data.myPRs.nodes, "authored"), "mine") },
+    ],
+  }
+}
+
+render(<App fetcher={fetchCockpit} cacheKey="cockpit" title="cockpit" detailFor={detailFor} watchPath={signalPath()} />, { alternateScreen: true })
+```
+
+Point a `bin` at it in your own `package.json` and it is a command. `withRetry` matters: GitHub returns 502 under load, and a 502 is the server declining to answer, not an answer.
+
+## Exports
+
+| Export | Purpose |
+| --- | --- |
+| `defineCockpit(config)` | Types a config object (`tabs`, `repoPriority`, `labelPriority`, `impliedLabels`, `filter`, `filters`, `checkoutDir`, `cacheNamespace`, `cacheTtlMs`, `checkDrills`, `extensions`). |
+| `configureInbox(config)` | Applies host opinions, as described under [Workflow](/projects/gh/docs/workflow). |
+| `parseArgs(argv)` | Parses `--here`, `--include`, `--exclude` and a positional named filter. |
+| `registerCheckDrills(drills)` | Where a CI check drills in; unregistered checks open in a browser. |
+| `registerPrompts(forms)` | What a delegated agent is told. With none registered, `y` copies the row URL. |
+| `registerDecisionHooks(hooks)` | Hooks for the decision block shown in a PR view. |
+| `detailFor(ctx)` · `PrView` · `IssueView` | The drill-in views. |
+| `withRetry(fn)` | Retries transient 50x responses. |
+| `toGHItem` · `computeHealth` · `buildInboxQuery` · `fetchInbox` | Node to row, health token, and the inbox queries. |
+
+Two opt-in extensions, `delegateExtension` and `copyPromptExtension`, come from `@kud/gh-cockpit/extensions`. They are a separate entry point because each adds a keybinding, and importing one is how you say yes to it.
+
+## Filtering
+
+```sh
+cockpit --include 'acme/*,me/acme-*' --exclude acme/legacy
+cockpit --here
+cockpit work
+```
+
+`*` matches within one path segment and never across `/`, so `acme/*` cannot reach another owner. A bare owner is sugar for all its repos, and `--exclude` wins over `--include`. `--here` resolves the repo from your git remote and scopes every search server-side. A positional name selects a filter from `filters`; flags override it rather than merging with it.
+
+A tab is a `TabSpec`: a `label`, an optional `help`, and `searches` as GitHub search qualifiers (minus `is:pr`), each optionally with a `standing` of `authored`, `queued` or `spoken`.
+
+## Refreshing without polling
+
+`watchPath` is a file the cockpit watches. Writing a byte to it makes every open cockpit refetch, debounced. Have whatever mutates GitHub on your behalf write to `signalPath()`. Write a byte rather than `touch`ing: two touches in the same second can be coalesced.

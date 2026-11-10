@@ -1,0 +1,54 @@
+---
+title: ⚡ Running commands
+description: Run a shell command when the timer fires, where its output goes and what happens when it fails.
+---
+
+`--exec <command>` runs a shell command at fire time, so the timer can act without waiting for you to notice it.
+
+```sh
+ding 25m --exec 'npm run build'
+```
+
+## How it runs
+
+- The command runs through `/bin/sh -c` and inherits the environment of the shell that launched ding. It is not a login shell, so your rc files are not re-read. If you need one, ask for it explicitly: `--exec 'zsh -lc "…"'`.
+- It starts the moment the timer fires, not when you dismiss the ringing alarm.
+- `--exec` does not imply `--detach`. Add `--detach` yourself if you want the prompt back.
+
+## Log file
+
+Output from stdout and stderr is appended to `~/Library/Logs/ding/exec.log`. Set `DING_EXEC_LOG` to use another path.
+
+Each run is written as a block with a timestamp, the command, its output and a closing line such as `exit 0 · 1.2s`. The log rotates to `exec.log.1` once it passes 1 MB, and a single run captures at most 1 MB of output. A detached run prints the log path when it starts.
+
+## On success
+
+ding prints a one-line summary with the exit status, duration and log path.
+
+## On failure
+
+A non-zero exit, a signal or a command that cannot start (reported as status 127) does four things:
+
+1. Plays `--exec-fail-sound`, which defaults to `siren` and accepts the same values as `--sound`.
+2. Sends a "command failed" notification, unless `--no-notify` is set.
+3. Prints the failure and the last 20 lines of output to stderr.
+4. Makes ding itself exit with the command's status, so it composes with `&&` and `||` in scripts.
+
+`--no-sound` silences the failure sound too.
+
+## Recipes
+
+Fire-and-forget, with no banner and no countdown:
+
+```sh
+ding 21:40 --detach --no-notify --exec 'say "quota is back"'
+```
+
+Ring when Claude's usage window resets. Rather than guess `5h`, read the exact remaining time from [ccusage](https://github.com/ryoppippi/ccusage), which parses Claude Code's local logs, and pass it to ding:
+
+```sh
+mins=$(ccusage blocks --active --json --offline | node -e 'const {blocks=[]}=JSON.parse(require("node:fs").readFileSync(0));const a=blocks.find(b=>b.isActive);process.stdout.write(String(a?.projection?.remainingMinutes??""))')
+[ -n "$mins" ] && ding "${mins}m" "Claude quota is back"
+```
+
+`--offline` keeps it fast, and `remainingMinutes` is already relative, so there is no timezone arithmetic to get wrong.

@@ -1,0 +1,71 @@
+---
+title: 🧩 Components
+description: GammeTheme and the six v0.1 components, with their parameters and behaviour.
+---
+
+## GammeTheme
+
+```kotlin
+GammeTheme(
+    colors = GammeColors(light = lightScheme, dark = darkScheme),
+    darkTheme = isSystemInDarkTheme(),
+    dynamicColor = false,
+    trueBlack = false,
+) { /* app content */ }
+```
+
+- Uses the dynamic scheme only when `dynamicColor` is set and the device is API 31 or later; otherwise the app's own scheme. An app with no brand passes Material's baseline `lightColorScheme()` and `darkColorScheme()`.
+- `trueBlack` applies in dark only: `background` and `surface` become black, containers keep their steps.
+- Applies `GammeShapes` and `gammeTypography()`, provides `LocalContentColor` as `onSurface` (so untinted icons are never black on dark) and `LocalReducedMotion`.
+- `rememberReducedMotion()` watches the system animator duration scale live, so the setting applies without a restart.
+- Window background, true-black persistence and the in-app theme choice stay in each app.
+
+## SettingsGroup
+
+`SettingsGroup(title, glyphs = false, footnote = null) { rows }` draws an optional heading (`titleSmall`, a heading to TalkBack, 32 dp from the screen edge) above a card: a column clipped to the `large` shape, rows 2 dp apart, nothing painted behind. Each row paints its own `surfaceContainer`, so the gap is a real gap and holds on true black or dynamic colour. Set `glyphs = true` when any row has a glyph so text lines up at 56 dp throughout. `footnote` sits under the card in `bodySmall`.
+
+## SettingsRow
+
+Parameters: `title`, `detail`, `detailMaxLines`, `state: MarkState?`, `icon: Painter?`, `notice`, `unavailable`, `destructive`, `selected: Boolean?`, `opens`, `onClick`, `footer`, `trailing`.
+
+- Minimum height 56 dp, 16 dp horizontal and 12 dp vertical padding; the whole row is one touch target.
+- Under the title appears exactly one of `unavailable`, `notice`, or `detail` (led by a `StateMark` when `state` is set). A reason line is the warning glyph plus words, at full `onSurfaceVariant`, never faded.
+- **Read-only** (no `onClick`, `selected` null): no ripple, no chevron, full contrast, read by TalkBack as one item.
+- **Unavailable**: the row is disabled and TalkBack reads the reason with it. There is no `enabled` parameter; passing the reason is the only way to disable a row.
+- **Notice**: inactive for a reason outside the app; the row stays enabled and its control keeps the user's preference.
+- **Destructive**: title and glyph in `error`; the verb says what goes ("Empty bin").
+- **Selected** non-null: the row is a radio with a `RadioButton` in the leading slot; `icon` is ignored.
+- **Opens**: draws the end chevron; only for a row that opens a screen, menu or system picker, and not combined with `trailing`.
+
+## SwitchRow
+
+`SwitchRow(title, checked, onCheckedChange, detail, state, icon, notice, unavailable, footer)`. The row is the only touch target (toggleable, switch role) and plays the select haptic. The `Switch` inside draws state only, with no click handler, so TalkBack sees one target, not two. A check mark sits in the thumb when on. Disabled colours come from Material alone, never faded twice.
+
+## StateMark
+
+```kotlin
+enum class MarkState { Done, NotYet, OnItsWay, Resting, NeedsALook, NotKnown }
+```
+
+A 16 dp decorative glyph; the words beside it carry the state.
+
+| State | Glyph | Tint |
+| --- | --- | --- |
+| `Done` | check circle | `onSurface` |
+| `NotYet` | ring | `onSurfaceVariant` |
+| `OnItsWay` | sync (never spins) | `onSurfaceVariant` |
+| `Resting` | moon | `onSurfaceVariant` |
+| `NeedsALook` | warning | `onSurfaceVariant` |
+| `NotKnown` | dashed ring | `outline` |
+
+## EmptyState
+
+`EmptyState(title, icon, detail = null, action: GammeAction? = null)` with `GammeAction(label, onClick)`. A 56 dp `surfaceContainerHigh` disc holding a 28 dp glyph, a `titleMedium` heading, an optional `bodyMedium` detail and at most one `FilledTonalButton`. Centred with 32 dp side padding. Skip the action when the screen already has one (a FAB), and never show it before the data has loaded.
+
+## SelectChip
+
+`SelectChip(selected, onClick, label, icon = null, iconWhenUnselected = false, role = Role.Tab)`. A pill 36 dp tall inside a 48 dp target. Unselected is `surfaceContainerHigh`; selected is `secondaryContainer` with a glyph (the supplied one, or a check) and a SemiBold label. **Its width never changes**: both faces are laid out together and only their opacity moves. Use `Role.RadioButton` for a single choice in a form and `Role.Tab` for a filter row over a list.
+
+## Not in v0.1
+
+Sheet, passing message, menu, top bar, segmented control wrapper, toggle and action chips, list card, extended FAB rules, banner, press and focus indication, `RevealRow` and the copy tests. Each app keeps its own until a second app needs the same thing.

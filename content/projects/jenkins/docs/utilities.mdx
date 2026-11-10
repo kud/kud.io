@@ -1,0 +1,47 @@
+---
+title: 🔧 Utilities
+description: Helpers for tidying URLs, parsing job and build links, and turning builds into status tokens and short durations.
+---
+
+## URL helpers
+
+| Function                  | Behaviour                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------ |
+| `normalizeUrl(url)`       | Repairs a missing slash pair: `http:/host` becomes `http://host`               |
+| `ensureScheme(url)`       | Prefixes `https://` onto a bare host; leaves an existing `http(s)://` alone    |
+| `parseBuildSpecifier(input)` | Classifies a job name, job URL or build URL                                 |
+
+`parseBuildSpecifier` is for command-line style input where a person may paste either a name or a link:
+
+```ts
+parseBuildSpecifier("api-gateway")
+// { type: "job", job: "api-gateway" }
+
+parseBuildSpecifier("https://jenkins.example.com/job/api-gateway/")
+// { type: "job-url", baseUrl: "https://jenkins.example.com", job: "api-gateway" }
+
+parseBuildSpecifier("https://jenkins.example.com/job/api-gateway/142/")
+// { type: "build-url", baseUrl: "https://jenkins.example.com", job: "api-gateway", buildNumber: "142" }
+```
+
+An empty input gives `{ type: "empty" }`, and a URL with no `/job/` segment gives `{ type: "url-unknown", href }`. Only the first job segment is read, so nested folder URLs are not parsed into a full name. `buildNumber` is a string.
+
+## Build status and timing
+
+These helpers keep presentation decisions out of the library while giving every front end the same answer.
+
+`buildStatusToken(build)` maps a build to one of `"success"`, `"failure"`, `"unstable"`, `"aborted"`, `"running"` or `"unknown"`. A build that is still `building` is always `"running"`, whatever its previous result. Map the token to colours in your own interface.
+
+```ts
+const build = await client.getBuild("acme/api-gateway")
+buildStatusToken(build) // "success"
+fmtDuration(build)      // "3m"
+fmtAge(build)           // "12m ago"
+```
+
+- `fmtDuration(build)` returns a compact elapsed time: `820ms`, `42s`, `3m` or `2h`. A running build is measured against now.
+- `fmtAge(build)` returns how long ago the build started: `5s ago`, `12m ago`, `3h ago` or `2d ago`, or `-` when there is no timestamp.
+
+## Types
+
+The shapes behind every method are exported from the package root: `JenkinsJob`, `JenkinsBuild`, `JenkinsArtifact`, `JenkinsBuildChanges`, `JenkinsParameterDefinition`, `DiagnoseBuildOptions`, `DiagnoseBuildResult`, `JenkinsNode`, `JenkinsNodeDetail`, `JenkinsView`, `JenkinsViewDetail`, `JenkinsSystemInfo`, `JenkinsPlugin` and others.

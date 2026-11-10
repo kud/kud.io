@@ -1,0 +1,71 @@
+---
+title: 🎨 Theming
+description: The design tokens, how an extension sets its accent, and the contrast rules the palette follows.
+---
+
+`tokens.css` defines everything as custom properties on `:root`, with `color-scheme: light dark` and a `prefers-color-scheme: dark` block that swaps the colour values. There is no theme switch to wire up.
+
+## Setting your accent
+
+An extension overrides one pair, and only that pair, in its own `theme.css`:
+
+```css
+:root {
+  --accent: #1a73e8;
+  --accent-fg: #ffffff; /* must reach 4.5:1 on --accent */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: #8ab4f8;
+    --accent-fg: #1c1b22;
+  }
+}
+```
+
+`--accent-fg` moves with `--accent`, so check it rather than guess. The default accent is orange (`#f0560e`) with ink (`#1c1b22`) as its foreground: 4.92:1, where white would be 3.48:1 and fail AA.
+
+Never put the accent in text. A status label in the accent colour should be a filled `.badge-accent`, so the text sits on the accent instead.
+
+## Colour tokens
+
+| Token | Light | Dark | Use |
+| --- | --- | --- | --- |
+| `--bg` | `#ffffff` | `#1c1b22` | Page surface |
+| `--fg` | `#1c1b22` | `#fbfbfe` | Body text |
+| `--muted` | `#5b5b66` | `#b1b1bd` | Secondary text; the lightest colour text may use |
+| `--faint` | `#8f8f9d` | `#8f8f9d` | Non-text only: icons, dividers, disabled edges |
+| `--hover` | `#f5f5f7` | `#2b2a33` | Hover and track fills |
+| `--border` | `#ededf0` | `#2b2a33` | Dividers, never a control edge |
+| `--border-control` | `#8f8f9d` | `#8f8f9d` | Control edges (meets WCAG 1.4.11) |
+| `--accent`, `--accent-fg` | `#f0560e`, `#1c1b22` | `#ff9a3d`, `#1c1b22` | Product identity |
+| `--success` | `#017a40` | `#81c995` | Positive feedback |
+| `--danger` | `#d70022` | `#ff6b6b` | Errors |
+
+Every pair is contrast-checked and the figures in the source comments are computed WCAG 2.1 ratios.
+
+## Focus
+
+`--focus-ring` (the accent), `--focus-ring-width` (`2px`) and `--focus-ring-offset` (`2px`) drive the global `:focus-visible` outline on links, buttons, form controls, `summary` and `[tabindex]`. The offset lets the ring clear an accent-filled control.
+
+## Scale tokens
+
+| Group | Tokens |
+| --- | --- |
+| Spacing (4px base) | `--space-1` 4, `--space-2` 8, `--space-3` 12, `--space-4` 16, `--space-6` 24, `--space-8` 32 |
+| Type size | `--text-xs` 11, `--text-sm` 12, `--text-base` 14, `--text-lg` 15 (px) |
+| Line height | `--line-tight` 1.2, `--line-base` 1.4, `--line-loose` 1.6 |
+| Fonts | `--font-sans` (system UI stack), `--font-mono` |
+| Radii | `--radius-sm` 4, `--radius-md` 6, `--radius-lg` 8, `--radius-xl` 12, `--radius-pill` 999 |
+| Sizing | `--control-height` 38px, `--popup-narrow` 260px, `--popup-wide` 360px |
+| Motion | `--dur-fast` 150ms, `--dur-slow` 300ms, `--ease` |
+
+Treat the scale as shared. Override it only with a reason worth writing down.
+
+## Optional layout hooks
+
+Two properties are read with a fallback and are not defined in `tokens.css`: `--page-width` (default `600px`, for `.page`) and `--list-max-height` (default `340px`, for `.list`). Set them in your own stylesheet if the defaults don't suit.
+
+## Motion and no external references
+
+Under `prefers-reduced-motion: reduce`, animations and transitions are cut to near zero. The stylesheet contains no `url()` references, and the test suite fails the build if one appears, so consumers never need to edit `web_accessible_resources`.

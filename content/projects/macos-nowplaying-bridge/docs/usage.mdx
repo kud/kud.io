@@ -1,0 +1,96 @@
+---
+title: 🎧 Usage
+description: Wire a Node player up to Control Center, from first update to clean shutdown.
+---
+
+## Requirements
+
+- macOS (the package declares `"os": ["darwin"]`, and `createNowPlayingBridge()` throws on any other platform)
+- Node.js 20 or later
+- `swiftc` on your `PATH`, which comes with the Xcode Command Line Tools (`xcode-select --install`)
+
+## A minimal player
+
+```ts
+import { createNowPlayingBridge } from "@kud/macos-nowplaying-bridge"
+
+const bridge = await createNowPlayingBridge()
+
+bridge.on("toggle", () => player.toggle())
+bridge.on("next", () => player.next())
+bridge.on("previous", () => player.previous())
+
+bridge.update({
+  title: "Intro",
+  artist: "The xx",
+  album: "xx",
+  duration: 126,
+  elapsed: 0,
+  state: "playing",
+})
+```
+
+Open Control Center and the track appears in the Now Playing tile. Pressing its buttons, or the media keys, calls your handlers.
+
+## Keep Control Center in step with your player
+
+Call `update()` whenever something worth showing changes: a new track, a pause, a seek. Control Center extrapolates the progress bar from `elapsed` and `rate` between updates, so you do not need to push a tick every second.
+
+```ts
+// Track changed
+bridge.update({ title, artist, album, duration, elapsed: 0, state: "playing" })
+
+// Paused at 41 seconds
+bridge.update({ title, elapsed: 41, state: "paused" })
+
+// User scrubbed
+bridge.update({ title, elapsed: seekPosition, state: "playing" })
+```
+
+Fields you omit keep their previous value in Control Center, with one exception: `rate` resets to `1` on every update. See the [API reference](/projects/macos-nowplaying-bridge/docs/api#update) for the details.
+
+## Handle every button
+
+`play` and `pause` are sent by the dedicated commands, while `toggle` is sent when the system asks for play/pause as a single action (the usual media-key behaviour). Handle all three, and update Control Center afterwards so it reflects what your player actually did.
+
+```ts
+bridge.on("play", () => {
+  player.play()
+  bridge.update({ title: player.title, elapsed: player.position, state: "playing" })
+})
+
+bridge.on("pause", () => {
+  player.pause()
+  bridge.update({ title: player.title, elapsed: player.position, state: "paused" })
+})
+```
+
+## Artwork
+
+Pass `artworkUrl` as a remote URL or a `file://` URL. The image is fetched once; repeated updates with the same URL do not trigger another download.
+
+```ts
+bridge.update({
+  title: "Intro",
+  artworkUrl: "file:///Users/me/Music/xx/cover.jpg",
+})
+```
+
+## Shut down
+
+```ts
+process.on("SIGINT", () => {
+  bridge.stop()
+  process.exit(0)
+})
+```
+
+`stop()` kills the co-process and releases the Now Playing slot. The co-process also exits on its own when your Node process goes away, because it quits as soon as its stdin closes.
+
+## Try it
+
+The repository ships a throwaway driver that claims the slot with a fixed track and logs every button press:
+
+```sh
+npx tsx examples/demo.ts
+```

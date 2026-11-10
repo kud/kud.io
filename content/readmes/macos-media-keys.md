@@ -1,7 +1,7 @@
 ---
 title: "macos-media-keys"
 description: "Send macOS system media keys (play/pause, next, previous, fast-forward, rewind) from Node"
-hasDocs: false
+hasDocs: true
 ---
 
 ## Features
@@ -32,23 +32,3 @@ await sendMediaKey("previous")
 await sendMediaKey("forward") // fast-forward within the track
 await sendMediaKey("rewind")
 ```
-
-### Accessibility permission
-
-Posting media keys requires the **calling process** to have Accessibility access. Grant it in System Settings → Privacy & Security → Accessibility. If permission is absent, `sendMediaKey` rejects with a message pointing you to that setting.
-
-## Development
-
-```sh
-git clone https://github.com/kud/macos-media-keys.git
-cd macos-media-keys
-npm install
-npm run dev
-```
-
-| Script              | Purpose                      |
-| ------------------- | ---------------------------- |
-| `npm run build`     | Compile TypeScript with tsup |
-| `npm run dev`       | Watch mode                   |
-| `npm run typecheck` | Type-check without emitting  |
-| `npm test`          | Run vitest suite             |

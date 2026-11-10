@@ -1,0 +1,73 @@
+---
+title: 📝 Listing sync
+description: Keep a local listing.json and the live AMO listing in step with diffListing and buildListingPatch.
+---
+
+The sync flow is: read a local file, compare it to the live add-on, and send only the fields that differ.
+
+```ts
+import {
+  createAmoClient,
+  readListingFile,
+  diffListing,
+  buildListingPatch,
+} from "@kud/amo"
+
+const amo = createAmoClient({
+  issuer: process.env.AMO_JWT_ISSUER!,
+  secret: process.env.AMO_JWT_SECRET!,
+})
+const guid = "my-addon@example.com"
+
+const local = await readListingFile("listing.json")
+const live = await amo.getAddon(guid)
+
+const changes = diffListing(local, live)
+if (changes.length > 0) {
+  await amo.updateListing(guid, buildListingPatch(changes))
+}
+```
+
+## The listing file
+
+`readListingFile(path)` reads JSON and validates it, throwing a clear `cannot read` or `cannot parse` error otherwise. The file must be an object, and `categories` and `tags`, if present, must be arrays of strings.
+
+Recognised fields (`LISTING_FIELDS`): `name`, `summary`, `description`, `homepage`, `support_email`, `support_url`, `categories`, `tags`. Text fields may be a plain string or a locale map such as `{ "en-US": "..." }`. Fields you leave out are never diffed or changed.
+
+```json
+{
+  "name": "Example Add-on",
+  "summary": "A short one-line summary.",
+  "description": "Longer **Markdown** description.",
+  "categories": ["tabs"],
+  "tags": ["productivity"]
+}
+```
+
+`parseListing(input, source?)` does the same validation on an already-parsed value.
+
+## Diffing
+
+`diffListing(local, live)` returns a `ListingChange[]`, each `{ field, live, patch }`:
+
+- Text fields compare the `en-US` value only. Entities and AMO's outgoing-link wrappers are normalised first, and whitespace at the ends is ignored.
+- `description` is compared as Markdown against AMO's rendered HTML, so formatting and links do not cause false differences. `sameDescription(local, live)` exposes this comparison.
+- `categories` and `tags` compare as sorted slug lists, order ignored. The live category shape (`{ firefox: [...] }` or a plain array) is handled for you.
+
+## Patching
+
+`buildListingPatch(changes)` turns the diff into the body for `amo.updateListing(guid, fields)`. A string value is sent as given; use a locale map if you need another locale.
+
+## Text helpers
+
+These are exported for building your own comparisons.
+
+| Helper                                | Description                                                                 |
+| ------------------------------------- | --------------------------------------------------------------------------- |
+| `normalizeText(value)`                | Decode entities and unwrap AMO outgoing URLs                                |
+| `sameText(a, b)`                      | Compare two values after normalising and trimming                           |
+| `localizedEnUs(value, locale?)`       | Pick a string from a plain string or locale map; defaults to `en-US`        |
+| `categorySlugs(value)`                | Sorted slugs from either live category shape                                |
+| `extractCaption(caption)`             | The `en-US` caption text, or `null`                                         |
+| `markdownToPlainText(value)`          | Strip Markdown (and inline HTML) to collapsed plain text                    |
+| `htmlToPlainText(value)`              | Strip HTML to collapsed plain text; links become `label (url)`              |

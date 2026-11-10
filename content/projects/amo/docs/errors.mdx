@@ -1,0 +1,53 @@
+---
+title: 🛡️ Errors and security
+description: Handle AmoError failures, and how Amo keeps secrets out of messages and logs.
+---
+
+## AmoError
+
+Every failed request throws an `AmoError`, an `Error` with `name === "AmoError"` and these extra fields:
+
+| Field          | Description                                                  |
+| -------------- | ------------------------------------------------------------ |
+| `kind`         | One of the kinds below                                       |
+| `status`       | HTTP status, or `null` for a network failure                 |
+| `detail`       | Message from AMO (the `detail` field, or its field errors)   |
+| `retryAfterMs` | Parsed `Retry-After` header, or `null`                       |
+
+| `kind`         | When                          |
+| -------------- | ----------------------------- |
+| `bad-request`  | HTTP 400                      |
+| `unauthorized` | HTTP 401                      |
+| `forbidden`    | HTTP 403                      |
+| `not-found`    | HTTP 404                      |
+| `rate-limited` | HTTP 429                      |
+| `server`       | HTTP 5xx                      |
+| `network`      | No response (`status` is null) |
+| `unexpected`   | Any other status              |
+
+```ts
+import { isAmoError } from "@kud/amo"
+
+try {
+  await amo.getAddon("my-addon@example.com")
+} catch (error) {
+  if (isAmoError(error) && error.kind === "not-found") {
+    console.error("No such add-on")
+  } else {
+    throw error
+  }
+}
+```
+
+Network errors, 429 and 5xx are retried first (see [Client](/projects/amo/docs/client)); the error is thrown once retries run out. `createAmoError` and `kindForStatus(status)` are exported for building or mapping errors yourself.
+
+## Secret redaction
+
+The API secret and the signed token are scrubbed from error messages before they are thrown, replaced with `<redacted>`. Two helpers are exported:
+
+- `redactSecrets(text, secrets)` replaces every occurrence of each non-empty secret in a string.
+- `redactHeaders(headers)` returns a copy with the `Authorization` header replaced by `JWT <redacted>`, safe to log.
+
+## JWT helper
+
+`createJwt({ issuer, secret, nowMs?, jti?, ttlSeconds? })` signs an HS256 token with `iss`, `jti`, `iat` and `exp`. The lifetime defaults to 60 seconds and the `jti` to a random UUID. The client calls it for each attempt, so you rarely need it directly. `base64urlEncode` is exported alongside it.

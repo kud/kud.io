@@ -1,0 +1,34 @@
+---
+title: 📁 Collections and topics
+description: Browse and search curated collections and Unsplash's editorial topics.
+---
+
+Every tool here accepts `page` (default 1) and, where it lists things, `per_page` (1 to 30, default 10).
+
+## Collections
+
+| Tool                     | Parameters                                          | Returns                                   |
+| ------------------------ | --------------------------------------------------- | ----------------------------------------- |
+| `list_collections`       | `page`, `per_page`                                  | Array of collection summaries             |
+| `get_collection`         | `id`                                                | One collection summary                    |
+| `get_collection_photos`  | `id`, `page`, `per_page`, `orientation`             | Array of photo summaries                  |
+| `search_collections`     | `query`, `page`, `per_page`                         | `total`, `total_pages`, `results`         |
+| `get_collection_related` | `id`                                                | Array of related collection summaries     |
+
+A collection summary contains `id`, `title`, `description`, `total_photos`, a `cover_photo` (a photo summary, or `null`), the curating `author` and a `link` to the collection page.
+
+`orientation` is `landscape`, `portrait` or `squarish`.
+
+To pull a random image from a collection, pass its ID to `random_photo` via `collections` (see [Photos](/projects/mcp-unsplash/docs/photos)).
+
+## Topics
+
+| Tool               | Parameters                                          | Returns                      |
+| ------------------ | --------------------------------------------------- | ---------------------------- |
+| `list_topics`      | `page`, `per_page`, `order_by`                      | Array of topic summaries     |
+| `get_topic`        | `id_or_slug`                                        | One topic summary            |
+| `get_topic_photos` | `id_or_slug`, `page`, `per_page`, `orientation`     | Array of photo summaries     |
+
+`order_by` for `list_topics` is one of `featured`, `latest`, `oldest` or `position`.
+
+A topic summary contains `id`, `slug`, `title`, `description`, `total_photos`, a `cover_photo` (or `null`) and a `link`. Topics can be addressed by either their ID or their slug, so `get_topic_photos` works with a slug such as `nature`.

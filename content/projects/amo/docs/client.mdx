@@ -1,0 +1,77 @@
+---
+title: 🔌 Client
+description: Create an authenticated AMO client, tune retries, and read add-ons and version status.
+---
+
+## Creating a client
+
+`createAmoClient` needs the API key (the JWT issuer) and secret from your AMO developer account. Each request is signed with a fresh short-lived JWT. A missing `issuer` or `secret` throws immediately.
+
+```ts
+import { createAmoClient } from "@kud/amo"
+
+const amo = createAmoClient({
+  issuer: process.env.AMO_JWT_ISSUER!,
+  secret: process.env.AMO_JWT_SECRET!,
+})
+```
+
+### Options
+
+| Option         | Default                             | Description                                                          |
+| -------------- | ----------------------------------- | -------------------------------------------------------------------- |
+| `issuer`       | required                            | AMO API key, used as the JWT issuer                                  |
+| `secret`       | required                            | AMO API secret, used to sign each JWT                                |
+| `baseUrl`      | `https://addons.mozilla.org/api/v5` | Override the API root; trailing slashes are trimmed                  |
+| `maxRetries`   | `3`                                 | Retries for network errors, HTTP 429 and 5xx                         |
+| `retryDelayMs` | `500`                               | Base backoff delay, doubled on each attempt                          |
+| `fetch`        | global `fetch`                      | Custom fetch implementation, handy in tests                          |
+| `sleep`        | `setTimeout`-based                  | Custom delay function used between retries, handy in tests           |
+
+When AMO sends a `Retry-After` header, that delay is used instead of the exponential backoff. Other 4xx responses are not retried.
+
+The package also exports `AMO_API`, the default base URL, and the types `AmoClient`, `AmoClientOptions`, `AddPreviewOptions`, `GetVersionsOptions` and `PublicReadOptions`.
+
+## Methods
+
+The GUID is the add-on's id, for example `my-addon@example.com`. It is URL-encoded for you.
+
+| Method                                 | Description                                                         |
+| -------------------------------------- | ------------------------------------------------------------------- |
+| `getAddon(guid)`                       | Fetch the add-on, authenticated and live                            |
+| `updateListing(guid, fields)`          | Patch listing fields with a `Listing` object                        |
+| `uploadIcon(guid, file)`               | Upload an icon                                                      |
+| `listPreviews(guid)`                   | List previews ordered by `position`                                 |
+| `addPreview(guid, file, options?)`     | Add a preview                                                       |
+| `removePreview(guid, id)`              | Delete a preview                                                    |
+| `updatePreviewCaption(guid, id, text)` | Change a preview caption                                            |
+| `getVersions(guid, options?)`          | List versions, following pagination (capped at 20 pages)            |
+| `getVersionStatus(guid, version?)`     | Status of one version, or of the latest                             |
+
+Listing and preview methods are covered in [Listing sync](/projects/amo/docs/listing) and [Icon and previews](/projects/amo/docs/previews).
+
+## Version status
+
+`getVersions` accepts `{ filter }`, one of `"all_with_unlisted"`, `"all_without_unlisted"` or `"only_beta"`.
+
+`getVersionStatus` always queries with `all_with_unlisted`. Without a version number it picks the version with the highest `id`; with one, it finds that exact `version` string. It returns `null` when nothing matches, otherwise:
+
+```ts
+type VersionStatus = {
+  id: number
+  version: string
+  channel: string | null
+  fileStatus: string | null
+  approved: boolean // true when fileStatus is "public"
+}
+```
+
+```ts
+const status = await amo.getVersionStatus("my-addon@example.com", "1.4.0")
+if (status === null) console.log("no such version")
+else console.log(status.fileStatus, status.approved)
+```
+
+## Public reads
+
+`getPublicAddon(guid, { baseUrl?, fetch? })` is a standalone, unauthenticated read of the add-on. It needs no credentials, but the response may be cached by AMO. Use `amo.getAddon` when you need live data. It throws the same [`AmoError`](/projects/amo/docs/errors) on failure, though it does not retry.

@@ -1,0 +1,55 @@
+---
+title: 🔍 How it works
+description: Which commits are listed, how they are ordered and what to do when git stops on a conflict.
+---
+
+## Which commits are listed
+
+The CLI reads your current branch name, then asks git for the commits reachable from `<branch>` but not from where you are:
+
+```bash
+git log <current-branch>..<branch> --oneline
+```
+
+So a commit that is already on your branch never appears, even if it was also made on `<branch>`. Results are limited to what `--oneline` prints: short hash plus subject.
+
+If you are on a detached `HEAD`, the current branch resolves to `HEAD`, and the range becomes `HEAD..<branch>`, which still works.
+
+## Order
+
+Commits are listed **oldest first**, the reverse of `git log`. That means the order in the checklist is the order they were originally made, which is the safe order to replay them in.
+
+The selection is passed to git in checklist order, not in the order you ticked them. Ticking the last commit first makes no difference.
+
+## Applying them
+
+All ticked commits go to a single call:
+
+```bash
+git cherry-pick <hash1> <hash2> ...
+```
+
+Once git succeeds, the CLI prints each commit's short hash and subject.
+
+## Conflicts and errors
+
+If git cannot apply a commit, the call fails and the CLI prints `❌ Error:` followed by git's message, then exits with `1`. The CLI does not abort, skip or retry anything, so a conflict leaves the repository in the normal mid-cherry-pick state. Resolve it with ordinary git:
+
+```bash
+git status
+# fix the conflicted files, then
+git add <files>
+git cherry-pick --continue
+```
+
+or give up on the whole run:
+
+```bash
+git cherry-pick --abort
+```
+
+An unknown branch name is reported the same way, as an `❌ Error:` line from git.
+
+## Requirements
+
+Node.js 20 or later, and a git repository as the working directory. The command acts on the repository in the current directory, so run it from inside the branch you want to receive the commits.

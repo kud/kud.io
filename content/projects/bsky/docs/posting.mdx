@@ -1,0 +1,72 @@
+---
+title: ✍️ Posting
+description: Create posts, replies, quotes, image posts and self-threads, and manage your own posts.
+---
+
+## createPost
+
+```ts
+import { createPost } from "@kud/bsky"
+
+const { uri, cid } = await createPost("hello from @kud/bsky")
+```
+
+Signature: `createPost(text: string, opts?: PostOptions): Promise<{ uri; cid }>`
+
+| Option | Effect |
+| --- | --- |
+| `replyTo` | A `bsky.app` post URL or `at://` URI. The reply's root is resolved for you, so replying deep in a thread keeps it intact. |
+| `quote` | A post URL or `at://` URI to embed as a quote |
+| `image` | Path to a local image (`.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`), uploaded as a blob |
+| `alt` | Alt text for the image; defaults to an empty string |
+| `lang` | A language tag such as `"en"`, written to the post's `langs` |
+
+```ts
+await createPost("nice thread!", {
+  replyTo: "https://bsky.app/profile/alice.example.com/post/3kexample",
+})
+
+await createPost("look at this", { image: "./photo.png", alt: "A grey cat on a sofa" })
+```
+
+Things worth knowing:
+
+- Only one image per post is supported.
+- If both `image` and `quote` are given, the image wins and the quote is ignored.
+- Text is limited to 300 characters, counted as Unicode code points. Longer text throws `Post is <n> chars — Bluesky limit is 300.` before anything is sent.
+- An unsupported image extension throws `Unsupported image format: <ext>`.
+
+## Rich text
+
+Links, hashtags and mentions are detected automatically and sent as AT Protocol facets, with correct UTF-8 byte offsets.
+
+- **Links**: anything starting `http://` or `https://`, plus bare domains ending in a common TLD (`com`, `io`, `org`, `net`, `dev`, `app`, `sh`, `co`, `uk`, `fr`, `de`, `me`, `ai`, `tech`, `info`, `biz`, `cc`). Bare domains are linked as `https://`.
+- **Hashtags**: `#word`.
+- **Mentions**: `@handle.example.com`. The handle is resolved to a DID; if it cannot be resolved, it stays plain text.
+
+`extractFacets(text)` is exported if you want to inspect the result.
+
+## createThread
+
+```ts
+import { createThread } from "@kud/bsky"
+
+const posts = await createThread(["1/ the idea", "2/ the detail", "3/ the end"])
+```
+
+Posts the texts in order as a self-thread: the first is the root and each following post replies to the previous one. Every text is length-checked before the first post goes out, so an over-long entry fails the whole call rather than leaving half a thread. Returns one `{ uri, cid }` per post.
+
+## Managing your posts
+
+- `deletePost(input)` takes a post URL, an `at://` URI or a bare record key, and deletes it from your repo.
+- `listMyPosts(limit = 25)` returns `{ uri, rkey, text, createdAt }` for your own posts.
+- `postWebUrl(handle, rkey)` builds the `https://bsky.app/profile/<handle>/post/<rkey>` link.
+- `checkLength(text)` throws if the text is over 300 code points.
+
+## Resolving references
+
+These helpers back the options above and are exported too:
+
+- `resolveHandle(handle)` returns a DID; DIDs and a leading `@` are handled.
+- `parsePostUrl(input)` turns a post URL or `at://` URI into `{ did, rkey }`.
+- `getPostRef(input)` returns `{ ref, root }`, the post's `{ uri, cid }` and its thread root.

@@ -1,0 +1,55 @@
+---
+title: 🎨 Ink components
+description: Controlled Ink panels, health glyphs and the inbox extension API in @kud/gh-ink.
+---
+
+`@kud/gh-ink` renders GitHub PR objects in the terminal. Components are controlled: data arrives as props and the consuming surface owns fetching, so one panel works as a full-screen CLI or a single pane of a dashboard. Built on [`@kud/ink-ui`](https://github.com/kud/ink-ui), fed by `@kud/gh`.
+
+```sh
+npm install @kud/gh-ink @kud/gh
+```
+
+`ink` and `react` are peer dependencies.
+
+## Components and helpers
+
+| Export | What |
+| --- | --- |
+| `CommentsPanel` | Review threads and conversation. `x` resolves, `r` replies, `R` shows or hides resolved. |
+| `HealthPanel` | Checks, reviews and merge state. `↵` opens a check, `r` retriggers failed CI, `m` merges after confirmation. |
+| `healthDisplay` · `healthGlyph` · `healthColor` | Map a `Health` token to a glyph and an ink-ui colour. The glyph distinguishes, so the list reads without colour. |
+| `healthLegend` | Ordered `[Health, label]` pairs for a help legend. |
+| `renderMarkdown` | GitHub-flavoured markdown to styled terminal lines. |
+| `PrRow`, `SidePanel`, `StatusStripLine` | Row, sidebar and status-strip pieces of the inbox. |
+
+The inbox shell (`App` and its helpers) is also exported from here and re-exported by the cockpit.
+
+## Inbox extensions
+
+A host adds verbs and screens through `InboxExtension`.
+
+| Field | What |
+| --- | --- |
+| `key` | The keypress that opens it, matched after the inbox's own bindings. |
+| `scope` | `"item"` acts on the selected row and joins its action menu; `"global"` does not. |
+| `menuGroup` | `"act"`, `"open"`, or `"other"`. |
+| `hint` | Short footer label. |
+| `icon` | Nerd-font glyph, shown only in nerd icon mode. |
+| `body` | `(onExit, target) => ReactNode`, rendered inside the inbox frame. |
+| `run` | `(target) => void`, a verb that runs on the row instead of mounting `body`. |
+
+With `run`, the list stays on screen. `target.activity.set(url, activity)` says what the row shows, and `target.activity.merged(url)` plays the merged sparkle and drops the row.
+
+| `RowActivity` | The row shows |
+| --- | --- |
+| `glyph: "spin"` | A spinner; a second verb on the row is refused. |
+| `glyph: "failed"` | A red cross until `↵` opens the view or `esc` dismisses it. |
+| `prompt` | A confirmation such as `Land #42 · y to confirm`; it takes the keyboard. |
+| `trailing` | Words in the trailing column, muted, red or green. |
+| `nudge` | Shakes the glyph cell once, for a refusal with no panel. |
+
+Call `setIconMode("nerd")` from `@kud/ink-ui` before the first render to enable nerd icons; the default text mode drops the icon column.
+
+## Focus slot
+
+`App` draws one standing row above the tab strip for whatever to look at next. The fetch result carries `focus?: FocusSlot | null`: absent draws no row, `null` draws the dim empty line. `focusLabel` and `focusEmpty` word it, and `g` jumps to the focus target. `Section.icon` gives a tab a glyph that survives when the strip is narrow.

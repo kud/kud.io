@@ -1,0 +1,70 @@
+---
+title: 🖥️ Browser
+description: How GandiBody works, its props, the keys it responds to and the changes it can make.
+---
+
+`GandiBody` is the assembled interactive browser. It lists your domains, opens one, and shows its DNS records, web redirects and basic details. It does not call `render()` and does not own the terminal: quitting is reported through the required `onExit` callback, and the host decides what happens next.
+
+```tsx
+import { render } from "ink"
+import { GandiBody } from "@kud/gandi-ink"
+
+const { unmount } = render(<GandiBody onExit={() => unmount()} />)
+```
+
+## Props
+
+| Prop     | Type        | Required | Purpose                                                                                                   |
+| -------- | ----------- | -------- | --------------------------------------------------------------------------------------------------------- |
+| `onExit` | `() => void` | yes      | Called when the user presses `q` while browsing. The host owns the terminal lifecycle.                    |
+| `api`    | `GandiAPI`  | no       | An authenticated client from `@kud/gandi`. Defaults to `gandiAPI`, using the stored token.                |
+| `apiKey` | `string`    | no       | Resolved once and passed to every call. Defaults to `getApiKey()` from `@kud/gandi`.                      |
+| `domain` | `string`    | no       | A fully qualified domain name. When set, the browser opens straight onto that domain's DNS tab.           |
+
+Passing your own `api` (and `apiKey`) lets a host reuse an existing session, or mount the browser with no credential store at all, which is how the tests run.
+
+## Navigation
+
+There are two depths. The domain list is the top level; opening a domain shows three tabs: **DNS**, **Redirects** and **Info**. Each tab loads its own data when you switch to it, and the header shows a `read at HH:MM:SS` stamp so a reload that finds identical data still visibly did something.
+
+| Key         | Domain list       | Inside a domain                          |
+| ----------- | ----------------- | ---------------------------------------- |
+| `↑` / `↓`   | Move selection    | Move selection                           |
+| `↵` / `→`   | Open the domain   | `↵` opens the actions menu               |
+| `←` / `esc` | n/a               | Back to the domain list                  |
+| `tab`       | n/a               | Next tab (`shift+tab` goes back)         |
+| `a`         | Actions menu      | n/a                                      |
+| `e`         | n/a               | Shortcut for the first "Edit…" action    |
+| `d`         | n/a               | Shortcut for the "Delete…" action        |
+| `r`         | Reload            | Reload the current tab                   |
+| `q`         | Quit via `onExit` | Quit via `onExit`                        |
+
+## Actions
+
+Actions are built from the current selection, so the menu never offers something that cannot work. With nothing selected you get "No actions for this selection."
+
+**Domain list and Info tab**
+
+- Turn autorenew on or off (asks for confirmation). The domain list also offers Open.
+
+**DNS tab**
+
+- Edit values: comma-separated, replacing the whole rrset. An empty value list is rejected.
+- Edit TTL: seconds, must be a positive number.
+- Delete record: removes the whole rrset, not a single value.
+
+**Redirects tab**
+
+- Edit target: the destination URL. An empty URL is rejected.
+- Cycle type: `http301`, then `http302`, then `cloak`, then back to `http301`.
+- Delete redirect: the DNS record pointing at Gandi's forwarder is left in place.
+
+Destructive actions and autorenew changes ask `(y/n)` first. Edits open an inline text input prefilled with the current value; `esc` cancels. After every change the browser reloads the affected list and shows a success or error message, dismissed by any key.
+
+## Info tab
+
+Shows the domain name, status, autorenew, the registry expiry date and the nameservers, read from the domain list you already loaded.
+
+## Sizing
+
+The list sizes itself from the terminal height, leaving room for the tab strip, breadcrumb, footer and any open menu or prompt. When the terminal reports no height (a pipe, or a test harness), it assumes 24 rows.

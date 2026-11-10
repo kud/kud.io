@@ -1,0 +1,88 @@
+---
+title: 🖼️ Icon and previews
+description: Upload the add-on icon, manage screenshots, and plan a preview sync that only re-uploads when something changed.
+---
+
+## Files to upload
+
+`uploadIcon` and `addPreview` take an `UploadFile`, either a file path or an object:
+
+```ts
+type UploadFile =
+  | string // path on disk
+  | { data: Uint8Array | Blob; filename: string; contentType?: string }
+```
+
+For a path, the MIME type comes from the extension (`.png`, `.jpg`, `.jpeg`), falling back to `application/octet-stream`. For an object, pass `contentType` when the filename has no useful extension.
+
+## Icon
+
+```ts
+await amo.uploadIcon(guid, "assets/icon.png")
+```
+
+## Previews
+
+```ts
+const previews = await amo.listPreviews(guid) // sorted by position
+
+await amo.addPreview(guid, "shots/main.png", {
+  position: 0,
+  caption: "The main view",
+})
+await amo.updatePreviewCaption(guid, previews[0].id, { "en-US": "New caption" })
+await amo.removePreview(guid, previews[0].id)
+```
+
+`caption` is a string (stored as `en-US`) or a locale map. AMO ignores a caption sent with the upload, so `addPreview` uploads first and then sets the caption in a second call. The returned `AmoPreview` is the one from that second call when a caption was given.
+
+## Planning a sync
+
+Re-uploading every screenshot on each run is wasteful, so `planPreviewSync` decides whether anything needs doing without touching the network.
+
+```ts
+import { planPreviewSync, parsePreviewState } from "@kud/amo"
+
+const state = parsePreviewState(JSON.parse(recordedJson))
+const plan = planPreviewSync(
+  [{ file: "shots/main.png", caption: "The main view", sha256: "<hash>" }],
+  await amo.listPreviews(guid),
+  { state, force: false },
+)
+
+if (!plan.inSync) {
+  for (const id of plan.deletes) await amo.removePreview(guid, id)
+  for (const shot of plan.uploads) {
+    await amo.addPreview(guid, shot.file, {
+      position: shot.position,
+      caption: shot.caption ?? undefined,
+    })
+  }
+}
+```
+
+The plan is `{ inSync, reason, deletes, uploads }`. It is in sync only when the live preview ids and captions match the recorded `state` and every local shot's `sha256` and caption match too. Otherwise it deletes every live preview and uploads all local shots in order, with `position` set to their index.
+
+| `reason`               | Meaning                                                      |
+| ---------------------- | ------------------------------------------------------------ |
+| `in-sync`              | Nothing to do                                                |
+| `no-local-screenshots` | No local shots were given; nothing is deleted                |
+| `forced`               | `force: true` was passed                                     |
+| `no-state`             | No recorded state to compare against                         |
+| `live-changed`         | Live ids or captions differ from the recorded state          |
+| `local-changed`        | A local file hash or caption differs, or the count changed   |
+
+Computing `sha256` is up to you; a shot without one never counts as in sync.
+
+## Recorded state
+
+After a successful sync, record what is now live so the next run can compare. `parsePreviewState(json)` validates it and throws `preview state is not a valid preview state file` otherwise:
+
+```json
+{
+  "version": 1,
+  "previews": [
+    { "id": 1001, "file": "shots/main.png", "sha256": "<hash>", "caption": "The main view" }
+  ]
+}
+```

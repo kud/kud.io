@@ -1,0 +1,13 @@
+---
+title: 👋 Introduction
+description: A typed, dependency-free client for the addons.mozilla.org API v5.
+---
+
+Amo wraps the parts of the AMO API v5 you need to keep a Firefox add-on's store listing under version control: sign requests, read and patch the listing, manage the icon and screenshots, and check whether a version has been approved. Everything is plain functions and exported types, so it slots into a release script or CI job.
+
+## What's here
+
+- [🔌 Client](/projects/amo/docs/client) — create an authenticated client, its options, retries and version status
+- [📝 Listing sync](/projects/amo/docs/listing) — diff a local listing file against the live add-on and patch only what changed
+- [🖼️ Icon and previews](/projects/amo/docs/previews) — upload the icon, manage screenshots and plan a preview sync
+- [🛡️ Errors and security](/projects/amo/docs/errors) — `AmoError` kinds, secret redaction and the JWT helper

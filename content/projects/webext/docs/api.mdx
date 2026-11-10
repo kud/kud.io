@@ -1,0 +1,45 @@
+---
+title: 🔌 API and messaging
+description: The browser namespace resolver, the promise/callback adapter and the active-tab messaging helper.
+---
+
+## api
+
+`api` is the resolved WebExtension namespace: `browser` where it exists, `chrome` otherwise. It is resolved on each access, and reading it outside an extension context throws a descriptive error naming the property, rather than the bare `undefined is not an object` the raw globals produce.
+
+```js
+webext.api.storage.local
+```
+
+## invoke
+
+`invoke(namespace, method, ...args)` is the promise/callback adapter the rest of the library is built on. It is exported so an API with no wrapper here does not need a hand-rolled Chrome MV2 branch.
+
+```js
+const [tab] = await webext.invoke(webext.api.tabs, "query", {
+  active: true,
+  currentWindow: true,
+})
+```
+
+It passes a callback and also honours a returned thenable, so it behaves correctly under Firefox, Chrome MV3 and Chrome MV2. It checks `runtime.lastError`, which a hand-rolled `new Promise((resolve) => chrome.tabs.query(q, resolve))` does not, silently resolving `undefined` on failure.
+
+It is for callback-or-promise async APIs only. It appends a callback argument to every call, so a synchronous API such as `i18n.getMessage` would receive an argument it does not expect.
+
+## sendToActiveTab
+
+`sendToActiveTab(message, options?)` sends a message to the active tab and resolves `undefined` when nothing is listening, instead of rejecting.
+
+```js
+const reply = await webext.sendToActiveTab({ type: "toggle" })
+```
+
+`tabs.sendMessage` rejects identically whether the tab has no content script or the content script threw. The absence of a receiver is the expected case (a browser-internal page, a non-matching site), so it is reported as a value. Any failure, including a failed tab query, resolves `undefined`.
+
+| Option | Values | Default |
+| --- | --- | --- |
+| `window` | `"current"`, `"lastFocused"` | `"current"` |
+
+Use `lastFocused` when the send is triggered from outside the browser UI, such as a keyboard command, a socket or an alarm, where the current window may resolve to the background context's own window.
+
+The reply type can be given as a generic: `sendToActiveTab<MyReply>(message)` returns `Promise<MyReply | undefined>`.

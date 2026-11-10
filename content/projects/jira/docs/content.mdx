@@ -1,0 +1,53 @@
+---
+title: 📝 Content and attachments
+description: Convert between Atlassian Document Format and Markdown, and trace and download attachments.
+---
+
+## ADF to Markdown
+
+Jira stores descriptions and comments as Atlassian Document Format, a JSON tree. `adfToMarkdown(doc, media?)` renders it as Markdown and stops there: no ANSI, no HTML. Styling is the caller's job, so a TUI, a pager and a JSON consumer all get the same text.
+
+```ts
+import { adfToMarkdown } from "@kud/jira"
+
+const issue = await jira.getIssue("ACME-1234")
+const text = adfToMarkdown(issue.fields.description)
+```
+
+It handles headings, bullet and ordered lists, tables, code blocks, blockquotes, panels (as `> [!NOTE]` style quotes), rules, marks (code, bold, italic, strikethrough, links), mentions, emoji, dates, status lozenges, inline cards and media. A plain string passes straight through and anything else returns an empty string.
+
+Media nodes render as `[attachment: <filename>]`. Jira stores the original filename in the node's `alt`; when it is absent the optional `media` resolver, `(id) => string | undefined`, is asked to name the id.
+
+## Markdown to ADF
+
+`markdownToAdf(text)` produces a document for `addComment`, `updateComment` or a worklog comment.
+
+```ts
+await jira.addComment("ACME-1234", markdownToAdf("Fixed in `v1.2`.\n\n- checked staging"))
+```
+
+It is deliberately partial: paragraphs, fenced code with a language, headings, bullet and numbered lists, links and code spans. Bold, italic and tables are not converted, because a half-supported table corrupts more often than it helps. For anything richer, write it in Jira itself.
+
+## Locating attachments
+
+Jira lists attachments once on the issue and never says where they were used. `locateAttachments(issue)` walks the description and each comment for media nodes and joins them back by filename, falling back to id.
+
+Each result is the attachment plus `origins`, an array of:
+
+- `{ kind: "issue" }` when nothing references it
+- `{ kind: "description" }`
+- `{ kind: "comment", commentId, author? }`
+
+The issue must come from `getIssue`, which requests the `attachment` field.
+
+## Sniffing and downloading
+
+`isTextual(attachment)` says whether a file is safe to render as text, using the MIME type first and a list of common extensions second, since Jira often labels source files `application/octet-stream`.
+
+```ts
+import { downloadAttachment } from "@kud/jira"
+
+const { bytes, mimeType } = await downloadAttachment(jira, attachment.id)
+```
+
+Jira answers the content endpoint with a redirect to a short-lived media host. `downloadAttachment` follows it manually so the `Authorization` header is never sent to the other origin. A failed download throws with the status. An alternative `fetch` for the second hop can be passed as the third argument.

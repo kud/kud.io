@@ -1,0 +1,40 @@
+---
+title: 🎛️ Commands
+description: The five media-keys subcommands, what each one sends and how the CLI behaves around them.
+---
+
+`media-keys` takes a single subcommand. Each one posts a system-level media key event, so the app that currently owns media keys (the one that would react to a keyboard press) receives it. Nothing targets a specific app.
+
+```console
+$ media-keys <command>
+```
+
+## Subcommands
+
+| Command    | Description                              | Key sent        |
+| ---------- | ---------------------------------------- | --------------- |
+| `play`     | Toggle play/pause                        | `play`          |
+| `next`     | Skip to the next track                   | `next`          |
+| `previous` | Go to the previous track                 | `previous`      |
+| `forward`  | Fast-forward within the current track    | `forward`       |
+| `rewind`   | Rewind within the current track          | `rewind`        |
+
+`play` is a toggle: running it while music plays pauses it, and running it again resumes. There is no separate pause command.
+
+```console
+$ media-keys play
+$ media-keys next
+$ media-keys previous
+$ media-keys forward
+$ media-keys rewind
+```
+
+None of the subcommands takes arguments or options, and none prints anything on success.
+
+## Help and bare invocation
+
+Run `media-keys --help` to list the subcommands with their descriptions. Running `media-keys` with no subcommand prints a short usage hint pointing you at `--help`.
+
+## Which app responds?
+
+macOS routes media keys to the most recent app that claimed them. If the wrong player reacts, start or interact with the one you want first, exactly as you would before pressing a keyboard media key. For how the key events are generated, see the [`@kud/macos-media-keys` documentation](/projects/macos-media-keys/docs).

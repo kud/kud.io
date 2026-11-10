@@ -1,0 +1,54 @@
+---
+title: 📋 Components
+description: The three list components and two helpers exported for building your own Gandi screens.
+---
+
+`GandiBody` is built from three presentation-only list components. They take props and render rows: no data fetching, no input handling. Use them to build a different layout, or to place one list in a pane of a larger dashboard. Types come from `@kud/gandi`.
+
+All three share the same shape of props:
+
+| Prop        | Type     | Default          | Purpose                                                 |
+| ----------- | -------- | ---------------- | ------------------------------------------------------- |
+| `selected`  | `number` | `-1`             | Index of the highlighted row. `-1` highlights nothing.  |
+| `rows`      | `number` | required         | How many rows the list may use. Longer lists scroll.    |
+| `emptyText` | `string` | per component    | Shown when the list is empty.                           |
+
+The parent owns the selection index; the lists only render it, keeping the selected row in view.
+
+## DomainList
+
+```tsx
+import { DomainList } from "@kud/gandi-ink"
+
+<DomainList domains={domains} selected={2} rows={10} />
+```
+
+Takes `domains: Domain[]`. Each row shows the name, the time left until the registry expiry as a countdown (`41d`, or `expired 3d ago`), and an autorenew marker (`↻ auto` or `· manual`). The countdown turns amber at 30 days or fewer and red at 7 or fewer. Default `emptyText` is "No domains".
+
+## DnsList
+
+Takes `records: DnsRecord[]`. One row per rrset: name, type, TTL in seconds and the values joined with commas. A record is the unit you act on, so values are not split across rows. Default `emptyText` is "No DNS records".
+
+## RedirectList
+
+Takes `redirects: WebRedir[]`. Each row shows the host, the redirect type and the target URL (`—` when there is none). The host is rendered exactly as the API returns it, already fully qualified, so do not append the domain yourself. Default `emptyText` is "No web redirects".
+
+## Helpers
+
+### windowSlice
+
+```ts
+windowSlice<T>(items: T[], selected: number, rows: number): { items: T[]; offset: number }
+```
+
+Returns the visible slice of `items` that keeps `selected` in view, centred when it can be, plus the offset of the first visible item. It is pure arithmetic with no state. Returns an empty slice when `rows` is zero or negative or `items` is empty, and the whole list when it already fits.
+
+### fit
+
+```ts
+fit(text: string, width: number): string
+```
+
+Pads or truncates `text` to exactly `width` characters, so fixed-width columns line up. Text that is too long is cut and ends with `…`. A width of zero or less returns an empty string.
+
+Both are exported so a host composing its own lists scrolls and pads identically to the built-in ones.

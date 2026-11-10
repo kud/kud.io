@@ -1,0 +1,45 @@
+---
+title: 🔎 JQL and search
+description: Helpers for composing JQL from options and for turning free text into a query.
+---
+
+These are pure functions with no client involved. They exist so a CLI, a TUI and an MCP server can share one idea of what a search means.
+
+## Building a query from options
+
+`buildJql(options, defaultProject?)` composes flags into one query ordered by `updated DESC`.
+
+```ts
+import { buildJql } from "@kud/jira"
+
+buildJql({ mine: true, status: "In Progress", project: "ACME" })
+// assignee = currentUser() AND project = "ACME" AND status = "In Progress" ORDER BY updated DESC
+```
+
+| Option     | Clause produced                                                         |
+| ---------- | ----------------------------------------------------------------------- |
+| `mine`     | `assignee = currentUser()`                                              |
+| `assignee` | `assignee = "<name>"`, or `assignee IS EMPTY` for the value `none`      |
+| `project`  | `project = "<key>"`, falling back to `defaultProject`                   |
+| `status`   | `status = "<value>"`                                                    |
+| `label`    | `labels = "<value>"`                                                    |
+| `sprint`   | `sprint = "<value>"`, or `sprint IN openSprints()` for `current`        |
+| `jql`      | Replaces everything else. Returned untouched.                           |
+
+`mine` wins over `assignee`. With no clauses at all the result is your own issues, because Jira rejects unbounded queries. Values are quoted with `jqlEscape(value)`, which escapes embedded double quotes.
+
+## Turning a search box into JQL
+
+```ts
+import { searchJql, looksLikeJql, textClause } from "@kud/jira"
+
+searchJql("status = Done")
+// { jql: "status = Done", mode: "jql" }
+
+searchJql("login bug", { scope: 'project = "ACME"' })
+// { jql: 'project = "ACME" AND text ~ "login bug" ORDER BY updated DESC', mode: "text" }
+```
+
+- `looksLikeJql(input)` checks the shape of the first clause, an identifier followed by an operator, rather than the presence of an operator anywhere. `in progress` stays words; `status = Done` is a query. Wordy operators are held to their grammar, so `is` needs `EMPTY` or `NULL` and `in` needs a list. A bare `ORDER BY …` counts as JQL.
+- `textClause(words)` builds `text ~ "…"` and escapes Lucene's special characters, so searching for `c++` does not throw.
+- `searchJql(input, { mode, scope })` picks a reading. `mode` is `"auto"` (default), `"jql"` or `"text"`. Plain words search within `scope`; JQL replaces the scope entirely, since asking for a query means asking for something else. The result says which reading was taken, so a UI can show it.

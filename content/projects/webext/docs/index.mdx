@@ -1,0 +1,13 @@
+---
+title: 👋 Introduction
+description: Typed settings and cross-browser plumbing for Firefox WebExtensions, built for extensions with no bundler.
+---
+
+webext is a small library that gives a Firefox WebExtension typed, default-aware settings and a promise adapter over `browser` and `chrome`. It is designed for extensions that ship their source as-is, so it is vendored into the repo as a single script rather than resolved at runtime. For the interface side, see the sibling [webext-ui](/projects/webext-ui/docs) library.
+
+## What's here
+
+- [📦 Vendoring](/projects/webext/docs/vendoring) — getting the built file into a no-build extension and loading it in every context
+- [⚙️ Settings](/projects/webext/docs/settings) — `defineSettings`, defaults, change subscriptions and failure behaviour
+- [🔌 API and messaging](/projects/webext/docs/api) — `api`, `invoke` and `sendToActiveTab`
+- [🚀 Releasing extensions](/projects/webext/docs/releasing) — the reusable workflows that sign, upload and list an extension on AMO

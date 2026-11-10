@@ -1,0 +1,89 @@
+---
+title: 🖼 Photos
+description: Search, list and fetch photos, read photo statistics, and follow Unsplash's attribution rules.
+---
+
+## Tools
+
+| Tool                   | Purpose                                                           |
+| ---------------------- | ----------------------------------------------------------------- |
+| `search_photos`        | Keyword search with filters                                       |
+| `list_photos`          | Browse all photos                                                 |
+| `random_photo`         | One or several random photos, optionally scoped                   |
+| `get_photo`            | Full metadata for one photo, and registers a download event       |
+| `get_photo_statistics` | Download, view and like counts over time for one photo            |
+
+### search_photos
+
+| Parameter     | Type    | Notes                                                                                                         |
+| ------------- | ------- | ------------------------------------------------------------------------------------------------------------- |
+| `query`       | string  | Required. Search terms.                                                                                       |
+| `page`        | integer | Default 1.                                                                                                    |
+| `per_page`    | integer | 1 to 30, default 10.                                                                                          |
+| `orientation` | enum    | `landscape`, `portrait` or `squarish`.                                                                        |
+| `color`       | string  | Unsplash colour filter: `black_and_white`, `black`, `white`, `yellow`, `orange`, `red`, `purple`, `magenta`, `green`, `teal`, `blue`. |
+| `order_by`    | enum    | `relevant` or `latest`.                                                                                       |
+
+Returns `total`, `total_pages` and a `results` array of photo summaries.
+
+### list_photos
+
+`page`, `per_page` and `order_by` (`latest`, `oldest` or `popular`). Returns an array of photo summaries.
+
+### random_photo
+
+| Parameter     | Type    | Notes                                         |
+| ------------- | ------- | --------------------------------------------- |
+| `query`       | string  | Limit selection to matching photos.           |
+| `collections` | string  | Comma-separated collection IDs.               |
+| `topics`      | string  | Comma-separated topic IDs.                    |
+| `orientation` | enum    | `landscape`, `portrait` or `squarish`.        |
+| `count`       | integer | 1 to 30.                                      |
+
+When `count` is given, the result is an array of photo summaries. Without it, a single photo is returned with the full metadata shape (see below).
+
+### get_photo
+
+Takes `id`. Returns full metadata and, as Unsplash's API guidelines require, makes a best-effort call to the photo's `download_location` endpoint so a download is registered. If that ping fails the tool call still succeeds.
+
+### get_photo_statistics
+
+`id`, plus `resolution` (only `days` is accepted, the default) and `quantity` (1 to 30, default 30). Returns the Unsplash statistics payload untrimmed: `downloads`, `views` and, when present, `likes`, each with a `total` and a `historical` series.
+
+## Response shapes
+
+A photo summary, used by every list and search tool:
+
+```json
+{
+  "id": "abc123XYZ",
+  "description": "A foggy forest at dawn",
+  "width": 6000,
+  "height": 4000,
+  "color": "#1a2b3c",
+  "likes": 42,
+  "urls": {
+    "regular": "https://images.unsplash.com/photo-example?w=1080",
+    "small": "https://images.unsplash.com/photo-example?w=400",
+    "thumb": "https://images.unsplash.com/photo-example?w=200"
+  },
+  "link": "https://unsplash.com/photos/abc123XYZ",
+  "author": {
+    "name": "Jane Example",
+    "username": "janeexample",
+    "profile": "https://unsplash.com/@janeexample"
+  }
+}
+```
+
+`description` falls back to the photo's alt description when the photographer wrote none.
+
+The full shape, returned by `get_photo` and by `random_photo` without `count`, adds `created_at`, `downloads`, the complete `urls` set (`raw`, `full`, `regular`, `small`, `thumb`), `exif` and `location` where Unsplash provides them.
+
+## Attribution and hotlinking
+
+Unsplash's guidelines apply to anything you display from these tools:
+
+- Use the returned `urls` directly rather than downloading and re-serving the image.
+- Credit the photographer by name, linking to `author.profile`.
+- Use `get_photo` for the photo you actually end up using, since that is what registers the download.

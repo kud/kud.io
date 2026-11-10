@@ -1,0 +1,38 @@
+---
+title: 🤖 Automation rules
+description: List, export, import, update and switch Jira Automation rules from the terminal.
+---
+
+```sh
+jira automation list --project SHOP          # --state ENABLED|DISABLED, --limit, --json
+jira automation get 0192e5ac-0e25-71de-ba7b-d972e6a2049a > rule.json
+jira automation update 0192e5ac-0e25-71de-ba7b-d972e6a2049a --file rule.json
+jira automation create --file rule.json      # prints the new rule's UUID; - reads stdin
+jira automation disable 0192e5ac-0e25-71de-ba7b-d972e6a2049a
+jira automation enable 0192e5ac-0e25-71de-ba7b-d972e6a2049a
+```
+
+## Commands
+
+| Command                     | Options                                                           |
+| --------------------------- | ----------------------------------------------------------------- |
+| `automation list`           | `-p, --project`, `--state`, `-n, --limit` (default 100), `--json` |
+| `automation get <uuid>`     | `--redact` hides sensitive fields such as web request secrets     |
+| `automation create`         | `-f, --file <path>` (required), `-` for stdin                     |
+| `automation update <uuid>`  | `-f, --file <path>` (required)                                    |
+| `automation enable <uuid>`  |                                                                   |
+| `automation disable <uuid>` |                                                                   |
+
+Every subcommand also takes `--host <site|api>`.
+
+## Permissions
+
+These use Atlassian's Automation REST API with the same classic API token as everything else; nothing new to configure. The account needs the **Jira administrator** global permission. Jira answers even a project admin with a bare 403, which the CLI reports before exiting 4. Project admins can still manage their project's rules in the Jira web UI.
+
+## File shape
+
+`create` and `update` accept what `get` prints, `{ "rule": { … } }`, or a bare rule object.
+
+## Cloud ID and host
+
+The cloud ID is read from the site's `/_edge/tenant_info`; set `ATLASSIAN_CLOUD_ID` to skip that call. Requests go through the site gateway by default. `--host api`, or `ATLASSIAN_AUTOMATION_HOST=api`, sends them to `api.atlassian.com` instead.
