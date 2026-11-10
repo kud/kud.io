@@ -86,12 +86,14 @@ const Bio = () => (
     </p>
     <p className={styles.bio}>
       The best systems aren&apos;t the cleverest ones. They&apos;re the ones
-      that leave people with clarity, autonomy, and trust. Currently on the
-      mobile team at{" "}
+      that leave people with clarity, autonomy, and trust. At{" "}
       <a href="https://www.sonymusic.com/" target="_blank" rel="noreferrer">
         Sony&nbsp;Music
-      </a>
-      .
+      </a>{" "}
+      I spent years on the mobile team, building the apps people carry in their
+      pocket. Now I&apos;m on the accounting team, working on the systems behind
+      the numbers. A different kind of complexity, quieter and just as human:
+      when the figures are right, people can trust them.
     </p>
   </>
 )

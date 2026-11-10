@@ -20,7 +20,7 @@ const sans = Hanken_Grotesk({
 
 const TITLE = "Erwann Mest — Systems Designer & Lead Software Engineer"
 const DESCRIPTION =
-  "Systems designer and lead software engineer in London. I make complex systems (software, teams, workflows) simpler, more effective, and more humane, reducing cognitive load, improving workflows, and using AI to amplify what people can do. Currently on the mobile team at Sony Music."
+  "Systems designer and lead software engineer in London. I make complex systems (software, teams, workflows) simpler, more effective, and more humane, reducing cognitive load, improving workflows, and using AI to amplify what people can do. Now on the accounting team at Sony Music, after years on its mobile team."
 
 // The OpenGraph and Twitter share images are supplied by the file-based
 // conventions (app/opengraph-image.tsx + app/twitter-image.tsx), so no images
@@ -39,6 +39,7 @@ export const metadata: Metadata = {
     "Senior Software Engineer",
     "Tech Lead",
     "Mobile Engineer",
+    "Financial Systems",
     "Systems Thinking",
     "AI Workflows",
     "Technical Leadership",
