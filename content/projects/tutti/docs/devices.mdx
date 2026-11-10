@@ -1,0 +1,26 @@
+---
+title: 🔌 Devices
+description: How tutti reaches the TV and the soundbar, and what each one needs switched on.
+---
+
+tutti talks to each device over its own channel, all on the local network.
+
+## TV remote
+
+The remote, keyboard and voice go over Android TV Remote v2. Nothing needs enabling: on first launch the TV shows a six-character code, and tutti sends it as soon as the sixth character is typed. The pairing is kept, so it happens once.
+
+## TV settings
+
+Picture, sound output and inputs go over the TV's REST API, which needs a Pre-Shared Key. On the TV, under *Settings → Network & Internet → Remote device settings*, turn *Control remotely* on, set *IP control → Authentication* to **Normal and Pre-Shared Key**, choose a key, and enter the same key in tutti. Without it, the remote still works; only the settings that need the API are missing.
+
+## Theatre Bar
+
+The bar's sound controls go over its IP control on TCP port 33336. Turn on **External control** for the bar in BRAVIA Connect once.
+
+## BRAVIA Connect
+
+Setup, room calibration and speaker placement stay in BRAVIA Connect. tutti's "Recalibrate in BRAVIA Connect" opens Sony's app, or its Play Store listing when it is not installed.
+
+## Fixed addresses
+
+Giving the TV and the bar fixed IP addresses on the router keeps tutti from having to find them again after a restart.

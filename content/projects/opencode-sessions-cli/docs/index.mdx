@@ -1,0 +1,13 @@
+---
+title: 👋 Introduction
+description: A TUI session manager that lists every session on your running opencode servers and attaches to one with a keystroke.
+---
+
+opencode sessions is a small Ink TUI for people who run several [opencode](https://opencode.ai) servers at once. It gathers their sessions into one list, hands the terminal to `opencode --server` when you pick one, and can stop the headless instances you no longer need. It needs opencode v2. It installs as `opencode-sessions` and the short alias `ocs`.
+
+Install it with `npm install -g @kud/opencode-sessions-cli`; the README has the details.
+
+## What's here
+
+- [⌨️ Usage](/projects/opencode-sessions-cli/docs/usage) — the session list, key bindings, stopping an instance and the demo flags
+- [🔍 How it works](/projects/opencode-sessions-cli/docs/how-it-works) — how servers are discovered, how rows are built and sorted, and what a stop actually does
