@@ -1,4 +1,5 @@
 import type { ReactNode } from "react"
+import { SiteFooter } from "@/components/site-footer"
 import { DocsLayout } from "fumadocs-ui/layouts/docs"
 import { SearchProvider } from "fumadocs-ui/contexts/search"
 import type { DefaultSearchDialogProps } from "fumadocs-ui/components/dialog/search-default"
@@ -60,6 +61,7 @@ const Layout = async ({
         >
           {children}
         </DocsLayout>
+        <SiteFooter />
       </SearchProvider>
     </div>
   )
