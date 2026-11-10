@@ -350,3 +350,14 @@
     padding: 0 14px;
   }
 }
+
+/* README landing ------------------------------------------------------------
+   The same card beside a README instead of a story. The release lives in one
+   place per variant: ?r=1 (default) keeps the hero's release pill, ?r=2 moves
+   the release into the box as on a product record. */
+.readmeBox {
+  grid-area: box;
+}
+:global(main:not([data-r="2"])) .releaseRow {
+  display: none;
+}

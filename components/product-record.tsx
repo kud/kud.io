@@ -2,6 +2,7 @@ import { InkLink } from "@/components/ink-link"
 import type { Project } from "@/lib/projects"
 import type { AppMeta } from "@/lib/app"
 import type { Release } from "@/lib/release"
+import { formatNode, type PackageFacts } from "@/lib/package-facts"
 import styles from "./product-record.module.css"
 
 type Post = { slug: string; title: string; description: string; href: string }
@@ -258,5 +259,199 @@ export const RecordSheet = (props: SheetProps) => {
         ) : null}
       </div>
     </div>
+  )
+}
+
+type Link = { slug: string; name: string; type: string }
+
+type ReadmeBoxProps = {
+  project: Project
+  facts: PackageFacts | null
+  release: Release | null
+  language: string | null
+  frameworks: string[]
+  // Other kud projects this one depends on, outside its own family.
+  builtOn: Link[]
+  // The other members of its `kud-site-eco-*` family, with that family's name.
+  family: { name: string; members: Link[] } | null
+}
+
+const Rows = ({
+  rows,
+}: {
+  rows: ({ label: string; value: React.ReactNode; release?: boolean } | null)[]
+}) => (
+  <dl className={styles.infoRows}>
+    {rows
+      .filter((row) => row !== null)
+      .map((row) => (
+        <div
+          key={row.label}
+          className={row.release ? styles.releaseRow : undefined}
+        >
+          <dt>{row.label}</dt>
+          <dd>{row.value}</dd>
+        </div>
+      ))}
+  </dl>
+)
+
+const projectLinks = (links: Link[]) =>
+  links.map((link, index) => (
+    <span key={link.slug}>
+      {index > 0 ? ", " : null}
+      <InkLink href={`/projects/${link.slug}`}>{link.name}</InkLink>
+    </span>
+  ))
+
+// The README landing's infobox: the same card as a product record, filled only
+// from what the repo already states (package.json, the registry, the topics,
+// GitHub's own fields). Time and terms sit in the hero's timeline and the
+// story is the README, so neither is repeated here.
+export const ReadmeInfobox = ({
+  project,
+  facts,
+  release,
+  language,
+  frameworks,
+  builtOn,
+  family,
+}: ReadmeBoxProps) => {
+  const released = release
+    ? formatDate(release.publishedAt, dayMonthYear)
+    : null
+  const onNpm = Boolean(release?.url.startsWith("https://www.npmjs.com/"))
+  const releaseRow = release
+    ? {
+        label: "Latest release",
+        release: true,
+        value: (
+          <>
+            <a href={release.url} target="_blank" rel="noreferrer">
+              v{release.version}
+            </a>
+            {released ? (
+              <span className={styles.infoMuted}>
+                {" · "}
+                <time dateTime={release.publishedAt ?? undefined}>
+                  {released}
+                </time>
+              </span>
+            ) : null}
+          </>
+        ),
+      }
+    : null
+  const isStore =
+    project.category === "raycast" || project.category === "webext"
+  const storeRows = isStore
+    ? [
+        project.downloads
+          ? {
+              label: "Installs",
+              value: project.downloads.toLocaleString("en-GB"),
+            }
+          : null,
+        project.users
+          ? {
+              label: "Daily users",
+              value: project.users.toLocaleString("en-GB"),
+            }
+          : null,
+        releaseRow,
+      ]
+    : []
+  const packageRows = facts
+    ? [
+        {
+          label: "Package",
+          value: onNpm ? (
+            <a href={release?.url} target="_blank" rel="noreferrer">
+              <code>{facts.name}</code>
+            </a>
+          ) : (
+            <code>{facts.name}</code>
+          ),
+        },
+        facts.commands.length > 0
+          ? {
+              label: facts.commands.length > 1 ? "Commands" : "Command",
+              value: facts.commands.map((command, index) => (
+                <span key={command}>
+                  {index > 0 ? " " : null}
+                  <code>{command}</code>
+                </span>
+              )),
+            }
+          : null,
+        facts.node ? { label: "Node", value: formatNode(facts.node) } : null,
+        facts.peers.length > 0
+          ? { label: "Works with", value: facts.peers.join(", ") }
+          : null,
+        builtOn.length > 0
+          ? { label: "Built on", value: projectLinks(builtOn) }
+          : null,
+        releaseRow,
+      ]
+    : []
+  const chips = [language, ...frameworks].filter((chip): chip is string =>
+    Boolean(chip),
+  )
+  const repo = project.repoUrl.replace(/^https:\/\/github\.com\//, "")
+  const firstRows = isStore ? storeRows : packageRows
+  return (
+    <aside
+      className={`${styles.infobox} ${styles.readmeBox}`}
+      aria-label={`${project.name} at a glance`}
+    >
+      <header className={styles.infoHead}>
+        <p className={styles.infoName}>{project.name}</p>
+      </header>
+      {firstRows.some((row) => row !== null) ? (
+        <Section title={isStore ? "Store" : "Package"}>
+          <Rows rows={firstRows} />
+        </Section>
+      ) : null}
+      {chips.length > 0 ? (
+        <Section title="Built with">
+          <ul className={styles.chips} aria-label="Stack">
+            {chips.map((chip) => (
+              <li key={chip}>{chip}</li>
+            ))}
+          </ul>
+        </Section>
+      ) : null}
+      {family ? (
+        <Section title={`${family.name} family`}>
+          <Rows
+            rows={family.members.map((member) => ({
+              label: member.type,
+              value: (
+                <InkLink href={`/projects/${member.slug}`}>
+                  {member.name}
+                </InkLink>
+              ),
+            }))}
+          />
+        </Section>
+      ) : null}
+      <Section title="Project">
+        <Rows
+          rows={[
+            {
+              label: "Source",
+              value: (
+                <a href={project.repoUrl} target="_blank" rel="noreferrer">
+                  {repo}
+                </a>
+              ),
+            },
+            // No package and no store (a theme, a tagged Swift app): the
+            // release, read from tags, lands here instead.
+            !isStore && !facts ? releaseRow : null,
+          ]}
+        />
+      </Section>
+    </aside>
   )
 }

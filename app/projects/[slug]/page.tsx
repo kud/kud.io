@@ -18,7 +18,9 @@ import {
 } from "@/lib/app"
 import { getAllPosts } from "@/lib/blog"
 import { postPath } from "@/lib/blog-path"
-import { isAppCategory } from "@/lib/categories"
+import { isAppCategory, typeFor } from "@/lib/categories"
+import { ecosystemName } from "@/lib/ecosystems"
+import { frameworksOf, getPackageFacts } from "@/lib/package-facts"
 import { getLandingMdx } from "@/lib/landings"
 import { getProjectReadme, projectHasDocs } from "@/lib/source"
 import { getIcons } from "@/lib/icons"
@@ -28,7 +30,11 @@ import { Reveal } from "@/components/reveal"
 import { getRelease, releaseAge, type Release } from "@/lib/release"
 import { ThemePicker } from "@/components/theme-picker"
 import { ThemeScopeScript } from "@/components/scoped-theme"
-import { RecordSheet, RecordTimeline } from "@/components/product-record"
+import {
+  ReadmeInfobox,
+  RecordSheet,
+  RecordTimeline,
+} from "@/components/product-record"
 import styles from "./page.module.css"
 
 // The release pill says how old the latest version is, so rebuild hourly.
@@ -346,7 +352,7 @@ const ProductRecord = async ({ project }: { project: Project }) => {
 // repo README (the source of truth), under a compact site hero. A "Documentation"
 // link appears only when the repo ships real docs beyond the README, so we never
 // link to the docs from a page that would just show the same README again.
-const ReadmeLanding = ({
+const ReadmeLanding = async ({
   project,
   icon,
   release,
@@ -355,6 +361,40 @@ const ReadmeLanding = ({
   icon: string | null
   release: Release | null
 }) => {
+  const [facts, projects] = await Promise.all([
+    getPackageFacts(project.slug),
+    getProjects(),
+  ])
+  const linkTo = (other: Project) => ({
+    slug: other.slug,
+    name: other.name,
+    type: typeFor(other.category),
+  })
+  const siblings = project.ecosystem
+    ? projects.filter(
+        (other) =>
+          other.ecosystem === project.ecosystem && other.slug !== project.slug,
+      )
+    : []
+  const family =
+    project.ecosystem && siblings.length > 0
+      ? {
+          name: ecosystemName(project.ecosystem),
+          members: siblings.map(linkTo),
+        }
+      : null
+  // Other kud projects this package depends on, by their npm name; a sibling
+  // already listed under the family is not named twice.
+  const builtOn = (facts?.dependencies ?? [])
+    .filter((dep) => dep.startsWith("@kud/"))
+    .map((dep) => projects.find((other) => other.slug === dep.slice(5)))
+    .filter(
+      (other): other is Project =>
+        other !== undefined &&
+        other.slug !== project.slug &&
+        !siblings.includes(other),
+    )
+    .map(linkTo)
   const readme = getProjectReadme(project.readmeSlug ?? project.slug)
   const art = Boolean(ART[project.slug])
   const Body = readme?.data.body
@@ -373,17 +413,9 @@ const ReadmeLanding = ({
   // short enough to need no TOC; curated lists keep theirs.
   const showToc = toc.length > 0 && (isList || !hasDocs)
   const age = release ? releaseAge(release.publishedAt) : null
-  const badgeLabel = isRaycast
-    ? project.downloads
-      ? `${project.downloads.toLocaleString()} installs`
-      : "Raycast extension"
-    : isWebext
-      ? project.users
-        ? `${project.users.toLocaleString()} user${project.users === 1 ? "" : "s"}`
-        : "Firefox add-on"
-      : isList
-        ? "Curated list"
-        : "Open source"
+  // The badge says what the project is; the licence moved to the timeline and
+  // install or user counts to the infobox.
+  const badgeLabel = isList ? "Curated list" : typeFor(project.category)
 
   return (
     <>
@@ -394,23 +426,26 @@ const ReadmeLanding = ({
         </MorphLink>
         {art ? <IllustrationSlot ratio="16/9" slug={project.slug} /> : null}
         <div className={`${styles.heroContent} ${art ? "warm-hero-copy" : ""}`}>
-          {icon ? (
-            <span className={styles.readmeIcon}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={icon} alt={`${project.name} icon`} />
-            </span>
-          ) : null}
           <div className={styles.badge}>
             <span className={styles.badgeDot} />
-            {project.license ? `${project.license} · ` : ""}
             {badgeLabel}
           </div>
-          <h1
-            className={`${styles.title} ${styles.titleReadme}`}
-            style={{ viewTransitionName: `project-${project.slug}` }}
-          >
-            {project.name}
-          </h1>
+          <div className={styles.recordTitleRow}>
+            {icon ? (
+              <span
+                className={`${styles.recordTitleIcon} ${styles.recordTitleGlyph}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={icon} alt="" />
+              </span>
+            ) : null}
+            <h1
+              className={`${styles.title} ${styles.titleReadme}`}
+              style={{ viewTransitionName: `project-${project.slug}` }}
+            >
+              {project.name}
+            </h1>
+          </div>
           {project.description ? (
             <p
               className={`${styles.tagline} ${release ? styles.taglineTight : ""}`}
@@ -441,7 +476,9 @@ const ReadmeLanding = ({
               </span>
             </a>
           ) : null}
-          <div className={`${styles.actions} warm-hero-actions`}>
+          <div
+            className={`${styles.actions} ${styles.actionsRecord} warm-hero-actions`}
+          >
             {isRaycast ? (
               <>
                 {project.installUrl ? (
@@ -512,11 +549,19 @@ const ReadmeLanding = ({
               </>
             )}
           </div>
+          <RecordTimeline project={project} />
         </div>
       </section>
 
+      {/* ?r=2 moves the release from the hero pill into the infobox; read in
+          the browser so the page stays static. */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `(function(){var r=new URLSearchParams(location.search).get("r");if(r)document.currentScript.closest("main").dataset.r=r})()`,
+        }}
+      />
       {Body ? (
-        <div className={styles.readmeLayout}>
+        <div className={`${styles.readmeLayout} ${styles.readmeRecord}`}>
           <article className={styles.readme}>
             <DocsBody>
               <Body components={getMDXComponents()} />
@@ -532,18 +577,29 @@ const ReadmeLanding = ({
               </div>
             ) : null}
           </article>
-          {showToc ? (
-            <aside className={styles.toc}>
-              <p className={styles.tocTitle}>On this page</p>
-              <ul>
-                {toc.map((item) => (
-                  <li key={item.url}>
-                    <a href={item.url}>{item.title}</a>
-                  </li>
-                ))}
-              </ul>
-            </aside>
-          ) : null}
+          <div className={styles.recordRail}>
+            <ReadmeInfobox
+              project={project}
+              facts={facts}
+              release={release}
+              language={project.language}
+              frameworks={facts ? frameworksOf(facts) : []}
+              builtOn={builtOn}
+              family={family}
+            />
+            {showToc ? (
+              <nav className={styles.toc} aria-label="On this page">
+                <p className={styles.tocTitle}>On this page</p>
+                <ul>
+                  {toc.map((item) => (
+                    <li key={item.url}>
+                      <a href={item.url}>{item.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ) : null}
+          </div>
         </div>
       ) : null}
     </>

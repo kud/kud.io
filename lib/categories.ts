@@ -105,3 +105,23 @@ export const groupByCategory = <T extends { category: string }>(
     }))
     .sort((a, b) => orderOf(a.key) - orderOf(b.key))
 }
+
+// What one project in each section is, in the singular: the README landing's
+// badge and the family rows in its infobox.
+const CATEGORY_TYPE: Record<string, string> = {
+  product: "Product",
+  app: "Web app",
+  desktop: "Desktop app",
+  cli: "Command-line tool",
+  mcp: "MCP server",
+  claude: "Claude Code companion",
+  lib: "Library",
+  ui: "UI library",
+  vscode: "VS Code extension",
+  theme: "VS Code theme",
+  raycast: "Raycast extension",
+  webext: "Firefox add-on",
+  other: "Curated list",
+}
+
+export const typeFor = (key: string) => CATEGORY_TYPE[key] ?? labelFor(key)

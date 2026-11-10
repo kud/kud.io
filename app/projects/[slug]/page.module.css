@@ -87,18 +87,6 @@
 /* Centred project icon at the top of the README-landing hero (when the repo
    ships assets/icon.*). The README's own leading icon is stripped at sync so it
    isn't shown twice. */
-.readmeIcon {
-  display: block;
-  width: 84px;
-  height: 84px;
-  margin: 0 auto 22px;
-}
-.readmeIcon img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
 .back {
   position: absolute;
   top: 28px;
@@ -1085,4 +1073,51 @@
    gives up its bottom margin to it (components/product-record.module.css). */
 .actionsRecord {
   margin-bottom: 0;
+}
+
+/* README record -------------------------------------------------------------
+   A README landing with the record's infobox: the README in the reading
+   column, the box (and the section list under it) in a 340px rail. On a phone
+   the box comes straight after the hero and the section list is dropped. */
+.readmeRecord {
+  max-width: 1168px;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-areas: "main box";
+}
+.readmeRecord > .readme {
+  grid-area: main;
+}
+.recordRail {
+  grid-area: box;
+  display: grid;
+  gap: 36px;
+}
+.recordRail .toc {
+  position: static;
+  padding: 0 6px;
+}
+@media (max-width: 900px) {
+  .readmeRecord {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "box" "main";
+    gap: 40px;
+    margin-top: -16px;
+    padding-top: 0;
+  }
+}
+
+/* A README icon is a glyph on transparent ground, not app-icon art: it sits
+   beside the title uncropped, without the squircle frame. */
+.recordTitleGlyph {
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none;
+}
+.recordTitleGlyph img {
+  object-fit: contain;
+}
+
+:global(main[data-r="2"]) .releasePill {
+  display: none;
 }
