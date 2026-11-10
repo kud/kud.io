@@ -286,15 +286,3 @@
 .relDate:not(:empty) + .absDate {
   display: none;
 }
-
-/* At large screens the browse block drops its empty left track and widens,
-   rail on the right. Kept in step with .layout in project-list.module.css. */
-@media (min-width: 1500px) {
-  .top {
-    max-width: calc(1640px + var(--rail-width) + 88px);
-    grid-template-columns: minmax(0, 1fr) minmax(0, var(--rail-width));
-  }
-  .band {
-    grid-column: 1;
-  }
-}

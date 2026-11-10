@@ -664,8 +664,7 @@
 }
 
 /* Fills the odd trailing slot so it reads as intentional, not a broken cell. */
-.filler,
-.filler3 {
+.filler {
   background-color: var(--surface);
   background-image: repeating-linear-gradient(
     -45deg,
@@ -676,35 +675,9 @@
   );
 }
 
-.filler3 {
-  display: none;
-}
-
 @media (max-width: 640px) {
   .filler {
     display: none;
-  }
-}
-
-/* Wide screens: the empty left track goes and the grid takes the room, rail
-   on the right; past 1700px the list runs three across, so the filler follows
-   the three-column remainder instead. */
-@media (min-width: 1500px) {
-  .layout {
-    max-width: calc(1640px + var(--rail-width) + 88px);
-    grid-template-columns: minmax(0, 1fr) minmax(0, var(--rail-width));
-    grid-template-areas: "main filters";
-  }
-}
-@media (min-width: 1700px) {
-  .list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .filler {
-    display: none;
-  }
-  .filler3 {
-    display: block;
   }
 }
 
