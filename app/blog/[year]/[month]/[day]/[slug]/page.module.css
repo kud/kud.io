@@ -1420,3 +1420,43 @@
     border-radius: 4px;
   }
 }
+
+/* Numeral placement for h=3 (preview row "Numeral") ------------------------ */
+/* above (today's h=3): the numeral on its own line over the heading.
+ * gutter: hung in the left margin, outside the text column, on the heading's
+ *   own baseline: an inline-block pulled back by its own width, so baselines
+ *   align without measuring anything. Phones have no margin to hang it in, so
+ *   it falls back to inline there.
+ * inline: before the heading text on the same line, muted.
+ * rule: over the heading, followed by a hairline to the column's edge. */
+:global(#blog-root[data-h="3"]:is([data-n="gutter"], [data-n="inline"]))
+  .body
+  h2::before {
+  display: inline-block;
+  margin-bottom: 0;
+  font-size: 13px;
+  vertical-align: baseline;
+}
+
+:global(#blog-root[data-h="3"][data-n="gutter"]) .body h2::before {
+  width: 44px;
+  margin-left: -44px;
+}
+
+:global(#blog-root[data-h="3"][data-n="inline"]) .body h2::before {
+  margin-right: 12px;
+}
+
+:global(#blog-root[data-h="3"][data-n="rule"]) .body h2::before {
+  margin-bottom: 12px;
+  background: linear-gradient(var(--line), var(--line)) no-repeat right center /
+    calc(100% - 2ch - 14px) 1px;
+}
+
+@media (max-width: 920px) {
+  :global(#blog-root[data-h="3"][data-n="gutter"]) .body h2::before {
+    width: auto;
+    margin-left: 0;
+    margin-right: 10px;
+  }
+}

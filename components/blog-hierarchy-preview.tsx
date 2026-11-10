@@ -18,12 +18,35 @@ const ROWS = [
   { param: "toc", label: "Contents", values: ["off", "right", "left"] },
   { param: "more", label: "More", values: ["0", "thumbs", "cards"] },
   { param: "picks", label: "Picks", values: ["0", "mixed"] },
+  {
+    param: "n",
+    label: "Numeral",
+    values: ["above", "gutter", "inline", "rule"],
+  },
 ] as const
 
 type Param = (typeof ROWS)[number]["param"]
 type Choice = Record<Param, string>
 
-const DEFAULTS: Choice = { h: "0", s: "0", toc: "off", more: "0", picks: "0" }
+const DEFAULTS: Choice = {
+  h: "0",
+  s: "0",
+  toc: "off",
+  more: "0",
+  picks: "0",
+  n: "above",
+}
+
+// Erwann's picks from the first round (2026-11-10). Locked rows are forced over
+// the URL and any stored choice, and drop off the banner, so only the open
+// question is left to switch.
+const LOCKED: Partial<Choice> = {
+  h: "3",
+  s: "1",
+  toc: "right",
+  more: "cards",
+  picks: "mixed",
+}
 
 const readChoice = (): Choice | null => {
   const query = new URLSearchParams(window.location.search)
@@ -34,11 +57,11 @@ const readChoice = (): Choice | null => {
       if (value && (values as readonly string[]).includes(value))
         choice[param] = value
     }
-    return choice
+    return { ...choice, ...LOCKED }
   }
   try {
     const stored = window.localStorage.getItem(KEY)
-    return stored ? { ...DEFAULTS, ...JSON.parse(stored) } : null
+    return stored ? { ...DEFAULTS, ...JSON.parse(stored), ...LOCKED } : null
   } catch {
     return null
   }
@@ -188,27 +211,29 @@ export const BlogHierarchyPreview = () => {
       )}
       <div className={styles.banner} role="region" aria-label="Preview options">
         <span className={styles.badge}>Preview</span>
-        {ROWS.map(({ param, label, values }) => (
-          <div
-            key={param}
-            className={styles.row}
-            role="radiogroup"
-            aria-label={label}
-          >
-            <span className={styles.rowLabel}>{label}</span>
-            {values.map((value) => (
-              <button
-                key={value}
-                type="button"
-                role="radio"
-                aria-checked={choice[param] === value}
-                onClick={() => setChoice({ ...choice, [param]: value })}
-              >
-                {value === "0" ? "now" : value}
-              </button>
-            ))}
-          </div>
-        ))}
+        {ROWS.filter(({ param }) => !(param in LOCKED)).map(
+          ({ param, label, values }) => (
+            <div
+              key={param}
+              className={styles.row}
+              role="radiogroup"
+              aria-label={label}
+            >
+              <span className={styles.rowLabel}>{label}</span>
+              {values.map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="radio"
+                  aria-checked={choice[param] === value}
+                  onClick={() => setChoice({ ...choice, [param]: value })}
+                >
+                  {value === "0" ? "now" : value}
+                </button>
+              ))}
+            </div>
+          ),
+        )}
         <button
           type="button"
           className={styles.close}

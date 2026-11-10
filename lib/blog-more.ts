@@ -37,7 +37,14 @@ export const pickMore = (nav: Element, slug: string) => {
 // before paint, so a preview link never shows today's layout for a frame.
 // BlogHierarchyPreview owns the choice from then on.
 export const stampPreview = () => {
-  const keys = ["h", "s", "toc", "more", "picks"]
+  const keys = ["h", "s", "toc", "more", "picks", "n"]
+  const locked: Record<string, string> = {
+    h: "3",
+    s: "1",
+    toc: "right",
+    more: "cards",
+    picks: "mixed",
+  }
   const root = document.getElementById("blog-root")
   if (!root) return
   const query = new URLSearchParams(window.location.search)
@@ -56,5 +63,6 @@ export const stampPreview = () => {
     } catch {}
   }
   if (!choice) return
+  for (const key in locked) choice[key] = locked[key]
   for (const key in choice) root.setAttribute(`data-${key}`, choice[key])
 }
