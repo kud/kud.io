@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { usePathname } from "next/navigation";
 import { InkLink as Link } from "@/components/ink-link";
 import styles from "./lost.module.css";
-import { Cat } from "./lost-cat";
+import { LostPicture } from "./lost-picture";
 
 export type Place = {
   href: string;
@@ -108,7 +108,7 @@ export const Lost = ({ places }: { places: Place[] }) => {
   return (
     <main className={styles.lost}>
       <div className={styles.inner}>
-        <Cat />
+        <LostPicture />
         <p className={styles.eyebrow}>
           404 <span aria-hidden>/</span> Page not found
         </p>
