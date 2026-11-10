@@ -3,7 +3,7 @@
 > A minimalist, performant personal website built with modern web technologies
 
 [![Node Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org/)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Licence: MIT code, CC BY-NC-ND writing](https://img.shields.io/badge/licence-MIT%20code%20%C2%B7%20CC%20BY--NC--ND%20writing-blue.svg)](LICENSE)
 
 **Live at:** [kud.io](https://kud.io)
 

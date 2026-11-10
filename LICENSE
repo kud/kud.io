@@ -1,0 +1,52 @@
+kud.io is licensed in three parts. Each file falls under the first part
+that matches it.
+
+1. Writing: Creative Commons Attribution-NonCommercial-NoDerivatives 4.0
+
+   The blog posts and their text, under content/blog/, and the copy on the
+   site's own pages (bio, introductions, section text).
+
+   You may share them, quoted or whole, with credit to Erwann Mest and a link
+   to the original. You may not use them commercially or publish edited
+   versions. Full terms: https://creativecommons.org/licenses/by-nc-nd/4.0/
+
+2. Images, identity and design: all rights reserved
+
+   Illustrations, cover art, photos and icons (public/projects/art/,
+   public/editorial-covers/, public/blog/, public/apps/, public/404/ and every
+   other image in public/), the kud.io and beansontoast marks, the name
+   "kud.io", and the site's visual design taken as a whole.
+
+   Copyright (c) 2013-2026 Erwann Mest. All rights reserved. No use outside
+   this site without written permission.
+
+3. Code: MIT
+
+   Everything else: the source code, styles, scripts and configuration.
+
+   Copyright (c) 2013-2026 Erwann Mest
+
+   Permission is hereby granted, free of charge, to any person obtaining a
+   copy of this software and associated documentation files (the "Software"),
+   to deal in the Software without restriction, including without limitation
+   the rights to use, copy, modify, merge, publish, distribute, sublicense,
+   and/or sell copies of the Software, and to permit persons to whom the
+   Software is furnished to do so, subject to the following conditions:
+
+   The above copyright notice and this permission notice shall be included in
+   all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+Not covered here
+
+   Project READMEs and docs under content/projects/, content/readmes/ and
+   content/landings/ are copied from Erwann Mest's other repositories and keep
+   those repositories' own licences. Fonts keep their own licences (SIL Open
+   Font License).
