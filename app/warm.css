@@ -498,72 +498,32 @@ html:has([data-ground="dusk"][data-theme="dark"]),
   }
 }
 
-/* Day warmth, preview candidates (?w=1..3 on a README landing) -------------
-   Day's white cards and near-black ink read as foreign on the warm ground.
-   Each candidate retunes only the day: the two night selectors below put the
-   night tokens back and clear the --dk-w-* hooks. Unset, every
-   hook falls back to today's look. */
-
-/* 1 · Paper: the same cards, in cream rather than white; plum ink, softer
-   rules. The lightest touch. */
-[data-ground="dusk"][data-w="1"] {
+/* Paper: the day in cream rather than white. Cards are #fffbf7 instead of
+   #fff, the ink a softer plum, the rules a little warmer, so white and black
+   stop reading as foreign on the warm ground (Erwann, 2026-11-10). README
+   landings take it now (data-paper on their wrapper); the rest of Dusk tries
+   it with ?dusk=paper (components/scoped-theme.tsx) until it is adopted
+   everywhere. Day only: the night selectors put the night tokens back. */
+[data-ground="dusk"][data-paper] {
   --dk-surface: #fffbf7;
   --dk-surface-2: #f6ebe3;
   --dk-border: #e9dad0;
   --dk-border-dim: #f2e7df;
   --dk-text: #3a2830;
 }
-
-/* 2 · Tinted: the cards take the ground's peach, labels drop to muted plum,
-   and the code block's lid goes dark so it reads as one object. */
-[data-ground="dusk"][data-w="2"] {
-  --dk-text: #3a2830;
-  --dk-border: #e6d3c7;
-  --dk-border-dim: #efe2d9;
-  --dk-w-card: #fcf2eb;
-  --dk-w-label: #5c4549;
-  --dk-w-bar: #33252c;
-  --dk-w-bar-rim: #33252c;
-  --dk-w-shadow: 0 18px 40px -32px rgb(90 50 40 / 0.35);
-}
-
-/* 3 · Open: no cards at all. The box and the features grid sit on the
-   ground, drawn by hairlines only, like an encyclopaedia's margin; code as
-   in 2. */
-[data-ground="dusk"][data-w="3"] {
-  --dk-text: #3a2830;
-  --dk-border: #e6d3c7;
-  --dk-border-dim: #efe2d9;
-  --dk-w-card: var(--dl-bg);
-  --dk-w-label: #5c4549;
-  --dk-w-bar: #33252c;
-  --dk-w-bar-rim: #33252c;
-  --dk-w-shadow: none;
-}
-
-[data-ground="dusk"][data-theme="dark"][data-w] {
+[data-ground="dusk"][data-theme="dark"][data-paper] {
   --dk-surface: var(--dn-surface);
   --dk-surface-2: var(--dn-surface-2);
   --dk-border: var(--dn-border);
   --dk-border-dim: var(--dn-border-dim);
   --dk-text: var(--dn-text);
-  --dk-w-card: initial;
-  --dk-w-label: initial;
-  --dk-w-bar: initial;
-  --dk-w-bar-rim: initial;
-  --dk-w-shadow: initial;
 }
 @media (prefers-color-scheme: dark) {
-  [data-ground="dusk"]:not([data-theme="light"])[data-w] {
+  [data-ground="dusk"]:not([data-theme="light"])[data-paper] {
     --dk-surface: var(--dn-surface);
     --dk-surface-2: var(--dn-surface-2);
     --dk-border: var(--dn-border);
     --dk-border-dim: var(--dn-border-dim);
     --dk-text: var(--dn-text);
-    --dk-w-card: initial;
-    --dk-w-label: initial;
-    --dk-w-bar: initial;
-    --dk-w-bar-rim: initial;
-    --dk-w-shadow: initial;
   }
 }

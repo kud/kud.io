@@ -553,11 +553,11 @@ const ReadmeLanding = async ({
         </div>
       </section>
 
-      {/* ?r=2 moves the release into the infobox; ?w=1..3 tries day warmth (app/warm.css). Read in
+      {/* ?r=2 moves the release from the hero pill into the infobox. Read in
           the browser so the page stays static. */}
       <script
         dangerouslySetInnerHTML={{
-          __html: `(function(){var q=new URLSearchParams(location.search),m=document.currentScript.closest("main");["r","w"].forEach(function(k){var v=q.get(k);if(v)m.dataset[k]=v})})()`,
+          __html: `(function(){var q=new URLSearchParams(location.search),m=document.currentScript.closest("main");var r=q.get("r");if(r)m.dataset.r=r})()`,
         }}
       />
       {Body ? (
@@ -633,10 +633,14 @@ const ProjectLanding = async ({
       ? null
       : ((await getIcons())[slug] ?? project.icon ?? null)
 
+  // README landings take the Paper day (app/warm.css); other Dusk pages try
+  // it with ?dusk=paper.
+  const paper = !showRecord && !showAppLanding && !authored
   return (
     <main
       className={styles.page}
       data-ground="dusk"
+      data-paper={paper ? "" : undefined}
       data-theme="system"
       data-theme-scope
       suppressHydrationWarning

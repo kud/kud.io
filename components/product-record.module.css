@@ -193,12 +193,10 @@
   padding-bottom: 14px;
   border: 1px solid var(--border);
   border-radius: 18px;
-  background: var(--dk-w-card, var(--surface));
-  box-shadow: var(
-    --dk-w-shadow,
+  background: var(--surface);
+  box-shadow:
     0 1px 0 rgb(255 255 255 / 0.04) inset,
-    0 28px 50px -34px rgb(0 0 0 / 0.42)
-  );
+    0 28px 50px -34px rgb(0 0 0 / 0.42);
   overflow: hidden;
   font-size: 14px;
   line-height: 1.5;
@@ -298,7 +296,7 @@
   border-top: 1px solid var(--border-dim, var(--border));
 }
 .infoRows dt {
-  color: var(--dk-w-label, var(--text));
+  color: var(--text);
   font-weight: 650;
 }
 /* Whole words wrap; a long unbroken value (a repo path) breaks only as a last
