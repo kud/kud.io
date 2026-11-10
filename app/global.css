@@ -243,7 +243,12 @@ html[data-vt="merge"]::view-transition-new(root) {
   html[data-vt="morph"]::view-transition-new(root),
   ::view-transition-group(site-avatar),
   ::view-transition-old(site-avatar),
-  ::view-transition-new(site-avatar) {
+  ::view-transition-new(site-avatar),
+  /* The project icon and title morphs (project-<slug>, app-icon-<slug>): a
+     cut, not a glide. */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
     animation: none;
   }
 }

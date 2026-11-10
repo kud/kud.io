@@ -98,7 +98,11 @@ const AppLanding = ({ project }: { project: Project }) => {
         <div className={styles.heroGrid} />
         {/* Anchor back to the Apps row so the icon morphs into its visible tile,
             rather than landing on the hero with the tile off-screen. */}
-        <MorphLink href="/projects#apps" className={styles.back}>
+        <MorphLink
+          href="/projects#apps"
+          slug={project.slug}
+          className={styles.back}
+        >
           ← Projects
         </MorphLink>
         <div className={styles.appHeroContent}>
@@ -279,7 +283,11 @@ const ProductRecord = async ({ project }: { project: Project }) => {
     <div className={styles.appLanding}>
       <section className={`${styles.hero} ${art ? "warm-hero" : ""}`}>
         <div className={styles.heroGrid} />
-        <MorphLink href="/projects#products" className={styles.back}>
+        <MorphLink
+          href="/projects#products"
+          slug={project.slug}
+          className={styles.back}
+        >
           ← Projects
         </MorphLink>
         {art ? <IllustrationSlot ratio="16/9" slug={project.slug} /> : null}
@@ -429,7 +437,11 @@ const ReadmeLanding = async ({
     <>
       <section className={`${styles.hero} ${art ? "warm-hero" : ""}`}>
         <div className={styles.heroGrid} />
-        <MorphLink href="/projects" className={styles.back}>
+        <MorphLink
+          href="/projects"
+          slug={project.slug}
+          className={styles.back}
+        >
           ← Projects
         </MorphLink>
         {art ? <IllustrationSlot ratio="16/9" slug={project.slug} /> : null}

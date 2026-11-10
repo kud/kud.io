@@ -17,6 +17,7 @@ import {
   BlueskyIcon,
 } from "@/components/social-icons"
 import { ProjectList, type ReleaseSummary } from "@/components/project-list"
+import { MorphArrival } from "@/components/morph-arrival"
 import { getRelease, releaseAge } from "@/lib/release"
 import { Contributions } from "@/components/contributions"
 import { ProjectsTop } from "@/components/projects-top"
@@ -186,6 +187,7 @@ const ProjectsIndex = async () => {
           <Contributions />
         </ProjectList>
       )}
+      <MorphArrival />
       <SiteFooter />
     </main>
   )
