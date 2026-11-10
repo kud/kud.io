@@ -260,3 +260,18 @@
   font-size: 0.7em;
   font-weight: 700;
 }
+
+/* Preview candidates (components/polish-candidate.tsx): at large screens the
+   browse block drops its empty left track and widens, rail on the right. Kept
+   in step with .layout in project-list.module.css. */
+@media (min-width: 1500px) {
+  :global(html[data-layout-candidate="2"]) .top,
+  :global(html[data-layout-candidate="3"]) .top {
+    max-width: calc(1640px + var(--rail-width) + 88px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--rail-width));
+  }
+  :global(html[data-layout-candidate="2"]) .band,
+  :global(html[data-layout-candidate="3"]) .band {
+    grid-column: 1;
+  }
+}

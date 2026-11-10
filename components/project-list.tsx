@@ -236,17 +236,23 @@ export const ProjectList = ({
   }
 
   // Languages ordered by how many projects use them, so the common ones lead.
-  const languages = useMemo(() => {
+  const languageCounts = useMemo(() => {
     const counts = new Map<string, number>()
     for (const group of groups)
       for (const project of group.items)
         if (project.language)
           counts.set(project.language, (counts.get(project.language) ?? 0) + 1)
-    return [...counts.keys()].sort(
-      (a, b) =>
-        (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || a.localeCompare(b),
-    )
+    return counts
   }, [groups])
+  const languages = useMemo(
+    () =>
+      [...languageCounts.keys()].sort(
+        (a, b) =>
+          (languageCounts.get(b) ?? 0) - (languageCounts.get(a) ?? 0) ||
+          a.localeCompare(b),
+      ),
+    [languageCounts],
+  )
 
   // Content tags (kud-site-tag-*), ordered by frequency.
   const tags = useMemo(() => {
@@ -463,9 +469,22 @@ export const ProjectList = ({
                           </span>
                         </MorphLink>
                       ))}
+                      {/* Odd trailing slots read as intentional, not broken:
+                          one per empty cell, for two columns and for three
+                          (the wide layout candidate). */}
                       {group.items.length % 2 === 1 ? (
                         <div className={styles.filler} aria-hidden />
                       ) : null}
+                      {Array.from(
+                        { length: (3 - (group.items.length % 3)) % 3 },
+                        (_, index) => (
+                          <div
+                            key={index}
+                            className={styles.filler3}
+                            aria-hidden
+                          />
+                        ),
+                      )}
                     </div>
                   )}
                 </section>
@@ -596,6 +615,9 @@ export const ProjectList = ({
                     </span>
                   ) : null}
                   {language}
+                  <span className={styles.languageCount}>
+                    {languageCounts.get(language)}
+                  </span>
                 </button>
               ))}
             </div>

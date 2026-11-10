@@ -793,7 +793,8 @@
 }
 
 /* Fills the odd trailing slot so it reads as intentional, not a broken cell. */
-.filler {
+.filler,
+.filler3 {
   background-color: var(--surface);
   background-image: repeating-linear-gradient(
     -45deg,
@@ -1285,5 +1286,174 @@
 @media (prefers-reduced-motion: reduce) {
   .freshDot::after {
     animation: none;
+  }
+}
+
+/* Preview candidates (components/polish-candidate.tsx) ----------------------*/
+.languageCount,
+.filler3 {
+  display: none;
+}
+
+/* Tiles 2 and 3 — flat: no specular sweep, no glass rim, no accent glow. The
+   squircle is a plain plate with a hairline edge, so full-bleed icons read as
+   themselves and a transparent glyph sits on a flat ground, not a bevel. The
+   doubled class outranks the dusk shadow in app/warm.css. */
+:global(html[data-tiles-candidate="2"]) .appIconWrap::before,
+:global(html[data-tiles-candidate="3"]) .appIconWrap::before {
+  display: none;
+}
+:global(html[data-tiles-candidate="2"]) .appIconWrap::after,
+:global(html[data-tiles-candidate="3"]) .appIconWrap::after {
+  box-shadow: inset 0 0 0 1px rgb(var(--hi, 255 255 255) / 0.08);
+}
+:global(html[data-tiles-candidate="2"]) .appTile .appIconWrap.appIconWrap,
+:global(html[data-tiles-candidate="3"]) .appTile .appIconWrap.appIconWrap {
+  background: var(--surface-2);
+  box-shadow: none;
+}
+:global(html[data-tiles-candidate="3"]) .appTile .appIconWrap.appIconWrap {
+  box-shadow:
+    0 1px 2px rgb(var(--dk-shade, 0 0 0) / 0.18),
+    0 6px 14px -8px rgb(var(--dk-shade, 0 0 0) / 0.4);
+}
+:global(html[data-tiles-candidate="2"]) .appTile:hover .appIconWrap.appIconWrap,
+:global(html[data-tiles-candidate="2"])
+  .appTile:focus-visible
+  .appIconWrap.appIconWrap {
+  transform: translateY(-3px);
+  box-shadow: none;
+}
+:global(html[data-tiles-candidate="3"]) .appTile:hover .appIconWrap.appIconWrap,
+:global(html[data-tiles-candidate="3"])
+  .appTile:focus-visible
+  .appIconWrap.appIconWrap {
+  transform: translateY(-3px);
+  box-shadow:
+    0 2px 4px rgb(var(--dk-shade, 0 0 0) / 0.2),
+    0 10px 20px -10px rgb(var(--dk-shade, 0 0 0) / 0.45);
+}
+:global(html[data-tiles-candidate="2"]) .appIconImg[data-bleed="false"],
+:global(html[data-tiles-candidate="3"]) .appIconImg[data-bleed="false"] {
+  filter: none;
+}
+
+/* Filters 2 — quiet chips: one chip size for every group, no letter avatars,
+   counts or logos, and tags as plain text rather than dashed boxes. */
+:global(html[data-filters-candidate="2"]) .sidebar {
+  gap: 18px;
+}
+:global(html[data-filters-candidate="2"]) .sidebar .chipIcon,
+:global(html[data-filters-candidate="2"]) .sidebar .chipCount,
+:global(html[data-filters-candidate="2"]) .sidebar .languageIcon {
+  display: none;
+}
+:global(html[data-filters-candidate="2"]) .sidebar .chip,
+:global(html[data-filters-candidate="2"]) .sidebar .ecosystemChip,
+:global(html[data-filters-candidate="2"]) .sidebar .languageChip {
+  padding: 5px 12px;
+  font-size: 13px;
+}
+:global(html[data-filters-candidate="2"]) .sidebar .tagChip {
+  padding: 2px 4px;
+  border: none;
+  font-size: 13px;
+}
+:global(html[data-filters-candidate="2"]) .sidebar .tagChip:hover {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Filters 3 — index list: ecosystems and languages become a plain text index
+   with a quiet count on the right; tags flow as inline text. */
+:global(html[data-filters-candidate="3"]) .sidebar {
+  gap: 22px;
+}
+:global(html[data-filters-candidate="3"]) .sidebar .chips:not(:has(.tagChip)) {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1px;
+}
+:global(html[data-filters-candidate="3"]) .sidebar .chipIcon,
+:global(html[data-filters-candidate="3"]) .sidebar .languageIcon {
+  display: none;
+}
+:global(html[data-filters-candidate="3"]) .sidebar .chip,
+:global(html[data-filters-candidate="3"]) .sidebar .ecosystemChip,
+:global(html[data-filters-candidate="3"]) .sidebar .languageChip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  text-align: left;
+}
+:global(html[data-filters-candidate="3"]) .sidebar .chip:hover,
+:global(html[data-filters-candidate="3"]) .sidebar .ecosystemChip:hover,
+:global(html[data-filters-candidate="3"]) .sidebar .languageChip:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+:global(html[data-filters-candidate="3"]) .sidebar .chip[data-active="true"],
+:global(html[data-filters-candidate="3"])
+  .sidebar
+  .ecosystemChip[data-active="true"],
+:global(html[data-filters-candidate="3"])
+  .sidebar
+  .languageChip[data-active="true"] {
+  background: rgb(var(--glow, 194 112 61) / 0.14);
+  color: var(--text);
+  font-weight: 650;
+}
+:global(html[data-filters-candidate="3"]) .sidebar .chipCount,
+:global(html[data-filters-candidate="3"]) .sidebar .languageCount {
+  display: inline;
+  min-width: 0;
+  height: auto;
+  margin-left: auto;
+  padding: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+:global(html[data-filters-candidate="3"]) .sidebar .tagChip {
+  padding: 2px 4px;
+  border: none;
+  font-size: 13px;
+}
+:global(html[data-filters-candidate="3"]) .sidebar .tagChip:hover {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Layout 2 and 3 — wider: at large screens the empty left track goes, and the
+   grid takes the room, rail on the right. 3 also runs the list three across. */
+@media (min-width: 1500px) {
+  :global(html[data-layout-candidate="2"]) .layout,
+  :global(html[data-layout-candidate="3"]) .layout {
+    max-width: calc(1640px + var(--rail-width) + 88px);
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--rail-width));
+    grid-template-areas: "main filters";
+  }
+}
+@media (min-width: 1700px) {
+  :global(html[data-layout-candidate="3"]) .list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  :global(html[data-layout-candidate="3"]) .filler {
+    display: none;
+  }
+  :global(html[data-layout-candidate="3"]) .filler3 {
+    display: block;
+    background-color: var(--surface);
   }
 }
