@@ -97,7 +97,10 @@ export const ProjectsTop = ({
                           <Icon project={p} size={48} />
                         </span>
                       )}
-                      <strong className={styles.pinName}>{p.name}</strong>
+                      <strong className={styles.pinName}>
+                        <Icon project={p} size={20} />
+                        {p.name}
+                      </strong>
                       {p.description ? (
                         <span className={styles.pinDesc}>{p.description}</span>
                       ) : null}

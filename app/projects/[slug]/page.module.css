@@ -877,8 +877,8 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 38px;
-  background: var(--code-bar, var(--surface-2));
-  border-bottom: 1px solid rgb(255 255 255 / 0.05);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
 }
 .readme :global(figure.shiki)::after {
   content: "";
@@ -1118,10 +1118,13 @@
 
 /* A README icon is a glyph on transparent ground, not app-icon art: it sits
    beside the title uncropped, without the squircle frame. */
+/* A glyph has no frame or shade, but keeps the rounded corners: an SVG that
+   paints its own square ground would otherwise show hard corners (Erwann,
+   2026-11-10). A transparent mark loses nothing to the clip. */
 .recordTitleGlyph {
   border: 0;
-  border-radius: 0;
-  overflow: visible;
+  border-radius: 22%;
+  overflow: hidden;
   box-shadow: none;
 }
 .recordTitleGlyph img {

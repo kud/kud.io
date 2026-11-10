@@ -84,10 +84,20 @@
   border: 1px solid color-mix(in srgb, var(--primary) 32%, transparent);
 }
 
+/* The version as a quiet pill, kin to the README hero's release pill: mono,
+   the plum ink on the page's second surface, drawn by the page border. */
 .version {
+  justify-self: end;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--primary-light);
   font-family: var(--mono);
-  font-size: 12.5px;
-  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
 }
 
 /* Pinned ------------------------------------------------------------------- */
@@ -125,7 +135,9 @@
 }
 
 .pinName {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-top: 12px;
   font-size: 18px;
   color: var(--text);
@@ -232,4 +244,19 @@
   .pinCard:is(:hover, :focus-visible) .pinArt img {
     transform: scale(1.06);
   }
+}
+
+/* The project's small icon leads the pinned title, a touch over the cap
+   height, on the same rounded corners as every icon on the page. */
+.pinName .icon,
+.pinName .monogram {
+  width: 1.1em;
+  height: 1.1em;
+  padding: 1px;
+}
+.pinName .monogram {
+  background: var(--surface-2);
+  color: var(--primary-light);
+  font-size: 0.7em;
+  font-weight: 700;
 }
