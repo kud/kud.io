@@ -193,6 +193,14 @@
   font-weight: 600;
   text-underline-offset: 3px;
 }
+.writing a:is(:hover, :focus-visible) {
+  color: var(--primary-light);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .writing a {
+    transition: color 0.18s;
+  }
+}
 .writing span {
   color: var(--muted);
   font-size: 14.5px;

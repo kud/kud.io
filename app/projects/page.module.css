@@ -212,6 +212,16 @@
   text-underline-offset: 3px;
 }
 
+.intro a:is(:hover, :focus-visible) {
+  color: var(--primary-light);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .intro a {
+    transition: color 0.18s;
+  }
+}
+
 .intro strong {
   color: var(--text);
   font-weight: 600;
@@ -238,15 +248,24 @@
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
-  transition: color 0.18s;
+  text-underline-offset: 3px;
 }
 
 .social a svg {
   opacity: 0.85;
 }
 
-.social a:hover {
-  color: var(--primary-light);
+/* --muted and --primary-light sit at the same lightness on the dusk ground, so
+   a colour swap alone read as no hover at all: lift to --text and underline. */
+.social a:is(:hover, :focus-visible) {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .social a {
+    transition: color 0.18s;
+  }
 }
 
 .count {
