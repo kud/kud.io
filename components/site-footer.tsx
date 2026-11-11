@@ -4,6 +4,8 @@ import {
   GitHubIcon,
   LinkedInIcon,
 } from "@/components/social-icons"
+import { SITE, SOCIAL } from "@/lib/links"
+import type { ElsewhereKey } from "@/lib/links"
 import styles from "./site-footer.module.css"
 
 // The one footer for the whole site: /projects, the project pages, their docs
@@ -14,19 +16,13 @@ const YEAR = new Date().getFullYear()
 
 // Internal pages go through InkLink, which inks only on a change of world
 // (components/ink.ts). The feed is a plain <a>: it is a route handler, not a
-// page, so there is nothing for a client route to prefetch or ink into.
-const SITE = [
-  { href: "/blog", label: "Writing", external: false },
-  { href: "/projects", label: "Projects", external: false },
-  { href: "/blog/feed.xml", label: "RSS", external: false, plain: true },
-  { href: "https://referrals.kud.io", label: "Referrals", external: true },
-]
-
-const SOCIAL = [
-  { href: "https://github.kud.io/", label: "GitHub", Icon: GitHubIcon },
-  { href: "https://bsky.kud.io/", label: "Bluesky", Icon: BlueskyIcon },
-  { href: "https://linkedin.kud.io/", label: "LinkedIn", Icon: LinkedInIcon },
-]
+// page, so there is nothing for a client route to prefetch or ink into. The
+// links themselves live in lib/links.ts, shared with the launcher.
+const MARK: Partial<Record<ElsewhereKey, typeof GitHubIcon>> = {
+  github: GitHubIcon,
+  bluesky: BlueskyIcon,
+  linkedin: LinkedInIcon,
+}
 
 export const SiteFooter = ({ className }: { className?: string }) => (
   <footer
@@ -50,13 +46,16 @@ export const SiteFooter = ({ className }: { className?: string }) => (
       )}
     </nav>
     <ul className={styles.marks}>
-      {SOCIAL.map(({ href, label, Icon }) => (
-        <li key={href}>
-          <a href={href} aria-label={label} target="_blank" rel="noreferrer">
-            <Icon className={styles.mark} />
-          </a>
-        </li>
-      ))}
+      {SOCIAL.map(({ key, href, label }) => {
+        const Icon = MARK[key]
+        return Icon ? (
+          <li key={href}>
+            <a href={href} aria-label={label} target="_blank" rel="noreferrer">
+              <Icon className={styles.mark} />
+            </a>
+          </li>
+        ) : null
+      })}
     </ul>
     <span className={styles.copy}>© {YEAR} Erwann Mest</span>
   </footer>
