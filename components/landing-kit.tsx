@@ -1,6 +1,5 @@
 import type { ReactNode } from "react"
 import { InkLink as Link } from "@/components/ink-link"
-import { Reveal } from "./reveal"
 import { Terminal } from "./terminal"
 import styles from "./landing-kit.module.css"
 
@@ -84,11 +83,11 @@ export const Section = ({
 }) => (
   <section className={styles.section}>
     {eyebrow || title || sub ? (
-      <Reveal className={styles.sectionHeader}>
+      <div className={styles.sectionHeader}>
         {eyebrow ? <span className={styles.eyebrow}>{eyebrow}</span> : null}
         {title ? <h2 className={styles.sectionTitle}>{title}</h2> : null}
         {sub ? <p className={styles.sectionSub}>{sub}</p> : null}
-      </Reveal>
+      </div>
     ) : null}
     {children}
   </section>
@@ -104,9 +103,9 @@ export const Install = ({
   children: ReactNode
   label?: string
 }) => (
-  <Reveal className={styles.installWrap}>
+  <div className={styles.installWrap}>
     <Terminal label={label}>{children}</Terminal>
-  </Reveal>
+  </div>
 )
 
 export const Features = ({ children }: { children: ReactNode }) => (
@@ -120,11 +119,11 @@ export const Feature = ({
   title: ReactNode
   children?: ReactNode
 }) => (
-  <Reveal className={styles.feature}>
+  <div className={styles.feature}>
     <span className={styles.featureMark} />
     <h3>{title}</h3>
     {children ? <div className={styles.featureBody}>{children}</div> : null}
-  </Reveal>
+  </div>
 )
 
 export const CTA = ({
@@ -139,7 +138,7 @@ export const CTA = ({
   label?: string
 }) => (
   <section className={styles.ctaSection}>
-    <Reveal>
+    <div>
       {title ? <h2 className={styles.ctaTitle}>{title}</h2> : null}
       {sub ? <p className={styles.ctaSub}>{sub}</p> : null}
       <a
@@ -149,7 +148,7 @@ export const CTA = ({
       >
         {label}
       </a>
-    </Reveal>
+    </div>
   </section>
 )
 

@@ -32,7 +32,6 @@ import { getProjectReadme, projectHasDocs } from "@/lib/source"
 import { getIcons } from "@/lib/icons"
 import { landingComponents } from "@/components/landing-kit"
 import { getMDXComponents } from "@/components/mdx"
-import { Reveal } from "@/components/reveal"
 import { getRelease, releaseAge, type Release } from "@/lib/release"
 import { ThemePicker } from "@/components/theme-picker"
 import { ThemeScopeScript } from "@/components/scoped-theme"
@@ -163,14 +162,14 @@ const AppLanding = ({ project }: { project: Project }) => {
         <section className={styles.section}>
           <div className={styles.shots} data-count={app.screenshots.length}>
             {app.screenshots.map((src, index) => (
-              <Reveal key={src} delay={index * 80} className={styles.shot}>
+              <div key={src} className={styles.shot}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={src}
                   alt={`${project.name} screenshot ${index + 1}`}
                   loading="lazy"
                 />
-              </Reveal>
+              </div>
             ))}
           </div>
         </section>
@@ -178,43 +177,39 @@ const AppLanding = ({ project }: { project: Project }) => {
 
       {app.why ? (
         <section className={styles.section}>
-          <Reveal className={styles.sectionHeader}>
+          <div className={styles.sectionHeader}>
             <span className={styles.eyebrow}>Why I built it</span>
-          </Reveal>
-          <Reveal className={styles.prose}>
+          </div>
+          <div className={styles.prose}>
             <p>{app.why}</p>
-          </Reveal>
+          </div>
         </section>
       ) : null}
 
       {app.how ? (
         <section className={styles.section}>
-          <Reveal className={styles.sectionHeader}>
+          <div className={styles.sectionHeader}>
             <span className={styles.eyebrow}>How it&apos;s built</span>
-          </Reveal>
-          <Reveal className={styles.prose}>
+          </div>
+          <div className={styles.prose}>
             <p>{app.how}</p>
-          </Reveal>
+          </div>
         </section>
       ) : null}
 
       {app.features.length > 0 ? (
         <section className={styles.section}>
-          <Reveal className={styles.sectionHeader}>
+          <div className={styles.sectionHeader}>
             <span className={styles.eyebrow}>Features</span>
             <h2 className={styles.sectionTitle}>What&apos;s inside</h2>
-          </Reveal>
+          </div>
           <div className={styles.features}>
-            {app.features.map((feature, index) => (
-              <Reveal
-                key={feature.title}
-                delay={index * 60}
-                className={styles.feature}
-              >
+            {app.features.map((feature) => (
+              <div key={feature.title} className={styles.feature}>
                 <span className={styles.featureMark} />
                 <h3>{feature.title}</h3>
                 {feature.description ? <p>{feature.description}</p> : null}
-              </Reveal>
+              </div>
             ))}
           </div>
         </section>
@@ -222,7 +217,7 @@ const AppLanding = ({ project }: { project: Project }) => {
 
       {launchUrl ? (
         <section className={styles.ctaSection}>
-          <Reveal>
+          <div>
             <h2 className={styles.ctaTitle}>{app.ctaTitle ?? `Try ${name}`}</h2>
             <p className={styles.ctaSub}>
               {app.ctaSubtitle ?? "Free, and runs right in your browser."}
@@ -236,7 +231,7 @@ const AppLanding = ({ project }: { project: Project }) => {
               <ButtonIcon name="web" />
               {launchLabel} →
             </a>
-          </Reveal>
+          </div>
           {project.topics.length > 0 ? (
             <ul className={styles.topics}>
               {project.topics.map((topic) => (

@@ -66,28 +66,6 @@ body {
   }
 }
 
-/* Scroll-reveal animation used by the landing sections. */
-.reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s ease;
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-}
-
 /* Button hover -------------------------------------------------------------- */
 /* One hover for every button-like control, taken from the home hero: a 2px
    lift and a highlight, on hover or keyboard focus only (Erwann, 2026-11-10).
