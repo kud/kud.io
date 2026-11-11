@@ -64,7 +64,7 @@ type Group = {
 export type ReleaseSummary = {
   version: string
   publishedAt: string | null
-  // Under two weeks old: the only releases allowed to move on this page.
+  // Under two weeks old: the only releases called out on this page.
   fresh: boolean
   age: string | null
 }
