@@ -670,16 +670,24 @@
   border-radius: var(--ik-wobble);
   box-shadow: none;
 }
-:global([data-theme="ink"]) .feedDialog::backdrop {
-  background: var(--ik-veil);
-  backdrop-filter: none;
-}
 :global([data-theme="ink"]) .gallery img,
 :global([data-theme="ink"]) .linkCard {
   border-color: var(--ik-ink);
 }
+/* The feed sits inside the socials' <li>, so ink's running-text link rule
+   (app/ink.css) reaches its links: the button and the date keep their own. */
 :global([data-theme="ink"]) .continue {
   border-radius: var(--ik-wobble-sm);
+  color: var(--ik-paper);
+  text-decoration: none;
+}
+:global([data-theme="ink"]) .postLink,
+:global([data-theme="ink"]) .linkCard {
+  color: var(--bc-meta);
+  text-decoration: none;
+}
+:global([data-theme="ink"]) .linkCard {
+  color: inherit;
 }
 :global([data-theme="ink"]) .continue:hover {
   background: var(--ik-paper);
