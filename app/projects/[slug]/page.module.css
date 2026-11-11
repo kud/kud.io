@@ -512,36 +512,31 @@ a.badge:focus-visible {
   color: transparent;
 }
 
-/* Prominent, accent-coloured launch button (distinct from the light .lead). */
-/* The one place an accent becomes a solid ground for text, so the one place it
-   has to clear 4.5:1 at 15px/700. White fails it on four of the six accents
-   shipping today (referrals at 2.15, your-move at 3.10) — these accents were
-   drawn as ink on near-black, not as a ground under white. Black ink on the
-   accent lifted 6% toward white passes for all of them, worst case 4.74, and
-   self-corrects for any accent added later that sits in the same mid-luminance
-   band these do. An accent dark enough to need white would break it. */
+/* The launch button is the same plate as every hero button, outlined like
+   .lead but in the app's own accent: a rim half-way to it at rest, the full
+   accent on hover, never a filled slab (Erwann, 2026-11-11). */
 .launch {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  padding: 14px 28px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--app-accent) 94%, #fff);
-  color: #000;
+  padding: 13px 24px;
+  border-radius: 11px;
+  border: 1px solid color-mix(in srgb, var(--app-accent) 50%, var(--border));
+  background: var(--surface);
+  color: var(--text);
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--app-accent) 80%, #000);
   transition:
-    transform 0.18s,
-    box-shadow 0.18s,
-    filter 0.18s;
+    background 0.18s,
+    border-color 0.18s,
+    transform var(--hover-speed);
 }
 
 .launch:is(:hover, :focus-visible) {
   transform: var(--hover-lift);
-  filter: brightness(1.08);
-  box-shadow: 0 18px 40px -12px color-mix(in srgb, var(--app-accent) 90%, #000);
+  border-color: var(--app-accent);
+  background: var(--surface-2);
 }
 
 .stack {
