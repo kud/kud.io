@@ -1,4 +1,5 @@
 import { ghHeaders } from "@/lib/projects"
+import { surfaceSource } from "@/lib/monorepo"
 
 const OWNER = "kud"
 
@@ -24,9 +25,9 @@ const compareSemver = (a: number[], b: number[]) =>
 // What `npm install` gets: the registry's latest, read through the package
 // name in the repo's own package.json. Private and unpublished packages fall
 // through to the tags.
-const fromNpm = async (slug: string): Promise<Release | null> => {
+const fromNpm = async (slug: string, path = ""): Promise<Release | null> => {
   const pkgRes = await fetch(
-    `https://api.github.com/repos/${OWNER}/${slug}/contents/package.json`,
+    `https://api.github.com/repos/${OWNER}/${slug}/contents/${path ? `${path}/` : ""}package.json`,
     {
       headers: { ...ghHeaders(), Accept: "application/vnd.github.raw+json" },
       next: { revalidate: false },
@@ -94,9 +95,13 @@ const tagDate = async (slug: string, sha: string): Promise<string | null> => {
 }
 
 // The latest version of a project, for its landing hero: npm when published
-// there, else the highest semver tag, else null and nothing shows.
+// there, else the highest semver tag, else null and nothing shows. A surface
+// synthesised from a monorepo (foxhop-cli) has no repo of its own: its version
+// is what its folder publishes, and the monorepo's tags are not its own.
 export const getRelease = async (slug: string): Promise<Release | null> => {
   try {
+    const surface = surfaceSource(slug)
+    if (surface) return await fromNpm(surface.repo, surface.path)
     return (await fromNpm(slug)) ?? (await fromTags(slug))
   } catch {
     return null

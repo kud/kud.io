@@ -15,6 +15,9 @@ type SurfaceDecl = {
   from?: string
   name?: string
   description?: string
+  // Where the surface's own package.json sits in the parent repo (e.g. "cli"),
+  // so its release is read from what it publishes, not from the monorepo root.
+  path?: string
 }
 type MonorepoDecl = { ecosystem: string; surfaces: SurfaceDecl[] }
 
@@ -38,6 +41,18 @@ const getMonorepoDecls = (): MonorepoDecl[] => {
     }
   }
   return decls
+}
+
+// The repo and folder a synthesised surface ships from, for reading its
+// release; null for anything that is its own repo.
+export const surfaceSource = (
+  slug: string,
+): { repo: string; path: string } | null => {
+  for (const decl of getMonorepoDecls())
+    for (const surface of decl.surfaces)
+      if (surface.slug === slug && surface.from && surface.path)
+        return { repo: surface.from, path: surface.path }
+  return null
 }
 
 // Apply every monorepo declaration to the assembled project list: stamp the

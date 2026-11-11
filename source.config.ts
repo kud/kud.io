@@ -6,6 +6,10 @@ import { duskDay } from "./lib/code-themes"
 // editor, with comments and parameters lifted to clear 4.5:1 on its ground,
 // minus its editor-only italics (lib/themes/november.ts).
 import { november } from "./lib/themes/november"
+import {
+  remarkStripHeadingEmoji,
+  remarkStripReadmeHero,
+} from "./lib/remark-readme"
 
 // Per-project documentation is synced from each repo's markdown into
 // content/projects/<slug>/... at build time; Fumadocs indexes it for the
@@ -51,6 +55,13 @@ export default defineConfig({
       themes: { light: duskDay, dark: november },
       fallbackLanguage: "text",
     },
+    // Ahead of fumadocs' own remark plugins, so the table of contents reads
+    // the headings already cleaned.
+    remarkPlugins: (plugins) => [
+      remarkStripHeadingEmoji,
+      remarkStripReadmeHero,
+      ...plugins,
+    ],
     rehypePlugins: (plugins) => [
       [rehypeRaw, { passThrough: MDX_NODES }],
       ...plugins,

@@ -1,18 +1,21 @@
 import { ART } from "@/lib/art"
 
-// A project's delivered illustration at the slot's ratio; one 16:9 drawing
-// serves both, the 4:3 card being its centred crop. Callers render it only for
-// a project in ART, so there is no placeholder to fall back to.
+// A project's cover at the slot's ratio; one 16:9 image serves both, the 4:3
+// card being its centred crop. The cover is its drawing in ART, or the hero
+// its README opens on (lib/cover.ts) when passed as src. Callers render it
+// only when there is one, so there is no placeholder to fall back to.
 export const IllustrationSlot = ({
   ratio,
   slug,
+  src,
   className,
 }: {
   ratio: "16/9" | "4/3"
   slug: string
+  src?: string | null
   className?: string
 }) => {
-  const art = ART[slug]
+  const art = src ?? ART[slug]
   if (!art) return null
   return (
     <div

@@ -7,7 +7,7 @@ import type { Metadata } from "next"
 import { InkLink as Link } from "@/components/ink-link"
 import { MorphLink } from "@/components/morph-link"
 import { IllustrationSlot } from "@/components/illustration-slot"
-import { ART } from "@/lib/art"
+import { coverOf } from "@/lib/cover"
 import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { DocsBody } from "fumadocs-ui/layouts/docs/page"
@@ -275,11 +275,11 @@ const ProductRecord = async ({ project }: { project: Project }) => {
     }))
   // The record sits on the Dusk ground like a README landing, so it takes the
   // ground's tokens rather than the product's own accent.
-  const art = Boolean(ART[project.slug])
+  const cover = coverOf(project)
 
   return (
     <div className={styles.appLanding}>
-      <section className={`${styles.hero} ${art ? "warm-hero" : ""}`}>
+      <section className={`${styles.hero} ${cover ? "warm-hero" : ""}`}>
         <div className={styles.heroGrid} />
         <MorphLink
           href="/projects#products"
@@ -288,8 +288,12 @@ const ProductRecord = async ({ project }: { project: Project }) => {
         >
           ← Projects
         </MorphLink>
-        {art ? <IllustrationSlot ratio="16/9" slug={project.slug} /> : null}
-        <div className={`${styles.heroContent} ${art ? "warm-hero-copy" : ""}`}>
+        {cover ? (
+          <IllustrationSlot ratio="16/9" slug={project.slug} src={cover} />
+        ) : null}
+        <div
+          className={`${styles.heroContent} ${cover ? "warm-hero-copy" : ""}`}
+        >
           <a className={styles.badge} href="https://beansontoast.app">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -405,7 +409,7 @@ const ReadmeLanding = async ({
     )
     .map(linkTo)
   const readme = getProjectReadme(project.readmeSlug ?? project.slug)
-  const art = Boolean(ART[project.slug])
+  const cover = coverOf(project)
   const Body = readme?.data.body
   // Section headings (depth 2) drive a simple right-rail TOC.
   const toc = (readme?.data.toc ?? []).filter((item) => item.depth === 2)
@@ -416,8 +420,10 @@ const ReadmeLanding = async ({
   // Firefox add-ons link out to AMO for the install, so — like Raycast — they
   // skip the docs route and show a store CTA in the hero instead.
   const isWebext = project.category === "webext"
-  const hasDocs =
-    !isList && !isRaycast && !isWebext && projectHasDocs(project.slug)
+  // A monorepo surface (foxhop-cli) has no docs of its own: they are the
+  // repo's, so it links to the parent's docs route.
+  const docsSlug = project.readmeSlug ?? project.slug
+  const hasDocs = !isList && !isRaycast && !isWebext && projectHasDocs(docsSlug)
   // Every landing with sections gets its "On this page", pitch landings too.
   const showToc = toc.length > 1
   const age = release ? releaseAge(release.publishedAt) : null
@@ -427,13 +433,17 @@ const ReadmeLanding = async ({
 
   return (
     <>
-      <section className={`${styles.hero} ${art ? "warm-hero" : ""}`}>
+      <section className={`${styles.hero} ${cover ? "warm-hero" : ""}`}>
         <div className={styles.heroGrid} />
         <MorphLink href="/projects" slug={project.slug} className={styles.back}>
           ← Projects
         </MorphLink>
-        {art ? <IllustrationSlot ratio="16/9" slug={project.slug} /> : null}
-        <div className={`${styles.heroContent} ${art ? "warm-hero-copy" : ""}`}>
+        {cover ? (
+          <IllustrationSlot ratio="16/9" slug={project.slug} src={cover} />
+        ) : null}
+        <div
+          className={`${styles.heroContent} ${cover ? "warm-hero-copy" : ""}`}
+        >
           <div className={styles.badge}>
             <span className={styles.badgeDot} />
             {badgeLabel}
@@ -543,7 +553,7 @@ const ReadmeLanding = async ({
               <>
                 {hasDocs ? (
                   <Link
-                    href={`/projects/${project.slug}/docs`}
+                    href={`/projects/${docsSlug}/docs`}
                     className={styles.lead}
                   >
                     <ButtonIcon name="docs" />
@@ -575,7 +585,7 @@ const ReadmeLanding = async ({
             {hasDocs && !isList ? (
               <div className={styles.landingCta}>
                 <Link
-                  href={`/projects/${project.slug}/docs`}
+                  href={`/projects/${docsSlug}/docs`}
                   className={styles.lead}
                 >
                   Read the documentation →
