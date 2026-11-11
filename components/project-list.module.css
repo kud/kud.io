@@ -316,17 +316,6 @@
   gap: 9px;
 }
 
-.sidebar .trigger {
-  width: 100%;
-  min-width: 0;
-}
-
-.sidebar .menu {
-  left: 0;
-  right: auto;
-  min-width: 100%;
-}
-
 .sidebar .filterGroup {
   flex-direction: column;
   align-items: stretch;
@@ -488,115 +477,6 @@
   gap: 10px;
 }
 
-.dropdown {
-  position: relative;
-}
-
-.trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 180px;
-  justify-content: space-between;
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 9px;
-  padding: 8px 14px;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition:
-    border-color 0.15s,
-    background 0.15s;
-}
-
-.trigger:hover,
-.trigger[aria-expanded="true"] {
-  border-color: var(--primary);
-  background: var(--surface-2);
-}
-
-.chevron {
-  width: 7px;
-  height: 7px;
-  border-right: 1.5px solid var(--muted);
-  border-bottom: 1.5px solid var(--muted);
-  transform: translateY(-2px) rotate(45deg);
-  transition: transform 0.18s;
-}
-
-.trigger[aria-expanded="true"] .chevron {
-  transform: translateY(1px) rotate(225deg);
-}
-
-.menu {
-  position: absolute;
-  top: calc(100% + 7px);
-  right: 0;
-  z-index: 30;
-  min-width: 210px;
-  margin: 0;
-  padding: 6px;
-  list-style: none;
-  /* Lifted like the launcher: the card surface and the theme's own shade.
-     surface-2 is lighter only by night; by day it is the darker wash. */
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow:
-    0 2px 6px rgb(var(--dk-shade) / 0.08),
-    0 20px 44px -18px rgb(var(--dk-shade) / 0.45);
-  animation: menuIn 0.14s ease both;
-}
-
-@keyframes menuIn {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 9px 10px;
-  background: transparent;
-  border: 0;
-  border-radius: 8px;
-  color: var(--muted);
-  font-family: inherit;
-  font-size: 13.5px;
-  text-align: left;
-  cursor: pointer;
-  transition:
-    background 0.12s,
-    color 0.12s;
-}
-
-.option:hover {
-  background: rgb(var(--hi, 255 255 255) / 0.05);
-  color: var(--text);
-}
-
-.option[data-active="true"] {
-  color: var(--text);
-}
-
-.check {
-  width: 13px;
-  flex-shrink: 0;
-  color: var(--primary-light);
-  font-size: 11px;
-}
-
 /* Sections ------------------------------------------------------------------*/
 .section {
   --accent: #8892a4;
@@ -609,31 +489,31 @@
   scroll-margin-top: 32px;
 }
 
-.section[data-cat="product"] {
+:is(.section, .typeMark)[data-cat="product"] {
   --accent: #e2683c;
 }
-.section[data-cat="cli"] {
+:is(.section, .typeMark)[data-cat="cli"] {
   --accent: #f59e0b;
 }
-.section[data-cat="mcp"] {
+:is(.section, .typeMark)[data-cat="mcp"] {
   --accent: #4f74ec;
 }
-.section[data-cat="claude"] {
+:is(.section, .typeMark)[data-cat="claude"] {
   --accent: #e0a87e;
 }
-.section[data-cat="opencode"] {
+:is(.section, .typeMark)[data-cat="opencode"] {
   --accent: #e0a87e;
 }
-.section[data-cat="ui"] {
+:is(.section, .typeMark)[data-cat="ui"] {
   --accent: #10b981;
 }
-.section[data-cat="vscode"] {
+:is(.section, .typeMark)[data-cat="vscode"] {
   --accent: #22d3ee;
 }
-.section[data-cat="theme"] {
+:is(.section, .typeMark)[data-cat="theme"] {
   --accent: #ec4899;
 }
-.section[data-cat="other"] {
+:is(.section, .typeMark)[data-cat="other"] {
   --accent: #8892a4;
 }
 
@@ -964,26 +844,15 @@
     order: -1;
   }
 
-  /* Stack each dropdown as label-above-control, full width and flush-left, so
-     Type/Sort line up on the exact same left edge as the search field and the
-     Lang/Tags rows — one consistent column instead of indented half-width boxes. */
+  /* Stack Sort as label-above-control, full width and flush-left, so it lines
+     up on the exact same left edge as the search field and the Type, Lang and
+     Tags rows — one consistent column instead of indented half-width boxes. */
   .sortGroup {
     margin-left: 0;
     flex-basis: 100%;
     flex-direction: column;
     align-items: stretch;
     gap: 7px;
-  }
-
-  .trigger {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .menu {
-    left: 0;
-    right: 0;
-    min-width: 0;
   }
 
   .section {
@@ -1301,4 +1170,83 @@
 .appName .freshDot {
   margin-right: 8px;
   vertical-align: 0.15em;
+}
+
+/* Type in the rail: each type wears its section's dot and carries its count
+   under the other filters. A type with none left dims but stays pickable. */
+.typeMark {
+  --accent: #8892a4;
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.typeMark[data-cat="all"] {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--muted);
+}
+
+.typeRow {
+  composes: chip;
+}
+
+.typeRow[data-active="true"] {
+  background: rgb(var(--glow, 194 112 61) / 0.14);
+  color: var(--text);
+  font-weight: 650;
+}
+
+.typeRow[data-empty="true"] {
+  opacity: 0.5;
+}
+
+/* Sort as three segments, all in view. */
+.segmented {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.segmented button {
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    color 0.14s,
+    background 0.14s;
+}
+
+.segmented button:hover {
+  color: var(--text);
+}
+
+.segmented button[aria-pressed="true"] {
+  background: rgb(var(--glow, 194 112 61) / 0.14);
+  color: var(--text);
+  font-weight: 650;
+}
+
+.typeRow:focus-visible,
+.segmented button:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+@media (max-width: 720px) {
+  .segmented button {
+    padding: 9px 8px;
+  }
 }

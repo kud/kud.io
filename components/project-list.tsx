@@ -94,99 +94,111 @@ type SortKey = "updated" | "stars" | "name"
 
 const SORTS: Record<
   SortKey,
-  { label: string; fn: (a: Project, b: Project) => number }
+  { label: string; short: string; fn: (a: Project, b: Project) => number }
 > = {
   updated: {
     label: "Recently updated",
+    short: "Recent",
     fn: (a, b) => b.pushedAt.localeCompare(a.pushedAt),
   },
   stars: {
     label: "Most stars",
+    short: "Stars",
     fn: (a, b) => b.stars - a.stars || a.slug.localeCompare(b.slug),
   },
   name: {
     label: "Name (A–Z)",
+    short: "A–Z",
     fn: (a, b) => a.slug.localeCompare(b.slug),
   },
 }
 
-type Option = { value: string | null; label: string }
+// `cat` names the type, for its colour mark (the section dot's accent);
+// `count` is how many projects it would show under the other filters.
+type Option = {
+  value: string | null
+  label: string
+  short?: string
+  cat?: string
+  count?: number
+}
 
-// A self-contained select dropdown (used for both Type and Sort).
-const Dropdown = ({
-  label,
-  value,
+const TypeMark = ({ cat }: { cat: string }) => (
+  <span className={styles.typeMark} data-cat={cat} aria-hidden />
+)
+
+// Type in the rail: the same index as Ecosystems and Languages below it, one
+// row per type with its mark and count.
+const TypeList = ({
   options,
+  value,
   onChange,
 }: {
-  label: string
-  value: string | null
   options: Option[]
+  value: string | null
   onChange: (value: string | null) => void
-}) => {
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!open) return
-    const onPointerDown = (event: MouseEvent) => {
-      if (!ref.current?.contains(event.target as Node)) setOpen(false)
-    }
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false)
-    }
-    document.addEventListener("mousedown", onPointerDown)
-    document.addEventListener("keydown", onKeyDown)
-    return () => {
-      document.removeEventListener("mousedown", onPointerDown)
-      document.removeEventListener("keydown", onKeyDown)
-    }
-  }, [open])
-
-  const current = options.find((option) => option.value === value) ?? options[0]
-
-  return (
-    <div className={styles.sortGroup}>
-      <span className={styles.filterLabel}>{label}</span>
-      <div className={styles.dropdown} ref={ref}>
+}) => (
+  <div className={styles.filterGroup}>
+    <span className={styles.filterLabel} id="type-filter-label">
+      Type
+    </span>
+    <div
+      className={styles.chips}
+      role="group"
+      aria-labelledby="type-filter-label"
+    >
+      {options.map((option) => (
         <button
+          key={option.label}
           type="button"
-          className={styles.trigger}
-          aria-haspopup="listbox"
-          aria-expanded={open}
-          onClick={() => setOpen((state) => !state)}
+          className={styles.typeRow}
+          aria-pressed={option.value === value}
+          data-active={option.value === value}
+          data-empty={option.count === 0}
+          onClick={() => onChange(option.value)}
         >
-          {current.label}
-          <span className={styles.chevron} aria-hidden />
+          <TypeMark cat={option.cat ?? "all"} />
+          {option.label}
+          <span className={styles.chipCount}>{option.count}</span>
         </button>
-        {open ? (
-          <ul className={styles.menu} role="listbox">
-            {options.map((option) => (
-              <li key={option.label}>
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={option.value === value}
-                  data-active={option.value === value}
-                  className={styles.option}
-                  onClick={() => {
-                    onChange(option.value)
-                    setOpen(false)
-                  }}
-                >
-                  <span className={styles.check} aria-hidden>
-                    {option.value === value ? "✓" : ""}
-                  </span>
-                  {option.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : null}
-      </div>
+      ))}
     </div>
-  )
-}
+  </div>
+)
+
+// Sort as a segmented control: three short options, all in view, one tap each.
+const SortSegments = ({
+  options,
+  value,
+  onChange,
+}: {
+  options: Option[]
+  value: string
+  onChange: (value: string) => void
+}) => (
+  <div className={styles.sortGroup}>
+    <span className={styles.filterLabel} id="sort-filter-label">
+      Sort
+    </span>
+    <div
+      className={styles.segmented}
+      role="group"
+      aria-labelledby="sort-filter-label"
+    >
+      {options.map((option) => (
+        <button
+          key={option.label}
+          type="button"
+          aria-pressed={option.value === value}
+          title={option.label}
+          onClick={() => onChange(option.value ?? "updated")}
+        >
+          {option.short ?? option.label}
+        </button>
+      ))}
+    </div>
+  </div>
+)
 
 export const ProjectList = ({
   groups,
@@ -322,16 +334,38 @@ export const ProjectList = ({
     }))
     .filter((group) => group.items.length > 0)
 
+  // Each type counted under the other filters, so a type the current search
+  // or language empties says so before it is picked.
+  const typeCounts = groups.map((group) => group.items.filter(matches).length)
   const categoryOptions: Option[] = [
-    { value: null, label: "All types" },
-    ...groups.map((group) => ({ value: group.key, label: group.name })),
+    {
+      value: null,
+      label: "All types",
+      count: typeCounts.reduce((sum, count) => sum + count, 0),
+    },
+    ...groups.map((group, index) => ({
+      value: group.key,
+      // The products heading carries its label; a filter row only needs the noun.
+      label: group.key === "product" ? "Products" : group.name,
+      cat: group.key,
+      count: typeCounts[index],
+    })),
   ]
   const sortOptions: Option[] = (Object.keys(SORTS) as SortKey[]).map(
     (key) => ({
       value: key,
       label: SORTS[key].label,
+      short: SORTS[key].short,
     }),
   )
+  const pickType = (value: string | null) => {
+    markFilterInteraction()
+    setCategory(value)
+  }
+  const pickSort = (value: string | null) => {
+    markFilterInteraction()
+    setSort((value ?? "updated") as SortKey)
+  }
 
   const isFiltered = Boolean(
     needle || category || lang || activeTags.length > 0 || activeEcosystem,
@@ -550,23 +584,15 @@ export const ProjectList = ({
               }}
               aria-label="Search projects"
             />
-            <Dropdown
-              label="Type"
-              value={category}
-              options={categoryOptions}
-              onChange={(value) => {
-                markFilterInteraction()
-                setCategory(value)
-              }}
-            />
-            <Dropdown
-              label="Sort"
-              value={sort}
+            <SortSegments
               options={sortOptions}
-              onChange={(value) => {
-                markFilterInteraction()
-                setSort((value ?? "updated") as SortKey)
-              }}
+              value={sort}
+              onChange={pickSort}
+            />
+            <TypeList
+              options={categoryOptions}
+              value={category}
+              onChange={pickType}
             />
 
             {ecosystems.length > 0 ? (
