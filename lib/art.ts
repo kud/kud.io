@@ -8,4 +8,4 @@ export const ART: Partial<Record<string, string>> = {
   globetrotter: "/projects/art/globetrotter.webp",
   "mcp-jenkins": "/projects/art/mcp-jenkins.webp",
   "soap-cli": "/projects/art/soap-cli.webp",
-};
+}

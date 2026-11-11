@@ -7,7 +7,7 @@ export const PINNED: string[] = [
   "mcp-jenkins",
   "soap-cli",
   "duux",
-  "tutti",
+  "globetrotter",
 ]
 
 // How many recently released projects follow the pins. The list shows six;
