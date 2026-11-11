@@ -388,7 +388,8 @@ const filterOptions = (
 
 // Where the visitor is decides what comes first: on a post, its outline and
 // writing; on a project, that project's actions and docs; elsewhere, the
-// site's own map. A # is choosing a family, so the filters are all there is;
+// site's own map, the page's own actions and Elsewhere before the docs'
+// longer hits. A # is choosing a family, so the filters are all there is;
 // a word that starts a kind offers it just under the projects, so Enter still
 // opens the best match.
 const sectionOrder = (
@@ -419,9 +420,9 @@ const sectionOrder = (
             "projects",
             "filters",
             "releases",
-            "docs",
             "actions",
             "elsewhere",
+            "docs",
             "settings",
           ]
         : [
@@ -430,9 +431,9 @@ const sectionOrder = (
             "filters",
             "releases",
             "writing",
-            "docs",
             "actions",
             "elsewhere",
+            "docs",
             "settings",
           ]
 
