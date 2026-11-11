@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { InkLink as Link } from "@/components/ink-link";
 import styles from "./lost.module.css";
 import { Cat } from "./lost-cat";
+import { ContactLink } from "@/components/contact-link";
 
 export type Place = {
   href: string;
@@ -139,7 +140,10 @@ export const Lost = ({ places }: { places: Place[] }) => {
 
         <p className={styles.footnote}>
           kud.io <span aria-hidden>&middot;</span> A quiet detour. If one of my
-          own links sent you here, <a href="mailto:m+site@kud.io">tell me</a>
+          own links sent you here,{" "}
+          <ContactLink href="mailto:m+site@kud.io" topic="bug">
+            tell me
+          </ContactLink>
           {" and I\u2019ll mend it."}
         </p>
       </div>

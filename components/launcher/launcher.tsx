@@ -230,6 +230,14 @@ type DocHit = {
 let cachedIndex: LauncherIndex | null = null
 let pendingIndex: Promise<LauncherIndex> | null = null
 
+// A way in that skips the list (components/contact-link.tsx): the next panel
+// to open starts on the message form, with this topic picked.
+let pendingMessage: { topic: MessageDraft["topic"] } | null = null
+
+export const openOnMessage = (topic: MessageDraft["topic"] = null) => {
+  pendingMessage = { topic }
+}
+
 export const preloadLauncherIndex = (): Promise<LauncherIndex> => {
   if (cachedIndex) return Promise.resolve(cachedIndex)
   pendingIndex ??= fetch("/api/launcher")
@@ -625,15 +633,19 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   // The message and detail views replace the list in the same panel; the list stays
   // mounted underneath, so the query and the selection survive a round trip,
   // and so does the draft.
+  const [opening] = useState(() => pendingMessage)
+  useEffect(() => {
+    pendingMessage = null
+  }, [])
   const [view, setView] = useState<"list" | "message" | "detail" | "keys">(
-    "list",
+    opening ? "message" : "list",
   )
   const [detail, setDetail] = useState<Detail | null>(null)
   const [filter, setFilter] = useState<Filter | null>(null)
   const [visitBaseline] = useState(readVisitBaseline)
   const [outline] = useState(() => readOutline(pathname))
   const [draft, setDraft] = useState<MessageDraft>({
-    topic: null,
+    topic: opening?.topic ?? null,
     subject: "",
     body: "",
   })
@@ -738,9 +750,15 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     const dialog = dialogRef.current
     if (!dialog) return
     dialog.showModal()
-    inputRef.current?.focus()
+    // Opened on the message form, whose subject took focus before the dialog
+    // was shown; showModal hands it to the first button, so give it back.
+    if (opening)
+      [...dialog.querySelectorAll<HTMLInputElement>("input")]
+        .find((input) => input.offsetParent)
+        ?.focus()
+    else inputRef.current?.focus()
     return () => dialog.close()
-  }, [])
+  }, [opening])
 
   // cmdk (1.1.1) updates the input's aria-activedescendant only on its own
   // arrow moves; a selection set through `value` (the first result, a Tab

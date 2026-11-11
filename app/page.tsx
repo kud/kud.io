@@ -15,6 +15,7 @@ import { ScrollHint } from "@/components/scroll-hint"
 import { yearsOfExperience } from "@/lib/experience"
 import { ThemeScopeScript } from "@/components/scoped-theme"
 import { BlueskyPeek } from "@/components/bluesky-card"
+import { ContactLink } from "@/components/contact-link"
 import styles from "./page.module.css"
 
 const socials = [
@@ -154,16 +155,24 @@ const Writing = () => (
 const SocialLinks = () => (
   <ul className={styles.socials}>
     {socials.map(({ label, href, Icon }) => {
-      const link = (
-        <a
-          href={href}
-          aria-label={label}
-          data-mascot={label === "Email" ? "contact" : undefined}
-          {...(isExternal(href) ? { target: "_blank", rel: "noreferrer" } : {})}
-        >
-          <Icon className={styles.socialIcon} />
-        </a>
-      )
+      // Email opens the launcher on its message form; the mailto stays the
+      // fallback without JavaScript.
+      const link =
+        label === "Email" ? (
+          <ContactLink href={href} aria-label={label} data-mascot="contact">
+            <Icon className={styles.socialIcon} />
+          </ContactLink>
+        ) : (
+          <a
+            href={href}
+            aria-label={label}
+            {...(isExternal(href)
+              ? { target: "_blank", rel: "noreferrer" }
+              : {})}
+          >
+            <Icon className={styles.socialIcon} />
+          </a>
+        )
       // The Bluesky icon peeks the latest post above itself.
       return label === "Bluesky" ? (
         <BlueskyPeek key={label}>{link}</BlueskyPeek>
