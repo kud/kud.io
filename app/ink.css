@@ -79,6 +79,7 @@ html:has([data-ground="dusk"][data-theme="ink"][data-theme="ink"]),
   --dk-hi: 0 0 0;
   --dk-glow: 0 0 0;
   --dk-cool: 0 0 0;
+  --dk-shade: 0 0 0;
   --dk-scheme: var(--ik-scheme);
   /* Categories were never only colours: each carries its word. In one ink
      they stay words; the product category alone keeps the full black. */

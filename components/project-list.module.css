@@ -505,10 +505,14 @@
   margin: 0;
   padding: 6px;
   list-style: none;
-  background: var(--surface-2);
+  /* Lifted like the launcher: the card surface and the theme's own shade.
+     surface-2 is lighter only by night; by day it is the darker wash. */
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  box-shadow: 0 20px 48px -20px rgba(0, 0, 0, 0.85);
+  box-shadow:
+    0 2px 6px rgb(var(--dk-shade) / 0.08),
+    0 20px 44px -18px rgb(var(--dk-shade) / 0.45);
   animation: menuIn 0.14s ease both;
 }
 
