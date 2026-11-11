@@ -35,7 +35,7 @@ const fetchAmo = async (
   try {
     const res = await fetch(
       `https://addons.mozilla.org/api/v5/addons/addon/${amoSlug}/`,
-      { headers: { Accept: "application/json" }, next: { revalidate: 86400 } },
+      { headers: { Accept: "application/json" }, next: { revalidate: false } },
     )
     if (!res.ok) return null
     const data = (await res.json()) as AmoAddon

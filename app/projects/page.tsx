@@ -44,8 +44,8 @@ export const metadata: Metadata = {
   twitter: { title: TITLE, description: PROJECTS_COPY.description },
 }
 
-// Static, rebuilt daily: hourly ISR used up the free tier's writes.
-export const revalidate = 86400
+// Static, rebuilt every six hours by the deploy workflow; ISR used up the free tier's writes.
+export const revalidate = false
 
 const AVATAR =
   "https://www.gravatar.com/avatar/e6eaeaa6da69e804c27c2d4cd55107e0?s=512"

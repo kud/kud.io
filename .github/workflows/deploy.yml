@@ -10,6 +10,10 @@ on:
   # The hourly content refresh pushes with GITHUB_TOKEN, which never triggers
   # `push`; it dispatches this workflow instead when it committed something.
   workflow_dispatch:
+  # Every page is static (no ISR, whose writes the free tier caps), so release
+  # ages, contributions and the Bluesky feed refresh by rebuilding.
+  schedule:
+    - cron: "41 */6 * * *"
 
 permissions:
   contents: read

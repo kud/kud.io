@@ -1,10 +1,10 @@
 // The latest post of Erwann's own on Bluesky, from the public AppView (no
-// auth). Fetched on the server and revalidated every six hours; any failure,
+// auth). Fetched on the server and refreshed by the six-hourly rebuild; any failure,
 // or a latest post older than about six weeks, returns null and the card
 // renders nothing: a stale post reads as an abandoned account.
 const HANDLE = "kud.io"
 const FEED = `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${HANDLE}&limit=10&filter=posts_no_replies`
-const REVALIDATE = 21600
+const REVALIDATE = false
 const MAX_AGE_MS = 42 * 24 * 60 * 60 * 1000
 
 export type BlueskySegment = { text: string; href?: string }

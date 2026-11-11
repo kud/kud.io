@@ -41,7 +41,7 @@ export const getPackageFacts = async (
       `https://api.github.com/repos/${OWNER}/${slug}/contents/package.json`,
       {
         headers: { ...ghHeaders(), Accept: "application/vnd.github.raw+json" },
-        next: { revalidate: 86400 },
+        next: { revalidate: false },
       },
     )
     if (!res.ok) return null
