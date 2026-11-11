@@ -1,12 +1,16 @@
+import type { ReactNode } from "react"
 import { BlueskyIcon } from "@/components/social-icons"
 import { RelativeDate } from "@/components/relative-date"
 import { getLatestBlueskyPost } from "@/lib/bluesky"
+import type { BlueskyPost } from "@/lib/bluesky"
+import { Peek } from "@/components/bluesky-peek"
 import styles from "./bluesky-card.module.css"
 
-// Erwann's latest Bluesky post as the closing band of home, under the
-// experience timeline. The whole card opens the post, through a stretched link
-// on the heading, so the links inside the text stay real links. No post, or a
-// post older than about six weeks (lib/bluesky.ts), and nothing renders.
+// Erwann's latest Bluesky post on home, as a card that peeks over the Bluesky
+// icon in the hero socials (components/bluesky-peek.tsx): the text, its picture
+// and the counts. The whole card opens the post, through a stretched link on the
+// heading, so the links inside the text stay real links. No post, or a post
+// older than about six weeks (lib/bluesky.ts), and nothing renders.
 const LABEL = "Lately on Bluesky"
 
 const shortDate = (iso: string) => {
@@ -55,10 +59,7 @@ const LikeIcon = () => (
 const plural = (count: number, word: string) =>
   `${count} ${word}${count === 1 ? "" : "s"}`
 
-export const BlueskyBand = async () => {
-  const post = await getLatestBlueskyPost()
-  if (!post) return null
-
+const Card = ({ post }: { post: BlueskyPost }) => {
   // Zero counts say nothing, so only the ones with something in them show.
   const counts = [
     { n: post.replies, word: "reply", Icon: ReplyIcon },
@@ -71,7 +72,7 @@ export const BlueskyBand = async () => {
     .join("")
     .slice(0, 80)
 
-  const card = (
+  return (
     <article className={styles.card}>
       <header className={styles.head}>
         <BlueskyIcon className={styles.mark} />
@@ -135,10 +136,12 @@ export const BlueskyBand = async () => {
       )}
     </article>
   )
+}
 
-  return (
-    <section className={styles.band} aria-label="Latest Bluesky post">
-      <div className={styles.bandInner}>{card}</div>
-    </section>
-  )
+// The Bluesky item of the hero socials. Without a post it is the plain
+// icon link it always was.
+export const BlueskyPeek = async ({ children }: { children: ReactNode }) => {
+  const post = await getLatestBlueskyPost()
+  if (!post) return <li>{children}</li>
+  return <Peek card={<Card post={post} />}>{children}</Peek>
 }

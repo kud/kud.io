@@ -212,8 +212,10 @@ html[data-vt="morph"]::view-transition-new(root) {
    flat cross-fade + avatar morph below. */
 
 /* Desktop: gentle proximity scroll-snap so sections magnetise near their start
-   without trapping the scroll. Mobile uses mandatory snap via .home instead. */
-@media (min-width: 861px) {
+   without trapping the scroll. Mobile uses mandatory snap via .home instead.
+   Home overrides it to mandatory on desktop (app/page.module.css).
+   Off under reduced motion: a snap is the page moving on its own. */
+@media (min-width: 861px) and (prefers-reduced-motion: no-preference) {
   html {
     scroll-snap-type: y proximity;
   }

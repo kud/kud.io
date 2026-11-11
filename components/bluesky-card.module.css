@@ -18,7 +18,9 @@
   --bc-link-line: #ddd5ca;
   --bc-accent: #c2703d;
   --bc-mono: var(--font-mono);
+}
 
+.card {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -180,22 +182,9 @@
   white-space: nowrap;
 }
 
-/* Band: the closing beat of home ----------------------------------------- */
-.band {
-  background: #fdfbf8;
-  border-top: 1px solid #ece5db;
-  padding: 72px 28px 96px;
-}
-
-.bandInner {
-  width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
-}
-
 /* Narrow: the picture drops under the text, full width, so it never squeezes
-   the words into a sliver. */
-@media (max-width: 560px) {
+   the words into a sliver. Measured on the peek, not the screen. */
+@container bsky (max-width: 420px) {
   .card {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
@@ -206,11 +195,65 @@
   }
   .image {
     width: 100%;
-    max-height: 220px;
+    max-height: 200px;
     margin-top: 12px;
   }
-  .band {
-    padding: 56px 20px 72px;
+}
+
+/* Peek: over the Bluesky icon ----------------------------------------- */
+/* The socials row is the anchor (app/page.module.css), so the card lines up
+   with its start on desktop and centres under the phone's centred row. It is
+   over other content, so it takes the page's cream and a soft shadow. */
+.peekItem {
+  position: static;
+}
+
+.peek {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 0;
+  z-index: 20;
+  width: min(480px, calc(100vw - 32px));
+  container: bsky / inline-size;
+  border-radius: 14px;
+  background: #fffdf9;
+  box-shadow:
+    0 1px 2px rgb(31 24 19 / 0.06),
+    0 18px 40px -16px rgb(31 24 19 / 0.28);
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity 140ms,
+    translate 140ms,
+    display 140ms allow-discrete;
+}
+
+.peek:not([data-open]) {
+  display: none;
+  opacity: 0;
+  translate: 0 4px;
+}
+
+@starting-style {
+  .peek[data-open] {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+
+/* The gap between icon and card belongs to the card, so the pointer can cross
+   it without the peek closing under it. */
+.peek::after {
+  content: "";
+  position: absolute;
+  inset: 100% 0 -12px;
+}
+
+@media (max-width: 860px) {
+  .peek {
+    left: 50%;
+    width: min(380px, calc(100vw - 32px));
+    margin-left: calc(min(380px, calc(100vw - 32px)) / -2);
   }
 }
 
@@ -229,9 +272,10 @@
 :global([data-theme="ink"]) .card:hover {
   background: var(--ik-wash);
 }
-:global([data-theme="ink"]) .band {
-  background: transparent;
-  border-color: var(--ik-line-dim);
+:global([data-theme="ink"]) .peek {
+  background: var(--ik-paper);
+  box-shadow: none;
+  border-radius: var(--ik-wobble);
 }
 :global([data-theme="ink"]) .inline {
   text-decoration: underline;
@@ -244,7 +288,8 @@
   .card,
   .cover,
   .text,
-  .inline {
+  .inline,
+  .peek {
     transition: none;
   }
 }

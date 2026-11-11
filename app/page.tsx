@@ -14,7 +14,7 @@ import { PromptMascot } from "@/components/prompt-mascot"
 import { ScrollHint } from "@/components/scroll-hint"
 import { yearsOfExperience } from "@/lib/experience"
 import { ThemeScopeScript } from "@/components/scoped-theme"
-import { BlueskyBand } from "@/components/bluesky-card"
+import { BlueskyPeek } from "@/components/bluesky-card"
 import styles from "./page.module.css"
 
 const socials = [
@@ -153,8 +153,8 @@ const Writing = () => (
 
 const SocialLinks = () => (
   <ul className={styles.socials}>
-    {socials.map(({ label, href, Icon }) => (
-      <li key={label}>
+    {socials.map(({ label, href, Icon }) => {
+      const link = (
         <a
           href={href}
           aria-label={label}
@@ -163,8 +163,14 @@ const SocialLinks = () => (
         >
           <Icon className={styles.socialIcon} />
         </a>
-      </li>
-    ))}
+      )
+      // The Bluesky icon peeks the latest post above itself.
+      return label === "Bluesky" ? (
+        <BlueskyPeek key={label}>{link}</BlueskyPeek>
+      ) : (
+        <li key={label}>{link}</li>
+      )
+    })}
   </ul>
 )
 
@@ -256,7 +262,9 @@ const Home = () => (
     <AboutDesktop />
     <HeroMobile />
     <ExperienceTimeline />
-    <BlueskyBand />
+    {/* A snap point at the timeline's end, so strict snap can always reach
+        the bottom of the page when nothing follows it. */}
+    <div className={styles.snapEnd} aria-hidden />
     <PromptMascot />
   </div>
 )

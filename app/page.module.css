@@ -312,13 +312,15 @@
 /* Socials -------------------------------------------------------------------*/
 .socials {
   display: flex;
+  /* Anchors the Bluesky peek (components/bluesky-card.module.css). */
+  position: relative;
   gap: 8px;
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.socials a {
+.socials > li > a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -334,8 +336,8 @@
     transform var(--hover-speed);
 }
 
-.socials a:hover,
-.socials a:focus-visible {
+.socials > li > a:hover,
+.socials > li > a:focus-visible {
   transform: var(--hover-lift);
   color: #fff;
   background: #141420;
@@ -584,6 +586,12 @@
     scroll-behavior: smooth;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .home {
+      scroll-behavior: auto;
+    }
+  }
+
   /* The desktop split-screen hero is swapped out for the mobile slides. */
   .hero {
     display: none;
@@ -675,7 +683,7 @@
     gap: 12px;
   }
 
-  .cardLinks .socials a {
+  .cardLinks .socials > li > a {
     width: 54px;
     height: 54px;
     border-radius: 15px;
@@ -685,7 +693,7 @@
     box-shadow: 0 3px 10px -4px rgba(31, 24, 19, 0.18);
   }
 
-  .cardLinks .socials a:active {
+  .cardLinks .socials > li > a:active {
     transform: translateY(1px);
   }
 
@@ -1151,7 +1159,7 @@
   .cardLinks .actions {
     margin-bottom: 0;
   }
-  .cardLinks .socials a {
+  .cardLinks .socials > li > a {
     width: clamp(46px, 7svh, 54px);
     height: clamp(46px, 7svh, 54px);
   }
@@ -1238,7 +1246,8 @@
 .home[data-theme="ink"] :is(.primary, .timelineButtonPrimary) * {
   color: var(--ik-paper);
 }
-.home[data-theme="ink"] :is(.primary, .timelineButtonPrimary):is(:hover, :focus-visible) {
+.home[data-theme="ink"]
+  :is(.primary, .timelineButtonPrimary):is(:hover, :focus-visible) {
   background: var(--ik-press);
   border-color: var(--ik-press);
   color: var(--ik-on-accent);
@@ -1248,7 +1257,7 @@
     .secondary,
     .timelineButton:not(.timelineButtonPrimary),
     .focusTag,
-    .socials a,
+    .socials > li > a,
     .stackChip,
     .modalClose,
     .modalVisit
@@ -1264,7 +1273,7 @@
     .secondary,
     .timelineButton:not(.timelineButtonPrimary),
     .focusTag,
-    .socials a,
+    .socials > li > a,
     .modalClose,
     .modalVisit
   ):is(:hover, :focus-visible) {
@@ -1311,18 +1320,30 @@
     margin-top: clamp(20px, 4.4vh, 38px);
   }
 
+  /* A slide of its own: at least one screen tall, content centred in it.
+     Taller content just grows the band, so nothing is ever clipped.
+     The padding scales with the screen height and the measure is a little
+     wider than the hero's so the whole band fits a 1280×720 laptop: the
+     next section never shows below it from there up. */
   .about {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100svh;
     scroll-snap-align: start;
     background: #fdfbf8;
     border-top: 1px solid #ece5db;
     color: #1f1813;
     font-family: var(--font-sans), system-ui, sans-serif;
-    padding: 96px 28px;
+    padding: clamp(28px, 5vh, 72px) 28px;
   }
   .aboutInner {
-    max-width: 720px;
+    width: 100%;
+    max-width: 760px;
     margin: 0 auto;
+  }
+  .aboutInner .focus {
+    margin-bottom: clamp(16px, 3vh, 32px);
   }
   .aboutInner .personal {
     margin-bottom: 0;
@@ -1331,4 +1352,26 @@
 
 .home[data-theme="ink"] .about {
   background: transparent;
+}
+
+/* Strict snap: each home section locks to the screen on desktop, as the
+   phone does (Erwann, 2026-11-11). Mandatory is safe because every section is
+   at least a screen tall and a taller one (the timeline, the about band on a
+   short laptop) scrolls freely inside itself, per spec. Off under reduced
+   motion, like the proximity snap. */
+@media (min-width: 861px) and (prefers-reduced-motion: no-preference) {
+  :global(html):has(.home) {
+    scroll-snap-type: y mandatory;
+  }
+}
+
+/* The end of the timeline as a snap position. A timeline taller than the
+   screen should scroll freely inside itself, but Chrome's mandatory snap pulls
+   a jump to the bottom (End, a fling) back to the timeline's start when no snap
+   point lies beyond it. This one-pixel marker, aligned to the screen's bottom,
+   gives it one on desktop and on the phone's .home scroller alike. */
+.snapEnd {
+  height: 1px;
+  margin-top: -1px;
+  scroll-snap-align: end;
 }
