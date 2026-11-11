@@ -73,7 +73,7 @@ $ shui confirm "Deploy to production?"
 Switch icon sets with `SHUI_ICONS`:
 
 ```zsh
-SHUI_ICONS=emoji   # default — requires Nerd Font
-SHUI_ICONS=unicode # plain Unicode fallback
-SHUI_ICONS=none    # no icons at all
+SHUI_ICONS=nerd  # default — requires a Nerd Font
+SHUI_ICONS=emoji # Unicode emoji, no special font
+SHUI_ICONS=none  # no icons at all
 ```
