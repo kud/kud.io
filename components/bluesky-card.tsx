@@ -1,17 +1,24 @@
 import type { ReactNode } from "react"
 import { BlueskyIcon } from "@/components/social-icons"
 import { RelativeDate } from "@/components/relative-date"
-import { getLatestBlueskyPost } from "@/lib/bluesky"
+import {
+  getLatestBlueskyPost,
+  getRecentBlueskyPosts,
+  PROFILE_URL,
+} from "@/lib/bluesky"
 import type { BlueskyPost } from "@/lib/bluesky"
 import { Peek } from "@/components/bluesky-peek"
 import styles from "./bluesky-card.module.css"
 
-// Erwann's latest Bluesky post on home, as a card that peeks over the Bluesky
-// icon in the hero socials (components/bluesky-peek.tsx): the text, its picture
-// and the counts. The whole card opens the post, through a stretched link on the
-// heading, so the links inside the text stay real links. No post, or a post
-// older than about six weeks (lib/bluesky.ts), and nothing renders.
+// Erwann's Bluesky on home. The latest post peeks over the Bluesky icon in the
+// hero socials (components/bluesky-peek.tsx) as a teaser: clamped text, its
+// picture, the counts. The whole card opens the feed behind it
+// (components/bluesky-feed.tsx), his recent posts in full, through a stretched
+// button on the heading, so the links inside the text stay real links. No
+// post, or a latest post older than about six weeks (lib/bluesky.ts), and
+// nothing peeks.
 const LABEL = "Lately on Bluesky"
+const FEED_SIZE = 8
 
 const shortDate = (iso: string) => {
   const date = new Date(iso)
@@ -59,14 +66,62 @@ const LikeIcon = () => (
 const plural = (count: number, word: string) =>
   `${count} ${word}${count === 1 ? "" : "s"}`
 
-const Card = ({ post }: { post: BlueskyPost }) => {
-  // Zero counts say nothing, so only the ones with something in them show.
+const When = ({ iso }: { iso: string }) => (
+  <time className={styles.when} dateTime={iso}>
+    <RelativeDate iso={iso} className={styles.relative} />
+    <span className={styles.absolute}>{shortDate(iso)}</span>
+  </time>
+)
+
+const Text = ({
+  post,
+  className,
+}: {
+  post: BlueskyPost
+  className: string
+}) => (
+  <p className={className}>
+    {post.segments.map(({ text, href }, index) =>
+      href ? (
+        <a
+          key={index}
+          href={href}
+          className={styles.inline}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {text}
+        </a>
+      ) : (
+        <span key={index}>{text}</span>
+      ),
+    )}
+  </p>
+)
+
+// Zero counts say nothing, so only the ones with something in them show.
+const Counts = ({ post }: { post: BlueskyPost }) => {
   const counts = [
     { n: post.replies, word: "reply", Icon: ReplyIcon },
     { n: post.reposts, word: "repost", Icon: RepostIcon },
     { n: post.likes, word: "like", Icon: LikeIcon },
   ].filter(({ n }) => n > 0)
+  if (counts.length === 0) return null
+  return (
+    <ul className={styles.counts}>
+      {counts.map(({ n, word, Icon }) => (
+        <li key={word}>
+          <Icon />
+          <span aria-hidden>{n}</span>
+          <span className={styles.sr}>{plural(n, word)}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
 
+// The teaser in the peek.
+const Card = ({ post }: { post: BlueskyPost }) => {
   const preview = post.segments
     .map(({ text }) => text)
     .join("")
@@ -74,43 +129,29 @@ const Card = ({ post }: { post: BlueskyPost }) => {
 
   return (
     <article className={styles.card}>
-      <header className={styles.head}>
-        <BlueskyIcon className={styles.mark} />
-        <a
-          href={post.url}
-          className={styles.cover}
-          target="_blank"
-          rel="noreferrer"
-          aria-label={`${LABEL}: ${preview}`}
-        >
-          {LABEL}
-        </a>
-        <span className={styles.sep} aria-hidden>
-          ·
-        </span>
-        <time className={styles.when} dateTime={post.createdAt}>
-          <RelativeDate iso={post.createdAt} className={styles.relative} />
-          <span className={styles.absolute}>{shortDate(post.createdAt)}</span>
-        </time>
-      </header>
-
-      <p className={styles.text}>
-        {post.segments.map(({ text, href }, index) =>
-          href ? (
-            <a
-              key={index}
-              href={href}
-              className={styles.inline}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {text}
-            </a>
-          ) : (
-            <span key={index}>{text}</span>
-          ),
-        )}
-      </p>
+      <div className={styles.body}>
+        <header className={styles.head}>
+          <BlueskyIcon className={styles.mark} />
+          <button
+            type="button"
+            className={styles.cover}
+            data-bsky-feed
+            aria-haspopup="dialog"
+            aria-label={`${LABEL}: ${preview}. Show recent posts`}
+          >
+            {LABEL}
+          </button>
+          <span className={styles.sep} aria-hidden>
+            ·
+          </span>
+          <When iso={post.createdAt} />
+          <span className={styles.more} aria-hidden>
+            More posts
+          </span>
+        </header>
+        <Text post={post} className={styles.text} />
+        <Counts post={post} />
+      </div>
 
       {post.image && (
         // eslint-disable-next-line @next/next/no-img-element
@@ -122,26 +163,93 @@ const Card = ({ post }: { post: BlueskyPost }) => {
           decoding="async"
         />
       )}
-
-      {counts.length > 0 && (
-        <ul className={styles.counts}>
-          {counts.map(({ n, word, Icon }) => (
-            <li key={word}>
-              <Icon />
-              <span aria-hidden>{n}</span>
-              <span className={styles.sr}>{plural(n, word)}</span>
-            </li>
-          ))}
-        </ul>
-      )}
     </article>
   )
 }
 
-// The Bluesky item of the hero socials. Without a post it is the plain
+// One post in the feed, in full. Its date opens it on Bluesky, through a link
+// stretched over the post; the links in the text and the link card sit above.
+const FeedPost = ({ post }: { post: BlueskyPost }) => {
+  const { images, link } = post
+  return (
+    <article className={styles.post}>
+      <a
+        href={post.url}
+        className={styles.postLink}
+        target="_blank"
+        rel="noreferrer"
+        aria-label={`Open the post of ${shortDate(post.createdAt)} on Bluesky`}
+      >
+        <When iso={post.createdAt} />
+      </a>
+      <Text post={post} className={styles.full} />
+
+      {images.length > 0 ? (
+        <div className={styles.gallery} data-count={Math.min(images.length, 4)}>
+          {images.slice(0, 4).map((image) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={image.src}
+              src={image.src}
+              alt={image.alt}
+              loading="lazy"
+              decoding="async"
+              style={
+                images.length === 1 && image.ratio
+                  ? { aspectRatio: String(image.ratio) }
+                  : undefined
+              }
+            />
+          ))}
+        </div>
+      ) : link ? (
+        <a
+          href={link.href}
+          className={styles.linkCard}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {link.thumb && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={link.thumb} alt="" loading="lazy" decoding="async" />
+          )}
+          <span className={styles.linkText}>
+            <span className={styles.linkTitle}>{link.title}</span>
+            <span className={styles.linkHost}>{link.host}</span>
+          </span>
+        </a>
+      ) : null}
+
+      <Counts post={post} />
+    </article>
+  )
+}
+
+const Feed = ({ posts }: { posts: BlueskyPost[] }) => (
+  <ol className={styles.feed}>
+    {posts.map((post) => (
+      <li key={post.url}>
+        <FeedPost post={post} />
+      </li>
+    ))}
+  </ol>
+)
+
+// The Bluesky item of the hero socials. Without a fresh post it is the plain
 // icon link it always was.
 export const BlueskyPeek = async ({ children }: { children: ReactNode }) => {
-  const post = await getLatestBlueskyPost()
+  const [post, posts] = await Promise.all([
+    getLatestBlueskyPost(),
+    getRecentBlueskyPosts(FEED_SIZE),
+  ])
   if (!post) return <li>{children}</li>
-  return <Peek card={<Card post={post} />}>{children}</Peek>
+  return (
+    <Peek
+      card={<Card post={post} />}
+      feed={<Feed posts={posts} />}
+      profile={PROFILE_URL}
+    >
+      {children}
+    </Peek>
+  )
 }
