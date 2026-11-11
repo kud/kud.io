@@ -538,138 +538,142 @@ export const ProjectList = ({
         </div>
 
         <aside className={styles.sidebar} data-revealed={filtersRevealed}>
-          <input
-            type="search"
-            className={styles.search}
-            placeholder="Search projects…"
-            value={query}
-            onChange={(event) => {
-              markFilterInteraction()
-              setQuery(event.target.value)
-            }}
-            aria-label="Search projects"
-          />
-          <Dropdown
-            label="Type"
-            value={category}
-            options={categoryOptions}
-            onChange={(value) => {
-              markFilterInteraction()
-              setCategory(value)
-            }}
-          />
-          <Dropdown
-            label="Sort"
-            value={sort}
-            options={sortOptions}
-            onChange={(value) => {
-              markFilterInteraction()
-              setSort((value ?? "updated") as SortKey)
-            }}
-          />
+          <div className={styles.sidebarScroll}>
+            <input
+              type="search"
+              className={styles.search}
+              placeholder="Search projects…"
+              value={query}
+              onChange={(event) => {
+                markFilterInteraction()
+                setQuery(event.target.value)
+              }}
+              aria-label="Search projects"
+            />
+            <Dropdown
+              label="Type"
+              value={category}
+              options={categoryOptions}
+              onChange={(value) => {
+                markFilterInteraction()
+                setCategory(value)
+              }}
+            />
+            <Dropdown
+              label="Sort"
+              value={sort}
+              options={sortOptions}
+              onChange={(value) => {
+                markFilterInteraction()
+                setSort((value ?? "updated") as SortKey)
+              }}
+            />
 
-          {ecosystems.length > 0 ? (
+            {ecosystems.length > 0 ? (
+              <div className={styles.filterGroup}>
+                <span className={styles.filterLabel}>Ecosystems</span>
+                <div className={styles.chips}>
+                  <button
+                    type="button"
+                    className={styles.chip}
+                    data-active={activeEcosystem === null}
+                    onClick={() => {
+                      markFilterInteraction()
+                      setActiveEcosystem(null)
+                    }}
+                  >
+                    All
+                  </button>
+                  {ecosystems.map((ecosystem) => (
+                    <button
+                      key={ecosystem.key}
+                      type="button"
+                      className={styles.ecosystemChip}
+                      data-active={activeEcosystem === ecosystem.key}
+                      onClick={() => {
+                        markFilterInteraction()
+                        setActiveEcosystem(
+                          activeEcosystem === ecosystem.key
+                            ? null
+                            : ecosystem.key,
+                        )
+                      }}
+                    >
+                      {ecosystem.name}
+                      <span className={styles.chipCount}>
+                        {ecosystem.count}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
             <div className={styles.filterGroup}>
-              <span className={styles.filterLabel}>Ecosystems</span>
+              <span className={styles.filterLabel}>Languages</span>
               <div className={styles.chips}>
                 <button
                   type="button"
                   className={styles.chip}
-                  data-active={activeEcosystem === null}
+                  data-active={lang === null}
                   onClick={() => {
                     markFilterInteraction()
-                    setActiveEcosystem(null)
+                    setLang(null)
                   }}
                 >
                   All
                 </button>
-                {ecosystems.map((ecosystem) => (
+                {languages.map((language) => (
                   <button
-                    key={ecosystem.key}
+                    key={language}
                     type="button"
-                    className={styles.ecosystemChip}
-                    data-active={activeEcosystem === ecosystem.key}
+                    className={styles.languageChip}
+                    data-active={lang === language}
                     onClick={() => {
                       markFilterInteraction()
-                      setActiveEcosystem(
-                        activeEcosystem === ecosystem.key
-                          ? null
-                          : ecosystem.key,
-                      )
+                      setLang(lang === language ? null : language)
                     }}
                   >
-                    {ecosystem.name}
-                    <span className={styles.chipCount}>{ecosystem.count}</span>
+                    {language}
+                    <span className={styles.languageCount}>
+                      {languageCounts.get(language)}
+                    </span>
                   </button>
                 ))}
               </div>
             </div>
-          ) : null}
 
-          <div className={styles.filterGroup}>
-            <span className={styles.filterLabel}>Languages</span>
-            <div className={styles.chips}>
-              <button
-                type="button"
-                className={styles.chip}
-                data-active={lang === null}
-                onClick={() => {
-                  markFilterInteraction()
-                  setLang(null)
-                }}
-              >
-                All
-              </button>
-              {languages.map((language) => (
-                <button
-                  key={language}
-                  type="button"
-                  className={styles.languageChip}
-                  data-active={lang === language}
-                  onClick={() => {
-                    markFilterInteraction()
-                    setLang(lang === language ? null : language)
-                  }}
-                >
-                  {language}
-                  <span className={styles.languageCount}>
-                    {languageCounts.get(language)}
-                  </span>
-                </button>
-              ))}
-            </div>
+            {tags.length > 0 ? (
+              <div className={styles.filterGroup}>
+                <span className={styles.filterLabel}>Tags</span>
+                <div className={styles.chips}>
+                  {tags.map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      className={styles.tagChip}
+                      data-active={activeTags.includes(tag)}
+                      onClick={() => toggleTag(tag)}
+                    >
+                      #{tag}
+                    </button>
+                  ))}
+                  {activeTags.length > 0 ? (
+                    <button
+                      type="button"
+                      className={styles.tagClear}
+                      onClick={() => {
+                        markFilterInteraction()
+                        setActiveTags([])
+                      }}
+                    >
+                      clear
+                    </button>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
           </div>
-
-          {tags.length > 0 ? (
-            <div className={styles.filterGroup}>
-              <span className={styles.filterLabel}>Tags</span>
-              <div className={styles.chips}>
-                {tags.map((tag) => (
-                  <button
-                    key={tag}
-                    type="button"
-                    className={styles.tagChip}
-                    data-active={activeTags.includes(tag)}
-                    onClick={() => toggleTag(tag)}
-                  >
-                    #{tag}
-                  </button>
-                ))}
-                {activeTags.length > 0 ? (
-                  <button
-                    type="button"
-                    className={styles.tagClear}
-                    onClick={() => {
-                      markFilterInteraction()
-                      setActiveTags([])
-                    }}
-                  >
-                    clear
-                  </button>
-                ) : null}
-              </div>
-            </div>
-          ) : null}
         </aside>
       </div>
     </>

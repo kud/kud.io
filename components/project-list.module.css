@@ -96,13 +96,32 @@
   margin-right: 0;
 }
 
+/* The rail is one card: .sidebar carries its border, radius, background and
+   shadow, and .sidebarScroll inside it holds the filters and does any
+   scrolling. A card never wraps a sticky, self-scrolling region itself: the
+   scroll fade would mask its own border, so the fade lives on the inner
+   scroller and stays clipped inside the border (Erwann, 2026-11-11). */
 .sidebar {
   --sidebar-top: clamp(16px, 4vh, 40px);
+  --sidebar-radius: 18px;
   grid-area: filters;
   display: flex;
   flex-direction: column;
-  gap: 22px;
   height: fit-content;
+  border: 1px solid var(--border);
+  border-radius: var(--sidebar-radius);
+  background: var(--surface);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.04) inset,
+    0 28px 50px -34px rgb(0 0 0 / 0.42);
+}
+
+.sidebarScroll {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 14px 12px 16px;
+  border-radius: calc(var(--sidebar-radius) - 1px);
 }
 
 @media (max-width: 1099px) {
@@ -117,34 +136,39 @@
     position: sticky;
     top: var(--sidebar-top);
     max-height: calc(100svh - var(--sidebar-top) * 2);
+    margin-top: 60px;
+  }
+  .sidebarScroll {
+    flex: 1 1 auto;
+    min-height: 0;
     overflow: auto;
     overscroll-behavior: contain;
-    margin-top: 60px;
     padding-bottom: 20px;
     /* The rail scrolls as one when it outgrows the viewport. Its scrollbar is
        thin and quiet, shows only while the pointer is over the rail, and has
        a gutter of its own so it never sits on a count or a highlighted row
-       (Erwann, 2026-11-10). */
+       (Erwann, 2026-11-10). The right padding gives back what the gutter
+       takes, so the card's insets stay even. */
     scrollbar-gutter: stable;
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
-    padding-right: 4px;
+    padding-right: 6px;
   }
-  .sidebar:is(:hover, :focus-within) {
+  .sidebarScroll:is(:hover, :focus-within) {
     scrollbar-color: color-mix(in srgb, var(--muted) 45%, transparent)
       transparent;
   }
-  .sidebar::-webkit-scrollbar {
+  .sidebarScroll::-webkit-scrollbar {
     width: 6px;
   }
-  .sidebar::-webkit-scrollbar-track {
+  .sidebarScroll::-webkit-scrollbar-track {
     background: transparent;
   }
-  .sidebar::-webkit-scrollbar-thumb {
+  .sidebarScroll::-webkit-scrollbar-thumb {
     border-radius: 999px;
     background: transparent;
   }
-  .sidebar:is(:hover, :focus-within)::-webkit-scrollbar-thumb {
+  .sidebarScroll:is(:hover, :focus-within)::-webkit-scrollbar-thumb {
     background: color-mix(in srgb, var(--muted) 45%, transparent);
   }
 
@@ -153,7 +177,7 @@
      Driven by the rail's own scroll; a rail that fits never fades. Where
      scroll-driven animation isn't supported, a fixed bottom fade over the
      rail's bottom padding stands in, and covers no row at the end. */
-  .sidebar {
+  .sidebarScroll {
     --rail-fade-top: 0px;
     --rail-fade-bottom: 20px;
     mask-image: linear-gradient(
@@ -165,7 +189,7 @@
     );
   }
   @supports (animation-timeline: scroll()) {
-    .sidebar {
+    .sidebarScroll {
       --rail-fade-bottom: 0px;
       animation: railFade linear both;
       animation-timeline: scroll(self);
@@ -311,6 +335,17 @@
 
 .sidebar .filterLabel {
   width: auto;
+  padding: 6px 10px;
+  border-radius: 9px;
+  background: color-mix(
+    in srgb,
+    var(--primary) 6%,
+    var(--surface-2, var(--surface))
+  );
+  color: var(--primary-light);
+  font-weight: 750;
+  letter-spacing: 1.2px;
+  text-align: center;
 }
 
 /* Filter section: labelled Language + Tags rows below the search/sort bar */
