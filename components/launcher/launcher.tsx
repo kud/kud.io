@@ -19,9 +19,13 @@ import {
   Columns2,
   Copy,
   FileText,
+  Gift,
   Hash,
   House,
+  Keyboard,
   LayoutGrid,
+  Link2,
+  ListFilter,
   Mail,
   Monitor,
   Droplet,
@@ -34,7 +38,15 @@ import {
   Sun,
 } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
-import { GitHubIcon } from "@/components/social-icons"
+import {
+  BlueskyIcon,
+  GitHubIcon,
+  LinkedInIcon,
+} from "@/components/social-icons"
+import { CATEGORY_META } from "@/lib/categories"
+import { ELSEWHERE, hostOf } from "@/lib/links"
+import type { ElsewhereKey } from "@/lib/links"
+import { reducedMotion } from "@/components/ink"
 import {
   SCOPED_THEMES,
   SECTION_LABEL as THEME_SECTION_LABEL,
@@ -47,17 +59,31 @@ import { DetailView, formatDate } from "./detail-view"
 import type { Detail } from "./detail-view"
 import { CONTACT_ADDRESS, MessageForm } from "./message-form"
 import type { MessageDraft } from "./message-form"
+import { ShortcutsSheet } from "./shortcuts-sheet"
 import styles from "./launcher.module.css"
 
 type SectionKey =
-  "pages" | "projects" | "writing" | "docs" | "actions" | "settings"
+  | "filters"
+  | "outline"
+  | "pages"
+  | "projects"
+  | "releases"
+  | "writing"
+  | "docs"
+  | "actions"
+  | "elsewhere"
+  | "settings"
 
 const SECTION_LABEL: Record<SectionKey, string> = {
+  filters: "Filters",
+  outline: "On this page",
   pages: "Pages",
   projects: "Projects",
+  releases: "Latest releases",
   writing: "Writing",
   docs: "Docs",
   actions: "Actions",
+  elsewhere: "Elsewhere",
   settings: "Settings",
 }
 
@@ -82,9 +108,104 @@ type Item = {
   run?: () => void
   // A project or a post: Enter shows what it is first, a second Enter goes.
   detail?: Detail
+  // What ⌘C copies while the row is selected: its link, or its anchor.
+  copyText?: string
+  // A release out since the last visit: a still dot after the title.
+  fresh?: boolean
+  // Keys drawn in place of the meta, for a row that has a shortcut.
+  keys?: string[]
   // The option's spoken name, when its visible content says it less well.
   label?: string
   score?: number
+}
+
+// A filter narrows the list to one kind of project (cli:) or one family
+// (#jenkins), shown as a removable chip in the bar.
+type Filter = {
+  kind: "category" | "ecosystem"
+  key: string
+  // The token as typed, for the chip: "cli:", "#jenkins".
+  token: string
+  // The words, for the heading and the screen reader: "CLIs & Tools".
+  name: string
+}
+
+// A few kinds answer to the word people use rather than the topic's key.
+const CATEGORY_ALIAS: Record<string, string> = {
+  firefox: "webext",
+  addon: "webext",
+  extension: "webext",
+  apps: "app",
+  libs: "lib",
+  themes: "theme",
+}
+
+const ELSEWHERE_MARK: Record<ElsewhereKey, Visual> = {
+  referrals: { kind: "glyph", Icon: Gift },
+  beansontoast: {
+    kind: "icon",
+    src: "/beansontoast-mark.svg",
+    letter: "B",
+  },
+  github: { kind: "glyph", Icon: GitHubIcon },
+  bluesky: { kind: "glyph", Icon: BlueskyIcon },
+  linkedin: { kind: "glyph", Icon: LinkedInIcon },
+}
+
+// Releases since the visitor was last here earn a dot. The baseline is the
+// previous visit's time, read once per tab session so a second opening still
+// shows what the first did; a first visit has no baseline and no dots.
+const LAST_VISIT_KEY = "kud.launcher.lastVisit"
+const VISIT_BASELINE_KEY = "kud.launcher.visitBaseline"
+
+const readVisitBaseline = (): number | null => {
+  try {
+    const kept = sessionStorage.getItem(VISIT_BASELINE_KEY)
+    if (kept !== null) return kept ? Number(kept) : null
+    const previous = localStorage.getItem(LAST_VISIT_KEY)
+    sessionStorage.setItem(VISIT_BASELINE_KEY, previous ?? "")
+    localStorage.setItem(LAST_VISIT_KEY, String(Date.now()))
+    return previous ? Number(previous) : null
+  } catch {
+    return null
+  }
+}
+
+const ageLabel = (iso: string, now = Date.now()) => {
+  const days = Math.max(0, Math.floor((now - Date.parse(iso)) / 86_400_000))
+  const rtf = new Intl.RelativeTimeFormat("en-GB", { numeric: "auto" })
+  return days < 30
+    ? rtf.format(-days, "day")
+    : days < 365
+      ? rtf.format(-Math.floor(days / 30), "month")
+      : rtf.format(-Math.floor(days / 365), "year")
+}
+
+// The page as a link: its address without the hash, its title without the
+// site's name.
+const pageLink = () => {
+  const url = `${window.location.origin}${window.location.pathname}`
+  const title =
+    document.title.replace(/\s+[·|—–-]\s+(kud\.io|Erwann Mest)$/i, "").trim() ||
+    url
+  return { url, markdown: `[${title.replace(/[[\]]/g, "\\$&")}](${url})` }
+}
+
+// The headings of the post or the docs page being read, straight from the
+// rendered page, so they never drift from what the reader sees.
+const OUTLINE = "article :is(h2, h3)[id]"
+
+const readOutline = (pathname: string) => {
+  const onPost = /^\/blog\/\d{4}\/\d{2}\/\d{2}\//.test(pathname)
+  const onDocs = /^\/projects\/[^/]+\/docs(\/|$)/.test(pathname)
+  if (!onPost && !onDocs) return []
+  return Array.from(document.querySelectorAll<HTMLElement>(OUTLINE))
+    .map((node) => ({
+      id: node.id,
+      text: (node.textContent ?? "").replace(/\s+/g, " ").trim(),
+      level: node.tagName === "H3" ? 3 : 2,
+    }))
+    .filter((heading) => heading.text)
 }
 
 type DocHit = {
@@ -191,22 +312,119 @@ const THEME_OPTION: Record<ScopedTheme, { label: string; Icon: LucideIcon }> = {
 const THEMES = SCOPED_THEMES.map((value) => ({ value, ...THEME_OPTION[value] }))
 
 const LIMIT: Record<SectionKey, number> = {
+  filters: 4,
+  outline: 5,
   pages: 5,
   projects: 6,
+  releases: 5,
   writing: 6,
   docs: 8,
   actions: 6,
+  elsewhere: 5,
   settings: 2,
 }
 
-// Where the visitor is decides what comes first: on a post, writing; on a
-// project, that project's actions and docs; elsewhere, the site's own map.
-const sectionOrder = (projectSlug: string | null, onPost: boolean) =>
-  projectSlug
-    ? (["actions", "docs", "projects", "writing", "pages", "settings"] as const)
-    : onPost
-      ? (["writing", "pages", "projects", "docs", "settings"] as const)
-      : (["pages", "projects", "writing", "docs", "settings"] as const)
+// The filters a half-typed box could mean: every family after a #, ranked by
+// what follows it; a kind whose key (or a word for it) starts the box.
+const filterOptions = (
+  index: LauncherIndex | null,
+  typed: string,
+): { next: Filter; count: number }[] => {
+  if (!index) return []
+  const { projects } = index
+  if (typed.startsWith("#")) {
+    const families = new Map<string, string>()
+    for (const project of projects)
+      if (project.ecosystem)
+        families.set(project.ecosystem.key, project.ecosystem.name)
+    const word = typed.slice(1)
+    return [...families]
+      .map(([key, name]) => ({
+        key,
+        name,
+        score: word ? fuzzyScore(word, key, [name]) : 1,
+      }))
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name))
+      .slice(0, word ? LIMIT.filters : undefined)
+      .map(({ key, name }) => ({
+        next: { kind: "ecosystem", key, token: `#${key}`, name },
+        count: projects.filter((p) => p.ecosystem?.key === key).length,
+      }))
+  }
+  const word = typed.toLowerCase()
+  if (!/^[a-z]{2,}$/.test(word)) return []
+  const kinds = new Set(projects.map((project) => project.category))
+  return Object.keys(CATEGORY_META)
+    .filter(
+      (key) =>
+        kinds.has(key) &&
+        (key.startsWith(word) ||
+          Object.entries(CATEGORY_ALIAS).some(
+            ([alias, target]) => target === key && alias.startsWith(word),
+          )),
+    )
+    .slice(0, LIMIT.filters)
+    .map((key) => ({
+      next: {
+        kind: "category",
+        key,
+        token: `${key}:`,
+        name: CATEGORY_META[key].name,
+      },
+      count: projects.filter((p) => p.category === key).length,
+    }))
+}
+
+// Where the visitor is decides what comes first: on a post, its outline and
+// writing; on a project, that project's actions and docs; elsewhere, the
+// site's own map. A # is choosing a family, so the filters are all there is;
+// a word that starts a kind offers it just under the projects, so Enter still
+// opens the best match.
+const sectionOrder = (
+  projectSlug: string | null,
+  onPost: boolean,
+  hashing: boolean,
+): readonly SectionKey[] =>
+  hashing
+    ? ["filters"]
+    : projectSlug
+      ? [
+          "actions",
+          "outline",
+          "docs",
+          "projects",
+          "filters",
+          "releases",
+          "writing",
+          "pages",
+          "elsewhere",
+          "settings",
+        ]
+      : onPost
+        ? [
+            "outline",
+            "writing",
+            "pages",
+            "projects",
+            "filters",
+            "releases",
+            "docs",
+            "actions",
+            "elsewhere",
+            "settings",
+          ]
+        : [
+            "pages",
+            "projects",
+            "filters",
+            "releases",
+            "writing",
+            "docs",
+            "actions",
+            "elsewhere",
+            "settings",
+          ]
 
 const rank = (query: string, items: Item[], limit: number) =>
   items
@@ -390,8 +608,13 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   // The message and detail views replace the list in the same panel; the list stays
   // mounted underneath, so the query and the selection survive a round trip,
   // and so does the draft.
-  const [view, setView] = useState<"list" | "message" | "detail">("list")
+  const [view, setView] = useState<"list" | "message" | "detail" | "keys">(
+    "list",
+  )
   const [detail, setDetail] = useState<Detail | null>(null)
+  const [filter, setFilter] = useState<Filter | null>(null)
+  const [visitBaseline] = useState(readVisitBaseline)
+  const [outline] = useState(() => readOutline(pathname))
   const [draft, setDraft] = useState<MessageDraft>({
     topic: null,
     subject: "",
@@ -410,6 +633,89 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   const docsTag = currentProject?.hasDocs && !docsWide ? projectSlug : null
   const trimmed = query.trim()
   const docsKey = `${docsTag ?? ""}\u0000${trimmed}`
+  // A filter is about projects, and a # is still choosing one: no docs then.
+  const docsWanted = trimmed.length >= 2 && !filter && !trimmed.startsWith("#")
+  const [mod] = useState(() =>
+    /Mac|iPhone|iPad/.test(navigator.userAgent) ? "⌘" : "Ctrl",
+  )
+
+  const applyFilter = (next: Filter) => {
+    setFilter(next)
+    setActiveId(null)
+    setCopiedId(null)
+    setAnnounce(`Filtered to ${next.name}`)
+    inputRef.current?.focus()
+  }
+
+  const clearFilter = () => {
+    setFilter(null)
+    setActiveId(null)
+    setAnnounce("Filter removed")
+    inputRef.current?.focus()
+  }
+
+  // "cli:" becomes a chip as soon as the colon lands; "#jenkins" once a space
+  // follows, since "#je" is still on its way to a name. Only kinds and
+  // families that have projects in them turn into chips.
+  const matchFilter = (
+    value: string,
+  ): { next: Filter; rest: string } | null => {
+    if (filter || !index) return null
+    const kind = /^([a-z]+):\s*(.*)$/i.exec(value)
+    if (kind) {
+      const word = kind[1].toLowerCase()
+      const key = CATEGORY_ALIAS[word] ?? word
+      if (!index.projects.some((project) => project.category === key))
+        return null
+      return {
+        next: {
+          kind: "category",
+          key,
+          token: `${key}:`,
+          name: CATEGORY_META[key]?.name ?? key,
+        },
+        rest: kind[2],
+      }
+    }
+    const family = /^#([\w-]+)\s+(.*)$/.exec(value)
+    if (family) {
+      const key = family[1].toLowerCase()
+      const ecosystem = index.projects.find(
+        (project) => project.ecosystem?.key === key,
+      )?.ecosystem
+      if (!ecosystem) return null
+      return {
+        next: {
+          kind: "ecosystem",
+          key,
+          token: `#${key}`,
+          name: ecosystem.name,
+        },
+        rest: family[2],
+      }
+    }
+    return null
+  }
+
+  // Enter on a heading: close, then scroll to it the way an in-page link does
+  // (components/hash-scroll.tsx), the URL moving without a popstate.
+  const jumpTo = (id: string) => {
+    onClose()
+    window.requestAnimationFrame(() => {
+      const target = document.getElementById(id)
+      if (!target) return
+      history.pushState(history.state, "", `#${id}`)
+      target.scrollIntoView({
+        block: "start",
+        behavior: reducedMotion() ? "auto" : "smooth",
+      })
+    })
+  }
+
+  const openKeys = () => {
+    setView("keys")
+    setAnnounce("Keyboard shortcuts")
+  }
 
   useLayoutEffect(() => {
     const dialog = dialogRef.current
@@ -453,7 +759,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   // Docs come from the existing search route; a short pause so typing a word
   // is one request, not five.
   useEffect(() => {
-    if (trimmed.length < 2) return
+    if (!docsWanted) return
     const controller = new AbortController()
     const timer = window.setTimeout(() => {
       const params = new URLSearchParams({ query: trimmed })
@@ -467,7 +773,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       window.clearTimeout(timer)
       controller.abort()
     }
-  }, [trimmed, docsTag, docsKey])
+  }, [trimmed, docsTag, docsKey, docsWanted])
 
   const copy = (text: string, id: string) => {
     navigator.clipboard?.writeText(text).then(
@@ -513,11 +819,132 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       detail: { kind: "post" as const, post },
     }))
 
-    // Actions are only what can be done to this project. The theme is a
-    // setting, kept in its own section after the content.
-    const actions: Item[] = currentProject
-      ? projectActions(currentProject, copy, copiedId)
-      : []
+    // The newest versions, with a dot on what shipped since the last visit.
+    // A release row opens its project as a project row does.
+    const releases: Item[] = (index?.releases ?? []).flatMap((release) => {
+      const row = projects.find((item) => item.id === `project:${release.slug}`)
+      if (!row) return []
+      const name = row.text
+      const fresh =
+        visitBaseline !== null &&
+        Date.parse(release.publishedAt) > visitBaseline
+      const age = ageLabel(release.publishedAt)
+      return [
+        {
+          ...row,
+          id: `release:${release.slug}`,
+          section: "releases" as const,
+          title: (
+            <>
+              {name} <span className={styles.version}>v{release.version}</span>
+            </>
+          ),
+          meta: age,
+          fresh,
+          label: `${name} v${release.version}, ${age}${
+            fresh ? ", new since your last visit" : ""
+          }`,
+        },
+      ]
+    })
+
+    // A filter keeps the projects of one kind or one family.
+    const inFilter = (item: Item) => {
+      if (!filter) return true
+      const project = projectsById.get(item.id.slice("project:".length))
+      return filter.kind === "category"
+        ? project?.category === filter.key
+        : project?.ecosystem?.key === filter.key
+    }
+
+    // While no filter is set, a # lists the families and a word that starts a
+    // kind ("cl", "rayc") offers that kind, so both can be found by typing.
+    const filterItems: Item[] = filter
+      ? []
+      : filterOptions(index, trimmed).map(({ next, count }) => ({
+          id: `filter:${next.token}`,
+          section: "filters",
+          title: next.token,
+          text: next.key,
+          meta: `${next.name} · ${count}`,
+          extras: [next.name],
+          visual: { kind: "glyph", Icon: ListFilter },
+          run: () => {
+            applyFilter(next)
+            setQuery("")
+          },
+        }))
+
+    // The post's or the docs page's own headings: Enter scrolls there, ⌘C
+    // copies the link to it.
+    const here = `${window.location.origin}${window.location.pathname}`
+    const outlineItems: Item[] = outline.map((heading) => ({
+      id: `outline:${heading.id}`,
+      section: "outline",
+      title: heading.text,
+      text: heading.text,
+      meta: heading.level === 3 ? "Subsection" : undefined,
+      visual: { kind: "glyph", Icon: Hash },
+      copyText: `${here}#${heading.id}`,
+      label: `${heading.text}. Enter to go there, ${mod} C to copy its link.`,
+      run: () => jumpTo(heading.id),
+    }))
+
+    // Where Erwann is elsewhere (lib/links.ts, shared with the footer). Each
+    // opens in a new tab; ⌘C copies its address.
+    const elsewhere: Item[] = ELSEWHERE.map((link) => ({
+      id: `elsewhere:${link.key}`,
+      section: "elsewhere",
+      title: link.label,
+      text: link.label,
+      meta: hostOf(link.href),
+      extras: link.aliases,
+      visual: ELSEWHERE_MARK[link.key],
+      href: link.href,
+      external: true,
+      copyText: link.href,
+    }))
+
+    // What can be done to this page, then the sheet of every key.
+    const pageActions: Item[] = [
+      {
+        id: "action:copy-link",
+        section: "actions",
+        title: "Copy page link",
+        text: "Copy page link",
+        meta: window.location.pathname,
+        extras: ["copy", "link", "url", "share", "address"],
+        visual: { kind: "glyph", Icon: Link2 },
+        run: () => copy(pageLink().url, "action:copy-link"),
+      },
+      {
+        id: "action:copy-markdown",
+        section: "actions",
+        title: "Copy as Markdown link",
+        text: "Copy as Markdown link",
+        keys: [mod, "⇧", "C"],
+        extras: ["markdown", "md", "copy", "link", "share"],
+        visual: { kind: "glyph", Icon: Copy },
+        run: () => copy(pageLink().markdown, "action:copy-markdown"),
+      },
+      {
+        id: "action:shortcuts",
+        section: "actions",
+        title: "Keyboard shortcuts",
+        text: "Keyboard shortcuts",
+        keys: ["?"],
+        extras: ["keys", "keyboard", "hotkeys", "help", "shortcuts"],
+        visual: { kind: "glyph", Icon: Keyboard },
+        run: openKeys,
+      },
+    ]
+
+    // Actions are what can be done to this project, then to this page. The
+    // theme is a setting, kept in its own section after the content.
+    const actions: Item[] = [
+      ...(currentProject ? projectActions(currentProject, copy, copiedId) : []),
+      ...pageActions,
+    ]
 
     const rss: Item = {
       id: "writing:rss",
@@ -705,28 +1132,46 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     }
 
     const pools: Record<SectionKey, Item[]> = {
+      filters: filterItems,
+      outline: outlineItems,
       pages: [...PAGES, message],
       projects,
+      releases,
       writing: [...writing, rss],
       docs: docItems,
       actions,
+      elsewhere,
       settings,
     }
 
     const pick = (key: SectionKey): Item[] => {
+      // A filter shows its projects and nothing else: all of them on an empty
+      // box, the best matches once something is typed.
+      if (filter) {
+        if (key !== "projects") return []
+        const kept = projects.filter(inFilter)
+        return trimmed ? rank(trimmed, kept, kept.length) : kept
+      }
+      if (key === "filters") return filterItems
+      // A # is still choosing a family; nothing else answers to it.
+      if (trimmed.startsWith("#")) return []
       if (key === "docs") return docItems
+      // Releases are a view of the empty box; typed, the project rows answer.
+      if (key === "releases")
+        return trimmed ? [] : releases.slice(0, LIMIT.releases)
       if (trimmed) return rank(trimmed, pools[key], LIMIT[key])
       // An empty box still has somewhere to go: the map, the pins, the
-      // latest posts, and whatever this page can do.
+      // latest releases and posts, and whatever this page can do.
       if (key === "projects")
         return projects.filter(
           (item) => projectsById.get(item.id.slice(8))?.pinned,
         )
       if (key === "writing") return [...writing.slice(0, onPost ? 5 : 3), rss]
+      if (key === "outline") return outlineItems.slice(0, 8)
       return pools[key]
     }
 
-    return sectionOrder(projectSlug, onPost)
+    return sectionOrder(projectSlug, onPost, trimmed.startsWith("#"))
       .map((key) => ({ key, items: pick(key) }))
       .filter((section) => section.items.length > 0)
     // copy and setTheme are stable enough; their identity must not reset the list
@@ -745,13 +1190,17 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     section,
     projectSlug,
     onPost,
+    filter,
+    visitBaseline,
+    outline,
+    mod,
   ])
 
   const flat = sections.flatMap((section) => section.items)
   const active = flat.find((item) => item.id === activeId) ?? flat[0]
 
   const indexPending = !index && !failed
-  const docsPending = trimmed.length >= 2 && docs?.key !== docsKey
+  const docsPending = docsWanted && docs?.key !== docsKey
   const showIndexSkeleton = useDelayed(indexPending ? "index" : null, 150)
   const showDocsSkeleton = useDelayed(docsPending ? docsKey : null, 150)
   const skeletonFor = (key: SectionKey) =>
@@ -811,6 +1260,26 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     if (event.key === "Tab") {
       event.preventDefault()
       jumpSection(event.shiftKey ? -1 : 1)
+    } else if (
+      (event.metaKey || event.ctrlKey) &&
+      event.key.toLowerCase() === "c"
+    ) {
+      // ⌘⇧C: this page as a Markdown link, wherever the selection is.
+      if (event.shiftKey) {
+        event.preventDefault()
+        copy(pageLink().markdown, "action:copy-markdown")
+        return
+      }
+      // ⌘C: the selected row's link, unless text in the box is selected.
+      const input = inputRef.current
+      const selecting = input && input.selectionStart !== input.selectionEnd
+      if (!selecting && active?.copyText) {
+        event.preventDefault()
+        copy(active.copyText, active.id)
+      }
+    } else if (event.key === "Backspace" && !query && filter) {
+      event.preventDefault()
+      clearFilter()
     } else if (event.key === "Backspace" && !query && docsTag) {
       setDocsWide(true)
       setAnnounce("Searching all docs")
@@ -825,13 +1294,15 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
         ? ""
         : `${flat.length} result${flat.length === 1 ? "" : "s"}`
 
-  const placeholder = currentProject
-    ? currentProject.hasDocs
-      ? "Search docs, projects, writing…"
-      : "Search projects, writing, actions…"
-    : onPost
-      ? "Search writing, projects, docs…"
-      : "Search pages, projects, writing, docs…"
+  const placeholder = filter
+    ? `Search ${filter.name}…`
+    : currentProject
+      ? currentProject.hasDocs
+        ? "Search docs, projects, writing…"
+        : "Search projects, writing, actions…"
+      : onPost
+        ? "Search writing, projects, docs…"
+        : "Search pages, projects, writing, docs…"
 
   return createPortal(
     <dialog
@@ -842,7 +1313,9 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
           ? "Send me a message"
           : view === "detail"
             ? "Details"
-            : "Search kud.io"
+            : view === "keys"
+              ? "Keyboard shortcuts"
+              : "Search kud.io"
       }
       onCancel={(event) => {
         event.preventDefault()
@@ -870,22 +1343,45 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       >
         <div className={styles.bar}>
           <Search className={styles.barIcon} aria-hidden />
+          {filter ? (
+            <button
+              type="button"
+              className={`${styles.chip} ${styles.filterChip}`}
+              aria-label={`Remove filter: ${filter.name}`}
+              title={`${filter.name}. Remove the filter`}
+              onMouseDown={(event) => event.preventDefault()}
+              onClick={clearFilter}
+            >
+              {filter.token}
+              <span aria-hidden className={styles.chipSwap}>
+                ×
+              </span>
+            </button>
+          ) : null}
           <Command.Input
             ref={inputRef}
             className={styles.input}
             placeholder={placeholder}
             value={query}
             onValueChange={(value) => {
-              setQuery(value)
               setActiveId(null)
               setCopiedId(null)
+              // ? on an empty box is a question about the keys, not a search.
+              if (value === "?" && !query) return openKeys()
+              const matched = matchFilter(value)
+              if (matched) {
+                applyFilter(matched.next)
+                setQuery(matched.rest)
+                return
+              }
+              setQuery(value)
             }}
             autoCorrect="off"
             autoCapitalize="off"
             spellCheck={false}
             enterKeyHint="go"
           />
-          {currentProject?.hasDocs ? (
+          {currentProject?.hasDocs && !filter ? (
             <button
               type="button"
               className={styles.chip}
@@ -932,55 +1428,80 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
             newTab.current = event.metaKey || event.ctrlKey
           }}
         >
-          {sectionOrder(projectSlug, onPost).map((key) => {
-            const section = sections.find((each) => each.key === key)
-            if (!section)
-              return skeletonFor(key) ? (
-                <SkeletonGroup key={key} section={key} />
-              ) : null
-            return (
-              <Command.Group
-                key={section.key}
-                className={styles.group}
-                heading={
-                  <>
-                    {SECTION_LABEL[section.key]}
-                    {section.key === "docs" && currentProject && docsTag ? (
-                      <span className={styles.headingNote}>
-                        {" "}
-                        · {currentProject.name}
-                      </span>
-                    ) : null}
-                  </>
-                }
-              >
-                {section.items.map((item) => (
-                  <Command.Item
-                    key={item.id}
-                    value={item.id}
-                    aria-label={item.label}
-                    className={styles.option}
-                    onSelect={() => activate(item)}
-                  >
-                    <VisualMark visual={item.visual} />
-                    <span className={styles.text}>
-                      <span className={styles.title}>{item.title}</span>
-                      {item.meta ? (
-                        <span className={styles.meta}>{item.meta}</span>
+          {sectionOrder(projectSlug, onPost, trimmed.startsWith("#")).map(
+            (key) => {
+              const section = sections.find((each) => each.key === key)
+              if (!section)
+                return skeletonFor(key) ? (
+                  <SkeletonGroup key={key} section={key} />
+                ) : null
+              return (
+                <Command.Group
+                  key={section.key}
+                  className={styles.group}
+                  heading={
+                    <>
+                      {SECTION_LABEL[section.key]}
+                      {section.key === "docs" && currentProject && docsTag ? (
+                        <span className={styles.headingNote}>
+                          {" "}
+                          · {currentProject.name}
+                        </span>
                       ) : null}
-                    </span>
-                    {item.external ? (
-                      <ArrowUpRight className={styles.trail} aria-hidden />
-                    ) : null}
-                  </Command.Item>
-                ))}
-              </Command.Group>
-            )
-          })}
+                      {section.key === "projects" && filter ? (
+                        <span className={styles.headingNote}>
+                          {" "}
+                          · {filter.name}
+                        </span>
+                      ) : null}
+                    </>
+                  }
+                >
+                  {section.items.map((item) => {
+                    const copied = copiedId === item.id
+                    return (
+                      <Command.Item
+                        key={item.id}
+                        value={item.id}
+                        aria-label={item.label}
+                        className={styles.option}
+                        onSelect={() => activate(item)}
+                      >
+                        <VisualMark visual={item.visual} />
+                        <span className={styles.text}>
+                          <span className={styles.title}>{item.title}</span>
+                          {item.fresh ? (
+                            <span className={styles.newDot} aria-hidden />
+                          ) : null}
+                          {copied && item.copyText ? (
+                            <span className={styles.meta}>Copied</span>
+                          ) : item.keys && !copied ? (
+                            <span className={styles.metaKeys}>
+                              {item.keys.map((key) => (
+                                <kbd key={key}>{key}</kbd>
+                              ))}
+                            </span>
+                          ) : item.meta || copied ? (
+                            <span className={styles.meta}>
+                              {copied ? "Copied" : item.meta}
+                            </span>
+                          ) : null}
+                        </span>
+                        {item.external ? (
+                          <ArrowUpRight className={styles.trail} aria-hidden />
+                        ) : null}
+                      </Command.Item>
+                    )
+                  })}
+                </Command.Group>
+              )
+            },
+          )}
           {trimmed && flat.length === 0 && index && !docsPending ? (
             <Command.Empty className={styles.empty}>
-              Nothing matches “{trimmed}”. Try a project, a post title, or a
-              word from the docs.
+              {filter
+                ? `Nothing in ${filter.name} matches “${trimmed}”. Backspace on an empty box removes the filter.`
+                : `Nothing matches “${trimmed}”. Try a project, a post title, or a word from the docs.`}
             </Command.Empty>
           ) : null}
         </Command.List>
@@ -996,9 +1517,19 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
           <span>
             <kbd>↵</kbd> {active?.detail ? "details" : "open"}
           </span>
+          {active?.copyText ? (
+            <span>
+              <kbd>{mod}</kbd>
+              <kbd>C</kbd> copy
+            </span>
+          ) : null}
+          <span>
+            <kbd>?</kbd> keys
+          </span>
           <span className={styles.footStatus}>{status}</span>
         </div>
       </Command>
+      {view === "keys" ? <ShortcutsSheet onBack={backToList} /> : null}
       {view === "detail" && detail ? (
         <DetailView
           key={

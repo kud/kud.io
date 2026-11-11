@@ -916,3 +916,113 @@
 .topics .segment[data-active] {
   background: var(--l-raise);
 }
+
+/* A release row: the version in mono beside the name, and a still dot when it
+   shipped since the last visit. The dot is the accent's one job in the row;
+   nothing on it moves. */
+.version {
+  color: var(--l-muted);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+.newDot {
+  flex-shrink: 0;
+  align-self: center;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--l-accent);
+}
+@media (forced-colors: active) {
+  .newDot {
+    background: CanvasText;
+  }
+}
+
+/* Keys drawn where a row's meta sits: "⌘ ⇧ C", "?". */
+.metaKeys {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 3px;
+  margin-left: auto;
+}
+.metaKeys kbd,
+.keysCombo kbd {
+  display: inline-grid;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  place-items: center;
+  border: 1px solid var(--l-line);
+  border-radius: 5px;
+  background: var(--l-raise);
+  color: var(--l-dim);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* A filter in the bar: the docs-scope chip's shape, set in mono since it is
+   the token as typed, and leading the field rather than trailing it. */
+.filterChip {
+  flex-shrink: 0;
+  margin-right: -4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+/* Shortcuts sheet: the message view's frame, a quiet two-column list per
+   group, keys on the left. */
+.keys {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px 18px 18px;
+}
+.keysGroup + .keysGroup {
+  margin-top: 6px;
+}
+.keysTitle {
+  margin: 0;
+  padding: 12px 0 6px;
+  color: var(--l-dim);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.keysList {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 8px 22px;
+  margin: 0;
+  align-items: baseline;
+}
+.keysList dt {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.keysList dd {
+  margin: 0;
+  color: var(--l-fg);
+  font-size: 14px;
+}
+.keysCombo {
+  display: inline-flex;
+  gap: 3px;
+}
+.keysCombo kbd {
+  color: var(--l-muted);
+}
+@media (max-width: 640px) {
+  .keysList {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+  .keysList dd {
+    margin-bottom: 8px;
+  }
+}
