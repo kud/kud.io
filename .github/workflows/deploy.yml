@@ -47,6 +47,10 @@ jobs:
         run: npx --yes vercel@65.14.0 build --prod --token="$VERCEL_TOKEN"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          # /projects reads every release from the GitHub API at build time;
+          # unauthenticated, the runner gets 60 requests an hour and the page
+          # renders with no release data.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy to production
         run: npx --yes vercel@65.14.0 deploy --prebuilt --prod --archive=tgz --token="$VERCEL_TOKEN"
