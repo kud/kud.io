@@ -140,6 +140,16 @@ const CATEGORY_ALIAS: Record<string, string> = {
   themes: "theme",
 }
 
+// Search words for the Elsewhere rows beyond their labels: launcher vocabulary,
+// so it lives here, not in lib/links.ts, which the footer reads too.
+const ELSEWHERE_ALIASES: Record<ElsewhereKey, string[]> = {
+  referrals: ["invite", "referral", "codes", "discount"],
+  beansontoast: ["studio", "beans", "apps", "label"],
+  github: ["code", "source", "repos"],
+  bluesky: ["bsky", "social", "posts"],
+  linkedin: ["work", "career", "cv"],
+}
+
 const ELSEWHERE_MARK: Record<ElsewhereKey, Visual> = {
   referrals: { kind: "glyph", Icon: Gift },
   beansontoast: {
@@ -898,7 +908,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       title: link.label,
       text: link.label,
       meta: hostOf(link.href),
-      extras: link.aliases,
+      extras: ELSEWHERE_ALIASES[link.key],
       visual: ELSEWHERE_MARK[link.key],
       href: link.href,
       external: true,

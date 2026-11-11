@@ -18,22 +18,18 @@ export type ElsewhereLink = {
   key: ElsewhereKey
   label: string
   href: string
-  // The words the launcher also answers to, beyond the label.
-  aliases: string[]
 }
 
 const REFERRALS: ElsewhereLink = {
   key: "referrals",
   label: "Referrals",
   href: "https://referrals.kud.io",
-  aliases: ["invite", "referral", "codes", "discount"],
 }
 
 const BEANS_ON_TOAST: ElsewhereLink = {
   key: "beansontoast",
   label: "Beans on Toast",
   href: "https://beansontoast.app",
-  aliases: ["studio", "beans", "apps", "label"],
 }
 
 export const SOCIAL: ElsewhereLink[] = [
@@ -41,19 +37,16 @@ export const SOCIAL: ElsewhereLink[] = [
     key: "github",
     label: "GitHub",
     href: "https://github.kud.io/",
-    aliases: ["code", "source", "repos"],
   },
   {
     key: "bluesky",
     label: "Bluesky",
     href: "https://bsky.kud.io/",
-    aliases: ["bsky", "social", "posts"],
   },
   {
     key: "linkedin",
     label: "LinkedIn",
     href: "https://linkedin.kud.io/",
-    aliases: ["work", "career", "cv"],
   },
 ]
 
