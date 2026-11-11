@@ -7,6 +7,7 @@ import { ArriveScript, InkTransition } from "@/components/ink-transition"
 import { HashScroll } from "@/components/hash-scroll"
 import { Launcher } from "@/components/launcher/launcher"
 import { LauncherTrigger } from "@/components/launcher/launcher-trigger"
+import { PeekBanner, PeekCandidateScript } from "@/components/peek-candidate"
 import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google"
 
 // Hanken Grotesk — a refined, elegant grotesque: subtle squared character with
@@ -85,6 +86,9 @@ export const viewport: Viewport = {
   themeColor: "#fdfbf8",
 }
 
+// Preview deployments only: the switcher for the /projects peek candidates.
+const isPreview = process.env.VERCEL_ENV !== "production"
+
 const RootLayout = ({ children }: { children: ReactNode }) => (
   <ViewTransitions>
     <html
@@ -94,6 +98,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
       className={`${sans.variable} ${code.variable}`}
     >
       <body className="flex min-h-screen flex-col">
+        {isPreview && <PeekCandidateScript />}
         <ArriveScript />
         <InkTransition />
         <HashScroll />
@@ -107,6 +112,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
         >
           {children}
           <LauncherTrigger />
+          {isPreview && <PeekBanner />}
         </RootProvider>
       </body>
     </html>

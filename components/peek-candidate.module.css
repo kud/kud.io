@@ -1,0 +1,99 @@
+/* Preview only. Fixed in its own neutral ink so it reads the same over every
+   theme, and never borrows the tokens of the page it sits on. */
+.banner {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  max-width: calc(100vw - 32px);
+  z-index: 1000;
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: center;
+  gap: 4px 10px;
+  padding: 8px 10px 8px 12px;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: 12px;
+  background: rgb(24 22 28 / 0.94);
+  box-shadow: 0 8px 24px -12px rgb(0 0 0 / 0.5);
+  color: #e9e6ee;
+  font:
+    500 12px/1.2 ui-sans-serif,
+    system-ui,
+    sans-serif;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  grid-column: 1;
+}
+.title {
+  color: #b3adbd;
+}
+.options {
+  display: inline-flex;
+  gap: 3px;
+}
+.options button {
+  min-width: 26px;
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.options button:hover {
+  background: rgb(255 255 255 / 0.08);
+}
+.options button[aria-pressed="true"] {
+  border-color: #e9e6ee;
+  background: #e9e6ee;
+  color: #18161c;
+  font-weight: 700;
+}
+/* Fixed width: the longest label, so switching never nudges the Copy button. */
+.label {
+  width: 14ch;
+  white-space: nowrap;
+}
+.note {
+  grid-column: 1;
+  margin: 0;
+  color: #f2c48d;
+}
+.copy {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: stretch;
+  min-width: 76px;
+  padding: 4px 10px;
+  border: 1px solid #e9e6ee;
+  border-radius: 6px;
+  background: transparent;
+  color: #e9e6ee;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.copy:hover {
+  background: rgb(255 255 255 / 0.08);
+}
+.options button:focus-visible,
+.copy:focus-visible {
+  outline: 2px solid #a6d0f3;
+  outline-offset: 1px;
+}
+
+/* Phone: one step above the launcher pill (bottom right, 40px tall). */
+@media (max-width: 480px) {
+  .banner {
+    bottom: calc(max(18px, env(safe-area-inset-bottom)) + 50px);
+  }
+  .options button {
+    min-width: 32px;
+    height: 32px;
+  }
+}

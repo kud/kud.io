@@ -23,6 +23,8 @@ import { Contributions } from "@/components/contributions"
 import { ProjectsTop } from "@/components/projects-top"
 import { PINNED, RECENT_COUNT } from "@/lib/pinned"
 import { PROJECTS_COPY } from "@/lib/section-copy"
+import { ProjectPeek } from "@/components/project-peek"
+import { peekOf } from "@/lib/peek"
 import styles from "./page.module.css"
 
 const TITLE = `${PROJECTS_COPY.title} — Erwann Mest`
@@ -209,6 +211,13 @@ const ProjectsIndex = async () => {
           <Contributions />
         </ProjectList>
       )}
+      {process.env.VERCEL_ENV !== "production" ? (
+        <ProjectPeek
+          peeks={Object.fromEntries(
+            withIcons.map((project) => [project.slug, peekOf(project)]),
+          )}
+        />
+      ) : null}
       <MorphArrival />
       <SiteFooter className={styles.footer} />
     </main>
