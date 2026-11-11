@@ -7,4 +7,5 @@ export const ART: Partial<Record<string, string>> = {
   "smart-tv-for-browser": "/projects/art/smart-tv-for-browser.webp",
   "mcp-jenkins": "/projects/art/mcp-jenkins.webp",
   "soap-cli": "/projects/art/soap-cli.webp",
+  "mcp-trakt": "/projects/art/mcp-trakt.webp",
 }
