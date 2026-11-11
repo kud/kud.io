@@ -136,6 +136,11 @@ html:has([data-ground="dusk"][data-theme="ink"][data-theme="ink"]),
   border-radius: var(--ik-wobble) !important;
   color: var(--ik-ink);
 }
+/* The README landing draws a terminal title bar from --code-bar; in ink it is
+   the blot grey, one step off the panel, in either tone. */
+[data-theme="ink"] figure.shiki {
+  --code-bar: var(--ik-blot);
+}
 [data-theme="ink"] figure:has(pre) pre {
   background: transparent !important;
   border: 0 !important;

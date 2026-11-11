@@ -196,9 +196,13 @@ const components = {
     >
       {children}
       {isOutbound(href) && isTextual(children) ? (
-        <span className={styles.outbound} aria-hidden>
-          ↗
-        </span>
+        // The word joiner keeps the arrow on the last word's line.
+        <>
+          {"\u2060"}
+          <span className={styles.outbound} aria-hidden>
+            ↗
+          </span>
+        </>
       ) : null}
     </a>
   ),
