@@ -832,7 +832,7 @@
 }
 .factCode code {
   overflow-wrap: anywhere;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 12.5px;
 }
 .factCode:hover,

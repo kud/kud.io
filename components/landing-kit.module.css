@@ -11,7 +11,7 @@
   --text: #e2e8f0;
   --muted: #8892a4;
   --prod: #34d399;
-  --mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, monospace;
+  --mono: var(--font-mono);
 }
 
 @keyframes kitFadeUp {

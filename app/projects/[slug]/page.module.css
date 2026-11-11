@@ -9,7 +9,7 @@
   --primary-light: #e0a87e;
   --text: #e2e8f0;
   --muted: #8892a4;
-  --mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, monospace;
+  --mono: var(--font-mono);
 
   position: relative;
   min-height: 100vh;

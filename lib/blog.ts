@@ -8,7 +8,7 @@ import type { ReactNode } from "react"
 import rehypeReact from "rehype-react"
 import rehypeShiki from "@shikijs/rehype"
 import type { ThemeRegistration } from "shiki"
-import novemberJson from "@/lib/themes/november.json"
+import { november } from "@/lib/themes/november"
 import rehypeSlug from "rehype-slug"
 import remarkGfm from "remark-gfm"
 import remarkParse from "remark-parse"
@@ -147,10 +147,9 @@ export const getPost = async (slug: string): Promise<Post | null> => {
 // themes, by design — so a dual-theme Shiki config has nothing to switch
 // between and everything to get wrong: it emits both palettes as custom
 // properties and lets whichever selector wins paint light tokens onto the dark
-// card. The card is Erwann's November theme (lib/themes/november.json), the
+// card. The card is Erwann's November theme (lib/themes/november.ts), the
 // same as project pages and docs, so code is one family across the site; the
 // card's ground lives in app/blog/blog.module.css (--c-bg).
-const november = novemberJson as ThemeRegistration
 export const SHIKI_THEME = {
   ...november,
   name: "kud-blog-november",

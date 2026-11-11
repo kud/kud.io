@@ -3,7 +3,6 @@ import { InkLink as Link } from "@/components/ink-link"
 import { BLOG_ROOT_ID, ThemeScopeScript } from "@/components/scoped-theme"
 import { SiteFooter } from "@/components/site-footer"
 import { ThemePicker } from "@/components/theme-picker"
-import { mono } from "./fonts"
 import styles from "./blog.module.css"
 
 // The wrapper lives in the layout, not in either page, because it is the thing
@@ -16,7 +15,6 @@ const BlogLayout = ({ children }: { children: ReactNode }) => (
     data-theme="system"
     data-theme-scope
     suppressHydrationWarning
-    className={mono.variable}
   >
     <ThemeScopeScript />
     {/* The same picker, in the same corner, as every other themed page. */}

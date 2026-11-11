@@ -34,8 +34,8 @@
 }
 
 /* The weight is the signal that survives greyscale and colour-vision
- * differences — it is not redundant with the ground and border. Commit Mono's
- * 400 and 500 share an advance width, so activating a pill never reflows the
+ * differences — it is not redundant with the ground and border. JetBrains
+ * Mono's 400 and 500 share an advance width, so activating a pill never reflows the
  * row. */
 .filter button[data-active] {
   color: var(--fg);

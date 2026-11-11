@@ -11,7 +11,7 @@ export const Blueprint = ({ className }: { className?: string }) => (
     fill="none"
     stroke={LINE}
     aria-hidden="true"
-    fontFamily="ui-monospace, 'SF Mono', Menlo, monospace"
+    style={{ fontFamily: "var(--font-mono)" }}
   >
     {/* Icon boundary */}
     <rect

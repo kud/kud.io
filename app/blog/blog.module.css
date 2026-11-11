@@ -47,9 +47,7 @@
   --sans:
     var(--font-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
     sans-serif;
-  --mono:
-    var(--font-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-    monospace;
+  --mono: var(--font-mono);
 
   display: flex;
   flex: 1;

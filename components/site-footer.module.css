@@ -18,14 +18,7 @@
   margin: var(--footer-gap, 96px) auto 0;
   padding: 18px var(--footer-inset, 24px) 44px;
   border-top: 1px solid var(--border);
-  font-family: var(
-    --footer-mono,
-    ui-monospace,
-    "SF Mono",
-    SFMono-Regular,
-    Menlo,
-    monospace
-  );
+  font-family: var(--footer-mono, var(--font-mono));
   font-size: 12px;
   line-height: 1.6;
   color: var(--dim);

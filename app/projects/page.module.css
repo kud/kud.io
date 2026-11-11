@@ -8,7 +8,7 @@
   --text: #e2e8f0;
   --muted: #8892a4;
   --dim: #3d4560;
-  --mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, monospace;
+  --mono: var(--font-mono);
   --accent: var(--primary);
   /* The browse grid, shared by the top band (components/projects-top) and
      the sections (components/project-list): one column width, one edge. */

@@ -7,7 +7,7 @@ import { ArriveScript, InkTransition } from "@/components/ink-transition"
 import { HashScroll } from "@/components/hash-scroll"
 import { Launcher } from "@/components/launcher/launcher"
 import { LauncherTrigger } from "@/components/launcher/launcher-trigger"
-import { Hanken_Grotesk } from "next/font/google"
+import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google"
 
 // Hanken Grotesk — a refined, elegant grotesque: subtle squared character with
 // open (not compressed) proportions, less geometric/techy than Sora, and every
@@ -16,6 +16,22 @@ import { Hanken_Grotesk } from "next/font/google"
 const sans = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-sans",
+})
+
+// JetBrains Mono for every piece of code and every mono label on the site:
+// sturdier than the thin faces it replaced, so a 14px block holds its weight
+// next to Hanken Grotesk. Its advance (0.6em) and x-height (0.55em) match the
+// Commit Mono the blog was tuned on, so no size had to move. Variable, so one
+// file per style covers 400 and 500. Exposed as --font-code; global.css folds
+// it into Tailwind's --font-mono, which every surface reads. No metric-adjusted
+// fallback: next/font would derive it from Arial, and a mono falling back to a
+// proportional width reflows the whole block on swap.
+const code = JetBrains_Mono({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-code",
+  display: "swap",
+  adjustFontFallback: false,
 })
 
 const TITLE = "Erwann Mest — Systems Designer & Lead Software Engineer"
@@ -75,7 +91,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={sans.variable}
+      className={`${sans.variable} ${code.variable}`}
     >
       <body className="flex min-h-screen flex-col">
         <ArriveScript />

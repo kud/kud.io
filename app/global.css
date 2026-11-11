@@ -8,6 +8,19 @@
 /* Generate the Tailwind utilities used by Fumadocs UI components. */
 @source "../node_modules/fumadocs-ui/dist/**/*.js";
 
+/* The one mono stack. --font-code is JetBrains Mono from next/font, stamped on
+   <html> (app/layout.tsx); every surface reads --font-mono, directly or through
+   its own --mono alias. Static so the token is emitted even where no Tailwind
+   utility asks for it. Ligatures off in code: `->` and `!=` must read as the
+   characters typed, and Tailwind's preflight applies this to code, kbd, samp
+   and pre. Labels set in mono (dates, chips) keep the default. */
+@theme static {
+  --font-mono:
+    var(--font-code), ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    monospace;
+  --font-mono--font-feature-settings: "calt" 0, "liga" 0;
+}
+
 /* Match the Fumadocs docs theme to the projects/ site palette (dark navy) so
    /projects/<slug>/docs feels like the same product. Primary and ring are left
    at the fumadocs neutral defaults (near-white) so the docs sidebar reads as a
