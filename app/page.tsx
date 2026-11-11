@@ -14,7 +14,7 @@ import { PromptMascot } from "@/components/prompt-mascot"
 import { ScrollHint } from "@/components/scroll-hint"
 import { yearsOfExperience } from "@/lib/experience"
 import { ThemeScopeScript } from "@/components/scoped-theme"
-import { BlueskyPeek } from "@/components/bluesky-card"
+import { BlueskySocial } from "@/components/bluesky-card"
 import { ContactLink } from "@/components/contact-link"
 import styles from "./page.module.css"
 
@@ -173,9 +173,11 @@ const SocialLinks = () => (
             <Icon className={styles.socialIcon} />
           </a>
         )
-      // The Bluesky icon peeks the latest post above itself.
+      // The Bluesky icon opens the recent posts.
       return label === "Bluesky" ? (
-        <BlueskyPeek key={label}>{link}</BlueskyPeek>
+        <BlueskySocial key={label} href={href} label={label}>
+          <Icon className={styles.socialIcon} />
+        </BlueskySocial>
       ) : (
         <li key={label}>{link}</li>
       )

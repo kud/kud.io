@@ -1,12 +1,9 @@
 // Erwann's own recent Bluesky posts, from the public AppView (no auth).
 // Fetched on the server and refreshed by the six-hourly rebuild; any failure
-// returns nothing. The peek on home shows only a fresh latest post (about six
-// weeks: a stale post reads as an abandoned account); the feed it opens shows
-// the recent ones whatever their age.
+// returns nothing.
 const HANDLE = "kud.io"
 const FEED = `https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=${HANDLE}&limit=10&filter=posts_no_replies`
 const REVALIDATE = false
-const MAX_AGE_MS = 42 * 24 * 60 * 60 * 1000
 
 export type BlueskySegment = { text: string; href?: string }
 
@@ -23,8 +20,6 @@ export type BlueskyPost = {
   url: string
   segments: BlueskySegment[]
   createdAt: string
-  // The first picture, or a link card's thumbnail: what the peek shows.
-  image?: { src: string; alt: string }
   images: BlueskyImage[]
   link?: BlueskyLink
   likes: number
@@ -100,15 +95,6 @@ const toSegments = (text: string, facets: Facet[] = []): BlueskySegment[] => {
   return segments
 }
 
-const firstImage = (embed?: Embed): BlueskyPost["image"] => {
-  if (!embed) return undefined
-  const image = embed.images?.[0]
-  if (image) return { src: image.thumb, alt: image.alt ?? "" }
-  // A link card's thumbnail illustrates the link; the text already says it.
-  if (embed.external?.thumb) return { src: embed.external.thumb, alt: "" }
-  return firstImage(embed.media)
-}
-
 const imagesOf = (embed?: Embed): BlueskyImage[] => {
   if (!embed) return []
   if (embed.images)
@@ -141,8 +127,6 @@ const postUrl = (uri: string) =>
 
 export const PROFILE_URL = `https://bsky.app/profile/${HANDLE}`
 
-// One request for both the peek and the feed: Next dedupes the same fetch
-// within a build.
 const getPosts = async (): Promise<BlueskyPost[]> => {
   try {
     const response = await fetch(FEED, { next: { revalidate: REVALIDATE } })
@@ -157,7 +141,6 @@ const getPosts = async (): Promise<BlueskyPost[]> => {
         url: postUrl(post.uri),
         segments: toSegments(post.record.text, post.record.facets),
         createdAt: post.record.createdAt,
-        image: firstImage(post.embed),
         images: imagesOf(post.embed),
         link: linkOf(post.embed),
         likes: post.likeCount ?? 0,
@@ -167,13 +150,6 @@ const getPosts = async (): Promise<BlueskyPost[]> => {
   } catch {
     return []
   }
-}
-
-export const getLatestBlueskyPost = async (): Promise<BlueskyPost | null> => {
-  const [post] = await getPosts()
-  if (!post) return null
-  const age = Date.now() - new Date(post.createdAt).getTime()
-  return age < MAX_AGE_MS ? post : null
 }
 
 export const getRecentBlueskyPosts = async (n: number) =>

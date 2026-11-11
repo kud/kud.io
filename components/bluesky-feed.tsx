@@ -1,15 +1,86 @@
 "use client"
 
-import { useLayoutEffect, useRef } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import type { ReactNode } from "react"
 import { BlueskyIcon } from "@/components/social-icons"
 import styles from "./bluesky-card.module.css"
 
-// Erwann's recent Bluesky posts in full, opened from the peek
-// (components/bluesky-peek.tsx). The launcher's family: a native modal
+// The Bluesky icon in the hero socials (components/bluesky-card.tsx). A click,
+// a tap, Enter or Space opens the recent posts in a modal; closing it hands
+// focus back to the icon. Without JavaScript, or with a modifier held for a new
+// tab, it stays the link to the profile it always was.
+export const BlueskyFeedLink = ({
+  href,
+  label,
+  profile,
+  feed,
+  children,
+}: {
+  href: string
+  label: string
+  profile: string
+  feed: ReactNode
+  children: ReactNode
+}) => {
+  const [reading, setReading] = useState(false)
+  const link = useRef<HTMLAnchorElement>(null)
+  const returning = useRef(false)
+
+  // After the dialog has closed: while it is open the page is inert.
+  useEffect(() => {
+    if (reading || !returning.current) return
+    returning.current = false
+    link.current?.focus()
+  }, [reading])
+
+  return (
+    <li>
+      <a
+        ref={link}
+        href={href}
+        aria-label={label}
+        aria-haspopup="dialog"
+        target="_blank"
+        rel="noreferrer"
+        onClick={(event) => {
+          if (
+            event.button !== 0 ||
+            event.metaKey ||
+            event.ctrlKey ||
+            event.shiftKey ||
+            event.altKey
+          )
+            return
+          event.preventDefault()
+          setReading(true)
+        }}
+        onKeyDown={(event) => {
+          if (event.key !== " ") return
+          event.preventDefault()
+          setReading(true)
+        }}
+      >
+        {children}
+      </a>
+      {reading && (
+        <BlueskyFeed
+          profile={profile}
+          onClose={() => {
+            returning.current = true
+            setReading(false)
+          }}
+        >
+          {feed}
+        </BlueskyFeed>
+      )}
+    </li>
+  )
+}
+
+// Erwann's recent Bluesky posts in full. The launcher's family: a native modal
 // <dialog> (focus trap, Escape and the backdrop for free), the whole viewport
 // and transparent, so a click that misses the panel is a click outside.
-export const BlueskyFeed = ({
+const BlueskyFeed = ({
   onClose,
   profile,
   children,

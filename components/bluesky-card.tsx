@@ -1,23 +1,12 @@
 import type { ReactNode } from "react"
-import { BlueskyIcon } from "@/components/social-icons"
 import { RelativeDate } from "@/components/relative-date"
-import {
-  getLatestBlueskyPost,
-  getRecentBlueskyPosts,
-  PROFILE_URL,
-} from "@/lib/bluesky"
+import { getRecentBlueskyPosts, PROFILE_URL } from "@/lib/bluesky"
 import type { BlueskyPost } from "@/lib/bluesky"
-import { Peek } from "@/components/bluesky-peek"
+import { BlueskyFeedLink } from "@/components/bluesky-feed"
 import styles from "./bluesky-card.module.css"
 
-// Erwann's Bluesky on home. The latest post peeks over the Bluesky icon in the
-// hero socials (components/bluesky-peek.tsx) as a teaser: clamped text, its
-// picture, the counts. The whole card opens the feed behind it
-// (components/bluesky-feed.tsx), his recent posts in full, through a stretched
-// button on the heading, so the links inside the text stay real links. No
-// post, or a latest post older than about six weeks (lib/bluesky.ts), and
-// nothing peeks.
-const LABEL = "Lately on Bluesky"
+// Erwann's Bluesky on home: the Bluesky icon in the hero socials opens his
+// recent posts in full, in a modal (components/bluesky-feed.tsx).
 const FEED_SIZE = 8
 
 const shortDate = (iso: string) => {
@@ -120,53 +109,6 @@ const Counts = ({ post }: { post: BlueskyPost }) => {
   )
 }
 
-// The teaser in the peek.
-const Card = ({ post }: { post: BlueskyPost }) => {
-  const preview = post.segments
-    .map(({ text }) => text)
-    .join("")
-    .slice(0, 80)
-
-  return (
-    <article className={styles.card}>
-      <div className={styles.body}>
-        <header className={styles.head}>
-          <BlueskyIcon className={styles.mark} />
-          <button
-            type="button"
-            className={styles.cover}
-            data-bsky-feed
-            aria-haspopup="dialog"
-            aria-label={`${LABEL}: ${preview}. Show recent posts`}
-          >
-            {LABEL}
-          </button>
-          <span className={styles.sep} aria-hidden>
-            ·
-          </span>
-          <When iso={post.createdAt} />
-          <span className={styles.more} aria-hidden>
-            More posts
-          </span>
-        </header>
-        <Text post={post} className={styles.text} />
-        <Counts post={post} />
-      </div>
-
-      {post.image && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          className={styles.image}
-          src={post.image.src}
-          alt={post.image.alt}
-          loading="lazy"
-          decoding="async"
-        />
-      )}
-    </article>
-  )
-}
-
 // One post in the feed, in full. Its date opens it on Bluesky, through a link
 // stretched over the post; the links in the text and the link card sit above.
 const FeedPost = ({ post }: { post: BlueskyPost }) => {
@@ -235,21 +177,34 @@ const Feed = ({ posts }: { posts: BlueskyPost[] }) => (
   </ol>
 )
 
-// The Bluesky item of the hero socials. Without a fresh post it is the plain
-// icon link it always was.
-export const BlueskyPeek = async ({ children }: { children: ReactNode }) => {
-  const [post, posts] = await Promise.all([
-    getLatestBlueskyPost(),
-    getRecentBlueskyPosts(FEED_SIZE),
-  ])
-  if (!post) return <li>{children}</li>
+// The Bluesky item of the hero socials. Without posts it is the plain icon
+// link it always was.
+export const BlueskySocial = async ({
+  href,
+  label,
+  children,
+}: {
+  href: string
+  label: string
+  children: ReactNode
+}) => {
+  const posts = await getRecentBlueskyPosts(FEED_SIZE)
+  if (posts.length === 0)
+    return (
+      <li>
+        <a href={href} aria-label={label} target="_blank" rel="noreferrer">
+          {children}
+        </a>
+      </li>
+    )
   return (
-    <Peek
-      card={<Card post={post} />}
-      feed={<Feed posts={posts} />}
+    <BlueskyFeedLink
+      href={href}
+      label={label}
       profile={PROFILE_URL}
+      feed={<Feed posts={posts} />}
     >
       {children}
-    </Peek>
+    </BlueskyFeedLink>
   )
 }

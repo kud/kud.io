@@ -312,8 +312,6 @@
 /* Socials -------------------------------------------------------------------*/
 .socials {
   display: flex;
-  /* Anchors the Bluesky peek (components/bluesky-card.module.css). */
-  position: relative;
   gap: 8px;
   list-style: none;
   padding: 0;
