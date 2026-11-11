@@ -8,6 +8,8 @@ import { getPackageFacts } from "@/lib/package-facts"
 import { projectHasDocs } from "@/lib/source"
 import { PINNED } from "@/lib/pinned"
 import { getListedApps } from "@/lib/listed-apps"
+import { ecosystemName } from "@/lib/ecosystems"
+import { getRelease } from "@/lib/release"
 
 // Everything the command launcher matches on without a round trip: the
 // projects exactly as /projects lists them, every post, and the few facts a
@@ -17,6 +19,8 @@ export type LauncherProject = {
   name: string
   type: string
   category: string
+  // The product family it belongs to (kud-site-eco-*), for the #key filter.
+  ecosystem: { key: string; name: string } | null
   description: string | null
   icon: string | null
   // The project's 16:9 drawing, when one has been delivered (lib/art.ts).
@@ -44,10 +48,22 @@ export type LauncherPost = {
   tags: string[]
 }
 
+// A project's latest version, for the empty launcher's Latest releases.
+export type LauncherRelease = {
+  slug: string
+  version: string
+  publishedAt: string
+}
+
 export type LauncherIndex = {
   projects: LauncherProject[]
   posts: LauncherPost[]
+  // Newest first, only those with a known date.
+  releases: LauncherRelease[]
 }
+
+// How many releases the index carries; the launcher shows fewer.
+const RELEASES = 8
 
 // Only these ship to npm; a lookup for a theme or an app is a wasted request.
 const NPM_CATEGORIES = new Set(["cli", "mcp", "lib", "ui", "claude"])
@@ -72,6 +88,9 @@ export const getLauncherIndex = async (): Promise<LauncherIndex> => {
         name: app ? appDisplayName(project.slug, app) : project.name,
         type: typeFor(category),
         category,
+        ecosystem: project.ecosystem
+          ? { key: project.ecosystem, name: ecosystemName(project.ecosystem) }
+          : null,
         description: project.description,
         icon: (app?.icon ?? icons[project.slug] ?? project.icon) || null,
         art: ART[project.slug] ?? null,
@@ -100,6 +119,7 @@ export const getLauncherIndex = async (): Promise<LauncherIndex> => {
       name: app.name,
       type: typeFor(app.category),
       category: app.category,
+      ecosystem: null,
       description: app.description,
       icon: app.icon ?? null,
       art: ART[app.slug] ?? null,
@@ -112,7 +132,29 @@ export const getLauncherIndex = async (): Promise<LauncherIndex> => {
       href: app.href,
     }))
 
+  // The same cached fetches /projects makes for its release pills.
+  const releases = (
+    await Promise.all(
+      projects
+        .filter((project) => !project.isPrivate)
+        .map(async (project): Promise<LauncherRelease | null> => {
+          const release = await getRelease(project.slug)
+          return release?.publishedAt
+            ? {
+                slug: project.slug,
+                version: release.version,
+                publishedAt: release.publishedAt,
+              }
+            : null
+        }),
+    )
+  )
+    .filter((release) => release !== null)
+    .sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt))
+    .slice(0, RELEASES)
+
   return {
+    releases,
     projects: [...launcherProjects, ...listed].sort(
       (a, b) =>
         Number(b.pinned) - Number(a.pinned) || a.name.localeCompare(b.name),
