@@ -77,6 +77,14 @@ export const BlueskyFeedLink = ({
   )
 }
 
+// The first screen's fold: a post starting less than CLEAR above it shows
+// only its date under the fade, and one starting within SNUG below it ends
+// the screen on a neat boundary. Either way the fold moves CUT above that
+// post, into the one before.
+const CLEAR = 112
+const SNUG = 24
+const CUT = 72
+
 // Erwann's recent Bluesky posts in full. The launcher's family: a native modal
 // <dialog> (focus trap, Escape and the backdrop for free), the whole viewport
 // and transparent, so a click that misses the panel is a click outside.
@@ -90,12 +98,55 @@ const BlueskyFeed = ({
   children: ReactNode
 }) => {
   const dialog = useRef<HTMLDialogElement>(null)
+  const scroll = useRef<HTMLDivElement>(null)
+  const [atEnd, setAtEnd] = useState(false)
 
   useLayoutEffect(() => {
     const node = dialog.current
     if (!node) return
     node.showModal()
     return () => node.close()
+  }, [])
+
+  // The fade at the foot of the list says there is more below; it lifts at the
+  // end. The first screen must also end mid-post: when the fold falls on a
+  // post's first lines, all under the fade, the list reads as complete, so it
+  // is shortened until the fold cuts the post above. Pictures load late and
+  // lengthen the list, so the fit runs again until the reader scrolls.
+  useEffect(() => {
+    const node = scroll.current
+    if (!node) return
+    const measure = () =>
+      setAtEnd(node.scrollTop + node.clientHeight >= node.scrollHeight - 2)
+    const fit = () => {
+      if (node.scrollTop > 0) return
+      node.style.removeProperty("flex")
+      node.style.removeProperty("height")
+      delete node.dataset.trimmed
+      const top = node.getBoundingClientRect().top
+      const fold = node.clientHeight
+      const hit = [...node.querySelectorAll(":scope > ol > li")]
+        .map((post) => post.getBoundingClientRect().top - top)
+        .find(
+          (start) => start > 0 && fold - start > -SNUG && fold - start < CLEAR,
+        )
+      if (hit !== undefined) {
+        node.style.flex = "none"
+        node.style.height = `${hit - CUT}px`
+        node.dataset.trimmed = ""
+      }
+      measure()
+    }
+    fit()
+    node.addEventListener("scroll", measure, { passive: true })
+    window.addEventListener("resize", fit)
+    const observer = new ResizeObserver(fit)
+    if (node.firstElementChild) observer.observe(node.firstElementChild)
+    return () => {
+      node.removeEventListener("scroll", measure)
+      window.removeEventListener("resize", fit)
+      observer.disconnect()
+    }
   }, [])
 
   return (
@@ -128,7 +179,13 @@ const BlueskyFeed = ({
             <span className={styles.escWord}>Close</span>
           </button>
         </header>
-        <div className={styles.scroll}>{children}</div>
+        <div
+          ref={scroll}
+          className={styles.scroll}
+          data-end={atEnd || undefined}
+        >
+          {children}
+        </div>
         <footer className={styles.foot}>
           <a
             href={profile}

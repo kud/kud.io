@@ -187,6 +187,27 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
+  /* Older posts lie below: the list's foot fades out until the end, as the
+     filter rail does (components/project-list.module.css). A mask, not a
+     painted gradient, so it stays inside the panel's border and takes no
+     colour of its own in any theme. */
+  --bsky-fade: 72px;
+  mask-image: linear-gradient(
+    to bottom,
+    #000 calc(100% - var(--bsky-fade)),
+    transparent 100%
+  );
+  transition: --bsky-fade 160ms ease-out;
+}
+
+.scroll[data-end] {
+  --bsky-fade: 0px;
+}
+
+@property --bsky-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
 }
 
 .feed {
@@ -400,6 +421,16 @@
     border: 0;
     border-radius: 0;
   }
+  /* A list shortened to end mid-post (components/bluesky-feed.tsx) makes the
+     sheet shorter: it rests on the bottom edge, rounded on top, the veil
+     above it. */
+  .feedDialog[open] {
+    align-items: flex-end;
+  }
+  .panel:has(> .scroll[data-trimmed]) {
+    height: auto;
+    border-radius: 16px 16px 0 0;
+  }
   .bar {
     min-height: 60px;
     padding-top: env(safe-area-inset-top);
@@ -484,6 +515,7 @@
 @media (prefers-reduced-motion: reduce) {
   .inline,
   .post,
+  .scroll,
   .continue {
     transition: none;
   }
