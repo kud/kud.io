@@ -29,7 +29,7 @@ const fromNpm = async (slug: string): Promise<Release | null> => {
     `https://api.github.com/repos/${OWNER}/${slug}/contents/package.json`,
     {
       headers: { ...ghHeaders(), Accept: "application/vnd.github.raw+json" },
-      next: { revalidate: 3600 },
+      next: { revalidate: 86400 },
     },
   )
   if (!pkgRes.ok) return null
@@ -40,7 +40,7 @@ const fromNpm = async (slug: string): Promise<Release | null> => {
   // `/latest` shortcut does not.
   const npmRes = await fetch(
     `https://registry.npmjs.org/${pkg.name.replace("/", "%2F")}`,
-    { next: { revalidate: 3600 } },
+    { next: { revalidate: 86400 } },
   )
   if (!npmRes.ok) return null
   const packument = (await npmRes.json()) as Packument
@@ -60,7 +60,7 @@ const fromNpm = async (slug: string): Promise<Release | null> => {
 const fromTags = async (slug: string): Promise<Release | null> => {
   const res = await fetch(
     `https://api.github.com/repos/${OWNER}/${slug}/tags?per_page=100`,
-    { headers: ghHeaders(), next: { revalidate: 3600 } },
+    { headers: ghHeaders(), next: { revalidate: 86400 } },
   )
   if (!res.ok) return null
   const tags = (await res.json()) as { name: string; commit: { sha: string } }[]
@@ -84,7 +84,7 @@ const fromTags = async (slug: string): Promise<Release | null> => {
 const tagDate = async (slug: string, sha: string): Promise<string | null> => {
   const res = await fetch(
     `https://api.github.com/repos/${OWNER}/${slug}/commits/${sha}`,
-    { headers: ghHeaders(), next: { revalidate: 3600 } },
+    { headers: ghHeaders(), next: { revalidate: 86400 } },
   )
   if (!res.ok) return null
   const commit = (await res.json()) as {

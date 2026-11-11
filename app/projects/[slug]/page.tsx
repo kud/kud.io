@@ -42,8 +42,11 @@ import {
 } from "@/components/product-record"
 import styles from "./page.module.css"
 
-// The release pill says how old the latest version is, so rebuild hourly.
-export const revalidate = 3600
+// The release pill says how old the latest version is, so rebuild daily: hourly ISR used up the free tier's writes.
+export const revalidate = 86400
+
+// Unknown slugs 404 without a write: crawlers probing made-up paths each cost one.
+export const dynamicParams = false
 
 export const generateStaticParams = async () =>
   (await getProjects()).map((project) => ({ slug: project.slug }))

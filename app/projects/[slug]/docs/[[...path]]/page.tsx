@@ -84,3 +84,6 @@ export const generateMetadata = async ({
     twitter: { title, description, images },
   }
 }
+
+// Unknown doc paths 404 without a write: crawlers probing made-up paths each cost one.
+export const dynamicParams = false

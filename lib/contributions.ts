@@ -65,7 +65,7 @@ const raycastContribution = async (
 ): Promise<RaycastContribution | null> => {
   const res = await fetch(
     `https://backend.raycast.com/api/v1/extensions/${entry.owner}/${entry.slug}`,
-    { next: { revalidate: 3600 } },
+    { next: { revalidate: 86400 } },
   )
   if (!res.ok) return null
   const meta = (await res.json()) as {
@@ -97,7 +97,7 @@ const mergedPrCount = async (user: string, repo: string): Promise<number> => {
   const query = `author:${user} type:pr is:merged repo:${repo}`
   const res = await fetch(
     `https://api.github.com/search/issues?q=${encodeURIComponent(query)}&per_page=1`,
-    { headers: ghHeaders(), next: { revalidate: 3600 } },
+    { headers: ghHeaders(), next: { revalidate: 86400 } },
   )
   if (!res.ok) return 0
   const data = (await res.json()) as { total_count?: number }
@@ -112,7 +112,7 @@ const repoContribution = async (
     mergedPrCount(user, entry.repo),
     fetch(`https://api.github.com/repos/${entry.repo}`, {
       headers: ghHeaders(),
-      next: { revalidate: 3600 },
+      next: { revalidate: 86400 },
     }),
   ])
   const meta = metaRes.ok

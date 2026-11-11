@@ -142,7 +142,7 @@ const toProject = (repo: Repo): Project => ({
 export const getProjects = async (): Promise<Project[]> => {
   const res = await fetch(
     `https://api.github.com/search/repositories?q=user:${OWNER}+topic:${TOPIC}+archived:false&sort=updated&per_page=100`,
-    { headers: ghHeaders(), next: { revalidate: 3600 } },
+    { headers: ghHeaders(), next: { revalidate: 86400 } },
   )
   // Raycast extensions come from content/raycast.json (no GitHub repo to tag), so
   // they're appended regardless — even when the topic search fails or is empty.
@@ -164,7 +164,7 @@ export const getProject = async (slug: string): Promise<Project | null> => {
 
   const res = await fetch(`https://api.github.com/repos/${OWNER}/${slug}`, {
     headers: ghHeaders(),
-    next: { revalidate: 3600 },
+    next: { revalidate: 86400 },
   })
   if (!res.ok) return null
   const repo = (await res.json()) as Repo

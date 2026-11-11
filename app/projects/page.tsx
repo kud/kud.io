@@ -44,8 +44,8 @@ export const metadata: Metadata = {
   twitter: { title: TITLE, description: PROJECTS_COPY.description },
 }
 
-// Static, rebuilt hourly: release dates and their "fresh" flag age by the hour.
-export const revalidate = 3600
+// Static, rebuilt daily: hourly ISR used up the free tier's writes.
+export const revalidate = 86400
 
 const AVATAR =
   "https://www.gravatar.com/avatar/e6eaeaa6da69e804c27c2d4cd55107e0?s=512"
