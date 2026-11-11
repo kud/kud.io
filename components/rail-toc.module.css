@@ -43,3 +43,7 @@
   color: var(--text);
   border-left-color: var(--primary);
 }
+.toc a[aria-current="location"] {
+  color: var(--text);
+  border-left-color: var(--primary);
+}

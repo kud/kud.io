@@ -284,3 +284,23 @@ html[data-arrive="ink"] body::after {
   pointer-events: none;
   animation: arrive-failsafe 0.3s ease-out 3s forwards;
 }
+
+/* Project docs read in the project page's type (app/projects/[slug]/
+   page.module.css .readme): body at 16px on 1.7 in the muted ink, headings in
+   the full ink at the landing's sizes. :where keeps the scope weightless, so
+   Ink's own rules still win. */
+:where([data-ground="dusk"]) #nd-page .prose :is(p, li) {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+:where([data-ground="dusk"]) #nd-page .prose h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+:where([data-ground="dusk"]) #nd-page .prose h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useSyncExternalStore } from "react"
+import { currentSection } from "@/components/reading-position"
 import styles from "./blog-contents.module.css"
 
 type Heading = { id: string; text: string }
@@ -30,15 +31,8 @@ export const BlogContents = () => {
   const [shown, setShown] = useState(false)
 
   useEffect(() => {
-    // The current section is the last heading above the top third of the
-    // viewport: reading position, not whichever heading happens to be visible.
     const update = () => {
-      const line = window.innerHeight * 0.33
-      let current: string | null = null
-      for (const node of document.querySelectorAll(HEADINGS)) {
-        if (node.getBoundingClientRect().top <= line) current = node.id
-      }
-      setActive(current)
+      setActive(currentSection(document.querySelectorAll(HEADINGS)))
 
       const title = document.querySelector("article h1")
       const pastTitle = title ? title.getBoundingClientRect().bottom < 0 : true

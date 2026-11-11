@@ -125,12 +125,20 @@ html:has([data-ground="dusk"][data-theme="ink"][data-theme="ink"]),
 }
 
 /* Code: shiki's token colours are drawn for a dark slab. On paper they all
-   become ink; comments step back to dim italic. */
+   become ink; comments step back to dim italic. A docs code block (fumadocs)
+   is a dark figure with its pre a level down, under a title bar: the figure
+   takes the panel and the pre inside it goes clear, so no dark slab is left
+   round the code in either tone. */
 [data-theme="ink"] pre,
-[data-theme="ink"] figure:has(> pre) {
+[data-theme="ink"] figure:has(pre) {
   background: var(--ik-wash) !important;
   border: 1px solid var(--ik-line-dim) !important;
   border-radius: var(--ik-wobble) !important;
+  color: var(--ik-ink);
+}
+[data-theme="ink"] figure:has(pre) pre {
+  background: transparent !important;
+  border: 0 !important;
 }
 [data-theme="ink"] pre :is(span, code) {
   color: var(--ik-ink) !important;

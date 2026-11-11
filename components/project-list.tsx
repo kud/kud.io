@@ -12,6 +12,8 @@ import {
 import { MorphLink } from "@/components/morph-link"
 import type { Project as RepoProject } from "@/lib/projects"
 
+const SEARCH_DEBOUNCE_MS = 180
+
 // A tile in the list: a tagged repo, or a listed app with no public source
 // (lib/listed-apps.ts), which opens its live address instead of a kud.io page.
 type Project = Omit<RepoProject, "repoUrl"> & { href?: string }
@@ -201,6 +203,13 @@ export const ProjectList = ({
 }) => {
   const [sort, setSort] = useState<SortKey>("updated")
   const [query, setQuery] = useState("")
+  // The field answers every keystroke; the list re-filters once typing
+  // pauses, so a fast word does not redraw ninety cards per letter.
+  const [searched, setSearched] = useState("")
+  useEffect(() => {
+    const timer = setTimeout(() => setSearched(query), SEARCH_DEBOUNCE_MS)
+    return () => clearTimeout(timer)
+  }, [query])
   const [category, setCategory] = useState<string | null>(null)
   const [lang, setLang] = useState<string | null>(null)
   const [activeTags, setActiveTags] = useState<string[]>([])
@@ -294,7 +303,7 @@ export const ProjectList = ({
     )
   }, [groups])
 
-  const needle = query.trim().toLowerCase()
+  const needle = searched.trim().toLowerCase()
   const matches = (project: Project) =>
     (!lang || project.language === lang) &&
     (!activeEcosystem || project.ecosystem === activeEcosystem) &&
@@ -517,7 +526,8 @@ export const ProjectList = ({
           >
             {visibleGroups.length === 0 ? (
               <p className={styles.noResults}>
-                No projects match “{query.trim()}”{lang ? ` in ${lang}` : ""}.
+                No projects match “{searched.trim()}”{lang ? ` in ${lang}` : ""}
+                .
               </p>
             ) : (
               restGroups.map(renderGroup)
