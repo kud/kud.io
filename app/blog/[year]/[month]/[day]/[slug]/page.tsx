@@ -1,5 +1,11 @@
 import type { Metadata } from "next"
-import type { CSSProperties } from "react"
+import {
+  Children,
+  isValidElement,
+  type CSSProperties,
+  type ComponentProps,
+  type ReactNode,
+} from "react"
 import { notFound } from "next/navigation"
 // The same Link the index uses — next/link here would drop the view
 // transition on every in-blog hop.
@@ -109,6 +115,40 @@ export const generateMetadata = async ({
   }
 }
 
+// A link leaves the site when it is absolute and not to kud.io itself.
+const isOutbound = (href?: string) =>
+  /^https?:\/\//i.test(href ?? "") &&
+  !/^https?:\/\/(www\.)?kud\.io(\/|$)/i.test(href ?? "")
+
+// The arrow belongs after words, not after an image or a figure someone linked.
+const isTextual = (children: ReactNode) =>
+  Children.toArray(children).every(
+    (child) =>
+      typeof child === "string" ||
+      typeof child === "number" ||
+      (isValidElement(child) &&
+        typeof child.type === "string" &&
+        child.type !== "img"),
+  )
+
+// Every heading is its own permalink: the words link to their #id, and a
+// faint # answers a hover, so the address bar can be copied from any section.
+const anchored = (Tag: "h2" | "h3" | "h4") => {
+  const Heading = ({ id, children, ...rest }: ComponentProps<"h2">) => (
+    <Tag id={id} {...rest}>
+      {id ? (
+        <a href={`#${id}`} className={styles.anchor}>
+          {children}
+        </a>
+      ) : (
+        children
+      )}
+    </Tag>
+  )
+  Heading.displayName = `Anchored(${Tag})`
+  return Heading
+}
+
 // Only the elements whose STRUCTURE changes get a component. Everything else —
 // paragraphs, lists, links, quotes, rules, inline code — is styled by
 // descendant rules in page.module.css, which produce identical markup. A
@@ -118,7 +158,10 @@ const components = {
   // Notion's heading_1 becomes `#`, which would be a second <h1> under the
   // post title. Demoted rather than dropped: the outline stays valid and the
   // author's own heading level still reads as the top of their document.
-  h1: (props) => <h2 {...props} />,
+  h1: anchored("h2"),
+  h2: anchored("h2"),
+  h3: anchored("h3"),
+  h4: anchored("h4"),
   div: ({ children, ...rest }) => {
     const source =
       (
@@ -152,6 +195,11 @@ const components = {
       {...rest}
     >
       {children}
+      {isOutbound(href) && isTextual(children) ? (
+        <span className={styles.outbound} aria-hidden>
+          ↗
+        </span>
+      ) : null}
     </a>
   ),
   // A scroll box around the table, so a wide one scrolls inside the column

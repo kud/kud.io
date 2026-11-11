@@ -1302,3 +1302,32 @@
 :global(#blog-root[data-theme="dark"]) .progress {
   background: var(--c-gold);
 }
+
+/* Heading permalinks: the heading reads as a heading, not a link, until it is
+ * hovered or focused, when a faint # follows it. */
+.body a.anchor {
+  color: inherit;
+  text-decoration: none;
+}
+.body a.anchor::after {
+  content: "#";
+  margin-left: 0.3em;
+  font-weight: 400;
+  color: var(--fg-3);
+  opacity: 0;
+  transition: opacity 140ms;
+}
+.body :is(h2, h3, h4):hover a.anchor::after,
+.body a.anchor:focus-visible::after {
+  opacity: 1;
+}
+
+/* A link that leaves the site carries the same ↗ as the rest of kud.io. Its
+ * own box keeps the link's underline off the arrow. */
+.outbound {
+  display: inline-block;
+  margin-left: 0.15em;
+  font-size: 0.85em;
+  text-decoration: none;
+  color: var(--fg-3);
+}
