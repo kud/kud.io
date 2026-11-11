@@ -60,13 +60,16 @@ const Tagline = () => (
   </p>
 )
 
-const Bio = () => (
+const BioLead = () => (
+  <p className={styles.bio}>
+    What I love most is taking load off people&apos;s minds: mine, the engineers
+    I work with, my team&apos;s, and the people who use what we build. Fewer
+    things to remember, fewer steps, fewer surprises.
+  </p>
+)
+
+const BioMore = () => (
   <>
-    <p className={styles.bio}>
-      What I love most is taking load off people&apos;s minds: mine, the
-      engineers I work with, my team&apos;s, and the people who use what we
-      build. Fewer things to remember, fewer steps, fewer surprises.
-    </p>
     <p className={styles.bio}>
       I think beyond <span data-mascot="tickets">{"tickets "}</span>and lines of
       code: in systems, workflows, and the people they serve. Software
@@ -102,6 +105,13 @@ const Bio = () => (
       complexity, quieter and just as human: when the figures are right, people
       can trust them.
     </p>
+  </>
+)
+
+const Bio = () => (
+  <>
+    <BioLead />
+    <BioMore />
   </>
 )
 
@@ -175,16 +185,27 @@ const HeroDesktop = () => (
         <Eyebrow />
         <Name />
         <Tagline />
-        <Bio />
-        <FocusTags />
-        <Personal />
+        <BioLead />
         <div className={styles.actions}>
           <Cta />
           <Writing />
         </div>
         <SocialLinks />
-        <ScrollHint />
+        <ScrollHint href="#about" label="About" />
       </div>
+    </div>
+  </section>
+)
+
+// Desktop: the rest of the bio, one scroll down, so the hero itself fits a
+// laptop screen. Mirrors the mobile split (carte de visite, then about).
+const AboutDesktop = () => (
+  <section id="about" className={styles.about} aria-label="About">
+    <div className={styles.aboutInner}>
+      <BioMore />
+      <FocusTags />
+      <Personal />
+      <ScrollHint />
     </div>
   </section>
 )
@@ -232,6 +253,7 @@ const Home = () => (
   >
     <ThemeScopeScript />
     <HeroDesktop />
+    <AboutDesktop />
     <HeroMobile />
     <ExperienceTimeline />
     <BlueskyBand />

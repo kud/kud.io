@@ -1278,3 +1278,56 @@
   border-color: color-mix(in srgb, var(--ik-paper) 35%, transparent);
   border-top-color: var(--ik-paper);
 }
+
+/* Desktop fit: the hero, buttons and socials included, fits one laptop screen
+   from 1040×645 up; the rest of the bio sits in the about band below it. The
+   vertical rhythm scales with the viewport height so short screens tighten
+   and tall ones keep their air. */
+.about {
+  display: none;
+}
+
+@media (min-width: 861px) {
+  .inner {
+    padding-block: clamp(28px, 7vh, 64px);
+  }
+  .name {
+    margin-bottom: clamp(10px, 1.8vh, 14px);
+  }
+  .tagline {
+    margin-bottom: clamp(18px, 3.6vh, 30px);
+  }
+  .inner > .bio {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.65;
+    max-width: 58ch;
+  }
+  .inner > .actions {
+    margin-block: clamp(22px, 4vh, 34px) clamp(18px, 3.4vh, 30px);
+  }
+  .inner > .scrollHint {
+    margin-top: clamp(20px, 4.4vh, 38px);
+  }
+
+  .about {
+    display: block;
+    scroll-snap-align: start;
+    background: #fdfbf8;
+    border-top: 1px solid #ece5db;
+    color: #1f1813;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    padding: 96px 28px;
+  }
+  .aboutInner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .aboutInner .personal {
+    margin-bottom: 0;
+  }
+}
+
+.home[data-theme="ink"] .about {
+  background: transparent;
+}
