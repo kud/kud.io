@@ -25,18 +25,6 @@
   }
 }
 
-@keyframes kitPulse {
-  0%,
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.5;
-    transform: scale(0.85);
-  }
-}
-
 /* Hero ----------------------------------------------------------------------*/
 .hero {
   position: relative;
@@ -136,7 +124,6 @@
   height: 6px;
   border-radius: 50%;
   background: var(--primary-light);
-  animation: kitPulse 2s ease-in-out infinite;
 }
 
 .title {

@@ -143,21 +143,6 @@
   /* Uppercase text reads optically higher than the line-box centre, so nudge the
      dot up a hair to sit with the letters rather than below them. */
   transform: translateY(-1px);
-  /* Gentle "alive" breathe — animates opacity only, so it's GPU-composited and
-     never triggers a per-frame repaint. (Animating box-shadow does, which is
-     what was costing FPS.) The dotBreathe keyframes are reused by the timeline
-     current-role dot. */
-  animation: dotBreathe 2.8s ease-in-out infinite;
-}
-
-@keyframes dotBreathe {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
 }
 
 .name {
@@ -498,52 +483,11 @@
     border-color 0.2s ease;
 }
 
-/* The current role (top entry) reads as "here now" — filled + live pulse. */
+/* The current role (top entry) reads as "here now": filled, with a still halo.
+   Nothing pulses; nothing on the page moves by itself. */
 .entry:first-child::before {
   background: #c2703d;
-}
-
-/* A radar ping around the current-role dot. Transform + opacity only (GPU-cheap),
-   and because the dot underneath stays fully opaque, the timeline line never
-   shows through it (an opacity breathe on the dot itself did). */
-.entry:first-child::after {
-  content: "";
-  position: absolute;
-  left: -5.5px;
-  top: 3px;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: #c2703d;
-  opacity: 0.3;
-  pointer-events: none;
-  animation: dotPing 2.6s ease-out infinite;
-}
-
-@keyframes dotPing {
-  0% {
-    transform: scale(1);
-    opacity: 0.3;
-  }
-  70%,
-  100% {
-    transform: scale(2.4);
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .entry:first-child::after {
-    animation: none;
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .entry:first-child::before {
-    animation: none;
-    box-shadow: 0 0 0 3px rgba(194, 112, 61, 0.18);
-  }
+  box-shadow: 0 0 0 3px rgba(194, 112, 61, 0.18);
 }
 
 .entryPeriod {
@@ -1272,7 +1216,6 @@
     .eyebrow::before,
     .timelineEyebrow::before,
     .entry::before,
-    .entry:first-child::after,
     .modalHighlights li::before
   ) {
   background: var(--ik-ink);
