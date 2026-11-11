@@ -141,15 +141,18 @@
     transform 0.18s;
 }
 
+/* Every hero button is the same plate; the lead one is told apart only by a
+   rim half-way to the accent, never a filled slab (Erwann, 2026-11-10). */
 .primary {
-  background: var(--primary);
-  color: #fff;
-  box-shadow: 0 8px 24px -8px var(--primary);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--primary) 50%, var(--border));
+  color: var(--text);
 }
 
 .primary:is(:hover, :focus-visible) {
-  background: var(--primary-light);
   transform: var(--hover-lift);
+  border-color: var(--primary);
+  background: var(--surface-2);
 }
 
 .secondary {
@@ -454,18 +457,20 @@
   align-items: center;
   padding: 14px 28px;
   border-radius: 12px;
-  background: var(--primary);
-  color: #fff;
+  border: 1px solid color-mix(in srgb, var(--primary) 50%, var(--border));
+  background: var(--surface);
+  color: var(--text);
   font-size: 15px;
   font-weight: 600;
   text-decoration: none;
-  box-shadow: 0 8px 24px -8px var(--primary);
   transition:
     background 0.18s,
+    border-color 0.18s,
     transform 0.18s;
 }
 
 .cta:is(:hover, :focus-visible) {
-  background: var(--primary-light);
   transform: var(--hover-lift);
+  border-color: var(--primary);
+  background: var(--surface-2);
 }
