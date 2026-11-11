@@ -14,6 +14,7 @@ import { PromptMascot } from "@/components/prompt-mascot"
 import { ScrollHint } from "@/components/scroll-hint"
 import { yearsOfExperience } from "@/lib/experience"
 import { ThemeScopeScript } from "@/components/scoped-theme"
+import { BlueskyBand } from "@/components/bluesky-card"
 import styles from "./page.module.css"
 
 const socials = [
@@ -233,6 +234,7 @@ const Home = () => (
     <HeroDesktop />
     <HeroMobile />
     <ExperienceTimeline />
+    <BlueskyBand />
     <PromptMascot />
   </div>
 )

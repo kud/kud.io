@@ -1,0 +1,250 @@
+/* The latest Bluesky post (components/bluesky-card.tsx). Flat: a hairline, no
+   fill, no shadow. Hover lifts the ink of the card and its border one step
+   towards the text; nothing moves, nothing darkens to a fill.
+
+   Colours are local tokens on home's cream, which is fixed: home keeps one
+   look under Light and Dark. Ink redraws them below. */
+
+/* Card --------------------------------------------------------------------- */
+.card {
+  /* Home's cream, as app/page.module.css spells it. #6f665d is home's muted
+     taupe taken down until 12px meta clears AA on both creams (5.6:1). */
+  --bc-text: #1f1813;
+  --bc-body: #574f47;
+  --bc-meta: #6f665d;
+  --bc-line: #eee7dd;
+  --bc-line-hover: #d9cfc2;
+  --bc-link: #1f1813;
+  --bc-link-line: #ddd5ca;
+  --bc-accent: #c2703d;
+  --bc-mono: var(--font-mono);
+
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "head image"
+    "text image"
+    "counts image";
+  align-content: start;
+  column-gap: 20px;
+  border: 1px solid var(--bc-line);
+  border-radius: 14px;
+  padding: 18px 20px;
+  color: var(--bc-body);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  text-align: left;
+  transition: border-color 130ms;
+}
+
+.card:hover,
+.card:has(.cover:focus-visible) {
+  border-color: var(--bc-line-hover);
+}
+
+.card:has(.cover:focus-visible) {
+  outline: 2px solid var(--bc-accent);
+  outline-offset: 2px;
+}
+
+.head {
+  grid-area: head;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--bc-meta);
+}
+
+.mark {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+
+.cover {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 130ms;
+}
+
+/* The heading's link covers the whole card, so a click anywhere opens the
+   post; the links inside the text sit above it. */
+.cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.cover:focus-visible {
+  outline: none;
+}
+
+.card:hover .cover {
+  color: var(--bc-text);
+}
+
+.sep {
+  opacity: 0.6;
+}
+
+.when {
+  font-variant-numeric: tabular-nums;
+}
+
+/* RelativeDate is empty on the server and past two months; the short date
+   stands in until it has words, then steps aside. */
+.relative:not(:empty) + .absolute {
+  display: none;
+}
+
+.text {
+  grid-area: text;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  transition: color 130ms;
+}
+
+.card:hover .text {
+  color: var(--bc-text);
+}
+
+.inline {
+  position: relative;
+  z-index: 1;
+  color: var(--bc-link);
+  text-decoration: none;
+  border-bottom: 1px solid var(--bc-link-line);
+  transition:
+    color 130ms,
+    border-color 130ms;
+}
+
+.inline:hover {
+  color: var(--bc-accent);
+  border-color: var(--bc-accent);
+}
+
+.inline:focus-visible {
+  outline: 2px solid var(--bc-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.image {
+  grid-area: image;
+  align-self: start;
+  width: 168px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border: 1px solid var(--bc-line);
+  border-radius: 10px;
+  background: var(--bc-line);
+}
+
+.counts {
+  grid-area: counts;
+  display: flex;
+  gap: 16px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--bc-mono);
+  font-size: 12px;
+  color: var(--bc-meta);
+}
+
+.counts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Band: the closing beat of home ----------------------------------------- */
+.band {
+  background: #fdfbf8;
+  border-top: 1px solid #ece5db;
+  padding: 72px 28px 96px;
+}
+
+.bandInner {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* Narrow: the picture drops under the text, full width, so it never squeezes
+   the words into a sliver. */
+@media (max-width: 560px) {
+  .card {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "head"
+      "text"
+      "image"
+      "counts";
+  }
+  .image {
+    width: 100%;
+    max-height: 220px;
+    margin-top: 12px;
+  }
+  .band {
+    padding: 56px 20px 72px;
+  }
+}
+
+/* Ink: every word in ink, every line drawn in ink; a hover is a grey step. */
+:global([data-theme="ink"]) .card {
+  --bc-text: var(--ik-ink);
+  --bc-body: var(--ik-muted);
+  --bc-meta: var(--ik-dim);
+  --bc-line: var(--ik-line);
+  --bc-line-hover: var(--ik-line);
+  --bc-link: var(--ik-ink);
+  --bc-link-line: var(--ik-ink);
+  --bc-accent: var(--ik-ink);
+  border-radius: var(--ik-wobble);
+}
+:global([data-theme="ink"]) .card:hover {
+  background: var(--ik-wash);
+}
+:global([data-theme="ink"]) .band {
+  background: transparent;
+  border-color: var(--ik-line-dim);
+}
+:global([data-theme="ink"]) .inline {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  border-bottom: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .cover,
+  .text,
+  .inline {
+    transition: none;
+  }
+}
