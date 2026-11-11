@@ -14,6 +14,10 @@
      the sections (components/project-list): one column width, one edge. */
   --content-max: 1180px;
   --rail-width: clamp(280px, 18vw, 340px);
+  /* The browse frame's outer width, rail and gutter included: the top band,
+     the list and the footer all read it, so all three keep one edge. It
+     widens past 1500px, where the list drops its empty left track. */
+  --browse-max: calc(var(--content-max) + (var(--rail-width) * 2) + 80px);
 
   position: relative;
   min-height: 100vh;
@@ -41,6 +45,12 @@
   color: var(--text);
   padding: 0 24px 96px;
   overflow-x: clip;
+}
+
+@media (min-width: 1500px) {
+  .page {
+    --browse-max: calc(1640px + var(--rail-width) + 88px);
+  }
 }
 
 @media (max-width: 720px) {
@@ -302,5 +312,19 @@
     width: clamp(104px, 19svh, 156px);
     height: clamp(104px, 19svh, 156px);
     view-transition-name: site-avatar;
+  }
+}
+
+/* The site footer runs the browse frame's full width, not its own 1180px, and
+   keeps the frame's 24px inset, which drops to the page gutter alone on a
+   phone, as the list's does (components/project-list.module.css). */
+.footer {
+  --footer-max: var(--browse-max);
+  --footer-inset-narrow: 24px;
+}
+
+@media (max-width: 600px) {
+  .footer {
+    --footer-inset-narrow: 0;
   }
 }

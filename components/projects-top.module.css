@@ -6,7 +6,7 @@
    and one width at every viewport, rather than two blocks centred at two
    different widths. */
 .top {
-  max-width: calc(var(--content-max) + (var(--rail-width) * 2) + 80px);
+  max-width: var(--browse-max);
   margin: 24px auto 0;
   padding: 0 24px;
   display: grid;
@@ -364,11 +364,10 @@
 }
 
 /* At large screens the browse block drops its empty left track and widens,
-   rail on the right. Kept in step with .layout in project-list.module.css;
+   rail on the right; --browse-max (app/projects/page.module.css) widens with it;
    the band still spans both tracks, rail included, like the products row. */
 @media (min-width: 1500px) {
   .top {
-    max-width: calc(1640px + var(--rail-width) + 88px);
     grid-template-columns: minmax(0, 1fr) minmax(0, var(--rail-width));
   }
   .band {

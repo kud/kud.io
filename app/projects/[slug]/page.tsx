@@ -659,6 +659,9 @@ const ProjectLanding = async ({
   const app = isAppCategory(project.category) ? getApp(slug) : null
   const showRecord = app !== null && isProduct(app)
   const showAppLanding = app !== null && !showRecord && appHasContent(app)
+  // The record and the README landing both sit on the 1168px sheet, and the
+  // footer takes that frame; the app and authored landings keep its default.
+  const onSheet = showRecord || (!showAppLanding && !authored)
   // The AppLanding hero shows the app icon itself, so the README icon is hidden
   // there; an app-like project that falls back to the README still gets its icon.
   const icon =
@@ -697,7 +700,7 @@ const ProjectLanding = async ({
       {family ? (
         <ProjectFamily name={family.name} members={family.members} />
       ) : null}
-      <SiteFooter />
+      <SiteFooter className={onSheet ? styles.sheetFooter : undefined} />
     </main>
   )
 }

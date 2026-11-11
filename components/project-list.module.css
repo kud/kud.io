@@ -32,7 +32,7 @@
 
 /* Two-column browse: grid in the main column, sticky filter rail on the right --*/
 .layout {
-  max-width: calc(var(--content-max) + (var(--rail-width) * 2) + 80px);
+  max-width: var(--browse-max);
   margin: 12px auto 0;
   padding: 0 24px;
   display: grid;
@@ -791,7 +791,6 @@
    the three-column remainder instead. */
 @media (min-width: 1500px) {
   .layout {
-    max-width: calc(1640px + var(--rail-width) + 88px);
     grid-template-columns: minmax(0, 1fr) minmax(0, var(--rail-width));
     grid-template-areas:
       "lead lead"

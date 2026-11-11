@@ -210,7 +210,7 @@ const ProjectsIndex = async () => {
         </ProjectList>
       )}
       <MorphArrival />
-      <SiteFooter />
+      <SiteFooter className={styles.footer} />
     </main>
   )
 }

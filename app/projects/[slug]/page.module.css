@@ -1032,3 +1032,12 @@ a.badge:focus-visible {
 .recordTitleGlyph img {
   object-fit: contain;
 }
+
+/* Under a product record or a README landing the site footer takes their
+   sheet's frame: its 1168px and its 24px gutter, kept on a phone
+   (components/product-record.module.css .sheet, .readmeRecord above), so the
+   hairline ends where the record does. */
+.sheetFooter {
+  --footer-max: 1168px;
+  --footer-inset-narrow: 24px;
+}
