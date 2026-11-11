@@ -31,6 +31,7 @@ import {
   Droplet,
   Moon,
   Package,
+  Palette,
   PenLine,
   Rss,
   Search,
@@ -48,11 +49,11 @@ import { ELSEWHERE, hostOf } from "@/lib/links"
 import type { ElsewhereKey } from "@/lib/links"
 import { reducedMotion } from "@/components/ink"
 import {
-  SCOPED_THEMES,
+  INK_TONES,
   SECTION_LABEL as THEME_SECTION_LABEL,
   useScopedTheme,
 } from "@/components/scoped-theme"
-import type { ScopedTheme } from "@/components/scoped-theme"
+import type { InkTone, ThemeStyle } from "@/components/scoped-theme"
 import type { LauncherIndex, LauncherProject } from "@/lib/launcher-index"
 import { fuzzyScore } from "./fuzzy"
 import { DetailView, formatDate } from "./detail-view"
@@ -310,16 +311,20 @@ const PAGES: Item[] = [
   },
 ]
 
-// The list is SCOPED_THEMES, shared with the pickers; only the word and the
-// mark live here, so a new theme fails the build until it has both.
-const THEME_OPTION: Record<ScopedTheme, { label: string; Icon: LucideIcon }> = {
+// The two axes the pickers share (components/theme-picker.tsx): only the word
+// and the mark live here, so a new choice fails the build until it has both.
+const TONE_OPTION: Record<InkTone, { label: string; Icon: LucideIcon }> = {
   system: { label: "System", Icon: Monitor },
   light: { label: "Light", Icon: Sun },
   dark: { label: "Dark", Icon: Moon },
-  ink: { label: "Ink", Icon: Droplet },
 }
 
-const THEMES = SCOPED_THEMES.map((value) => ({ value, ...THEME_OPTION[value] }))
+const STYLES = ["colour", "ink"] as const satisfies readonly ThemeStyle[]
+
+const STYLE_OPTION: Record<ThemeStyle, { label: string; Icon: LucideIcon }> = {
+  colour: { label: "Colour", Icon: Palette },
+  ink: { label: "Ink", Icon: Droplet },
+}
 
 const LIMIT: Record<SectionKey, number> = {
   filters: 4,
@@ -593,7 +598,8 @@ type PanelProps = { onClose: () => void }
 const LauncherPanel = ({ onClose }: PanelProps) => {
   const pathname = usePathname()
   const router = useRouter()
-  const { theme, setTheme, split, setSplit, section } = useScopedTheme()
+  const { split, setSplit, section, tone, setTone, style, setStyle } =
+    useScopedTheme()
   const dialogRef = useRef<HTMLDialogElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
@@ -969,30 +975,68 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       hard: true,
     }
 
-    // One row with the three choices in it: Enter steps to the next, a typed
-    // choice ("dark") is taken directly, and each choice is clickable. The
-    // launcher stays open so the change is seen, page and palette both.
-    // Home has no theme of its own, so the row would change nothing there.
-    const pickTheme = (value: ScopedTheme) => {
-      setTheme(value, document.querySelector("[data-launcher-trigger]"))
-      setAnnounce(`Theme: ${THEME_OPTION[value].label}`)
+    // Two rows, as on the page's own picker: the light (Auto, Light, Dark)
+    // and the style (Colour or Ink). Each keeps the other's choice, so Dark
+    // then Ink is a dark ink. Enter steps to the next, a typed choice ("dark",
+    // "ink") is taken directly, and each choice is clickable. The launcher
+    // stays open so the change is seen, page and palette both.
+    const pickTone = (value: InkTone) => {
+      setTone(value)
+      setAnnounce(`Light: ${TONE_OPTION[value].label}`)
     }
-    const nextTheme = (): ScopedTheme => {
-      const typed = THEMES.find(({ value, label }) =>
-        [label, value].some(
+    const pickStyle = (value: ThemeStyle) => {
+      setStyle(value)
+      setAnnounce(`Style: ${STYLE_OPTION[value].label}`)
+    }
+    const typedFrom = <T extends string>(
+      list: readonly T[],
+      option: Record<T, { label: string }>,
+      current: T,
+    ): T => {
+      const typed = list.find((value) =>
+        [option[value].label, value].some(
           (name) =>
             trimmed && name.toLowerCase().startsWith(trimmed.toLowerCase()),
         ),
       )
-      if (typed && typed.value !== theme) return typed.value
-      const at = THEMES.findIndex(({ value }) => value === theme)
-      return THEMES[(at + 1) % THEMES.length].value
+      if (typed && typed !== current) return typed
+      return list[(list.indexOf(current) + 1) % list.length]
     }
-    const CurrentIcon =
-      THEMES.find(({ value }) => value === theme)?.Icon ?? Monitor
-    // Once themes are set per section, the row names the one it changes.
+    // Once themes are set per section, the rows name the one they change.
     const themeName =
       split && section ? `${THEME_SECTION_LABEL[section]} theme` : "Theme"
+    const styleName =
+      split && section ? `${THEME_SECTION_LABEL[section]} style` : "Style"
+    const segmentRow = <T extends string>(
+      name: string,
+      list: readonly T[],
+      option: Record<T, { label: string; Icon: LucideIcon }>,
+      current: T,
+      pick: (value: T) => void,
+    ) => (
+      <span className={styles.setting}>
+        {name}
+        <span className={styles.segments}>
+          {list.map((value) => {
+            const { label, Icon } = option[value]
+            return (
+              <span
+                key={value}
+                className={styles.segment}
+                data-active={value === current || undefined}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  pick(value)
+                }}
+              >
+                <Icon aria-hidden className={styles.segmentIcon} />
+                {label}
+              </span>
+            )
+          })}
+        </span>
+      </span>
+    )
     // The opt-in for a theme per section: a second row, the same quiet
     // segments, Same by default. Enter flips it.
     const pickSplit = (value: boolean) => {
@@ -1050,29 +1094,15 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       ? [
           {
             id: "setting:theme",
-            label: `${themeName}: ${THEME_OPTION[theme].label}. Enter to change.`,
+            label: `${themeName}: ${TONE_OPTION[tone].label}. Enter to change.`,
             section: "settings",
             text: themeName,
-            title: (
-              <span className={styles.setting}>
-                {themeName}
-                <span className={styles.segments}>
-                  {THEMES.map(({ value, label, Icon }) => (
-                    <span
-                      key={value}
-                      className={styles.segment}
-                      data-active={value === theme || undefined}
-                      onClick={(event) => {
-                        event.stopPropagation()
-                        pickTheme(value)
-                      }}
-                    >
-                      <Icon aria-hidden className={styles.segmentIcon} />
-                      {label}
-                    </span>
-                  ))}
-                </span>
-              </span>
+            title: segmentRow(
+              themeName,
+              INK_TONES,
+              TONE_OPTION,
+              tone,
+              pickTone,
             ),
             extras: [
               "light",
@@ -1084,8 +1114,24 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
               "colour",
               "color",
             ],
-            visual: { kind: "glyph", Icon: CurrentIcon },
-            run: () => pickTheme(nextTheme()),
+            visual: { kind: "glyph", Icon: TONE_OPTION[tone].Icon },
+            run: () => pickTone(typedFrom(INK_TONES, TONE_OPTION, tone)),
+          },
+          {
+            id: "setting:theme-style",
+            label: `${styleName}: ${STYLE_OPTION[style].label}. Enter to change.`,
+            section: "settings",
+            text: styleName,
+            title: segmentRow(
+              styleName,
+              STYLES,
+              STYLE_OPTION,
+              style,
+              pickStyle,
+            ),
+            extras: ["ink", "colour", "color", "paper", "e-ink", "greyscale"],
+            visual: { kind: "glyph", Icon: STYLE_OPTION[style].Icon },
+            run: () => pickStyle(typedFrom(STYLES, STYLE_OPTION, style)),
           },
           splitRow,
         ]
@@ -1196,7 +1242,8 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
     currentProject,
     copiedId,
     themed,
-    theme,
+    tone,
+    style,
     split,
     section,
     projectSlug,
