@@ -48,6 +48,19 @@ export const SCOPED_THEMES = ["system", "light", "dark", "ink"] as const
 
 export type ScopedTheme = (typeof SCOPED_THEMES)[number]
 
+// Ink has a light of its own: white paper by day, a dark panel by night, or
+// whichever the OS says (Erwann, 2026-11-11). It is one choice for every ink
+// page, stamped beside data-theme as data-ink-tone, and white paper stays the
+// default so an Ink chosen before this keeps the page it had.
+export const INK_TONES = ["system", "light", "dark"] as const
+export type InkTone = (typeof INK_TONES)[number]
+export const INK_TONE_KEY = "kud.theme.ink"
+
+// The picker's two axes. Tone is the light (Auto, Light, Dark); style is
+// whether the page keeps its colour or is printed in ink. Stored as before:
+// the theme key holds a tone or "ink", and the ink key holds ink's tone.
+export type ThemeStyle = "colour" | "ink"
+
 // The sections a visitor may theme apart. Home and anything unclaimed always
 // follow the shared choice.
 export const THEME_SECTIONS = ["writing", "projects"] as const
@@ -68,6 +81,14 @@ export const sectionOf = (pathname: string): ThemeSection | null => {
   if (pathname === "/projects" || pathname.startsWith("/projects/"))
     return "projects"
   return null
+}
+
+const isInkTone = (value: unknown): value is InkTone =>
+  (INK_TONES as readonly unknown[]).includes(value)
+
+export const readInkTone = (): InkTone => {
+  const stored = read(INK_TONE_KEY)
+  return isInkTone(stored) ? stored : "light"
 }
 
 const isTheme = (value: unknown): value is ScopedTheme =>
@@ -122,7 +143,9 @@ const THEME_SCRIPT = `try{var p=location.pathname,s=p==="/blog"||p.indexOf("/blo
   THEME_KEY,
 )});if(t===null)t=localStorage.getItem(${JSON.stringify(
   LEGACY_THEME_KEY,
-)});if(t==="light"||t==="dark"||t==="ink")document.currentScript.parentElement.dataset.theme=t}catch(e){}`
+)});var e=document.currentScript.parentElement,k=localStorage.getItem(${JSON.stringify(
+  INK_TONE_KEY,
+)});if(k==="system"||k==="dark")e.dataset.inkTone=k;if(t==="light"||t==="dark"||t==="ink")e.dataset.theme=t}catch(e){}`
 
 const themeListeners = new Set<() => void>()
 
@@ -156,6 +179,7 @@ export const readStoredTheme = (
 
 const serverTheme = (): ScopedTheme => "system"
 const serverSplit = () => false
+const serverInkTone = (): InkTone => "light"
 
 // Every scope on the page belongs to the page's section, so one value covers
 // them all.
@@ -164,6 +188,7 @@ const stampScopes = (theme: ScopedTheme) => {
     .querySelectorAll<HTMLElement>(`[${THEME_SCOPE_ATTR}]`)
     .forEach((scope) => {
       scope.dataset.theme = theme
+      scope.dataset.inkTone = readInkTone()
     })
 }
 
@@ -221,7 +246,52 @@ export const useScopedTheme = () => {
     [section],
   )
 
-  return { theme, setTheme, split, setSplit, section }
+  const inkTone = useSyncExternalStore(
+    subscribeToTheme,
+    readInkTone,
+    serverInkTone,
+  )
+  const tone: InkTone = theme === "ink" ? inkTone : theme
+  const style: ThemeStyle = theme === "ink" ? "ink" : "colour"
+
+  // A tone press keeps the style: in Ink it relights the paper, otherwise it
+  // is the theme itself.
+  const setTone = useCallback(
+    (next: InkTone) => {
+      if (readStoredTheme(section) !== "ink") return setTheme(next)
+      if (next === readInkTone()) return
+      write(INK_TONE_KEY, next)
+      themeMerge(() => stampScopes("ink"))
+      notify()
+    },
+    [section, setTheme],
+  )
+
+  // A style press keeps the tone: Ink takes the light on screen, Colour gives
+  // the paper's light back to the page.
+  const setStyle = useCallback(
+    (next: ThemeStyle) => {
+      const current = readStoredTheme(section)
+      if ((current === "ink") === (next === "ink")) return
+      if (next === "ink") {
+        write(INK_TONE_KEY, current as InkTone)
+        setTheme("ink")
+      } else setTheme(readInkTone())
+    },
+    [section, setTheme],
+  )
+
+  return {
+    theme,
+    setTheme,
+    split,
+    setSplit,
+    section,
+    tone,
+    setTone,
+    style,
+    setStyle,
+  }
 }
 
 // The first child of every themed wrapper. The wrapper itself carries
@@ -242,6 +312,7 @@ export const ThemeScopeScript = () => {
     const scope = ref.current?.parentElement
     if (!scope) return
     scope.dataset.theme = readStoredTheme(section)
+    scope.dataset.inkTone = readInkTone()
   }, [section])
 
   return (

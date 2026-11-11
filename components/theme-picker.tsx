@@ -1,38 +1,44 @@
 "use client"
 
-import { Droplet, Monitor, Moon, Sun } from "lucide-react"
+import { Droplet, Monitor, Moon, Palette, Sun } from "lucide-react"
 import type { LucideIcon } from "lucide-react"
 import {
-  SCOPED_THEMES,
+  INK_TONES,
   SECTION_LABEL,
-  type ScopedTheme,
+  type InkTone,
+  type ThemeStyle,
   useScopedTheme,
 } from "@/components/scoped-theme"
 
-// The list comes from SCOPED_THEMES; only the word and the mark live here, so
-// a new theme cannot ship without both.
-const OPTION: Record<ScopedTheme, { label: string; Icon: LucideIcon }> = {
-  system: { label: "System", Icon: Monitor },
-  dark: { label: "Dark", Icon: Moon },
+const TONE: Record<InkTone, { label: string; Icon: LucideIcon }> = {
+  system: { label: "Auto", Icon: Monitor },
   light: { label: "Light", Icon: Sun },
+  dark: { label: "Dark", Icon: Moon },
+}
+
+const STYLES = ["colour", "ink"] as const satisfies readonly ThemeStyle[]
+
+const STYLE: Record<ThemeStyle, { label: string; Icon: LucideIcon }> = {
+  colour: { label: "Colour", Icon: Palette },
   ink: { label: "Ink", Icon: Droplet },
 }
 
-// System, Dark, Light or Ink for the Dusk pages: the shared scoped theme,
-// stamped on the data-ground="dusk" wrapper, never on <html>. The server
-// renders System; the stored choice is marked once the client reads it.
+// Two axes, two rows: the light (Auto, Light, Dark) and the style (Colour or
+// Ink). Each row keeps the other's choice, so Dark then Ink is a dark ink and
+// Light then Ink the white paper Ink has always been. Stamped on the
+// data-ground="dusk" wrapper, never on <html>; the server renders Auto and
+// Colour, and the stored choice is marked once the client reads it.
 //
-// It shows and sets this section's theme. Once the visitor has chosen a theme
-// per section (launcher settings), a quiet word names the section, so a pick
-// that leaves the other one alone does not read as a bug. Until then nothing
-// is added: the default visitor never sees the option's furniture.
+// Once the visitor has chosen a theme per section (launcher settings), a quiet
+// word names the section, so a pick that leaves the other one alone does not
+// read as a bug. Until then nothing is added.
 export const ThemePicker = ({ className }: { className?: string }) => {
-  const { theme, setTheme, split, section } = useScopedTheme()
+  const { tone, setTone, style, setStyle, split, section } = useScopedTheme()
   const scope = split && section ? SECTION_LABEL[section] : null
 
   return (
     <div
-      role="radiogroup"
+      role="group"
       aria-label={scope ? `${scope} colour theme` : "Colour theme"}
       className={["dusk-picker", className].filter(Boolean).join(" ")}
     >
@@ -41,23 +47,50 @@ export const ThemePicker = ({ className }: { className?: string }) => {
           {scope}
         </span>
       ) : null}
-      {SCOPED_THEMES.map((value) => {
-        const { label, Icon } = OPTION[value]
-        return (
-          <button
-            key={value}
-            type="button"
-            role="radio"
-            aria-checked={theme === value}
-            aria-label={label}
-            title={label}
-            onClick={(event) => setTheme(value, event.currentTarget)}
-          >
-            <Icon aria-hidden size={14} strokeWidth={2} />
-            <span>{label}</span>
-          </button>
-        )
-      })}
+      <div role="radiogroup" aria-label="Light" className="dusk-picker-row">
+        <span className="dusk-picker-label" aria-hidden>
+          Light
+        </span>
+        {INK_TONES.map((value) => {
+          const { label, Icon } = TONE[value]
+          return (
+            <button
+              key={value}
+              type="button"
+              role="radio"
+              aria-checked={tone === value}
+              aria-label={label}
+              title={label}
+              onClick={() => setTone(value)}
+            >
+              <Icon aria-hidden size={14} strokeWidth={2} />
+              <span>{label}</span>
+            </button>
+          )
+        })}
+      </div>
+      <div role="radiogroup" aria-label="Style" className="dusk-picker-row">
+        <span className="dusk-picker-label" aria-hidden>
+          Style
+        </span>
+        {STYLES.map((value) => {
+          const { label, Icon } = STYLE[value]
+          return (
+            <button
+              key={value}
+              type="button"
+              role="radio"
+              aria-checked={style === value}
+              aria-label={label}
+              title={label}
+              onClick={() => setStyle(value)}
+            >
+              <Icon aria-hidden size={14} strokeWidth={2} />
+              <span>{label}</span>
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }

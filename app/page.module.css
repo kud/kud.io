@@ -1172,7 +1172,8 @@
   color: var(--ik-ink);
   border-color: var(--ik-line);
 }
-.home[data-theme="ink"] :is(.hero, .timeline, .slideAbout, .modalCard) {
+.home[data-theme="ink"]
+  :is(.hero, .timeline, .slideCard, .slideAbout, .about, .modalCard) {
   background: transparent;
 }
 .home[data-theme="ink"] .modalCard {
@@ -1181,7 +1182,7 @@
   border-radius: var(--ik-wobble);
 }
 .home[data-theme="ink"] .modal::backdrop {
-  background: color-mix(in srgb, var(--ik-ink) 45%, transparent);
+  background: var(--ik-veil);
 }
 .home[data-theme="ink"]
   :is(

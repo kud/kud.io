@@ -34,6 +34,8 @@
   /* Images: greyscale with the contrast pressed a little, the way an e-paper
      panel flattens a photo's midtones. */
   --ik-image: grayscale(1) contrast(1.18) brightness(1.04);
+  /* The modal backdrop: ink laid thin over the page. */
+  --ik-veil: color-mix(in srgb, #111111 45%, transparent);
 }
 /* Shared by every ink scope ------------------------------------------------- */
 /* The safety net: whatever a token missed (a vendor colour, a hard-coded hex,
@@ -217,4 +219,76 @@ html[data-ink-refresh]::after {
 /* Drawings: printed in the same ink. */
 [data-theme="ink"] .illus-art img {
   mix-blend-mode: multiply;
+}
+
+/* Dark ink ------------------------------------------------------------------ */
+/* Night reader: an e-reader's dark mode. Ink-black paper, never
+   true black, which no ink is, and a soft white ink so a long page does not
+   glare. Every text pair clears 6:1.
+   Still paper and ink, never colour: the tokens swap and every rule above
+   (underlines, fills, hairlines, the refresh flash) follows. Chosen on the
+   picker's first row with Ink on its second (components/theme-picker.tsx);
+   Light stays the default. */
+html:has([data-theme-scope][data-theme="ink"][data-ink-tone="dark"]) {
+  --ik-paper: #0e0e0e;
+  --ik-card: #0e0e0e;
+  --ik-wash: #1a1a1a;
+  --ik-blot: #262626;
+  --ik-ink: #ececec;
+  --ik-muted: #c4c4c4;
+  --ik-dim: #a3a3a3;
+  --ik-accent: #ececec;
+  --ik-on-accent: #0e0e0e;
+  --ik-press: #c4c4c4;
+  --ik-line: #ececec;
+  --ik-line-dim: #3a3a3a;
+  --ik-scheme: dark;
+  --ik-image: grayscale(1) contrast(1.1) brightness(0.86);
+  /* Covers are painted scenes on light grounds: no multiply on dark paper,
+     and dimmed so a pale cover does not glare off the page. */
+  --ik-blend: normal;
+  --ik-drawing: brightness(0.7);
+  --ik-veil: rgb(0 0 0 / 0.6);
+}
+@media (prefers-color-scheme: dark) {
+  html:has([data-theme-scope][data-theme="ink"][data-ink-tone="system"]) {
+    --ik-paper: #0e0e0e;
+    --ik-card: #0e0e0e;
+    --ik-wash: #1a1a1a;
+    --ik-blot: #262626;
+    --ik-ink: #ececec;
+    --ik-muted: #c4c4c4;
+    --ik-dim: #a3a3a3;
+    --ik-accent: #ececec;
+    --ik-on-accent: #0e0e0e;
+    --ik-press: #c4c4c4;
+    --ik-line: #ececec;
+    --ik-line-dim: #3a3a3a;
+    --ik-scheme: dark;
+    --ik-image: grayscale(1) contrast(1.1) brightness(0.86);
+    /* Covers are painted scenes on light grounds: no multiply on dark paper,
+     and dimmed so a pale cover does not glare off the page. */
+    --ik-blend: normal;
+    --ik-drawing: brightness(0.7);
+    --ik-veil: rgb(0 0 0 / 0.6);
+  }
+}
+[data-theme="ink"] .illus-art img {
+  mix-blend-mode: var(--ik-blend, multiply);
+  filter: var(--ik-image) var(--ik-drawing, invert(0));
+}
+
+/* The launcher reads home's day palette (--dl-*) wherever no scope maps it.
+   In ink every ground is paper and every word ink, so the trigger and the
+   dialog are printed in the same tokens as the page, in either light. */
+[data-theme-scope][data-theme="ink"] {
+  --dl-surface: var(--ik-card);
+  --dl-surface-2: var(--ik-wash);
+  --dl-surface-3: var(--ik-blot);
+  --dl-text: var(--ik-ink);
+  --dl-muted: var(--ik-muted);
+  --dl-dim: var(--ik-dim);
+  --dl-border: var(--ik-line-dim);
+  --dl-primary: var(--ik-accent);
+  --dl-primary-light: var(--ik-accent);
 }

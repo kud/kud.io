@@ -397,6 +397,38 @@ body:has([data-ground="dusk"]) {
   }
 }
 
+/* Two axes, two rows: the light above, the style below, one control. The
+   rows share a width, so Colour and Ink split it in halves under the three
+   lights. */
+.dusk-picker {
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 17px;
+}
+.dusk-picker-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+}
+.dusk-picker-row + .dusk-picker-row {
+  margin-top: 1px;
+  padding-top: 3px;
+  border-top: 1px solid var(--border);
+}
+.dusk-picker-row button {
+  justify-content: center;
+}
+.dusk-picker-label {
+  display: none;
+}
+@media (max-width: 720px) {
+  .dusk-picker-row button {
+    width: auto;
+    min-width: 30px;
+  }
+}
+
 /* Polish -------------------------------------------------------------------- */
 /* Shade: the colour shadows are cast in. Plum ink by day, near-black plum by
    night, so a lifted card sits on the ground instead of glowing off it. */
