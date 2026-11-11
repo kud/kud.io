@@ -19,7 +19,12 @@ type SurfaceDecl = {
   // so its release is read from what it publishes, not from the monorepo root.
   path?: string
 }
-type MonorepoDecl = { ecosystem: string; surfaces: SurfaceDecl[] }
+type MonorepoDecl = {
+  ecosystem: string
+  surfaces: SurfaceDecl[]
+  // The repo the declaration lives in, whose docs every surface shares.
+  parent: string
+}
 
 const CONTENT_DIR = join(process.cwd(), "content", "projects")
 
@@ -34,14 +39,22 @@ const getMonorepoDecls = (): MonorepoDecl[] => {
   for (const slug of slugs) {
     try {
       const raw = readFileSync(join(CONTENT_DIR, slug, "surfaces.json"), "utf8")
-      const data = JSON.parse(raw) as MonorepoDecl
-      if (data.ecosystem && Array.isArray(data.surfaces)) decls.push(data)
+      const data = JSON.parse(raw) as Omit<MonorepoDecl, "parent">
+      if (data.ecosystem && Array.isArray(data.surfaces))
+        decls.push({ ...data, parent: slug })
     } catch {
       // No surfaces.json in this project dir — not a monorepo, skip.
     }
   }
   return decls
 }
+
+// The repo a surface ships from, so a surface without docs of its own can
+// point at the repo's; null for anything outside a monorepo.
+export const surfaceParent = (slug: string): string | null =>
+  getMonorepoDecls().find((decl) =>
+    decl.surfaces.some((surface) => surface.slug === slug),
+  )?.parent ?? null
 
 // The repo and folder a synthesised surface ships from, for reading its
 // release; null for anything that is its own repo.

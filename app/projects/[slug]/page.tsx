@@ -28,7 +28,7 @@ import { ProjectFamily, type FamilyMember } from "@/components/project-family"
 import { frameworksOf, getPackageFacts } from "@/lib/package-facts"
 import { getLandingMdx } from "@/lib/landings"
 import { projectShare } from "@/lib/project-share"
-import { getProjectReadme, projectHasDocs } from "@/lib/source"
+import { getProjectReadme, projectDocsHref } from "@/lib/source"
 import { getIcons } from "@/lib/icons"
 import { landingComponents } from "@/components/landing-kit"
 import { getMDXComponents } from "@/components/mdx"
@@ -78,6 +78,23 @@ export const generateMetadata = async ({
   }
 }
 
+// Every page with docs offers them twice: in the hero, and again where the
+// concise page ends, for the reader who finished it and wants more.
+const DocsButton = ({ href, lead }: { href: string; lead?: boolean }) => (
+  <Link href={href} className={lead ? styles.lead : styles.secondary}>
+    <ButtonIcon name="docs" />
+    Documentation →
+  </Link>
+)
+
+const DocsCta = ({ href }: { href: string }) => (
+  <div className={styles.landingCta}>
+    <Link href={href} className={styles.lead}>
+      Read the documentation →
+    </Link>
+  </div>
+)
+
 // App landing — for `kud-site-app` web apps. Icon-first hero (the squircle morphs
 // in from the launcher tile), a prominent Launch button to the live deployment,
 // and the why/how story plus features pulled from app.json.
@@ -87,6 +104,7 @@ const AppLanding = ({ project }: { project: Project }) => {
   const launchUrl = app.launchUrl ?? project.homepage
   const launchLabel = app.launchLabel ?? "Launch app"
   const tagline = app.tagline ?? project.description
+  const docsHref = projectDocsHref(project)
   // SVG icons are glyphs — contain them on the tinted glass; raster icons are
   // full app-icon art, so they fill the squircle edge to edge.
   const bleed = Boolean(app.icon && !app.icon.endsWith(".svg"))
@@ -150,6 +168,7 @@ const AppLanding = ({ project }: { project: Project }) => {
               <ButtonIcon name="github" />
               GitHub ↗
             </a>
+            {docsHref ? <DocsButton href={docsHref} /> : null}
           </div>
           {app.stack.length > 0 ? (
             <ul className={styles.stack}>
@@ -218,6 +237,12 @@ const AppLanding = ({ project }: { project: Project }) => {
         </section>
       ) : null}
 
+      {docsHref ? (
+        <section className={styles.section}>
+          <DocsCta href={docsHref} />
+        </section>
+      ) : null}
+
       {launchUrl ? (
         <section className={styles.ctaSection}>
           <div>
@@ -259,7 +284,7 @@ const ProductRecord = async ({ project }: { project: Project }) => {
   const name = appDisplayName(project.slug, app)
   const url = productUrl(app)
   const host = productHost(app)
-  const hasDocs = projectHasDocs(project.slug)
+  const docsHref = projectDocsHref(project)
   const [posts, release] = await Promise.all([
     getAllPosts(),
     getRelease(project.slug),
@@ -346,15 +371,7 @@ const ProductRecord = async ({ project }: { project: Project }) => {
               <ButtonIcon name="github" />
               Source ↗
             </a>
-            {hasDocs ? (
-              <Link
-                href={`/projects/${project.slug}/docs`}
-                className={styles.secondary}
-              >
-                <ButtonIcon name="docs" />
-                Documentation →
-              </Link>
-            ) : null}
+            {docsHref ? <DocsButton href={docsHref} /> : null}
           </div>
           <RecordTimeline project={project} />
         </div>
@@ -366,9 +383,10 @@ const ProductRecord = async ({ project }: { project: Project }) => {
         name={name}
         url={url}
         host={host}
-        hasDocs={hasDocs}
+        docsHref={docsHref}
         release={release}
         writing={writing}
+        footer={docsHref ? <DocsCta href={docsHref} /> : null}
       />
     </div>
   )
@@ -415,15 +433,11 @@ const ReadmeLanding = async ({
   const toc = (readme?.data.toc ?? []).filter((item) => item.depth === 2)
   const isList = project.readmeLanding
   // Raycast extensions live in the raycast/extensions monorepo, so the hero links
-  // to the Raycast Store + the monorepo source rather than a docs route.
+  // to the Raycast Store + the monorepo source; Firefox add-ons link out to AMO
+  // for the install. Either still offers docs when the project has them.
   const isRaycast = project.category === "raycast"
-  // Firefox add-ons link out to AMO for the install, so — like Raycast — they
-  // skip the docs route and show a store CTA in the hero instead.
   const isWebext = project.category === "webext"
-  // A monorepo surface (foxhop-cli) has no docs of its own: they are the
-  // repo's, so it links to the parent's docs route.
-  const docsSlug = project.readmeSlug ?? project.slug
-  const hasDocs = !isList && !isRaycast && !isWebext && projectHasDocs(docsSlug)
+  const docsHref = projectDocsHref(project)
   // Every landing with sections gets its "On this page", pitch landings too.
   const showToc = toc.length > 1
   const age = release ? releaseAge(release.publishedAt) : null
@@ -525,6 +539,7 @@ const ReadmeLanding = async ({
                   <ButtonIcon name="github" />
                   View source ↗
                 </a>
+                {docsHref ? <DocsButton href={docsHref} /> : null}
               </>
             ) : isWebext ? (
               <>
@@ -548,26 +563,19 @@ const ReadmeLanding = async ({
                   <ButtonIcon name="github" />
                   View source ↗
                 </a>
+                {docsHref ? <DocsButton href={docsHref} /> : null}
               </>
             ) : (
               <>
-                {hasDocs ? (
-                  <Link
-                    href={`/projects/${docsSlug}/docs`}
-                    className={styles.lead}
-                  >
-                    <ButtonIcon name="docs" />
-                    Documentation →
-                  </Link>
-                ) : null}
+                {docsHref ? <DocsButton href={docsHref} lead /> : null}
                 <a
                   href={project.repoUrl}
-                  className={hasDocs ? styles.secondary : styles.lead}
+                  className={docsHref ? styles.secondary : styles.lead}
                   target="_blank"
                   rel="noreferrer"
                 >
                   <ButtonIcon name="github" />
-                  {hasDocs ? "GitHub ↗" : "View on GitHub ↗"}
+                  {docsHref ? "GitHub ↗" : "View on GitHub ↗"}
                 </a>
               </>
             )}
@@ -582,16 +590,7 @@ const ReadmeLanding = async ({
             <DocsBody>
               <Body components={getMDXComponents()} />
             </DocsBody>
-            {hasDocs && !isList ? (
-              <div className={styles.landingCta}>
-                <Link
-                  href={`/projects/${docsSlug}/docs`}
-                  className={styles.lead}
-                >
-                  Read the documentation →
-                </Link>
-              </div>
-            ) : null}
+            {docsHref ? <DocsCta href={docsHref} /> : null}
           </article>
           <div className={styles.recordRail} data-infobox>
             <InfoboxFit />

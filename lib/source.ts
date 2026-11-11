@@ -1,6 +1,8 @@
 import { docs, readmes } from "collections/server"
 import { loader } from "fumadocs-core/source"
 import type { Root, Node, Folder } from "fumadocs-core/page-tree"
+import type { Project } from "@/lib/projects"
+import { surfaceParent } from "@/lib/monorepo"
 
 // All per-project docs live under content/projects/<slug>/docs/**, so a single
 // loader with baseUrl "/projects" maps them to /projects/<slug>/docs/** — the
@@ -86,3 +88,15 @@ export const projectHasExtraDocs = (slug: string): boolean =>
         page.slugs[1] === "docs" &&
         page.path.endsWith(".mdx"),
     )
+
+// Where a project page sends readers for the documentation, or null when there
+// is none worth linking. A surface of a monorepo (foxhop-cli, raycast-foxhop)
+// without docs of its own shares the repo's. A curated list's README is the
+// whole project, so it never links out to docs.
+export const projectDocsHref = (project: Project): string | null => {
+  if (project.readmeLanding) return null
+  const slug = [project.readmeSlug, project.slug, surfaceParent(project.slug)]
+    .filter((candidate): candidate is string => Boolean(candidate))
+    .find(projectHasDocs)
+  return slug ? `/projects/${slug}/docs` : null
+}

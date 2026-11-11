@@ -1,4 +1,5 @@
 import { InkLink } from "@/components/ink-link"
+import type { ReactNode } from "react"
 import type { Project } from "@/lib/projects"
 import type { AppMeta } from "@/lib/app"
 import type { Release } from "@/lib/release"
@@ -68,9 +69,11 @@ type SheetProps = {
   name: string
   url: string | null
   host: string | null
-  hasDocs: boolean
+  docsHref: string | null
   release: Release | null
   writing: Post[]
+  // Closes the story column: the docs link for readers who want more.
+  footer?: ReactNode
 }
 
 const Section = ({
@@ -96,7 +99,7 @@ const Infobox = ({
   name,
   url,
   host,
-  hasDocs,
+  docsHref,
   release,
 }: SheetProps) => {
   const released = release
@@ -132,14 +135,10 @@ const Infobox = ({
           ),
         }
       : null,
-    hasDocs
+    docsHref
       ? {
           label: "Documentation",
-          value: (
-            <InkLink href={`/projects/${project.slug}/docs`}>
-              Read the docs
-            </InkLink>
-          ),
+          value: <InkLink href={docsHref}>Read the docs</InkLink>,
         }
       : null,
   ].filter((row) => row !== null)
@@ -197,11 +196,13 @@ const Infobox = ({
 // The body of a product record: the story in a reading column, every fact in
 // the infobox beside it (above it on a phone).
 export const RecordSheet = (props: SheetProps) => {
-  const { app, name, writing } = props
+  const { app, name, writing, footer } = props
   const shot = app.screenshots[0]
   const chapters = [
     app.what ? { url: "#what-it-is", title: "What it is" } : null,
-    app.flow.length > 0 ? { url: "#how-it-works", title: "How it works" } : null,
+    app.flow.length > 0
+      ? { url: "#how-it-works", title: "How it works" }
+      : null,
     app.decisions.length > 0 ? { url: "#decisions", title: "Decisions" } : null,
     writing.length > 0 ? { url: "#writing", title: "Writing" } : null,
   ].filter((item) => item !== null)
@@ -269,6 +270,7 @@ export const RecordSheet = (props: SheetProps) => {
             </ul>
           </section>
         ) : null}
+        {footer}
       </div>
     </div>
   )
