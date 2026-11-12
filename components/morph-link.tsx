@@ -24,7 +24,7 @@ export const flagMorph = () => {
   el.dataset.vt = "morph"
   window.setTimeout(() => {
     if (el.dataset.vt === "morph") delete el.dataset.vt
-  }, 700)
+  }, 1000)
 }
 
 type Props = ComponentProps<typeof Link> & {

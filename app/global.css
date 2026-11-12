@@ -196,12 +196,21 @@ html[data-vt="back"]::view-transition-new(root) {
 
 html[data-vt="morph"]::view-transition-old(root) {
   animation-name: vt-content-hold;
-  animation-duration: 0.55s;
+  animation-duration: 0.75s;
 }
 
 html[data-vt="morph"]::view-transition-new(root) {
   animation-name: vt-content-reveal;
-  animation-duration: 0.55s;
+  animation-duration: 0.75s;
+}
+
+/* The icon and title glide: the browser's 0.25s default read as a snap
+   (Erwann, 2026-11-12). Kept at 45% of the root so they land as the new page
+   starts to show. */
+html[data-vt="morph"]::view-transition-group(*),
+html[data-vt="morph"]::view-transition-old(*),
+html[data-vt="morph"]::view-transition-new(*) {
+  animation-duration: 0.34s;
 }
 
 /* The home ↔ /projects "ink" transition is handled on desktop by the

@@ -285,6 +285,15 @@
   letter-spacing: 0.02em;
 }
 
+/* The figure is the line's point: bigger and in full ink, the words stay quiet. */
+.countNumber {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
 /* Sections render in components/project-list.tsx (client, sortable). */
 
 .empty {

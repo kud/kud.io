@@ -188,7 +188,7 @@ const ProjectsIndex = async () => {
           </div>
           {projects.length > 0 ? (
             <p className={styles.count}>
-              {projects.length} projects · always shipping
+              <span className={styles.countNumber}>{projects.length}</span> projects · slow-cooked, with precision
             </p>
           ) : null}
         </div>
