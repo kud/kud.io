@@ -1,15 +1,19 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import type { Project } from "@/lib/projects"
+import { getApp, isProduct } from "@/lib/app"
 
-// A tile with no repository behind it: the Project shape minus the source, plus
-// the live address the tile opens instead of a kud.io page.
-export type ListedProject = Omit<Project, "repoUrl"> & { href: string }
+// A tile with no public repository behind it: the Project shape minus the
+// source. `href` is the live address the tile opens, set only when the app has
+// no kud.io page of its own.
+export type ListedProject = Omit<Project, "repoUrl"> & { href?: string }
 
 // Live apps whose source is not public. They cannot be tagged on GitHub, so
 // they are listed by hand in content/apps.json (outside content/projects/, which
-// the sync prunes). Nothing here names or links a repository: the tile opens the
-// live app, and there is no kud.io page, release, README or star count behind it.
+// the sync prunes). Nothing here names or links a repository. A listed product
+// with an engineering record (content/projects/<slug>/app.json, kept by the
+// sync for every slug listed here) gets a kud.io page like any product, and its
+// tile opens that page; any other listed app's tile opens the live app.
 type ListedApp = {
   slug: string
   name: string
@@ -21,16 +25,20 @@ type ListedApp = {
   section: "product" | "app"
 }
 
-export const getListedApps = (): ListedProject[] => {
-  let records: ListedApp[]
+const readListed = (): ListedApp[] => {
   try {
-    records = JSON.parse(
+    return JSON.parse(
       readFileSync(join(process.cwd(), "content", "apps.json"), "utf8"),
     ) as ListedApp[]
   } catch {
     return []
   }
-  return records.map((record) => ({
+}
+
+const hasRecord = (slug: string): boolean => isProduct(getApp(slug))
+
+export const getListedApps = (): ListedProject[] =>
+  readListed().map((record) => ({
     slug: record.slug,
     name: record.name,
     description: record.description,
@@ -42,11 +50,19 @@ export const getListedApps = (): ListedProject[] => {
     accent: record.accent ?? null,
     topics: [],
     homepage: record.url,
-    href: record.url,
+    href: hasRecord(record.slug) ? undefined : record.url,
     stars: 0,
     language: null,
     license: null,
     pushedAt: "",
     createdAt: null,
+    isPrivate: true,
   }))
-}
+
+// The listed apps that have a kud.io page, as the page reads a project. The
+// repo URL is left empty and `isPrivate` set, so the page renders no source
+// link, release, licence or dates (it has no GitHub record to take them from).
+export const getListedRecords = (): Project[] =>
+  getListedApps()
+    .filter((app) => app.href === undefined)
+    .map((app) => ({ ...app, repoUrl: "" }))

@@ -101,8 +101,8 @@ const ProjectsIndex = async () => {
     }
     return { ...project, icon: icons[project.slug] ?? project.icon ?? null }
   })
-  // Live apps with no public source join their section here and nowhere else:
-  // no release lookup, no pin, no page of their own (lib/listed-apps.ts).
+  // Live apps with no public source join their section here: no release lookup,
+  // no pin, and a page only when they carry a record (lib/listed-apps.ts).
   const listed = getListedApps().filter(
     (app) => !withIcons.some((project) => project.slug === app.slug),
   )

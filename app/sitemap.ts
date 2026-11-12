@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next"
 import { getAllPosts, postPath } from "@/lib/blog"
 import { getProjects } from "@/lib/projects"
+import { getListedRecords } from "@/lib/listed-apps"
 import { source } from "@/lib/source"
 
 // Absolute URLs, matching the metadataBase in app/layout.tsx. A sitemap is read
@@ -41,6 +42,9 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
     ...projects.map((project) => ({
       url: `${SITE}/projects/${project.slug}`,
       lastModified: project.pushedAt || undefined,
+    })),
+    ...getListedRecords().map((project) => ({
+      url: `${SITE}/projects/${project.slug}`,
     })),
     ...docsRoutes(),
   ]

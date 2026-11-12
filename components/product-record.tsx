@@ -106,15 +106,18 @@ const Infobox = ({
     ? formatDate(release.publishedAt, dayMonthYear)
     : null
   const repo = project.repoUrl.replace(/^https:\/\/github\.com\//, "")
+  // A private repo is never named or linked, so its record has no Source row.
   const projectRows = [
-    {
-      label: "Source",
-      value: (
-        <a href={project.repoUrl} target="_blank" rel="noreferrer">
-          {repo}
-        </a>
-      ),
-    },
+    project.isPrivate
+      ? null
+      : {
+          label: "Source",
+          value: (
+            <a href={project.repoUrl} target="_blank" rel="noreferrer">
+              {repo}
+            </a>
+          ),
+        },
     release
       ? {
           label: "Latest release",
@@ -179,16 +182,18 @@ const Infobox = ({
           </ul>
         </Section>
       ) : null}
-      <Section title="Project">
-        <dl className={styles.infoRows}>
-          {projectRows.map((row) => (
-            <div key={row.label}>
-              <dt>{row.label}</dt>
-              <dd>{row.value}</dd>
-            </div>
-          ))}
-        </dl>
-      </Section>
+      {projectRows.length > 0 ? (
+        <Section title="Project">
+          <dl className={styles.infoRows}>
+            {projectRows.map((row) => (
+              <div key={row.label}>
+                <dt>{row.label}</dt>
+                <dd>{row.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </Section>
+      ) : null}
     </aside>
   )
 }

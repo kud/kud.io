@@ -1,0 +1,51 @@
+{
+  "icon": "/apps/retro.png",
+  "beansontoast": "retro",
+  "summary": "An anonymous team retrospective in a shared link, no account.",
+  "what": "A retrospective board for a team looking back on its last few weeks. Everyone writes cards on their own screen, then the host reveals them all at once, unsigned and shuffled. The room groups them into stacks, votes, and talks through the stacks with the most votes, agreeing actions as it goes. The whole retro exports as Markdown, CSV or JSON.",
+  "who": "A team running its retro round a table or on a call, where people say more when nobody can tell who wrote what.",
+  "facts": [
+    { "label": "Runs in", "value": "Any browser" },
+    { "label": "Account", "value": "None: a shared link or a six-letter code" },
+    {
+      "label": "Data",
+      "value": "Room state on Cloudflare, wiped 24 hours after last use"
+    },
+    { "label": "Phases", "value": "Write, group, vote, discuss" },
+    {
+      "label": "Columns",
+      "value": "Glad / Sad / Mad, Start / Stop / Continue, Good / Bad / Try, or your own"
+    }
+  ],
+  "flow": [
+    { "label": "Every browser, host included", "note": "one WebSocket each" },
+    {
+      "label": "Room server",
+      "note": "a PartyServer Durable Object on Cloudflare Workers, with SQLite storage"
+    },
+    {
+      "label": "A view per person",
+      "note": "built from the room state for each connection, never broadcast"
+    }
+  ],
+  "flowNote": "Anonymity is enforced on the server rather than hidden in the browser: drafts and votes never reach anyone else's screen, the host's included, and a card's author is deleted at the reveal.",
+  "screenshots": [],
+  "stack": [
+    "Next.js",
+    "React",
+    "PartyServer",
+    "Cloudflare Workers",
+    "Durable Objects",
+    "WebSockets",
+    "TypeScript"
+  ],
+  "decisions": [
+    "Authorship is destroyed, not filtered: at the reveal a card loses its author and gets a new id and a shuffled place, and each person's votes are deleted once the totals are shown.",
+    "Every client gets its own view of the room from one tested function, sent to that connection alone. Nothing is broadcast, so a field can't leak by accident.",
+    "One Durable Object per room, with SQLite storage and no other database. It sleeps between messages and wipes itself 24 hours after the room goes quiet, which is why the export exists.",
+    "A room code is derived from the host's secret, six characters picked to be read aloud, so a wiped room's code can't be casually claimed by someone else.",
+    "Writes are rate limited per room and connections per address, because the room server shares a free quota with other apps.",
+    "Columns differ by name and a character's silhouette, never by colour alone, and reduced motion turns movement into a short fade so every cue still happens."
+  ],
+  "writing": []
+}

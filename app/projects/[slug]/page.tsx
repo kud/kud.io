@@ -12,6 +12,7 @@ import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { DocsBody } from "fumadocs-ui/layouts/docs/page"
 import { getProject, getProjects, type Project } from "@/lib/projects"
+import { getListedRecords } from "@/lib/listed-apps"
 import {
   getApp,
   appDisplayName,
@@ -48,8 +49,11 @@ export const revalidate = false
 // Unknown slugs 404 without a write: crawlers probing made-up paths each cost one.
 export const dynamicParams = false
 
+// Listed apps with a record (lib/listed-apps.ts) have a page but no tagged repo.
 export const generateStaticParams = async () =>
-  (await getProjects()).map((project) => ({ slug: project.slug }))
+  [...(await getProjects()), ...getListedRecords()].map((project) => ({
+    slug: project.slug,
+  }))
 
 export const generateMetadata = async ({
   params,
@@ -287,7 +291,7 @@ const ProductRecord = async ({ project }: { project: Project }) => {
   const docsHref = projectDocsHref(project)
   const [posts, release] = await Promise.all([
     getAllPosts(),
-    getRelease(project.slug),
+    project.isPrivate ? null : getRelease(project.slug),
   ])
   const writing = app.writing
     .map((slug) => posts.find((post) => post.slug === slug))
@@ -362,15 +366,17 @@ const ProductRecord = async ({ project }: { project: Project }) => {
                 Open {host} ↗
               </a>
             ) : null}
-            <a
-              href={project.repoUrl}
-              className={styles.secondary}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <ButtonIcon name="github" />
-              Source ↗
-            </a>
+            {project.isPrivate ? null : (
+              <a
+                href={project.repoUrl}
+                className={styles.secondary}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <ButtonIcon name="github" />
+                Source ↗
+              </a>
+            )}
             {docsHref ? <DocsButton href={docsHref} /> : null}
           </div>
           <RecordTimeline project={project} />

@@ -545,7 +545,9 @@ const main = async () => {
       if (icon) icons[slug] = icon
     } catch (error) {
       synced.push(repo.name)
-      warnings.push(`${repo.name}: sync failed, kept previous content (${error.message})`)
+      warnings.push(
+        `${repo.name}: sync failed, kept previous content (${error.message})`,
+      )
     }
   }
 
@@ -554,10 +556,14 @@ const main = async () => {
 
   // Drop content for slugs no longer live (e.g. a repo renamed away). Guarded on a non-empty
   // search so a transient GitHub outage (repos: []) can't prune every project at once.
+  // A listed app (content/apps.json) has no tagged repo, so no run produces its
+  // slug; its content/projects/<slug>/app.json is authored here and must stay.
+  const listed = await readJson("content/apps.json")
+  const listedSlugs = Array.isArray(listed) ? listed.map((app) => app.slug) : []
   const pruned =
     repos.length > 0
       ? await pruneOrphans({
-          projects: new Set(synced),
+          projects: new Set([...synced, ...listedSlugs]),
           readmes: new Set([
             ...synced,
             ...RAYCAST_SLUGS.map((slug) => `raycast-${slug}`),

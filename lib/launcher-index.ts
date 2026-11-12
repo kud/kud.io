@@ -31,8 +31,8 @@ export type LauncherProject = {
   homepage: string | null
   storeUrl: string | null
   npm: { name: string; install: string } | null
-  // A live app with no public source (lib/listed-apps.ts): its card opens the
-  // app itself, as on /projects, since there is no kud.io page behind it.
+  // A live app with no public source and no kud.io page (lib/listed-apps.ts):
+  // its card opens the app itself, as on /projects.
   href?: string
 }
 
@@ -126,7 +126,7 @@ export const getLauncherIndex = async (): Promise<LauncherIndex> => {
       pinned: false,
       hasDocs: false,
       repoUrl: null,
-      homepage: app.href,
+      homepage: app.homepage,
       storeUrl: null,
       npm: null,
       href: app.href,

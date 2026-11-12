@@ -1,4 +1,5 @@
 import { getProject, getProjects } from "@/lib/projects"
+import { getListedRecords } from "@/lib/listed-apps"
 import { getIcons } from "@/lib/icons"
 import { ART } from "@/lib/art"
 import { projectShare } from "@/lib/project-share"
@@ -6,9 +7,11 @@ import { CARD_SIZE, kindInk, loadImage, renderCard } from "@/lib/og/card"
 
 // Prerender one card per project at build time (mirrors the page's own
 // generateStaticParams) so crawlers fetch a static PNG instead of triggering a
-// GitHub API round-trip on demand.
+// GitHub API round-trip on demand. Listed apps with a record have a card too.
 export const generateStaticParams = async () =>
-  (await getProjects()).map((project) => ({ slug: project.slug }))
+  [...(await getProjects()), ...getListedRecords()].map((project) => ({
+    slug: project.slug,
+  }))
 
 // Per-project share card: what it is, its icon, its name and the same summary
 // as the page's meta description, on the Dusk ground its page opens on. A

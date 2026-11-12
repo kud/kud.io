@@ -2,6 +2,7 @@ import { getRaycastProjects } from "@/lib/raycast"
 import { enrichWebextProjects } from "@/lib/webext"
 import { applyMonorepos } from "@/lib/monorepo"
 import { getApp } from "@/lib/app"
+import { getListedRecords } from "@/lib/listed-apps"
 
 const OWNER = "kud"
 const TOPIC = "kud-site"
@@ -161,6 +162,9 @@ export const getProject = async (slug: string): Promise<Project | null> => {
   // Reuse the cached topic search so 32 landings don't each hit the API.
   const found = (await getProjects()).find((project) => project.slug === slug)
   if (found) return found
+  // A listed app with a record has a page but no public repo to ask about.
+  const listed = getListedRecords().find((project) => project.slug === slug)
+  if (listed) return listed
 
   const res = await fetch(`https://api.github.com/repos/${OWNER}/${slug}`, {
     headers: ghHeaders(),

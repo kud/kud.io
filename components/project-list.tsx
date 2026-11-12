@@ -18,7 +18,7 @@ const SEARCH_DEBOUNCE_MS = 180
 // (lib/listed-apps.ts), which opens its live address instead of a kud.io page.
 type Project = Omit<RepoProject, "repoUrl"> & { href?: string }
 
-// Where a tile goes: its kud.io page, or, for a listed app, the app itself.
+// Where a tile goes: its kud.io page, or, for a listed app without one, the app.
 const TileLink = ({
   project,
   className,
