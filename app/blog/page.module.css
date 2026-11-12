@@ -78,9 +78,9 @@ section:first-of-type .year {
 }
 
 .list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 24px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -90,6 +90,7 @@ section:first-of-type .year {
  * column is measured off the content, so no date ever wraps or floats. */
 .list li {
   display: grid;
+  grid-column: 1 / -1;
   grid-template-columns: 88px 96px minmax(0, 1fr) auto;
   gap: 18px;
   align-items: center;
@@ -119,6 +120,33 @@ section:first-of-type .year {
 }
 
 .list li[data-lead] .tags {
+  justify-content: flex-start;
+}
+
+/* The pair: the two posts after the lead, half the column each, cover over
+ * caption like the lead but a size down. */
+.list li[data-pair] {
+  grid-column: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  margin-bottom: 22px;
+}
+
+.list li[data-pair] > .thumb {
+  order: -1;
+  width: 100%;
+  margin: 0 0 6px;
+  border-radius: 8px;
+}
+
+.list li[data-pair] h2 {
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.list li[data-pair] .tags {
   justify-content: flex-start;
 }
 
@@ -226,6 +254,14 @@ section:first-of-type .year {
 }
 
 @media (max-width: 580px) {
+  .list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .list li[data-pair] {
+    grid-column: 1 / -1;
+  }
+
   .list li {
     grid-template-columns: minmax(0, 1fr) 96px;
     gap: 3px 14px;
