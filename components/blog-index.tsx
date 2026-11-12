@@ -72,6 +72,16 @@ export const BlogIndex = ({
   const lead = groups[0]?.[1][0]
   const leadSlug = lead?.cover ? lead.slug : undefined
 
+  // The two posts after it sit side by side under the lead as half-width
+  // cards. Both need a cover and the lead's year, or the pair would be a
+  // lone card or straddle a year heading; otherwise they stay plain rows.
+  const pair = leadSlug ? groups[0][1].slice(1, 3) : []
+  const pairSlugs = new Set(
+    pair.length === 2 && pair.every((post) => post.cover)
+      ? pair.map((post) => post.slug)
+      : [],
+  )
+
   return (
     <>
       {/* The filter bar is the index; the row tags are a reversal of an earlier
@@ -111,6 +121,7 @@ export const BlogIndex = ({
               <li
                 key={post.slug}
                 data-lead={post.slug === leadSlug || undefined}
+                data-pair={pairSlugs.has(post.slug) || undefined}
               >
                 <time dateTime={post.date}>{post.date}</time>
                 {/* The thumb repeats the title's link for the pointer only: one tab
@@ -143,7 +154,14 @@ export const BlogIndex = ({
                               "(max-width: 580px) calc(100vw - 36px), 754px",
                             loading: "eager",
                           }
-                        : { loading: "lazy" })}
+                        : pairSlugs.has(post.slug)
+                          ? {
+                              srcSet: `${post.cover.thumb} 320w, ${post.cover.hero} 1600w`,
+                              sizes:
+                                "(max-width: 580px) calc(100vw - 36px), 365px",
+                              loading: "lazy",
+                            }
+                          : { loading: "lazy" })}
                       decoding="async"
                     />
                   )}
