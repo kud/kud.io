@@ -15,14 +15,18 @@ About › Version, and the app when it opens or comes back to the screen (at mos
 
 ## What the TV is playing
 
-While the remote is open, tutti asks the TV over Google Cast what it is playing, for apps that report it (YouTube does, Netflix doesn't). The title and channel stay on the phone: never saved, logged or put in a diagnostic.
+While the remote is open, tutti asks the TV over Google Cast what it is playing, for apps that report it (YouTube does, and Nuvio names its poster; Netflix doesn't). The title and channel stay on the phone: never saved, logged or put in a diagnostic.
 
 When that report names a picture, the card shows it. To get it, tutti asks one of these hosts, and no other:
 
 - `i.ytimg.com`: YouTube's video thumbnails.
 - `lh3.googleusercontent.com`: Google's image service, where YouTube Music keeps its artwork.
+- `image.tmdb.org`: The Movie Database's images, where Nuvio's posters come from once it has looked the title up there.
+- `images.metahub.space`: the posters and backgrounds of Cinemeta, Nuvio's default catalogue.
 
-Only HTTPS, only while the remote is open and a picture on one of those hosts is reported, at most once per item. No account, cookie or identifier of yours goes with it; the request names the video, which is how the TV fetched it too. The picture is kept in memory until the app closes, never written to storage, and its address is never logged. Any other address in the report is ignored, and the card keeps the app's icon.
+Only HTTPS, only while the remote is open and a picture on one of those hosts is reported, at most once per item. No account, cookie or identifier of yours goes with it; the request names the video or the film, which is how the TV fetched it too. The picture is kept in memory until the app closes, never written to storage, and its address is never logged. Any other address in the report is ignored, and the card keeps the app's icon.
+
+Playback's Share button writes one sentence about what is on (the title, channel, app and how far in, plus a YouTube link at that second when the picture's address names the video) and hands it to Android's share sheet: nothing leaves the phone unless you pick where it goes. The Trakt and JustWatch buttons, off until you turn them on in Settings, open a search for the title in your browser or in the app that takes the link (when no title is known, Trakt opens the Trakt app, or Trakt's home page, with nothing about what is on); tutti itself sends nothing to either.
 
 ## Trust on first use
 

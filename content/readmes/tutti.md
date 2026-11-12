@@ -27,7 +27,7 @@ Screenshots are rendered from invented fixtures, never captured from a phone: `T
 - 📱 **Widget, Quick Settings tile and media notification** — the essentials without opening the app
 - 🔄 **Settings sync** — your layout, scenes and settings in one file, in a folder you choose on your own Drive (or any storage app), so every phone shares them (*Settings › Sync*)
 - 🔒 **Local and private** — LAN only, devices pinned on first use, pairing material encrypted with an Android Keystore key
-- 🩺 **Developer mode** — redacted, copyable details on every error, and a diagnostic of the TV and bar connections
+- 🩺 **Developer mode** — redacted, copyable details on every error, a diagnostic of the TV and bar connections, a scrubbed log of recent events, and "Report on GitHub", which opens a prefilled issue for you to review and submit (nothing is sent by the app)
 
 ## 🚀 Quick Start
 
