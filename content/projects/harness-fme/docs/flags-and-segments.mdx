@@ -1,0 +1,113 @@
+---
+title: 🚩 Flags, definitions and segments
+description: Reading and changing flags, per-environment definitions, classic and rule-based segments, flag overviews and web UI links.
+---
+
+A flag exists once per workspace. Its targeting lives in a **definition**, one per environment. All the functions below take the client first and return an [`FmeResult`](/projects/harness-fme/docs/client).
+
+## Flags
+
+```ts
+import {
+  listAllFeatureFlags,
+  getFeatureFlag,
+  createFeatureFlag,
+  updateFeatureFlag,
+} from "@kud/harness-fme"
+
+const flag = await getFeatureFlag(client, {
+  workspaceId,
+  flagName: "checkout_new_flow",
+})
+```
+
+| Function                                        | Does                                                        |
+| ----------------------------------------------- | ----------------------------------------------------------- |
+| `listFeatureFlags` / `listAllFeatureFlags`      | One page or every flag, filtered by `tag`, `rolloutStatusId`, `name` |
+| `getFeatureFlag`                                | One flag                                                    |
+| `createFeatureFlag`                             | Needs `workspaceId`, `trafficType`, `name`, optional `description` |
+| `updateFeatureFlag`                             | Patches `description`, `tags`, `owners`, `rolloutStatusId`; fails if you give none |
+| `archiveFeatureFlag` / `unarchiveFeatureFlag`   | Archive or bring back                                       |
+| `deleteFeatureFlag`                             | Resolves to `{ deleted: flagName }`                         |
+
+Reads flatten the traffic type, so `trafficTypeId` is always available next to the nested `trafficType`. `updateFeatureFlag` accepts tags as plain strings or `{ name }` objects.
+
+## Definitions
+
+A definition holds the treatments, default rule, targeting rules and the killed state for one flag in one environment.
+
+| Function                                           | Does                                              |
+| -------------------------------------------------- | ------------------------------------------------- |
+| `getFlagDefinition`                                | Read one definition (404 when none exists)        |
+| `listFlagDefinitions` / `listAllFlagDefinitions`   | One page or all definitions in an environment     |
+| `createFlagDefinition` / `updateFlagDefinition`    | POST or PUT a full definition                     |
+| `deleteFlagDefinition`                             | Remove the definition from one environment        |
+| `killFeatureFlag` / `restoreFeatureFlag`           | Kill (serve the default treatment) or restore     |
+| `addSegmentToTreatment`                            | Read, add a segment to a named treatment, write   |
+
+The create and update calls take the definition as a JSON **string** and optional `title` and `comment`. Workspaces with `requiresTitleAndComments` reject writes without them, so supply both there. They fail with a clear message when the JSON is invalid, or when title and comment are given for a definition that is not an object.
+
+`addSegmentToTreatment` exists so you never have to replace a whole definition just to add a segment, where a dropped field would silently wipe targeting. It is idempotent: if the segment is already on the treatment it returns `{ unchanged: true }` without writing.
+
+For changing many flags, prefer the [safe-write engine](/projects/harness-fme/docs/safe-writes).
+
+### Reading a definition
+
+Pure helpers in `definition.ts` interpret a definition without any request:
+
+```ts
+import { classifyRollout, describeDefaultRule, isFullyServing } from "@kud/harness-fme"
+
+classifyRollout(def) // "killed" | "on" | "off" | "partial" | "unknown"
+describeDefaultRule(def) // "on 50% / off 50%"
+isFullyServing(def, "on") // true when the default rule serves "on" at 100%
+```
+
+`classifyRollout` lets a killed flag win over everything else, since a killed flag serves its default treatment whatever its rules say. Treatment names default to `on` and `off`; pass `{ on, off }` for others.
+
+## Flag overviews
+
+`findFlags(client, workspaceId, { tag, prefix, includeInactive })` lists flags by tag and name prefix, leaving out archived ones unless asked. `buildFlagRows` then produces one row per flag with a view per environment, choosing per flag between single reads and listing the whole environment, whichever costs fewer requests:
+
+```ts
+const flags = await findFlags(client, ws.id, { prefix: "checkout_" })
+const rows = await buildFlagRows(client, {
+  workspaceId: ws.id,
+  flags: flags.ok ? flags.data : [],
+  environments,
+})
+```
+
+Each environment view carries `state` (including `"undefined"` for a flag with no definition there) and a readable `defaultRule`.
+
+## Segments
+
+Classic segments hold lists of keys.
+
+| Function                                                | Does                                     |
+| ------------------------------------------------------- | ---------------------------------------- |
+| `listSegments`, `listSegmentDefinitions`                | Workspace segments, and their state per environment |
+| `createSegment`, `deleteSegment`                        | Lifecycle in a workspace                 |
+| `enableSegmentInEnvironment`, `disableSegmentInEnvironment` | Switch a segment on or off in one environment |
+| `listSegmentKeys`                                       | Member keys, to check whether a person is already in |
+| `addSegmentKeys`, `removeSegmentKeys`                   | Change membership                        |
+
+```ts
+await addSegmentKeys(client, {
+  environmentId,
+  segmentName: "beta_testers",
+  keys: ["user-1042", "user-2210"],
+  title: "Add testers",
+  comment: "Two more testers for the beta.",
+})
+```
+
+`addSegmentKeys` refuses an empty list and more than `MAX_SEGMENT_KEYS_PER_CALL` (10,000) keys, with a message asking you to split the call. Pass `replace: true` to replace the membership instead of adding to it.
+
+## Rule-based segments
+
+Rule-based segments are defined by rules rather than key lists, and have their own set: `listRuleBasedSegments`, `getRuleBasedSegment`, `createRuleBasedSegment`, `deleteRuleBasedSegment`, `listRuleBasedSegmentDefinitions`, `updateRuleBasedSegmentDefinition` (JSON string), `enableRuleBasedSegmentDefinition`, `disableRuleBasedSegmentDefinition` and `createRuleBasedSegmentChangeRequest` for workspaces that require approval.
+
+## Web UI links
+
+`buildFlagUrl(client, { accountId, orgGuid, workspace, flag, environment })` assembles the deep link to a flag's definition page. Workspace, flag and environment can be names or ids. The account id and organisation GUID are platform identifiers the admin API does not expose, so you supply them.

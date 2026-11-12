@@ -1,0 +1,91 @@
+---
+title: 🧩 Client and results
+description: Creating a client with createClient, the FmeResult return type, resolving the API key and looking up workspaces and environments.
+---
+
+Every function in the library takes an `FmeClient` as its first argument. The client is a thin wrapper over the global `fetch` (Node.js 20 or later) with no runtime dependencies.
+
+## Creating a client
+
+```ts
+import { createClient, resolveApiKey } from "@kud/harness-fme"
+
+const client = createClient({
+  apiKey: resolveApiKey() ?? "",
+  minIntervalMs: 150,
+})
+```
+
+| Option          | Default                                | Notes                                                                 |
+| --------------- | -------------------------------------- | --------------------------------------------------------------------- |
+| `apiKey`        | required                               | `createClient` throws `apiKey is required` when it is empty           |
+| `baseUrl`       | `https://api.split.io/internal/api/v2` | Exported as `API_BASE`                                                |
+| `fetch`         | global `fetch`                         | Inject your own for tests or proxies                                  |
+| `minIntervalMs` | `0`                                    | Minimum gap between request starts, see [Errors and rate limits](/projects/harness-fme/docs/errors-and-rate-limits) |
+| `maxRetries`    | `3`                                    | Retries on 429 only (`DEFAULT_MAX_RETRIES`)                           |
+| `sleep`         | `setTimeout`                           | Inject a fake clock in tests                                          |
+| `onError`       | none                                   | Called with `(message, path)` for every failed request                |
+| `onRateLimit`   | none                                   | Called with `(waitMs, path)` before each 429 wait                     |
+
+The client exposes `baseUrl` and `request(path, options)`. Most callers use the typed helpers instead, but `request` is there for endpoints the library does not wrap yet:
+
+```ts
+const result = await client.request<{ objects: unknown[] }>("/workspaces?limit=5")
+```
+
+`RequestOptions` takes `method`, `body` (sent as JSON) and `expectBody: false` for calls such as `DELETE` that answer with an empty body.
+
+## Results, not exceptions
+
+Nothing in the library throws for an API failure. Every call returns an `FmeResult<T>`:
+
+```ts
+type FmeResult<T> =
+  | { ok: true; data: T }
+  | { ok: false; message: string; status?: number }
+```
+
+Check `ok` and the types narrow for you. `status` is the HTTP status when there was a response, and absent for network errors. A 404 is often an answer rather than an error, which is why the status survives.
+
+```ts
+const flag = await getFeatureFlag(client, {
+  workspaceId,
+  flagName: "checkout_new_flow",
+})
+if (!flag.ok) {
+  if (flag.status === 404) console.log("no such flag")
+  else console.error(flag.message)
+} else {
+  console.log(flag.data.name)
+}
+```
+
+Helpers wrap failures with what they were attempting, for example `failed to fetch feature flag: checkout_new_flow (404: …)`. `withContext(result, context)` and `failure(message)` are exported if you write helpers of your own.
+
+A successful write may return an empty or non-JSON body, 204 included. The client treats that as success with `data: null` rather than reporting a write that already happened as a failure.
+
+## The API key
+
+The key lives in the `createClient` closure only, so logging or serialising the client cannot print it. It is sent as `Authorization: Bearer <key>`.
+
+`resolveApiKey(env = process.env)` returns the first non-empty, trimmed value among `HARNESS_FME_API_KEY` and `MCP_HARNESS_FME_API_KEY`, or `undefined`. The second name is what the MCP server has always read, so one exported key serves every surface. The list itself is exported as `API_KEY_ENV_VARS`, handy for an error message that tells people which variables to set.
+
+## Workspaces and environments
+
+Most calls need a workspace id and often an environment id. Resolve them from names once:
+
+```ts
+import { resolveWorkspace, resolveEnvironment } from "@kud/harness-fme"
+
+const ws = await resolveWorkspace(client) // the only workspace, or an error
+if (!ws.ok) throw new Error(ws.message)
+
+const env = await resolveEnvironment(client, ws.data.id, "Staging")
+```
+
+- `resolveWorkspace(client, reference?)` matches an id or a name (case-insensitively). With no reference it returns the account's only workspace; with several, the failure lists them all.
+- `resolveEnvironment(client, workspaceId, reference)` matches id or name and always performs the lookup, so safety checks see the real name.
+- `resolveEnvironmentId` is the lighter variant: a bare GUID passes straight through without a request, and it returns `{ id }` or `{ error }`.
+- `getEnvironments`, `listTrafficTypes`, `listRolloutStatuses`, `listWorkspaces` and `getAllWorkspaces` are the plain reads.
+
+`GUID_RE` is the pattern used to tell a resolved id such as `11111111-2222-4333-8444-555555555555` from a human name.

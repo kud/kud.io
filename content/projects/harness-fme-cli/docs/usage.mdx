@@ -1,0 +1,127 @@
+---
+title: "📖 Usage"
+description: "Every command and option: list, status, unreleased, key add and remove, on and off, plus JSON output and exit codes."
+---
+
+Set an API key and a workspace once, then:
+
+```sh
+export HARNESS_FME_API_KEY=<your-api-key>
+export HARNESS_FME_WORKSPACE="Storefront"
+
+harness-fme list --env QA --env Prod
+harness-fme status checkout_new_flow
+harness-fme unreleased --env QA
+harness-fme on checkout_new_flow --env QA        # plan only
+harness-fme on checkout_new_flow --env QA --go   # applies it
+```
+
+## 🌐 Global options
+
+| Option                       | Description                                                          |
+| ---------------------------- | -------------------------------------------------------------------- |
+| `-w, --workspace <id\|name>` | Workspace to use (default: the only one, or `HARNESS_FME_WORKSPACE`) |
+| `--json`                     | Machine-readable output                                              |
+| `--no-color`                 | Plain output (`NO_COLOR` works too)                                  |
+
+Progress notes and rate-limit messages go to stderr, so stdout stays clean for pipes. Colour is only used when stdout is a terminal.
+
+## 👀 Reading
+
+### `list`
+
+Rollout status and default rule per environment, one row per flag.
+
+| Option              | Description                                                                 |
+| ------------------- | --------------------------------------------------------------------------- |
+| `--tag <tag>`       | Only flags with this tag                                                    |
+| `--prefix <prefix>` | Only flags whose name starts with this                                      |
+| `-e, --env <env>`   | Environment name or id; repeat or comma-separate for several (default: all) |
+| `--all`             | Include archived flags                                                      |
+
+```sh
+harness-fme list --prefix checkout_ --env QA,Prod
+```
+
+### `status <flag>`
+
+One flag across every environment: state, default rule, traffic, rules, keys and segments. `-e, --env` narrows the environments.
+
+```sh
+harness-fme status checkout_new_flow
+```
+
+### `unreleased`
+
+Flags that are not fully on in an environment. `--env` is required. Also takes `--tag`, `--prefix` and `--all`.
+
+```sh
+harness-fme unreleased --env QA --tag payments
+```
+
+## ✏️ Writing
+
+Every write command takes the same options, and every one is a plan until `--go` is given. See [Safe writes](/projects/harness-fme-cli/docs/safe-writes) for what happens around the write.
+
+| Option                | Description                                                           |
+| --------------------- | --------------------------------------------------------------------- |
+| `-e, --env <env>`     | Environment to change (required, exactly one)                         |
+| `--prefix <prefix>`   | Target every active flag starting with this (instead of naming flags) |
+| `--only <flag>`       | Restrict the write to this flag (repeatable)                          |
+| `--limit <n>`         | Write at most this many flags                                         |
+| `--go`                | Apply the plan; without it nothing is written                         |
+| `--title <title>`     | Change title recorded by the API                                      |
+| `--comment <comment>` | Change comment recorded by the API                                    |
+| `--backup-dir <dir>`  | Where originals are saved (default `~/.harness-fme/backups`)          |
+
+Name at least one flag, or pass `--prefix`, but not both.
+
+### `key add [flags...]` and `key remove [flags...]`
+
+Add a key to, or remove it from, a treatment of each flag.
+
+| Option               | Description                                 |
+| -------------------- | ------------------------------------------- |
+| `--key <id>`         | The key to use (default: `HARNESS_FME_KEY`) |
+| `--treatment <name>` | Treatment to edit (default: `on`)           |
+
+```sh
+harness-fme key add checkout_new_flow --env QA --key 0a1b2c3d-0000-4000-8000-000000000001 --go
+harness-fme key remove --prefix checkout_ --env QA --key 0a1b2c3d-0000-4000-8000-000000000001
+```
+
+Without `--key` and without `HARNESS_FME_KEY`, the command exits with code 2.
+
+### `on [flags...]` and `off [flags...]`
+
+`on` serves the `on` treatment: to everyone by default, to a percentage, or to a segment. `off` serves `off` to everyone by default, or stops serving a segment.
+
+| Option             | Description                                                    |
+| ------------------ | -------------------------------------------------------------- |
+| `--segment <name>` | Act on this segment's membership of the `on` treatment         |
+| `--percent <n>`    | `on` only: serve `on` to this share of traffic, the rest `off` |
+
+`--percent` and `--segment` cannot be combined, and `--percent` is refused on `off` (use `off` itself for 0%).
+
+```sh
+harness-fme on checkout_new_flow --env QA --percent 25 --go
+harness-fme on checkout_new_flow --env QA --segment beta_testers --go
+harness-fme off checkout_new_flow --env QA --segment beta_testers --go
+harness-fme off checkout_new_flow --env Prod --go
+```
+
+## 🧾 JSON output
+
+`--json` turns any command into machine-readable output. For writes it prints one document with the `environment`, the `mode` (`plan` or `write`), the `plan` (with a `selected` flag on each update), the `results` and, after a real write, the `backupDir`.
+
+```sh
+harness-fme --json on --prefix checkout_ --env QA | jq '.plan[] | select(.selected)'
+```
+
+## 🚦 Exit codes
+
+| Code | Meaning                                                                   |
+| ---- | ------------------------------------------------------------------------- |
+| `0`  | Success (a dry run that planned cleanly included)                         |
+| `1`  | Failure, such as an API error or a write that stopped midway              |
+| `2`  | Usage error or refusal, such as a missing `--key` or the production guard |

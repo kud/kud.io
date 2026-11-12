@@ -1,0 +1,94 @@
+---
+title: 🛡 Safe writes
+description: The plan, backup, write and read-back engine for changing many flags, with operations, the --go gate and the production rule.
+---
+
+Changing flags one call at a time is easy and easy to get wrong. The safe-write engine splits a bulk change into steps that can each be inspected: **plan** what would happen, **select** what to touch, then **apply** with a backup and a read-back for every flag.
+
+## Operations
+
+A `FlagOperation` is a pure edit of one definition. Given the current state it either returns an update or says why it leaves the flag alone. The same operation runs at plan time and again on a fresh read right before the write.
+
+| Factory                                        | Effect                                                              |
+| ---------------------------------------------- | ------------------------------------------------------------------- |
+| `turnOnOperation({ segment?, percent?, on?, off? })` | Default rule to `on` for everyone, to a percentage, or add a segment to `on` |
+| `turnOffOperation({ segment?, on?, off? })`    | Default rule to `off`, or remove a segment from `on`               |
+| `addKeyOperation({ key, treatment? })`         | Add an individual key to a treatment (default `on`)                 |
+| `removeKeyOperation({ key, treatment? })`      | Remove one                                                          |
+
+`turnOnOperation` throws if you pass both a segment and a percentage, or a percentage that is not a whole number from 1 to 100. Skips are explained in plain words: a killed flag (`killed (restore it before changing its rules)`), a missing treatment, or a flag that is already in the wanted state.
+
+Each operation also carries `describe`, `defaultTitle` and `defaultComment`, useful for the confirmation text and the change title.
+
+## Plan
+
+`planChanges` reads each flag in the environment and decides what the operation would do. Nothing is written.
+
+```ts
+import { planChanges, turnOnOperation } from "@kud/harness-fme"
+
+const plan = await planChanges(client, {
+  workspaceId,
+  environmentId,
+  flags: ["checkout_new_flow", "search_v2"],
+  operation: turnOnOperation({ percent: 25 }),
+  onProgress: (done, total) => console.log(`${done}/${total}`),
+})
+```
+
+Every flag gets one `PlanItem`:
+
+- `update` with a `summary`, the `before` and `next` definitions and a `changes` list of `{ path, before, after }` entries covering only writable fields
+- `skip` with a `reason`, including `not defined in this environment` for a 404
+- `error` with the failure message
+
+## Select
+
+`selectUpdates(plan, { only, limit })` narrows the plan to the items a write will touch: only the named flags, and at most `limit` of them. Skips and errors are never selected, which makes a staged rollout simple: apply with `limit: 5`, look, then run again.
+
+## Apply
+
+```ts
+import { applyChanges, selectUpdates } from "@kud/harness-fme"
+
+const outcome = await applyChanges(client, {
+  workspaceId,
+  environmentId,
+  operation,
+  items: selectUpdates(plan, { limit: 5 }),
+  title: "Roll out checkout flow",
+  comment: "Quarter of traffic to the new flow.",
+  guard: { environmentName: "Production", environmentArg: "Production", go: true },
+  backup: async ({ flag, definition }) => {
+    await writeFile(`backup-${flag}.json`, JSON.stringify(definition, null, 2))
+  },
+  onResult: (r) => console.log(r.flag, r.status),
+})
+```
+
+For each selected flag, in order, `applyChanges`:
+
+1. Reads it fresh and re-runs the operation, since state may have moved since the plan. If the operation now skips, the flag is recorded as `skipped` with `state changed since the plan: …` and the run continues.
+2. Calls your `backup` callback with `{ flag, environmentId, definition }`, the definition exactly as read. The callback must persist it before anything is written. If it throws, nothing is written for that flag and the run stops.
+3. Writes the new definition with your `title` and `comment`. Only writable fields are sent, so read-only fields are never echoed back.
+4. Reads the flag back and compares it with what was intended. Any mismatch, in a writable field or in a field that should not have moved, fails the run and lists the paths.
+
+The first failure of any kind stops the run, so one bad flag can never become fifty. The `ApplyOutcome` holds `ok` and a `results` array of `{ flag, status: "applied" | "skipped" | "failed", reason?, changes? }`.
+
+## The write gate
+
+Every write is a plan until the caller gives an explicit go-ahead, and `applyChanges` evaluates `evaluateWriteGate` itself before touching anything:
+
+| Situation                                                     | Mode      |
+| ------------------------------------------------------------- | --------- |
+| `go` is false                                                 | `plan`, nothing written |
+| `go` is true                                                  | `write`   |
+| `go` is true, environment looks like production, name typed differently | `refused` |
+
+An environment looks like production when its real name matches `/prod/i` (`isProductionEnvironment`). For those, the caller must have typed the environment's exact name, so an id, an alias or a differently cased guess cannot reach production by accident. `WriteGuardInput` takes the real `environmentName` as the API reports it, the `environmentArg` the caller literally typed, and `go`.
+
+When the gate says `plan` or `refused`, `applyChanges` returns `ok: false` with a single `*` result carrying the reason, and writes nothing.
+
+## Diffing helpers
+
+The pieces the engine uses are exported for your own tooling: `diffValues(before, after)`, `normaliseDefinition` (ignores volatile stamps such as `lastUpdateTime` and sorts key and segment lists), `writableView`, `otherView`, `buildWriteBody` and the `WRITABLE_FIELDS` list.

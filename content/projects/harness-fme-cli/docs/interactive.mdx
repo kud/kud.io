@@ -1,0 +1,60 @@
+---
+title: "🖥️ Interactive dashboard"
+description: "The full-screen dashboard: read-only by default, write keys behind --write, and exact-name confirmation for production."
+---
+
+`harness-fme tui` is a full-screen dashboard of flags against environments. It needs an interactive terminal: run elsewhere it exits with code 2.
+
+```sh
+harness-fme tui --env QA --env Prod        # read-only
+harness-fme tui --env QA --write           # write keys enabled
+```
+
+| Option              | Description                                          |
+| ------------------- | ---------------------------------------------------- |
+| `--tag <tag>`       | Only flags with this tag                             |
+| `--prefix <prefix>` | Only flags whose name starts with this               |
+| `-e, --env <env>`   | Environments to show (repeat or comma-separate)      |
+| `--write`           | Enable writes from the dashboard (read-only without) |
+
+## 🔒 Read-only unless `--write`
+
+Without `--write`, pressing a write key only shows `read-only: start with --write`. Nothing can change.
+
+## ⌨️ Keys
+
+| Key                       | Action                                                    |
+| ------------------------- | --------------------------------------------------------- |
+| `up` / `down`             | Move through the flags                                    |
+| `left` / `right` or `tab` | Change the focused environment column                     |
+| `space`                   | Mark or unmark a flag                                     |
+| `enter`                   | Open a flag                                               |
+| `r`                       | Refresh                                                   |
+| `esc`                     | Go back                                                   |
+| `q`                       | Quit                                                      |
+| `o`                       | Write: serve `on` for everyone (needs `--write`)          |
+| `f`                       | Write: serve `off` (needs `--write`)                      |
+| `a`                       | Write: add the `HARNESS_FME_KEY` key (needs `--write`)    |
+| `x`                       | Write: remove the `HARNESS_FME_KEY` key (needs `--write`) |
+
+The write keys act on the marked flags, or on the selected flag when none are marked, in the focused environment. `a` and `x` need `HARNESS_FME_KEY`; without it the dashboard says `no key configured: set HARNESS_FME_KEY`.
+
+```sh
+HARNESS_FME_KEY=0a1b2c3d-0000-4000-8000-000000000001 harness-fme tui --env QA --write
+```
+
+## 🏭 Production is explicit
+
+- The initial focus is never a production environment. If every environment shown is production, nothing is focused and a write key asks you to pick a column first.
+- A production environment is marked in the list and the plan.
+
+## ✅ Confirming a write
+
+A write key does not write. It opens a plan screen listing what would change, then waits:
+
+- **Other environments**: press `y` to apply, `esc` to cancel.
+- **Production**: the screen takes text input. Type the environment's exact name, for example `Prod`, then `enter`. A wrong name is refused with the reason on screen and nothing is sent. `esc` cancels.
+
+After applying, a results screen lists each flag as applied, skipped or failed; `enter` or `esc` returns to the refreshed list.
+
+The dashboard uses the same path as the commands in [Safe writes](/projects/harness-fme-cli/docs/safe-writes): the plan, a backup before each write under `~/.harness-fme/backups`, a read-back afterwards, and a stop at the first failure. The title and comment are the operation's defaults.

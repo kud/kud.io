@@ -1,0 +1,10 @@
+{
+  "pages": [
+    "index",
+    "client",
+    "errors-and-rate-limits",
+    "paging",
+    "flags-and-segments",
+    "safe-writes"
+  ]
+}

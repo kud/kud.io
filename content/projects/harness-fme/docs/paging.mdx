@@ -1,0 +1,64 @@
+---
+title: 📄 Paging
+description: Page size limits, collectAll, and the listAll helpers that walk every page for you.
+---
+
+List endpoints return a `Page<T>`: `{ objects: T[]; totalCount?: number }`. Each `list*` helper fetches a single page; each `listAll*` helper walks them all.
+
+## Limits
+
+The admin API caps every list endpoint at 50 objects per page, exported as `MAX_PAGE_SIZE`. Single-page helpers such as `listFeatureFlags`, `listWorkspaces` and `listSegments` default to `limit = 20` and `offset = 0`:
+
+```ts
+const page = await listFeatureFlags(client, {
+  workspaceId,
+  limit: 50,
+  offset: 100,
+  tag: "checkout",
+})
+```
+
+The page size is sent as `limit`. The flag listing also accepts `tag`, `rolloutStatusId` and `name` (a partial match) as filters.
+
+## `collectAll`
+
+`collectAll(fetchPage, { pageSize })` is the generic walker. Give it a function that fetches one page at an offset and it returns every object:
+
+```ts
+import { collectAll, listSegments } from "@kud/harness-fme"
+
+const all = await collectAll((offset, limit) =>
+  listSegments(client, { workspaceId, limit, offset }),
+)
+if (all.ok) console.log(all.data.length)
+```
+
+It is careful about how it stops:
+
+- The offset advances by the number of objects actually returned, not the number asked for, so a server that caps pages below the requested size still yields every object exactly once.
+- It ends on `totalCount` when the API provides one, or on a short page when it does not.
+- An empty page always ends the walk.
+- The first failed page ends it too, returning that failure as the result.
+
+`pageSize` defaults to `MAX_PAGE_SIZE`.
+
+## The `listAll*` helpers
+
+| Helper                                              | Walks                                       |
+| --------------------------------------------------- | ------------------------------------------- |
+| `getAllWorkspaces(client)`                          | every workspace                             |
+| `listAllFeatureFlags(client, { workspaceId, … })`   | every flag, with the same filters           |
+| `listAllFlagDefinitions(client, { workspaceId, environmentId })` | every definition in an environment |
+
+```ts
+const flags = await listAllFeatureFlags(client, {
+  workspaceId,
+  tag: "checkout",
+})
+```
+
+Fetching at the maximum page size matters: a workspace of a thousand flags takes 20 requests rather than 50. A bug where the page size was sent under the wrong parameter name, silently leaving every page at 20, is the reason the helpers all go through one tested path.
+
+## Counting cheaply
+
+`countFlags(client, workspaceId)` asks for a single-object page and reads `totalCount`, so you learn the size of a workspace with one tiny request. `buildFlagRows` uses it to decide between reading definitions flag by flag and listing a whole environment, see [Flags, definitions and segments](/projects/harness-fme/docs/flags-and-segments).

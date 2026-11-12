@@ -1,0 +1,39 @@
+---
+title: "⚙️ Configuration"
+description: "Environment variables, workspace selection, colour, and the optional fme alias."
+---
+
+`harness-fme` has no config file. It reads environment variables, and command-line options win over them.
+
+## 🌱 Environment variables
+
+| Variable                | Purpose                                                                                           |
+| ----------------------- | ------------------------------------------------------------------------------------------------- |
+| `HARNESS_FME_API_KEY`   | API key. `MCP_HARNESS_FME_API_KEY` is read too, so one exported key serves the MCP server as well |
+| `HARNESS_FME_WORKSPACE` | Default workspace, by name or id                                                                  |
+| `HARNESS_FME_KEY`       | Default for `--key`, and the key the dashboard's `a` and `x` act on                               |
+| `NO_COLOR`              | Disable colour                                                                                    |
+
+```sh
+export HARNESS_FME_API_KEY=<your-api-key>
+export HARNESS_FME_WORKSPACE="Storefront"
+export HARNESS_FME_KEY=0a1b2c3d-0000-4000-8000-000000000001
+```
+
+The API key is never printed, on success or on failure. Without one, the command exits with code 2 before making any request.
+
+## 🏢 Workspace
+
+`-w, --workspace <id|name>` wins over `HARNESS_FME_WORKSPACE`. With neither, the CLI uses the only workspace the key can see.
+
+## 🎨 Colour
+
+Colour is used only when stdout is a terminal. `--no-color` or `NO_COLOR` turns it off, and `--json` never uses it.
+
+## ⌨️ A shorter name
+
+There is deliberately no second binary. If you would rather type less, alias it:
+
+```sh
+alias fme=harness-fme
+```

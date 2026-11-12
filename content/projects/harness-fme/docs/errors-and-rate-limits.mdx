@@ -1,0 +1,63 @@
+---
+title: 🚦 Errors and rate limits
+description: How the client waits out 429 responses, spaces requests with minIntervalMs and reports failures.
+---
+
+## The rate limit is shared
+
+The admin API's request budget belongs to the whole organisation, roughly 20 requests per 10-second window. Another integration can drain it, so a single call can get a `429` through no fault of its own. The client waits out the window instead of failing on the first one.
+
+## 429 handling
+
+On a `429` the client reads `x-ratelimit-reset-seconds-org`, falling back to `x-ratelimit-reset-seconds-ip`, and sleeps for that long before sending the same request again:
+
+- A missing or invalid header waits 2 seconds.
+- Any wait is capped at 12 seconds.
+- A further 250 ms is added on top.
+- At most `maxRetries` retries happen (3 by default). After that the `429` comes back as an ordinary failure.
+
+Unlike many clients, this retry applies to writes too. A `429` means the request was rejected before it did anything, so repeating it is safe. No other status is retried.
+
+```ts
+const client = createClient({
+  apiKey,
+  maxRetries: 5,
+  onRateLimit: (waitMs, path) => console.warn(`rate limited on ${path}, waiting ${waitMs} ms`),
+})
+```
+
+`rateLimitWaitMs(response)` is exported if you want the same calculation elsewhere.
+
+## Spacing requests with `minIntervalMs`
+
+Waiting after a 429 is reactive. `minIntervalMs` is the polite alternative: the minimum gap between the starts of two requests, retries included.
+
+```ts
+const client = createClient({ apiKey, minIntervalMs: 200 })
+```
+
+Slots are handed out in order, so concurrent calls queue up rather than bunching. The default of `0` disables spacing; the 429 handling applies either way. For long bulk runs a small interval keeps you well inside the window and leaves room for everyone else sharing the budget.
+
+## What a failure looks like
+
+A non-2xx answer becomes `{ ok: false, status, message }`, where `message` is the status followed by the response body, such as `404: {"code":404,"message":"flag not found"}`. A network error, or any exception raised while sending, becomes `{ ok: false, message }` with no `status`.
+
+`onError(message, path)` fires for both, which is the one place to hook logging:
+
+```ts
+const client = createClient({
+  apiKey,
+  onError: (message, path) => console.error(`${path}: ${message}`),
+})
+```
+
+Helpers add context in front, and the status is preserved, so you can still branch on it:
+
+```ts
+const def = await getFlagDefinition(client, { workspaceId, environmentId, flagName })
+if (!def.ok && def.status === 404) {
+  // the flag has no definition in this environment
+}
+```
+
+See [Client and results](/projects/harness-fme/docs/client) for the result type.

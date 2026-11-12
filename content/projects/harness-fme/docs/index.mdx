@@ -1,0 +1,14 @@
+---
+title: 👋 Introduction
+description: A headless Harness FME admin API client for Node.js, with typed reads, rate-limit handling and a safe plan, backup, write and read-back engine.
+---
+
+`@kud/harness-fme` is the core library behind the harness-fme family: one small request client, typed helpers for workspaces, flags, definitions and segments, and an engine that changes flags in bulk without surprises. It has no CLI, no prompts and no rendering, so command-line tools and servers can share the same behaviour underneath.
+
+## What's here
+
+- [🧩 Client and results](/projects/harness-fme/docs/client) — `createClient`, the `FmeResult` shape and how the API key is handled
+- [🚦 Errors and rate limits](/projects/harness-fme/docs/errors-and-rate-limits) — 429 handling, `minIntervalMs` and what a failure looks like
+- [📄 Paging](/projects/harness-fme/docs/paging) — `limit`, `MAX_PAGE_SIZE`, `collectAll` and the `listAll*` helpers
+- [🚩 Flags, definitions and segments](/projects/harness-fme/docs/flags-and-segments) — reading and writing flags, per-environment definitions and both kinds of segment
+- [🛡 Safe writes](/projects/harness-fme/docs/safe-writes) — operations, `planChanges`, `applyChanges`, the production rule, backups and read-back

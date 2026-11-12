@@ -1,0 +1,76 @@
+---
+title: "🛡️ Safe writes"
+description: "How every write is planned, backed up, verified and paced, and how the production guard works."
+---
+
+Writes are the point of this tool, so they are the most careful part of it. `on`, `off`, `key add` and `key remove` all take the same path.
+
+## 📝 A plan, always
+
+Every write resolves the flags, reads their current definitions and prints a table of what would change (flag, action, detail). Without `--go` that is all that happens:
+
+```console
+$ harness-fme on checkout_new_flow --env QA
+Dry run: nothing was written. 1 change ready; re-run with --go to apply.
+```
+
+`--json` prints the same plan as a document with `mode: "plan"`. A plan that contains flags which could not be read exits with code 1, and `--go` refuses to proceed until that is fixed.
+
+## 💾 A backup before each write
+
+With `--go`, the original definition is saved immediately before that flag is written:
+
+```
+~/.harness-fme/backups/<run>/<environment>/<flag>.json
+```
+
+Use `--backup-dir <dir>` to put the run somewhere else. Each file holds the workspace id, the environment, the flag, a `savedAt` timestamp and the definition exactly as it was read, so a change can be put back by hand. Existing files are never overwritten.
+
+## 🔎 A read-back after each write
+
+The flag is read again and compared with the plan. The run **stops at the first failure**, reports how many flags were changed and how many were not attempted, and exits with code 1.
+
+```console
+FAILED  checkout_new_flow  ...
+Stopped at the first failure after 0 changes; 2 not attempted.
+```
+
+## 🐢 Going slowly
+
+`--only <flag>` (repeatable) and `--limit <n>` narrow what is written from a larger plan, so you can try one flag before the rest. Every `--only` name must be among the flags in the run, otherwise the command exits with code 2. When a plan is narrowed, the dry-run message says how many were planned and how many are ready.
+
+## ⏱️ Gentle on the API
+
+Calls are spaced about 550 ms apart, because the API's limit is shared across the organisation. When the API answers 429, the reset headers are honoured before retrying, and a `rate limited, waiting Ns` note appears on stderr.
+
+## 🏭 The production guard
+
+An environment whose name matches `/prod/i` refuses to write unless both of these are given:
+
+- `--env <its exact name>`
+- `--go`
+
+`--env prod` for an environment called `Prod` is a refusal with exit code 2, not a guess. The plan table marks such an environment `(production)`, and a dry run reminds you of the exact command to use.
+
+```sh
+harness-fme off checkout_new_flow --env Prod          # plan only
+harness-fme off checkout_new_flow --env Prod --go     # allowed: exact name plus --go
+```
+
+The dashboard applies the same rule by asking for the name to be typed out; see [Interactive dashboard](/projects/harness-fme-cli/docs/interactive).
+
+## 🏷️ Title and comment
+
+Every write is labelled, so the change history says why. Each operation has a sensible default title and comment; override them with `--title` and `--comment`.
+
+## 🧭 A careful rollout
+
+Try one flag from a prefix before the rest:
+
+```sh
+harness-fme on --prefix checkout_ --env Prod
+harness-fme on --prefix checkout_ --env Prod --limit 1 \
+  --title "Enable checkout flow" --comment "Planned rollout" --go
+```
+
+The first command is a plan only. The second writes a single flag; because `Prod` is the exact environment name and `--go` is present, the guard is satisfied. Run it again with a larger `--limit`, or none, when the first flag looks right.
