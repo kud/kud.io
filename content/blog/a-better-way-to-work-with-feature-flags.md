@@ -4,7 +4,7 @@ description: "Why I built a Harness FME CLI for inspecting rollouts, managing us
 date: "2026-11-12"
 slug: "a-better-way-to-work-with-feature-flags"
 tags: ["engineering","tools"]
-cover: "/blog/a-better-way-to-work-with-feature-flags/4f677083d0c1.png"
+cover: "/blog/a-better-way-to-work-with-feature-flags/4a8dcdb2ea60.jpg"
 updated: "2026-11-12T18:46:00.000Z"
 ---
 
