@@ -94,6 +94,13 @@ const closest = (pathname: string, places: Place[]) => {
   return winner;
 };
 
+// The way-back buttons under the card; the one the card already offers is left
+// out, so a guess of Projects never shows Projects twice.
+const ways = [
+  { href: "/projects", label: "Projects" },
+  { href: "/blog", label: "Writing" },
+];
+
 const PlaceLink = ({ place }: { place: Place }) => (
   <Link href={place.href} className={styles.place}>
     <span className={styles.kind}>{place.kind}</span>
@@ -130,12 +137,13 @@ export const Lost = ({ places }: { places: Place[] }) => {
           <Link href="/" className={styles.primary}>
             Back home
           </Link>
-          <Link href="/projects" className={styles.secondary}>
-            Projects
-          </Link>
-          <Link href="/blog" className={styles.secondary}>
-            Writing
-          </Link>
+          {ways
+            .filter((way) => way.href !== guess?.href)
+            .map((way) => (
+              <Link key={way.href} href={way.href} className={styles.secondary}>
+                {way.label}
+              </Link>
+            ))}
         </nav>
 
         <p className={styles.footnote}>
