@@ -18,6 +18,7 @@
     "getstream-feeds",
     "lastfm",
     "youtube",
-    "image-view"
+    "image-view",
+    "incidents"
   ]
 }

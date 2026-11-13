@@ -1,0 +1,44 @@
+---
+title: 🚨 incidents
+description: Check whether a vendor is having an incident before you debug your own code — reads the status pages of the services you depend on through the incidents CLI.
+---
+
+The **incidents** plugin wraps the
+[`@kud/incidents-cli`](https://www.npmjs.com/package/@kud/incidents-cli) CLI. It
+ships a skill only, with no MCP server. When a third-party call is failing, the
+skill runs the CLI, reads what each vendor is declaring on its own status page,
+and tells you whether the fault is likely theirs before you go digging in your
+own code.
+
+## 🧰 What it bundles
+
+| Skill             | Trigger                                                                                   | What it does                                                                                                   |
+| ----------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `incidents-check` | An external API or SaaS call failing, timeouts or 5xx from a vendor, "is GitHub/AWS down?" | Runs `incidents list --json`, reads it worst first, and treats an unreadable page as not green, never as fine |
+
+## 📦 Install
+
+```
+/plugin install incidents@kud --scope user
+```
+
+## 🔧 Configuration
+
+Install the CLI the skill drives (Node 22 or later):
+
+```
+npm i -g @kud/incidents-cli
+```
+
+The global install is optional: without it, the plugin ships its own `incidents` that runs the CLI through npx.
+
+The services come from your own config, `~/.config/incidents/config.yml` plus
+any `config.d/*.yml`. With no config it watches `github`, `npm`, `cloudflare`
+and `claude`. The skill only reads: it never edits your config.
+
+A green row is what the vendor has declared, not proof that your calls work.
+
+## 🔗 Links
+
+- npm: [`@kud/incidents-cli`](https://www.npmjs.com/package/@kud/incidents-cli)
+- GitHub: [kud/incidents-cli](https://github.com/kud/incidents-cli)
