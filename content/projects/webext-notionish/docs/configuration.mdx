@@ -1,0 +1,43 @@
+---
+title: ⚙️ Configuration
+description: The options page settings, what each one stores, and their defaults.
+---
+
+Open the options page from the popup's **Open options** link, or from the add-on's entry in Firefox's Add-ons Manager. Every setting is saved to `browser.storage.sync`, so it follows your Firefox account across machines, and takes effect on open tabs straight away.
+
+## Settings
+
+| Option                         | Storage key     | Default | Effect                                                     |
+| ------------------------------ | --------------- | ------- | ---------------------------------------------------------- |
+| Google Docs                    | `docsEnabled`   | `true`  | Applies the focus treatment to Docs.                       |
+| Google Sheets                  | `sheetsEnabled` | `true`  | Applies the focus treatment to Sheets.                     |
+| Zoom Google Docs to            | `zoomFactor`    | `1.3`   | Text size for Docs while focus mode is on.                 |
+| Set document text in Inter     | `fontOverride`  | `false` | Experimental document typeface swap; breaks layout.        |
+
+Defaults are not written to storage on install. A key you have never changed is read as its default, so a future change of default reaches you too.
+
+## Surfaces
+
+Unticking **Google Docs** or **Google Sheets** turns the extension off for that surface entirely: no attributes are set on the page, no styling applies, and Docs is put back to 100% zoom. The popup's per-surface switch and its **Turn off everywhere** button write the same two keys.
+
+## Text size
+
+Docs draws body text into a canvas, so no stylesheet can set its size. Browser zoom can: it changes the resolution Docs renders at, so the text is repainted larger and stays sharp.
+
+The choices are 100% (Google's default), 110%, 125%, 130%, 150% and 175%. A few things to know:
+
+- It applies to **Docs only**, and only while focus mode is on. Toggling focus off or disabling Docs returns it to 100%.
+- If the page would not fit the window at the chosen size, the zoom is capped to the largest that does, and recomputed when the window is resized. The popup says when this has happened.
+- Firefox only offers a browser-applied zoom per site, so this **is** the zoom Firefox remembers for `docs.google.com`. If you uninstall Notionish while focus mode is on, Docs stays zoomed; reset it with `Cmd+0`.
+
+## Typography
+
+**Set document text in Inter** redefines the sans-serif families Docs uses for body text (Arial, Helvetica, Roboto, Google Sans, Calibri and Verdana) to point at the bundled Inter. Serif fonts are never touched.
+
+It is off by default for good reason. Docs places each run of formatting at a position computed from the original font's measurements, and Inter measures differently, so runs overlap: bold text lands on top of the words either side of it. It stays as an option because it shows canvas text can be reached at all, not because it is pleasant to read. The damage is local to your browser.
+
+This is separate from the Inter used for the surrounding UI, which is always on while a surface is enabled and never affects the document.
+
+## Keyboard shortcut
+
+The focus toggle is the `toggle-focus` command, bound to `Alt+Shift+N` by default. Rebind it from Firefox's Add-ons Manager under **Manage Extension Shortcuts**.

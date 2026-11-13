@@ -1,0 +1,118 @@
+---
+title: 🧠 How it works
+description: The study modes, the mastery and spaced-revision rules, and the formula behind the readiness score.
+---
+
+## 📚 Facts first, questions second
+
+Every examinable fact is a **knowledge item**: one statement in original wording, filed under one of ten topics and marked low, medium or high importance. Questions are interchangeable variants that probe those facts. When you answer, the result is credited to the fact, not to the question, so a different wording of the same idea counts towards the same mastery.
+
+The bank currently holds 99 knowledge items and 152 questions across ten topics:
+
+| Topic                  | Topic                     |
+| ---------------------- | ------------------------- |
+| Values & Principles    | Law & Justice             |
+| What is the UK?        | Rights & Responsibilities |
+| UK History             | Culture & Traditions      |
+| Modern Society         | Geography & Symbols       |
+| Government & Democracy | Sport, Arts & Science     |
+
+Every question has four options, shuffled each time it is shown, and one correct answer with an explanation.
+
+## 🎯 Study modes
+
+| Mode           | Where               | Questions | What it picks                                                               |
+| -------------- | ------------------- | --------- | --------------------------------------------------------------------------- |
+| Diagnostic     | Practice            | 16        | A spread across the whole bank, ignoring your history — a starting baseline |
+| Mixed practice | Practice            | 10        | Any topic, weighted towards what you need                                   |
+| Topic practice | Practice, per topic | 10        | One topic only, weighted the same way                                       |
+| Review         | Practice, Revise    | 10        | Questions you got wrong and facts that are due again                        |
+| Mock exam      | Mock                | 24        | A balanced draw across all ten topics, timed                                |
+
+Practice, diagnostic and review show the answer and explanation straight after each question. The mock exam does not: you answer all 24, then see your result.
+
+### ⚖️ How practice questions are chosen
+
+Practice and review draw questions by weighted chance, and never use the same fact twice in one session while another is available. A question's weight goes up when:
+
+- its fact is one you have never seen,
+- its fact has a low mastery score (the weaker, the heavier),
+- its fact is overdue for revision,
+- you got that exact question wrong last time,
+- its fact is marked high importance (weight multiplied by 1.3).
+
+If nothing is wrong or due, review falls back to the whole bank.
+
+### ⏱️ Mock exams
+
+A mock is 24 questions with a 45-minute countdown, starting after a 3, 2, 1 count-in. Questions are picked round-robin across the ten topics, one fact per question, then shuffled. When the clock reaches zero, any unanswered questions are marked wrong and the exam is submitted. You pass at 75%, which is 18 out of 24.
+
+## 🔄 Mastery and spaced revision
+
+Each fact keeps a mastery score from 0 to 100:
+
+- a correct answer adds 20,
+- a wrong one takes away 25,
+- the score never leaves the 0 to 100 range.
+
+Each answer also schedules the fact's next review, based on how many times in a row you have got it right:
+
+| Correct in a row | Next due      |
+| ---------------- | ------------- |
+| 0                | Straight away |
+| 1                | 1 day         |
+| 2                | 3 days        |
+| 3                | 7 days        |
+| 4                | 16 days       |
+| 5 or more        | 35 days       |
+
+A fact counts as **weak** until its score reaches 60 and you have answered it correctly at least twice in a row. The Revise page shows the facts you get wrong most often, and how many questions are waiting in your review queue.
+
+A topic's score is the average mastery of all its facts, with unseen facts counting as zero, so coverage is part of the number.
+
+## 📊 The readiness score
+
+Readiness is a score from 0 to 100, built from four parts:
+
+| Part           | Weight | What it measures                                                                                 |
+| -------------- | ------ | ------------------------------------------------------------------------------------------------ |
+| Mock average   | 45%    | Your average percentage over your last three completed mocks                                     |
+| Topic coverage | 25%    | Your average mastery across all ten topics                                                       |
+| Key facts      | 20%    | 100, minus 8 for each high-importance fact that is still weak or unseen                          |
+| Consistency    | 10%    | Your streak (12 per day, up to 60, only while it is alive) plus answers given (2 each, up to 40) |
+
+The score maps to a label:
+
+| Score     | Label                |
+| --------- | -------------------- |
+| 80 and up | Likely ready         |
+| 65 to 79  | Almost ready         |
+| 40 to 64  | Building foundations |
+| Below 40  | Not ready yet        |
+
+Until you have sat a mock, the mock average counts as zero, so the score stays low on purpose. Alongside the number, the Progress page lists the reasons behind it (the home screen shows the first two): your recent mock average against the 21 out of 24 it suggests aiming for, how many key facts still need work, your weakest topic if it is below 60%, and a nudge to practise daily if consistency is low.
+
+Readiness is guidance, not a guarantee of passing the real test.
+
+## 🏅 XP, levels, streaks and badges
+
+- **XP**: 2 for every answer, 10 more for a correct one, and a 50 bonus for passing a mock. Every 100 XP is a new level.
+- **Streak**: practising on consecutive calendar days adds one; missing a day resets it to one. A streak is alive if you last practised today or yesterday.
+- **Badges** unlock as you go:
+
+| Badge               | How to earn it                              |
+| ------------------- | ------------------------------------------- |
+| First Steps         | Complete your first practice session        |
+| Dress Rehearsal     | Sit your first mock exam                    |
+| First Pass          | Pass a mock exam for the first time         |
+| Hat-Trick           | Pass three mock exams in a row              |
+| Top Marks           | Score 24 out of 24 in a mock exam           |
+| History Foundations | Reach 70% mastery in UK History             |
+| Government Ready    | Reach 70% mastery in Government & Democracy |
+| Culture Collector   | Reach 70% mastery in Culture & Traditions   |
+| Error Crusher       | Put right 10 facts you previously got wrong |
+| Seven-Day Streak    | Practise on seven days in a row             |
+| Centurion           | Answer 100 questions in total               |
+| Likely Ready        | Reach a readiness score of 80 or more       |
+
+For where all of this is kept, see [Your data](/projects/brit-ready/docs/your-data).

@@ -1,0 +1,97 @@
+---
+title: 🧭 Interactive view
+description: The board, the list and the detail page, and the keys that move between them.
+---
+
+Run `incidents` with no arguments to open the interactive view, or `incidents <service>` to open it straight on one service's detail. A service can be named by its id or any of its aliases, case-insensitively.
+
+```sh
+incidents
+incidents github
+```
+
+The view opens only when both stdin and stdout are terminals, `CI` is not set and `--json` was not passed. Otherwise every form falls back to the static output described in [Scripting](/projects/incidents-cli/docs/scripting), so pipes and cron never hang. Quitting the interactive view exits 0.
+
+Rows fill in as each page answers, and hold still until every service has replied; only then do they take their worst-first order. The header shows how many services are declaring trouble and when the data was last updated.
+
+## Statuses
+
+| Label           | Meaning                                                      |
+| --------------- | ------------------------------------------------------------ |
+| `● critical`    | The vendor declares a critical incident                      |
+| `● major`       | A major incident                                             |
+| `? unreadable`  | The page could not be read; counts as trouble                |
+| `● minor`       | A minor incident                                             |
+| `◌ maintenance` | Maintenance in progress; counts as clear                     |
+| `● ok`          | Operational                                                  |
+| `→ manual`      | No machine-readable page: the row links to it, claims nothing |
+
+## The filter column
+
+Both views share a column of filters on the left, which doubles as the tally: each entry carries how many services it holds.
+
+| Filter        | Holds                                            |
+| ------------- | ------------------------------------------------ |
+| All           | Every service                                    |
+| Trouble       | Everything that is not clear                     |
+| major         | `critical` and `major`                           |
+| minor         | `minor`                                          |
+| unreadable    | Pages that could not be read                     |
+| maintenance   | `maintenance`                                    |
+| ok            | Operational                                      |
+| manual        | Link-only services                               |
+
+`tab` moves the keys between the filter column and the services. In the column, `↑↓` or `j k` step through the filters, and `⏎` or `→` go back to the services. On a narrow terminal the column collapses and the active filter's name moves into the services title.
+
+## The board
+
+The interactive view opens on the list unless `view: board` is set in the configuration, and `v` switches between the two at any time.
+
+The board is a card for each service in trouble, with the healthy ones in a grid beneath. `↑↓` (or `j k`) and `←→` move between cards and card columns; `←` from the first column steps into the filters, and `→` comes back.
+
+## The list
+
+The list shows every service, worst first, one per row, with a preview of the selected one. `↑↓` or `j k` move, and `←→` cycle the filters directly (All, Trouble, then one per status) without leaving the list. The view to open on is set by `view` in the [configuration](/projects/incidents-cli/docs/configuration).
+
+## Searching, folding and sorting
+
+- `/` searches service names and aliases; `esc` clears the search.
+- `z` folds the operational services into one line, and shows them again.
+- `s` toggles the order between by status (worst first) and by name. The view and the order are independent.
+
+Whenever a filter, the fold or a search hides services, a line under the list says how many and which key brings them back.
+
+## The detail page
+
+`⏎` on a service opens its detail page, and loads its history if it has not been loaded yet. The page has two parts:
+
+- **Now** — what the vendor declares: its summary, open incidents and affected components with their status.
+- **History** — earlier incidents, newest first, grouped by period, with a count of any upcoming maintenance. If the history feed could not be read, the page says so rather than showing an empty list.
+
+On a wide terminal the two sit side by side and History scrolls; on a narrow one they stack into a single scrolling column. A `note` from the service's configuration appears at the end.
+
+| Key                    | Action           |
+| ---------------------- | ---------------- |
+| `↑↓` or `j k`          | Scroll one line  |
+| `space`, `f`, `PgDn`   | Scroll a page down |
+| `b`, `PgUp`            | Scroll a page up |
+| `g` / `G`              | Top / bottom     |
+| `r`                    | Re-read this service |
+| `esc` or `⌫`           | Back to the overview |
+
+## All keys
+
+| Key           | Action                                                        |
+| ------------- | ------------------------------------------------------------- |
+| `↑↓`, `j k`   | Move                                                          |
+| `←→`          | Board: move between columns and into the filters. List: cycle filters |
+| `tab`         | Switch between the filters and the services                   |
+| `⏎`           | Open a service                                                |
+| `/`           | Search names and aliases                                      |
+| `z`           | Fold or show the operational services                         |
+| `v`           | Switch between the board and the list                         |
+| `s`           | Sort by status or by name                                     |
+| `r`           | Refresh                                                       |
+| `esc`         | Clear a search, or go back                                    |
+| `⌫`           | Go back                                                       |
+| `q`           | Quit                                                          |

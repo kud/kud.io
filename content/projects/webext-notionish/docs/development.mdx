@@ -1,0 +1,60 @@
+---
+title: 🔧 Development
+description: Running Notionish from source, probing Google's markup, and how releases are built and signed.
+---
+
+Notionish is plain JavaScript and hand-written CSS under Manifest V2, with [`web-ext`](https://github.com/mozilla/web-ext) (pinned at 10.6.0) doing the running, linting, building and signing. It needs Node 20 or later.
+
+## Running it
+
+```sh
+git clone https://github.com/kud/webext-notionish.git
+cd webext-notionish
+npm install
+npm run dev
+```
+
+`npm run dev` launches Firefox Nightly with the extension loaded and reloaded on every file change, using a persistent profile at `~/.cache/notionish-dev-profile`. Sign into Google there once; the profile is kept between runs, and there is nothing to test against without a real session. `npm run dev:clean` uses a throwaway profile instead, for a first-install view.
+
+To load it by hand, open `about:debugging#/runtime/this-firefox`, choose **Load Temporary Add-on** and pick `manifest.json`. Temporary add-ons need an explicit **Reload** after each change and are dropped when Firefox restarts.
+
+## Scripts
+
+| Script              | What it does                                                                 |
+| ------------------- | ---------------------------------------------------------------------------- |
+| `npm run dev`       | Firefox Nightly on the persistent dev profile, extension loaded and watched  |
+| `npm run dev:clean` | The same on a fresh temporary profile                                        |
+| `npm run lint`      | `web-ext lint`                                                               |
+| `npm run build`     | Builds the package into `web-ext-artifacts/`                                 |
+| `npm run version`   | Copies the `package.json` version into `manifest.json`                       |
+| `npm run publish`   | Builds, then opens the AMO Developer Hub for a first manual submission       |
+
+`publish.sh`, `tools/`, `package-lock.json` and `.github/` are left out of every built and signed package.
+
+## How it fits together
+
+`src/content.js` runs at `document_start`, works out the surface from the URL, reads the settings and, if that surface is enabled, sets `data-notionish-surface` and `data-notionish-focus` on the page's root element. Every hiding and restyling rule in `src/content/shared.css`, `docs.css` and `sheets.css` is gated on those attributes, so if the script never runs the stylesheets do nothing and Google's normal interface shows.
+
+JavaScript reaches past the stylesheets in only three places, all because canvas text is out of a stylesheet's reach: the injected `@font-face` for the UI typeface, the optional document font swap, and the Docs zoom. `src/background.js` performs the zoom with `tabs.setZoom`, which a content script cannot call, and relays the keyboard shortcut to the active tab.
+
+`src/settings.js` is the single declaration of the stored preferences, loaded as a classic script by the content script, popup and options page alike.
+
+## Probing Google's markup
+
+Google changes Docs and Sheets markup without notice. Every selector the stylesheets depend on is tracked in `SELECTORS.md`, tiered by evidence: confirmed on a live document, confirmed absent, or unverified. When something reappears, probe rather than guess.
+
+Each probe script copies a snippet to the clipboard (macOS, via `pbcopy`). Paste it into the **page** console on a real Doc or Sheet (`Cmd+Opt+K`, not the Browser Console):
+
+| Script                    | File                | Answers                                                          |
+| ------------------------- | ------------------- | ---------------------------------------------------------------- |
+| `npm run probe:selectors` | `selector-probe.js` | Which elements exist, and which are visible despite a rule       |
+| `npm run probe:spacing`   | `spacing-probe.js`  | Which element owns each vertical gap, and the page's box geometry |
+| `npm run probe:header`    | `header-probe.js`   | The same question along the header row                           |
+| `npm run probe:model`     | `model-probe.js`    | What Docs' own document model contains                           |
+| `npm run probe:title`     | `title-query.js`    | Measures the title field once you click into it to rename        |
+
+## Releasing
+
+CI runs `npm run build` and `npm run lint` on every push to `main` and on pull requests.
+
+Pushing a `v*` tag runs the release workflow, which signs the package and uploads it to addons.mozilla.org. The very first submission of a new add-on has to go through the Developer Hub by hand, which is what `npm run publish` sets up.

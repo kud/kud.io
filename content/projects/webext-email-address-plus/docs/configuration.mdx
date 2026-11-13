@@ -1,0 +1,41 @@
+---
+title: ⚙️ Configuration
+description: Your email address, the three labelling modes with examples, the two display toggles, and where the settings are stored.
+---
+
+Open the settings from the add-ons manager, or with the **Settings** button in the toolbar popup. There is no save button: changes are saved as you make them, and a **Saved** tick confirms each one.
+
+## ✉️ Your address
+
+Enter the address you want labelled, for example `alex@example.org`. It must look like a full address; anything else is flagged and not saved.
+
+The label is inserted just before the last `@`, so the address only works with a mail provider that supports plus addressing.
+
+## 🏷️ Label to add
+
+Three modes decide how much of the hostname becomes the label. The settings page previews each one live for a page on `www.shop.example.com`:
+
+| Mode                      | Label for `www.shop.example.com` | Result                                  |
+| ------------------------- | -------------------------------- | --------------------------------------- |
+| **Main domain** (default) | `example.com`                    | `alex+example.com@example.org`          |
+| **Short**                 | `example`                        | `alex+example@example.org`              |
+| **Full domain**           | `www.shop.example.com`           | `alex+www.shop.example.com@example.org` |
+
+A few details of how the label is built:
+
+- **Main domain** keeps the last two parts of the hostname, or the last three when the second-to-last part is `co`, `com`, `org`, `net`, `gov`, `edu` or `ac`, so `shop.example.co.uk` gives `example.co.uk`.
+- **Short** takes the second-to-last part of the hostname. On a two-part suffix such as `.co.uk` that is the suffix itself (`co`), so **Main domain** is the better fit for those sites.
+- The label is lower-cased, and anything other than letters, digits, dots and hyphens is stripped out.
+
+## 🎛️ Popup and page
+
+| Toggle                            | Default | Effect                                                     |
+| --------------------------------- | ------- | ---------------------------------------------------------- |
+| **Recent addresses in the popup** | on      | Shows the last three copied addresses in the toolbar popup |
+| **Icon inside email fields**      | on      | Shows the floating **+** button on focused email fields    |
+
+## 💾 Storage
+
+Settings live in the browser's local extension storage on this computer only; nothing is synced or sent anywhere. The stored keys are `email`, `domainMode` (`main`, `short` or `full`), `showHistory`, `showFloatingIcon` and `emailHistory` (the Recent list).
+
+See [Usage](/projects/webext-email-address-plus/docs/usage) for where each of these shows up.

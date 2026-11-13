@@ -1,0 +1,56 @@
+---
+title: 🕰️ Freshness
+description: How the board stays current within GitHub's rate limit, and what each age and staleness label is telling you.
+---
+
+Your Move holds no copy of your GitHub data. Every answer is read from GitHub, so the honest thing it can do is tell you how old that answer is. This page explains how it decides when to read again, and what the header means.
+
+## 💓 Pulses and full reads
+
+A full read of the board costs about 74 of GitHub's 5,000 hourly GraphQL points, far too many to spend every minute. So the board asks a cheaper question instead.
+
+- **Pulse** — once a minute, while the tab is visible, the board calls `/api/pulse`. For a single point it asks whether anything the board shows has moved, and gets back a fingerprint.
+- **Full read** — when the fingerprint differs from the last one, the board calls `/api/inbox` and redraws.
+- **Safety net** — independently of pulses, a visible board does a full read every 20 minutes. Returning to the tab sends a pulse straight away, and reconnecting after being offline does a full read.
+
+The fingerprint is a cursor, not a mirror: it is compared for equality and nothing else, never shown and never stored on the server. Losing it costs one pulse re-recording a baseline, never a wrong board.
+
+## 🪫 Protecting the budget
+
+Several limits stop a busy afternoon from spending the hour's points on its own:
+
+| Rule                       | Value      | Why                                                                          |
+| -------------------------- | ---------- | ---------------------------------------------------------------------------- |
+| Gap between pulse reads    | 3 minutes  | A PR collecting comments every thirty seconds still causes one read at most  |
+| Gap when the budget is low | 10 minutes | Applies once fewer than 2,000 points remain                                  |
+| Automatic refresh floor    | 500 points | Below this the board stops refreshing on its own and leaves the rest for you |
+
+A change spotted inside the gap is not forgotten: the next pulse sees it again and reads once the gap has passed.
+
+On the server, `/api/inbox` keeps each answer in memory for five minutes, so a second tab, a reload or a phone and a laptop looking at once share one read. If GitHub refuses (a spent rate limit, say), the last good answer from the past 90 minutes is served with its original age rather than an empty board. A partial answer, where some sources failed, is never cached.
+
+## 🏷️ Reading the header
+
+The header always describes the **read**: how old the rows on screen are.
+
+| Label                 | Meaning                                                            |
+| --------------------- | ------------------------------------------------------------------ |
+| `just now`            | Read less than a minute ago                                        |
+| `14 min ago`          | Read 14 minutes ago, with no newer confirmation                    |
+| `no change in 14 min` | Read 14 minutes ago, and a pulse since has confirmed nothing moved |
+| `May be out of date`  | Nothing has confirmed the board for more than eight minutes        |
+
+Staleness follows the latest confirmation (a successful pulse or full read); age follows the read. That is why a board read twenty minutes ago and confirmed a minute ago is current, not stale. Hover or focus the refresh control for the exact figure in seconds.
+
+The board can also be **offline** (no network) or **expired** (GitHub answered 401, so you need to sign in again).
+
+## 🔕 What speaks and what stays quiet
+
+- Pulses are silent: no spinner, no banner, no toast. A failed pulse other than a 401 says nothing, and the eight-minute rule catches it.
+- Only a full read shows the refreshing indicator.
+- Only a refresh you pressed announces its result, once: `Updated` or `Up to date`.
+- A change a pulse brought in lands in place. If **Notify me** is on, a row that newly needs you raises a notification; see [🗂️ Using the board](/projects/your-move/docs/usage).
+
+## 🔄 Stale builds
+
+An installed app resumed from the background can keep an old bundle for days while its data stays fresh. The client compares its own build with the one `/api/version` reports, and the menu shows **Update available** when they differ. `/api/version` sits outside the sign-in gate, because an expired session is exactly when a stale client most needs telling.

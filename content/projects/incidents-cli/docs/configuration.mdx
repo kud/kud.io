@@ -1,0 +1,86 @@
+---
+title: ⚙️ Configuration
+description: Where the config lives, its keys, how drop-ins merge, the built-in services, the kinds of page and the environment variables.
+---
+
+## Where it lives
+
+`${XDG_CONFIG_HOME:-~/.config}/incidents/config.yml` is read first, then every `config.d/*.yml` beside it, in lexical order, merged over it by service id. `INCIDENTS_CONFIG=<file>` replaces both with a single file, and fails with exit 2 if that file does not exist.
+
+With no config file at all, the services are `github`, `npm`, `cloudflare` and `claude`, and a muted line names the config path to create.
+
+## Keys
+
+```yaml
+timeout: 4000 # milliseconds per request, default 4000
+view: list # the view to open on: list (default) or board
+sort: status # the order to open on: status, worst first (default), or name
+services:
+  github: {} # take the built-in entry as it is
+  aws:
+    regions: [us-east-1, us-west-2] # override fields of a built-in entry
+  npm:
+    enabled: false # drop one
+  acme:
+    name: Acme # a full entry defines a new service
+    kind: statuspage
+    url: https://status.acme.example
+    aliases: [ac]
+```
+
+| Key        | Meaning                                                                       |
+| ---------- | ----------------------------------------------------------------------------- |
+| `timeout`  | Milliseconds per request, default `4000`                                      |
+| `view`     | `list` (default) or `board`: the view the interactive view opens on           |
+| `sort`     | `status` (default, worst first) or `name`                                     |
+| `services` | A map of service id to its fields; only the services listed here are checked |
+
+For `timeout`, `view` and `sort`, the last file to set them wins. Any other value for `view` or `sort` is an error naming the file.
+
+Within `services`, a drop-in's fields are merged over the same id's fields from earlier files, so one file can add `regions` to a service another file declared.
+
+## Service fields
+
+| Field     | Meaning                                                                          |
+| --------- | -------------------------------------------------------------------------------- |
+| `name`    | Display name; defaults to the id                                                 |
+| `kind`    | `statuspage`, `rss`, `slack`, `aws` or `link`; required for a service not built in |
+| `url`     | The status page; must be `https://` for `statuspage`, `rss` and `link`           |
+| `feed`    | The incident feed URL; required for `rss`                                        |
+| `window`  | For `rss`: hours a post counts as current, default `6`                           |
+| `regions` | For `aws`: the regions to count; global events always count                      |
+| `aliases` | Other words that name the service on the command line and in search              |
+| `note`    | A line printed under the detail                                                  |
+| `timeout` | Milliseconds per request for this service, overriding the global one             |
+| `enabled` | `false` drops the service                                                        |
+
+## Kinds
+
+| Kind         | Reads                                                                                         |
+| ------------ | --------------------------------------------------------------------------------------------- |
+| `statuspage` | Atlassian Statuspage v2: `<url>/api/v2/summary.json`, history from `<url>/history.rss`        |
+| `rss`        | An incident feed only; current state comes from how recent the last post is (`window`)        |
+| `slack`      | Slack's status API                                                                            |
+| `aws`        | AWS Health's public event list; `regions` narrows it, global events always count              |
+| `link`       | No machine-readable page: the row points at `url` and claims nothing                          |
+
+## Built-in services
+
+`github`, `claude`, `openai`, `vercel`, `cloudflare`, `npm`, `docker`, `figma`, `linear`, `notion`, `gandi`, `todoist`, `bluesky`, `jira`, `confluence`, `bitbucket`, `sentry`, `harness`, `datadog`, `slack`, `aws`.
+
+Listing one with `{}` takes its built-in entry as it is; any fields you give override it.
+
+## Errors
+
+`list`, `services`, `watch` and `help` are reserved words and cannot be a service id or alias. Loading fails with exit 2 and a message naming the file and the id. Any other configuration problem (an unknown kind, a missing `https` url, an `rss` service without a `feed`, a file that is not a YAML mapping) also exits 2 with the file named.
+
+## Environment
+
+| Variable           | Effect                                             |
+| ------------------ | -------------------------------------------------- |
+| `INCIDENTS_CONFIG` | A single config file, replacing the default lookup |
+| `XDG_CONFIG_HOME`  | Moves the default config directory                 |
+| `NO_COLOR`         | Plain output                                       |
+| `CI`               | Forces the static output                           |
+
+Requests identify themselves as `incidents-cli/<version>`.

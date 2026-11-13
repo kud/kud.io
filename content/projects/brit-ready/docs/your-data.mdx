@@ -1,0 +1,52 @@
+---
+title: 🔒 Your data
+description: Where Brit Ready keeps your progress, how to back it up and restore it, and what each setting does.
+---
+
+## 💾 Everything stays on your device
+
+There is no account and no backend. Progress is saved in your browser's IndexedDB under the key `brit-ready-progress`, so it belongs to that browser on that device. Clearing site data, or switching browser or device, starts you from scratch unless you restore a backup.
+
+What is saved:
+
+- your name and target test date, if you gave them,
+- your preferences: reminders, sound and mascot style,
+- XP, streak and the day you last practised,
+- mastery for every fact you have seen,
+- every session and every answer,
+- the questions you last got wrong, and your unlocked badges.
+
+The app installs as a PWA and its service worker caches what it needs, so after the first visit it works offline.
+
+## 📦 Back up and restore
+
+Open **Settings**, then **Your data**:
+
+- **Export** downloads `brit-ready-backup.json`, a readable JSON file of your progress.
+- **Import** reads such a file back in and replaces the matching fields.
+
+An import is accepted only if the file says it comes from `brit-ready` and uses the same backup format version (currently `1`); anything else is rejected and your progress is left alone. Reminders, sound and mascot style are not part of the backup, so set them again on a new device.
+
+To move to a new phone or browser, export on the old one, then import on the new one.
+
+## ⚙️ Settings
+
+| Setting            | What it does                                                                    |
+| ------------------ | ------------------------------------------------------------------------------- |
+| Your name          | Used to greet you on the home screen; optional                                  |
+| Test date          | Your booked test date; drives the countdown in reminders                        |
+| Theme              | Light, dark or system                                                           |
+| Language           | English only                                                                    |
+| Mascot             | Pixel art or soft style for the coach                                           |
+| Sound effects      | Subtle sounds for answers and wins; on by default                               |
+| Reminders          | Practice nudges, off by default                                                 |
+| Reset all progress | Erases everything stored on this device, after a confirmation; cannot be undone |
+
+## 🔔 How reminders work
+
+A PWA cannot schedule notifications in the background without a server, so Brit Ready shows its reminder **when you open the app**, at most once per calendar day. Turning reminders on asks for notification permission; the switch is disabled in browsers that do not support notifications.
+
+- With a test date set, the reminder counts down the days to your test.
+- Without one, you get a nudge to keep your streak going, but only on days you have not practised yet.
+
+For what the scores and streaks mean, see [How it works](/projects/brit-ready/docs/how-it-works).

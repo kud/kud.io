@@ -1,0 +1,72 @@
+---
+title: 🔐 Self-hosting
+description: Running your own deployment, from the GitHub OAuth App and environment variables to sessions and demo mode.
+---
+
+Your Move is a Next.js app with no database and no session store. Running your own copy needs a GitHub OAuth App, three environment variables and anything that runs Node.
+
+## 🔑 Create the OAuth App
+
+Create an OAuth App under [GitHub's developer settings](https://github.com/settings/developers) and set its **Authorization callback URL** to:
+
+```
+https://your-deployment.example.com/api/auth/callback
+```
+
+It has to be an OAuth App rather than a GitHub App. A GitHub App's user token is intersected with the App's installations, so it would only ever see the repositories the App happens to be installed on, which is the wrong shape for a set of repositories that changes week to week.
+
+Sign-in asks for the `repo` and `read:org` scopes.
+
+## 🌱 Environment variables
+
+Copy `.env.example` to `.env.local` and fill in:
+
+| Variable               | Required | What it is                                                                                               |
+| ---------------------- | -------- | -------------------------------------------------------------------------------------------------------- |
+| `SESSION_SECRET`       | Yes      | Any long random string; the key the session cookie is sealed under. `openssl rand -base64 48` makes one. |
+| `GITHUB_CLIENT_ID`     | Yes      | From the OAuth App                                                                                       |
+| `GITHUB_CLIENT_SECRET` | Yes      | From the same OAuth App                                                                                  |
+| `YOUR_MOVE_DEMO`       | No       | Set to `1` to turn on demo mode on a non-production deploy (see below)                                   |
+
+Without `SESSION_SECRET` (outside demo mode) every request answers `500 SESSION_SECRET is not configured`, rather than serving the board unprotected.
+
+## ▶️ Build and run
+
+```sh
+npm install
+npm run build
+npm start
+```
+
+For local work, `npm run dev` starts the dev server on `http://localhost:3000`. Vercel needs no configuration beyond the environment variables.
+
+| Script              | What it does             |
+| ------------------- | ------------------------ |
+| `npm run dev`       | Start the dev server     |
+| `npm run build`     | Production build         |
+| `npm start`         | Run the production build |
+| `npm test`          | Run the Vitest suite     |
+| `npm run typecheck` | Type-check with no emit  |
+
+## 🍪 Sessions
+
+The session is your GitHub token, sealed with AES-GCM under `SESSION_SECRET` and kept in an `HttpOnly` cookie (`ym_session`) that lasts 90 days. Every request runs as you, so a session grants exactly what you can already see on GitHub.
+
+- Changing `SESSION_SECRET` signs everyone out, which doubles as a way to revoke every session at once.
+- Everything sits behind the sign-in gate except the login page, the `/api/auth` routes, `/api/version`, and the files a browser needs before it has a session: the manifest, the icons, `sw.js` and the offline page.
+- A visit to a gated page while signed out redirects to `/login` and returns you to that page afterwards.
+
+## 🧪 Demo mode
+
+Demo mode lets a preview or local run be signed into and browsed without GitHub. The login page is still the way in, but the GitHub round trip is pretended and the board serves invented sample data. Label changes answer success and save nothing.
+
+It is on when:
+
+- `VERCEL_ENV` is `preview`, or
+- `YOUR_MOVE_DEMO=1` and `VERCEL_ENV` is not `production`
+
+Production is never demo, whatever else is set. With no `SESSION_SECRET`, demo mode falls back to a fixed, demo-only key; set a real one and it is used instead.
+
+## 🏷️ Labels and permissions
+
+Adding or removing a label is the one write the app makes, through GitHub's REST API with your token. The label control only appears on repositories you can write to, and you cannot create a label on someone else's repository, so columns built from labels work only where you own the repo. Everything else on the [board](/projects/your-move/docs/usage) works everywhere.

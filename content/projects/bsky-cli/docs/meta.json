@@ -1,0 +1,4 @@
+{
+  "title": "bsky-cli",
+  "pages": ["index", "authentication", "usage", "interactive"]
+}

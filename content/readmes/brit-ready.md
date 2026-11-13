@@ -1,7 +1,7 @@
 ---
 title: "brit-ready"
 description: "Brit Ready — a gamified, non-official PWA for the Life in the UK Test. Learn every fact, practise the exam format, and know when you're ready to book."
-hasDocs: false
+hasDocs: true
 ---
 
 ## 🌟 Features
@@ -38,74 +38,6 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000). The onboarding flow will walk you through your first session.
-
----
-
-## 📖 Scripts
-
-| Command             | Description                                                          |
-| ------------------- | -------------------------------------------------------------------- |
-| `npm run dev`       | Development server with Turbopack                                    |
-| `npm run build`     | Production build (**`next build --webpack`** — required for Serwist) |
-| `npm run start`     | Serve the production build                                           |
-| `npm run lint`      | ESLint                                                               |
-| `npm run typecheck` | TypeScript type-check (no emit)                                      |
-| `npm run format`    | Prettier (write)                                                     |
-| `npm run icons`     | Generate icons from source                                           |
-
----
-
-## 🗂 Project Structure
-
-```
-src/
-├── app/                   # App Router
-│   ├── page.tsx           # Landing page
-│   ├── about/             # Disclaimer / about
-│   └── app/               # App shell
-│       ├── dashboard/     # Readiness score overview
-│       ├── practice/      # Question-by-question practice
-│       ├── mock/          # Timed mock exam
-│       ├── revise/        # Spaced revision queue
-│       ├── learn/         # Browse knowledge items
-│       ├── progress/      # Mastery charts
-│       ├── onboarding/    # First-run flow
-│       ├── settings/      # Data export/import, preferences
-│       └── category/      # Per-topic drill
-├── components/            # UI components (mascot, quiz-runner, drawer, date picker…)
-├── content/               # Question bank, KnowledgeItems, categories (~150+ questions, 10 topics)
-└── lib/                   # zustand store, session logic, coach lines, sounds, data transfer
-```
-
----
-
-## 🏗 Tech Stack
-
-| Library                                                                                                  | Role                                                    |
-| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| [Next.js 16](https://nextjs.org)                                                                         | App Router, React Server Components, image optimisation |
-| [React 19](https://react.dev)                                                                            | UI runtime                                              |
-| [TypeScript](https://www.typescriptlang.org)                                                             | Strict types throughout                                 |
-| [Tailwind CSS v4](https://tailwindcss.com)                                                               | Utility-first styling                                   |
-| [zustand](https://github.com/pmndrs/zustand) + [idb-keyval](https://github.com/jakearchibald/idb-keyval) | Local-first state with IndexedDB persistence            |
-| [Framer Motion (`motion`)](https://motion.dev)                                                           | Animations and transitions                              |
-| [Serwist / `@serwist/next`](https://serwist.pages.dev)                                                   | Service worker, offline caching, PWA                    |
-| [vaul](https://github.com/emilkowalski/vaul)                                                             | Mobile bottom-sheet drawer                              |
-| [next-themes](https://github.com/pacocoursey/next-themes)                                                | Light / dark theme                                      |
-| [lucide-react](https://lucide.dev)                                                                       | Icon set                                                |
-| [canvas-confetti](https://github.com/catdad/canvas-confetti)                                             | Pass celebration effect                                 |
-
----
-
-## 🚢 Deploy
-
-The project is deployed on Vercel. One critical detail: the build command is pinned to **`next build --webpack`** in `vercel.json`. This is intentional — Serwist's service worker generation is webpack-only, and Next.js 16 now defaults to Turbopack. Using the default `next build` (Turbopack) would silently omit the service worker, breaking offline support and the PWA install prompt.
-
-If you fork and deploy your own instance, ensure your Vercel project's build command matches:
-
-```
-next build --webpack
-```
 
 ---
 

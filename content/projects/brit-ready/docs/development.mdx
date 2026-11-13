@@ -1,0 +1,57 @@
+---
+title: 🛠️ Development
+description: Running Brit Ready locally, the scripts, the content model, icon generation, CI and deploying your own copy.
+---
+
+## 🚀 Run it locally
+
+The repo pins Node.js 22 in `mise.toml`, and CI uses the same version.
+
+```bash
+git clone https://github.com/kud/brit-ready.git
+cd brit-ready
+npm install
+npm run dev
+```
+
+The app lives under `/app`; `/` is the landing page and `/about` the disclaimer. The service worker is disabled in development.
+
+## 📖 Scripts
+
+| Command              | What it does                                    |
+| -------------------- | ----------------------------------------------- |
+| `npm run dev`        | Development server (Turbopack)                  |
+| `npm run build`      | Production build with `next build --webpack`    |
+| `npm run start`      | Serve the production build                      |
+| `npm run lint`       | ESLint                                          |
+| `npm run typecheck`  | `tsc --noEmit`                                  |
+| `npm test`           | Vitest, single run                              |
+| `npm run test:watch` | Vitest in watch mode                            |
+| `npm run format`     | Prettier, writing changes                       |
+| `npm run icons`      | Regenerate every icon from the pixel-art master |
+
+## 🏗️ Why the build uses webpack
+
+Next.js 16 builds with Turbopack by default, but Serwist only generates the service worker through its webpack plugin. `npm run build` therefore runs `next build --webpack`, which compiles `src/app/sw.ts` to `public/sw.js`. A plain `next build` would quietly ship without a service worker: no offline mode and no install prompt.
+
+`vercel.json` sets the build command to `npm run build`, so Vercel picks this up. If you deploy a fork elsewhere, make sure the build command still ends in `next build --webpack`.
+
+## 🗂️ Content
+
+The question bank is plain TypeScript in `src/content/`:
+
+- `categories.ts` — the ten topics, each with an id, title, blurb and emoji.
+- `knowledge-items.ts` — the facts, built with a `ki(id, categoryId, title, fact, entities, importance)` helper. Importance defaults to `medium`.
+- `questions.ts` — the questions, built with a `q(id, knowledgeItemIds, prompt, correct, distractors, explanation, difficulty)` helper. The correct answer comes first and exactly three distractors follow; the quiz shuffles them for display. A question takes its topic from its first knowledge item, and throws at load time if that item does not exist.
+
+`src/content/integrity.test.ts` checks that every question points at real knowledge items and a real topic, and that every high-importance fact is covered by at least one question. An uncovered key fact would count against readiness forever, so this test is the guard for that.
+
+## 🎨 Icons
+
+`npm run icons` runs `scripts/generate-icons.py` through `uv` with Pillow, from the master `assets/guard-icon.png`: a 42 by 42 pixel-art guard, one pixel per cell. Icons scale only by whole numbers with nearest-neighbour sampling and are full-bleed squares, with no rounded corners or padding baked in; whoever displays an icon applies its own shape. Maskable icons keep the guard inside the 80% safe zone.
+
+## ✅ CI
+
+GitHub Actions runs on every push to `main` and every pull request, on Node.js 22, in this order: `npm run lint`, `npm run typecheck`, `npm test`, `npm run build`.
+
+For the scoring rules the tests cover, see [How it works](/projects/brit-ready/docs/how-it-works).

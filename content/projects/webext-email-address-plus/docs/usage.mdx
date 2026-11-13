@@ -1,0 +1,43 @@
+---
+title: ⚡ Usage
+description: The floating icon, the context menu, the keyboard shortcut and the toolbar popup, and how each one fills or copies a labelled address.
+---
+
+Each method takes the address you saved in [Configuration](/projects/webext-email-address-plus/docs/configuration), adds a `+label` built from the current page's hostname, and either fills a field or copies the result.
+
+When a field is filled, the extension sets its value, fires `input` and `change` events so the page's form code notices, and gives the field a brief blue glow.
+
+## ➕ Floating icon
+
+Focus an `input type="email"` field and a small round **+** button appears at its top-right corner. Click it and the field is filled.
+
+- It only appears on fields declared as `type="email"`; for other fields, use the context menu or the shortcut.
+- It follows the field when the page scrolls or resizes, and disappears when focus leaves the field.
+- Turn it off with **Icon inside email fields** in the settings.
+
+## 🖱️ Context menu
+
+Right-click a text field and choose **Fill with labeled email**.
+
+- The menu item appears on editable fields of `http` and `https` pages.
+- It fills the field you right-clicked when that field is a text, email or search input (or has no `type`).
+
+## ⌨️ Keyboard shortcut
+
+Focus a field and press `Ctrl+Shift+Y` (`Cmd+Shift+Y` on macOS). The labelled address goes into whichever element has focus.
+
+The command is called **Fill focused field with labeled email**; Firefox lets you rebind it from **Manage Extension Shortcuts** in the add-ons manager.
+
+## 📋 Toolbar popup
+
+Click the extension's toolbar button for when there is no field to fill, or you want the address elsewhere.
+
+- The popup builds the labelled address for the current tab, **copies it to the clipboard** straight away and shows it with the label highlighted.
+- A **Recent** list holds the last three addresses copied this way; click one to copy it again. Hide it with **Recent addresses in the popup** in the settings.
+- The popup closes itself after four seconds. The countdown pauses while the pointer is over it or keyboard focus is inside it, so you can reach a Recent row.
+- On pages without a web hostname (`about:` pages, extension pages) it copies your plain address with no label.
+
+## 🙋 When no address is set
+
+- The floating icon, context menu and shortcut show a short tooltip above the field asking you to set your address first, and fill nothing.
+- The popup says **Email address missing** (or **Invalid email format**) and offers an **Open settings** button.

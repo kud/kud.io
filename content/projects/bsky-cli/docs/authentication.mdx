@@ -1,0 +1,39 @@
+---
+title: 🔐 Authentication
+description: How bsky signs in to Bluesky with an App Password set in your environment.
+---
+
+`bsky` has no login command and no config file. It reads two environment variables and signs in on the first command that needs an account.
+
+## 🔑 Credentials
+
+| Variable               | Value                                                       |
+| ---------------------- | ----------------------------------------------------------- |
+| `BLUESKY_HANDLE`       | Your handle, for example `alice.example.com`                |
+| `BLUESKY_APP_PASSWORD` | An App Password from Bluesky, under Settings, App Passwords |
+
+```sh
+export BLUESKY_HANDLE=alice.example.com
+export BLUESKY_APP_PASSWORD=<app-password>
+```
+
+Use an App Password rather than your account password. You can revoke it from the same settings screen whenever you like, without touching your real password.
+
+Put the exports in your shell profile so every new terminal has them.
+
+## 🌐 Server
+
+`bsky` always signs in against `https://bsky.social`. Accounts hosted on a different server are not supported, and there is no setting to change it.
+
+The session lasts for the life of one command, so each invocation logs in again; the interactive mode logs in once at start-up.
+
+## 🩺 When it fails
+
+Errors go to stderr and the command exits with status `1`.
+
+- Either variable missing: `Missing credentials. Set BLUESKY_HANDLE and BLUESKY_APP_PASSWORD (an App Password from Bluesky → Settings → App Passwords).`
+- Login rejected: `Auth failed (<status>): <response body>`. The usual cause is an App Password that was mistyped or has been revoked.
+
+Every subcommand needs a session, reading ones such as `timeline`, `search` and `view` included, so set both variables before using any of them.
+
+Next: [⚡ Usage](/projects/bsky-cli/docs/usage).

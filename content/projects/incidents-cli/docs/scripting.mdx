@@ -1,0 +1,98 @@
+---
+title: 📜 Scripting
+description: One-shot output with incidents list, JSON records, the services list and the exit codes.
+---
+
+## incidents list
+
+`incidents list` prints the status once and exits. With a service id or alias it prints that service's detail, history included.
+
+```sh
+incidents list
+incidents list github
+```
+
+The same static output is what `incidents` and `incidents <service>` print when there is no terminal on stdin or stdout, or `CI` is set. Colour and links are used only when stdout is a terminal and `NO_COLOR` is unset.
+
+## JSON
+
+Add `--json` to any form for JSON records. It never opens the interactive view.
+
+```sh
+incidents list --json
+incidents list github --json
+```
+
+`incidents list --json` prints an array, worst first. With a service, it prints one record with its history loaded.
+
+```json
+{
+  "id": "github",
+  "name": "GitHub",
+  "url": "https://www.githubstatus.com",
+  "kind": "statuspage",
+  "fetched": "ok",
+  "indicator": "minor",
+  "description": "Partially Degraded Service",
+  "components": [{ "name": "API", "status": "degraded_performance" }],
+  "active": [
+    {
+      "title": "Elevated API errors",
+      "link": "https://stspg.io/abc",
+      "date": "2026-01-01T10:00:00Z",
+      "impact": "minor"
+    }
+  ],
+  "recent": [],
+  "upcoming": [],
+  "historyLoaded": false,
+  "historyFailed": false,
+  "note": ""
+}
+```
+
+| Field           | Meaning                                                                                              |
+| --------------- | ---------------------------------------------------------------------------------------------------- |
+| `kind`          | `statuspage`, `rss`, `slack`, `aws` or `link`                                                        |
+| `fetched`       | `ok`, or `failed` when the page could not be read                                                    |
+| `indicator`     | `critical`, `major`, `unknown`, `minor`, `maintenance`, `none` or `link`, worst first in that order |
+| `description`   | The vendor's own summary line                                                                        |
+| `components`    | Components with their raw vendor status; `operational` ones are included                             |
+| `active`        | Incidents open now                                                                                   |
+| `recent`        | Past incidents, newest first; empty until history is loaded                                          |
+| `upcoming`      | Scheduled maintenance still to come; empty until history is loaded                                   |
+| `historyLoaded` | `true` once history was requested for this record                                                    |
+| `historyFailed` | `true` when the history feed could not be read, so an empty `recent` claims nothing                  |
+| `note`          | The service's configured `note`, or an empty string                                                  |
+
+`unknown` means the page could not be read. It sorts above every healthy row and fails the exit code.
+
+For example, to list only the services in trouble:
+
+```sh
+incidents list --json | jq -r '.[] | select(.indicator != "none" and .indicator != "link" and .indicator != "maintenance") | .id'
+```
+
+## Exit codes
+
+| Code | Meaning                                                     |
+| ---- | ----------------------------------------------------------- |
+| 0    | All clear: `none`, `maintenance` and `link` count as clear  |
+| 1    | Something is degraded, or a page could not be read          |
+| 2    | Usage or configuration error, or an unknown service         |
+
+The interactive view and `incidents watch` exit 0 when stopped. With no services configured, `incidents list` prints `No services configured.` and exits 0.
+
+```sh
+if ! incidents list >/dev/null; then
+  echo "a vendor is declaring trouble"
+fi
+```
+
+## incidents services
+
+`incidents services` prints the configured services, one per line, as tab-separated id, name and aliases (comma-separated). It is the quickest way to see which ids and aliases `incidents <service>` accepts.
+
+```sh
+incidents services | cut -f1
+```

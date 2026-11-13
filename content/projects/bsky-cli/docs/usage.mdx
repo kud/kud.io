@@ -1,0 +1,126 @@
+---
+title: ⚡ Usage
+description: Every bsky subcommand, its arguments and options, and what it prints.
+---
+
+Run `bsky <command>` for a one-shot action. Run `bsky` on its own to open the [🖥️ interactive mode](/projects/bsky-cli/docs/interactive) instead. `bsky <command> --help` lists a command's arguments.
+
+## 📋 Cheat sheet
+
+| Task | Command |
+| --- | --- |
+| Post | `bsky post "Hello"` |
+| Post with an image | `bsky post "Sunset" --image sunset.jpg --alt "Orange sky"` |
+| Self-thread | `bsky thread "First" "Second" "Third"` |
+| Reply | `bsky reply <post-url> "Agreed"` |
+| Quote | `bsky quote <post-url> "Worth a read"` |
+| Delete your post | `bsky delete <post-url or rkey>` |
+| Your recent posts | `bsky list --limit 10` |
+| Home timeline | `bsky timeline` |
+| Notifications | `bsky notifications` |
+| A profile | `bsky profile alice.example.com` |
+| A post and its replies | `bsky view <post-url>` |
+| Search posts | `bsky search "atproto" --limit 50` |
+| Like / unlike | `bsky like <post-url>`, `bsky unlike <post-url>` |
+| Repost / undo | `bsky repost <post-url>`, `bsky unrepost <post-url>` |
+| Follow / unfollow | `bsky follow <handle>`, `bsky unfollow <handle>` |
+
+## 🔗 Posts and handles
+
+Wherever a command asks for a post, it takes either a `bsky.app` web URL, such as `https://bsky.app/profile/alice.example.com/post/3kxyz…`, or an `at://` URI. `delete` also takes the bare record key (the last segment of the URL).
+
+Handles may be written with or without a leading `@`, and a `did:` identifier works too.
+
+## ✍️ Writing
+
+### `post`
+
+```sh
+bsky post "<text>" [--image <path>] [--alt <text>] [--reply-to <url>] [--quote <url>] [--lang <code>]
+```
+
+| Option | Effect |
+| --- | --- |
+| `--image` | Attach one image: `.png`, `.jpg`, `.jpeg`, `.gif` or `.webp` |
+| `--alt` | Alt text for that image |
+| `--reply-to` | Post as a reply to this post, inside its thread |
+| `--quote` | Embed this post as a quote |
+| `--lang` | Tag the post with a language code, such as `en` or `fr` |
+| `--yes` | Accepted and ignored, for compatibility with older scripts |
+
+`--image` and `--quote` cannot be combined: when both are given, the image is attached and the quote is dropped.
+
+Links, `#hashtags` and `@handle.example.com` mentions in the text are turned into rich text automatically, so they are clickable on Bluesky. A domain such as `kud.io` becomes a link without needing `https://`.
+
+### `thread`
+
+```sh
+bsky thread "First post" "Second post" "Third post"
+```
+
+Each argument becomes one post, and each post replies to the one before it. At least two are required. Every post is length-checked before anything is sent, so one over-long post stops the whole thread rather than leaving half of it published.
+
+### `reply` and `quote`
+
+```sh
+bsky reply <post-url> "Your reply"
+bsky quote <post-url> "Your comment"
+```
+
+Shortcuts for `post --reply-to` and `post --quote`.
+
+### `delete`
+
+```sh
+bsky delete <post-url or rkey>
+```
+
+Deletes one of your own posts and prints `✓ Deleted`.
+
+### 📏 Length and output
+
+Bluesky allows 300 characters per post. Anything longer fails with `Post is <n> chars — Bluesky limit is 300.`
+
+On success, `post`, `reply` and `quote` print the web URL of the new post:
+
+```
+✓ https://bsky.app/profile/alice.example.com/post/3kxyz…
+```
+
+`thread` prints `✓ Posted a <n>-post thread` followed by the URL of its first post.
+
+## 📖 Reading
+
+| Command | Shows | Options |
+| --- | --- | --- |
+| `bsky list` | Your own recent posts, each with its age and web URL | `--limit` (default `25`) |
+| `bsky timeline` | Your home timeline | `--limit` (default `25`) |
+| `bsky notifications` | Who did what (the reason, such as `like`, `repost` or `follow`), with a snippet of text; unread ones marked `●` | `--limit` (default `25`) |
+| `bsky profile [handle]` | Name, bio, followers, following and post count; yourself when no handle is given | none |
+| `bsky view <post-url>` | A post followed by its direct replies (up to 25) | none |
+| `bsky search "<query>"` | Posts matching the query | `--limit` (default `25`) |
+
+Feed output gives each post its author, age (`5m`, `3h`, `2d`), text, and like, repost and reply counts.
+
+## 💬 Engaging
+
+```sh
+bsky like <post-url>
+bsky unlike <post-url>
+bsky repost <post-url>
+bsky unrepost <post-url>
+bsky follow <handle>
+bsky unfollow <handle>
+```
+
+Each prints `✓ <command>` when it succeeds, for example `✓ like`.
+
+## 🤖 Scripting
+
+- Every failure prints its message to stderr and exits with status `1`, so `set -e` and `&&` chains behave.
+- Colour is only used when stdout is a terminal; piped output is plain text.
+- Credentials come from the environment (see [🔐 Authentication](/projects/bsky-cli/docs/authentication)), so nothing prompts.
+
+```sh
+bsky post "New release is out: kud.io" && echo "announced"
+```

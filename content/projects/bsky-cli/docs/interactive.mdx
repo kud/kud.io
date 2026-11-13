@@ -1,0 +1,77 @@
+---
+title: 🖥️ Interactive mode
+description: The full-screen Bluesky client you get by running bsky with no arguments, and the keys that drive it.
+---
+
+```sh
+bsky
+```
+
+With no subcommand, `bsky` signs in, switches to the terminal's alternate screen and opens a two-pane client: a menu on the left and the current view on the right. Quitting restores your terminal as it was.
+
+The menu and post cards use Nerd Font icons, so a Nerd Font in your terminal makes them render properly; without one you will see placeholder glyphs.
+
+## 🧭 Layout
+
+The menu holds **Home**, **Notifications**, **Profile**, **New post**, **Refresh** and **Quit**, with your handle at the bottom. The pane with focus has a bright border.
+
+| View | What it shows |
+| --- | --- |
+| Home | Your timeline, the latest 50 posts, as cards with author, age, two lines of text and reply, repost and like counts |
+| Notifications | Your 30 most recent notifications, unread ones marked `●` |
+| Profile | Your own profile and counts |
+| Thread | The selected post followed by its direct replies |
+| New post | The composer |
+
+## ⌨️ Keys
+
+A hint bar along the bottom always shows the keys for where you are.
+
+### Menu
+
+| Key | Action |
+| --- | --- |
+| `↑` / `↓` | Move through the menu |
+| `Enter` | Open the item |
+| `→` | Jump to the feed |
+| `q` | Quit |
+
+### Home feed
+
+| Key | Action |
+| --- | --- |
+| `↑` / `↓` | Move between posts |
+| `Enter` | Open the post as a thread |
+| `l` | Like the post |
+| `r` | Repost it |
+| `c` | Reply to it in the composer |
+| `←` | Back to the menu |
+| `q` | Quit |
+
+Likes and reposts show a short confirmation next to the view title.
+
+### Thread
+
+| Key | Action |
+| --- | --- |
+| `Esc` or `←` | Back to the home feed |
+| `q` | Quit |
+
+### Composer
+
+| Key | Action |
+| --- | --- |
+| `Shift+Enter` or `Ctrl+D` | Post |
+| `Enter` | New line |
+| `Backspace` | Delete a character |
+| `Esc` | Cancel |
+
+A counter shows how many of the 300 allowed characters you have used and turns red past the limit, at which point posting is refused. After a post goes through, or fails, press any key to return to the home feed, which reloads.
+
+`q` does nothing special in the composer: it simply types a `q`.
+
+## 🔄 Refreshing
+
+**Refresh** in the menu reloads the view that is open: the home timeline, notifications or your profile. Nothing refreshes on its own.
+
+For anything the interactive mode does not cover, such as images, quotes, threads, search or follows, use the [⚡ subcommands](/projects/bsky-cli/docs/usage).

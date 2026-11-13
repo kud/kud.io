@@ -1,0 +1,84 @@
+---
+title: 👀 Watch mode
+description: Poll every service and print one line per status change, as text or JSON, optionally running a command for each.
+---
+
+`incidents watch` polls every configured service and prints a line only when something changes. It never opens the interactive view; `ctrl-c` stops it and exits 0.
+
+```sh
+incidents watch
+incidents watch --interval 2 --json
+```
+
+## Options
+
+| Option                 | Effect                                                              |
+| ---------------------- | ------------------------------------------------------------------- |
+| `--interval <minutes>` | Minutes between polls, default `5`; must be greater than 0          |
+| `--exec <command>`     | Run a shell command once per change; must not be empty              |
+| `--json`               | One JSON object per change instead of a text line                   |
+| `--mock`               | Replay a scenario in which services flip between polls              |
+
+An invalid `--interval` or an empty `--exec` exits 2, as does a configuration with no services.
+
+## What counts as a change
+
+Each service is reduced to one level: `clear`, `minor`, `major`, `critical` or `unreadable`. Operational, maintenance and link-only services all count as `clear`; a page that cannot be read is `unreadable`, which counts as trouble.
+
+A line is printed when a service moves between levels: clear to trouble, trouble to clear, a change of severity, or a page becoming unreadable or readable again. The first poll sets the baseline and reports only what is already in trouble, with `from` set to `null` (shown as `already <level>` in text).
+
+## Output
+
+A text line carries the time, the service, the move, the headline and a link:
+
+```text
+10:00:00  GitHub  clear → minor  Elevated API errors  https://stspg.io/abc
+```
+
+With `--json`, each change is one JSON object per line:
+
+```json
+{
+  "service": "github",
+  "name": "GitHub",
+  "from": "clear",
+  "to": "minor",
+  "headline": "Elevated API errors",
+  "url": "https://stspg.io/abc",
+  "at": "2026-01-01T10:00:00.000Z"
+}
+```
+
+`headline` is the first open incident's title, or the vendor's summary when there is none; `url` is that incident's link, or the status page.
+
+## Running a command per change
+
+`--exec "<command>"` runs a command through your `$SHELL` (or `/bin/sh`) once per change. The change arrives as JSON on stdin, and the same facts are in the environment:
+
+| Variable             | Value                                    |
+| -------------------- | ---------------------------------------- |
+| `INCIDENTS_SERVICE`  | The service id                           |
+| `INCIDENTS_FROM`     | The previous level, empty on the first poll |
+| `INCIDENTS_TO`       | The new level                            |
+| `INCIDENTS_HEADLINE` | The headline                             |
+| `INCIDENTS_URL`      | The link                                 |
+
+The command's output goes to stderr, so a `--json` stream on stdout stays clean. A command that fails, or runs past 30 seconds and is stopped, is reported on stderr and the watch carries on.
+
+On macOS, a desktop notification per change:
+
+```sh
+incidents watch --exec 'osascript -e "display notification \"$INCIDENTS_HEADLINE\" with title \"$INCIDENTS_SERVICE: $INCIDENTS_TO\""'
+```
+
+Or hand each change to a script that reads stdin:
+
+```sh
+incidents watch --exec 'jq -r .headline >> ~/incidents.log'
+```
+
+To try a command without waiting for a real outage, replay the mock scenario:
+
+```sh
+incidents watch --mock --exec 'cat'
+```

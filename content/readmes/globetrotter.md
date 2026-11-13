@@ -1,7 +1,7 @@
 ---
 title: "globetrotter"
 description: "Interactive 3D globe visualization built with Next.js, React, Three.js, and D3. Explore geographic data with smooth animations and real-time interactivity."
-hasDocs: false
+hasDocs: true
 ---
 
 ## 🌟 Features
@@ -29,74 +29,3 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000). Click any country on the flat map or globe to see facts, set a status, write journal notes, and start building your personal atlas.
-
-## 🔧 Development
-
-### Project tree
-
-```
-src/
-├── app/
-│   ├── api/
-│   │   ├── advisories/   # Proxies US + Canada advisory feeds and merges them
-│   │   ├── flight/       # Random live aircraft from adsb.lol
-│   │   ├── plane-info/   # Aircraft type, operator, and route via hexdb
-│   │   └── plane-photo/  # Aircraft photo from Planespotters
-│   ├── layout.tsx        # Root layout — fonts, theme flash prevention, PWA register
-│   ├── manifest.ts       # Web App Manifest for PWA install
-│   └── page.tsx          # Entry: <Sidebar> + <MapStage>
-├── components/
-│   ├── flat-map.tsx      # D3-zoom SVG Mercator map with capital stars and whale
-│   ├── globe-view.tsx    # WebGL 3D globe (react-globe.gl + Three.js) with whale
-│   ├── map-stage.tsx     # Toolbar: view toggle, auto-spin, language, theme, compass
-│   ├── sidebar.tsx       # Stats, search, country list, sort/filter, export/import
-│   ├── country-panel.tsx # Slide-in detail panel with facts, status, and journal
-│   ├── country-tooltip.tsx # Cursor-following tooltip with flag, name, risk meter
-│   └── flight-panel.tsx  # Slide-in live flight details, photo, and airport links
-├── lib/
-│   ├── store.ts          # Zustand store (persisted to localStorage, v4 migration)
-│   ├── advisory.ts       # Bundled US State Dept advisory snapshot
-│   ├── advisory-store.ts # Live advisory fetch (US RSS + Canada), blended level
-│   ├── advisory-feed.ts  # Feed parsing helpers
-│   ├── flight.ts         # adsb.lol poller (60-second interval)
-│   ├── geo.ts            # TopoJSON → GeoJSON country features
-│   ├── country-info.ts   # Country metadata + capital coordinates
-│   ├── colors.ts         # Theme-aware colour palette and status colours
-│   ├── i18n.ts           # Translations (en / fr / es / de)
-│   ├── oceans.ts         # Ocean label coordinates, shared by both views
-│   ├── use-whale.ts      # Whale easter-egg timer hook
-│   └── save-file.ts      # JSON export / import / clipboard helpers
-└── data/
-    ├── advisories.json   # Bundled US State Dept advisory snapshot
-    ├── capitals.json     # Capital city lat/lng index
-    └── country-info.json # Country metadata (flags, region, population…)
-```
-
-### Scripts
-
-| Command         | Description                          |
-| --------------- | ------------------------------------ |
-| `npm run dev`   | Start the Next.js development server |
-| `npm run build` | Production build                     |
-| `npm run start` | Serve the production build locally   |
-| `npm run lint`  | Run ESLint across the codebase       |
-
-## 🏗 Tech Stack
-
-| Library                                                        | Role                                                              |
-| -------------------------------------------------------------- | ----------------------------------------------------------------- |
-| [Next.js 16](https://nextjs.org)                               | React framework, App Router, API route handlers                   |
-| [React 19](https://react.dev)                                  | UI layer                                                          |
-| [Three.js 0.184](https://threejs.org)                          | WebGL renderer underpinning the globe                             |
-| [react-globe.gl](https://github.com/vasturiano/react-globe.gl) | Globe primitives: polygons, HTML elements, arcs                   |
-| [D3 (geo / zoom / selection / transition)](https://d3js.org)   | Flat map projection, pan/zoom, country path rendering             |
-| [topojson-client](https://github.com/topojson/topojson-client) | TopoJSON → GeoJSON conversion for country borders                 |
-| [world-atlas](https://github.com/topojson/world-atlas)         | Bundled 110m TopoJSON world topology                              |
-| [Zustand 5](https://zustand-demo.pmnd.rs)                      | Client state with `localStorage` persistence and schema migration |
-| [Framer Motion](https://www.framer-motion.com)                 | Slide-in panel animations                                         |
-| [Tailwind CSS v4](https://tailwindcss.com)                     | Utility-first styling                                             |
-| [TypeScript 5](https://www.typescriptlang.org)                 | Type safety across the entire codebase                            |
-
----
-
-MIT © [kud](https://github.com/kud) — Made with ❤️

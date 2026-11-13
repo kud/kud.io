@@ -1,0 +1,55 @@
+---
+title: 🛠️ Development
+description: Building and linting the Firefox extension, running the web demo, and pushing the add-on listing to AMO.
+---
+
+The extension is built with WXT as a Manifest V2 Firefox add-on (Firefox 142 or later). You need Node 22 or later.
+
+## 🧱 Build and run
+
+```bash
+npm ci              # exact locked dependencies
+npm run dev         # development mode in Firefox
+npm run build       # build into .output/firefox-mv2
+npm run lint        # web-ext lint on the build (run after build)
+npm run zip         # package the add-on and its sources
+npm run format      # Prettier over js, json, html, css, md and ts
+```
+
+`npm run format:check` runs the same Prettier pass without writing.
+
+## 🗂️ Layout
+
+| Path                        | What it is                                                     |
+| --------------------------- | -------------------------------------------------------------- |
+| `entrypoints/background.js` | Context menu, keyboard command and label generation            |
+| `entrypoints/content.js`    | Field detection, the floating icon, filling and tooltips       |
+| `entrypoints/popup/`        | Toolbar popup: copy, Recent list and auto-close                |
+| `entrypoints/options/`      | Settings page with live label previews                         |
+| `utils/settings.js`         | The single declaration of every stored setting and its default |
+| `wxt.config.ts`             | Manifest: permissions, the `fill-focused-field` command, icons |
+
+## 🖼️ Web demo
+
+`preview/` runs the real popup and options pages side by side in an ordinary browser tab, on invented `example.*` data from `preview/fixtures/demo.json`, against a fake `browser` API. Generating an address, the Recent list and the settings all work; changes live in the tab's session storage and vanish when it closes. The popup stays open there, so its timer bar is hidden.
+
+```bash
+npm run preview         # run the demo locally
+npm run build:preview   # static output in preview-dist/
+```
+
+`vercel.json` deploys `preview-dist/`. The demo is left out of the extension build and the source zip.
+
+## 🏪 Store listing
+
+The AMO page's name, summary, description and categories live in `amo/listing.json`, and its screenshots in `amo/screenshots/` (sorted by name, with an optional same-named `.txt` as the caption). The repo is the source of truth, so edits made by hand on the AMO dashboard are overwritten on the next push.
+
+```bash
+# Dry run: diff against the live listing, send nothing
+npx -y @kud/amo-cli@0.1.1 listing push --listing amo/listing.json --guid email-address-plus@kud.io --screenshots amo/screenshots --only=listing,previews
+
+# Send the changes
+npx -y @kud/amo-cli@0.1.1 listing push --listing amo/listing.json --guid email-address-plus@kud.io --screenshots amo/screenshots --only=listing,previews --apply
+```
+
+Sending needs `WEB_EXT_API_KEY` and `WEB_EXT_API_SECRET` in the environment, the JWT issuer and secret from AMO's API credentials page.

@@ -1,16 +1,16 @@
 ---
 title: "incidents-cli"
 description: "Which of the services you depend on are declaring trouble right now: vendor status pages in one terminal view"
-hasDocs: false
+hasDocs: true
 ---
 
 Which of the services you depend on are declaring trouble right now: vendor status pages in one terminal view.
 
 It reads each vendor's own status page, worst first, and tells you what they have **declared**. A green row is not proof your calls work; a page it cannot read is shown as `? unreadable` and counts as not green, never as fine.
 
-![The overview: every service, worst first](https://raw.githubusercontent.com/kud/incidents-cli/HEAD/assets/overview.png)
+![The board: a filter column that doubles as the tally, a card per service in trouble, the healthy ones in a grid](https://raw.githubusercontent.com/kud/incidents-cli/HEAD/assets/board.png)
 
-![The board: a tally, a card per service in trouble, the rest in a grid](https://raw.githubusercontent.com/kud/incidents-cli/HEAD/assets/board.png)
+![The list (v): every service, worst first, with a preview of the selected one](https://raw.githubusercontent.com/kud/incidents-cli/HEAD/assets/list.png)
 
 ![One service in detail: open incidents, affected components, earlier ones](https://raw.githubusercontent.com/kud/incidents-cli/HEAD/assets/detail.png)
 
@@ -30,8 +30,9 @@ Node 22 or later.
 | `incidents <service>`      | Interactive view opened on that service's detail                         |
 | `incidents list [service]` | One-shot static output: the overview, or one service's detail            |
 | `incidents services`       | One service per line: id, name, aliases (comma-separated), tab-separated |
+| `incidents watch`          | Polls every few minutes and prints one line per status change            |
 
-Keys in the interactive view: `↑↓` or `j k` move, `⏎` opens a service, `←→` (or `tab`) moves between the status tabs (All, Trouble, then one per status), `/` searches names and aliases, `z` folds the operational services into one line, `v` switches between the list and the board, `s` sorts by status (worst first) or by name, `esc` clears a search or goes back, `⌫` goes back, `r` refreshes, `q` quits. The view and the sort are independent: either view works in either order, and the service name leads every row. Whenever a tab, the fold or a search hides services, a line under the list says how many and which key brings them back.
+Keys in the interactive view: `↑↓` or `j k` move, and on the board `←→` move between card columns too, with `←` from the first column stepping into the filters and `→` back; in the list `←→` cycle the status filters (All, Trouble, then one per status). `tab` switches between the filters and the services, `⏎` opens a service, the detail page scrolls its history with `↑↓`, `/` searches names and aliases, `z` folds the operational services into one line, `v` switches between the list and the board, `s` sorts by status (worst first) or by name, `esc` clears a search or goes back, `⌫` goes back, `r` refreshes, `q` quits. The view and the sort are independent: either view works in either order, and the service name leads every row. Whenever a tab, the fold or a search hides services, a line under the list says how many and which key brings them back.
 
 Add `--json` to any form for JSON records. With no TTY on stdin or stdout, or `CI` set, every form falls back to the static output (or JSON), so pipes, `$(...)` and cron never hang.
 
@@ -44,6 +45,37 @@ Add `--json` to any form for JSON records. With no TTY on stdin or stdout, or `C
 | 2    | Usage or configuration error                                |
 
 The interactive view exits 0 on quit.
+
+### Watch mode
+
+`incidents watch` polls every service every five minutes (`--interval <minutes>` to change it) and prints a line only when something changes: clear to trouble, trouble to clear, a change of severity (`minor`, `major`, `critical`), or a page becoming unreadable or readable again. An unreadable page counts as trouble. The first poll sets the baseline and reports only what is already in trouble, with `from` set to `null`. It never opens the interactive view; `ctrl-c` stops it and exits 0.
+
+```sh
+incidents watch
+incidents watch --interval 2 --json
+```
+
+With `--json`, each change is one JSON object per line:
+
+```json
+{
+  "service": "github",
+  "name": "GitHub",
+  "from": "clear",
+  "to": "minor",
+  "headline": "Elevated API errors",
+  "url": "https://stspg.io/abc",
+  "at": "2026-01-01T10:00:00.000Z"
+}
+```
+
+`--exec "<command>"` runs a command through your shell once per change, with that JSON on stdin and the same facts in `INCIDENTS_SERVICE`, `INCIDENTS_FROM`, `INCIDENTS_TO`, `INCIDENTS_HEADLINE` and `INCIDENTS_URL`. Its output goes to stderr, so a `--json` stream stays clean. A command that fails, or runs past 30 seconds and is stopped, is reported on stderr and the watch carries on. On macOS, a desktop notification:
+
+```sh
+incidents watch --exec 'osascript -e "display notification \"$INCIDENTS_HEADLINE\" with title \"$INCIDENTS_SERVICE: $INCIDENTS_TO\""'
+```
+
+`incidents watch --mock` replays a scenario in which services flip between polls, to try a command without waiting for a real outage.
 
 ## Configuration
 
@@ -68,7 +100,7 @@ services:
 
 With no config file the defaults are `github`, `npm`, `cloudflare` and `claude`, and one muted line names the config path.
 
-`list`, `services` and `help` are reserved words and cannot be a service id or alias; loading fails with exit 2 and a message naming the file and the id. Any other configuration error also exits 2.
+`list`, `services`, `watch` and `help` are reserved words and cannot be a service id or alias; loading fails with exit 2 and a message naming the file and the id. Any other configuration error also exits 2.
 
 ### Built-in services
 

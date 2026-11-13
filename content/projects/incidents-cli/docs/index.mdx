@@ -1,0 +1,15 @@
+---
+title: 👋 Introduction
+description: Which of the services you depend on are declaring trouble right now, read from each vendor's own status page.
+---
+
+**incidents-cli** reads the status pages of the services you depend on and tells you, worst first, what each vendor has _declared_. It is a quick answer to "is it us or is it them?", in a terminal view, a one-shot command or a watcher that speaks up only when something changes.
+
+Two things to keep in mind throughout. A green row is a vendor's claim, not proof your calls work. And a page the tool cannot read is shown as `? unreadable` and counts as trouble, never as fine.
+
+## What's here
+
+- [🧭 Interactive view](/projects/incidents-cli/docs/interactive) — the board with its filter column, the list (`v`), the detail page, and every key
+- [📜 Scripting](/projects/incidents-cli/docs/scripting) — `incidents list`, `--json` records, `incidents services` and the exit codes
+- [👀 Watch mode](/projects/incidents-cli/docs/watch) — `incidents watch`, one line per status change, with `--json` and `--exec`
+- [⚙️ Configuration](/projects/incidents-cli/docs/configuration) — the config file, drop-ins, built-in services, kinds and environment variables

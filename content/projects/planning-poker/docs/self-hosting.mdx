@@ -1,0 +1,71 @@
+---
+title: 🛠️ Self-hosting
+description: How rooms work under the hood, and how to run, deploy and load-test your own table.
+---
+
+planning-poker is two pieces: a Next.js app for the table, and a [PartyServer](https://github.com/cloudflare/partykit/tree/main/packages/partyserver) room server on Cloudflare Workers that holds the truth.
+
+## 🧩 How rooms work
+
+Each room is a Durable Object (the `PokerRoom` class in `party/index.ts`, bound as `Main` in `wrangler.jsonc`). Every participant, host included, connects to it over a WebSocket at `/parties/main/<code>`. The server owns the room state, applies each message, and broadcasts the result to every connection; each vote is masked from everyone but its owner until the reveal.
+
+- **Persistence.** The room state and the host secret are saved to Durable Object storage on every change, so a room survives refreshes, reconnects and the server going to sleep.
+- **Clean-up.** Each connect and disconnect pushes a clean-up alarm 24 hours out. If nobody is connected when it fires, the room is wiped, host included; otherwise it waits another 24 hours.
+- **Limits.** Names and avatars are cut to 120 characters, ids and the host secret to 128, and a client can send at most one reaction every 250 ms.
+
+### 💾 What the browser keeps
+
+Nothing is stored server-side about a person beyond the room they are in. The browser keeps the rest in `localStorage`:
+
+| Key                    | Holds                                         |
+| ---------------------- | --------------------------------------------- |
+| `pp-settings`          | Your name and avatar                          |
+| `pp-preferred-deck`    | The deck to start new rooms with              |
+| `poker-client-<code>`  | Your player id in that room                   |
+| `poker-host-<code>`    | The host secret, if you created that room     |
+| `poker-seen-<code>`    | When you last visited that room               |
+
+Per-room keys are pruned after seven days without a visit.
+
+## 🚀 Running it locally
+
+```bash
+npm install
+npm run party:dev   # room server on ws://127.0.0.1:8787
+npm run dev         # the app on http://localhost:3000
+```
+
+### 📜 Scripts
+
+| Script                 | What it does                                                 |
+| ---------------------- | ------------------------------------------------------------ |
+| `npm run dev`          | Start the Next.js dev server                                 |
+| `npm run party:dev`    | Start the room server locally (`wrangler dev`)               |
+| `npm run party:deploy` | Deploy the room server to Cloudflare Workers (`wrangler deploy`) |
+| `npm run build`        | Production build of the app                                  |
+| `npm run start`        | Serve the production build                                   |
+| `npm run crew -- CODE` | Fill a room with fake voters (see below)                     |
+| `npm run lint`         | Run ESLint                                                   |
+| `npm test`             | Run the unit tests (Vitest)                                  |
+
+## ⚙️ Pointing the app at your room server
+
+The app reads one setting at build time:
+
+| Variable                    | Default                                                                 |
+| --------------------------- | ----------------------------------------------------------------------- |
+| `NEXT_PUBLIC_PARTYKIT_HOST` | `127.0.0.1:8787` in development, `planning-poker.kud-space.workers.dev` in production builds |
+
+To run your own table end to end, deploy the room server with `npm run party:deploy`, then build the app with `NEXT_PUBLIC_PARTYKIT_HOST` set to your worker's host name (no scheme).
+
+## 🤖 Testing with a crew
+
+`scripts/crew.js` drops a crew of fake players into a room so you can try a full table on your own:
+
+```bash
+npm run crew -- PKD8QC              # seven players on the local room server
+npm run crew -- PKD8QC --count 3    # three players
+npm run crew -- PKD8QC --prod       # against the deployed room server
+```
+
+The crew vote a random value from `1`, `2`, `3`, `5`, `8` and `13` a few seconds after joining, and vote again after every new round. With `--prod` they connect over `wss://` to `NEXT_PUBLIC_PARTYKIT_HOST`, falling back to the default production host. They leave after 15 minutes, or on `Ctrl-C`. The crew has at most eight members.

@@ -1,0 +1,50 @@
+---
+title: 🎩 Host controls
+description: What the host can do in a room, from picking a deck to keeping a history of estimates.
+---
+
+The person who creates a room is its host. Creating a room stores a secret for that room in the browser, and whoever presents it to the room server gets the host controls; there is no account behind it. Every control below is checked on the server, so a guest cannot trigger it by hand.
+
+## 🃏 Decks
+
+Pick a deck from **Card Deck**. Your choice is remembered as your preferred deck for the next room you create.
+
+| Preset    | Cards                                    |
+| --------- | ---------------------------------------- |
+| Fibonacci | `0`, `½`, `1`, `2`, `3`, `5`, `8`, `13`, `21`, `?`, `☕` |
+| Numeric   | `1`, `2`, `4`, `8`, `16`, `32`, `?`      |
+| T-shirt   | `XS`, `S`, `M`, `L`, `XL`, `XXL`         |
+| Custom    | Comma-separated values of your choice, for example `1, 2, 3, 5, 8, ?` |
+
+Fibonacci is the default. Votes are only accepted for cards in the current deck.
+
+## 🂠 Reveal and new round
+
+- **Reveal** flips every card at once. It is available as soon as one vote is in.
+- **Auto-reveal** flips the cards on its own the moment every player has voted. A player switching to spectator can complete the round too.
+- **New round** clears the votes and the speaker queue.
+
+The keyboard shortcuts for all three are on [🃏 Playing a round](/projects/planning-poker/docs/usage).
+
+## ⏱️ Round timer
+
+Start a countdown for the round with the **30s**, **1m** or **2m** buttons, and cancel it with the same control. A timer can only start before the reveal. When it runs out, the table announces that time is up.
+
+## 📝 Topics and history
+
+- Set the **topic** for the round: a title and an optional link to the story.
+- **Save the round** with the agreed estimate (any card from the deck). The topic and estimate go into the session history, and a fresh round starts with the topic cleared.
+- History entries can be edited or cleared. A room keeps its latest 200 entries.
+- Copy the history to the clipboard as a Markdown table (`Topic`, `Estimate`) or as CSV with the columns `Topic,Link,Estimate,Date`, ready to paste into a tracker.
+
+## 🔐 Join approval
+
+With approval on, anyone new who opens the link waits in a queue until you **admit** or **deny** them. People already at the table reconnect without asking. Turning approval off admits everyone still waiting.
+
+## ☕ Breaks
+
+Once a break is under way, the host can change how long is left (up to an hour) or end it early. See [🃏 Playing a round](/projects/planning-poker/docs/usage) for how one starts.
+
+## 🥊 Rage Mode
+
+Rage Mode is an optional brawl arena for letting off steam after a tense round. The host switches it on or off for the whole room; once it is on, any player can step into the arena and invite the others, and the host can restart the fight. Turning it off closes the arena for everyone.

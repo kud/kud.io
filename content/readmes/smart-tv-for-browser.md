@@ -1,7 +1,7 @@
 ---
 title: "smart-tv-for-browser"
 description: "An immersive, intelligent, and intuitive interface for watching television right from your computer"
-hasDocs: false
+hasDocs: true
 ---
 
 A **smart-TV home screen that runs in your browser**. It behaves like a real

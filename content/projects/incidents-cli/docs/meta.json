@@ -1,0 +1,4 @@
+{
+  "title": "incidents-cli",
+  "pages": ["index", "interactive", "scripting", "watch", "configuration"]
+}

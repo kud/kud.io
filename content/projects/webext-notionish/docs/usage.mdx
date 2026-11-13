@@ -1,0 +1,63 @@
+---
+title: 🧭 Usage
+description: What Notionish changes on a Google Doc or Sheet, and how to switch it on and off.
+---
+
+Notionish is on by default for both Docs and Sheets. Open a document or spreadsheet and the chrome is already gone.
+
+## Where it runs
+
+The extension only acts on two hosts, `docs.google.com` and `sheets.google.com`, and decides what to do from the URL path rather than the host:
+
+| URL                                        | Treated as |
+| ------------------------------------------ | ---------- |
+| `sheets.google.com/*`                      | Sheets     |
+| `docs.google.com/spreadsheets/*`           | Sheets     |
+| `docs.google.com/document/*`               | Docs       |
+| anything else (Slides, Drive, other paths) | left alone |
+
+## What changes
+
+On a **Doc**:
+
+- The menu row, toolbar, both rulers and the left rail (outline and tab strip) are hidden.
+- The thin title band stays, painted flat white, with the icon buttons reduced to hairline circles and Share drawn as a white button with a grey outline.
+- Google's grey backdrop and paper drop-shadow give way to a continuous white page.
+- Body text is shown larger through Firefox's zoom (130% by default), so it is repainted sharp rather than scaled up. The zoom is capped to what the window can hold, and the title band is only partly scaled with it.
+
+On a **Sheet**:
+
+- The menu row and toolbar are hidden; the title band and the grid are left as they are.
+- No zoom is applied, since a zoomed spreadsheet simply shows fewer rows.
+
+On both, the UI that remains (comment cards, dialogs, context menus) is restyled and set in the bundled Inter, registered under its own family name so the document itself never picks it up.
+
+If Google renames something and a selector stops matching, that piece of furniture simply reappears. The page is never left hidden or broken.
+
+## Showing Google's UI again
+
+Press `Alt+Shift+N` on a Doc or Sheet to toggle focus mode on that tab. With focus off, the full Google interface returns and Docs goes back to 100% zoom. This is per tab and lasts until the page reloads, which brings Notionish back.
+
+The toolbar button opens a popup that offers the same thing and a little more:
+
+| Control                              | What it does                                                                                      |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| **Enabled on Docs** / **Sheets**     | Turns Notionish on or off for that surface, saved to your synced preferences.                     |
+| **Show Google's UI on this tab**     | The same toggle as `Alt+Shift+N`.                                                                 |
+| **Turn off everywhere** / **on**     | Switches both surfaces off (or back on) at once, on every synced machine.                         |
+| **Open options**                     | Opens the [options page](/projects/webext-notionish/docs/configuration).                          |
+
+The popup also says when the Docs zoom has been capped below your chosen setting to fit the window.
+
+## When the toggle does nothing
+
+The popup reports two cases rather than closing silently:
+
+- **"This tab was open before Notionish loaded"** — the tab predates the extension; reload it.
+- **"Notionish is loaded here but not active yet"** — the extension is present but has not applied itself to the page; reload it.
+
+## Limits
+
+- The Sheets formula bar still shows; its selector is not yet known.
+- The document's own typeface and page geometry are not changed. A font swap exists only as an [experimental option](/projects/webext-notionish/docs/configuration#typography).
+- Firefox only. Google Slides is not touched.

@@ -1,0 +1,98 @@
+---
+title: 🗂️ Using the board
+description: The columns, the whose-move ordering, filters and saved views, the launcher, the detail view and the settings menu.
+---
+
+## 🧭 The layout
+
+The board is a matrix: one row per repository, one column per status, so a project's whole situation reads as a single line. On a wide screen you see the columns side by side; on a phone the same board becomes a grouped list with counts in the section headers. It is one responsive surface, not two apps.
+
+Each column is a shape of GitHub fact:
+
+| Column             | What it holds                                                                   |
+| ------------------ | ------------------------------------------------------------------------------- |
+| Review requested   | Someone has asked you to review their pull request.                             |
+| Your pull requests | Your own pull requests, open and out for review.                                |
+| Incoming           | Pull requests other people have opened on your repositories.                    |
+| Assigned to you    | Issues assigned to you on GitHub, wherever they live.                           |
+| Reviewed           | Pull requests you have reviewed recently, so a thread you replied to stays put. |
+| Open issues        | Open issues on repositories you own, plus issues you opened on other people's.  |
+| Recently done      | Closed recently, kept briefly so you can see what moved.                        |
+
+Every card carries a kind label (`PR` or `ISSUE`) and a verdict: `your move`, `their move`, or unknown when it cannot be ruled either way. The short reason beside it (review requested, CI failing, changes requested, a conflict, approved) says why.
+
+## ↕️ How a cell is ordered
+
+Inside one cell, rows are sorted by four keys in turn:
+
+1. **Yours before theirs.** `your move` first, then unknown, then `their move`. A `their move` row never ranks above a `your move` one.
+2. **Drafts last within a band.** Your own draft still outranks anything that is not yours.
+3. **Hot before warm before neither.** A row that has sat too long in its column is marked, and that mark ranks.
+4. **Most recently moved.**
+
+"Too long" depends on the column, in days:
+
+| Column             | Warm | Hot |
+| ------------------ | ---- | --- |
+| Review requested   | 2    | 5   |
+| Incoming           | 3    | 7   |
+| Your pull requests | 3    | 7   |
+| Reviewed           | 3    | 10  |
+| Assigned to you    | 7    | 21  |
+| Open issues        | 14   | 45  |
+
+Recently done never ages: a finished thing does not become a problem.
+
+The repositories themselves are ordered by **urgency** by default. Switch **Order** to **name** in the menu when you are looking for one project rather than reading down what wants you.
+
+## 🎛️ Filters
+
+Press `/` (outside a text field) to open the filter sheet with its search focused. There are five facets:
+
+- **Whose move** — you, them, or unknown
+- **Repositories** and **owners** — pick named repositories, or whole owners so that a repository created tomorrow is included automatically
+- **Status** — the columns above
+- **Labels**
+
+Facets combine with AND; choices within one facet combine with OR. The current selection lives in the URL as `?repos=`, `?owners=`, `?status=`, `?labels=` and `?move=`, so a filtered board is a bookmark and a link you can send.
+
+## 💾 Saved views
+
+Name the current filter set ("at work", "at home") and it becomes a saved view you can switch to from the sheet or the launcher. Views are stored in this browser only. To carry them to another device, the menu's **Saved views** section offers:
+
+- **Export** — downloads `your-move-views.json`
+- **Import** — reads that file back in
+- **Copy a share link** — the whole set, encoded in a `#views=` fragment. A fragment is never sent to the server, but the link does carry repository names, private ones included, so treat it accordingly.
+
+## ⚡ The launcher
+
+Press `⌘K` (or `Ctrl+K`) to open the launcher. It searches row titles and takes you to one thing; it never filters the board. Use the arrow keys to move, `⌘↑` / `⌘↓` to jump to the ends, and `Enter` to open. `⌘Enter` or `Shift+Enter` on a row opens it on GitHub in a new tab instead. The first `Escape` clears the query, the second closes.
+
+Alongside rows it offers a few actions that appear only when they apply: apply or turn off a saved view, **Clear all filters**, **Refresh the board**, and **Unfold every column**.
+
+## 🔎 Opening a row
+
+Tapping a card shows verdict, checks, reviews and the description, with no diff and no comment box, since that is what GitHub is for. Where it opens is set in the menu under **Open in**: **Side**, **Modal**, **Full** or straight to **GitHub** on a wide screen, and **Here** or **GitHub** on a phone. A modified click (`⌘`, `Ctrl`, `Shift` or `Alt`) always opens GitHub in a new tab.
+
+From the detail view you can add or remove a label, the one write the app makes. The control only appears on repositories you can write to.
+
+## 🗂️ Folding
+
+Collapse a noisy repository and its row keeps its columns and counts, hatched, so nothing disappears silently. Columns fold too. The launcher's **Unfold every column** reopens every folded column at once.
+
+## ⚙️ The menu
+
+| Setting         | What it does                                                                 |
+| --------------- | ---------------------------------------------------------------------------- |
+| Notify me       | A browser notification when a row newly needs you, while the app is open     |
+| Sound           | A chime alongside the notification                                           |
+| Open in         | Where a row opens (see above)                                                |
+| Order           | Repositories by `urgency` or `name`                                          |
+| Theme           | `auto` (follows the system), `light` or `dark`                           |
+| Higher contrast | Raises the quiet tones and turns the background sky off, for bright daylight |
+| Reduce motion   | Calms the animation, which is also faster on a slow machine                  |
+| Recently done   | How far back the done column reaches: `7d`, `14d` or `30d`                   |
+
+These preferences live in the browser's local storage. The menu also shows **Update available** when a newer build is deployed than the one on screen, and **Sign out**.
+
+Next: [🕰️ Freshness](/projects/your-move/docs/freshness) explains what the age in the header means.
