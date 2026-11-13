@@ -1,11 +1,11 @@
 ---
 title: "Is it them or is it me?"
-description: "A quick way to check what your dependencies are reporting before debugging, with the same careful rules for a developer and a Claude Code assistant."
+description: "Before debugging your own code, check whether the vendor is already declaring trouble. A terminal tool that keeps unknown as unknown, never green."
 date: "2026-11-13"
 slug: "is-it-them-or-is-it-me"
 tags: ["engineering","tools"]
 cover: "/blog/is-it-them-or-is-it-me/b7ae7c147980.png"
-updated: "2026-11-13T21:33:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 _A first check before debugging your own code, for you and your AI assistant._

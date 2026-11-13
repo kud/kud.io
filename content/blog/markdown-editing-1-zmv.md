@@ -1,11 +1,11 @@
 ---
 title: "How to edit markdown with zmv"
-description: "Sorry .mdx but I renamed you."
+description: "Renaming every .mdx file to .md in one line with zsh's zmv."
 date: "2020-05-10"
 slug: "markdown-editing-1-zmv"
 tags: ["tools"]
 cover: "/blog/markdown-editing-1-zmv/8cc92487aa9d.jpg"
-updated: "2026-10-22T16:44:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 As you may know, I now use [Next.js](https://nextjs.org/) to compile my website. It allows me to write my layout and pages in [React](https://reactjs.org/) and still have the benefit to use static files in the end.

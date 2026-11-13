@@ -1,11 +1,11 @@
 ---
 title: "How to easily debug a shorthand return"
-description: "like a map()."
+description: "Log inside an arrow function's shorthand return without rewriting it, thanks to the comma operator."
 date: "2021-02-01"
 slug: "debug-a-shorthand-return"
 tags: ["engineering"]
 cover: "/blog/debug-a-shorthand-return/8dfcd7b77913.jpg"
-updated: "2026-09-04T13:39:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 See this code:

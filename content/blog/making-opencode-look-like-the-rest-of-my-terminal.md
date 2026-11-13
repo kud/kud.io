@@ -1,11 +1,11 @@
 ---
 title: "Making opencode look like the rest of my terminal"
-description: "opencode's docs stop at themes and keybinds. Underneath there's a plugin system that can redraw parts of the interface, and with it I got a transparent theme, my Claude Code statusline, and syntax colours for shell scripts, which opencode 1.18 shows as plain text."
+description: "Beneath opencode's themes there's a plugin system that can redraw the interface. I used it to make opencode match the rest of my terminal."
 date: "2026-09-30"
 slug: "making-opencode-look-like-the-rest-of-my-terminal"
 tags: ["tools","engineering"]
 cover: "/blog/making-opencode-look-like-the-rest-of-my-terminal/508e2ee3db9d.jpg"
-updated: "2026-10-28T18:57:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 For a long time [**opencode**](https://opencode.ai/) was the tool I opened now and then, and stock `tokyonight` was fine for that. Claude Code was where I spent my days, and it had long since been bent into shape: my colours, a statusline I read without thinking.

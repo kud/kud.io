@@ -1,11 +1,11 @@
 ---
 title: "Filtering the internet before it reaches my apps"
-description: "Rethink DNS + Firewall made me want the same device-wide filtering on macOS. A local dnscrypt-proxy can put encrypted, filtered DNS underneath the browser blocker so desktop apps and background processes get covered too."
+description: "Encrypted, filtered DNS for the whole Mac, so desktop apps and background processes are covered too, not just the browser."
 date: "2026-10-24"
 slug: "filtering-the-internet-before-it-reaches-my-apps"
 tags: ["engineering","tools"]
 cover: "/blog/filtering-the-internet-before-it-reaches-my-apps/50f785939814.jpg"
-updated: "2026-10-24T16:23:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 On my phone I had already got used to [Rethink DNS + Firewall](https://rethinkdns.com/app). I liked the idea that blocking ads, trackers and known malicious domains did not stop at the browser: the policy applied to the whole device.

@@ -1,11 +1,11 @@
 ---
 title: "$ git contrib"
-description: "A new command for my git worflow."
+description: "A git command that turns a fork into a contribution-only repo: no stale main, just a README saying it's there for pull requests."
 date: "2020-05-15"
 slug: "git-contrib"
 tags: ["tools"]
 cover: "/blog/git-contrib/6379eda86f32.jpg"
-updated: "2026-09-04T13:39:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 You probably don't know me so much but I love when something is perfect, shiny, well designed. Yes, some people could say I'm a maniac. Anyway. 😜

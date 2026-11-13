@@ -1,11 +1,11 @@
 ---
 title: "One remote for the living room"
-description: "A remote that feels simple and enjoyable every day, with room for personal shortcuts, scenes and deeper TV controls when you want them."
+description: "A TV remote that's simple to use every day, with room for your own shortcuts, scenes and deeper controls when you want them."
 date: "2026-11-07"
 slug: "tutti-one-remote-for-the-living-room"
 tags: ["engineering","design"]
 cover: "/blog/tutti-one-remote-for-the-living-room/7b37572df525.png"
-updated: "2026-11-07T18:47:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 I've always liked the idea of having everything in one place. My living room has a Sony BRAVIA TV, a Theatre Bar, and often a laptop connected to the screen. Each comes with its own way of controlling things.

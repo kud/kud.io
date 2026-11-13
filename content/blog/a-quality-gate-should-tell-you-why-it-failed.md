@@ -1,11 +1,11 @@
 ---
 title: "A quality gate should tell you why it failed"
-description: "Why a small, predictable CLI can make SonarQube quality gates easier to understand—and where a read-only MCP companion fits."
+description: "SonarQube says a quality gate failed. A small CLI says why, and a read-only MCP lets an assistant ask the same question."
 date: "2026-11-10"
 slug: "a-quality-gate-should-tell-you-why-it-failed"
 tags: ["engineering","tools"]
 cover: "/blog/a-quality-gate-should-tell-you-why-it-failed/72ba5991d2d8.png"
-updated: "2026-11-10T19:01:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 A red quality gate tells you something is wrong. It doesn't necessarily tell you what to do about it.

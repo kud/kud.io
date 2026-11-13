@@ -1,11 +1,11 @@
 ---
 title: "A road trip that fits in one tab"
-description: "I built a private travel companion around a Notion itinerary: map, bookings, offline data and a timeline that distinguishes a hard deadline from an afternoon with room to wander. Using it for a week changed the data model as much as the interface."
+description: "A private travel companion built on a Notion itinerary, and what a week on the road changed in its data model and its interface."
 date: "2026-10-22"
 slug: "a-road-trip-that-fits-in-one-tab"
 tags: ["engineering","design"]
 cover: "/blog/a-road-trip-that-fits-in-one-tab/43180db41c58.png"
-updated: "2026-10-24T16:00:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 Flights were in email. Hotels were in booking apps. The rental car had its own confirmation, door codes arrived in messages, and the itinerary itself lived in Notion.

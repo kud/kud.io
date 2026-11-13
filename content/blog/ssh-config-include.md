@@ -1,10 +1,11 @@
 ---
 title: "How to include a file in your SSH config"
+description: "Split ~/.ssh/config into separate files with Include, so switching between work and home setups doesn't mean editing one big file."
 date: "2020-06-08"
 slug: "ssh-config-include"
 tags: ["tools"]
 cover: "/blog/ssh-config-include/aa688326b214.jpg"
-updated: "2026-10-22T16:44:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 Since the confinement (COVID-19 😷), we all had in my company to work remotely. Even if it was a real experience as human being, technically we were already prepared as we have some colleagues who work full-time remotely.

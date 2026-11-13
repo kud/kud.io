@@ -1,11 +1,11 @@
 ---
 title: "A better way to work with feature flags"
-description: "Why I built a Harness FME CLI for inspecting rollouts, managing user targeting and making safer bulk changes — and how it fits into the way I like to prototype and experiment."
+description: "A terminal tool for Harness FME: inspect rollouts, manage targeting and make bulk changes safely, right where I prototype."
 date: "2026-11-12"
 slug: "a-better-way-to-work-with-feature-flags"
 tags: ["engineering","tools"]
 cover: "/blog/a-better-way-to-work-with-feature-flags/4a8dcdb2ea60.jpg"
-updated: "2026-11-12T18:46:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 I love feature flags. What I enjoy considerably less is managing them.

@@ -1,11 +1,11 @@
 ---
 title: "Letting Claude Code name its own sessions"
-description: "Starting Claude Code sessions with a fixed name left my resume picker full of identical rows. A UserPromptSubmit hook can set the session title, so now the model that already knows the subject picks the name, and the hook applies it, at no extra model call."
+description: "A hook lets Claude Code name its own sessions, so the resume picker stops filling up with identical rows. No extra model call."
 date: "2026-09-29"
 slug: "claude-code-session-names"
 tags: ["engineering","tools"]
 cover: "/blog/claude-code-session-names/946acb346f61.jpg"
-updated: "2026-09-29T16:19:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 I run several Claude Code sessions side by side, across a handful of projects, and they work together: one session can hand a task to another by name. That only works if names are predictable, so they are not left to chance. A small wrapper around `claude` names every session at launch after its folder (`claude -n project`).

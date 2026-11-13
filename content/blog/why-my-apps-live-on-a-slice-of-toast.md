@@ -1,11 +1,11 @@
 ---
 title: "Why my apps live on a slice of toast"
-description: "I live in the UK and I still don't quite understand beans on toast. That confusion, and how funny the phrase is, became the name and the whole look of beansontoast.app."
+description: "I live in the UK and still don't understand beans on toast. That confusion became the name and the look of beansontoast.app."
 date: "2026-10-24"
 slug: "why-my-apps-live-on-a-slice-of-toast"
 tags: ["design","notes"]
 cover: "/blog/why-my-apps-live-on-a-slice-of-toast/fbe04fb80d01.jpg"
-updated: "2026-10-24T13:43:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 I live in the UK, and I still don't quite understand beans on toast.

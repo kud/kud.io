@@ -1,11 +1,11 @@
 ---
 title: "Component namespacing with Emotion"
-description: "(or styled-components or whatever CSS-in-JS)"
+description: "Keeping BEM's naming habits once styles move into Emotion, styled-components or any other CSS-in-JS."
 date: "2020-06-15"
 slug: "component-namespacing-with-emotion"
 tags: ["engineering","design"]
 cover: "/blog/component-namespacing-with-emotion/6067a212ca30.jpg"
-updated: "2026-09-04T13:39:00.000Z"
+updated: "2026-11-13T22:06:00.000Z"
 ---
 
 Naming, naming, naming. Oh god. One of the hardest part in computer science. Fortunately, we've got some conventions about that which help us not to overthink every time we must name something.
