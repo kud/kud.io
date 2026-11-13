@@ -77,10 +77,60 @@ section:first-of-type .year {
   border-top: 0;
 }
 
+/* The rail (Erwann's pick, 2026-11-13). From 1200px the margin beside the
+ * 790px column is wide enough for a 140px card plus a 40px gutter, so the
+ * filter leaves the flow and sits there, sticky, under a "Topics" caption. The
+ * column itself never moves sideways. Below, the rail is an ordinary block,
+ * the caption is hidden and the bar sits inline above the list. The caption
+ * is a real element, not generated content, so it can name the group. */
+.index {
+  position: relative;
+}
+
+.caption {
+  display: none;
+}
+
+@media (min-width: 1200px) {
+  .rail {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(100% + 40px);
+    width: 140px;
+  }
+
+  .filter {
+    position: sticky;
+    top: 42px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 0;
+    padding: 14px 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--bg-2);
+  }
+
+  .caption {
+    display: block;
+    margin: 0 0 4px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+  }
+
+  .filter button[data-active] {
+    background: var(--bg);
+  }
+}
+
 .list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px 24px;
+  gap: 28px 24px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -102,14 +152,14 @@ section:first-of-type .year {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 8px;
-  margin-bottom: 22px;
+  gap: 12px;
+  margin-bottom: 44px;
 }
 
 .list li[data-lead] > .thumb {
   order: -1;
   width: 100%;
-  margin: 0 0 8px;
+  margin: 0 0 14px;
   border-radius: 10px;
 }
 
@@ -130,14 +180,14 @@ section:first-of-type .year {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 6px;
-  margin-bottom: 22px;
+  gap: 10px;
+  margin-bottom: 36px;
 }
 
 .list li[data-pair] > .thumb {
   order: -1;
   width: 100%;
-  margin: 0 0 6px;
+  margin: 0 0 10px;
   border-radius: 8px;
 }
 
@@ -175,7 +225,7 @@ section:first-of-type .year {
 }
 
 .summary {
-  margin: 2px 0 0;
+  margin: 5px 0 0;
   font-size: 14px;
   line-height: 1.45;
   color: var(--fg-2);
@@ -196,7 +246,7 @@ section:first-of-type .year {
 }
 
 .list li[data-pair] .summary {
-  margin-top: 6px;
+  margin-top: 4px;
   font-size: 14.5px;
   line-height: 1.45;
   -webkit-line-clamp: 3;

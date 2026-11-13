@@ -2,7 +2,7 @@
 
 import { InkLink as Link } from "@/components/ink-link"
 import { postPath } from "@/lib/blog-path"
-import { useEffect, useMemo, useState, type CSSProperties } from "react"
+import { useEffect, useId, useMemo, useState, type CSSProperties } from "react"
 import { CoverImage } from "@/components/blog-cover"
 import type { CoverImages } from "@/lib/blog"
 
@@ -83,34 +83,45 @@ export const BlogIndex = ({
       : [],
   )
 
+  const captionId = useId()
+
   return (
-    <>
+    <div className={styles.index}>
       {/* The filter bar is the index; the row tags are a reversal of an earlier
           "tags once, at the top" rule, asked for by Erwann so a post shows its
           topics at a glance. They stay quieter than the titles (smaller, no
           border at rest) and double as a shortcut into the same filter. */}
       {tags.length > 0 && (
-        <div className={styles.filter} role="group" aria-label="Filter by tag">
-          <button
-            type="button"
-            onClick={() => choose(null)}
-            aria-pressed={tag === null}
-            data-active={tag === null || undefined}
+        <div className={styles.rail}>
+          <div
+            className={styles.filter}
+            role="group"
+            aria-labelledby={captionId}
           >
-            all
-          </button>
-          {tags.map((option) => (
+            <p id={captionId} className={styles.caption}>
+              Topics
+            </p>
             <button
-              key={option}
               type="button"
-              data-tag={option}
-              onClick={() => choose(option)}
-              aria-pressed={tag === option}
-              data-active={tag === option || undefined}
+              onClick={() => choose(null)}
+              aria-pressed={tag === null}
+              data-active={tag === null || undefined}
             >
-              {option}
+              all
             </button>
-          ))}
+            {tags.map((option) => (
+              <button
+                key={option}
+                type="button"
+                data-tag={option}
+                onClick={() => choose(option)}
+                aria-pressed={tag === option}
+                data-active={tag === option || undefined}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
@@ -200,6 +211,6 @@ export const BlogIndex = ({
           </ul>
         </section>
       ))}
-    </>
+    </div>
   )
 }
