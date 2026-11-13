@@ -281,8 +281,10 @@
 
 /* Image stage ---------------------------------------------------------------- */
 /* Same ceiling and the same shell-centred anchor as .diagram and .codeStage
- * (min(1080px, 100vw - 48px), centre 27px right of .body's), so an image breaks
- * out exactly as far as a diagram does. The image inside is never stretched:
+ * (--embed, centre 27px right of .body's), so an image breaks out exactly as far
+ * as a diagram, a code card or a video does. --embed is the one breakout every
+ * embed shares: wider than the 754px shell, well short of the hero, and the
+ * full column below 768px. The image inside is never stretched:
  * it keeps its natural width up to the stage and is centred on the shell, so a
  * 350px GIF stays 350px.
  *
@@ -294,6 +296,7 @@
  * value on the same element. An image in a blockquote does not break out. */
 .body {
   --lead: 0px;
+  --embed: min(860px, 100vw - 48px);
 }
 
 .body :is(ul, ol) {
@@ -321,7 +324,7 @@
 
 @media (min-width: 768px) {
   .imageStage {
-    --stage: min(1080px, 100vw - 48px);
+    --stage: var(--embed);
     width: var(--stage);
     margin-left: calc(50% - var(--lead) / 2 + 27px - var(--stage) / 2);
   }
@@ -343,6 +346,20 @@
   margin: 2rem 0;
   border-radius: 8px;
   background: var(--bg-2);
+}
+
+/* From 768px the video takes the shared breakout, on the same anchor as an
+ * image stage. */
+@media (min-width: 768px) {
+  .body video {
+    width: var(--embed);
+    margin-left: calc(50% - var(--lead) / 2 + 27px - var(--embed) / 2);
+  }
+
+  .body blockquote video {
+    width: 100%;
+    margin-left: 0;
+  }
 }
 
 .imageFrame {
@@ -677,7 +694,7 @@
  * at least the shell's 754px and grows with the code, and the card is pinned to
  * the track's start, so its left edge is min(shell-centred, prose-left): flush
  * up to 700px, growing right to 754px, centred on the page past that, scrolling
- * past the 1080px ceiling. A card wider than its code needs is never drawn.
+ * past the --embed ceiling. A card wider than its code needs is never drawn.
  * minmax(0, 1fr) is load-bearing: an auto grid track would size itself to the
  * code's max-content and carry the card straight past max-width. */
 .codeStage {
@@ -693,7 +710,7 @@
 
 @media (min-width: 768px) {
   .codeStage {
-    --stage: min(1080px, 100vw - 48px);
+    --stage: var(--embed);
     width: var(--stage);
     margin-left: calc(50% + 27px - var(--stage) / 2);
     grid-template-columns:
@@ -710,7 +727,7 @@
 
 /* Diagram stage + frame ---------------------------------------------------- */
 /* Running prose deliberately stops at 700px; a diagram may widen past it, to a
- * fixed ceiling of 1080px and never the viewport: past
+ * fixed ceiling of --embed and never the viewport: past
  * that it stops reading as part of the column. The stage is centred on the
  * shell, whose centre sits 27px right of .body's, so the breakout is
  * anchored on the column and the inset added back. No transform here: the
@@ -718,14 +735,14 @@
  * block and stop covering the screen. */
 .diagram {
   display: grid;
-  width: calc(100% + 54px);
-  margin: 1.75em 0 1.75em -27px;
+  width: 100%;
+  margin: 1.75em 0;
   justify-items: center;
 }
 
 @media (min-width: 768px) {
   .diagram {
-    --stage: min(1080px, 100vw - 48px);
+    --stage: var(--embed);
     width: var(--stage);
     margin-left: calc(50% + 27px - var(--stage) / 2);
   }
