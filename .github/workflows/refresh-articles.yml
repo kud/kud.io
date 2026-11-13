@@ -1,0 +1,28 @@
+name: Refresh articles
+
+# Named posts, or the newest N. Other posts keep their committed copy and
+# nothing is pruned.
+on:
+  workflow_dispatch:
+    inputs:
+      articles:
+        description: Slugs or exact titles, comma-separated (leave empty to use "latest")
+        type: string
+        default: ""
+      latest:
+        description: When no article is named, how many of the newest posts
+        type: number
+        default: 1
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  refresh:
+    uses: ./.github/workflows/refresh-project-content.yml
+    with:
+      scope: writing
+      articles: ${{ inputs.articles }}
+      latest_articles: ${{ inputs.latest }}
+    secrets: inherit

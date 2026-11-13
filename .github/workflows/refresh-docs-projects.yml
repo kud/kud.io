@@ -1,0 +1,23 @@
+name: Refresh docs for projects
+
+# Only the named projects' README, docs and landing. Nothing else is touched
+# or pruned.
+on:
+  workflow_dispatch:
+    inputs:
+      projects:
+        description: Repo names, comma-separated (e.g. incidents-cli, foxhop)
+        type: string
+        required: true
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  refresh:
+    uses: ./.github/workflows/refresh-project-content.yml
+    with:
+      scope: docs
+      projects: ${{ inputs.projects }}
+    secrets: inherit

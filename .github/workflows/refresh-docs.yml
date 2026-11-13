@@ -1,0 +1,16 @@
+name: Refresh docs
+
+# Every project's README, docs and landing, without the blog.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  refresh:
+    uses: ./.github/workflows/refresh-project-content.yml
+    with:
+      scope: docs
+    secrets: inherit

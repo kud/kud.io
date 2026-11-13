@@ -544,10 +544,30 @@ const main = async () => {
   const start = Date.now()
   const spinner = ora("fetching repos…").start()
 
-  const repos = await searchRepos().catch((error) => {
+  // --only=a,b syncs just those repos (by name). A partial run skips Raycast
+  // and never prunes: everything it did not visit would look orphaned.
+  const onlyArg = process.argv.find((arg) => arg.startsWith("--only="))
+  const only = onlyArg
+    ? new Set(
+        onlyArg
+          .slice("--only=".length)
+          .split(/[\s,]+/)
+          .filter(Boolean),
+      )
+    : null
+
+  const found = await searchRepos().catch((error) => {
     spinner.warn(`github topic search failed: ${error.message}`)
     return []
   })
+  const repos = only ? found.filter((repo) => only.has(repo.name)) : found
+  if (only) {
+    const missing = [...only].filter(
+      (name) => !repos.some((r) => r.name === name),
+    )
+    if (missing.length)
+      spinner.warn(`not tagged for the site, skipped: ${missing.join(", ")}`)
+  }
 
   // Start from the existing map so a transient GitHub or Raycast API failure
   // can't wipe icons synced on an earlier run; this run's results overlay it.
@@ -570,7 +590,7 @@ const main = async () => {
     }
   })
 
-  const raycastIcons = await syncRaycast(spinner)
+  const raycastIcons = only ? {} : await syncRaycast(spinner)
   Object.assign(icons, raycastIcons)
 
   // Drop content for slugs no longer live (e.g. a repo renamed away). Guarded on a non-empty
@@ -580,7 +600,7 @@ const main = async () => {
   const listed = await readJson("content/apps.json")
   const listedSlugs = Array.isArray(listed) ? listed.map((app) => app.slug) : []
   const pruned =
-    repos.length > 0
+    !only && repos.length > 0
       ? await pruneOrphans({
           projects: new Set([...synced, ...listedSlugs]),
           readmes: new Set([

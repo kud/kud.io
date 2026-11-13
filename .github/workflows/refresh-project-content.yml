@@ -1,4 +1,4 @@
-name: Refresh project content
+name: Refresh website
 
 on:
   workflow_dispatch:
@@ -6,14 +6,24 @@ on:
     types: [project-content-updated]
   schedule:
     - cron: "17 * * * *"
-  # refresh-writing.yml calls this with writing_only, so both share one set of
-  # build, commit and deploy steps.
+  # The narrower refresh-*.yml workflows call this one with a scope, so they all
+  # share one set of build, commit and deploy steps.
   workflow_call:
     inputs:
-      writing_only:
-        type: boolean
-        default: false
+      scope:
+        description: website (everything), docs or writing
+        type: string
+        default: website
+      projects:
+        description: docs scope, comma-separated repo names (empty = all)
+        type: string
+        default: ""
+      articles:
+        description: writing scope, comma-separated slugs or titles
+        type: string
+        default: ""
       latest_articles:
+        description: writing scope, the N newest posts (0 = all)
         type: number
         default: 0
 
@@ -44,17 +54,24 @@ jobs:
 
       - name: Sync project content
         run: |
-          if [ "$WRITING_ONLY" = "true" ]; then
-            if [ "${LATEST:-0}" -gt 0 ]; then
-              node scripts/sync-notion.js "--latest=${LATEST}"
-            else
-              node scripts/sync-notion.js
-            fi
-          else
-            npm run sync
-          fi
+          case "${SCOPE:-website}" in
+            docs)
+              node scripts/sync-content.js ${PROJECTS:+"--only=$PROJECTS"} ;;
+            writing)
+              if [ -n "$ARTICLES" ]; then
+                node scripts/sync-notion.js "--slug=$ARTICLES"
+              elif [ "${LATEST:-0}" -gt 0 ]; then
+                node scripts/sync-notion.js "--latest=$LATEST"
+              else
+                node scripts/sync-notion.js
+              fi ;;
+            *)
+              npm run sync ;;
+          esac
         env:
-          WRITING_ONLY: ${{ inputs.writing_only }}
+          SCOPE: ${{ inputs.scope }}
+          PROJECTS: ${{ inputs.projects }}
+          ARTICLES: ${{ inputs.articles }}
           LATEST: ${{ inputs.latest_articles }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}

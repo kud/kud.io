@@ -498,13 +498,36 @@ const main = async () => {
     }),
   )
 
-  // --latest=N re-renders only the N newest published posts (--latest alone is
-  // 1), for a quick refresh after editing them. Every other post keeps its
-  // committed copy, so nothing is pruned: the kept set would only hold those.
+  // A partial run, for a quick refresh after editing a post:
+  //   --latest=N    the N newest published posts (--latest alone is 1)
+  //   --slug=a,b    those posts, by slug or exact title
+  // Every other post keeps its committed copy, so nothing is pruned: the kept
+  // set would only hold the ones visited.
   const latestArg = process.argv.find((arg) => /^--latest(=\d+)?$/.test(arg))
   const latestCount = latestArg ? Number(latestArg.split("=")[1] ?? 1) : 0
-  const latestOnly = latestCount > 0
-  const selected = latestOnly ? pages.slice(0, latestCount) : pages
+  const slugArg = process.argv.find((arg) => arg.startsWith("--slug="))
+  const wanted = slugArg
+    ? slugArg
+        .slice("--slug=".length)
+        .split(",")
+        .map((s) => s.trim().toLowerCase())
+        .filter(Boolean)
+    : []
+  const keys = (page) => [
+    (plain(page.properties.Slug) || "").toLowerCase(),
+    (plain(page.properties.Name) || "").toLowerCase(),
+  ]
+  const latestOnly = latestCount > 0 || wanted.length > 0
+  const selected = wanted.length
+    ? pages.filter((page) => keys(page).some((key) => wanted.includes(key)))
+    : latestCount > 0
+      ? pages.slice(0, latestCount)
+      : pages
+  const missing = wanted.filter(
+    (want) => !pages.some((page) => keys(page).includes(want)),
+  )
+  if (missing.length)
+    console.warn(`[blog] not among published posts: ${missing.join(", ")}`)
 
   const kept = new Set()
   let skipped = 0
