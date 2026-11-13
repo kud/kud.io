@@ -25,14 +25,21 @@ const ZOOM_SLACK = 4
 // With its dimensions known, the frame reserves the image's box before it
 // loads and paints a placeholder ground there, cleared once the image arrives
 // so a transparent image never keeps it.
+//
+// A terminal screenshot (terminal set, from its caption) wears the code card's
+// chrome instead: the same dark ground, three dots and mono label, with the
+// command where a code card names its language. The frame belongs to the page,
+// not the file, so the screenshot itself stays a plain capture.
 export const BlogImage = ({
   styles,
   alt,
   dimensions,
+  terminal,
   ...props
 }: ComponentProps<"img"> & {
   styles: Record<string, string>
   dimensions?: ImageDimensions | null
+  terminal?: string
 }) => {
   const imageRef = useRef<HTMLImageElement>(null)
   const [zoomable, setZoomable] = useState(false)
@@ -73,6 +80,7 @@ export const BlogImage = ({
         data-zoomable={zoomable || undefined}
         data-sized={dimensions ? true : undefined}
         data-loaded={loaded || undefined}
+        data-terminal={terminal ? true : undefined}
         style={
           dimensions
             ? ({
@@ -82,6 +90,16 @@ export const BlogImage = ({
             : undefined
         }
       >
+        {terminal && (
+          <span className={styles.cardHead}>
+            <span className={styles.dots} aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </span>
+            <span>{terminal}</span>
+          </span>
+        )}
         {/* eslint-disable-next-line @next/next/no-img-element -- needs a ref and arbitrary passthrough props for the zoom animation */}
         <img
           ref={imageRef}

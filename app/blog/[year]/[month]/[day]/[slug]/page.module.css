@@ -394,6 +394,29 @@
   outline-offset: 3px;
 }
 
+/* A terminal screenshot in the code card's chrome (BlogImage, terminal): the
+ * card's ground, corners and hairline, its head with the dots and the command,
+ * and the capture under it edge to edge. Dark in both themes, like the card. */
+.imageFrame[data-terminal] {
+  grid-template-rows: auto auto;
+  background: var(--c-bg);
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.045);
+  overflow: hidden;
+}
+
+.imageFrame[data-terminal] .cardHead {
+  padding-bottom: 13px;
+}
+
+.imageFrame[data-terminal] img {
+  border-radius: 0;
+}
+
+.imageFrame[data-terminal][data-sized]:not([data-loaded]) {
+  background: var(--c-bg);
+}
+
 /* The badge is a hint, not a target: the image under it takes the click. */
 .imageZoom {
   pointer-events: none;

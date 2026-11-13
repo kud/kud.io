@@ -61,6 +61,16 @@ different posts.** Not from an instinct at midnight.
   case with a neutral vendor, then check the restatement still demonstrates the
   point.
 
+## Terminal screenshots
+
+A screenshot of a terminal gets the code card's window chrome (dark ground, three dots, a title) when its Notion caption starts with `$ `: the command goes up to ` | `, the alt text after it.
+
+```
+$ incidents watch | One line per status change. Fictional demo data.
+```
+
+The title reads `incidents watch`; without ` | ` the alt falls back to `Terminal: <command>`. Upload the plain capture, never one with a frame baked in: the page draws the frame, in both themes. Any other image stays bare.
+
 ## Cover
 
 Every post needs one: it's the hero and, through `scripts/share-images.js`, the

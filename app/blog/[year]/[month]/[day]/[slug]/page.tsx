@@ -131,6 +131,18 @@ const isTextual = (children: ReactNode) =>
         child.type !== "img"),
   )
 
+// A terminal screenshot opts into the code card's window chrome from Notion,
+// where the caption is the only field an image has: a caption starting "$ "
+// names the command as the window's title, and anything after " | " is the
+// alt text. "$ incidents watch | One line per status change" frames the shot
+// under "incidents watch"; most images are not terminals and stay bare.
+const terminalCaption = (alt?: string) => {
+  const match = alt?.match(/^\$\s+(.+?)(?:\s+\|\s+(.+))?$/s)
+  if (!match) return null
+  const title = match[1].trim()
+  return { title, alt: match[2]?.trim() || `Terminal: ${title}` }
+}
+
 // Every heading is its own permalink: the words link to their #id, and a
 // faint # answers a hover, so the address bar can be copied from any section.
 const anchored = (Tag: "h2" | "h3" | "h4") => {
@@ -213,15 +225,20 @@ const components = {
       <table {...props} />
     </div>
   ),
-  img: (props) => (
-    <BlogImage
-      {...props}
-      dimensions={
-        typeof props.src === "string" ? imageDimensions(props.src) : null
-      }
-      styles={styles}
-    />
-  ),
+  img: ({ alt, ...props }) => {
+    const terminal = terminalCaption(alt)
+    return (
+      <BlogImage
+        {...props}
+        alt={terminal?.alt ?? alt}
+        terminal={terminal?.title}
+        dimensions={
+          typeof props.src === "string" ? imageDimensions(props.src) : null
+        }
+        styles={styles}
+      />
+    )
+  },
 } satisfies Partial<Components>
 
 const BlogPostPage = async ({ params }: Params) => {
