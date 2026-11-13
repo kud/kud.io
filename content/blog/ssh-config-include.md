@@ -3,7 +3,7 @@ title: "How to include a file in your SSH config"
 date: "2020-06-08"
 slug: "ssh-config-include"
 tags: ["tools"]
-cover: "/blog/ssh-config-include/c53c40d84308.jpg"
+cover: "/blog/ssh-config-include/aa688326b214.jpg"
 updated: "2026-10-22T16:44:00.000Z"
 ---
 

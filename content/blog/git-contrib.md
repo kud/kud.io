@@ -4,7 +4,7 @@ description: "A new command for my git worflow."
 date: "2020-05-15"
 slug: "git-contrib"
 tags: ["tools"]
-cover: "/blog/git-contrib/40786d511775.png"
+cover: "/blog/git-contrib/6379eda86f32.jpg"
 updated: "2026-09-04T13:39:00.000Z"
 ---
 

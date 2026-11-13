@@ -4,7 +4,7 @@ description: "Sorry .mdx but I renamed you."
 date: "2020-05-10"
 slug: "markdown-editing-1-zmv"
 tags: ["tools"]
-cover: "/blog/markdown-editing-1-zmv/33b47ae8e128.png"
+cover: "/blog/markdown-editing-1-zmv/8cc92487aa9d.jpg"
 updated: "2026-10-22T16:44:00.000Z"
 ---
 

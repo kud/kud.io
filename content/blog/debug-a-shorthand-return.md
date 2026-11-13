@@ -4,7 +4,7 @@ description: "like a map()."
 date: "2021-02-01"
 slug: "debug-a-shorthand-return"
 tags: ["engineering"]
-cover: "/blog/debug-a-shorthand-return/a283ac973b70.jpg"
+cover: "/blog/debug-a-shorthand-return/8dfcd7b77913.jpg"
 updated: "2026-09-04T13:39:00.000Z"
 ---
 

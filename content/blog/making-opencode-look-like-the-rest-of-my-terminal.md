@@ -4,7 +4,7 @@ description: "opencode's docs stop at themes and keybinds. Underneath there's a 
 date: "2026-09-30"
 slug: "making-opencode-look-like-the-rest-of-my-terminal"
 tags: ["tools","engineering"]
-cover: "/blog/making-opencode-look-like-the-rest-of-my-terminal/41c049bc5622.png"
+cover: "/blog/making-opencode-look-like-the-rest-of-my-terminal/508e2ee3db9d.jpg"
 updated: "2026-10-28T18:57:00.000Z"
 ---
 
