@@ -12,12 +12,12 @@ incidents watch --interval 2 --json
 
 ## Options
 
-| Option                 | Effect                                                              |
-| ---------------------- | ------------------------------------------------------------------- |
-| `--interval <minutes>` | Minutes between polls, default `5`; must be greater than 0          |
-| `--exec <command>`     | Run a shell command once per change; must not be empty              |
-| `--json`               | One JSON object per change instead of a text line                   |
-| `--mock`               | Replay a scenario in which services flip between polls              |
+| Option                 | Effect                                                     |
+| ---------------------- | ---------------------------------------------------------- |
+| `--interval <minutes>` | Minutes between polls, default `5`; must be greater than 0 |
+| `--exec <command>`     | Run a shell command once per change; must not be empty     |
+| `--json`               | One JSON object per change instead of a text line          |
+| `--mock`               | Replay a scenario in which services flip between polls     |
 
 An invalid `--interval` or an empty `--exec` exits 2, as does a configuration with no services.
 
@@ -55,13 +55,13 @@ With `--json`, each change is one JSON object per line:
 
 `--exec "<command>"` runs a command through your `$SHELL` (or `/bin/sh`) once per change. The change arrives as JSON on stdin, and the same facts are in the environment:
 
-| Variable             | Value                                    |
-| -------------------- | ---------------------------------------- |
-| `INCIDENTS_SERVICE`  | The service id                           |
+| Variable             | Value                                       |
+| -------------------- | ------------------------------------------- |
+| `INCIDENTS_SERVICE`  | The service id                              |
 | `INCIDENTS_FROM`     | The previous level, empty on the first poll |
-| `INCIDENTS_TO`       | The new level                            |
-| `INCIDENTS_HEADLINE` | The headline                             |
-| `INCIDENTS_URL`      | The link                                 |
+| `INCIDENTS_TO`       | The new level                               |
+| `INCIDENTS_HEADLINE` | The headline                                |
+| `INCIDENTS_URL`      | The link                                    |
 
 The command's output goes to stderr, so a `--json` stream on stdout stays clean. A command that fails, or runs past 30 seconds and is stopped, is reported on stderr and the watch carries on.
 

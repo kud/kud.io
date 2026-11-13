@@ -28,11 +28,11 @@ services:
     aliases: [ac]
 ```
 
-| Key        | Meaning                                                                       |
-| ---------- | ----------------------------------------------------------------------------- |
-| `timeout`  | Milliseconds per request, default `4000`                                      |
-| `view`     | `list` (default) or `board`: the view the interactive view opens on           |
-| `sort`     | `status` (default, worst first) or `name`                                     |
+| Key        | Meaning                                                                      |
+| ---------- | ---------------------------------------------------------------------------- |
+| `timeout`  | Milliseconds per request, default `4000`                                     |
+| `view`     | `list` (default) or `board`: the view the interactive view opens on          |
+| `sort`     | `status` (default, worst first) or `name`                                    |
 | `services` | A map of service id to its fields; only the services listed here are checked |
 
 For `timeout`, `view` and `sort`, the last file to set them wins. Any other value for `view` or `sort` is an error naming the file.
@@ -41,28 +41,28 @@ Within `services`, a drop-in's fields are merged over the same id's fields from 
 
 ## Service fields
 
-| Field     | Meaning                                                                          |
-| --------- | -------------------------------------------------------------------------------- |
-| `name`    | Display name; defaults to the id                                                 |
+| Field     | Meaning                                                                            |
+| --------- | ---------------------------------------------------------------------------------- |
+| `name`    | Display name; defaults to the id                                                   |
 | `kind`    | `statuspage`, `rss`, `slack`, `aws` or `link`; required for a service not built in |
-| `url`     | The status page; must be `https://` for `statuspage`, `rss` and `link`           |
-| `feed`    | The incident feed URL; required for `rss`                                        |
-| `window`  | For `rss`: hours a post counts as current, default `6`                           |
-| `regions` | For `aws`: the regions to count; global events always count                      |
-| `aliases` | Other words that name the service on the command line and in search              |
-| `note`    | A line printed under the detail                                                  |
-| `timeout` | Milliseconds per request for this service, overriding the global one             |
-| `enabled` | `false` drops the service                                                        |
+| `url`     | The status page; must be `https://` for `statuspage`, `rss` and `link`             |
+| `feed`    | The incident feed URL; required for `rss`                                          |
+| `window`  | For `rss`: hours a post counts as current, default `6`                             |
+| `regions` | For `aws`: the regions to count; global events always count                        |
+| `aliases` | Other words that name the service on the command line and in search                |
+| `note`    | A line printed under the detail                                                    |
+| `timeout` | Milliseconds per request for this service, overriding the global one               |
+| `enabled` | `false` drops the service                                                          |
 
 ## Kinds
 
-| Kind         | Reads                                                                                         |
-| ------------ | --------------------------------------------------------------------------------------------- |
-| `statuspage` | Atlassian Statuspage v2: `<url>/api/v2/summary.json`, history from `<url>/history.rss`        |
-| `rss`        | An incident feed only; current state comes from how recent the last post is (`window`)        |
-| `slack`      | Slack's status API                                                                            |
-| `aws`        | AWS Health's public event list; `regions` narrows it, global events always count              |
-| `link`       | No machine-readable page: the row points at `url` and claims nothing                          |
+| Kind         | Reads                                                                                  |
+| ------------ | -------------------------------------------------------------------------------------- |
+| `statuspage` | Atlassian Statuspage v2: `<url>/api/v2/summary.json`, history from `<url>/history.rss` |
+| `rss`        | An incident feed only; current state comes from how recent the last post is (`window`) |
+| `slack`      | Slack's status API                                                                     |
+| `aws`        | AWS Health's public event list; `regions` narrows it, global events always count       |
+| `link`       | No machine-readable page: the row points at `url` and claims nothing                   |
 
 ## Built-in services
 

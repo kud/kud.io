@@ -51,19 +51,19 @@ incidents list github --json
 }
 ```
 
-| Field           | Meaning                                                                                              |
-| --------------- | ---------------------------------------------------------------------------------------------------- |
-| `kind`          | `statuspage`, `rss`, `slack`, `aws` or `link`                                                        |
-| `fetched`       | `ok`, or `failed` when the page could not be read                                                    |
+| Field           | Meaning                                                                                             |
+| --------------- | --------------------------------------------------------------------------------------------------- |
+| `kind`          | `statuspage`, `rss`, `slack`, `aws` or `link`                                                       |
+| `fetched`       | `ok`, or `failed` when the page could not be read                                                   |
 | `indicator`     | `critical`, `major`, `unknown`, `minor`, `maintenance`, `none` or `link`, worst first in that order |
-| `description`   | The vendor's own summary line                                                                        |
-| `components`    | Components with their raw vendor status; `operational` ones are included                             |
-| `active`        | Incidents open now                                                                                   |
-| `recent`        | Past incidents, newest first; empty until history is loaded                                          |
-| `upcoming`      | Scheduled maintenance still to come; empty until history is loaded                                   |
-| `historyLoaded` | `true` once history was requested for this record                                                    |
-| `historyFailed` | `true` when the history feed could not be read, so an empty `recent` claims nothing                  |
-| `note`          | The service's configured `note`, or an empty string                                                  |
+| `description`   | The vendor's own summary line                                                                       |
+| `components`    | Components with their raw vendor status; `operational` ones are included                            |
+| `active`        | Incidents open now                                                                                  |
+| `recent`        | Past incidents, newest first; empty until history is loaded                                         |
+| `upcoming`      | Scheduled maintenance still to come; empty until history is loaded                                  |
+| `historyLoaded` | `true` once history was requested for this record                                                   |
+| `historyFailed` | `true` when the history feed could not be read, so an empty `recent` claims nothing                 |
+| `note`          | The service's configured `note`, or an empty string                                                 |
 
 `unknown` means the page could not be read. It sorts above every healthy row and fails the exit code.
 
@@ -75,11 +75,11 @@ incidents list --json | jq -r '.[] | select(.indicator != "none" and .indicator 
 
 ## Exit codes
 
-| Code | Meaning                                                     |
-| ---- | ----------------------------------------------------------- |
-| 0    | All clear: `none`, `maintenance` and `link` count as clear  |
-| 1    | Something is degraded, or a page could not be read          |
-| 2    | Usage or configuration error, or an unknown service         |
+| Code | Meaning                                                    |
+| ---- | ---------------------------------------------------------- |
+| 0    | All clear: `none`, `maintenance` and `link` count as clear |
+| 1    | Something is degraded, or a page could not be read         |
+| 2    | Usage or configuration error, or an unknown service        |
 
 The interactive view and `incidents watch` exit 0 when stopped. With no services configured, `incidents list` prints `No services configured.` and exits 0.
 

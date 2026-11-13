@@ -4,9 +4,29 @@ description: "📊 Pure-Rust terminal dashboard for Claude Code — live session
 hasDocs: true
 ---
 
+## Features
+
 A fast, minimal terminal dashboard for monitoring your [Claude Code](https://claude.ai/code) sessions in real time — built entirely in Rust.
 
+- **Live session list** — every running Claude Code agent at a glance, grouped by status (waiting for approval → active → idle → ended)
+- **Permission modals** — review and approve or deny tool permission requests (Edit, Write, Bash) without leaving the terminal
+- **Usage panel** — today's cost, monthly spend and all-time totals, with a 7-day cost chart and token and model breakdowns, pulled from [ccusage](https://github.com/ryoppippi/ccusage)
+- **Session management** — rename sessions, launch new ones (tmux window, iTerm2 tab, or Terminal.app), and clear ended ones
+- **Auto-spawned daemon** — the background daemon starts on first launch, no separate step
+- **Pure Rust** — a single binary, no Node.js or npm required
+
+## Install
+
+```sh
+cargo install claude-dash
+claude-dash install
 ```
+
+## Usage
+
+Run `claude-dash` — the TUI launches immediately and auto-spawns its background daemon on first run.
+
+```console
 ◆ claude-dash  2 active  │  today $4.20 · 9.8M tok  month $52.10
 ┌──────────────────────────────────────────────────────────────────┐
 │ Agents · 2 active · 4 total                                      │
@@ -30,22 +50,4 @@ A fast, minimal terminal dashboard for monitoring your [Claude Code](https://cla
 │ All Time     $248.75  ·  612.40M tok   18 sessions               │
 └──────────────────────────────────────────────────────────────────┘
 [q] quit  [↑↓] select  [e] rename  [n] new  [r] refresh  ● connected
-```
-
-## Install
-
-```bash
-cargo install claude-dash
-claude-dash install
-```
-
-Then run `claude-dash` — the TUI launches immediately and auto-spawns its background daemon on first run.
-
-## Development
-
-```bash
-git clone https://github.com/kud/claude-dash-cli
-cd claude-dash-cli
-cargo build
-cargo run
 ```

@@ -4,12 +4,15 @@ description: "✨ A curated list of tools and frameworks that make the terminal 
 hasDocs: false
 ---
 
-> A curated list of tools, frameworks, and libraries that make the terminal genuinely beautiful to build with and look at.
+## Features
 
-Not just functional — _delightful_. Every entry here earns its place through great DX, visual polish, or both.
+A curated list of tools, frameworks, and libraries that make the terminal genuinely beautiful to build with and look at. Not just functional — _delightful_. Every entry here earns its place through great DX, visual polish, or both.
 
----
-
+- **Building blocks** — TUI frameworks, prompt and input libraries, styling and output helpers
+- **Everyday tools** — CLIs, multiplexers, shells and terminal emulators that happen to look exceptional
+- **The look itself** — fonts and colour schemes that travel across your whole terminal stack
+- **Inspiration** — showcases that make you go "wait, that runs in a terminal?"
+- **Language at a glance** — each entry is tagged with its language (`rust`, `go`, `ts`, `js`, …)
 
 ## TUI Frameworks
 

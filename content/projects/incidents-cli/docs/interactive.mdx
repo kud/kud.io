@@ -16,30 +16,30 @@ Rows fill in as each page answers, and hold still until every service has replie
 
 ## Statuses
 
-| Label           | Meaning                                                      |
-| --------------- | ------------------------------------------------------------ |
-| `● critical`    | The vendor declares a critical incident                      |
-| `● major`       | A major incident                                             |
-| `? unreadable`  | The page could not be read; counts as trouble                |
-| `● minor`       | A minor incident                                             |
-| `◌ maintenance` | Maintenance in progress; counts as clear                     |
-| `● ok`          | Operational                                                  |
+| Label           | Meaning                                                       |
+| --------------- | ------------------------------------------------------------- |
+| `● critical`    | The vendor declares a critical incident                       |
+| `● major`       | A major incident                                              |
+| `? unreadable`  | The page could not be read; counts as trouble                 |
+| `● minor`       | A minor incident                                              |
+| `◌ maintenance` | Maintenance in progress; counts as clear                      |
+| `● ok`          | Operational                                                   |
 | `→ manual`      | No machine-readable page: the row links to it, claims nothing |
 
 ## The filter column
 
 Both views share a column of filters on the left, which doubles as the tally: each entry carries how many services it holds.
 
-| Filter        | Holds                                            |
-| ------------- | ------------------------------------------------ |
-| All           | Every service                                    |
-| Trouble       | Everything that is not clear                     |
-| major         | `critical` and `major`                           |
-| minor         | `minor`                                          |
-| unreadable    | Pages that could not be read                     |
-| maintenance   | `maintenance`                                    |
-| ok            | Operational                                      |
-| manual        | Link-only services                               |
+| Filter      | Holds                        |
+| ----------- | ---------------------------- |
+| All         | Every service                |
+| Trouble     | Everything that is not clear |
+| major       | `critical` and `major`       |
+| minor       | `minor`                      |
+| unreadable  | Pages that could not be read |
+| maintenance | `maintenance`                |
+| ok          | Operational                  |
+| manual      | Link-only services           |
 
 `tab` moves the keys between the filter column and the services. In the column, `↑↓` or `j k` step through the filters, and `⏎` or `→` go back to the services. On a narrow terminal the column collapses and the active filter's name moves into the services title.
 
@@ -70,28 +70,28 @@ Whenever a filter, the fold or a search hides services, a line under the list sa
 
 On a wide terminal the two sit side by side and History scrolls; on a narrow one they stack into a single scrolling column. A `note` from the service's configuration appears at the end.
 
-| Key                    | Action           |
-| ---------------------- | ---------------- |
-| `↑↓` or `j k`          | Scroll one line  |
-| `space`, `f`, `PgDn`   | Scroll a page down |
-| `b`, `PgUp`            | Scroll a page up |
-| `g` / `G`              | Top / bottom     |
-| `r`                    | Re-read this service |
-| `esc` or `⌫`           | Back to the overview |
+| Key                  | Action               |
+| -------------------- | -------------------- |
+| `↑↓` or `j k`        | Scroll one line      |
+| `space`, `f`, `PgDn` | Scroll a page down   |
+| `b`, `PgUp`          | Scroll a page up     |
+| `g` / `G`            | Top / bottom         |
+| `r`                  | Re-read this service |
+| `esc` or `⌫`         | Back to the overview |
 
 ## All keys
 
-| Key           | Action                                                        |
-| ------------- | ------------------------------------------------------------- |
-| `↑↓`, `j k`   | Move                                                          |
-| `←→`          | Board: move between columns and into the filters. List: cycle filters |
-| `tab`         | Switch between the filters and the services                   |
-| `⏎`           | Open a service                                                |
-| `/`           | Search names and aliases                                      |
-| `z`           | Fold or show the operational services                         |
-| `v`           | Switch between the board and the list                         |
-| `s`           | Sort by status or by name                                     |
-| `r`           | Refresh                                                       |
-| `esc`         | Clear a search, or go back                                    |
-| `⌫`           | Go back                                                       |
-| `q`           | Quit                                                          |
+| Key         | Action                                                                |
+| ----------- | --------------------------------------------------------------------- |
+| `↑↓`, `j k` | Move                                                                  |
+| `←→`        | Board: move between columns and into the filters. List: cycle filters |
+| `tab`       | Switch between the filters and the services                           |
+| `⏎`         | Open a service                                                        |
+| `/`         | Search names and aliases                                              |
+| `z`         | Fold or show the operational services                                 |
+| `v`         | Switch between the board and the list                                 |
+| `s`         | Sort by status or by name                                             |
+| `r`         | Refresh                                                               |
+| `esc`       | Clear a search, or go back                                            |
+| `⌫`         | Go back                                                               |
+| `q`         | Quit                                                                  |

@@ -4,9 +4,21 @@ description: "Typed settings and plumbing for Firefox WebExtensions"
 hasDocs: true
 ---
 
-Typed settings and plumbing for Firefox WebExtensions.
+## Features
 
-## Consuming this without a build step
+- **One settings schema** — `defineSettings` declares defaults once, shared by the popup, options page, background page and content script
+- **Loud on typos** — `set()` with an undeclared key throws instead of writing under a name nothing reads
+- **No build step needed** — an IIFE build you vendor straight into a no-bundler extension
+- **`invoke`** — one promise/callback adapter that is correct under Firefox, Chrome MV3 and Chrome MV2, and checks `runtime.lastError`
+- **Reusable release workflows** — build, sign, upload and list any Firefox extension on AMO without copying the workflows
+
+## Install
+
+```sh
+npm install @kud/webext
+```
+
+### Consuming this without a build step
 
 The extensions this library is built for have no bundler — `web-ext build`
 just zips the source directory as-is. So there is no `import "@kud/webext"`
@@ -100,108 +112,3 @@ later `get()` silently merges over.
 `defineSettings` also throws on `set()` calls with an undeclared key, so a
 typo in a plain-JS content script fails loudly instead of silently writing
 under a name nothing reads.
-
-### When `get()` rejects
-
-It does not swallow storage failures, and that is deliberate — the failure is
-almost never transient. In Firefox the usual cause is `storage.sync` throwing
-because the manifest has no `browser_specific_settings.gecko.id`; **check that
-first**. Resolving defaults instead would leave the extension running on
-defaults forever while the user's saved settings appear to be ignored, with
-nothing anywhere to point at the cause.
-
-Where a caller genuinely wants to carry on, the defaults are one expression
-away — and reading them from the schema is the point, rather than restating
-the literal in a `catch`:
-
-```js
-const values = await settings.get().catch(() => settings.defaults)
-```
-
-## `invoke` — for APIs this library does not wrap
-
-`invoke(namespace, method, ...args)` is the promise/callback adapter the rest
-of the library is built on, exported so an API with no wrapper here does not
-need a hand-rolled Chrome-MV2 branch at the call site:
-
-```js
-const [tab] = await webext.invoke(webext.api.tabs, "query", {
-  active: true,
-  currentWindow: true,
-})
-```
-
-It passes a callback _and_ honours a returned thenable, so it is correct under
-Firefox, Chrome MV3 and Chrome MV2 alike, and it checks `runtime.lastError` —
-which a hand-rolled `new Promise((resolve) => chrome.tabs.query(q, resolve))`
-does not, silently resolving `undefined` on failure.
-
-⚠ It is for **callback-or-promise async** APIs, not a universal wrapper. It
-appends a callback argument to every call, so a synchronous API
-(`i18n.getMessage`) would receive an argument it does not expect.
-
-## Development
-
-```sh
-npm install
-npm run build      # emits dist/index.js (ESM) and dist/index.global.js (IIFE)
-npm run typecheck
-npm test
-```
-
-## Releasing an extension
-
-Two reusable workflows in `.github/workflows` release any Firefox extension
-without copying them. The extension repo keeps its own version (`git lzv`, a
-repo script); the workflows never bump anything.
-
-`release-extension.yml` builds (WXT, or plain web-ext, detected from
-`package.json`), signs and uploads the listed AMO version, attaches the
-artefacts to the GitHub release, then applies the AMO listing. Tag-triggered:
-
-```yaml
-# .github/workflows/release.yml
-on:
-  push:
-    tags: ["v*"]
-permissions:
-  contents: write
-jobs:
-  release:
-    uses: kud/webext/.github/workflows/release-extension.yml@main
-    secrets: inherit
-```
-
-Inputs: `root` (default `.`), `node-version`, `mode` (`auto`, `wxt`, `web-ext`),
-`source-dir` and `ignore-files` (web-ext mode), `amo-metadata`, `listing`,
-`icon`. The caller needs `WEB_EXT_API_KEY` and `WEB_EXT_API_SECRET` secrets,
-or `MOZILLA_ADDONS_JWT_ISSUER` and `MOZILLA_ADDONS_JWT_SECRET` as a fallback.
-
-`amo-listing.yml` pushes `<root>/amo/listing.json`, the icon and
-`<root>/amo/screenshots`. A dry run writes the diff to the job summary;
-`apply` sends it and commits `.amo-previews.json` back. `force` replaces every
-screenshot and only takes effect on `workflow_dispatch`, never on a tag. The
-add-on id comes from `<root>/manifest.json`; a WXT project, which has none
-checked in, passes it as `guid`:
-
-```yaml
-# .github/workflows/amo-listing.yml
-on:
-  push:
-    branches: [main]
-    paths: ["amo/**"]
-  workflow_dispatch:
-    inputs:
-      apply: { type: boolean, default: false }
-      force: { type: boolean, default: false }
-permissions:
-  contents: write
-jobs:
-  listing:
-    uses: kud/webext/.github/workflows/amo-listing.yml@main
-    with:
-      apply: ${{ inputs.apply == true }}
-      force: ${{ inputs.force == true }}
-      icon: assets/icon-128.png
-    secrets: inherit
-```

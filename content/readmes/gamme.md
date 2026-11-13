@@ -4,10 +4,16 @@ description: "🎛️ One Material design system for kud's Android apps: shared 
 hasDocs: true
 ---
 
+## Features
+
 The Material design system for kud's Android apps ([tutti](https://github.com/kud/tutti), [pastille](https://github.com/kud/pastille), and the ones to come).
 
-Gamme is a source-only kit: each app copies it into its own `:design` module and compiles it with its own toolchain, so apps on different Android Gradle Plugin and Kotlin versions can share it, and F-Droid builds stay reproducible from source. Colour schemes stay with each app; Gamme shares the roles, shape, spacing, motion, and the components that carry the accessibility rules.
+- **Source-only kit** — each app copies it into its own `:design` module and compiles it with its own toolchain
+- **Any toolchain** — apps on different Android Gradle Plugin and Kotlin versions can share it
+- **Reproducible F-Droid builds** — everything builds from source
+- **Shared foundations** — roles, shape, spacing and motion, plus the components that carry the accessibility rules
+- **Each app's own colours** — colour schemes stay with each app
 
-- [`docs/spec.md`](https://github.com/kud/gamme/blob/HEAD/docs/spec.md): the v0.1 specification, its rulings, and the rules drawn from reviewing the apps on a real phone.
+## Install
 
-The code arrives after pastille's first F-Droid release. MIT licensed.
+Gamme is not a dependency you pull in: an app copies the kit into its own `:design` module. The code arrives after pastille's first F-Droid release.
