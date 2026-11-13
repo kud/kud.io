@@ -275,6 +275,49 @@ const rehypeBlogMermaid = () => (tree: HastNode) => {
   walk(tree)
 }
 
+// A Notion video arrives as a paragraph holding one link to an .mp4 or .webm
+// (scripts/sync-notion.js), because Markdown has no video syntax and posts
+// carry no raw HTML. Swap that paragraph for a <video>, keeping the link text
+// as its accessible name; a link inside running prose stays a link.
+const VIDEO_HREF = /\.(mp4|webm)(\?.*)?$/i
+
+const rehypeBlogVideo = () => (tree: HastNode) => {
+  const walk = (node: HastNode) => {
+    for (const child of node.children ?? []) {
+      if (child.type === "element" && child.tagName === "p") {
+        const parts = (child.children ?? []).filter(
+          (part) => !(part.type === "text" && !part.value?.trim()),
+        )
+        const link = parts[0]
+        const href = link?.properties?.href
+        if (
+          parts.length === 1 &&
+          link.type === "element" &&
+          link.tagName === "a" &&
+          typeof href === "string" &&
+          VIDEO_HREF.test(href)
+        ) {
+          child.tagName = "video"
+          child.properties = {
+            src: href,
+            "aria-label": hastText(link).trim() || "Video",
+            controls: true,
+            muted: true,
+            loop: true,
+            autoPlay: true,
+            playsInline: true,
+            preload: "metadata",
+          }
+          child.children = []
+          continue
+        }
+      }
+      walk(child)
+    }
+  }
+  walk(tree)
+}
+
 // Element overrides live with the route, not here: this is the pipeline, and
 // how a blockquote looks is a design decision. Callers pass their own map.
 export const renderMarkdown = async (
@@ -287,6 +330,7 @@ export const renderMarkdown = async (
     .use(remarkRehype)
     .use(rehypeSlug)
     .use(rehypeBlogMermaid)
+    .use(rehypeBlogVideo)
     .use(rehypeShiki, {
       theme: SHIKI_THEME,
       transformers: [diffTransformer],

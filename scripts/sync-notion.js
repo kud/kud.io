@@ -295,7 +295,10 @@ const renderBlock = async (block, context) => {
       const href = isNotionHosted(block.video)
         ? await mirrorFile(url, slug, "mp4")
         : url
-      return `[Video](${href})`
+      // The caption becomes the player's accessible name (lib/blog.ts).
+      const label =
+        richText(block.video.caption).replace(/[[\]]/g, "") || "Video"
+      return `[${label}](${href})`
     }
     case "equation":
       return `\`${block.equation.expression}\``
