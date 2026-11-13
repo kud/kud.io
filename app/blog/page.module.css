@@ -411,3 +411,57 @@ section:first-of-type .year {
     transform: scale(1.06);
   }
 }
+
+/* Hover (Erwann's pick, 2026-11-13): the whole post is the target, and every
+ * post takes the same soft grey tile, the lead and pair cards included, whose
+ * cover still leans in. The title link stretches over its <li> (::after,
+ * inset 0), so the row is one hit area and still one tab stop; the row tags
+ * lift above it (z-index 1) and stay their own filter buttons. The tile is the
+ * li's ::before, bled 10/14px past the column so the content never moves, and
+ * kept behind it by isolation. The title underline gives way to the tile.
+ * Keyboard focus on the title lights the same tile and rings it, never the
+ * title; the global ring has id specificity, hence #blog-root here. */
+.list li {
+  position: relative;
+  isolation: isolate;
+}
+
+.list li::before {
+  content: "";
+  position: absolute;
+  inset: -10px -14px;
+  z-index: -1;
+  border-radius: 12px;
+  background: var(--bg-2);
+  opacity: 0;
+  transition: opacity 130ms;
+}
+
+.list li:hover::before {
+  opacity: 1;
+}
+
+.list h2 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.list .tags {
+  position: relative;
+  z-index: 1;
+}
+
+:global(#blog-root) .list h2 a:focus-visible {
+  outline: 0;
+}
+
+.list li:has(h2 a:focus-visible)::before {
+  opacity: 1;
+  outline: 2px solid var(--c-fn);
+  outline-offset: 0;
+}
+
+.list li:has(.thumb:hover, h2 a:hover) h2 a {
+  border-bottom-color: transparent;
+}
