@@ -2,6 +2,7 @@
 
 import type { ComponentProps, MouseEvent } from "react"
 import { MorphLink } from "@/components/morph-link"
+import { readGlide } from "@/components/blog-morph-preview"
 
 // The names a post owns on the index and on its own page: its cover and its
 // title. Both carry a view-transition-class too (blog page.module.css and the
@@ -30,15 +31,12 @@ export const PostMorphLink = ({ slug, onClick, ...props }: Props) => {
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     onClick?.(event)
     if (isModified(event)) return
-    // Preview only: ?morph=cover picks anim-2 (the cover alone), ?morph=solo
-    // anim-3, ?morph=none today's plain cross-fade (anim-0, the baseline).
-    const variant = new URLSearchParams(location.search).get("morph")
-    if (variant === "none") {
-      delete document.documentElement.dataset.vt
-      return
-    }
+    // Preview only: the glide candidate picked on the preview banner.
+    const variant = readGlide()
+    if (variant === "none") delete document.documentElement.dataset.vt
     if (variant) document.documentElement.dataset.blogMorph = variant
     else delete document.documentElement.dataset.blogMorph
+    if (variant === "none") return
 
     const row = event.currentTarget.closest("li")
     const names = postMorphNames(slug)

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react"
 import { InkLink as Link } from "@/components/ink-link"
 import { BLOG_ROOT_ID, ThemeScopeScript } from "@/components/scoped-theme"
+import { BlogMorphPreview } from "@/components/blog-morph-preview"
 import { SiteFooter } from "@/components/site-footer"
 import { ThemePicker } from "@/components/theme-picker"
 import styles from "./blog.module.css"
@@ -32,6 +33,7 @@ const BlogLayout = ({ children }: { children: ReactNode }) => (
     </div>
     {/* Outside .wrap: the footer restates the column itself (blog.module.css). */}
     <SiteFooter className={styles.footer} />
+    <BlogMorphPreview />
   </div>
 )
 

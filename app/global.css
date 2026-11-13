@@ -239,13 +239,20 @@ html[data-vt="morph"]::view-transition-new(*.post-cover) {
   object-fit: cover;
 }
 
-/* Preview only (anim-2, ?morph=cover on the index): the title stays in the
+/* Preview only (anim-2, Glide 2 on the preview banner): the title stays in the
    page and arrives with the fade. */
 html[data-blog-morph="cover"] [data-morph-title] {
   view-transition-name: none !important;
 }
 
-/* Preview only (anim-3, ?morph=solo): the title glides as the post's own
+/* Preview only (anim-0, Glide now): today's plain cross-fade, so the post
+   names nothing either. */
+html[data-blog-morph="none"] [data-morph-title],
+html[data-blog-morph="none"] [data-morph-cover] {
+  view-transition-name: none !important;
+}
+
+/* Preview only (anim-3, Glide 3 on the preview banner): the title glides as the post's own
    heading only. A cross-fade of the two snapshots ghosts whenever the line
    breaks differ, which on a phone is nearly always (a one-line row title
    becoming a two-line heading); dropping the outgoing one leaves a single
