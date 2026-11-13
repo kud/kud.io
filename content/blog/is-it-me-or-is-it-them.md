@@ -5,7 +5,7 @@ date: "2026-11-13"
 slug: "is-it-me-or-is-it-them"
 tags: ["engineering","tools"]
 cover: "/blog/is-it-me-or-is-it-them/b7ae7c147980.png"
-updated: "2026-11-13T22:12:00.000Z"
+updated: "2026-11-13T22:25:00.000Z"
 ---
 
 _A first check before debugging your own code, for you and your AI assistant._
@@ -54,19 +54,17 @@ Running `incidents` opens an interactive terminal interface. Services appear as 
 
 There are two views. The board opens by default, with a filter column down the left that doubles as the tally: each status, its count and a small bar. The arrow keys move across the cards in both directions. Press `v` for the list instead, every service worst first with a preview of the one you're on.
 
-![The board, the default view: a card for each service in trouble. Fictional demo data.](/blog/is-it-me-or-is-it-them/8ff806f30852.png)
+![$ incidents | The board, the default view: a card for each service in trouble. Fictional demo data.](/blog/is-it-me-or-is-it-them/c3449dec73de.png)
 
-![The list view, worst first, with a preview of the selected service. Fictional demo data.](/blog/is-it-me-or-is-it-them/26917db91435.png)
+![$ incidents | The list view, worst first, with a preview of the selected service. Fictional demo data.](/blog/is-it-me-or-is-it-them/cbec78f68dec.png)
 
 You can sort by severity or name, `tab` into the filter column to narrow the view, search, or fold the healthy services out of the way.
 
 Open a service and its page splits into what's happening now and what happened before.
 
-![A service's detail page: active incidents and affected components, with its history alongside. Fictional demo data.](/blog/is-it-me-or-is-it-them/b82506b76886.png)
+![$ incidents harbour-ci | A service's detail page: what's happening now on the left, its incident history by month on the right, scrollable. Fictional demo data.](/blog/is-it-me-or-is-it-them/cb08225b3be8.png)
 
 Some status pages list dozens of components. Rather than a wall of them, incidents groups the affected ones by status, worst first, and says how many more there are. History comes from the vendor's incidents API rather than its RSS feed, which on a page that schedules a lot of maintenance fills up with future windows and pushes real incidents out. Upcoming maintenance is counted on its own, and if that count can't be read, it's left unknown rather than shown as zero.
-
-![A busy page, grouped worst first, with upcoming maintenance counted separately. Fictional demo data.](/blog/is-it-me-or-is-it-them/ec16967f74a6.png)
 
 For scripts, there's a simpler interface:
 
@@ -88,13 +86,13 @@ The same rules apply whether a person or a program is reading the result.
 
 There's also `incidents watch`, for when you'd rather not look at all. It says where everything stands when it starts, then checks every few minutes and prints a line only when something changes, and with `--exec` it runs a command of your choice on each change: a desktop notification, a sound, or a voice telling you GitHub is down again.
 
-![incidents watch: where everything stands, then one line per change. Fictional demo data.](/blog/is-it-me-or-is-it-them/b56423804ace.png)
+![$ incidents watch | Where everything stands, then one line per change. Fictional demo data.](/blog/is-it-me-or-is-it-them/857219bb93d9.png)
 
 And since Claude Code can run terminal commands while investigating software problems, I thought it should be able to ask that first question too.
 
 ## Teaching Claude to check first
 
-I published an [incidents plugin for Claude Code](https://github.com/kud/claude-plugins/tree/main/plugins/incidents).
+I published an [incidents plugin for Claude Code](https://kud.io/projects/claude-plugins/docs/incidents).
 
 There's no MCP server, separate API or background service. The plugin is a single skill: a Markdown file containing instructions that teach Claude when to check vendor status and how to interpret the result.
 
@@ -163,4 +161,4 @@ And if the answer is unknown, leave it unknown.
 
 ---
 
-[Install incidents on npm](https://www.npmjs.com/package/@kud/incidents-cli) · [Documentation](https://kud.io/projects/incidents-cli/docs) · [Source code](https://github.com/kud/incidents-cli) · [Claude Code plugin](https://github.com/kud/claude-plugins/tree/main/plugins/incidents)
+[Install incidents on npm](https://www.npmjs.com/package/@kud/incidents-cli) · [Documentation](https://kud.io/projects/incidents-cli/docs) · [Source code](https://github.com/kud/incidents-cli) · [Claude Code plugin](https://kud.io/projects/claude-plugins/docs/incidents)
