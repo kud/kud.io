@@ -385,6 +385,7 @@
   background: var(--bg-2);
 }
 
+.imageFrame[data-zoomable],
 .imageFrame[data-zoomable] img {
   cursor: zoom-in;
 }

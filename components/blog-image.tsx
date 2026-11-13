@@ -30,6 +30,10 @@ const ZOOM_SLACK = 4
 // chrome instead: the same dark ground, three dots and mono label, with the
 // command where a code card names its language. The frame belongs to the page,
 // not the file, so the screenshot itself stays a plain capture.
+//
+// The click is taken on the frame, not the image: on a terminal frame the zoom
+// badge sits over the head, not the capture, so a click on it would otherwise
+// land on chrome that does nothing. The image stays the keyboard target.
 export const BlogImage = ({
   styles,
   alt,
@@ -81,6 +85,7 @@ export const BlogImage = ({
         data-sized={dimensions ? true : undefined}
         data-loaded={loaded || undefined}
         data-terminal={terminal ? true : undefined}
+        onClick={zoomable ? () => setOpen(true) : undefined}
         style={
           dimensions
             ? ({
@@ -115,7 +120,6 @@ export const BlogImage = ({
             tabIndex: 0,
             "aria-label": label,
             "aria-haspopup": "dialog",
-            onClick: () => setOpen(true),
             onKeyDown,
           })}
         />
