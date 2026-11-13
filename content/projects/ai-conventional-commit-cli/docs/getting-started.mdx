@@ -1,15 +1,6 @@
 ---
-title: Getting started
----
-
-| `-q, --quiet` | One line after committing (generate); default when stdout is not a terminal, or `AICC_QUIET=1` |
-| `--verbose` | Full output even when stdout is not a terminal (generate), or `AICC_QUIET=0` |
-
----
-
 title: 🚀 Getting Started
 description: Install the CLI, generate your first commit, and learn the full command and flag reference.
-
 ---
 
 ## 📦 Install
@@ -65,14 +56,16 @@ ai-conventional-commit models --interactive --save
 
 ## 🔧 Flags
 
-| Flag                                        | Description                                   |
-| ------------------------------------------- | --------------------------------------------- |
-| `--style <standard\|gitmoji\|gitmoji-pure>` | Override the commit style for this run        |
-| `--model <provider/name>`                   | Override the active model for this run        |
-| `-y, --yes`                                 | Skip all confirmation prompts                 |
-| `--shorter`                                 | Ask the model to shorten the message (refine) |
-| `--longer`                                  | Ask the model to expand the message (refine)  |
-| `--scope <scope>`                           | Force a specific scope (refine)               |
+| Flag                                        | Description                                                                                    |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `--style <standard\|gitmoji\|gitmoji-pure>` | Override the commit style for this run                                                         |
+| `--model <provider/name>`                   | Override the active model for this run                                                         |
+| `-y, --yes`                                 | Skip all confirmation prompts                                                                  |
+| `--shorter`                                 | Ask the model to shorten the message (refine)                                                  |
+| `--longer`                                  | Ask the model to expand the message (refine)                                                   |
+| `--scope <scope>`                           | Force a specific scope (refine)                                                                |
+| `-q, --quiet`                               | One line after committing (generate); default when stdout is not a terminal, or `AICC_QUIET=1` |
+| `--verbose`                                 | Full output even when stdout is not a terminal (generate), or `AICC_QUIET=0`                   |
 
 ## ✏️ Refine & reword
 

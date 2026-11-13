@@ -4,8 +4,8 @@ description: "A quick way to check what your dependencies are reporting before d
 date: "2026-11-13"
 slug: "is-it-them-or-is-it-me"
 tags: ["engineering","tools"]
-cover: "/blog/is-it-them-or-is-it-me/b72774620ac3.png"
-updated: "2026-11-13T18:24:00.000Z"
+cover: "/blog/is-it-them-or-is-it-me/b7ae7c147980.png"
+updated: "2026-11-13T18:48:00.000Z"
 ---
 
 _A first check before debugging your own code, for you and your AI assistant._
