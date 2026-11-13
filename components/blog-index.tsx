@@ -5,6 +5,42 @@ import { postPath } from "@/lib/blog-path"
 import { useEffect, useId, useMemo, useState, type CSSProperties } from "react"
 import { CoverImage } from "@/components/blog-cover"
 import type { CoverImages } from "@/lib/blog"
+import {
+  Braces,
+  LayoutGrid,
+  Palette,
+  StickyNote,
+  Wrench,
+  type LucideIcon,
+} from "lucide-react"
+
+// One line icon per topic pill (Erwann's pick, 2026-11-13). Decoration only:
+// the label stays the name. A topic missing here simply gets no icon.
+const TOPIC_ICONS: Record<string, LucideIcon> = {
+  all: LayoutGrid,
+  design: Palette,
+  engineering: Braces,
+  notes: StickyNote,
+  tools: Wrench,
+}
+
+const TopicIcon = ({
+  topic,
+  className,
+}: {
+  topic: string
+  className: string
+}) => {
+  const Icon = TOPIC_ICONS[topic]
+  return Icon ? (
+    <Icon
+      className={className}
+      size={14}
+      strokeWidth={1.75}
+      aria-hidden="true"
+    />
+  ) : null
+}
 
 export type IndexEntry = {
   slug: string
@@ -107,6 +143,7 @@ export const BlogIndex = ({
               aria-pressed={tag === null}
               data-active={tag === null || undefined}
             >
+              <TopicIcon topic="all" className={styles.pillIcon} />
               all
             </button>
             {tags.map((option) => (
@@ -118,6 +155,7 @@ export const BlogIndex = ({
                 aria-pressed={tag === option}
                 data-active={tag === option || undefined}
               >
+                <TopicIcon topic={option} className={styles.pillIcon} />
                 {option}
               </button>
             ))}

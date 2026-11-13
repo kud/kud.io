@@ -15,6 +15,9 @@
 /* 4px 10px is a 26px box including borders — the same height as the theme
  * pill at 4px 9px, so the page's two controls share one scale. */
 .filter button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font: inherit;
   padding: 4px 10px;
   border: 1px solid var(--line);
@@ -37,6 +40,17 @@
  * differences — it is not redundant with the ground and border. JetBrains
  * Mono's 400 and 500 share an advance width, so activating a pill never reflows the
  * row. */
+/* The topic icon (components/blog-index.tsx) follows the pill's own colour,
+ * a touch quieter at rest so the word still leads. */
+.pillIcon {
+  flex: none;
+  opacity: 0.8;
+}
+
+.filter button[data-active] .pillIcon {
+  opacity: 1;
+}
+
 .filter button[data-active] {
   color: var(--fg);
   border-color: var(--line-2);
@@ -78,8 +92,9 @@ section:first-of-type .year {
 }
 
 /* The rail (Erwann's pick, 2026-11-13). From 1200px the margin beside the
- * 790px column is wide enough for a 140px card plus a 40px gutter, so the
- * filter leaves the flow and sits there, sticky, under a "Topics" caption. The
+ * 790px column is wide enough for a 152px card plus a 40px gutter (152px so
+ * "engineering" and its icon sit inside it), so the filter leaves the flow and
+ * sits there, sticky, under a "Topics" caption. The
  * column itself never moves sideways. Below, the rail is an ordinary block,
  * the caption is hidden and the bar sits inline above the list. The caption
  * is a real element, not generated content, so it can name the group. */
@@ -97,7 +112,7 @@ section:first-of-type .year {
     top: 0;
     bottom: 0;
     left: calc(100% + 40px);
-    width: 140px;
+    width: 152px;
   }
 
   .filter {
