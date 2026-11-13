@@ -498,12 +498,18 @@ const main = async () => {
     }),
   )
 
+  // --latest re-renders only the newest published post, for a quick refresh
+  // after editing it. Every other post keeps its committed copy, so nothing is
+  // pruned: the kept set would only hold the one post.
+  const latestOnly = process.argv.includes("--latest")
+  const selected = latestOnly ? pages.slice(0, 1) : pages
+
   const kept = new Set()
   let skipped = 0
 
   // Per-post isolation: one malformed post is skipped and logged, never allowed
   // to take down the build for every other post.
-  for (const page of pages) {
+  for (const page of selected) {
     const label = plain(page.properties.Name) || page.id
     spinner.text = `notion: ${label}`
     try {
@@ -514,7 +520,7 @@ const main = async () => {
     }
   }
 
-  const removed = await pruneStale(kept)
+  const removed = latestOnly ? 0 : await pruneStale(kept)
   const redirected = await writeRedirects(dataSourceId)
   const shared = await writeShareImages()
   const sized = await writeCoverImages()

@@ -2,6 +2,11 @@ name: Refresh project content
 
 on:
   workflow_dispatch:
+    inputs:
+      latest_article_only:
+        description: Refresh only the newest blog post (skips repos and other posts)
+        type: boolean
+        default: false
   repository_dispatch:
     types: [project-content-updated]
   schedule:
@@ -34,7 +39,12 @@ jobs:
         run: npm ci
 
       - name: Sync project content
-        run: npm run sync
+        run: |
+          if [ "${{ inputs.latest_article_only }}" = "true" ]; then
+            node scripts/sync-notion.js --latest
+          else
+            npm run sync
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
