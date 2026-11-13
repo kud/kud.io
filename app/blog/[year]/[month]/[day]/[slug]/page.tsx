@@ -264,8 +264,10 @@ const BlogPostPage = async ({ params }: Params) => {
         {cover && (
           <figure
             className={styles.hero}
+            data-morph-cover
             style={
               {
+                viewTransitionName: `post-cover-${post.slug}`,
                 ...(cover.preview && { "--preview": `url(${cover.preview})` }),
                 ...(coverSize && {
                   "--ratio": `${coverSize.width} / ${coverSize.height}`,
@@ -281,7 +283,13 @@ const BlogPostPage = async ({ params }: Params) => {
             />
           </figure>
         )}
-        <h1 className={styles.title}>{post.title}</h1>
+        <h1
+          className={styles.title}
+          data-morph-title
+          style={{ viewTransitionName: `post-title-${post.slug}` }}
+        >
+          {post.title}
+        </h1>
         <div className={styles.meta}>
           <span>
             {[post.date, `${readingMinutes(post.body)} min`]

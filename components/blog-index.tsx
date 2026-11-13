@@ -1,6 +1,6 @@
 "use client"
 
-import { InkLink as Link } from "@/components/ink-link"
+import { PostMorphLink } from "@/components/post-morph-link"
 import { postPath } from "@/lib/blog-path"
 import { useEffect, useId, useMemo, useState, type CSSProperties } from "react"
 import { CoverImage } from "@/components/blog-cover"
@@ -141,9 +141,11 @@ export const BlogIndex = ({
                     its own colours wait there, blurred; a post with no cover
                     gets a plain tile in its first tag's hue rather than a gap,
                     so the title column starts at the same x on every row. */}
-                <Link
+                <PostMorphLink
                   href={postPath(post)}
+                  slug={post.slug}
                   className={styles.thumb}
+                  data-morph-cover={post.cover ? true : undefined}
                   data-tag={post.tags[0]}
                   data-cover={post.cover ? true : undefined}
                   style={
@@ -177,13 +179,15 @@ export const BlogIndex = ({
                       decoding="async"
                     />
                   )}
-                </Link>
+                </PostMorphLink>
                 {/* Title and summary share one grid cell, so a plain row keeps
                     its four columns and its thumb-high line whether or not the
                     post has a summary. */}
                 <div className={styles.text}>
-                  <h2>
-                    <Link href={postPath(post)}>{post.title}</Link>
+                  <h2 data-morph-title>
+                    <PostMorphLink href={postPath(post)} slug={post.slug}>
+                      {post.title}
+                    </PostMorphLink>
                   </h2>
                   {post.description && (
                     <p className={styles.summary}>{post.description}</p>

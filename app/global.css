@@ -213,6 +213,48 @@ html[data-vt="morph"]::view-transition-new(*) {
   animation-duration: 0.34s;
 }
 
+/* The index row and the post page both mark their cover and title with
+   data-morph-cover and data-morph-title. The class is set here, not in the
+   CSS modules, which would hash its value. */
+[data-morph-cover] {
+  view-transition-class: post-cover;
+}
+
+[data-morph-title] {
+  view-transition-class: post-title;
+}
+
+/* Blog index → post: the cover glides from its thumb into the hero. The two
+   boxes differ in shape (a 96px square, a 16:9 lead or pair card, the wide
+   hero), and a snapshot keeps its own aspect by default, so it would spill
+   out of the moving frame; filling and cropping it keeps the picture whole
+   at every step, the way object-fit does on the page. */
+html[data-vt="morph"]::view-transition-old(*.post-cover),
+html[data-vt="morph"]::view-transition-new(*.post-cover) {
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Preview only (anim-2, ?morph=cover on the index): the title stays in the
+   page and arrives with the fade. */
+html[data-blog-morph="cover"] [data-morph-title] {
+  view-transition-name: none !important;
+}
+
+/* Preview only (anim-3, ?morph=solo): the title glides as the post's own
+   heading only. A cross-fade of the two snapshots ghosts whenever the line
+   breaks differ, which on a phone is nearly always (a one-line row title
+   becoming a two-line heading); dropping the outgoing one leaves a single
+   piece of text that grows into place. */
+html[data-vt="morph"][data-blog-morph="solo"]::view-transition-old(*.post-title) {
+  animation: none;
+  opacity: 0;
+}
+
+html[data-vt="morph"][data-blog-morph="solo"]::view-transition-new(*.post-title) {
+  animation: none;
+}
+
 /* The home ↔ /projects "ink" transition is handled on desktop by the
    InkTransition overlay, which spills cover ink out of the pressed control and
    reveals the new route once it commits (via @kud/inkblot, which injects its

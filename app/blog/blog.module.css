@@ -320,3 +320,23 @@
   --text: var(--fg);
   --primary-light: var(--fg-2);
 }
+
+/* The ground under the blog's own transitions. The index → post glide clears
+ * the outgoing page before the new one shows (global.css, vt-content-hold), so
+ * for a moment only <html> is on screen; without this it is the site's dark
+ * class colour, a black flash between two light pages. --bg lives on
+ * #blog-root, which <html> cannot read, hence the literals: keep them equal to
+ * --bg above. */
+:global(html:has(#blog-root)) {
+  background: #f7f8f9;
+}
+
+@media (prefers-color-scheme: dark) {
+  :global(html:has(#blog-root:not([data-theme="light"]))) {
+    background: #0e1418;
+  }
+}
+
+:global(html:has(#blog-root[data-theme="dark"])) {
+  background: #0e1418;
+}
