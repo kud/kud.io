@@ -40,15 +40,25 @@ jobs:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_BLOG_DATABASE_ID: ${{ vars.NOTION_BLOG_DATABASE_ID }}
 
-      - name: Build website
-        run: npm run build
-
-      - name: Commit refreshed content
+      - name: Check for content changes
+        id: changes
         run: |
           if [ -z "$(git status --porcelain -- content/projects content/readmes content/landings content/blog content/blog-redirects.json public/blog)" ]; then
             echo "No project content changes."
-            exit 0
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
+
+      # Guards main against content that would break the deploy; the hourly
+      # runs that changed nothing have nothing to guard.
+      - name: Build website
+        if: steps.changes.outputs.changed == 'true'
+        run: npm run build
+
+      - name: Commit refreshed content
+        if: steps.changes.outputs.changed == 'true'
+        run: |
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

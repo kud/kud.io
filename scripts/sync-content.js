@@ -61,6 +61,24 @@ const api = async (url) => {
   return res.json()
 }
 
+// Run fn over items, at most `limit` at once. Repos are independent and each one
+// is a handful of small fetches, so a serial loop spent the sync waiting on the
+// network (87 repos took ~175s on the runner).
+const mapPool = async (items, limit, fn) => {
+  const results = new Array(items.length)
+  let next = 0
+  const worker = async () => {
+    while (next < items.length) {
+      const i = next++
+      results[i] = await fn(items[i], i)
+    }
+  }
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, worker),
+  )
+  return results
+}
+
 const rawFile = async (slug, path) => {
   const res = await fetch(
     `https://raw.githubusercontent.com/${OWNER}/${slug}/HEAD/${path}`,
@@ -453,9 +471,10 @@ const syncRaycastExtension = async (slug) => {
 const syncRaycast = async (spinner) => {
   const records = []
   const icons = {}
-  for (const slug of RAYCAST_SLUGS) {
-    spinner.text = `raycast-${slug}`
-    const result = await syncRaycastExtension(slug)
+  const results = await mapPool(RAYCAST_SLUGS, 8, (slug) =>
+    syncRaycastExtension(slug),
+  )
+  for (const result of results) {
     if (!result) continue
     records.push(result.record)
     if (result.icon) icons[result.record.slug] = result.icon
@@ -535,7 +554,7 @@ const main = async () => {
   const icons = await readJson(join(CONTENT_DIR, "icons.json"))
   const synced = []
   const warnings = []
-  for (const repo of repos) {
+  await mapPool(repos, 8, async (repo) => {
     spinner.text = repo.name
     // One repo's failure never stops the others. Its slug still counts as
     // synced, so pruneOrphans keeps its last good content instead of deleting it.
@@ -549,7 +568,7 @@ const main = async () => {
         `${repo.name}: sync failed, kept previous content (${error.message})`,
       )
     }
-  }
+  })
 
   const raycastIcons = await syncRaycast(spinner)
   Object.assign(icons, raycastIcons)
