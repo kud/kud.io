@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useId, useState, type CSSProperties } from "react"
+import { useEffect, useId, useState } from "react"
 import { BLOG_ROOT_ID } from "@/components/scoped-theme"
 import { BlogZoomViewer, ZoomIcon } from "@/components/blog-zoom-viewer"
 
@@ -11,12 +11,6 @@ const loadMermaid = () => (mermaidModule ??= import("mermaid"))
 
 const token = (style: CSSStyleDeclaration, name: string, fallback: string) =>
   style.getPropertyValue(name).trim() || fallback
-
-// With useMaxWidth, mermaid sizes the SVG to 100% and writes its natural width
-// as an inline max-width; that number is the only record of how wide the
-// diagram actually is, and the frame in page.module.css sizes itself from it.
-const naturalWidth = (svg: string) =>
-  Number(/max-width:\s*([\d.]+)px/.exec(svg)?.[1]) || undefined
 
 const renderMermaid = (id: string, source: string, root: HTMLElement) => {
   const style = getComputedStyle(root)
@@ -73,7 +67,6 @@ export const BlogMermaid = ({
 }) => {
   const stableId = useId().replace(/[^a-zA-Z0-9_-]/g, "")
   const [svg, setSvg] = useState<string>()
-  const [natural, setNatural] = useState<number>()
   const [failed, setFailed] = useState(false)
   const [viewerOpen, setViewerOpen] = useState(false)
   useEffect(() => {
@@ -93,13 +86,11 @@ export const BlogMermaid = ({
         )
         if (disposed || current != revision) return
         setSvg(result.svg)
-        setNatural(naturalWidth(result.svg))
         setFailed(false)
       } catch (error) {
         if (disposed || current != revision) return
         console.error("Could not render Mermaid diagram", error)
         setSvg(undefined)
-        setNatural(undefined)
         setFailed(true)
       }
     }
@@ -127,14 +118,7 @@ export const BlogMermaid = ({
 
   return (
     <div className={styles.diagram}>
-      <div
-        className={styles.diagramFrame}
-        style={
-          natural
-            ? ({ "--natural": `${natural}px` } as CSSProperties)
-            : undefined
-        }
-      >
+      <div className={styles.diagramFrame}>
         {svg ? (
           <>
             <button

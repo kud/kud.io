@@ -279,21 +279,22 @@
   border-top: 1px solid var(--line);
 }
 
-/* Image stage ---------------------------------------------------------------- */
-/* Same ceiling and the same shell-centred anchor as .diagram and .codeStage
- * (--embed, centre 27px right of .body's), so an image breaks out exactly as far
- * as a diagram, a code card or a video does. --embed is the one breakout every
- * embed shares: wider than the 754px shell, well short of the hero, and the
- * full column below 768px. The image inside is never stretched:
- * it keeps its natural width up to the stage and is centred on the shell, so a
- * 350px GIF stays 350px.
+/* Embed breakout ------------------------------------------------------------- */
+/* --embed is the one width every embed shares (image, video, code card,
+ * diagram): wider than the 700px text, well short of the hero, and the full
+ * column below 768px. It is centred on the text column's own axis, so it
+ * breaks out by the same amount on both sides. Not on the 754px shell: .body
+ * sits flush left in it, so the shell's centre is 27px right of the text's and
+ * every embed overshot twice as far on the right (53px vs 107px at 860px).
+ * The image inside a stage is never stretched: it keeps its natural width up
+ * to the stage and is centred in it, so a 350px GIF stays 350px.
  *
- * --lead is how far the stage's containing block starts to the right of .body's
+ * --lead is how far the embed's containing block starts to the right of .body's
  * left edge: 1.15em for each list level it sits in (the lists' own padding-left).
  * The margin cancels it, so a screenshot inside a bullet leaves the bullet and
  * lands where a top-level one does. It is per depth rather than accumulated
  * because a custom property cannot be defined in terms of its own inherited
- * value on the same element. An image in a blockquote does not break out. */
+ * value on the same element. An embed in a blockquote does not break out. */
 .body {
   --lead: 0px;
   --embed: min(860px, 100vw - 48px);
@@ -322,19 +323,6 @@
   justify-items: center;
 }
 
-@media (min-width: 768px) {
-  .imageStage {
-    --stage: var(--embed);
-    width: var(--stage);
-    margin-left: calc(50% - var(--lead) / 2 + 27px - var(--stage) / 2);
-  }
-}
-
-.body blockquote .imageStage {
-  width: 100%;
-  margin-left: 0;
-}
-
 /* A body video (lib/blog.ts, rehypeBlogVideo) sits like a body image: the
  * column's width at most, the same height cap and corners, on the same
  * placeholder ground until its first frame arrives. */
@@ -348,18 +336,20 @@
   background: var(--bg-2);
 }
 
-/* From 768px the video takes the shared breakout, on the same anchor as an
- * image stage. */
+/* The breakout itself, once for every embed. `.body` lifts it over each
+ * component's own base rule, and max-width: none over the global media cap
+ * that held the video at the column's width. */
 @media (min-width: 768px) {
-  .body video {
+  .body :is(.imageStage, .codeStage, .diagram, video) {
     width: var(--embed);
-    margin-left: calc(50% - var(--lead) / 2 + 27px - var(--embed) / 2);
+    max-width: none;
+    margin-left: calc(50% - var(--lead) / 2 - var(--embed) / 2);
   }
+}
 
-  .body blockquote video {
-    width: 100%;
-    margin-left: 0;
-  }
+.body blockquote :is(.imageStage, video) {
+  width: 100%;
+  margin-left: 0;
 }
 
 .imageFrame {
@@ -688,75 +678,36 @@
 }
 
 /* Code stage --------------------------------------------------------------- */
-/* A short card belongs to the prose: it is exactly the column's width, so both
- * its edges meet the text's. A wide one has left the column and sits on the
- * shell's axis, as diagrams do. The stage is shell-centred; its middle track is
- * at least the shell's 754px and grows with the code, and the card is pinned to
- * the track's start, so its left edge is min(shell-centred, prose-left): flush
- * up to 700px, growing right to 754px, centred on the page past that, scrolling
- * past the --embed ceiling. A card wider than its code needs is never drawn.
+/* The card fills the stage, so every card is exactly as wide as the other
+ * embeds (the shared breakout above); code wider than that scrolls inside it.
  * minmax(0, 1fr) is load-bearing: an auto grid track would size itself to the
  * code's max-content and carry the card straight past max-width. */
 .codeStage {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  justify-items: center;
   margin: 1.75em 0;
 }
 
 .codeStage > .card {
-  min-width: min(100%, 700px);
-}
-
-@media (min-width: 768px) {
-  .codeStage {
-    --stage: var(--embed);
-    width: var(--stage);
-    margin-left: calc(50% + 27px - var(--stage) / 2);
-    grid-template-columns:
-      minmax(0, 1fr)
-      minmax(min(100%, 754px), max-content)
-      minmax(0, 1fr);
-  }
-
-  .codeStage > .card {
-    grid-column: 2;
-    justify-self: start;
-  }
+  width: 100%;
 }
 
 /* Diagram stage + frame ---------------------------------------------------- */
-/* Running prose deliberately stops at 700px; a diagram may widen past it, to a
- * fixed ceiling of --embed and never the viewport: past
- * that it stops reading as part of the column. The stage is centred on the
- * shell, whose centre sits 27px right of .body's, so the breakout is
- * anchored on the column and the inset added back. No transform here: the
- * fixed viewer inside would take a transformed ancestor as its containing
- * block and stop covering the screen. */
+/* The stage takes the shared breakout above. No transform here: the fixed
+ * viewer inside would take a transformed ancestor as its containing block and
+ * stop covering the screen. */
 .diagram {
   display: grid;
   width: 100%;
   margin: 1.75em 0;
-  justify-items: center;
 }
 
-@media (min-width: 768px) {
-  .diagram {
-    --stage: var(--embed);
-    width: var(--stage);
-    margin-left: calc(50% + 27px - var(--stage) / 2);
-  }
-}
-
-/* The frame hugs the diagram's own width (--natural, read off the SVG mermaid
- * renders — it has no intrinsic width of its own, so fit-content would not
- * measure it), floored at the shell so a small model looks exactly as it did
- * and only a sprawling one breaks out. 42px is the frame's own padding and
- * border. */
+/* The frame fills the stage like every other embed; the diagram is centred
+ * inside it at its own width. */
 .diagramFrame {
   position: relative;
   box-sizing: border-box;
-  width: min(100%, max(684px, calc(var(--natural, 0px) + 42px)));
+  width: 100%;
   padding: 24px 20px;
   border: 1px solid var(--line);
   border-radius: 10px;
