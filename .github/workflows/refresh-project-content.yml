@@ -2,28 +2,32 @@ name: Refresh project content
 
 on:
   workflow_dispatch:
-    inputs:
-      latest_article_only:
-        description: Refresh only the newest blog post (skips repos and other posts)
-        type: boolean
-        default: false
   repository_dispatch:
     types: [project-content-updated]
   schedule:
     - cron: "17 * * * *"
+  # refresh-writing.yml calls this with writing_only, so both share one set of
+  # build, commit and deploy steps.
+  workflow_call:
+    inputs:
+      writing_only:
+        type: boolean
+        default: false
+      latest_articles:
+        type: number
+        default: 0
 
 permissions:
   contents: write
   # To start the production deploy after a refresh commit.
   actions: write
 
-concurrency:
-  group: refresh-project-content
-  cancel-in-progress: false
-
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    concurrency:
+      group: refresh-project-content
+      cancel-in-progress: false
 
     steps:
       - name: Check out repository
@@ -40,12 +44,18 @@ jobs:
 
       - name: Sync project content
         run: |
-          if [ "${{ inputs.latest_article_only }}" = "true" ]; then
-            node scripts/sync-notion.js --latest
+          if [ "$WRITING_ONLY" = "true" ]; then
+            if [ "${LATEST:-0}" -gt 0 ]; then
+              node scripts/sync-notion.js "--latest=${LATEST}"
+            else
+              node scripts/sync-notion.js
+            fi
           else
             npm run sync
           fi
         env:
+          WRITING_ONLY: ${{ inputs.writing_only }}
+          LATEST: ${{ inputs.latest_articles }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_BLOG_DATABASE_ID: ${{ vars.NOTION_BLOG_DATABASE_ID }}

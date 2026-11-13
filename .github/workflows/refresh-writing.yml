@@ -1,0 +1,23 @@
+name: Refresh writing
+
+# The blog only: re-renders posts from Notion without the repo and docs sync,
+# then builds, commits and deploys through the shared refresh workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      latest:
+        description: Refresh only the N newest posts (0 = every post)
+        type: number
+        default: 0
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  refresh:
+    uses: ./.github/workflows/refresh-project-content.yml
+    with:
+      writing_only: true
+      latest_articles: ${{ inputs.latest }}
+    secrets: inherit

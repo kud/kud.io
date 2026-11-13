@@ -498,11 +498,13 @@ const main = async () => {
     }),
   )
 
-  // --latest re-renders only the newest published post, for a quick refresh
-  // after editing it. Every other post keeps its committed copy, so nothing is
-  // pruned: the kept set would only hold the one post.
-  const latestOnly = process.argv.includes("--latest")
-  const selected = latestOnly ? pages.slice(0, 1) : pages
+  // --latest=N re-renders only the N newest published posts (--latest alone is
+  // 1), for a quick refresh after editing them. Every other post keeps its
+  // committed copy, so nothing is pruned: the kept set would only hold those.
+  const latestArg = process.argv.find((arg) => /^--latest(=\d+)?$/.test(arg))
+  const latestCount = latestArg ? Number(latestArg.split("=")[1] ?? 1) : 0
+  const latestOnly = latestCount > 0
+  const selected = latestOnly ? pages.slice(0, latestCount) : pages
 
   const kept = new Set()
   let skipped = 0
