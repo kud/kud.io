@@ -229,6 +229,10 @@ html[data-vt="morph"]::view-transition-new(*) {
    hero), and a snapshot keeps its own aspect by default, so it would spill
    out of the moving frame; filling and cropping it keeps the picture whole
    at every step, the way object-fit does on the page. */
+html[data-vt="morph"]::view-transition-group(*.post-cover) {
+  overflow: clip;
+}
+
 html[data-vt="morph"]::view-transition-old(*.post-cover),
 html[data-vt="morph"]::view-transition-new(*.post-cover) {
   height: 100%;

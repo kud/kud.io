@@ -30,8 +30,13 @@ export const PostMorphLink = ({ slug, onClick, ...props }: Props) => {
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     onClick?.(event)
     if (isModified(event)) return
-    // Preview only: ?morph=cover on the index picks anim-2, the cover alone.
+    // Preview only: ?morph=cover picks anim-2 (the cover alone), ?morph=solo
+    // anim-3, ?morph=none today's plain cross-fade (anim-0, the baseline).
     const variant = new URLSearchParams(location.search).get("morph")
+    if (variant === "none") {
+      delete document.documentElement.dataset.vt
+      return
+    }
     if (variant) document.documentElement.dataset.blogMorph = variant
     else delete document.documentElement.dataset.blogMorph
 
