@@ -24,8 +24,8 @@ on:
         default: ""
       latest_articles:
         description: writing scope, the N newest posts (0 = all)
-        type: number
-        default: 0
+        type: string
+        default: "0"
 
 permissions:
   contents: write
