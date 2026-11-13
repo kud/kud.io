@@ -166,6 +166,43 @@ section:first-of-type .year {
   letter-spacing: -0.008em;
 }
 
+/* The summary is the post's Notion Summary. It is set apart from the title by
+ * size and weight, not only by its quieter ink, and in the sans the post body
+ * uses, never the mono of the date and tags: it is prose, not metadata. Each
+ * layout clamps it to what its space can hold; the full text is on the post. */
+.text {
+  min-width: 0;
+}
+
+.summary {
+  margin: 2px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--fg-2);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  overflow: hidden;
+}
+
+.list li[data-lead] .summary {
+  margin-top: 8px;
+  max-width: 62ch;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.list li[data-pair] .summary {
+  margin-top: 6px;
+  font-size: 14.5px;
+  line-height: 1.45;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
 .list h2 a {
   color: inherit;
   text-decoration: none;
@@ -279,6 +316,19 @@ section:first-of-type .year {
     grid-row: 1 / span 3;
     width: 96px;
     margin-top: 2px;
+  }
+
+  /* A phone row is a stack, not a line beside the thumb, so it can afford a
+   * second line of summary; the lead, at the full width, a third. */
+  .summary {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+
+  .list li[data-lead] .summary {
+    font-size: 15px;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
   }
 
   /* Under the title the tags start where it starts: right-flush, they float

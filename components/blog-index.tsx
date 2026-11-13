@@ -10,6 +10,7 @@ export type IndexEntry = {
   slug: string
   title: string
   date: string
+  description: string
   tags: string[]
   cover?: CoverImages
 }
@@ -166,9 +167,17 @@ export const BlogIndex = ({
                     />
                   )}
                 </Link>
-                <h2>
-                  <Link href={postPath(post)}>{post.title}</Link>
-                </h2>
+                {/* Title and summary share one grid cell, so a plain row keeps
+                    its four columns and its thumb-high line whether or not the
+                    post has a summary. */}
+                <div className={styles.text}>
+                  <h2>
+                    <Link href={postPath(post)}>{post.title}</Link>
+                  </h2>
+                  {post.description && (
+                    <p className={styles.summary}>{post.description}</p>
+                  )}
+                </div>
                 {post.tags.length > 0 && (
                   <div className={styles.tags}>
                     {post.tags.map((option) => (
