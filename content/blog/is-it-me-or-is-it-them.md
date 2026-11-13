@@ -5,7 +5,7 @@ date: "2026-11-13"
 slug: "is-it-me-or-is-it-them"
 tags: ["engineering","tools"]
 cover: "/blog/is-it-me-or-is-it-them/b7ae7c147980.png"
-updated: "2026-11-13T22:25:00.000Z"
+updated: "2026-11-13T22:32:00.000Z"
 ---
 
 _A first check before debugging your own code, for you and your AI assistant._
@@ -20,7 +20,7 @@ That's what [**incidents**](https://github.com/kud/incidents-cli) is for.
 
 It's a small terminal tool that checks the status pages of services such as GitHub, npm, Cloudflare, AWS and Claude, and brings their declared incidents together in one place, worst first.
 
-[incidents 0.4.0, recorded from the real CLI. Fictional demo services and incidents.](/blog/is-it-me-or-is-it-them/65f88700e7ac.mp4)
+[incidents 0.4.0, recorded from the real CLI. Fictional demo services and incidents.](/blog/is-it-me-or-is-it-them/7aab55b9784f.mp4)
 
 I released it as an open-source npm package on 13 November 2026, and by the evening it had reached 0.4.0.
 
@@ -54,17 +54,19 @@ Running `incidents` opens an interactive terminal interface. Services appear as 
 
 There are two views. The board opens by default, with a filter column down the left that doubles as the tally: each status, its count and a small bar. The arrow keys move across the cards in both directions. Press `v` for the list instead, every service worst first with a preview of the one you're on.
 
-![$ incidents | The board, the default view: a card for each service in trouble. Fictional demo data.](/blog/is-it-me-or-is-it-them/c3449dec73de.png)
+![$ incidents | The board, the default view: a card for each service in trouble. Fictional demo data.](/blog/is-it-me-or-is-it-them/76bc182759bd.png)
 
-![$ incidents | The list view, worst first, with a preview of the selected service. Fictional demo data.](/blog/is-it-me-or-is-it-them/cbec78f68dec.png)
+![$ incidents | The list view, worst first, with a preview of the selected service. Fictional demo data.](/blog/is-it-me-or-is-it-them/78d29a3afe96.png)
 
 You can sort by severity or name, `tab` into the filter column to narrow the view, search, or fold the healthy services out of the way.
 
 Open a service and its page splits into what's happening now and what happened before.
 
-![$ incidents harbour-ci | A service's detail page: what's happening now on the left, its incident history by month on the right, scrollable. Fictional demo data.](/blog/is-it-me-or-is-it-them/cb08225b3be8.png)
+![$ incidents harbour-ci | A service's detail page: what's happening now on the left, its incident history by month on the right, scrollable. Fictional demo data.](/blog/is-it-me-or-is-it-them/53285bf22085.png)
 
 Some status pages list dozens of components. Rather than a wall of them, incidents groups the affected ones by status, worst first, and says how many more there are. History comes from the vendor's incidents API rather than its RSS feed, which on a page that schedules a lot of maintenance fills up with future windows and pushes real incidents out. Upcoming maintenance is counted on its own, and if that count can't be read, it's left unknown rather than shown as zero.
+
+![$ incidents northwind | A busy page: affected components grouped worst first, with upcoming maintenance counted separately. Fictional demo data.](/blog/is-it-me-or-is-it-them/c024d4c050f5.png)
 
 For scripts, there's a simpler interface:
 
@@ -86,7 +88,7 @@ The same rules apply whether a person or a program is reading the result.
 
 There's also `incidents watch`, for when you'd rather not look at all. It says where everything stands when it starts, then checks every few minutes and prints a line only when something changes, and with `--exec` it runs a command of your choice on each change: a desktop notification, a sound, or a voice telling you GitHub is down again.
 
-![$ incidents watch | Where everything stands, then one line per change. Fictional demo data.](/blog/is-it-me-or-is-it-them/857219bb93d9.png)
+![$ incidents watch | Where everything stands, then one line per change. Fictional demo data.](/blog/is-it-me-or-is-it-them/75f86aa8664d.png)
 
 And since Claude Code can run terminal commands while investigating software problems, I thought it should be able to ask that first question too.
 
