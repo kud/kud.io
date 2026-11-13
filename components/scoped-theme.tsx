@@ -218,6 +218,7 @@ export const useScopedTheme = () => {
   // The pressed control is still accepted from callers but a crossfade has no
   // origin.
   const setTheme = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars -- origin is accepted for callers that pass the click target
     (next: ScopedTheme, _origin?: Element | null) => {
       const before = readStoredTheme(section)
       write(section && readSplit() ? sectionKey(section) : THEME_KEY, next)

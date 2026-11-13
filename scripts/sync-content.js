@@ -468,7 +468,7 @@ const syncRaycastExtension = async (slug) => {
 
 // Sync every curated Raycast extension; writes content/raycast.json and returns
 // a slug → icon-URL map to fold into icons.json.
-const syncRaycast = async (spinner) => {
+const syncRaycast = async () => {
   const records = []
   const icons = {}
   const results = await mapPool(RAYCAST_SLUGS, 8, (slug) =>
@@ -590,7 +590,7 @@ const main = async () => {
     }
   })
 
-  const raycastIcons = only ? {} : await syncRaycast(spinner)
+  const raycastIcons = only ? {} : await syncRaycast()
   Object.assign(icons, raycastIcons)
 
   // Drop content for slugs no longer live (e.g. a repo renamed away). Guarded on a non-empty

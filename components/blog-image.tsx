@@ -82,6 +82,7 @@ export const BlogImage = ({
             : undefined
         }
       >
+        {/* eslint-disable-next-line @next/next/no-img-element -- needs a ref and arbitrary passthrough props for the zoom animation */}
         <img
           ref={imageRef}
           {...props}
@@ -118,6 +119,7 @@ export const BlogImage = ({
             closeOnBackdrop
             onClose={() => setOpen(false)}
           >
+            {/* eslint-disable-next-line @next/next/no-img-element -- zoom viewer shows the original, unoptimised file */}
             <img src={props.src} alt={alt ?? ""} draggable={false} />
           </BlogZoomViewer>,
           root,

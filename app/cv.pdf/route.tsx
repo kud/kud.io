@@ -313,6 +313,7 @@ const Cv = ({ avatar }: { avatar: string | null }) => (
     {/* Page 1 — who I am + skills */}
     <Page size="A4" style={styles.page}>
       <View style={styles.header}>
+        {/* eslint-disable-next-line jsx-a11y/alt-text -- react-pdf Image has no alt prop; it is not HTML */}
         {avatar ? <Image src={avatar} style={styles.avatar} /> : null}
         <View style={styles.headerText}>
           <Text style={styles.eyebrowText}>

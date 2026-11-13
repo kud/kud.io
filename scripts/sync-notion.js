@@ -303,7 +303,7 @@ const renderBlock = async (block, context) => {
     case "equation":
       return `\`${block.equation.expression}\``
     case "table":
-      return await renderTable(block, context)
+      return await renderTable(block)
     case "column_list":
     case "column":
       return await kids(0)
@@ -312,7 +312,7 @@ const renderBlock = async (block, context) => {
   }
 }
 
-const renderTable = async (block, context) => {
+const renderTable = async (block) => {
   await pace()
   const rows = await collectAll((cursor) =>
     notion.blocks.children.list({ block_id: block.id, start_cursor: cursor }),
