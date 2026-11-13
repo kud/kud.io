@@ -366,3 +366,28 @@ html[data-arrive="ink"] body::after {
   font-weight: 700;
   color: var(--text);
 }
+
+/* Preview only: the glide banner's "slow ×5" (components/blog-morph-preview.tsx),
+   so the candidates can be told apart by eye. Every duration above, times five:
+   the morph's 0.75s root and 0.34s glide, and the plain cross-fade's 0.25s. */
+html[data-blog-slow]::view-transition-old(root),
+html[data-blog-slow]::view-transition-new(root) {
+  animation-duration: 1.25s;
+}
+
+html[data-blog-slow][data-vt="morph"]::view-transition-old(root),
+html[data-blog-slow][data-vt="morph"]::view-transition-new(root) {
+  animation-duration: 3.75s;
+}
+
+html[data-blog-slow]::view-transition-group(*),
+html[data-blog-slow]::view-transition-old(*),
+html[data-blog-slow]::view-transition-new(*) {
+  animation-duration: 1.25s;
+}
+
+html[data-blog-slow][data-vt="morph"]::view-transition-group(*),
+html[data-blog-slow][data-vt="morph"]::view-transition-old(*),
+html[data-blog-slow][data-vt="morph"]::view-transition-new(*) {
+  animation-duration: 1.7s;
+}

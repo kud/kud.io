@@ -10,6 +10,7 @@ import styles from "./blog-morph-preview.module.css"
 // changed: PostMorphLink reads it at that moment (readGlide below).
 
 const KEY = "kud.blog-morph-preview"
+const SLOW_KEY = "kud.blog-morph-preview-slow"
 
 // now: today's plain cross-fade (anim-0). 1: cover and title glide, the
 // default. 2: the cover alone. 3: cover and title, the title as the post's
@@ -62,6 +63,34 @@ const setGlide = (next: Glide | "") => {
 export const BlogMorphPreview = () => {
   const [copied, setCopied] = useState(false)
   const glide = useSyncExternalStore(subscribe, getSnapshot, () => "")
+  // Slow motion: every view-transition duration times five (global.css,
+  // html[data-blog-slow]), so a 0.34s glide can be watched. Read once on the
+  // client; the banner renders nothing on the server, so nothing mismatches.
+  const [slow, setSlow] = useState(() => {
+    if (typeof window === "undefined") return false
+    if (new URLSearchParams(window.location.search).get("slow") === "5")
+      return true
+    try {
+      return window.localStorage.getItem(SLOW_KEY) === "5"
+    } catch {
+      return false
+    }
+  })
+
+  useEffect(() => {
+    const root = document.documentElement
+    if (glide && slow) root.dataset.blogSlow = "5"
+    else delete root.dataset.blogSlow
+    try {
+      if (glide && slow) window.localStorage.setItem(SLOW_KEY, "5")
+      else window.localStorage.removeItem(SLOW_KEY)
+    } catch {}
+    if (!glide) return
+    const url = new URL(window.location.href)
+    if (slow) url.searchParams.set("slow", "5")
+    else url.searchParams.delete("slow")
+    window.history.replaceState(window.history.state, "", url)
+  }, [glide, slow])
 
   useEffect(() => {
     if (!glide) return
@@ -79,7 +108,9 @@ export const BlogMorphPreview = () => {
     const url = new URL(window.location.href)
     url.searchParams.delete("_vercel_share")
     try {
-      await navigator.clipboard.writeText(`Glide ${glide} — ${url}`)
+      await navigator.clipboard.writeText(
+        `Glide ${glide}${slow ? " · Slow ×5" : ""} — ${url}`,
+      )
       setCopied(true)
       window.setTimeout(() => setCopied(false), 1600)
     } catch {}
@@ -91,6 +122,8 @@ export const BlogMorphPreview = () => {
     } catch {}
     const url = new URL(window.location.href)
     url.searchParams.delete("glide")
+    url.searchParams.delete("slow")
+    setSlow(false)
     window.history.replaceState(window.history.state, "", url)
     setGlide("")
   }
@@ -112,6 +145,15 @@ export const BlogMorphPreview = () => {
           </button>
         ))}
       </div>
+      <button
+        type="button"
+        className={styles.toggle}
+        aria-pressed={slow}
+        onClick={() => setSlow(!slow)}
+        title="Play every transition five times slower"
+      >
+        slow ×5
+      </button>
       <button
         type="button"
         className={styles.copy}

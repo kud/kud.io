@@ -24,7 +24,9 @@ export const flagMorph = () => {
   el.dataset.vt = "morph"
   window.setTimeout(() => {
     if (el.dataset.vt === "morph") delete el.dataset.vt
-  }, 1000)
+    // The blog glide preview's slow motion (data-blog-slow) stretches the
+    // transition five times; the flag has to outlast it.
+  }, el.dataset.blogSlow ? 5000 : 1000)
 }
 
 type Props = ComponentProps<typeof Link> & {

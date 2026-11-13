@@ -11,7 +11,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 6px 14px;
+  gap: 6px 8px;
   width: max-content;
   max-width: calc(100vw - 24px);
   padding: 7px 10px 7px 12px;
@@ -91,4 +91,33 @@
 
 .copy:hover {
   box-shadow: inset 0 0 0 1px var(--fg-3);
+}
+
+/* Slow ×5: a two-state toggle, styled as the checked radio when on. */
+.toggle {
+  padding: 3px 7px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.toggle:hover {
+  color: var(--fg);
+}
+
+.toggle[aria-pressed="true"] {
+  background: var(--bg);
+  color: var(--fg);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+
+/* One line on a phone: the row's own label goes first, the numbers read
+ * without it next to the badge. */
+@media (max-width: 420px) {
+  .rowLabel {
+    display: none;
+  }
 }
