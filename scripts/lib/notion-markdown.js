@@ -29,14 +29,19 @@ export const codeSpan = (content) => {
   return `${fence}${pad}${content}${pad}${fence}`
 }
 
+// Markers wrap the text, never the whitespace around it: `**1966 **` or a bold
+// run ending in a soft line break (`**Headline  \n**`) is not emphasis in
+// CommonMark, and renders as literal asterisks. Notion lets an editor bold the
+// trailing space or the Shift+Enter, so the edges move outside the markers.
 export const decorate = (content, annotations) => {
   if (!content.trim()) return content
-  let out = content
   if (annotations.code) return codeSpan(content)
+  const [, lead, core, trail] = content.match(/^(\s*)([\s\S]*?)(\s*)$/)
+  let out = core
   if (annotations.bold) out = `**${out}**`
   if (annotations.italic) out = `_${out}_`
   if (annotations.strikethrough) out = `~~${out}~~`
-  return out
+  return `${lead}${out}${trail}`
 }
 
 export const richText = (nodes = []) =>
