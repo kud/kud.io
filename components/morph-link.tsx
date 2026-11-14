@@ -18,23 +18,51 @@ export const morphNames = (slug: string) => [
 
 // Flag the next view transition as a morph, so global.css holds the incoming
 // page hidden until the shared elements have landed (html[data-vt="morph"]).
-// The flag self-clears after the transition window, counted from the latest
-// flag: an earlier timer left running would clear it in the middle of a quick
-// way back, and the old snapshot would cross-fade in.
+// The flag lasts until the transition it belongs to has finished. It used to
+// clear one second after the press, but the transition only starts once the
+// next page has loaded: on a first visit or a slow phone that took longer, the
+// flag was gone by the snapshot and the browser's default cross-fade played,
+// doubling and stretching the cover and title (2026-11-14). The long timer
+// only covers a press that never leads to a transition.
 let clearFlag: number | undefined
+let flagged = false
+
+const clearMorph = () => {
+  window.clearTimeout(clearFlag)
+  flagged = false
+  const el = document.documentElement
+  if (el.dataset.vt === "morph") delete el.dataset.vt
+}
+
+// Every view transition passes through here, next-view-transitions' included:
+// one that starts while the flag is up owns it and clears it when it ends.
+const watchTransitions = () => {
+  const doc = document as Document & { __morphWatched?: boolean }
+  if (typeof doc.startViewTransition !== "function" || doc.__morphWatched)
+    return
+  doc.__morphWatched = true
+  const start = doc.startViewTransition.bind(doc)
+  doc.startViewTransition = (
+    ...args: Parameters<Document["startViewTransition"]>
+  ) => {
+    const transition = start(...args)
+    if (flagged) {
+      flagged = false
+      window.clearTimeout(clearFlag)
+      transition.finished.finally(() => {
+        if (!flagged) clearMorph()
+      })
+    }
+    return transition
+  }
+}
 
 export const flagMorph = () => {
-  const el = document.documentElement
-  el.dataset.vt = "morph"
+  watchTransitions()
+  document.documentElement.dataset.vt = "morph"
+  flagged = true
   window.clearTimeout(clearFlag)
-  clearFlag = window.setTimeout(
-    () => {
-      if (el.dataset.vt === "morph") delete el.dataset.vt
-      // The blog glide preview's slow motion (data-blog-slow) stretches the
-      // transition five times; the flag has to outlast it.
-    },
-    el.dataset.blogSlow ? 5000 : 1000,
-  )
+  clearFlag = window.setTimeout(clearMorph, 10000)
 }
 
 type Props = ComponentProps<typeof Link> & {

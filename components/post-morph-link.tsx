@@ -20,7 +20,9 @@ const INDEX_SCROLL_KEY = "kud:blog-index-scroll"
 const slowFactor = () => (document.documentElement.dataset.blogSlow ? 5 : 1)
 
 // The thumb's hover lean at the press, as a scale (1 when at rest), for the
-// incoming cover to start from (global.css, post-cover-settle).
+// incoming cover to start from (global.css, post-cover-settle). Held long
+// enough to outlast a slow load before the transition starts; the way back
+// and the next press reset it anyway.
 let clearZoom: number | undefined
 
 const holdZoom = (cover: HTMLElement | null | undefined) => {
@@ -31,7 +33,7 @@ const holdZoom = (cover: HTMLElement | null | undefined) => {
   window.clearTimeout(clearZoom)
   clearZoom = window.setTimeout(
     () => root.style.removeProperty("--morph-zoom"),
-    1000 * slowFactor(),
+    10000 * slowFactor(),
   )
 }
 
