@@ -79,6 +79,7 @@
 
 .mastTools {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
 }
@@ -324,7 +325,8 @@
 
 /* Language switch and reading preferences: two quiet controls of one kind. */
 .langSwitch,
-.prefs summary {
+.prefs summary,
+.listenButton {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -342,13 +344,15 @@
 }
 
 .langSwitch:hover,
-.prefs summary:hover {
+.prefs summary:hover,
+.listenButton:hover {
   color: var(--fg);
   border-color: var(--fg-3);
 }
 
 .langSwitch > span:first-child,
-.prefsMark {
+.prefsMark,
+.listenMark {
   font-family: var(--mono);
   font-size: 11.5px;
   font-weight: 600;
@@ -1303,4 +1307,70 @@
   color: var(--fg);
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+/* Listen: a third pill of the same kind. While it reads, a square stop sits
+ * beside it, and the passage being read carries a thin rule in the margin:
+ * a mark to follow, never a ground that competes with a selected story. */
+.listen {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.listenButton {
+  font: inherit;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.listenMark {
+  display: inline-flex;
+}
+
+.listen[data-state="playing"] .listenButton:first-child {
+  color: var(--fg);
+  border-color: var(--fg-3);
+}
+
+.listenStop {
+  justify-content: center;
+  width: 32px;
+  padding: 0;
+}
+
+.listenButton:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+
+.section[data-listening] {
+  position: relative;
+}
+
+.section[data-listening]::before,
+.item[data-listening]::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: -14px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--fg-3);
+  animation: listenIn 240ms ease-out;
+}
+
+@keyframes listenIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section[data-listening]::before,
+  .item[data-listening]::before {
+    animation: none;
+  }
 }

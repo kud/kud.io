@@ -18,8 +18,10 @@ import {
   type Lang,
 } from "@/lib/newsletter/language"
 import { headline } from "@/lib/newsletter/prompt"
+import { listeningScript } from "@/lib/newsletter/listen"
 import { EditionBar } from "@/components/newsletter/edition-bar"
 import { LangSwitch } from "@/components/newsletter/lang-switch"
+import { Listen } from "@/components/newsletter/listen"
 import { Prose } from "@/components/newsletter/prose"
 import {
   ItemSelect,
@@ -103,6 +105,11 @@ export const EditionView = ({
             lang={lang}
             styles={styles}
           >
+            <Listen
+              passages={listeningScript(edition, lang)}
+              lang={lang}
+              styles={styles}
+            />
             <ReaderPreferences
               lang={lang}
               rootId={EDITION_ROOT_ID}
