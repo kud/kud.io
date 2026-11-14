@@ -391,11 +391,9 @@ body:has([data-ground="dusk"]) {
     clip-path: inset(50%);
     white-space: nowrap;
   }
-  /* On phones the corner belongs to the header, and the picker floated over
-     its rule. The theme lives behind the search button there: the launcher
-     carries the same two rows under Settings. */
   .dusk-picker-top {
-    display: none;
+    top: 12px;
+    right: 14px;
   }
 }
 
@@ -428,6 +426,18 @@ body:has([data-ground="dusk"]) {
   .dusk-picker-row button {
     width: auto;
     min-width: 30px;
+  }
+  /* On phones the two rows stood 64px tall and crossed the header's rule;
+     side by side they make one 36px pill that sits inside the header. */
+  .dusk-picker-top {
+    flex-direction: row;
+    border-radius: 999px;
+  }
+  .dusk-picker-top .dusk-picker-row + .dusk-picker-row {
+    margin: 0 0 0 1px;
+    padding: 0 0 0 3px;
+    border-top: 0;
+    border-left: 1px solid var(--border);
   }
 }
 
