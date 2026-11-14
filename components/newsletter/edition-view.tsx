@@ -1,11 +1,11 @@
-import type { Metadata } from "next"
-import { InkLink as Link } from "@/components/ink-link"
-import { hostOf } from "@/lib/links"
+import type { Metadata } from "next";
+import { InkLink as Link } from "@/components/ink-link";
+import { hostOf } from "@/lib/links";
 import {
   sectionsWithItems,
   type Edition,
   type LoadedEdition,
-} from "@/lib/newsletter/content"
+} from "@/lib/newsletter/content";
 import {
   COPY,
   formatEditionDate,
@@ -16,56 +16,45 @@ import {
   ogLocale,
   otherLang,
   type Lang,
-} from "@/lib/newsletter/language"
-import { headline } from "@/lib/newsletter/prompt"
-import { LangSwitch } from "@/components/newsletter/lang-switch"
-import { Prose } from "@/components/newsletter/prose"
+} from "@/lib/newsletter/language";
+import { headline } from "@/lib/newsletter/prompt";
+import { LangSwitch } from "@/components/newsletter/lang-switch";
+import { Prose } from "@/components/newsletter/prose";
 import {
   ItemSelect,
   SelectionProvider,
   ShareItem,
-} from "@/components/newsletter/research"
+} from "@/components/newsletter/research";
 import {
   READER_SCRIPT,
   ReaderPreferences,
-} from "@/components/newsletter/reader-preferences"
-import { Signup } from "@/components/newsletter/signup"
-import { isEmailAdvertised } from "@/lib/newsletter/notify/config"
-import styles from "@/app/newsletter/newsletter.module.css"
+} from "@/components/newsletter/reader-preferences";
+import { Signup } from "@/components/newsletter/signup";
+import { isEmailAdvertised } from "@/lib/newsletter/notify/config";
+import styles from "@/app/newsletter/newsletter.module.css";
 
-export const EDITION_ROOT_ID = "newsletter-edition"
+export const EDITION_ROOT_ID = "newsletter-edition";
 
-const SITE = "https://kud.io"
+const SITE = "https://kud.io";
 
 // The signup only exists once the email side is advertised: the pipeline's
 // public build flag, read in one place (notify/config) with the server check.
-const emailConfigured = isEmailAdvertised
+const emailConfigured = isEmailAdvertised;
 
 const capitalise = (text: string) =>
-  text.charAt(0).toUpperCase() + text.slice(1)
+  text.charAt(0).toUpperCase() + text.slice(1);
 
 const writtenAt = (iso: string | null, lang: Lang) => {
-  if (!iso) return null
+  if (!iso) return null;
   const time = new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-GB", {
     timeZone: "Europe/London",
     hour: "2-digit",
     minute: "2-digit",
-  }).format(new Date(iso))
+  }).format(new Date(iso));
   return lang === "fr"
     ? `Écrite à ${time}, heure de Londres`
-    : `Written at ${time}, London time`
-}
-
-const SourceLinks = ({ urls }: { urls: string[] }) => (
-  <>
-    {urls.map((url) => (
-      <a key={url} href={url} rel="noreferrer" className={styles.citation}>
-        <span aria-hidden>↗ </span>
-        {hostOf(url)}
-      </a>
-    ))}
-  </>
-)
+    : `Written at ${time}, London time`;
+};
 
 export const EditionView = ({
   edition,
@@ -73,21 +62,22 @@ export const EditionView = ({
   dates,
   latest = false,
 }: {
-  edition: LoadedEdition
-  lang: Lang
-  dates: string[]
-  latest?: boolean
+  edition: LoadedEdition;
+  lang: Lang;
+  dates: string[];
+  latest?: boolean;
 }) => {
-  const copy = COPY[lang]
-  const page = latest ? {} : { date: edition.date }
-  const index = dates.indexOf(edition.date)
-  const newer = index > 0 ? dates[index - 1] : null
-  const older = index >= 0 && index < dates.length - 1 ? dates[index + 1] : null
-  const sections = sectionsWithItems(edition)
-  const minutes = edition.readingMinutes?.[lang]
-  const words = edition.wordCount?.[lang]
-  const at = writtenAt(edition.generatedAt, lang)
-  const numberFormat = new Intl.NumberFormat(lang === "fr" ? "fr-FR" : "en-GB")
+  const copy = COPY[lang];
+  const page = latest ? {} : { date: edition.date };
+  const index = dates.indexOf(edition.date);
+  const newer = index > 0 ? dates[index - 1] : null;
+  const older =
+    index >= 0 && index < dates.length - 1 ? dates[index + 1] : null;
+  const sections = sectionsWithItems(edition);
+  const minutes = edition.readingMinutes?.[lang];
+  const words = edition.wordCount?.[lang];
+  const at = writtenAt(edition.generatedAt, lang);
+  const numberFormat = new Intl.NumberFormat(lang === "fr" ? "fr-FR" : "en-GB");
 
   return (
     <SelectionProvider
@@ -137,8 +127,8 @@ export const EditionView = ({
               below; repeat it here only if an edition ever has its own. */}
           {edition.lede[lang] &&
             edition.lede[lang] !== edition.narrative.overview[lang] && (
-            <p className={styles.lede}>{edition.lede[lang]}</p>
-          )}
+              <p className={styles.lede}>{edition.lede[lang]}</p>
+            )}
           <p className={styles.meta}>
             {minutes ? <strong>{minutes} min</strong> : null}
             {words ? (
@@ -205,9 +195,7 @@ export const EditionView = ({
                       {formatEditionDate(entry.date, lang, "short")}{" "}
                       {entry.date.slice(0, 4)}
                     </time>
-                    <span>
-                      {entry.text[lang]} <SourceLinks urls={entry.urls} />
-                    </span>
+                    <Prose markdown={entry.text[lang]} inline />
                   </li>
                 ))}
               </ol>
@@ -217,7 +205,7 @@ export const EditionView = ({
               <ul className={styles.facts}>
                 {edition.inBrief.map((fact) => (
                   <li key={fact.text.en}>
-                    {fact.text[lang]} <SourceLinks urls={fact.urls} />
+                    <Prose markdown={fact.text[lang]} inline />
                   </li>
                 ))}
               </ul>
@@ -333,11 +321,11 @@ export const EditionView = ({
         </footer>
       </article>
     </SelectionProvider>
-  )
-}
+  );
+};
 
 export const EmptyEdition = ({ lang }: { lang: Lang }) => {
-  const copy = COPY[lang]
+  const copy = COPY[lang];
   return (
     <div className={styles.empty} lang={htmlLang[lang]} data-edition="">
       <p className={styles.kicker}>{copy.name}</p>
@@ -345,21 +333,21 @@ export const EmptyEdition = ({ lang }: { lang: Lang }) => {
       <p className={styles.lede}>{copy.emptyBody}</p>
       {emailConfigured() && <Signup lang={lang} styles={styles} />}
     </div>
-  )
-}
+  );
+};
 
 export const ArchiveView = ({
   editions,
   lang,
 }: {
-  editions: Edition[]
-  lang: Lang
+  editions: Edition[];
+  lang: Lang;
 }) => {
-  const copy = COPY[lang]
-  const months = new Map<string, Edition[]>()
+  const copy = COPY[lang];
+  const months = new Map<string, Edition[]>();
   for (const edition of editions) {
-    const month = edition.date.slice(0, 7)
-    months.set(month, [...(months.get(month) ?? []), edition])
+    const month = edition.date.slice(0, 7);
+    months.set(month, [...(months.get(month) ?? []), edition]);
   }
   return (
     <div className={styles.archive} lang={htmlLang[lang]}>
@@ -389,7 +377,7 @@ export const ArchiveView = ({
             {list.map((edition) => {
               const titles = edition.items
                 .slice(0, 3)
-                .map((item) => item.title[lang])
+                .map((item) => item.title[lang]);
               return (
                 <li key={edition.date}>
                   <Link href={newsletterHref({ date: edition.date }, lang)}>
@@ -404,41 +392,41 @@ export const ArchiveView = ({
                     </span>
                   </Link>
                 </li>
-              )
+              );
             })}
           </ol>
         </section>
       ))}
     </div>
-  )
-}
+  );
+};
 
 const FEED_TITLE: Record<Lang, string> = {
   fr: "Newsletter (français) — kud.io",
   en: "Newsletter (English) — kud.io",
-}
+};
 
 const feeds = (lang: Lang) => ({
   "application/rss+xml": [
     { url: `/newsletter/${lang}.xml`, title: FEED_TITLE[lang] },
   ],
-})
+});
 
 export const newsletterMetadata = ({
   edition,
   lang,
   page,
 }: {
-  edition: Edition | null
-  lang: Lang
-  page: { date?: string; archive?: boolean }
+  edition: Edition | null;
+  lang: Lang;
+  page: { date?: string; archive?: boolean };
 }): Metadata => {
-  const copy = COPY[lang]
+  const copy = COPY[lang];
   const title = page.archive
     ? `${copy.name} · ${copy.archiveTitle} — kud.io`
     : edition
       ? `${copy.name} · ${capitalise(formatEditionDate(edition.date, lang))} — kud.io`
-      : `${copy.name} — kud.io`
+      : `${copy.name} — kud.io`;
   const description = page.archive
     ? copy.tagline
     : (edition?.lede[lang] ??
@@ -447,8 +435,9 @@ export const newsletterMetadata = ({
             .slice(0, 3)
             .map((item) => item.title[lang])
             .join(" · ")
-        : copy.tagline))
-  const href = (to: Lang) => newsletterHref(page, to, { explicit: to !== "fr" })
+        : copy.tagline));
+  const href = (to: Lang) =>
+    newsletterHref(page, to, { explicit: to !== "fr" });
   return {
     title,
     description,
@@ -474,5 +463,5 @@ export const newsletterMetadata = ({
         : {}),
     },
     twitter: { title, description },
-  }
-}
+  };
+};

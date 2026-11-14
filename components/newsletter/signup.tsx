@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import {
   COPY,
   LANG_NAME,
@@ -9,7 +9,7 @@ import {
   signupStateOf,
   type Lang,
   type SignupState,
-} from "@/lib/newsletter/language"
+} from "@/lib/newsletter/language";
 
 // A plain form post, so it works before (and without) any script: the
 // subscribe and confirm routes answer with a redirect back here carrying
@@ -21,19 +21,19 @@ export const Signup = ({
   lang,
   styles,
 }: {
-  lang: Lang
-  styles: Record<string, string>
+  lang: Lang;
+  styles: Record<string, string>;
 }) => {
-  const copy = COPY[lang]
-  const [state, setState] = useState<SignupState | null>(null)
+  const copy = COPY[lang];
+  const [state, setState] = useState<SignupState | null>(null);
 
   useEffect(() => {
     // Read after hydration: the page is static, so the query is the browser's.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setState(signupStateOf(location.search))
-  }, [])
+    setState(signupStateOf(location.search));
+  }, []);
 
-  const done = state === "check" || state === "confirmed"
+  const done = state === "check" || state === "confirmed";
 
   return (
     <section
@@ -109,5 +109,5 @@ export const Signup = ({
         </form>
       )}
     </section>
-  )
-}
+  );
+};
