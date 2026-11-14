@@ -275,40 +275,84 @@ const rehypeBlogMermaid = () => (tree: HastNode) => {
   walk(tree)
 }
 
-// A Notion video arrives as a paragraph holding one link to an .mp4 or .webm
+// A Notion video arrives as a paragraph led by one link to an .mp4 or .webm
 // (scripts/sync-notion.js), because Markdown has no video syntax and posts
-// carry no raw HTML. Swap that paragraph for a <video>, keeping the link text
-// as its accessible name; a link inside running prose stays a link.
+// carry no raw HTML. Its caption, if any, follows on the next line of the same
+// paragraph, links intact. Swap that paragraph for a <video>, wrapped in a
+// <figure> with a visible <figcaption> when there is a caption, since it is
+// where a credit goes. A link inside running prose stays a link.
+//
+// Posts synced before the caption moved out of the link text still carry it
+// there; anything but the "Video" fallback is read as the caption.
 const VIDEO_HREF = /\.(mp4|webm)(\?.*)?$/i
+const VIDEO_FALLBACK = "Video"
+
+const trimStart = (nodes: HastNode[]): HastNode[] => {
+  const [first, ...rest] = nodes
+  if (first?.type !== "text") return nodes
+  const value = first.value?.replace(/^\s+/, "") ?? ""
+  return value ? [{ ...first, value }, ...rest] : trimStart(rest)
+}
 
 const rehypeBlogVideo = () => (tree: HastNode) => {
   const walk = (node: HastNode) => {
-    for (const child of node.children ?? []) {
+    const children = node.children ?? []
+    for (const [index, child] of children.entries()) {
       if (child.type === "element" && child.tagName === "p") {
-        const parts = (child.children ?? []).filter(
-          (part) => !(part.type === "text" && !part.value?.trim()),
-        )
-        const link = parts[0]
+        const [link, ...after] = trimStart(child.children ?? [])
         const href = link?.properties?.href
         if (
-          parts.length === 1 &&
-          link.type === "element" &&
+          link?.type === "element" &&
           link.tagName === "a" &&
           typeof href === "string" &&
-          VIDEO_HREF.test(href)
+          VIDEO_HREF.test(href) &&
+          // The caption starts on its own line; a link followed by prose on
+          // the same line is a sentence that happens to start with a link.
+          (after.length === 0 ||
+            (after[0].type === "text" &&
+              /^[ \t]*\n/.test(after[0].value ?? "")))
         ) {
-          child.tagName = "video"
-          child.properties = {
-            src: href,
-            "aria-label": hastText(link).trim() || "Video",
-            controls: true,
-            muted: true,
-            loop: true,
-            autoPlay: true,
-            playsInline: true,
-            preload: "metadata",
+          const label = hastText(link).trim()
+          const trailing = trimStart(after)
+          const caption: HastNode[] = trailing.length
+            ? trailing
+            : label && label !== VIDEO_FALLBACK
+              ? [{ type: "text", value: label }]
+              : []
+          const video: HastNode = {
+            type: "element",
+            tagName: "video",
+            properties: {
+              src: href,
+              "aria-label":
+                caption.map(hastText).join("").trim() ||
+                label ||
+                VIDEO_FALLBACK,
+              controls: true,
+              muted: true,
+              loop: true,
+              autoPlay: true,
+              playsInline: true,
+              preload: "metadata",
+            },
+            children: [],
           }
-          child.children = []
+          children[index] = caption.length
+            ? {
+                type: "element",
+                tagName: "figure",
+                properties: { "data-video": "" },
+                children: [
+                  video,
+                  {
+                    type: "element",
+                    tagName: "figcaption",
+                    properties: {},
+                    children: caption,
+                  },
+                ],
+              }
+            : video
           continue
         }
       }

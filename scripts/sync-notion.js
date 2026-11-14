@@ -295,10 +295,11 @@ const renderBlock = async (block, context) => {
       const href = isNotionHosted(block.video)
         ? await mirrorFile(url, slug, "mp4")
         : url
-      // The caption becomes the player's accessible name (lib/blog.ts).
-      const label =
-        richText(block.video.caption).replace(/[[\]]/g, "") || "Video"
-      return `[${label}](${href})`
+      // The caption rides on the next line of the same paragraph, links and
+      // all, so lib/blog.ts can show it as the video's <figcaption>. Inside the
+      // link text it would lose its own links to the bracket stripping.
+      const caption = richText(block.video.caption).trim()
+      return caption ? `[Video](${href})\n${caption}` : `[Video](${href})`
     }
     case "equation":
       return `\`${block.equation.expression}\``

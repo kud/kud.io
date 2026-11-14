@@ -15,7 +15,7 @@ hasn't changed a draft in three posts gets cut.**
 - **The verdict.** What he actually thinks is true, including the unflattering
   part.
 - **The gap in the argument.** Not style — reasoning. On the first post it was
-  *"we're mostly talking about AI reading it, but also committing"*: a hole only
+  _"we're mostly talking about AI reading it, but also committing"_: a hole only
   the person holding the belief could see, and he saw it by reading a draft.
 
 Everything else is the writer's: structure, transitions, rhythm, secondary
@@ -29,8 +29,8 @@ Notion `Blog` database as `Status: Draft`; Erwann reads, corrects, publishes.
 Both of these come from real failures on the first post:
 
 - **Is the other half of the mechanism covered — including the more dangerous
-  half?** The draft explained agents *reading* secrets and omitted agents
-  *committing* them, which is worse and likelier.
+  half?** The draft explained agents _reading_ secrets and omitted agents
+  _committing_ them, which is worse and likelier.
 - **Is the list of examples complete, or does a gap undercut the claim?** The
   deny-rule examples omitted the Keychain, which is precisely where a secret
   lives once it isn't in a file.
@@ -63,13 +63,17 @@ different posts.** Not from an instinct at midnight.
 
 ## Terminal screenshots
 
-A screenshot of a terminal gets the code card's window chrome (dark ground, three dots, a title) when its Notion caption starts with `$ `: the command goes up to ` | `, the alt text after it.
+A screenshot of a terminal gets the code card's window chrome (dark ground, three dots, a title) when its Notion caption starts with `$ `: the command goes up to `|`, the alt text after it.
 
 ```
 $ incidents watch | One line per status change. Fictional demo data.
 ```
 
-The title reads `incidents watch`; without ` | ` the alt falls back to `Terminal: <command>`. Upload the plain capture, never one with a frame baked in: the page draws the frame, in both themes. Any other image stays bare.
+The title reads `incidents watch`; without `|` the alt falls back to `Terminal: <command>`. Upload the plain capture, never one with a frame baked in: the page draws the frame, in both themes. Any other image stays bare.
+
+## Video captions
+
+A Notion video's caption shows as visible text under the player, links kept: put credits there (`Music: "Track" by Artist, CC BY 4.0`).
 
 ## Cover
 

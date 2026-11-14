@@ -336,18 +336,41 @@
   background: var(--bg-2);
 }
 
+/* A captioned video (rehypeBlogVideo) is a figure: the figure takes the video's
+ * place in the flow, its margin and its breakout, so the video sits flush in
+ * it and the caption starts under its left edge, at the same width. */
+.body figure[data-video] {
+  margin: 2rem 0;
+}
+
+.body figure[data-video] video {
+  margin: 0;
+}
+
+.body figcaption {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-3);
+}
+
 /* The breakout itself, once for every embed. `.body` lifts it over each
  * component's own base rule, and max-width: none over the global media cap
  * that held the video at the column's width. */
 @media (min-width: 768px) {
-  .body :is(.imageStage, .codeStage, .diagram, video) {
+  .body :is(.imageStage, .codeStage, .diagram, video, figure[data-video]) {
     width: var(--embed);
     max-width: none;
     margin-left: calc(50% - var(--lead) / 2 - var(--embed) / 2);
   }
+
+  .body figure[data-video] video {
+    width: 100%;
+    margin-left: 0;
+  }
 }
 
-.body blockquote :is(.imageStage, video) {
+.body blockquote :is(.imageStage, video, figure[data-video]) {
   width: 100%;
   margin-left: 0;
 }
