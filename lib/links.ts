@@ -53,6 +53,7 @@ export const SOCIAL: ElsewhereLink[] = [
 export const SITE: SiteLink[] = [
   { href: "/blog", label: "Writing", external: false },
   { href: "/projects", label: "Projects", external: false },
+  { href: "/newsletter", label: "Newsletter", external: false },
   { href: "/blog/feed.xml", label: "RSS", external: false, plain: true },
   { href: REFERRALS.href, label: REFERRALS.label, external: true },
 ]

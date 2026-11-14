@@ -1,0 +1,345 @@
+{
+  "schema": 1,
+  "date": "2026-11-13",
+  "generatedAt": "2026-11-13T18:20:00Z",
+  "publishedAt": "2026-11-13T19:05:00Z",
+  "languages": [
+    "fr",
+    "en"
+  ],
+  "lede": {
+    "fr": "Une édition entièrement fictive pour éprouver la mise en page.",
+    "en": "An entirely fictional edition to test the layout."
+  },
+  "narrative": {
+    "overview": {
+      "fr": "Ce soir, on revient sur la facture d’eau de Port-Lune, une ville imaginaire où elle a pris un tiers en deux ans, et sur ce qu’elle dit du coût des réseaux qui vieillissent. Après le tour de l’actualité, inventée de bout en bout pour cette maquette, on vous explique ce qu’est une clause de révision. Et deux trouvailles qui méritent un clic.",
+      "en": "Tonight, we look at the water bill in Port-Lune, an imaginary city where it has risen by a third in two years, and at what it says about the cost of ageing networks. After the round-up of the news, invented from start to finish for this mock-up, we explain what a review clause is. And two finds worth a click."
+    },
+    "analysis": null,
+    "closing": {
+      "fr": "Bonne soirée, et à demain pour une nouvelle édition.",
+      "en": "Have a good evening, and see you tomorrow for the next edition."
+    }
+  },
+  "timeline": [],
+  "inBrief": [
+    {
+      "text": {
+        "fr": "La bibliothèque imaginaire de Saint-Exemple ouvrira désormais le dimanche après-midi.",
+        "en": "The imaginary library of Saint-Exemple will now open on Sunday afternoons."
+      },
+      "urls": [
+        "https://example.org/saint-exemple/bibliotheque"
+      ]
+    }
+  ],
+  "readingMinutes": {
+    "fr": 3,
+    "en": 3
+  },
+  "wordCount": {
+    "fr": 572,
+    "en": 524
+  },
+  "sections": [
+    {
+      "key": "overview",
+      "kind": "narrative",
+      "title": {
+        "fr": "Ce soir",
+        "en": "Tonight"
+      },
+      "items": []
+    },
+    {
+      "key": "depth",
+      "kind": "items",
+      "title": {
+        "fr": "Le sujet du jour",
+        "en": "Today’s focus"
+      },
+      "items": [
+        "01"
+      ]
+    },
+    {
+      "key": "brief",
+      "kind": "items",
+      "title": {
+        "fr": "L’essentiel",
+        "en": "The essentials"
+      },
+      "items": [
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "key": "explainer",
+      "kind": "items",
+      "title": {
+        "fr": "C’est quoi ?",
+        "en": "Explainer"
+      },
+      "items": [
+        "05"
+      ]
+    },
+    {
+      "key": "techsci",
+      "kind": "items",
+      "title": {
+        "fr": "Technologie & science",
+        "en": "Technology & science"
+      },
+      "items": [
+        "06"
+      ]
+    },
+    {
+      "key": "inbrief",
+      "kind": "list",
+      "title": {
+        "fr": "En bref",
+        "en": "In brief"
+      },
+      "items": []
+    },
+    {
+      "key": "finds",
+      "kind": "items",
+      "title": {
+        "fr": "Ça vaut un clic",
+        "en": "Worth a click"
+      },
+      "items": [
+        "07"
+      ]
+    },
+    {
+      "key": "watch",
+      "kind": "items",
+      "title": {
+        "fr": "À surveiller",
+        "en": "Watch next"
+      },
+      "items": [
+        "08"
+      ]
+    },
+    {
+      "key": "closing",
+      "kind": "narrative",
+      "title": {
+        "fr": "Pour finir",
+        "en": "To close"
+      },
+      "items": []
+    }
+  ],
+  "items": [
+    {
+      "id": "01",
+      "section": "depth",
+      "kicker": null,
+      "title": {
+        "fr": "Pourquoi l’eau coûte plus cher à Port-Lune",
+        "en": "Why water costs more in Port-Lune"
+      },
+      "summary": {
+        "fr": "Dans la ville imaginaire de Port-Lune, la facture d’eau a augmenté d’un tiers en deux ans, selon le rapport annuel de la régie, l’établissement public qui gère le réseau. Trois causes se superposent : des canalisations posées il y a soixante ans, une nappe qui recule et un emprunt à taux variable.",
+        "en": "In the imaginary city of Port-Lune, the water bill has risen by a third in two years, according to the annual report of the régie, the public body that runs the network. Three causes overlap: pipes laid sixty years ago, a falling water table and a variable-rate loan."
+      },
+      "sources": [
+        {
+          "url": "https://example.org/port-lune/rapport-regie-2025",
+          "label": {
+            "fr": "Rapport annuel de la régie (fictif)",
+            "en": "Utility annual report (fictional)"
+          }
+        },
+        {
+          "url": "https://data.example.org/port-lune/eau",
+          "label": {
+            "fr": "Données publiques de Port-Lune (fictives)",
+            "en": "Port-Lune open data (fictional)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "section": "brief",
+      "kicker": {
+        "fr": "VALMOREAU",
+        "en": "VALMOREAU"
+      },
+      "title": {
+        "fr": "Le port fermé aux voitures",
+        "en": "A harbour closed to cars"
+      },
+      "summary": {
+        "fr": "Le conseil municipal de la ville fictive de Valmoreau a voté jeudi, par 17 voix contre 14, la piétonnisation complète de son port à partir du 1er avril. La mesure remplace 300 places de stationnement par un marché couvert et une piste cyclable. « Le port redevient un lieu où l’on s’arrête », a réagi la maire, tandis que l’association des commerçants dit craindre pour les livraisons du matin, rapporte Le Courrier d’Exemple.",
+        "en": "Valmoreau’s town council, in a fictional town, voted 17 to 14 on Thursday to pedestrianise its whole harbour from 1 April. The measure swaps 300 parking spaces for a covered market and a cycle lane. “The harbour becomes a place you stop again,” the mayor said, while the traders’ association fears for morning deliveries, The Example Courier reports."
+      },
+      "sources": [
+        {
+          "url": "https://example.org/valmoreau/deliberation-2026-118",
+          "label": {
+            "fr": "Délibération du conseil (fictive)",
+            "en": "Council resolution (fictional)"
+          }
+        },
+        {
+          "url": "https://news.example.com/valmoreau-port",
+          "label": {
+            "fr": "Le Courrier d’Exemple",
+            "en": "The Example Courier"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "section": "brief",
+      "kicker": {
+        "fr": "PÊCHE",
+        "en": "FISHERIES"
+      },
+      "title": {
+        "fr": "Accord dans le détroit de Kestrel",
+        "en": "An accord in the Kestrel Strait"
+      },
+      "summary": {
+        "fr": "Deux États imaginaires riverains du détroit de Kestrel ont signé mercredi un accord qui plafonne les prises de hareng à 40 000 tonnes par an pendant cinq ans et crée une autorité commune de contrôle. Le texte prévoit une clause de révision si les stocks se reconstituent plus vite que prévu.",
+        "en": "Two imaginary states on the Kestrel Strait signed an accord on Wednesday capping herring catches at 40,000 tonnes a year for five years and creating a joint inspection authority. The text includes a review clause should stocks recover faster than expected."
+      },
+      "sources": [
+        {
+          "url": "https://example.net/kestrel-accord.pdf",
+          "label": {
+            "fr": "Texte de l’accord (fictif)",
+            "en": "Text of the accord (fictional)"
+          }
+        },
+        {
+          "url": "https://press.example.org/kestrel",
+          "label": {
+            "fr": "Agence Exemple",
+            "en": "Example Agency"
+          }
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "section": "brief",
+      "kicker": {
+        "fr": "JUSTICE",
+        "en": "COURTS"
+      },
+      "title": {
+        "fr": "Une taxe sur les livres suspendue",
+        "en": "A tax on books suspended"
+      },
+      "summary": {
+        "fr": "La cour administrative de la province inventée d’Aubrac-Nord a suspendu mardi une taxe de 4 % sur les livres neufs, estimant qu’elle n’avait pas été débattue par l’assemblée provinciale, l’organe qui vote le budget local.",
+        "en": "The administrative court of the invented province of North Aubrac on Tuesday suspended a 4% tax on new books, ruling it had not been debated by the provincial assembly, the body that votes the local budget."
+      },
+      "sources": [
+        {
+          "url": "https://courts.example.org/aubrac-nord/2026/341",
+          "label": {
+            "fr": "Ordonnance de la cour (fictive)",
+            "en": "Court order (fictional)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "section": "explainer",
+      "kicker": null,
+      "title": {
+        "fr": "C’est quoi, une clause de révision ?",
+        "en": "What is a review clause?"
+      },
+      "summary": {
+        "fr": "Pourquoi on en parle. L’accord de pêche du détroit de Kestrel en contient une.",
+        "en": "Why it’s in the news. The Kestrel Strait fisheries accord contains one."
+      },
+      "sources": [
+        {
+          "url": "https://example.net/kestrel-accord.pdf",
+          "label": {
+            "fr": "Texte de l’accord (fictif)",
+            "en": "Text of the accord (fictional)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "section": "techsci",
+      "kicker": {
+        "fr": "ESPACE",
+        "en": "SPACE"
+      },
+      "title": {
+        "fr": "Une comète inventée frôlera la Terre",
+        "en": "An invented comet will pass close to Earth"
+      },
+      "summary": {
+        "fr": "Un observatoire fictif annonce le passage de la comète C/2026 X9 à 0,3 unité astronomique de la Terre, soit environ 45 millions de kilomètres, le 9 février. Elle devrait être visible à la jumelle.",
+        "en": "A fictional observatory says comet C/2026 X9 will pass 0.3 astronomical units from Earth, about 45 million kilometres, on 9 February. It should be visible through binoculars."
+      },
+      "sources": [
+        {
+          "url": "https://observatory.example.net/circulars/2026-77",
+          "label": {
+            "fr": "Circulaire de l’observatoire (fictive)",
+            "en": "Observatory circular (fictional)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Des phares qui n’ont jamais brillé",
+        "en": "Lighthouses that never shone"
+      },
+      "summary": {
+        "fr": "Un site d’exemple recense cent phares qui n’ont jamais existé. Chacun a sa carte marine, son rythme de feu et une courte histoire de gardien. On s’y perd volontiers, une côte imaginaire après l’autre.",
+        "en": "An example site catalogues a hundred lighthouses that never existed. Each has its chart, its light rhythm and a short keeper’s tale. It is easy to lose an evening there, one imaginary coast after another."
+      },
+      "sources": [
+        {
+          "url": "https://lighthouses.example.com/",
+          "label": {
+            "fr": "Atlas des phares (exemple)",
+            "en": "Lighthouse atlas (example)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "Le budget de l’eau à Port-Lune",
+        "en": "Port-Lune’s water budget"
+      },
+      "summary": {
+        "fr": "Le conseil de Port-Lune doit publier vendredi l’ordre du jour de sa séance de janvier.",
+        "en": "Port-Lune’s council is due to publish the agenda for its January session on Friday."
+      },
+      "sources": []
+    }
+  ]
+}

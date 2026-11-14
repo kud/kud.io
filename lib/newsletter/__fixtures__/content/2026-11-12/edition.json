@@ -1,0 +1,150 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "generatedAt": "2026-11-12T18:20:00Z",
+  "publishedAt": "2026-11-12T19:05:00Z",
+  "languages": [
+    "fr",
+    "en"
+  ],
+  "lede": {
+    "fr": "Édition d’exemple, sujets inventés.",
+    "en": "Example edition, invented subjects."
+  },
+  "narrative": {
+    "overview": {
+      "fr": "Ce soir, une grève fictive sur les traversiers de l’île Brune et une rivière inventée qui gagne quarante capteurs. Et une trouvaille pour regarder le ciel autrement.",
+      "en": "Tonight, a fictional ferry strike on Isle Brune and an invented river gaining forty sensors. And one find to look at the sky differently."
+    },
+    "analysis": null,
+    "closing": null
+  },
+  "timeline": [],
+  "inBrief": [],
+  "readingMinutes": {
+    "fr": 1,
+    "en": 1
+  },
+  "wordCount": {
+    "fr": 111,
+    "en": 93
+  },
+  "sections": [
+    {
+      "key": "overview",
+      "kind": "narrative",
+      "title": {
+        "fr": "Ce soir",
+        "en": "Tonight"
+      },
+      "items": []
+    },
+    {
+      "key": "brief",
+      "kind": "items",
+      "title": {
+        "fr": "L’essentiel",
+        "en": "The essentials"
+      },
+      "items": [
+        "01"
+      ]
+    },
+    {
+      "key": "techsci",
+      "kind": "items",
+      "title": {
+        "fr": "Technologie & science",
+        "en": "Technology & science"
+      },
+      "items": [
+        "02"
+      ]
+    },
+    {
+      "key": "finds",
+      "kind": "items",
+      "title": {
+        "fr": "Ça vaut un clic",
+        "en": "Worth a click"
+      },
+      "items": [
+        "03"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "01",
+      "section": "brief",
+      "kicker": {
+        "fr": "TRANSPORTS",
+        "en": "TRANSPORT"
+      },
+      "title": {
+        "fr": "Grève des traversiers de l’île Brune",
+        "en": "Isle Brune ferry strike"
+      },
+      "summary": {
+        "fr": "Les équipages des traversiers de l’île imaginaire de Brune cessent le travail pour 48 heures à partir de vendredi, réclamant des rotations plus courtes, rapporte Le Courrier d’Exemple.",
+        "en": "Ferry crews serving the imaginary Isle Brune stop work for 48 hours from Friday, asking for shorter rotations, The Example Courier reports."
+      },
+      "sources": [
+        {
+          "url": "https://news.example.com/ile-brune-greve",
+          "label": {
+            "fr": "Le Courrier d’Exemple",
+            "en": "The Example Courier"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "section": "techsci",
+      "kicker": {
+        "fr": "ENVIRONNEMENT",
+        "en": "ENVIRONMENT"
+      },
+      "title": {
+        "fr": "Quarante capteurs pour l’Orme",
+        "en": "Forty sensors for the Orme"
+      },
+      "summary": {
+        "fr": "Des chercheurs fictifs déploient quarante capteurs le long de la rivière Orme pour mesurer sa température heure par heure.",
+        "en": "Fictional researchers are deploying forty sensors along the River Orme to log its temperature every hour."
+      },
+      "sources": [
+        {
+          "url": "https://research.example.org/orme-sensors",
+          "label": {
+            "fr": "Note de recherche (fictive)",
+            "en": "Research note (fictional)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Les nuages ont des noms",
+        "en": "Clouds have names"
+      },
+      "summary": {
+        "fr": "Une page d’exemple qui présente chaque genre de nuage en une phrase et une photo. De quoi briller à la prochaine averse.",
+        "en": "An example page that introduces each cloud genus in a sentence and a photo. Handy for the next downpour."
+      },
+      "sources": [
+        {
+          "url": "https://clouds.example.net/glossary",
+          "label": {
+            "fr": "Glossaire des nuages (exemple)",
+            "en": "Cloud glossary (example)"
+          }
+        }
+      ]
+    }
+  ]
+}
