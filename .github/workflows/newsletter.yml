@@ -38,7 +38,7 @@ jobs:
       NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
       NOTION_NEWSLETTER_DATABASE_ID: ${{ vars.NOTION_NEWSLETTER_DATABASE_ID }}
       DATE_INPUT: ${{ inputs.date }}
-      REPORT: ${{ runner.temp }}/newsletter-report.json
+      REPORT: /tmp/newsletter-report.json
 
     steps:
       - name: Check out repository
