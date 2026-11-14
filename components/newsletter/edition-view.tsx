@@ -486,6 +486,19 @@ export const newsletterMetadata = ({
     : `${copy.name} — kud.io`
   const description = edition ? summaryOf(edition, lang) : copy.tagline
   const href = (to: Lang) => newsletterHref(page, to, { explicit: to !== "fr" })
+  // An edition shares its own card (app/newsletter/og), in the page's language;
+  // listed under twitter too, since only an explicit list there displaces the
+  // site-wide twitter-image every route inherits.
+  const images = edition
+    ? [
+        {
+          url: `/newsletter/og/${edition.date}/${lang}`,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ]
+    : undefined
   return {
     title,
     description,
@@ -507,7 +520,8 @@ export const newsletterMetadata = ({
       title,
       description,
       ...(edition?.publishedAt ? { publishedTime: edition.publishedAt } : {}),
+      ...(images ? { images } : {}),
     },
-    twitter: { title, description },
+    twitter: { title, description, ...(images ? { images } : {}) },
   }
 }
