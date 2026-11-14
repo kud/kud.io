@@ -18,15 +18,23 @@ export const morphNames = (slug: string) => [
 
 // Flag the next view transition as a morph, so global.css holds the incoming
 // page hidden until the shared elements have landed (html[data-vt="morph"]).
-// The flag self-clears after the transition window.
+// The flag self-clears after the transition window, counted from the latest
+// flag: an earlier timer left running would clear it in the middle of a quick
+// way back, and the old snapshot would cross-fade in.
+let clearFlag: number | undefined
+
 export const flagMorph = () => {
   const el = document.documentElement
   el.dataset.vt = "morph"
-  window.setTimeout(() => {
-    if (el.dataset.vt === "morph") delete el.dataset.vt
-    // The blog glide preview's slow motion (data-blog-slow) stretches the
-    // transition five times; the flag has to outlast it.
-  }, el.dataset.blogSlow ? 5000 : 1000)
+  window.clearTimeout(clearFlag)
+  clearFlag = window.setTimeout(
+    () => {
+      if (el.dataset.vt === "morph") delete el.dataset.vt
+      // The blog glide preview's slow motion (data-blog-slow) stretches the
+      // transition five times; the flag has to outlast it.
+    },
+    el.dataset.blogSlow ? 5000 : 1000,
+  )
 }
 
 type Props = ComponentProps<typeof Link> & {

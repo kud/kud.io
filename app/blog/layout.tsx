@@ -2,6 +2,7 @@ import type { ReactNode } from "react"
 import { InkLink as Link } from "@/components/ink-link"
 import { BLOG_ROOT_ID, ThemeScopeScript } from "@/components/scoped-theme"
 import { BlogMorphPreview } from "@/components/blog-morph-preview"
+import { BlogIndexLink } from "@/components/post-morph-link"
 import { SiteFooter } from "@/components/site-footer"
 import { ThemePicker } from "@/components/theme-picker"
 import styles from "./blog.module.css"
@@ -25,9 +26,9 @@ const BlogLayout = ({ children }: { children: ReactNode }) => (
         <Link href="/" className={styles.who}>
           kud.io
         </Link>
-        <Link href="/blog" className={styles.where}>
+        <BlogIndexLink href="/blog" className={styles.where}>
           /writing
-        </Link>
+        </BlogIndexLink>
       </div>
       {children}
     </div>

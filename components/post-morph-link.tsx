@@ -4,10 +4,51 @@ import { useEffect } from "react"
 import type { ComponentProps, MouseEvent } from "react"
 import { MorphLink, flagMorph } from "@/components/morph-link"
 import { readGlide } from "@/components/blog-morph-preview"
+import { InkLink } from "@/components/ink-link"
 
 // sessionStorage key naming the post a return glide started from, read by
 // BlogMorphArrival on the index to name the one row the cover lands in.
 export const POST_RETURN_KEY = "kud:post-morph-return"
+
+// sessionStorage key holding the index's scroll at the press, with the slug
+// pressed. The way back restores it before the index is snapshotted: left to
+// the browser, the restore lands after the snapshot, so the cover glided to
+// where its row sat at scroll 0, often below the fold, and the page jumped
+// once it was over.
+const INDEX_SCROLL_KEY = "kud:blog-index-scroll"
+
+const slowFactor = () => (document.documentElement.dataset.blogSlow ? 5 : 1)
+
+// The thumb's hover lean at the press, as a scale (1 when at rest), for the
+// incoming cover to start from (global.css, post-cover-settle).
+let clearZoom: number | undefined
+
+const holdZoom = (cover: HTMLElement | null | undefined) => {
+  const img = cover?.querySelector("img")
+  const scale = img ? new DOMMatrix(getComputedStyle(img).transform).a : 1
+  const root = document.documentElement
+  root.style.setProperty("--morph-zoom", String(scale || 1))
+  window.clearTimeout(clearZoom)
+  clearZoom = window.setTimeout(
+    () => root.style.removeProperty("--morph-zoom"),
+    1000 * slowFactor(),
+  )
+}
+
+// Post → index, by any way back (the Back button or gesture, Alt+←, the
+// header's /writing): flag the glide and leave the slug for BlogMorphArrival,
+// which names the row on the index side. The post's own cover and title are
+// named in its markup already.
+export const flagPostReturn = (slug: string) => {
+  if (readGlide() === "none") return
+  flagMorph()
+  // The lean belongs to the press that opened the post, not to the row the
+  // cover lands back in.
+  document.documentElement.style.removeProperty("--morph-zoom")
+  try {
+    sessionStorage.setItem(POST_RETURN_KEY, slug)
+  } catch {}
+}
 
 // The names a post owns on the index and on its own page: its cover and its
 // title. global.css gives them their view-transition-class.
@@ -69,7 +110,11 @@ export const PostMorphLink = ({
       return
     }
     delete document.documentElement.dataset.blogMorph
-    nameRow(event.currentTarget.closest("li"), slug)
+    const { cover } = nameRow(event.currentTarget.closest("li"), slug)
+    holdZoom(cover)
+    try {
+      sessionStorage.setItem(INDEX_SCROLL_KEY, `${slug} ${window.scrollY}`)
+    } catch {}
   }
 
   return (
@@ -92,20 +137,13 @@ export const PostMorphLink = ({
   )
 }
 
-// On a post: the browser's Back to the index glides the same way, home. The
-// popstate is already wrapped in a view transition by next-view-transitions,
-// unflagged; flag it and leave the slug for BlogMorphArrival, which names the
-// row on the index side. This page's own cover and title are named in its
-// markup already.
+// On a post: the browser's Back to the index (button, gesture, Alt+←) glides
+// the same way, home. next-view-transitions already wraps every popstate in a
+// view transition, unflagged; this flags it before the old page is captured.
 export const PostMorphReturn = ({ slug }: { slug: string }) => {
   useEffect(() => {
     const onPopState = () => {
-      if (window.location.pathname !== "/blog") return
-      if (readGlide() === "none") return
-      flagMorph()
-      try {
-        sessionStorage.setItem(POST_RETURN_KEY, slug)
-      } catch {}
+      if (window.location.pathname === "/blog") flagPostReturn(slug)
     }
     window.addEventListener("popstate", onPopState)
     return () => window.removeEventListener("popstate", onPopState)
@@ -114,11 +152,14 @@ export const PostMorphReturn = ({ slug }: { slug: string }) => {
   return null
 }
 
-// On the index, arriving back from a post: name the one row the cover and
-// title return to, and bring it into view so the glide lands somewhere
-// visible. A passive effect, like MorphArrival on /projects: after the
-// router's own scroll and before the new snapshot is taken. The names come
-// off once the transition is over, so the next press starts clean.
+// On the index, arriving back from a post: put the list back where it was at
+// the press, name the one row the cover and title return to, and make sure it
+// is in view, so the glide lands somewhere visible. A passive effect, like
+// MorphArrival on /projects: after the router's own scroll and before the new
+// snapshot is taken. Every scroll here is instant, never the page's smooth
+// default: a smooth scroll is still at its start when the snapshot is taken.
+// The names come off once the transition is over, so the next press starts
+// clean.
 export const BlogMorphArrival = () => {
   useEffect(() => {
     let slug: string | null = null
@@ -127,21 +168,47 @@ export const BlogMorphArrival = () => {
       sessionStorage.removeItem(POST_RETURN_KEY)
     } catch {}
     if (!slug) return
+    let scroll: string | null = null
+    try {
+      scroll = sessionStorage.getItem(INDEX_SCROLL_KEY)
+    } catch {}
+    // Only the scroll saved by this post's own press: a post reached some
+    // other way leaves an older value behind.
+    const [from, top] = scroll?.split(" ") ?? []
+    if (from === slug)
+      window.scrollTo({ top: Number(top), behavior: "instant" })
     const link = document.querySelector(`h2 a[href$="/${slug}"]`)
     const row = link?.closest("li") ?? null
     const { cover, title } = nameRow(row, slug)
-    // Only when the row is off screen, so a row already in view (the
-    // usual Back) leaves the page where it was, header and all, still.
-    // Instant on purpose: the glide is the motion.
+    // Only when the row is still off screen (a resized window, a list that
+    // changed), so a row in view leaves the page where it was.
     const box = row?.getBoundingClientRect()
     if (box && (box.bottom < 0 || box.top > window.innerHeight - 40))
-      row?.scrollIntoView({ block: "center" })
-    const slow = document.documentElement.dataset.blogSlow ? 5 : 1
+      row?.scrollIntoView({ block: "center", behavior: "instant" })
     window.setTimeout(() => {
       if (cover) cover.style.viewTransitionName = ""
       if (title) title.style.viewTransitionName = ""
-    }, 1000 * slow)
+    }, 1000 * slowFactor())
   }, [])
 
   return null
 }
+
+// The header's /writing. On a post it is a way back like the browser's, so it
+// glides home the same way; anywhere else it is the plain InkLink it wraps.
+export const BlogIndexLink = ({
+  onClick,
+  ...props
+}: ComponentProps<typeof InkLink>) => (
+  <InkLink
+    {...props}
+    onClick={(event) => {
+      onClick?.(event)
+      if (isModified(event)) return
+      const post = window.location.pathname.match(
+        /^\/blog\/\d{4}\/\d{2}\/\d{2}\/([^/]+)$/,
+      )
+      if (post) flagPostReturn(post[1])
+    }}
+  />
+)

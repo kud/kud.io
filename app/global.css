@@ -263,7 +263,6 @@ html[data-vt="morph"]::view-transition-old(*.blog-still) {
   opacity: 0;
 }
 
-html[data-vt="morph"]::view-transition-new(*.post-cover),
 html[data-vt="morph"]::view-transition-new(*.post-title),
 html[data-vt="morph"]::view-transition-new(*.blog-still),
 html[data-vt="morph"]::view-transition-group(*.blog-still) {
@@ -297,7 +296,32 @@ html[data-vt="morph"] [data-morph-cover]::before {
 html[data-vt="morph"] [data-morph-cover] img {
   transition: none !important;
   opacity: 1 !important;
+}
+
+/* The post hero's own load-in lean (scale 1.045) is reset; the index thumb
+   keeps whatever hover lean it had at the press, so nothing snaps back to 1
+   before the snapshot. */
+html[data-vt="morph"] figure[data-morph-cover] img {
   transform: none !important;
+}
+
+/* The thumb leans in on hover (scale 1.06, page.module.css). The press reads
+   that lean into --morph-zoom (PostMorphLink), and the incoming cover starts
+   at it and settles to 1 as it travels, so the zoom carries straight into the
+   hero: no unzoom at the snapshot, no second zoom. Same timing as the group
+   so the two land together. */
+@keyframes post-cover-settle {
+  from {
+    transform: scale(var(--morph-zoom, 1));
+  }
+}
+
+html[data-vt="morph"]::view-transition-new(*.post-cover) {
+  animation: post-cover-settle 0.34s ease both;
+}
+
+html[data-blog-slow][data-vt="morph"]::view-transition-new(*.post-cover) {
+  animation-duration: 1.7s;
 }
 
 /* Preview only (Glide now on the preview banner): today's plain cross-fade,
