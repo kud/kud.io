@@ -336,6 +336,67 @@ html[data-blog-slow][data-vt="morph"]::view-transition-new(*.post-cover) {
   animation-duration: 1.7s;
 }
 
+/* Preview only: three ways for the title to travel (Selin, 2026-11-14), picked
+   on the preview banner (components/blog-morph-preview.tsx). The snapshot
+   keeps its own size, anchored top left, and scales from the outgoing type
+   size (--title-from, set at the press in post-morph-link.tsx), so it never
+   stretches with the group's box. t2 also lets the outgoing title ride the
+   same scale and hands over to the incoming one inside the move; t3 is t1
+   with the post title at the list's weight. */
+@keyframes post-title-grow {
+  from {
+    transform: scale(var(--title-from, 1));
+  }
+}
+@keyframes post-title-shrink-out {
+  to {
+    transform: scale(calc(1 / var(--title-from, 1)));
+    opacity: 0;
+  }
+}
+@keyframes post-title-in {
+  from {
+    opacity: 0;
+  }
+}
+html[data-title-morph][data-vt="morph"]::view-transition-new(*.post-title) {
+  inline-size: auto;
+  block-size: auto;
+  transform-origin: 0 0;
+  animation: post-title-grow 0.34s ease both;
+}
+html[data-title-morph="2"][data-vt="morph"]::view-transition-old(*.post-title) {
+  inline-size: auto;
+  block-size: auto;
+  transform-origin: 0 0;
+  mix-blend-mode: plus-lighter;
+  opacity: 1;
+  animation: post-title-shrink-out 0.34s ease both;
+}
+html[data-title-morph="2"][data-vt="morph"]::view-transition-new(*.post-title) {
+  mix-blend-mode: plus-lighter;
+  animation:
+    post-title-grow 0.34s ease both,
+    post-title-in 0.2s ease both;
+}
+html[data-title-morph][data-blog-slow][data-vt="morph"]::view-transition-old(
+    *.post-title
+  ),
+html[data-title-morph][data-blog-slow][data-vt="morph"]::view-transition-new(
+    *.post-title
+  ) {
+  animation-duration: 1.7s;
+}
+html[data-title-morph="2"][data-blog-slow][data-vt="morph"]::view-transition-new(
+    *.post-title
+  ) {
+  animation-duration: 1.7s, 1s;
+}
+html[data-title-morph="3"] h1[data-morph-title] {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
 /* Preview only (Glide now on the preview banner): today's plain cross-fade,
    so nothing is named on either side. */
 html[data-blog-morph="none"] [data-morph-title],

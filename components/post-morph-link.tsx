@@ -19,6 +19,22 @@ const INDEX_SCROLL_KEY = "kud:blog-index-scroll"
 
 const slowFactor = () => (document.documentElement.dataset.blogSlow ? 5 : 1)
 
+// The post title's size (app/blog/[year]/[month]/[day]/[slug]/page.module.css
+// .title). The title glide starts its incoming snapshot at the outgoing type
+// size: --title-from is outgoing over incoming, set before the snapshot.
+const POST_TITLE_PX = 30
+const setTitleFrom = (
+  title: HTMLElement | null | undefined,
+  toIndex: boolean,
+) => {
+  const px = title ? parseFloat(getComputedStyle(title).fontSize) : 0
+  if (!px) return
+  document.documentElement.style.setProperty(
+    "--title-from",
+    String(toIndex ? POST_TITLE_PX / px : px / POST_TITLE_PX),
+  )
+}
+
 // The thumb's hover lean at the press, as a scale (1 when at rest), for the
 // incoming cover to start from (global.css, post-cover-settle). Held long
 // enough to outlast a slow load before the transition starts; the way back
@@ -112,8 +128,9 @@ export const PostMorphLink = ({
       return
     }
     delete document.documentElement.dataset.blogMorph
-    const { cover } = nameRow(event.currentTarget.closest("li"), slug)
+    const { cover, title } = nameRow(event.currentTarget.closest("li"), slug)
     holdZoom(cover)
+    setTitleFrom(title, false)
     try {
       sessionStorage.setItem(INDEX_SCROLL_KEY, `${slug} ${window.scrollY}`)
     } catch {}
@@ -182,6 +199,7 @@ export const BlogMorphArrival = () => {
     const link = document.querySelector(`h2 a[href$="/${slug}"]`)
     const row = link?.closest("li") ?? null
     const { cover, title } = nameRow(row, slug)
+    setTitleFrom(title, true)
     // Only when the row is still off screen (a resized window, a list that
     // changed), so a row in view leaves the page where it was.
     const box = row?.getBoundingClientRect()

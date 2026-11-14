@@ -13,8 +13,11 @@ const KEY = "kud.blog-morph-preview"
 const SLOW_KEY = "kud.blog-morph-preview-slow"
 
 // now: today's plain cross-fade. glide: what is on both pages only moves
-// (the cover, the title) or stays still (header, picker, footer).
-const VALUES = ["now", "glide"] as const
+// (the cover, the title) or stays still (header, picker, footer). t1 to t3:
+// the glide with one of three ways for the title to travel (global.css,
+// html[data-title-morph]): t1 grows from the list's type size, t2 also hands
+// the list title over to the post's, t3 is t1 with the post title at 600.
+const VALUES = ["now", "glide", "t1", "t2", "t3"] as const
 type Glide = (typeof VALUES)[number]
 
 const isGlide = (value: string | null): value is Glide =>
@@ -84,6 +87,12 @@ export const BlogMorphPreview = () => {
     else url.searchParams.delete("slow")
     window.history.replaceState(window.history.state, "", url)
   }, [glide, slow])
+
+  useEffect(() => {
+    const root = document.documentElement
+    if (glide.startsWith("t")) root.dataset.titleMorph = glide.slice(1)
+    else delete root.dataset.titleMorph
+  }, [glide])
 
   useEffect(() => {
     if (!glide) return
