@@ -5,7 +5,7 @@ date: "2026-11-13"
 slug: "is-it-me-or-is-it-them"
 tags: ["engineering","tools"]
 cover: "/blog/is-it-me-or-is-it-them/b7ae7c147980.png"
-updated: "2026-11-13T22:32:00.000Z"
+updated: "2026-11-14T00:22:00.000Z"
 ---
 
 _A first check before debugging your own code, for you and your AI assistant._
@@ -20,7 +20,8 @@ That's what [**incidents**](https://github.com/kud/incidents-cli) is for.
 
 It's a small terminal tool that checks the status pages of services such as GitHub, npm, Cloudflare, AWS and Claude, and brings their declared incidents together in one place, worst first.
 
-[incidents 0.4.0, recorded from the real CLI. Fictional demo services and incidents.](/blog/is-it-me-or-is-it-them/7aab55b9784f.mp4)
+[Video](/blog/is-it-me-or-is-it-them/5bf1fc8825af.mp4)
+Music: "[Nightfall](https://freemusicarchive.org/music/beat-mekanik/euphoria/nightfall-4/)" by Beat Mekanik, CC BY 4.0
 
 I released it as an open-source npm package on 13 November 2026, and by the evening it had reached 0.4.0.
 
