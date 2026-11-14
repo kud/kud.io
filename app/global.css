@@ -271,10 +271,15 @@ html[data-vt="morph"]::view-transition-old(*.blog-still) {
 }
 
 html[data-vt="morph"]::view-transition-new(*.post-title),
-html[data-vt="morph"]::view-transition-new(*.blog-still),
-html[data-vt="morph"]::view-transition-group(*.blog-still) {
+html[data-vt="morph"]::view-transition-new(*.blog-still) {
   animation: none;
 }
+
+/* The header, picker and footer keep the browser's glide between their two
+   places. Where both pages hold them at the same spot that glide is no move at
+   all; from a scrolled index, the header and picker sit above the fold on the
+   post, and a group frozen at its new place jumped there at the first frame,
+   over the old page's text (2026-11-14, seen at phone width). */
 
 /* The cover's frame changes shape on the way (a 96px square, a 16:9 card, the
    wide hero); the picture fills and crops it at every step, the way
