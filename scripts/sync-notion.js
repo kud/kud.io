@@ -13,6 +13,7 @@ import { Client } from "@notionhq/client"
 import ora from "ora"
 import { writeCoverImages } from "./cover-images.js"
 import { writeShareImages } from "./share-images.js"
+import { richText } from "./lib/notion-markdown.js"
 
 const CONTENT_DIR = "content/blog"
 const IMAGE_DIR = "public/blog"
@@ -51,58 +52,6 @@ const collectAll = async (fetchPage) => {
 // ---------------------------------------------------------------------------
 // Rich text → Markdown
 // ---------------------------------------------------------------------------
-
-// Escaped so a literal asterisk, bracket or angle in prose can't become syntax.
-// Backslash goes first or it would double-escape everything after it.
-//
-// `<` and `>` stay in the set even though the output is plain Markdown, not
-// MDX. They are not an MDX leftover: remark parses a bare `<Layout/>` in prose
-// as raw HTML and remark-rehype drops it, so an unescaped one deletes the text
-// silently. Escaped, it round-trips — `\<` is a valid CommonMark escape and
-// renders as `<`. Verified against the real pipeline, both ways.
-const escapeMarkdown = (text) =>
-  text.replace(/([\\`*_[\]<>])/g, "\\$1").replace(/\n/g, "  \n")
-
-// A code span is a literal: nothing inside it is Markdown, so nothing inside it
-// CAN be escaped. A backslash there renders as a backslash — which is precisely
-// what put `\<Layout/\>` on three published posts. A backtick in the content is
-// therefore handled by lengthening the fence, the only mechanism CommonMark
-// offers, and the space padding is what stops a leading or trailing backtick
-// closing the fence early.
-const codeSpan = (content) => {
-  const runs = [...content.matchAll(/`+/g)].map((match) => match[0].length)
-  const fence = "`".repeat(Math.max(0, ...runs) + 1)
-  const pad =
-    content.startsWith("`") || content.endsWith("`") || /^\s|\s$/.test(content)
-      ? " "
-      : ""
-  return `${fence}${pad}${content}${pad}${fence}`
-}
-
-const decorate = (content, annotations) => {
-  if (!content.trim()) return content
-  let out = content
-  if (annotations.code) return codeSpan(content)
-  if (annotations.bold) out = `**${out}**`
-  if (annotations.italic) out = `_${out}_`
-  if (annotations.strikethrough) out = `~~${out}~~`
-  return out
-}
-
-const richText = (nodes = []) =>
-  nodes
-    .map((node) => {
-      if (node.type === "equation") return codeSpan(node.equation.expression)
-      const raw = node.plain_text ?? ""
-      const annotations = node.annotations ?? {}
-      const text = decorate(
-        annotations.code ? raw : escapeMarkdown(raw),
-        annotations,
-      )
-      const href = node.href ?? node.text?.link?.url
-      return href ? `[${text}](${href})` : text
-    })
-    .join("")
 
 // ---------------------------------------------------------------------------
 // Mirrored files
