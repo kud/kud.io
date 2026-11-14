@@ -1,5 +1,5 @@
 // Leading marks for the project hero buttons (Erwann, 2026-11-10). Brand marks are Simple Icons
-// (CC0-1.0), the docs, projects and web marks Heroicons 16/solid (MIT), inlined rather
+// (CC0-1.0), the docs, projects, newsletter and web marks Heroicons 16/solid (MIT), inlined rather
 // than packaged for a handful of glyphs. All draw in currentColor, so they take the
 // button ink, never a brand colour.
 const ICONS = {
@@ -44,6 +44,19 @@ const ICONS = {
     paths: [
       {
         d: "M3.5 2A1.5 1.5 0 0 0 2 3.5v2A1.5 1.5 0 0 0 3.5 7h2A1.5 1.5 0 0 0 7 5.5v-2A1.5 1.5 0 0 0 5.5 2h-2ZM3.5 9A1.5 1.5 0 0 0 2 10.5v2A1.5 1.5 0 0 0 3.5 14h2A1.5 1.5 0 0 0 7 12.5v-2A1.5 1.5 0 0 0 5.5 9h-2ZM9 3.5A1.5 1.5 0 0 1 10.5 2h2A1.5 1.5 0 0 1 14 3.5v2A1.5 1.5 0 0 1 12.5 7h-2A1.5 1.5 0 0 1 9 5.5v-2ZM10.5 9A1.5 1.5 0 0 0 9 10.5v2a1.5 1.5 0 0 0 1.5 1.5h2a1.5 1.5 0 0 0 1.5-1.5v-2A1.5 1.5 0 0 0 12.5 9h-2Z",
+        evenodd: false,
+      },
+    ],
+  },
+  newsletter: {
+    vb: "0 0 16 16",
+    paths: [
+      {
+        d: "M10 3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v9a2 2 0 0 0 2 2h8a2 2 0 0 1-2-2V3ZM4 4h4v2H4V4Zm4 3.5H4V9h4V7.5Zm-4 3h4V12H4v-1.5Z",
+        evenodd: true,
+      },
+      {
+        d: "M13 5h-1.5v6.25a1.25 1.25 0 1 0 2.5 0V6a1 1 0 0 0-1-1Z",
         evenodd: false,
       },
     ],

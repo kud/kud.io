@@ -99,6 +99,7 @@ const closest = (pathname: string, places: Place[]) => {
 const ways = [
   { href: "/projects", label: "Projects" },
   { href: "/blog", label: "Writing" },
+  { href: "/newsletter", label: "Newsletter" },
 ];
 
 const PlaceLink = ({ place }: { place: Place }) => (

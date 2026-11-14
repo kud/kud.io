@@ -152,6 +152,13 @@ const Writing = () => (
   </InkLink>
 )
 
+const Newsletter = () => (
+  <InkLink href="/newsletter" className={styles.secondary}>
+    <ButtonIcon name="newsletter" />
+    Newsletter
+  </InkLink>
+)
+
 const SocialLinks = () => (
   <ul className={styles.socials}>
     {socials.map(({ label, href, Icon }) => {
@@ -206,6 +213,7 @@ const HeroDesktop = () => (
         <div className={styles.actions}>
           <Cta />
           <Writing />
+          <Newsletter />
         </div>
         <SocialLinks />
         <ScrollHint href="#about" label="About" />
@@ -246,6 +254,7 @@ const HeroMobile = () => (
         <div className={styles.actions}>
           <Cta />
           <Writing />
+          <Newsletter />
         </div>
         <SocialLinks />
       </div>
