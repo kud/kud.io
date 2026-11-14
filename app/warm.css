@@ -391,9 +391,11 @@ body:has([data-ground="dusk"]) {
     clip-path: inset(50%);
     white-space: nowrap;
   }
+  /* On phones the corner belongs to the header, and the picker floated over
+     its rule. The theme lives behind the search button there: the launcher
+     carries the same two rows under Settings. */
   .dusk-picker-top {
-    top: 12px;
-    right: 14px;
+    display: none;
   }
 }
 
