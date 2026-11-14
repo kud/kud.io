@@ -1,0 +1,955 @@
+/* The newsletter. Tokens come from #blog-root (app/blog/blog.module.css), the
+ * same reading greys, light, dark and Ink as Writing; nothing here declares a
+ * colour of its own. A calm daily: one column at about 65 characters, prose
+ * with room to breathe, structure carried by quiet uppercase labels and rules
+ * rather than boxes, cards or colour. */
+
+.wrap {
+  max-width: 760px;
+}
+
+.edition,
+.empty,
+.archive {
+  --measure: 65ch;
+  --body-size: 18px;
+  --body-font: var(--sans);
+  --serif:
+    "Iowan Old Style", "Charter", "Source Serif 4", "Georgia", "Cambria",
+    "Times New Roman", serif;
+  font-family: var(--body-font);
+}
+
+/* Reader preferences (components/newsletter/reader-preferences.tsx). */
+.edition[data-font="serif"] {
+  --body-font: var(--serif);
+}
+
+.edition[data-font="mono"] {
+  --body-font: var(--mono);
+  --body-size: 16px;
+}
+
+.edition[data-size="s"] {
+  --body-size: 16px;
+}
+
+.edition[data-size="l"] {
+  --body-size: 20px;
+}
+
+.edition[data-font="mono"][data-size="l"] {
+  --body-size: 18px;
+}
+
+.edition[data-width="narrow"] {
+  --measure: 56ch;
+}
+
+.edition[data-width="wide"] {
+  --measure: 78ch;
+}
+
+.visuallyHidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Masthead ---------------------------------------------------------------- */
+
+.masthead {
+  margin-bottom: 48px;
+}
+
+.mastRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin-bottom: 14px;
+}
+
+.mastTools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kicker {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.kickerNote {
+  letter-spacing: 0.06em;
+}
+
+.title {
+  margin: 0 0 14px;
+  font-family: var(--sans);
+  font-size: clamp(30px, 6vw, 40px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.lede {
+  max-width: var(--measure);
+  margin: 0 0 16px;
+  font-size: calc(var(--body-size) + 1px);
+  line-height: 1.6;
+  color: var(--fg-2);
+  text-wrap: pretty;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0 0 22px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--fg-3);
+}
+
+.meta strong {
+  font-weight: 500;
+  color: var(--fg-2);
+}
+
+.contents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 13.5px;
+}
+
+.contents a,
+.footLinks a,
+.pager a {
+  color: var(--fg-2);
+  text-decoration: none;
+}
+
+.contents a:hover,
+.footLinks a:hover,
+.pager a:hover {
+  color: var(--fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Language switch and reading preferences: two quiet controls of one kind. */
+.langSwitch,
+.prefs summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  padding: 4px 11px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--fg-2);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.langSwitch:hover,
+.prefs summary:hover {
+  color: var(--fg);
+  border-color: var(--fg-3);
+}
+
+.langSwitch > span:first-child,
+.prefsMark {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+}
+
+@media (max-width: 480px) {
+  .langSwitch > span:last-child {
+    display: none;
+  }
+}
+
+.prefs {
+  position: relative;
+}
+
+.prefs summary {
+  list-style: none;
+}
+
+.prefs summary::-webkit-details-marker {
+  display: none;
+}
+
+.prefsPanel {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(300px, calc(100vw - 36px));
+  padding: 14px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.14);
+}
+
+.prefsGroup {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+}
+
+.prefsGroup:last-child {
+  margin-bottom: 0;
+}
+
+.prefsGroup legend {
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.prefsGroup label {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--fg-2);
+  cursor: pointer;
+}
+
+.prefsGroup label[data-value="serif"] {
+  font-family: var(--serif);
+}
+
+.prefsGroup label[data-value="mono"] {
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.prefsGroup input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+
+.prefsGroup label:has(input:checked) {
+  border-color: var(--fg-2);
+  background: var(--bg-2);
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.prefsGroup label:has(input:focus-visible) {
+  outline: 2px solid var(--c-fn);
+  outline-offset: 2px;
+}
+
+/* Sections ---------------------------------------------------------------- */
+
+.section {
+  margin: 0 0 56px;
+}
+
+/* A section title is a label, not a headline: small, spaced capitals over a
+ * hairline, so the stories carry the weight and the page reads as a paper. */
+.sectionTitle {
+  margin: 0 0 22px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line-2);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.prose {
+  max-width: var(--measure);
+  font-size: var(--body-size);
+  line-height: 1.68;
+}
+
+.prose p {
+  margin: 0 0 1em;
+  text-wrap: pretty;
+}
+
+.prose > :last-child {
+  margin-bottom: 0;
+}
+
+.prose a {
+  color: inherit;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 3px;
+}
+
+.prose a:hover {
+  text-decoration-color: currentColor;
+}
+
+.prose strong {
+  font-weight: 650;
+}
+
+.prose ul,
+.prose ol {
+  margin: 0 0 1em;
+  padding-left: 1.2em;
+}
+
+.prose blockquote {
+  margin: 0 0 1em;
+  padding-left: 16px;
+  border-left: 2px solid var(--line-2);
+  color: var(--fg-2);
+}
+
+/* The opening paragraph: the edition introduces itself, a size up. */
+.section[id="section-overview"] .prose {
+  font-size: calc(var(--body-size) + 1px);
+}
+
+.section[id="section-closing"] {
+  margin-top: -8px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.section[id="section-closing"] .prose {
+  font-style: italic;
+  color: var(--fg-2);
+}
+
+.citation {
+  white-space: nowrap;
+  font-family: var(--sans);
+  font-size: 0.82em;
+  font-weight: 500;
+  color: var(--fg-2) !important;
+  text-decoration: none !important;
+}
+
+.citation:hover {
+  color: var(--fg) !important;
+  text-decoration: underline !important;
+}
+
+.researchHint {
+  max-width: var(--measure);
+  margin: 18px 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--fg-3);
+}
+
+/* Stories ------------------------------------------------------------------ */
+
+.items {
+  display: grid;
+}
+
+.item {
+  position: relative;
+  padding: 26px 0 28px;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 24px;
+}
+
+.items > .item:first-child {
+  padding-top: 4px;
+  border-top: 0;
+}
+
+/* Selected: a ground, a rule and the ticked box, never colour alone. */
+.item:has(.select input:checked) {
+  margin: 0 -14px;
+  padding-inline: 12px 14px;
+  border-left: 2px solid var(--fg-2);
+  border-radius: 0 8px 8px 0;
+  background: var(--bg-2);
+}
+
+.itemTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  max-width: var(--measure);
+  margin: 0 0 10px;
+  font-family: var(--sans);
+  font-size: 21px;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.num {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--fg-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.kickerLabel {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--fg-2);
+}
+
+.itemTitleText {
+  flex-basis: 100%;
+}
+
+.itemTools {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 12px;
+}
+
+@media (min-width: 640px) {
+  .itemTitle {
+    padding-right: 220px;
+  }
+
+  .itemTools {
+    position: absolute;
+    top: 22px;
+    right: 0;
+    margin: 0;
+  }
+
+  .items > .item:first-child .itemTools {
+    top: 0;
+  }
+
+  .item:has(.select input:checked) .itemTools {
+    right: 14px;
+  }
+}
+
+.select,
+.share {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--bg);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: var(--fg-3);
+  cursor: pointer;
+}
+
+.select:hover,
+.share:hover {
+  color: var(--fg);
+  border-color: var(--line-2);
+}
+
+.select input {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  accent-color: var(--fg);
+}
+
+.select:has(input:checked) {
+  border-color: var(--fg-2);
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.select:has(input:focus-visible) {
+  outline: 2px solid var(--c-fn);
+  outline-offset: 2px;
+}
+
+/* No script, no prompt: the box would tick and do nothing. */
+@media (scripting: none) {
+  .itemTools,
+  .researchHint {
+    display: none;
+  }
+}
+
+/* Today's focus: its bold sub-labels read as quiet section labels, and its
+ * key dates as a timeline down a hairline. */
+.section[id="section-depth"] .prose p:has(> strong:only-child),
+.section[id="section-explainer"] .prose p > strong:first-child {
+  font-family: var(--sans);
+}
+
+.section[id="section-depth"] .prose p:has(> strong:only-child) {
+  margin: 1.6em 0 0.5em;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.section[id="section-depth"] .prose ul {
+  margin: 0 0 1.2em;
+  padding: 0;
+  list-style: none;
+  border-left: 1px solid var(--line-2);
+}
+
+.section[id="section-depth"] .prose li {
+  position: relative;
+  margin: 0 0 14px;
+  padding-left: 20px;
+}
+
+.section[id="section-depth"] .prose li::before {
+  content: "";
+  position: absolute;
+  top: 0.62em;
+  left: -4px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--fg-3);
+}
+
+.section[id="section-depth"] .prose li > strong:first-child {
+  margin-right: 6px;
+  font-family: var(--mono);
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.sources {
+  max-width: var(--measure);
+  margin-top: 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.sourcesLabel {
+  margin: 0 0 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.sources ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sources a {
+  color: var(--fg-2);
+  text-underline-offset: 3px;
+  text-decoration-color: var(--line-2);
+}
+
+.sources a:hover {
+  color: var(--fg);
+}
+
+.host {
+  margin-left: 6px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--fg-3);
+}
+
+/* Fast facts and timeline ------------------------------------------------- */
+
+.facts,
+.timeline {
+  max-width: var(--measure);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: calc(var(--body-size) - 1px);
+  line-height: 1.6;
+}
+
+.facts li,
+.timeline li {
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.facts li:first-child,
+.timeline li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 8.5em 1fr;
+  gap: 12px;
+}
+
+.timeline time {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--fg-3);
+}
+
+/* Footer ------------------------------------------------------------------ */
+
+.editionFooter {
+  padding-top: 24px;
+  border-top: 1px solid var(--line-2);
+}
+
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  font-size: 14.5px;
+}
+
+.pager a {
+  display: grid;
+  gap: 2px;
+}
+
+.pager small {
+  font-size: 12.5px;
+  color: var(--fg-3);
+}
+
+.pagerNext {
+  text-align: right;
+}
+
+.footLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0 0 32px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+
+/* Research bar -------------------------------------------------------------- */
+
+/* Fixed to the bottom, clear of the home indicator, and only there while
+ * something is ticked or a confirmation is showing. The page gains matching
+ * room underneath, so the last story is never hidden behind it. */
+.bar {
+  position: fixed;
+  z-index: 30;
+  left: 50%;
+  bottom: calc(14px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  width: min(620px, calc(100vw - 24px));
+  padding: 10px 10px 10px 16px;
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: 0 14px 40px rgb(0 0 0 / 0.18);
+  transform: translate(-50%, calc(100% + 40px));
+  visibility: hidden;
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    visibility 0s 220ms;
+}
+
+.bar[data-open] {
+  transform: translate(-50%, 0);
+  visibility: visible;
+  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:global(#blog-root):has(.bar[data-open]) {
+  padding-bottom: 96px;
+}
+
+.barCount {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.barActions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.barQuiet,
+.barPrimary {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.barQuiet {
+  border: 1px solid var(--line-2);
+  background: transparent;
+  color: var(--fg-2);
+}
+
+.barPrimary {
+  border: 1px solid var(--fg);
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.barPrimary:hover {
+  opacity: 0.88;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar,
+  .bar[data-open] {
+    transition: none;
+  }
+}
+
+.fallback {
+  width: min(640px, calc(100vw - 24px));
+  padding: 18px;
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.fallback::backdrop {
+  background: rgb(0 0 0 / 0.4);
+}
+
+.fallback p {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+
+.fallback textarea {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  background: var(--bg-2);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+/* Signup -------------------------------------------------------------------- */
+
+.signup {
+  max-width: var(--measure);
+  padding: 20px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: var(--bg-2);
+}
+
+.signupTitle {
+  margin: 0 0 4px;
+  font-size: 17px;
+  font-weight: 650;
+}
+
+.signupBody,
+.signupConsent,
+.signupDone {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--fg-2);
+}
+
+.signupConsent {
+  font-size: 12.5px;
+  color: var(--fg-3);
+}
+
+.signupForm {
+  display: grid;
+}
+
+.signupField {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.signupField input {
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  font-size: 16px;
+}
+
+.signupLangs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+  font-size: 14px;
+}
+
+.signupLangs legend {
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.signupLangs label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.signupForm .barPrimary {
+  justify-self: start;
+}
+
+.honeypot {
+  position: absolute;
+  left: -9999px;
+}
+
+/* Empty and archive --------------------------------------------------------- */
+
+.empty {
+  padding: 40px 0 56px;
+}
+
+.month {
+  margin-top: 40px;
+}
+
+.archiveList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.archiveList li + li {
+  border-top: 1px solid var(--line);
+}
+
+.archiveList a {
+  display: grid;
+  gap: 4px;
+  padding: 16px 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.archiveList time {
+  font-size: 17px;
+  font-weight: 650;
+}
+
+.archiveList a:hover time {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.archiveLede {
+  max-width: var(--measure);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--fg-2);
+}
+
+.archiveTitles {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--fg-3);
+}
+
+/* On a phone the bar sits above the site's launcher button (bottom right) and
+ * its two actions take a row of their own, so the long French label wraps
+ * rather than being cut. */
+@media (max-width: 560px) {
+  .bar {
+    bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+
+  .barActions {
+    width: 100%;
+  }
+
+  .barPrimary {
+    flex: 1;
+    padding-block: 8px;
+    line-height: 1.25;
+  }
+
+  :global(#blog-root):has(.bar[data-open]) {
+    padding-bottom: 180px;
+  }
+}
