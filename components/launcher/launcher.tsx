@@ -756,6 +756,10 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       [...dialog.querySelectorAll<HTMLInputElement>("input")]
         .find((input) => input.offsetParent)
         ?.focus()
+    // On a touch screen, focusing the search box opens the keyboard over the
+    // results before anyone asked to type; hold focus on the dialog instead.
+    else if (window.matchMedia("(hover: none) and (pointer: coarse)").matches)
+      dialog.focus()
     else inputRef.current?.focus()
     return () => dialog.close()
   }, [opening])
@@ -1383,6 +1387,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
   return createPortal(
     <dialog
       ref={dialogRef}
+      tabIndex={-1}
       className={styles.dialog}
       aria-label={
         view === "message"
