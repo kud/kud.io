@@ -5,10 +5,10 @@ name: Publish newsletter
 # derived files, deploys, waits until the edition is really served, then marks
 # it Published in Notion and mails the teaser. It never writes or edits prose.
 #
-# The editor dispatches it once an edition is Ready. The two schedules are a
-# safety net that lands at 19:30 London on either side of DST (18:30 UTC in
-# summer, 19:30 UTC in winter; the other run of the pair finds nothing Ready
-# and stops after the sync).
+# The editor writes from 18:30 London and sets the edition Ready. The schedules
+# pick it up at 19:30 London on either side of DST (18:30 UTC in summer, 19:30
+# UTC in winter), then twice more an hour apart in case writing ran long; a run
+# that finds nothing Ready stops after the sync.
 
 on:
   workflow_dispatch:
@@ -24,6 +24,8 @@ on:
   schedule:
     - cron: "30 18 * * *"
     - cron: "30 19 * * *"
+    - cron: "30 20 * * *"
+    - cron: "30 21 * * *"
 
 permissions:
   contents: write
