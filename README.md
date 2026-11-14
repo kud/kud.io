@@ -82,6 +82,57 @@ kud.github.io/
 └── README.md              # You are here!
 ```
 
+## 📰 Newsletter
+
+`/newsletter` is a bilingual (French and British English) evening edition. Its
+pipeline has three parts, each with one job:
+
+- **Notion** is the source of truth: one database, one row per edition, the
+  edition written in the page body to the format in `newsletter/FORMAT.md`.
+- **`scripts/sync-newsletter.js`** turns a Ready edition into
+  `content/newsletter/<date>/{fr.md,en.md,edition.json}`. `lib/newsletter/`
+  parses and validates it first (sections, item ids, French and English
+  matching, every link public and safe) and refuses the edition otherwise.
+  Those files are derived: never edit them by hand.
+- **`.github/workflows/newsletter.yml`** publishes: sync, build, commit,
+  deploy, wait until the page is live, mark the edition Published in Notion,
+  then mail the teaser once. It runs when dispatched and as a safety net at
+  19:30 London time.
+
+Statuses in Notion: **Draft** (being written, never published), **Ready**
+(publish it), **Published** (live; set by the workflow, with *Published at*),
+**Failed** (not published; the reason is in *Error*, and setting it back to
+Ready retries).
+
+```bash
+# Every Ready edition, without writing anything
+NOTION_TOKEN=… NOTION_NEWSLETTER_DATABASE_ID=… node scripts/sync-newsletter.js --dry-run
+
+# Check one edition, exit 1 on any error (writes nothing)
+node scripts/sync-newsletter.js --validate-only --date=2026-11-14
+
+# Sync one date and keep a JSON report
+node scripts/sync-newsletter.js --date=2026-11-14 --report=report.json
+```
+
+The script needs Node 22.18 or later: it imports `lib/newsletter/*.ts` through
+Node's own type stripping.
+
+Email is optional and off until configured. Sign-up is double opt-in: the
+subscribe route mails a signed link that expires after three days, and the
+reader is added only when they click it. Each edition is mailed once per
+language, with an unsubscribe link.
+
+| Name                            | Kind            | Where                       | Purpose                                                      |
+| ------------------------------- | --------------- | --------------------------- | ------------------------------------------------------------ |
+| `NOTION_TOKEN`                  | secret          | Actions                     | Read editions, set their status                              |
+| `NOTION_NEWSLETTER_DATABASE_ID` | variable        | Actions                     | The newsletter database                                      |
+| `RESEND_API_KEY`                | secret          | Actions, Vercel             | Email provider                                               |
+| `NEWSLETTER_SIGNING_SECRET`     | secret          | Actions, Vercel             | Signs confirm links (any long random string)                 |
+| `RESEND_SEGMENT_FR`, `_EN`      | variable        | Actions, Vercel             | One Resend segment per language                              |
+| `NEWSLETTER_FROM`               | variable        | Actions, Vercel             | Sender, e.g. `kud.io <newsletter@your-domain>`               |
+| `NEXT_PUBLIC_NEWSLETTER_EMAIL`  | variable (`1`)  | Vercel                      | Shows the sign-up form; set it once the values above exist   |
+
 ## 🤝 Contributing
 
 This is a personal portfolio project, but suggestions and feedback are welcome! Feel free to:
