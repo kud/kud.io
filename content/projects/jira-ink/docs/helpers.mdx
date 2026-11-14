@@ -1,0 +1,115 @@
+---
+title: 🧰 Helpers
+description: The pure functions and types behind the board, row transitions, the priority marker and the invented mock board.
+---
+
+Everything the board computes is exported as a pure function, so a host can build its own view over the same rules, or test against them, without mounting a component.
+
+## 📥 Fetching
+
+| Export                           | What it does                                                                                                                                                                                  |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `boardOf(client, jql, options?)` | One JQL search plus tab derivation, returning a `BoardModel`. `options` is `BoardOptions`: `tabs`, `board`, `limit` (default 200).                                                            |
+| `parentsOf(client, rows)`        | The parents the rows name but the board holds no row for, in one `key in (…)` search. Returns `[]` without calling Jira when nothing is missing. Feed the result to `IssueBoard`'s `parents`. |
+| `toBoardRow(issue)`              | One `JiraIssue` to a `BoardRow`: summaries HTML-unescaped, the container question answered by `isContainerType` from `@kud/jira`.                                                             |
+| `decodeEntities(text)`           | Undoes the HTML entities some Jira paths put in summaries (`&amp;` and friends, plus numeric entities). Unknown named entities are left alone.                                                |
+
+### BoardRow
+
+```ts
+type BoardRow = {
+  key: string;
+  summary: string;
+  status: string;
+  statusId: string;
+  category: StatusCategory; // "new" | "indeterminate" | "done" | "unknown"
+  type: string;
+  container: boolean;
+  priority: string | null;
+  parent?: { key: string; summary: string };
+  assignee: string; // "unassigned" when empty
+  updated: string; // ISO timestamp
+  behind?: string; // host-filled: the row's status lags the evidence
+  pending?: string; // a move in flight: the target tab's label
+};
+```
+
+`behind` is a flag by presence: test `behind !== undefined`, not truthiness. On a task its text is drawn dim as the note (for example `PR #214 open`); on a container it silences the head's note.
+
+## 🗂️ Tabs
+
+| Export                                   | What it does                                                                                                                                     |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `tabsFromConfig(tabs)`                   | Hand-written tabs (each `{ label, statuses }`) plus an Off board tab. `source: "config"`.                                                        |
+| `tabsFromBoard(configuration)`           | A board's columns, statuses matched by id, plus Off board. Returns `null` for a board with no columns. `source: "board"`.                        |
+| `tabsFromCategories()`                   | To do, In progress, Done. `source: "categories"`.                                                                                                |
+| `OFF_BOARD`                              | The value of the derived Off board tab, `"__off_board__"`.                                                                                       |
+| `tabOf(row, tabs)`                       | The tab a row's own status belongs to. Nothing falls out: unclaimed rows go Off board, or to the matching category tab.                                                           |
+| `placementOf(rows, tabs)`                | Where every row is drawn: tasks by their own status, containers in every tab that holds one of their children. Returns `{ tabsOf, childrenOf }`. |
+| `rowsInTab(rows, tabs, tab, placement?)` | The rows one tab draws.                                                                                                                          |
+| `countsFor(rows, tabs, placement?)`      | Per-tab row counts.                                                                                                                              |
+| `visibleTabs(tabs, counts)`              | Every configured tab, plus Off board only when it holds something.                                                                               |
+| `tabLabelOf(to, tabs)`                   | The label of the tab a transition target lands in.                                                                                               |
+
+## 🌳 Grouping and the tree
+
+| Export                                      | What it does                                                                                                                                                                                                                                                           |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `blocksFor(rows, under?, parents?)`         | One tab's rows as drawn: container-headed groups, then fenced groups for parents not in the tab, then rows with no parent under a `No epic` fence, a gap between groups. Leaves from `under` sit directly under their row. A tab with no structure stays a plain list. |
+| `isStop(block)` · `stopsOf(blocks)`         | Issues and leaves are cursor stops; fences and gaps are not.                                                                                                                                                                                                           |
+| `blockIndexOfStop(blocks, n)`               | The line index of the n-th stop.                                                                                                                                                                                                                                       |
+| `treePrefix(blocks, i)`                     | The tree glyphs left of a stop: `├─ `, `└─ ` for the last sibling, and a `│  ` stem at depth two.                                                                                                                                                                      |
+| `subtreeOf(blocks, i)`                      | A row and everything under it: its leaves, its children and theirs.                                                                                                                                                                                                    |
+| `fenceLabel(block)`                         | A fence's label: the parent's key, then its summary (`SHOP-350 Storefront refresh`).                                                                                                                                                                                   |
+| `fenceNote(parent, tabs, { viewer, mine })` | What follows a fence: the parent's tab label on your own board, otherwise its owner as `@First`. Empty until the parent is known.                                                                                                                                      |
+| `firstName(assignee)`                       | `@` and a capitalised first name, from a display name or an email's local part; `""` when there is no clean name.                                                                                                                                                      |
+| `headNote(row, tabs, tab, placement)`       | The dim note after an epic's summary: its own status when it differs from the tab, then the largest group of its children elsewhere (`+3 in QA`).                                                                                                                      |
+| `withBehind(rows, tabs)`                    | Marks epics that lag their children: parked Off board with a child started, or still open with every child done. Never overwrites a host's `behind`.                                                                                                                   |
+
+The `Block`, `Stop` and `Placement` types are exported alongside.
+
+## 🔀 Moving a row
+
+Three pure steps over a `BoardModel` for showing a status change as it happens:
+
+```ts
+let next = pendingRow(model, "SHOP-412", transition.to); // row shows "⋯ → QA"
+// …after Jira accepts the transition:
+next = transitionRow(next, "SHOP-412", transition.to); // status rewritten, row changes tab
+// …or, if Jira rejects it:
+next = settleRow(next, "SHOP-412"); // marker cleared, nothing moved
+```
+
+`to` is a `TransitionTarget`, `{ id?, name, category? }`, which is the `to` of a `Transition` from `transitionsOf` (see [Issue detail](/projects/jira-ink/docs/issue-detail)). Nothing is optimistic: the row only moves once you call `transitionRow`.
+
+## 🏷️ Row glyphs
+
+| Export                   | What it does                                                                                                                                                       |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `priorityRank(name)`     | `"highest"`, `"high"`, `"medium"`, `"low"`, `"lowest"` or `"none"`, matched case-insensitively against the default scheme, common renames and the P0 to P5 ladder. |
+| `priorityMarker(name)`   | `{ marker, color?, rank }`: one column wide, coloured from ink-ui's `priorityColors`.                                                                              |
+| `relativeAge(iso, now?)` | A compact age: `45s`, `3m`, `2h`, `5d`, `3w`. `""` for an unparseable date.                                                                                        |
+| `pillVariantFor(row)`    | The type pill's variant: `group` for containers, `error` for bugs, `info` for stories, `muted` otherwise.                                                          |
+
+How `priorityRank` reads names:
+
+| Rank      | Names                              | Text glyph |
+| --------- | ---------------------------------- | ---------- |
+| `highest` | highest, blocker, critical, P0, P1 | `⇈`        |
+| `high`    | high, urgent, major, P2            | `↑`        |
+| `medium`  | medium, normal, P3                 | `=`        |
+| `low`     | low, minor, P4                     | `↓`        |
+| `lowest`  | lowest, trivial, P5                | `⇊`        |
+| `none`    | anything else, or no priority      | blank      |
+
+In Nerd Font icon mode (ink-ui's `getIconMode()`), `priorityMarker` draws Material Design chevrons instead of the text arrows.
+
+## 🎭 Mock board
+
+`mockBoard()` returns a `BoardModel` over `MOCK_BOARD_ROWS` with category tabs. Every key and name in it is invented. It covers an epic in a tab with a child under it, a parent not in the tab, an orphan, all three categories and both ends of priority, so it is a ready fixture for screenshots and tests:
+
+```tsx
+import { IssueBoard, mockBoard } from "@kud/jira-ink";
+
+<IssueBoard model={mockBoard()} viewer="Ada Okafor" {...rest} />;
+```

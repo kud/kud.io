@@ -1,0 +1,108 @@
+---
+title: "📚 Library"
+description: "Using the @kud/segment core client and the @kud/segment-ink components from your own code."
+---
+
+## 🧩 `@kud/segment`
+
+The core has no runtime dependencies and knows nothing about terminals: it is a
+thin wrapper around the global `fetch`, ESM only, for Node 22 and later.
+
+```sh
+npm install @kud/segment
+```
+
+```ts
+import { SegmentClient, resolveConfig } from "@kud/segment"
+
+const { token, region, timeout } = resolveConfig()
+const client = new SegmentClient(token!, { region, timeout })
+
+const sources = await client.listSources()
+const destinations = await client.listSourceDestinations(sources[0].id)
+```
+
+### Client options
+
+`new SegmentClient(token, options)` takes:
+
+| Option    | Default | Meaning                                                        |
+| --------- | ------- | -------------------------------------------------------------- |
+| `region`  | `"us"`  | `"us"` or `"eu"`                                               |
+| `timeout` | `15000` | Per-request timeout in milliseconds                            |
+| `retries` | `0`     | Retries on 5xx or network errors, with exponential back-off from 500 ms |
+
+### Methods
+
+| Method                                   | Returns                  |
+| ---------------------------------------- | ------------------------ |
+| `listSources()`                          | `Source[]`               |
+| `getSource(id)`                          | `Source`                 |
+| `listSourceDestinations(sourceId)`       | `Destination[]`          |
+| `listDestinations()`                     | `Destination[]`          |
+| `getDestination(id)`                     | `Destination`            |
+| `createDestination(input)`               | `Destination`            |
+| `updateDestination(id, patch)`           | `Destination`            |
+| `deleteDestination(id)`                  | nothing                  |
+| `listDestinationMetadata()`              | `DestinationMetadata[]`  |
+| `getDestinationMetadata(metadataId)`     | `DestinationMetadata`    |
+
+The list methods for sources, destinations and catalog entries follow the API's
+pagination for you, 200 items a page, and return everything. `createDestination`
+takes `sourceId`, `metadataId`, `settings`, and optionally `name` and `enabled`;
+`updateDestination` takes any of `name`, `enabled` and `settings`.
+
+A failed response throws an `HttpError` carrying `status` and the raw `body`
+alongside a readable message.
+
+### Config helpers
+
+The same resolution the CLI uses is exported, so another surface on top of the
+core behaves identically:
+
+- `resolveConfig(overrides?)` returns `{ token, region, timeout }` using the
+  order described in [Configuration](/projects/segment/docs/configuration).
+- `loadConfig()` and `saveConfig(partial)` read and merge-write the config file.
+- `normalizeRegion(value)` validates a region string.
+- `CONFIG_FILE` is the resolved path to the config file.
+
+## 🖼️ `@kud/segment-ink`
+
+Ink components for the same data, used by the CLI's interactive browser. `ink`
+(7 or later) and `react` (19 or later) are peer dependencies.
+
+```sh
+npm install @kud/segment-ink
+```
+
+`SegmentBody` is the whole browser as one component. It never calls `render()`
+or touches the terminal itself; it reports quitting through a required `onExit`
+and leaves the lifecycle to you:
+
+```tsx
+import { render } from "ink"
+import { SegmentClient, resolveConfig } from "@kud/segment"
+import { SegmentBody } from "@kud/segment-ink"
+
+const { token, region, timeout } = resolveConfig()
+const client = new SegmentClient(token!, { region, timeout })
+
+const { unmount, waitUntilExit } = render(
+  <SegmentBody client={client} onExit={() => unmount()} />,
+  { alternateScreen: true },
+)
+
+await waitUntilExit()
+```
+
+It also accepts an optional `screen` (`"sources"` or `"catalog"`) and
+`sourceId`, to open straight onto a tab or a single source.
+
+The building blocks are exported too, and they are presentation-only (props in,
+no fetching, no input handling), so they fit into a dashboard that owns its own
+input loop: `SourceList`, `DestinationList`, `CatalogList` and `OptionTable`,
+plus the helpers `windowSlice`, `fit`, `listRows` and `enabledBadge`.
+
+For demos and tests, `createMockClient()` returns a fixture client that
+satisfies the `SegmentLike` shape `SegmentBody` expects, with no network calls.
+It is what `segment --mock` runs on.

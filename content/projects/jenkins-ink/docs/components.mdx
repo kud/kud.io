@@ -1,0 +1,157 @@
+---
+title: 🧩 Components
+description: The controlled presentation components, their props, and the helpers they share.
+---
+
+Every component here is controlled. None of them fetches data or calls `useInput`; you hold the selection index and the key handling in your own shell and pass the result down. All of them are exported from the package root.
+
+```tsx
+import {
+  BuildList,
+  JobList,
+  BuildInfo,
+  LogView,
+  StageTree,
+  StatusBar,
+  Overlay,
+  Panel,
+} from "@kud/jenkins-ink";
+```
+
+## BuildList
+
+A windowed, selectable list of builds. Each row reads `#num  STATE  dur  age`, coloured by the build's status token from `@kud/jenkins`.
+
+| Prop        | Type             | Default       | Notes                                   |
+| ----------- | ---------------- | ------------- | --------------------------------------- |
+| `builds`    | `JenkinsBuild[]` | required      | The full list; windowing happens inside |
+| `selected`  | `number`         | required      | Index of the highlighted row            |
+| `rows`      | `number`         | required      | How many rows are visible at once       |
+| `emptyText` | `string`         | `"No builds"` | Shown, muted, when `builds` is empty    |
+
+```tsx
+<BuildList builds={builds} selected={selected} rows={20} />
+```
+
+## JobList
+
+A windowed, selectable list of jobs, each prefixed with a status dot. The row shows the job's `fullName`, falling back to `name`; a job carrying an `error` is shown in red with `— ERROR` after it.
+
+| Prop        | Type           | Default     | Notes                              |
+| ----------- | -------------- | ----------- | ---------------------------------- |
+| `jobs`      | `JenkinsJob[]` | required    | The full list                      |
+| `selected`  | `number`       | required    | Index of the highlighted row       |
+| `rows`      | `number`       | required    | Visible rows                       |
+| `emptyText` | `string`       | `"No jobs"` | Shown, muted, when `jobs` is empty |
+
+The dot comes from `jobDot`, which is exported on its own (see [Helpers](#helpers)).
+
+## BuildInfo
+
+One line of build metadata: `#num  STATE  duration  started-at`, with the start time from the build's `timestamp` formatted by `toLocaleString()`.
+
+| Prop    | Type                   | Notes                                        |
+| ------- | ---------------------- | -------------------------------------------- |
+| `build` | `JenkinsBuild \| null` | `null` renders a muted `Select a build` line |
+
+Because it accepts `null`, you can pass the current selection straight through: `<BuildInfo build={builds[selected] ?? null} />`.
+
+## LogView
+
+A deliberately plain log viewport. It lays out exactly the lines it is given; windowing, scrolling, search and colouring are yours. Lines may contain ANSI escapes, and long lines are truncated rather than wrapped into their neighbours.
+
+| Prop    | Type       | Notes                                    |
+| ------- | ---------- | ---------------------------------------- |
+| `lines` | `string[]` | Already-windowed lines; may contain ANSI |
+| `width` | `number`   | Optional fixed width for the viewport    |
+
+## StageTree
+
+A pipeline drill-down across three levels: stages, then a stage's steps, then a step's log. You own the current level, the selection index and every fetch; the component renders only the level it is told to.
+
+| Prop       | Type                           | Notes                                     |
+| ---------- | ------------------------------ | ----------------------------------------- |
+| `level`    | `"stages" \| "steps" \| "log"` | Which level to render                     |
+| `stages`   | `StageNode[]`                  | Shown at the `stages` level               |
+| `steps`    | `StageNode[]`                  | Shown at the `steps` level                |
+| `stepLog`  | `string[]`                     | Rendered through `LogView` at `log` level |
+| `selected` | `number`                       | Highlighted row at the list levels        |
+| `rows`     | `number`                       | Visible rows at the list levels           |
+
+`StageNode` is exported as a type: `{ id?: string; name?: string; status?: string; durationMillis?: number }`. Its `status` is a Jenkins workflow status string, coloured as follows:
+
+| Status                   | Colour token |
+| ------------------------ | ------------ |
+| `SUCCESS`                | success      |
+| `FAILED`, `FAILURE`      | error        |
+| `UNSTABLE`               | accent       |
+| `IN_PROGRESS`, `RUNNING` | warning      |
+| `ABORTED`                | info         |
+| anything else            | muted        |
+
+Empty lists read `No stages (not a pipeline build?)` and `No steps`; a node without a name reads `(unnamed)`.
+
+## Chrome
+
+Two layout pieces used by the assembled grid, exported for hosts that want the same look.
+
+**`StatusBar`** is a full-width, round-bordered bar three rows high, with context on the left and state on the right. Props: `left: string`, `right: string` (omitted when empty), `width: number`.
+
+**`Overlay`** replaces the body with a centred, round-bordered box and a bold title, used for help and artefact lists. Props: `title: string`, `color: string`, `width: number`, `height: number`, `children`. The inner box is capped at 100 columns.
+
+`Panel` is re-exported unchanged from `@kud/ink-ui`, so a host can frame these components without a second import.
+
+## Helpers
+
+**`windowSlice(items, selected, rows)`** returns `{ items, offset }`: the visible slice of a list that keeps `selected` in view, centred when it can be, plus the index of the first visible item. Every list component above scrolls through it, so a custom list built on it will scroll identically. It holds no state.
+
+**`statusColor`** maps each `BuildStatusToken` from `@kud/jenkins` to an `@kud/ink-ui` colour:
+
+| Token      | Colour  |
+| ---------- | ------- |
+| `running`  | warning |
+| `success`  | success |
+| `failure`  | error   |
+| `unstable` | accent  |
+| `aborted`  | info    |
+| `unknown`  | muted   |
+
+**`jobDot(color?)`** turns a job's Jenkins `color` field into `{ glyph, color }`:
+
+| Jenkins colour             | Glyph | Colour  |
+| -------------------------- | ----- | ------- |
+| none (a folder)            | `▸`   | muted   |
+| contains `anime` (running) | `◐`   | info    |
+| starts with `blue`         | `●`   | success |
+| starts with `red`          | `●`   | error   |
+| starts with `yellow`       | `●`   | warning |
+| starts with `aborted`      | `●`   | muted   |
+| anything else              | `○`   | muted   |
+
+## Putting them together
+
+The selection lives in your shell, so the lists drop beside any other pane:
+
+```tsx
+import { useState } from "react";
+import { Box, useInput } from "ink";
+import { BuildList, BuildInfo } from "@kud/jenkins-ink";
+
+const Builds = ({ builds }) => {
+  const [selected, setSelected] = useState(0);
+
+  useInput((_input, key) => {
+    if (key.upArrow) setSelected((s) => Math.max(0, s - 1));
+    if (key.downArrow) setSelected((s) => Math.min(builds.length - 1, s + 1));
+  });
+
+  return (
+    <Box flexDirection="column">
+      <BuildInfo build={builds[selected] ?? null} />
+      <BuildList builds={builds} selected={selected} rows={20} />
+    </Box>
+  );
+};
+```
+
+If you would rather have the whole navigable grid than assemble it yourself, see [JenkinsBody](/projects/jenkins-ink/docs/jenkins-body).

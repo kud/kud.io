@@ -1,0 +1,119 @@
+---
+title: 🖥️ JenkinsBody
+description: The assembled jobs, builds and logs grid as one embeddable component, with its props, host contract and key bindings.
+---
+
+`JenkinsBody` is the full interactive Jenkins explorer: a jobs list, a builds list, build metadata and a log pane, with filters, log search, a pipeline stage drill-down, artefacts and build actions. Unlike the [smaller components](/projects/jenkins-ink/docs/components), it owns its own state, fetches through the `JenkinsClient` you hand it, and binds keys.
+
+It does not own the terminal. It never calls `render()`, never enters the alternate screen and never binds `q`, so a host can mount it as the whole app or as one component inside something larger. It sizes itself from the terminal and follows resizes.
+
+## Props
+
+| Prop             | Type                                                   | Notes                                                                                |
+| ---------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| `client`         | `JenkinsClient`                                        | From `@kud/jenkins`; every fetch and action goes through it                          |
+| `jobSearchLimit` | `number`                                               | Cap for the incremental job search; `0` is unlimited. Changeable at runtime with `L` |
+| `buildsLimit`    | `number`                                               | How many builds to list per job                                                      |
+| `preselectJob`   | `string \| null`                                       | Job name to select once the job list loads                                           |
+| `jobsFilter`     | `string[] \| null`                                     | Load only these jobs instead of searching every job                                  |
+| `singleJobMode`  | `boolean`                                              | Hide the jobs pane and work on `jobsFilter[0]` alone                                 |
+| `onExit`         | `() => void`                                           | Required. Quitting belongs to the host; the body never binds `q`                     |
+| `onFocus`        | `(state: { layer: boolean; typing: boolean }) => void` | Optional. Reports the body's own layers so the host's keys can stand down            |
+
+## The host contract
+
+The host owns quitting and its own back key. `onFocus` tells it when to step aside:
+
+- `typing` is `true` while a text mode (log search, job limit) or a list filter's field is open. A `q` typed then is a letter, not a quit.
+- `layer` is `true` while an overlay, a confirmation or a kept list filter is up. `esc` then belongs to the body, which closes that layer, so the host's back must not fire.
+
+A minimal full-screen host, using `useAppKeys` from `@kud/ink-ui`:
+
+```tsx
+import { useState } from "react";
+import { render, useApp } from "ink";
+import { useAppKeys } from "@kud/ink-ui";
+import { JenkinsBody } from "@kud/jenkins-ink";
+
+const Root = ({ client }) => {
+  const { exit } = useApp();
+  const [focus, setFocus] = useState({ layer: false, typing: false });
+  useAppKeys({
+    isActive: !focus.typing,
+    onQuit: exit,
+    onBack: () => focus.layer,
+  });
+  return (
+    <JenkinsBody
+      client={client}
+      jobSearchLimit={0}
+      buildsLimit={15}
+      preselectJob={null}
+      jobsFilter={null}
+      singleJobMode={false}
+      onExit={exit}
+      onFocus={setFocus}
+    />
+  );
+};
+
+render(<Root client={client} />, { exitOnCtrlC: false });
+```
+
+When the body unmounts, it aborts any log stream still in flight.
+
+## Keys
+
+### Panes
+
+| Key              | Action                                                            |
+| ---------------- | ----------------------------------------------------------------- |
+| `←` `→`          | Move focus between panes                                          |
+| `1` `2` `3`      | Focus jobs, builds, logs (`1` is unavailable in single-job mode)  |
+| `↑` `↓`, `k` `j` | Move the selection in the focused list                            |
+| `/`              | Filter the focused list; in the logs pane, search the log instead |
+| `esc`            | Clear a kept list filter, or close the open layer                 |
+
+A list filter narrows live as you type; `↵` keeps it and hands the letters back as hotkeys, `/` edits it again, and `esc` clears it.
+
+### Global
+
+| Key | Action                                                                    |
+| --- | ------------------------------------------------------------------------- |
+| `↵` | Open the action menu for the selected build (not in the logs pane)        |
+| `x` | Stop the selected build, if it is running (asks `y` to confirm)           |
+| `T` | Trigger the selected job (asks `y` to confirm)                            |
+| `r` | Refresh jobs and builds                                                   |
+| `t` | Toggle auto-refresh every 10 seconds                                      |
+| `f` | Toggle following the log                                                  |
+| `S` | Flip the log order between newest first (the default) and oldest first    |
+| `a` | Open the artefacts list                                                   |
+| `p` | Open the pipeline stage drill-down                                        |
+| `F` | Open the build status filter                                              |
+| `L` | Set the job search limit (`0` for unlimited)                              |
+| `o` | Show folders only (not in single-job mode)                                |
+| `c` | Clear every list filter and the log search                                |
+| `w` | Open the selected build (builds pane) or job in the browser; in the logs pane, toggle word wrap |
+| `?` | Help                                                                      |
+
+Any key other than `y` at a confirmation cancels it.
+
+### Logs pane
+
+| Key              | Action                                          |
+| ---------------- | ----------------------------------------------- |
+| `↑` `↓`, `k` `j` | Scroll one line                                 |
+| `PgUp` `PgDn`    | Scroll one page                                 |
+| `g` / `G`        | Jump to the top / bottom                        |
+| `e` / `W` / `i`  | Jump to the next `ERROR` / `WARN` / `INFO` line |
+| `n` / `N`        | Next / previous search match                    |
+| `m` / `M`        | Toggle a bookmark / go to the next one          |
+| `l`              | Toggle line numbers                             |
+
+Word wrap is on by default: lines are split to the pane width before Ink renders them, which keeps wide characters from breaking the layout.
+
+### Overlays
+
+- **Status filter** (`F`): `space` toggles a status, `a` selects all, `n` selects none, `esc` or `↵` closes. The statuses are `SUCCESS`, `FAILURE`, `UNSTABLE`, `ABORTED` and `RUNNING`; builds in any other state are always shown.
+- **Artefacts** (`a`): `↵` downloads the selected artefact into the current working directory under its own file name.
+- **Stages** (`p`): `↵` drills from stages to steps to a step's log, `esc` steps back up a level, and `PgUp` `PgDn` scroll the step log.

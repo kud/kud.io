@@ -1,0 +1,175 @@
+---
+title: 📋 Board
+description: IssueBoard and IssueBoardSkeleton, the tabbed list of issues with epic grouping, search, host leaves and a cursor the host can read.
+---
+
+`IssueBoard` draws a tabbed list of issues: rows grouped under their epic, and on each row a priority glyph, the key, a type pill, the summary and how long ago it was last updated. A `/` search takes plain words or JQL. The host owns the frame, the fetch and the quit key; the board owns only the layers it pushes itself, its search box and its legend.
+
+## 🚀 Mounting it
+
+```tsx
+import { boardOf, IssueBoard } from "@kud/jira-ink"
+
+const model = await boardOf(client, "assignee = currentUser() ORDER BY updated DESC", {
+  board: config.defaultBoard, // optional: its columns become the tabs
+  tabs: config.tabs, // optional: hand-written tabs win over the board
+})
+
+<IssueBoard
+  model={model}
+  viewer="you"
+  loadedAt={Date.now()}
+  scope={{ kind: "mine" }}
+  showingAll={false}
+  width={100}
+  height={30}
+  onOpen={openIssue}
+  onToggleAll={toggleAll}
+  onRefresh={refresh}
+  onSearch={runSearch}
+  onClearSearch={clearSearch}
+  frame={({ facts, hints, body }) => (
+    <MyFrame facts={facts} hints={hints}>{body}</MyFrame>
+  )}
+/>
+```
+
+`boardOf(client, jql, options)` runs **one** JQL search (200 issues by default, `limit` to change it) and buckets the results client-side. The board's columns supply the tab vocabulary, never the population.
+
+## 🗂️ Where the tabs come from
+
+In order of precedence:
+
+1. **`tabs`** in `BoardOptions`: hand-written tabs, statuses matched by id or name.
+2. **`board`**: a board id whose column configuration becomes the tabs, statuses matched **by id**, never by name.
+3. **Status categories**: To do, In progress and Done, which every status on every instance carries, so they need no configuration.
+
+Statuses no configured tab claims go to a derived **Off board** tab, drawn only when it holds something. A board with no columns falls through to categories. On first draw the board selects the In progress category tab when the tabs come from categories, and the first tab otherwise.
+
+**Containers are placed by their children.** A task sits in the tab of its own status; an epic heads a group in each tab that holds one of its children, and its own status shows only as a dim note (`In progress`, `+3 in QA`). An epic with no children on the board sits Off board.
+
+## ⚙️ IssueBoard props
+
+| Prop            | Type                                        | Notes                                                                                                                                      |
+| --------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `model`         | `BoardModel`                                | `{ rows, tabs }`, as `boardOf` returns it.                                                                                                 |
+| `viewer`        | `string`                                    | Who the `mine` scope belongs to; drawn as `@viewer` in the title.                                                                          |
+| `loadedAt`      | `number`                                    | Epoch milliseconds of the fetch; drawn as `updated 2m ago`, refreshed every 30 seconds.                                                    |
+| `scope`         | `BoardScope`                                | `{ kind: "mine" }`, or `{ kind: "search", query, mode }` with `mode` `"jql"` or `"text"`.                                                  |
+| `showingAll`    | `boolean`                                   | Whether closed work beyond the recent window is loaded; changes the `a` hint and the empty-tab message.                                    |
+| `width`         | `number`                                    | Columns available.                                                                                                                         |
+| `height`        | `number`                                    | Rows available; the row list is windowed around the cursor to fit.                                                                         |
+| `onOpen`        | `(key: string) => void`                     | `Enter` on an issue row.                                                                                                                   |
+| `onToggleAll`   | `() => void`                                | `a`.                                                                                                                                       |
+| `onRefresh`     | `() => void`                                | `r`.                                                                                                                                       |
+| `onSearch`      | `(query: string, mode: SearchMode) => void` | Submitting a non-empty search.                                                                                                             |
+| `onClearSearch` | `() => void`                                | `x` while a search is active, or submitting an empty search.                                                                               |
+| `frame`         | `BoardFrame` (optional)                     | The host draws the chrome; without it the board draws a plain column.                                                                      |
+| `flash`         | `Flash` (optional)                          | A transient message under the search box.                                                                                                  |
+| `searchError`   | `string` (optional, deprecated)             | Use `flash` with `tone: "error"`. `flash` wins when both are set.                                                                          |
+| `parents`       | `BoardRow[]` (optional)                     | Parents the board holds no row for, so a fence can say where its parent is. See `parentsOf` in [Helpers](/projects/jira-ink/docs/helpers). |
+| `leaves`        | `BoardLeaves` (optional)                    | Non-Jira items the host hangs under rows.                                                                                                  |
+| `onInputFocus`  | `(focused: boolean) => void` (optional)     | Fires as the search box opens and closes, so the host can stand its app keys down while `q` must type.                                     |
+| `onCursor`      | `(at: CursorAt or null) => void` (optional) | Where the cursor is, with its subtree. `null` while a tab is empty.                                                                        |
+| `isActive`      | `boolean` (optional, default `true`)        | When `false`, the board renders but binds no keys; cursor, tab, search and scroll are kept.                                                |
+
+### ⌨️ Keys
+
+| Key               | Action                                                               |
+| ----------------- | -------------------------------------------------------------------- |
+| `↑` `↓` (`k` `j`) | Move the cursor                                                      |
+| `←` `→`           | Switch tab                                                           |
+| `Enter`           | Open the issue (`onOpen`) or the leaf (`leaves.onOpen`)              |
+| `/`               | Open the search box, prefilled with the current query when searching |
+| `?`               | Toggle the legend                                                    |
+| `a`               | `onToggleAll`                                                        |
+| `r`               | `onRefresh`                                                          |
+| `x`               | `onClearSearch`, only while a search is active                       |
+
+Inside the search box, `Enter` runs it, `Tab` flips between JQL and plain words, and `Esc` cancels. Inside the legend, `?` or `Esc` closes it. No `q` and no back key: those belong to the host.
+
+### 🔍 Search
+
+The search mode starts on auto: a draft that looks like JQL runs as JQL, anything else as plain words. While you type plain words, the loaded rows are narrowed locally by key and summary, and the title says `N of M`. The server search on `Enter` only ever widens that. The active query stays drawn under the title with a `JQL` or `plain` label.
+
+### 💬 Flash
+
+```ts
+type Flash = { text: string; tone: "error" | "info" };
+```
+
+`tone: "error"` draws the text with a `✗` prefix in the error colour; `tone: "info"` draws it plainly, muted.
+
+## 🖼️ The frame
+
+```ts
+type BoardFrame = (parts: BoardFrameParts) => ReactNode;
+
+type BoardFrameParts = {
+  facts: string; // "12 items · @you · updated 2m ago"
+  title: {
+    count: number | null;
+    user?: string;
+    scope?: string;
+    status: { text: string; tone: "quiet" | "busy" };
+  };
+  hints: Hint[]; // the view's own; the host adds its `q quit` tail
+  body: ReactNode;
+};
+```
+
+`facts` is one string for a host with a plain title row; `title` gives the same facts as segments for a host drawing a richer one. `count` is `null` only while unknown, in the skeleton.
+
+## 💀 IssueBoardSkeleton
+
+Draw it through the same `frame` before the first load lands, so nothing jumps when the rows arrive:
+
+```tsx
+{
+  model ? (
+    <IssueBoard model={model} frame={frame} {...rest} />
+  ) : (
+    <IssueBoardSkeleton
+      tabs={tabsFromCategories()}
+      width={100}
+      height={30}
+      frame={frame}
+    />
+  );
+}
+```
+
+| Prop     | Type                    | Notes                                         |
+| -------- | ----------------------- | --------------------------------------------- |
+| `tabs`   | `BoardTabs`             | The real tab labels, drawn with `(–)` counts. |
+| `width`  | `number`                |                                               |
+| `height` | `number`                |                                               |
+| `frame`  | `BoardFrame` (optional) | The same render prop `IssueBoard` takes.      |
+
+It draws six placeholder rows on the board's own cell grid, passes a `title.count` of `null` and a `busy` status reading `reading the board`, and binds no keys and no hints. Use it for the first load only; a refetch keeps the stale board on screen.
+
+## 🌿 Leaves
+
+A leaf is something the host hangs under a row that is not a Jira issue, such as a task's pull requests. The board draws the cursor marker and the tree prefix and hands the rest of the line to your renderer. The leaf type `L` never reaches the board's own logic.
+
+```ts
+type BoardLeaves<L> = {
+  under: (row: BoardRow) => L[];
+  keyOf: (leaf: L) => string;
+  render: (leaf: L, ctx: { active: boolean; width: number }) => ReactNode;
+  onOpen: (leaf: L) => void;
+};
+```
+
+`width` is the columns left after the marker and tree prefix, so the renderer can truncate honestly. Leaves sit directly under their row, before its children, and are cursor stops like issues.
+
+## 🎯 Reading the cursor
+
+The board owns the cursor and holds it **by key**, not index, so a refetch or late-arriving leaves cannot slide a different row under it. Each tab remembers its own position. A host that binds keys of its own (a move menu, an action over everything under a row) reads it through `onCursor`:
+
+```ts
+type CursorAt<L> = {
+  stop: Stop<L>; // the issue or leaf under the cursor
+  subtree: Block<L>[]; // the stop and everything hanging off it
+};
+```

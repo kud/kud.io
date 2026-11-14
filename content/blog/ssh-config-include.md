@@ -37,8 +37,8 @@ For that, I found that since `ssh 7.3p1` (type `ssh -V` to know yours) , it is p
 
 From [the doc](https://man7.org/linux/man-pages/man5/ssh_config.5.html):
 
-> **Include  
-**Include the specified configuration file(s). Multiple path‐  
+> **Include**  
+Include the specified configuration file(s). Multiple path‐  
 names may be specified and each pathname may contain glob(7)  
 wildcards and, for user configurations, shell-like ‘~’ refer‐  
 ences to user home directories. Files without absolute paths  

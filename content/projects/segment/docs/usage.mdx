@@ -1,0 +1,128 @@
+---
+title: "⚡ Usage"
+description: "The full segment command reference: sources, destinations, the catalog and local config."
+---
+
+The binary is `segment`. With a subcommand it prints a table or a detail view
+and exits; with no subcommand at all it opens the
+[interactive browser](/projects/segment/docs/interactive).
+
+## 🌐 Global options
+
+These work on every subcommand:
+
+| Option             | What it does                                    |
+| ------------------ | ----------------------------------------------- |
+| `--token <token>`  | Segment Public API token for this call          |
+| `--region <us\|eu>` | API region for this call                        |
+| `--json`           | Print raw JSON and nothing else (no colour)     |
+| `--timeout <ms>`   | Request timeout in milliseconds                 |
+| `--pretty`         | Force colour output                             |
+| `--no-color`       | Disable colour output                           |
+
+Token and region can also come from the environment or the config file; see
+[Configuration](/projects/segment/docs/configuration) for the order.
+
+Any failure prints `error: <message>` to stderr and exits with status 1, so the
+commands behave in scripts.
+
+## 🔍 Sources
+
+| Command                                   | Description                              |
+| ----------------------------------------- | ---------------------------------------- |
+| `segment sources list`                    | List every source in the workspace       |
+| `segment sources get <sourceId>`          | Show one source in detail                |
+| `segment sources destinations <sourceId>` | List the destinations connected to it    |
+
+`sources list` shows ID, name, slug, enabled state and the first write key (with
+a `(+N)` count when there are more). `sources get` adds the workspace, every
+write key and the source type.
+
+## 🔌 Destinations
+
+| Command                                                                 | Description                                   |
+| ----------------------------------------------------------------------- | --------------------------------------------- |
+| `segment destinations list [--source <sourceId>]`                       | List destinations, optionally for one source  |
+| `segment destinations get <destinationId>`                              | Show one destination and its settings         |
+| `segment destinations create <sourceId> <metadataId> --settings <json>` | Connect a new destination to a source         |
+| `segment destinations update <destinationId>`                           | Change a destination's name, settings or state |
+| `segment destinations delete <destinationId> --yes`                     | Delete a destination                          |
+
+Extra flags:
+
+- `create` requires `--settings <json>` and also takes `--name <name>` and
+  `--disabled` (create it switched off).
+- `update` takes `--settings <json>`, `--name <name>`, and either `--enable` or
+  `--disable`. Passing both is an error.
+- `--settings` must be a valid JSON object, or the command stops before calling
+  the API.
+
+### 🛑 Deleting safely
+
+`destinations delete` always fetches the destination first. Without `--yes` it
+prints the destination's details and refuses, so a dry run is simply the same
+command without the flag:
+
+```sh
+segment destinations delete dst_example
+segment destinations delete dst_example --yes
+```
+
+## 📚 Catalog
+
+| Command                                          | Description                                   |
+| ------------------------------------------------ | --------------------------------------------- |
+| `segment catalog destinations [--search <term>]` | List destination types in the catalog         |
+| `segment catalog destination <metadataId>`       | Show a destination type and its settings schema |
+
+`--search` filters on a case-insensitive substring of the name or slug. The
+detail view ends with a settings-schema table (name, type, whether it is
+required, description), which is exactly what you need before `destinations
+create`.
+
+## ⚙️ Config
+
+| Command                                           | Description                                           |
+| ------------------------------------------------- | ----------------------------------------------------- |
+| `segment config set [--token <t>] [--region <r>]` | Write the token and/or region to the config file      |
+| `segment config show`                             | Print the resolved configuration, token masked        |
+
+`config set` needs at least one of the two flags.
+
+## 🎯 Worked example: connecting a destination
+
+Check what a source already has:
+
+```sh
+segment sources destinations src_example
+```
+
+Find the destination type you want, then read its settings schema:
+
+```sh
+segment catalog destinations --search analytics
+segment catalog destination <metadataId>
+```
+
+Create it with the required settings, starting disabled if you want to review it
+first:
+
+```sh
+segment destinations create src_example <metadataId> --settings '{"apiKey":"YOUR_API_KEY"}' --disabled
+```
+
+Then switch it on:
+
+```sh
+segment destinations update dst_example --enable
+```
+
+## 🤖 Scripting
+
+`--json` turns every command into plain JSON on stdout, ready for `jq`:
+
+```sh
+segment sources list --json | jq -r '.[] | select(.enabled) | .slug'
+```
+
+A deletion with `--json` prints `{ "deleted": "<destinationId>" }`.

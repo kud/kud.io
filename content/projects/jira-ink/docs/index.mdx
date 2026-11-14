@@ -1,0 +1,29 @@
+---
+title: 👋 Introduction
+description: Ink components that draw Jira issues in the terminal, the issue detail screen and the tabbed board, for any host that owns its own keys and data.
+---
+
+**jira-ink** is a small set of [Ink](https://github.com/vadimdemedes/ink) components for reading Jira in a terminal: the issue detail screen and the tabbed board. It renders; the host fetches, navigates and quits. Data comes through a [`@kud/jira`](https://github.com/kud/jira) client, so the same screens drop into a full-screen CLI or a single pane inside a larger dashboard.
+
+## 🧭 How it fits together
+
+Every screen comes in two halves:
+
+- a **lib** half that fetches and shapes (`issueDetailOf`, `boardOf`), turning raw Jira issues into plain, string-only shapes (`IssueDetail`, `BoardModel`);
+- a **component** half that draws that shape and never touches a raw `JiraIssue`.
+
+A host that fakes the fetch, for a test or a screenshot, therefore gets a screen it can predict. And a host that fetched the issue another way can build the shape by hand.
+
+## ⌨️ Who owns which keys
+
+The components never bind `q`, and never a back key of their own. The host mounts `useAppKeys` from [`@kud/ink-ui`](https://github.com/kud/ink-ui) once, and its peel calls the view's `onBack` or `onExit` when the view is the topmost layer. A view binds only the keys for layers it pushes itself, such as the board's search box and legend. Mount a view without that host wiring and nothing will take you back.
+
+## 🖼️ Frames
+
+Each view can draw its own plain title and footer, or hand its parts to a `frame` render prop so the host places them inside its own chrome: a bordered pane, a title row, hints pinned at the foot. The skeleton and the loading states use the same `frame`, so the border never moves between the first load and the finished screen.
+
+## What's here
+
+- [🎫 Issue detail](/projects/jira-ink/docs/issue-detail): `IssueBody` and `IssueDetailView`, their props and keys, and the `IssueDetail` shape
+- [📋 Board](/projects/jira-ink/docs/board): `IssueBoard` and `IssueBoardSkeleton`, tabs, search, leaves and the cursor
+- [🧰 Helpers](/projects/jira-ink/docs/helpers): the pure functions behind the board, row transitions, the priority marker and the mock board

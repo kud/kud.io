@@ -20,6 +20,8 @@ It reads each vendor's own status page, worst first, and tells you what they hav
 
 ![One service in detail: open incidents, affected components, earlier ones](https://raw.githubusercontent.com/kud/incidents-cli/HEAD/assets/detail.png)
 
+▶ [Watch the 47-second demo](https://github.com/kud/incidents-cli/blob/HEAD/assets/demo.mp4), recorded from the real CLI on invented services. Music: "[Nightfall](https://freemusicarchive.org/music/beat-mekanik/euphoria/nightfall-4/)" by Beat Mekanik, CC BY 4.0.
+
 ## Install
 
 ```sh

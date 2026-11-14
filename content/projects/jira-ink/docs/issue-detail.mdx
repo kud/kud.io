@@ -1,0 +1,159 @@
+---
+title: 🎫 Issue detail
+description: The issue screen in its two shapes, the self-fetching IssueBody and the controlled IssueDetailView, with their props, keys and data shape.
+---
+
+The issue screen shows one ticket: status, assignee and parent as rows, a dim facts line, then the whole ticket as **one scrolling Markdown document**: the description, the comments under their own heading, and the attachments as an appendix.
+
+It comes in two shapes that draw the same thing:
+
+| Export            | Use it when                                                                                           |
+| ----------------- | ----------------------------------------------------------------------------------------------------- |
+| `IssueBody`       | You have a client and an issue key and want the screen to fetch itself. Read-only.                    |
+| `IssueDetailView` | You already hold an `IssueDetail` and own the prompts behind the write verbs (move, comment, assign). |
+
+## 📥 IssueBody
+
+Hand it a client and a key; it fetches through `issueDetailOf`, shows a loading screen, an error message or the issue, and reads its own scroll keys until `onExit`.
+
+```tsx
+import { createJiraClient, loadConfig } from "@kud/jira"
+import { IssueBody } from "@kud/jira-ink"
+
+const loaded = loadConfig()
+if ("missing" in loaded) throw new Error(loaded.missing.join(", "))
+const client = createJiraClient(loaded.config)
+
+<IssueBody
+  client={client}
+  baseUrl={loaded.config.baseUrl}
+  issueKey="SHOP-1234"
+  onExit={() => setScreen("list")}
+/>
+```
+
+### Props
+
+| Prop       | Type                                | Notes                                                                                                                        |
+| ---------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `client`   | `JiraClient`                        | From `@kud/jira`.                                                                                                            |
+| `baseUrl`  | `string`                            | Instance URL; used only to build the browser link.                                                                           |
+| `issueKey` | `string`                            | The issue to fetch, e.g. `SHOP-1234`.                                                                                        |
+| `summary`  | `string` (optional)                 | The summary the host already knows, so a frame carries a title before the fetch answers. The fetched one wins once it lands. |
+| `onExit`   | `() => void`                        | Called by the host's back key; becomes the view's `onBack`.                                                                  |
+| `width`    | `number` (optional)                 | Overrides the terminal width. Defaults to the terminal's columns, tracked on resize.                                         |
+| `height`   | `number` (optional)                 | Overrides the terminal height. Defaults to the terminal's rows.                                                              |
+| `frame`    | same as `IssueDetailView`'s `frame` | The host's chrome; see below.                                                                                                |
+| `theme`    | `MarkdownTheme` (optional)          | Colours for the Markdown body.                                                                                               |
+
+`IssueBody` wires only one verb: `o` opens the issue in the browser (`open` on macOS, `start` on Windows, `xdg-open` elsewhere). Move, comment and assign are not wired, so the hint row does not offer them.
+
+While loading, a framed `IssueBody` already calls `frame` with the key as `title`, the `summary` you passed as `subtitle`, and a single `⌫ back` hint, so the panel stays the same through loading, error and ready.
+
+## 🧩 IssueDetailView
+
+The controlled screen. You fetch (with `issueDetailOf` or by hand) and pass the result in.
+
+```tsx
+import { IssueDetailView, issueDetailOf } from "@kud/jira-ink"
+
+const issue = await issueDetailOf(client, baseUrl, "SHOP-1234")
+
+<IssueDetailView
+  issue={issue}
+  width={80}
+  height={30}
+  onBack={back}
+  onTransition={transition}
+  onComment={comment}
+  onAssign={assign}
+  onOpenBrowser={open}
+/>
+```
+
+### Props
+
+| Prop            | Type                       | Notes                                                                           |
+| --------------- | -------------------------- | ------------------------------------------------------------------------------- |
+| `issue`         | `IssueDetail`              | The view-ready issue.                                                           |
+| `width`         | `number`                   | Columns available to the body.                                                  |
+| `height`        | `number`                   | Rows available to the body, the host's frame excluded.                          |
+| `onBack`        | `() => void`               | Called by the host's back key, never bound by the view itself.                  |
+| `onTransition`  | `() => void` (optional)    | Bound to `t`, hinted as `move`.                                                 |
+| `onComment`     | `() => void` (optional)    | Bound to `c`, hinted as `comment`.                                              |
+| `onAssign`      | `() => void` (optional)    | Bound to `a`, hinted as `assign`.                                               |
+| `onOpenBrowser` | `() => void` (optional)    | Bound to `o`, hinted as `browser`.                                              |
+| `frame`         | render prop (optional)     | Hand the screen to the host's chrome in parts.                                  |
+| `theme`         | `MarkdownTheme` (optional) | From `@kud/ink-markdown`; lets links, code and headings use the host's palette. |
+
+**A verb whose handler is absent is neither bound nor hinted.** A read-only host gets the same screen minus the keys it cannot honour, rather than a hint row promising `t` and `c` that do nothing.
+
+### Keys
+
+| Key        | Action                      |
+| ---------- | --------------------------- |
+| `↓` or `j` | Scroll down                 |
+| `↑` or `k` | Scroll up                   |
+| `t`        | `onTransition`, when given  |
+| `c`        | `onComment`, when given     |
+| `a`        | `onAssign`, when given      |
+| `o`        | `onOpenBrowser`, when given |
+
+The `⌫ back` hint is always shown, but the back key belongs to the host. `Esc`, `←` and `→` are not bound.
+
+### The frame
+
+```ts
+frame?: (parts: {
+  title: string
+  subtitle: string
+  hints: Hint[]
+  body: ReactNode
+}) => ReactNode
+```
+
+When `frame` is given, the view draws neither its own title line nor its footer, so nothing appears twice. `title` is `KEY · Type` (the type moves up beside the key and leaves the rows), `subtitle` is the summary, and `hints` is the view's hint row. Without `frame`, the view draws `KEY summary` in bold on top and a `FooterHints` row at the foot.
+
+### What the body shows
+
+- **Rows:** `status` as a badge, `type` (unframed only), `assignee` (muted when `unassigned`), and `parent` with its key and a summary cut to 60 characters.
+- **Facts line:** the priority glyph and name when it is away from the default rank, then `by <reporter>`, the labels, the comment count and the attachment count.
+- **Document:** the description, then `## Comments (N)`, then `## Attachments (N)`, each attachment listed with its MIME type, size, where it came from, and the `jira attachment read KEY filename` command that fetches it.
+
+## 📐 The IssueDetail shape
+
+`issueDetailOf(client, baseUrl, key)` returns this, with every field already a string and Atlassian Document Format already converted to Markdown:
+
+```ts
+type IssueDetail = {
+  key: string;
+  summary: string;
+  status: string;
+  type: string;
+  assignee: string; // "unassigned" when empty
+  reporter: string;
+  labels: string[];
+  priority?: string; // Jira's name, verbatim; absent when the field is off
+  parent?: { key: string; summary: string };
+  url: string; // `${baseUrl}/browse/${key}`
+  description: string; // Markdown
+  comments: { id: string; author: string; created: string; body: string }[];
+  attachments: LocatedAttachment[]; // from @kud/jira
+};
+```
+
+Missing status, type or reporter come through as `—`.
+
+## 🔀 Transitions
+
+`transitionsOf(client, key)` lists the moves available from the issue's current status, for a host building its own move prompt behind `onTransition`:
+
+```ts
+type Transition = {
+  id: string;
+  name: string;
+  to: { id?: string; name: string; category?: StatusCategory };
+};
+```
+
+`to` carries the whole target status, id and category included, because status names are per instance and a host deciding which board tab the move lands in should not match on a name. Pair it with the board's [row transition helpers](/projects/jira-ink/docs/helpers).

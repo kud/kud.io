@@ -1,0 +1,74 @@
+---
+title: "⚙️ Configuration"
+description: "Where segment finds its token, region and timeout, and where the config file lives."
+---
+
+## 🔑 The token
+
+`segment` needs a Segment **Public API token**, not the legacy Config API token.
+They are separate credentials, and a Config API token fails with a 401 or 403 on
+every call.
+
+Create one in the Segment dashboard under **Settings → Access Management →
+Tokens → +Create Token**, and choose **Public API token**.
+
+## 🪜 Precedence
+
+Each value is resolved independently, first match wins:
+
+| Setting | 1. Flag           | 2. Environment       | 3. Config file | Default |
+| ------- | ----------------- | -------------------- | -------------- | ------- |
+| Token   | `--token`         | `SEGMENT_API_TOKEN`  | `token`        | none    |
+| Region  | `--region`        | `SEGMENT_API_REGION` | `region`       | `us`    |
+| Timeout | `--timeout <ms>`  | `SEGMENT_TIMEOUT`    | not stored     | 15000 ms |
+
+An empty environment variable counts as unset. The region accepts `us` or `eu`
+in any case; anything else is an error.
+
+The [interactive browser](/projects/segment/docs/interactive) reads the
+environment and the config file only, so give it its token with
+`SEGMENT_API_TOKEN` or `segment config set` rather than `--token`.
+
+## 🌍 Regions
+
+| Region | API host                          |
+| ------ | --------------------------------- |
+| `us`   | `https://api.segmentapis.com`     |
+| `eu`   | `https://eu1.api.segmentapis.com` |
+
+## 🗂️ The config file
+
+Location: `$XDG_CONFIG_HOME/segment-cli/config.json`, falling back to
+`~/.config/segment-cli/config.json`.
+
+Write it with `config set`, which merges into whatever is already there:
+
+```sh
+segment config set --token tkn_example --region eu
+```
+
+The file is plain JSON:
+
+```json
+{
+  "token": "tkn_example",
+  "region": "eu"
+}
+```
+
+Check what is actually in effect, with the token masked to its first and last
+four characters:
+
+```sh
+segment config show
+```
+
+## 🚨 Errors worth knowing
+
+| Status | Message ends with                                          | Usually means                    |
+| ------ | ---------------------------------------------------------- | -------------------------------- |
+| 401    | `check SEGMENT_API_TOKEN`                                  | Wrong or legacy token            |
+| 403    | `the token may lack the required workspace permission`     | Token scope is too narrow        |
+
+With no token found anywhere, commands stop with a message listing the three
+ways to supply one.

@@ -49,7 +49,7 @@ A few things I only learned by trying:
 
 - **The bar left of the prompt is the agent's colour**, not a theme role. It lives in the main config, `agent.build.color`, and accepts a theme role name like `primary`, so it follows the theme.
 
-- `markdownCodeBlock`** is declared but never drawn with**, at least in 1.18.33. I changed it twice before reading the renderer and finding nothing uses it.
+- `markdownCodeBlock` **is declared but never drawn with**, at least in 1.18.33. I changed it twice before reading the renderer and finding nothing uses it.
 
 ## The part the docs don't cover: TUI plugins
 
@@ -71,7 +71,7 @@ Other people found this before me: searching npm for `opencode tui plugin` turns
 
 Two traps before writing one:
 
-- **Keep it out of **`~/.config/opencode/plugin/`** and **`plugins/`**.** opencode loads every file in those folders as a server plugin, and hands your TUI plugin the wrong API. I keep mine in `~/.config/opencode/tui/`.
+- **Keep it out of** `~/.config/opencode/plugin/` **and** `plugins/`**.** opencode loads every file in those folders as a server plugin, and hands your TUI plugin the wrong API. I keep mine in `~/.config/opencode/tui/`.
 
 - **Skip JSX.** The components are SolidJS, and a local file gets no JSX transform. `createComponent` from `solid-js` and `createElement` from `@opentui/solid` do the same job in plain TypeScript, and opencode provides both modules to plugins, so there's nothing to install.
 
@@ -125,7 +125,7 @@ Two details in there:
 
 - **The version is pinned.** A TUI plugin runs inside opencode with everything opencode can reach. This one was 11 days old with a single maintainer, so I take new releases on purpose rather than on launch.
 
-- `plugin_enabled`** switches off opencode's own sidebar blocks.** Each block is an internal plugin with a name, and these two repeated what the statusline or the prompt already showed. Without them, no figure appears twice.
+- `plugin_enabled` **switches off opencode's own sidebar blocks.** Each block is an internal plugin with a name, and these two repeated what the statusline or the prompt already showed. Without them, no figure appears twice.
 
 ## One row under the prompt
 

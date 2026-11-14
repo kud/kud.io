@@ -1,0 +1,52 @@
+---
+title: "🖥️ Interactive browser"
+description: "The full-screen browser that opens when you run segment with no subcommand, and the keys that drive it."
+---
+
+Run `segment` on its own and it opens a full-screen browser over your sources,
+their destinations and the destination catalog. It reads data only: creating,
+updating and deleting stay with the [subcommands](/projects/segment/docs/usage).
+
+```sh
+segment
+```
+
+## 🚪 Opening it
+
+| Invocation                 | What happens                                          |
+| -------------------------- | ----------------------------------------------------- |
+| `segment`                  | Opens on the Sources tab                              |
+| `segment --screen catalog` | Opens straight on the Catalog tab                     |
+| `segment --screen list`    | Prints the screen names (`sources`, `catalog`) and exits |
+| `segment --mock`           | Browses built-in fixture data, no token needed        |
+
+`--mock` is the quickest way to look around before you have a token. An unknown
+`--screen` value is an error that lists the valid ones.
+
+The browser needs an interactive terminal. If stdin is not a TTY (a pipe, CI) it
+refuses and points you at a subcommand such as `segment sources list --json`.
+Without a token it prints how to create one and exits before taking over the
+screen.
+
+## 🗺️ Layout
+
+At the top level there are two tabs, **Sources** and **Catalog**. Opening a
+source takes you one level down, where the tabs become **Destinations** and
+**Info** for that source. Selecting a destination or a catalog entry opens a
+detail panel beneath the list rather than a new screen. A timestamp shows when
+the data was last read, so a reload that finds nothing new still visibly did
+something.
+
+## ⌨️ Keys
+
+| Key            | Where                 | Action                                  |
+| -------------- | --------------------- | --------------------------------------- |
+| `↑` / `↓`      | Any list              | Move the cursor                         |
+| `tab` / `shift+tab` | Anywhere         | Next / previous tab                     |
+| `↵` or `→`     | Sources               | Open the selected source                |
+| `↵`            | Catalog               | Show the type's settings schema         |
+| `↵`            | Destinations          | Show the destination's detail           |
+| `←` or `esc`   | Inside a source       | Back to the source list                 |
+| `←`, `esc` or `↵` | Detail panel       | Close the panel                         |
+| `r`            | Lists and error screen | Reload the current view                |
+| `q`            | Anywhere              | Quit                                    |

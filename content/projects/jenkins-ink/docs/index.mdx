@@ -1,0 +1,11 @@
+---
+title: 👋 Introduction
+description: Controlled Ink components for rendering Jenkins builds, jobs, pipeline stages and logs in the terminal.
+---
+
+jenkins-ink is the Ink rendering layer for Jenkins: a set of presentation-only components fed by the types and formatters in `@kud/jenkins`, plus one assembled, embeddable interactive grid. The small components take props and render; your app owns selection, key handling and data loading, so a build list can sit in a full-screen CLI or in one pane of a larger dashboard.
+
+## What's here
+
+- [🧩 Components](/projects/jenkins-ink/docs/components) — `BuildList`, `JobList`, `BuildInfo`, `LogView`, `StageTree`, the chrome pieces and the small helpers they share
+- [🖥️ JenkinsBody](/projects/jenkins-ink/docs/jenkins-body) — the full jobs, builds and logs grid as one component, its props and the keys it binds

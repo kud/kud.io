@@ -1,0 +1,24 @@
+---
+title: "👋 Introduction"
+description: "Segment Public API tooling: a surface-agnostic core, Ink components and a thin CLI for sources, destinations and the catalog."
+---
+
+**segment** is a small family of packages for the Segment Public API. A
+zero-dependency core client does the talking, and the `segment` command sits on
+top of it so you can inspect sources, wire up destinations and read the
+destination catalog without opening the dashboard.
+
+Three packages live in the monorepo, and the flow only goes one way:
+
+| Package            | Role                                                                  |
+| ------------------ | --------------------------------------------------------------------- |
+| `@kud/segment`     | The core: `SegmentClient`, config resolution and types. No terminal.  |
+| `@kud/segment-ink` | Ink components for sources, destinations and the catalog.            |
+| `@kud/segment-cli` | The `segment` binary, a thin layer over the other two.                |
+
+## 🧭 What's here
+
+- [⚡ Usage](/projects/segment/docs/usage): every `segment` subcommand, its flags, and a worked destination set-up
+- [🖥️ Interactive browser](/projects/segment/docs/interactive): the full-screen browser you get from a bare `segment`, and its keys
+- [⚙️ Configuration](/projects/segment/docs/configuration): tokens, regions, the config file and how they are resolved
+- [📚 Library](/projects/segment/docs/library): using `@kud/segment` and `@kud/segment-ink` from your own code
