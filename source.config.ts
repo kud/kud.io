@@ -10,6 +10,7 @@ import {
   remarkStripHeadingEmoji,
   remarkStripReadmeHero,
 } from "./lib/remark-readme"
+import { rehypeVideo } from "./lib/rehype-video"
 
 // Per-project documentation is synced from each repo's markdown into
 // content/projects/<slug>/... at build time; Fumadocs indexes it for the
@@ -65,6 +66,9 @@ export default defineConfig({
     rehypePlugins: (plugins) => [
       [rehypeRaw, { passThrough: MDX_NODES }],
       ...plugins,
+      // A README video (a bare GitHub attachment URL on its own line) plays
+      // here as it does on GitHub; lib/rehype-video.ts has the shapes.
+      rehypeVideo,
     ],
   },
 })

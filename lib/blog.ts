@@ -15,6 +15,7 @@ import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
 import { unified } from "unified"
 import { imageDimensions } from "@/lib/image-dimensions"
+import { hastText, rehypeVideo, type HastNode } from "@/lib/rehype-video"
 import type { Components } from "hast-util-to-jsx-runtime"
 
 // Posts are plain Markdown, not MDX: Notion cannot emit JSX, so an MDX compiler
@@ -236,19 +237,6 @@ const diffTransformer = {
 // <pre><code> path before Shiki sees the tree, keeping the original source on a data
 // attribute so the React layer can render it client-side and still offer a
 // readable source fallback when JavaScript or Mermaid itself fails.
-type HastNode = {
-  type?: string
-  tagName?: string
-  value?: string
-  properties?: Record<string, unknown>
-  children?: HastNode[]
-}
-
-const hastText = (node: HastNode): string =>
-  node.type === "text"
-    ? (node.value ?? "")
-    : (node.children ?? []).map(hastText).join("")
-
 const rehypeBlogMermaid = () => (tree: HastNode) => {
   const walk = (node: HastNode) => {
     for (const child of node.children ?? []) {
@@ -275,93 +263,6 @@ const rehypeBlogMermaid = () => (tree: HastNode) => {
   walk(tree)
 }
 
-// A Notion video arrives as a paragraph led by one link to an .mp4 or .webm
-// (scripts/sync-notion.js), because Markdown has no video syntax and posts
-// carry no raw HTML. Its caption, if any, follows on the next line of the same
-// paragraph, links intact. Swap that paragraph for a <video>, wrapped in a
-// <figure> with a visible <figcaption> when there is a caption, since it is
-// where a credit goes. A link inside running prose stays a link.
-//
-// Posts synced before the caption moved out of the link text still carry it
-// there; anything but the "Video" fallback is read as the caption.
-const VIDEO_HREF = /\.(mp4|webm)(\?.*)?$/i
-const VIDEO_FALLBACK = "Video"
-
-const trimStart = (nodes: HastNode[]): HastNode[] => {
-  const [first, ...rest] = nodes
-  if (first?.type !== "text") return nodes
-  const value = first.value?.replace(/^\s+/, "") ?? ""
-  return value ? [{ ...first, value }, ...rest] : trimStart(rest)
-}
-
-const rehypeBlogVideo = () => (tree: HastNode) => {
-  const walk = (node: HastNode) => {
-    const children = node.children ?? []
-    for (const [index, child] of children.entries()) {
-      if (child.type === "element" && child.tagName === "p") {
-        const [link, ...after] = trimStart(child.children ?? [])
-        const href = link?.properties?.href
-        if (
-          link?.type === "element" &&
-          link.tagName === "a" &&
-          typeof href === "string" &&
-          VIDEO_HREF.test(href) &&
-          // The caption starts on its own line; a link followed by prose on
-          // the same line is a sentence that happens to start with a link.
-          (after.length === 0 ||
-            (after[0].type === "text" &&
-              /^[ \t]*\n/.test(after[0].value ?? "")))
-        ) {
-          const label = hastText(link).trim()
-          const trailing = trimStart(after)
-          const caption: HastNode[] = trailing.length
-            ? trailing
-            : label && label !== VIDEO_FALLBACK
-              ? [{ type: "text", value: label }]
-              : []
-          const video: HastNode = {
-            type: "element",
-            tagName: "video",
-            properties: {
-              src: href,
-              "aria-label":
-                caption.map(hastText).join("").trim() ||
-                label ||
-                VIDEO_FALLBACK,
-              controls: true,
-              muted: true,
-              loop: true,
-              autoPlay: true,
-              playsInline: true,
-              preload: "metadata",
-            },
-            children: [],
-          }
-          children[index] = caption.length
-            ? {
-                type: "element",
-                tagName: "figure",
-                properties: { "data-video": "" },
-                children: [
-                  video,
-                  {
-                    type: "element",
-                    tagName: "figcaption",
-                    properties: {},
-                    children: caption,
-                  },
-                ],
-              }
-            : video
-          continue
-        }
-      }
-      walk(child)
-    }
-  }
-  walk(tree)
-}
-
 // Element overrides live with the route, not here: this is the pipeline, and
 // how a blockquote looks is a design decision. Callers pass their own map.
 export const renderMarkdown = async (
@@ -374,7 +275,7 @@ export const renderMarkdown = async (
     .use(remarkRehype)
     .use(rehypeSlug)
     .use(rehypeBlogMermaid)
-    .use(rehypeBlogVideo)
+    .use(rehypeVideo)
     .use(rehypeShiki, {
       theme: SHIKI_THEME,
       transformers: [diffTransformer],

@@ -15,6 +15,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test": "node --test \"lib/**/*.test.ts\" \"scripts/**/*.test.js\"",
     "sync": "node scripts/sync-content.js && node scripts/sync-notion.js",
     "check": "node scripts/check-repos.js",
     "share-images": "node scripts/share-images.js",

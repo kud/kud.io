@@ -651,6 +651,35 @@ a.badge:focus-visible {
   border: 1px solid var(--border);
 }
 
+/* A README video (lib/rehype-video.ts) sits like a screenshot, framed the
+ * same way. Captioned, it is a figure: the figure takes the margin, and the
+ * caption reads as the blog's does, in this page's muted ink. */
+.readme :global(video) {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: min(75svh, 720px);
+  margin: 24px 0;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.readme :global(figure[data-video]) {
+  margin: 24px 0;
+}
+
+.readme :global(figure[data-video] video) {
+  margin: 0;
+}
+
+.readme :global(figure[data-video] figcaption) {
+  max-width: 70ch;
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
 .readme :global(h3) {
   font-size: 18px;
   font-weight: 700;
