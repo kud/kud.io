@@ -12,6 +12,26 @@ properly, the day's essential stories told in dense factual paragraphs, a few
 discoveries worth a click, and a friendly word to close. It explains as much
 as it reports: a reader who missed the last six months should still follow.
 
+## Editorial line
+
+The newsletter has a stance, and says so. It chooses and frames its subjects
+from a progressive perspective: social and ecological justice, the public
+interest, and structural explanations rather than purely individual ones.
+That stance shapes what we look at; it never shapes what we report as true.
+
+- **Facts first.** Primary sources, attribution and cross-reading apply to
+  every subject, including the ones we care about most. A claim we would like
+  to be true gets the same scrutiny as one we would not.
+- **No propaganda, from any side.** No partisan talking points, no slogans,
+  no unverified claims, no selective quotation that changes a meaning.
+- **Interested sources are claims to check.** Government and state-media
+  statements, lobbying material, corporate communications and campaign
+  material are reported as what someone says, attributed, and checked;
+  never used as a source of fact on their own.
+- **Ideas, with substance.** Essays and ideas pieces earn their place by
+  argument and evidence. No self-help, no inspirational fluff, nothing
+  sentimental for its own sake.
+
 ## Principles
 
 - **Selection over exhaustiveness.** A handful of subjects told properly beat
