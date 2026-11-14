@@ -1,0 +1,173 @@
+name: Publish newsletter
+
+# Notion holds the edition; this workflow only carries a Ready one to the live
+# site. It syncs and validates (scripts/sync-newsletter.js), commits the
+# derived files, deploys, waits until the edition is really served, then marks
+# it Published in Notion and mails the teaser. It never writes or edits prose.
+#
+# The editor dispatches it once an edition is Ready. The two schedules are a
+# safety net that lands at 19:30 London on either side of DST (18:30 UTC in
+# summer, 19:30 UTC in winter; the other run of the pair finds nothing Ready
+# and stops after the sync).
+
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        description: Edition date (YYYY-MM-DD). Empty = every Ready edition.
+        type: string
+        default: ""
+  schedule:
+    - cron: "30 18 * * *"
+    - cron: "30 19 * * *"
+
+permissions:
+  contents: write
+  # To start deploy.yml: a GITHUB_TOKEN push triggers no workflow.
+  actions: write
+
+concurrency:
+  group: newsletter
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+      NOTION_NEWSLETTER_DATABASE_ID: ${{ vars.NOTION_NEWSLETTER_DATABASE_ID }}
+      DATE_INPUT: ${{ inputs.date }}
+      REPORT: ${{ runner.temp }}/newsletter-report.json
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      # The sync script imports TypeScript from lib/ through Node's own type
+      # stripping, which needs Node 22.18 or later; lts/* is newer.
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Writes the files, the report, and this step's outputs: `publish`
+      # (valid editions not yet Published) and `invalid`, space-separated dates.
+      - name: Sync from Notion
+        id: plan
+        run: |
+          node scripts/sync-newsletter.js ${DATE_INPUT:+"--date=$DATE_INPUT"} "--report=$REPORT"
+          if [ -n "$(git status --porcelain -- content/newsletter)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # An invalid edition never reaches the site; the editor sees why in
+      # Notion's Error property and the job fails at the end.
+      - name: Mark invalid editions failed
+        if: steps.plan.outputs.invalid != ''
+        run: |
+          for date in ${{ steps.plan.outputs.invalid }}; do
+            node scripts/sync-newsletter.js --mark=failed "--date=$date" "--from-report=$REPORT"
+          done
+
+      # Nothing outside content/newsletter/ may ride along in the commit.
+      - name: Guard the working tree
+        if: steps.plan.outputs.changed == 'true'
+        run: |
+          stray=$(git status --porcelain --untracked-files=all | grep -v ' content/newsletter/' || true)
+          if [ -n "$stray" ]; then
+            echo "Files changed outside content/newsletter/:"
+            echo "$stray"
+            exit 1
+          fi
+
+      - name: Build website
+        if: steps.plan.outputs.changed == 'true'
+        run: npm run build
+
+      - name: Commit and push
+        if: steps.plan.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/newsletter
+          git commit -m "📝 docs(newsletter): publish ${{ steps.plan.outputs.publish }}"
+          # Humans, agents and the hourly refresh push here too: rebase onto
+          # whatever landed since checkout, then retry.
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+            git push && break
+            [ "$attempt" = 5 ] && exit 1
+            sleep $((attempt * 5))
+          done
+
+      # Also when nothing changed: a Ready edition already committed by a run
+      # whose deploy failed still needs one.
+      - name: Deploy
+        if: steps.plan.outputs.publish != ''
+        run: gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Live means the production page answers 200 and names this edition. The
+      # deploy builds on a fresh runner, so allow it twenty minutes.
+      - name: Wait for the editions to go live
+        if: steps.plan.outputs.publish != ''
+        run: |
+          for date in ${{ steps.plan.outputs.publish }}; do
+            deadline=$(( $(date +%s) + 1200 ))
+            until curl -fsS --max-time 20 "https://kud.io/newsletter/$date" 2>/dev/null | grep -q "data-edition=\"$date\""; do
+              if [ "$(date +%s)" -ge "$deadline" ]; then
+                echo "$date is not live after 20 minutes"
+                exit 1
+              fi
+              sleep 30
+            done
+            echo "$date is live"
+          done
+
+      - name: Mark published
+        if: steps.plan.outputs.publish != ''
+        run: |
+          for date in ${{ steps.plan.outputs.publish }}; do
+            node scripts/sync-newsletter.js --mark=published "--date=$date"
+          done
+
+      # After Published, never before: the script refuses any other status and
+      # skips a language already sent, so a re-run never mails twice. Without
+      # the email secrets it says so and succeeds.
+      - name: Send the teaser
+        if: steps.plan.outputs.publish != ''
+        run: |
+          for date in ${{ steps.plan.outputs.publish }}; do
+            node scripts/sync-newsletter.js --notify "--date=$date"
+          done
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_SEGMENT_FR: ${{ vars.RESEND_SEGMENT_FR }}
+          RESEND_SEGMENT_EN: ${{ vars.RESEND_SEGMENT_EN }}
+          NEWSLETTER_FROM: ${{ vars.NEWSLETTER_FROM }}
+          NEWSLETTER_SIGNING_SECRET: ${{ secrets.NEWSLETTER_SIGNING_SECRET }}
+
+      # Any failure before Published lands on the edition in Notion. The mark
+      # refuses to touch an edition already Published, so a failed email
+      # leaves a live edition alone.
+      - name: Record the failure in Notion
+        if: failure() && steps.plan.outputs.publish != ''
+        run: |
+          for date in ${{ steps.plan.outputs.publish }}; do
+            node scripts/sync-newsletter.js --mark=failed "--date=$date" \
+              "--error=Publication failed in run ${GITHUB_RUN_ID}; see the Actions log." || true
+          done
+
+      - name: Fail on invalid editions
+        if: steps.plan.outputs.invalid != ''
+        run: |
+          echo "Invalid editions: ${{ steps.plan.outputs.invalid }} (reasons in Notion's Error property)"
+          exit 1
