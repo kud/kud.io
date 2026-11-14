@@ -1,18 +1,20 @@
 ---
-date: 2026-11-13
-lang: en
-title: "Newsletter · 2026-11-13"
+title: "Newsletter · 13 November 2026"
+date: "2026-11-13"
+lang: "en"
+lede: "Tonight, we look at the water bill in Port-Lune, an imaginary city where it has risen by a third in two years, and at what it says about the cost of ageing networks. After the round-up of the news, invented from start to finish for this mock-up, we explain what a review clause is. And one find worth a click."
+generatedAt: "2026-11-13T17:40:00.000Z"
+readingMinutes: 3
+wordCount: 607
 ---
 
-## Tonight
-
-Tonight, we look at the water bill in Port-Lune, an imaginary city where it has risen by a third in two years, and at what it says about the cost of ageing networks. After the round-up of the news, invented from start to finish for this mock-up, we explain what a review clause is. And two finds worth a click.
+Tonight, we look at the water bill in Port-Lune, an imaginary city where it has risen by a third in two years, and at what it says about the cost of ageing networks. After the round-up of the news, invented from start to finish for this mock-up, we explain what a review clause is. And one find worth a click.
 
 ## Today’s focus
 
 ### 01 · Why water costs more in Port-Lune {#item-01}
 
-In the imaginary city of Port-Lune, the water bill has risen by a third in two years, according to the annual report of the régie, the public body that runs the network. Three causes overlap: pipes laid sixty years ago, a falling water table and a variable-rate loan.
+In the imaginary city of Port-Lune, the water bill has risen by a third in two years, according to the annual report of the utility, the public body that runs the network. Three causes overlap: pipes laid sixty years ago, a falling water table and a variable-rate loan.
 
 **The idea**
 
@@ -20,12 +22,9 @@ A public utility charges for water at cost: when leaks grow, it has to produce m
 
 **Key dates**
 
-- **1966** — The network goes in\
-  The city lays most of its cast-iron pipes, designed to last fifty years.
-- **2019** — The loan\
-  The utility borrows at a variable rate to rebuild its treatment works.
-- **2024** — The first rise\
-  The price per cubic metre goes up 14%, the first increase in ten years.
+- **1966** — The network goes in. The city lays most of its cast-iron pipes, designed to last fifty years.
+- **2019** — The loan. The utility borrows at a variable rate to rebuild its treatment works.
+- **2024** — The first rise. The price per cubic metre goes up 14%, the first increase in ten years.
 
 **Did you know?**
 
@@ -80,6 +79,12 @@ Sources:
 
 - [Text of the accord (fictional)](https://example.net/kestrel-accord.pdf)
 
+## Analysis
+
+Port-Lune and Valmoreau settle the same question in two shapes: who pays to maintain what already exists. The [utility](https://example.org/port-lune/rapport-regie-2025) passes its leaks on to the customer; Valmoreau chooses to [remove spaces](https://example.org/valmoreau/deliberation-2026-118) rather than enlarge the harbour.
+
+What follows depends on timetables: Port-Lune’s January vote, and Kestrel’s [review clause](https://example.net/kestrel-accord.pdf), which shows an agreement can plan for its own reopening.
+
 ## Technology & science
 
 ### 06 · SPACE · An invented comet will pass close to Earth {#item-06}
@@ -89,6 +94,11 @@ A fictional observatory says comet C/2026 X9 will pass 0.3 astronomical units fr
 Sources:
 
 - [Observatory circular (fictional)](https://observatory.example.net/circulars/2026-77)
+
+## Timeline
+
+- 2026-11-11 — The [Kestrel accord](https://example.net/kestrel-accord.pdf) is signed.
+- 2026-11-12 — Valmoreau’s [council votes](https://example.org/valmoreau/deliberation-2026-118).
 
 ## In brief
 
@@ -109,7 +119,5 @@ Sources:
 ### 08 · Port-Lune’s water budget {#item-08}
 
 Port-Lune’s council is due to publish the agenda for its January session on Friday.
-
-## To close
 
 Have a good evening, and see you tomorrow for the next edition.

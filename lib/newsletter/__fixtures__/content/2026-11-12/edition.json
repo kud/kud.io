@@ -1,15 +1,23 @@
 {
   "schema": 1,
   "date": "2026-11-12",
-  "generatedAt": "2026-11-12T18:20:00Z",
-  "publishedAt": "2026-11-12T19:05:00Z",
+  "generatedAt": "2026-11-12T17:40:00.000Z",
+  "publishedAt": "2026-11-12T18:05:00.000Z",
   "languages": [
     "fr",
     "en"
   ],
   "lede": {
-    "fr": "Édition d’exemple, sujets inventés.",
-    "en": "Example edition, invented subjects."
+    "fr": "Ce soir, une grève fictive sur les traversiers de l’île Brune et une rivière inventée qui gagne quarante capteurs. Et une trouvaille pour regarder le ciel autrement.",
+    "en": "Tonight, a fictional ferry strike on Isle Brune and an invented river gaining forty sensors. And one find to look at the sky differently."
+  },
+  "readingMinutes": {
+    "fr": 1,
+    "en": 1
+  },
+  "wordCount": {
+    "fr": 111,
+    "en": 93
   },
   "narrative": {
     "overview": {
@@ -18,16 +26,6 @@
     },
     "analysis": null,
     "closing": null
-  },
-  "timeline": [],
-  "inBrief": [],
-  "readingMinutes": {
-    "fr": 1,
-    "en": 1
-  },
-  "wordCount": {
-    "fr": 111,
-    "en": 93
   },
   "sections": [
     {
@@ -146,5 +144,7 @@
         }
       ]
     }
-  ]
+  ],
+  "timeline": [],
+  "inBrief": []
 }

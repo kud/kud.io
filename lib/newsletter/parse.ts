@@ -192,6 +192,18 @@ const renderBody = (
 }
 
 // One item's blocks, from just after its heading to just before the next one.
+
+// Blocks are paragraphs apart, except a run of list items of one kind, which
+// stays one tight list: a blank line between bullets would make Markdown read
+// them as a loose list and wrap every entry in its own paragraph.
+const LIST_TYPES = new Set(["bulleted_list_item", "numbered_list_item"])
+const joinBody = (parts: string[], types: string[]) =>
+  parts.reduce(
+    (text, part, i) =>
+      i === 0 ? part : text + (LIST_TYPES.has(types[i]) && types[i] === types[i - 1] ? "\n" : "\n\n") + part,
+    "",
+  )
+
 const parseItem = (
   id: string,
   title: string,
@@ -202,6 +214,7 @@ const parseItem = (
   out: Collector,
 ): RenditionItem => {
   const body: string[] = []
+  const bodyTypes: string[] = []
   const sources: Source[] = []
   let summary = ""
   let inSources = false
@@ -253,7 +266,10 @@ const parseItem = (
     }
 
     const rendered = renderBody(block, where, out)
-    if (rendered) body.push(rendered)
+    if (rendered) {
+      body.push(rendered)
+      bodyTypes.push(block.type)
+    }
     if (!summary && block.type === "paragraph" && text.trim()) summary = text.trim()
   }
 
@@ -270,7 +286,7 @@ const parseItem = (
   }
 
   const { kicker, title: plainTitle } = splitItemTitle(title)
-  return { id, kicker, title: plainTitle, section, summary, body: body.join("\n\n"), sources }
+  return { id, kicker, title: plainTitle, section, summary, body: joinBody(body, bodyTypes), sources }
 }
 
 type Block = { blocks: NotionBlock[]; where: string }

@@ -1,10 +1,12 @@
 ---
-date: 2026-11-12
-lang: fr
-title: "Newsletter · 2026-11-12"
+title: "Newsletter · 12 novembre 2026"
+date: "2026-11-12"
+lang: "fr"
+lede: "Ce soir, une grève fictive sur les traversiers de l’île Brune et une rivière inventée qui gagne quarante capteurs. Et une trouvaille pour regarder le ciel autrement."
+generatedAt: "2026-11-12T17:40:00.000Z"
+readingMinutes: 1
+wordCount: 111
 ---
-
-## Ce soir
 
 Ce soir, une grève fictive sur les traversiers de l’île Brune et une rivière inventée qui gagne quarante capteurs. Et une trouvaille pour regarder le ciel autrement.
 

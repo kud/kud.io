@@ -112,7 +112,9 @@ describe("newsletter loader", () => {
         "depth",
         "brief",
         "explainer",
+        "analysis",
         "techsci",
+        "timeline",
         "inbrief",
         "finds",
         "watch",
@@ -124,6 +126,15 @@ describe("newsletter loader", () => {
       ["02", "03", "04"],
     )
     assert.equal(sections[2].entries[0].kicker?.fr, "VALMOREAU")
+    assert.equal(sections.find((s) => s.key === "timeline")?.kind, "bullets")
+  })
+
+  it("keeps the closing line out of the last story", async () => {
+    const edition = await loadEdition("2026-11-13", FIXTURES)
+    assert.ok(edition)
+    assert.doesNotMatch(edition.bodies.en["08"], /Have a good evening/)
+    assert.match(edition.bodies.en["08"], /January session/)
+    assert.match(edition.narrative.closing?.en ?? "", /Have a good evening/)
   })
 
   it("finds the editions either side", () => {

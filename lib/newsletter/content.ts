@@ -1,7 +1,9 @@
 import { readdir, readFile } from "node:fs/promises"
 import path from "node:path"
 import { parseEditionMarkdown } from "./body.ts"
+import type { EditionJson } from "./derive.ts"
 import { isEditionDate, LANGS, type Lang } from "./language.ts"
+import { SECTIONS, type SectionKey, type SectionKind } from "./sections.ts"
 
 // The reading side of the newsletter. It reads only the derived build
 // artefacts under content/newsletter/<date>/ (edition.json, fr.md, en.md),
@@ -11,85 +13,22 @@ import { isEditionDate, LANGS, type Lang } from "./language.ts"
 
 export type Localised<T = string> = Record<Lang, T>
 
-export const SECTION_KEYS = [
-  "overview",
-  "depth",
-  "brief",
-  "explainer",
-  "analysis",
-  "techsci",
-  "timeline",
-  "inbrief",
-  "finds",
-  "watch",
-  "closing",
-] as const
+// One edition type for the whole newsletter: the pipeline's derive step writes
+// edition.json from it and this loader reads it back, so the pages can only
+// ever render the shape the pipeline produces.
+export type Edition = EditionJson
+export type EditionItem = Edition["items"][number]
+export type EditionSource = EditionItem["sources"][number]
+export type EditionSection = Edition["sections"][number]
+export type TimelineEntry = Edition["timeline"][number]
+export type FastFact = Edition["inBrief"][number]
+export type { SectionKey, SectionKind }
 
-// What a section holds. Narrative sections are written prose with inline
-// citations (edition.narrative); list sections are bullets (edition.timeline,
-// edition.inBrief); item sections hold the numbered, selectable stories.
-export type SectionKind = "narrative" | "list" | "items"
+export const SECTION_KEYS = SECTIONS.map((section) => section.key)
 
-export const SECTION_KIND: Record<SectionKey, SectionKind> = {
-  overview: "narrative",
-  depth: "items",
-  brief: "items",
-  explainer: "items",
-  closing: "narrative",
-  analysis: "narrative",
-  techsci: "items",
-  timeline: "list",
-  inbrief: "list",
-  finds: "items",
-  watch: "items",
-}
-
-export type SectionKey = (typeof SECTION_KEYS)[number]
-
-export type EditionSource = { url: string; label: Localised }
-
-export type EditionItem = {
-  id: string
-  section: SectionKey
-  // A short uppercase topic label ("CLIMATE"); a story may carry only this.
-  kicker: Localised | null
-  title: Localised
-  summary: Localised
-  sources: EditionSource[]
-}
-
-export type EditionSection = {
-  key: SectionKey
-  kind: SectionKind
-  title: Localised
-  items: string[]
-}
-
-export type TimelineEntry = { date: string; text: Localised; urls: string[] }
-
-export type FastFact = { text: Localised; urls: string[] }
-
-export type Edition = {
-  schema: 1
-  date: string
-  generatedAt: string | null
-  publishedAt: string | null
-  languages: Lang[]
-  lede: Localised<string | null>
-  // Markdown, links inline on the source name. The overview is required by
-  // the publication rules; null here only for an artefact older than it.
-  narrative: {
-    overview: Localised | null
-    analysis: Localised | null
-    closing: Localised | null
-  }
-  timeline: TimelineEntry[]
-  inBrief: FastFact[]
-  readingMinutes: Localised<number> | null
-  wordCount: Localised<number> | null
-  sections: EditionSection[]
-  items: EditionItem[]
-}
+export const SECTION_KIND = Object.fromEntries(
+  SECTIONS.map((section) => [section.key, section.kind]),
+) as Record<SectionKey, SectionKind>
 
 // The edition plus each item's Markdown body per language, keyed by item id.
 // A body may be missing (an older artefact, a hand-made fixture): the page
@@ -228,14 +167,14 @@ export const parseEdition = (raw: unknown, expectedDate?: string): Edition => {
     languages: [...LANGS],
     lede: raw.lede as Localised<string | null>,
     narrative: {
-      overview: optionalLocalised(narrative.overview, "narrative.overview"),
+      overview: optionalLocalised(narrative.overview, "narrative.overview") ?? fail("narrative.overview"),
       analysis: optionalLocalised(narrative.analysis, "narrative.analysis"),
       closing: optionalLocalised(narrative.closing, "narrative.closing"),
     },
     timeline,
     inBrief,
-    readingMinutes: numbers(raw.readingMinutes),
-    wordCount: numbers(raw.wordCount),
+    readingMinutes: numbers(raw.readingMinutes) ?? fail("readingMinutes"),
+    wordCount: numbers(raw.wordCount) ?? fail("wordCount"),
     sections: (raw.sections as Record<string, unknown>[]).map((section) => ({
       key: section.key as SectionKey,
       kind: SECTION_KIND[section.key as SectionKey],
@@ -278,6 +217,16 @@ export const listEditionDates = async (dir = contentDir()) => {
   }
 }
 
+// The closing line ends the Markdown with no heading of its own, so it reads
+// as the tail of the last story; edition.json carries it, and it is cut here.
+const bodiesOf = (markdown: string, closing: string | undefined) => {
+  const items = parseEditionMarkdown(markdown).items
+  const last = Object.keys(items).sort().at(-1)
+  if (closing && last && items[last].endsWith(closing))
+    items[last] = items[last].slice(0, -closing.length).trim()
+  return items
+}
+
 export const loadEdition = async (
   date: string,
   dir = contentDir(),
@@ -292,8 +241,8 @@ export const loadEdition = async (
   return {
     ...edition,
     bodies: {
-      fr: fr ? parseEditionMarkdown(fr).items : {},
-      en: en ? parseEditionMarkdown(en).items : {},
+      fr: fr ? bodiesOf(fr, edition.narrative.closing?.fr) : {},
+      en: en ? bodiesOf(en, edition.narrative.closing?.en) : {},
     },
   }
 }

@@ -1,12 +1,14 @@
 ---
-date: 2026-11-13
-lang: fr
-title: "Newsletter · 2026-11-13"
+title: "Newsletter · 13 novembre 2026"
+date: "2026-11-13"
+lang: "fr"
+lede: "Ce soir, on revient sur la facture d’eau de Port-Lune, une ville imaginaire où elle a pris un tiers en deux ans, et sur ce qu’elle dit du coût des réseaux qui vieillissent. Après le tour de l’actualité, inventée de bout en bout pour cette maquette, on vous explique ce qu’est une clause de révision. Et une trouvaille qui mérite un clic."
+generatedAt: "2026-11-13T17:40:00.000Z"
+readingMinutes: 4
+wordCount: 653
 ---
 
-## Ce soir
-
-Ce soir, on revient sur la facture d’eau de Port-Lune, une ville imaginaire où elle a pris un tiers en deux ans, et sur ce qu’elle dit du coût des réseaux qui vieillissent. Après le tour de l’actualité, inventée de bout en bout pour cette maquette, on vous explique ce qu’est une clause de révision. Et deux trouvailles qui méritent un clic.
+Ce soir, on revient sur la facture d’eau de Port-Lune, une ville imaginaire où elle a pris un tiers en deux ans, et sur ce qu’elle dit du coût des réseaux qui vieillissent. Après le tour de l’actualité, inventée de bout en bout pour cette maquette, on vous explique ce qu’est une clause de révision. Et une trouvaille qui mérite un clic.
 
 ## Le sujet du jour
 
@@ -20,12 +22,9 @@ Une régie facture l’eau à son coût : quand les fuites augmentent, il faut p
 
 **Les dates clés**
 
-- **1966** — Le réseau est posé\
-  La ville pose l’essentiel de ses canalisations en fonte, prévues pour cinquante ans.
-- **2019** — L’emprunt\
-  La régie emprunte à taux variable pour rénover l’usine de traitement.
-- **2024** — Première hausse\
-  Le prix du mètre cube augmente de 14 %, la première hausse depuis dix ans.
+- **1966** — Le réseau est posé. La ville pose l’essentiel de ses canalisations en fonte, prévues pour cinquante ans.
+- **2019** — L’emprunt. La régie emprunte à taux variable pour rénover l’usine de traitement.
+- **2024** — Première hausse. Le prix du mètre cube augmente de 14 %, la première hausse depuis dix ans.
 
 **Le saviez-vous ?**
 
@@ -80,6 +79,12 @@ Sources :
 
 - [Texte de l’accord (fictif)](https://example.net/kestrel-accord.pdf)
 
+## Analyse
+
+Port-Lune et Valmoreau tranchent la même question sous deux formes : qui paie l’entretien de ce qui existe déjà. La [régie](https://example.org/port-lune/rapport-regie-2025) répercute ses fuites sur l’abonné ; Valmoreau, elle, choisit de [retirer des places](https://example.org/valmoreau/deliberation-2026-118) plutôt que d’agrandir le port.
+
+La suite dépend des calendriers : le vote de janvier à Port-Lune, et la [clause de révision](https://example.net/kestrel-accord.pdf) de Kestrel, qui montre qu’un accord peut prévoir sa propre remise en cause.
+
 ## Technologie & science
 
 ### 06 · ESPACE · Une comète inventée frôlera la Terre {#item-06}
@@ -89,6 +94,11 @@ Un observatoire fictif annonce le passage de la comète C/2026 X9 à 0,3 unité 
 Sources :
 
 - [Circulaire de l’observatoire (fictive)](https://observatory.example.net/circulars/2026-77)
+
+## Chronologie
+
+- 2026-11-11 — Signature de l’[accord de Kestrel](https://example.net/kestrel-accord.pdf).
+- 2026-11-12 — Vote du [conseil de Valmoreau](https://example.org/valmoreau/deliberation-2026-118).
 
 ## En bref
 
@@ -109,7 +119,5 @@ Sources :
 ### 08 · Le budget de l’eau à Port-Lune {#item-08}
 
 Le conseil de Port-Lune doit publier vendredi l’ordre du jour de sa séance de janvier.
-
-## Pour finir
 
 Bonne soirée, et à demain pour une nouvelle édition.

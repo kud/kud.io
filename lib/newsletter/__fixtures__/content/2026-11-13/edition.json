@@ -1,46 +1,37 @@
 {
   "schema": 1,
   "date": "2026-11-13",
-  "generatedAt": "2026-11-13T18:20:00Z",
-  "publishedAt": "2026-11-13T19:05:00Z",
+  "generatedAt": "2026-11-13T17:40:00.000Z",
+  "publishedAt": "2026-11-13T18:05:00.000Z",
   "languages": [
     "fr",
     "en"
   ],
   "lede": {
-    "fr": "Une édition entièrement fictive pour éprouver la mise en page.",
-    "en": "An entirely fictional edition to test the layout."
+    "fr": "Ce soir, on revient sur la facture d’eau de Port-Lune, une ville imaginaire où elle a pris un tiers en deux ans, et sur ce qu’elle dit du coût des réseaux qui vieillissent. Après le tour de l’actualité, inventée de bout en bout pour cette maquette, on vous explique ce qu’est une clause de révision. Et une trouvaille qui mérite un clic.",
+    "en": "Tonight, we look at the water bill in Port-Lune, an imaginary city where it has risen by a third in two years, and at what it says about the cost of ageing networks. After the round-up of the news, invented from start to finish for this mock-up, we explain what a review clause is. And one find worth a click."
+  },
+  "readingMinutes": {
+    "fr": 4,
+    "en": 3
+  },
+  "wordCount": {
+    "fr": 653,
+    "en": 607
   },
   "narrative": {
     "overview": {
-      "fr": "Ce soir, on revient sur la facture d’eau de Port-Lune, une ville imaginaire où elle a pris un tiers en deux ans, et sur ce qu’elle dit du coût des réseaux qui vieillissent. Après le tour de l’actualité, inventée de bout en bout pour cette maquette, on vous explique ce qu’est une clause de révision. Et deux trouvailles qui méritent un clic.",
-      "en": "Tonight, we look at the water bill in Port-Lune, an imaginary city where it has risen by a third in two years, and at what it says about the cost of ageing networks. After the round-up of the news, invented from start to finish for this mock-up, we explain what a review clause is. And two finds worth a click."
+      "fr": "Ce soir, on revient sur la facture d’eau de Port-Lune, une ville imaginaire où elle a pris un tiers en deux ans, et sur ce qu’elle dit du coût des réseaux qui vieillissent. Après le tour de l’actualité, inventée de bout en bout pour cette maquette, on vous explique ce qu’est une clause de révision. Et une trouvaille qui mérite un clic.",
+      "en": "Tonight, we look at the water bill in Port-Lune, an imaginary city where it has risen by a third in two years, and at what it says about the cost of ageing networks. After the round-up of the news, invented from start to finish for this mock-up, we explain what a review clause is. And one find worth a click."
     },
-    "analysis": null,
+    "analysis": {
+      "fr": "Port-Lune et Valmoreau tranchent la même question sous deux formes : qui paie l’entretien de ce qui existe déjà. La [régie](https://example.org/port-lune/rapport-regie-2025) répercute ses fuites sur l’abonné ; Valmoreau, elle, choisit de [retirer des places](https://example.org/valmoreau/deliberation-2026-118) plutôt que d’agrandir le port.\n\nLa suite dépend des calendriers : le vote de janvier à Port-Lune, et la [clause de révision](https://example.net/kestrel-accord.pdf) de Kestrel, qui montre qu’un accord peut prévoir sa propre remise en cause.",
+      "en": "Port-Lune and Valmoreau settle the same question in two shapes: who pays to maintain what already exists. The [utility](https://example.org/port-lune/rapport-regie-2025) passes its leaks on to the customer; Valmoreau chooses to [remove spaces](https://example.org/valmoreau/deliberation-2026-118) rather than enlarge the harbour.\n\nWhat follows depends on timetables: Port-Lune’s January vote, and Kestrel’s [review clause](https://example.net/kestrel-accord.pdf), which shows an agreement can plan for its own reopening."
+    },
     "closing": {
       "fr": "Bonne soirée, et à demain pour une nouvelle édition.",
       "en": "Have a good evening, and see you tomorrow for the next edition."
     }
-  },
-  "timeline": [],
-  "inBrief": [
-    {
-      "text": {
-        "fr": "La bibliothèque imaginaire de Saint-Exemple ouvrira désormais le dimanche après-midi.",
-        "en": "The imaginary library of Saint-Exemple will now open on Sunday afternoons."
-      },
-      "urls": [
-        "https://example.org/saint-exemple/bibliotheque"
-      ]
-    }
-  ],
-  "readingMinutes": {
-    "fr": 3,
-    "en": 3
-  },
-  "wordCount": {
-    "fr": 572,
-    "en": 524
   },
   "sections": [
     {
@@ -88,6 +79,15 @@
       ]
     },
     {
+      "key": "analysis",
+      "kind": "narrative",
+      "title": {
+        "fr": "Analyse",
+        "en": "Analysis"
+      },
+      "items": []
+    },
+    {
       "key": "techsci",
       "kind": "items",
       "title": {
@@ -99,8 +99,17 @@
       ]
     },
     {
+      "key": "timeline",
+      "kind": "bullets",
+      "title": {
+        "fr": "Chronologie",
+        "en": "Timeline"
+      },
+      "items": []
+    },
+    {
       "key": "inbrief",
-      "kind": "list",
+      "kind": "bullets",
       "title": {
         "fr": "En bref",
         "en": "In brief"
@@ -150,7 +159,7 @@
       },
       "summary": {
         "fr": "Dans la ville imaginaire de Port-Lune, la facture d’eau a augmenté d’un tiers en deux ans, selon le rapport annuel de la régie, l’établissement public qui gère le réseau. Trois causes se superposent : des canalisations posées il y a soixante ans, une nappe qui recule et un emprunt à taux variable.",
-        "en": "In the imaginary city of Port-Lune, the water bill has risen by a third in two years, according to the annual report of the régie, the public body that runs the network. Three causes overlap: pipes laid sixty years ago, a falling water table and a variable-rate loan."
+        "en": "In the imaginary city of Port-Lune, the water bill has risen by a third in two years, according to the annual report of the utility, the public body that runs the network. Three causes overlap: pipes laid sixty years ago, a falling water table and a variable-rate loan."
       },
       "sources": [
         {
@@ -340,6 +349,39 @@
         "en": "Port-Lune’s council is due to publish the agenda for its January session on Friday."
       },
       "sources": []
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2026-11-11",
+      "text": {
+        "fr": "Signature de l’[accord de Kestrel](https://example.net/kestrel-accord.pdf).",
+        "en": "The [Kestrel accord](https://example.net/kestrel-accord.pdf) is signed."
+      },
+      "urls": [
+        "https://example.net/kestrel-accord.pdf"
+      ]
+    },
+    {
+      "date": "2026-11-12",
+      "text": {
+        "fr": "Vote du [conseil de Valmoreau](https://example.org/valmoreau/deliberation-2026-118).",
+        "en": "Valmoreau’s [council votes](https://example.org/valmoreau/deliberation-2026-118)."
+      },
+      "urls": [
+        "https://example.org/valmoreau/deliberation-2026-118"
+      ]
+    }
+  ],
+  "inBrief": [
+    {
+      "text": {
+        "fr": "[La bibliothèque imaginaire de Saint-Exemple ouvrira désormais le dimanche après-midi.](https://example.org/saint-exemple/bibliotheque)",
+        "en": "[The imaginary library of Saint-Exemple will now open on Sunday afternoons.](https://example.org/saint-exemple/bibliotheque)"
+      },
+      "urls": [
+        "https://example.org/saint-exemple/bibliotheque"
+      ]
     }
   ]
 }

@@ -1,10 +1,12 @@
 ---
-date: 2026-11-12
-lang: en
-title: "Newsletter · 2026-11-12"
+title: "Newsletter · 12 November 2026"
+date: "2026-11-12"
+lang: "en"
+lede: "Tonight, a fictional ferry strike on Isle Brune and an invented river gaining forty sensors. And one find to look at the sky differently."
+generatedAt: "2026-11-12T17:40:00.000Z"
+readingMinutes: 1
+wordCount: 93
 ---
-
-## Tonight
 
 Tonight, a fictional ferry strike on Isle Brune and an invented river gaining forty sensors. And one find to look at the sky differently.
 

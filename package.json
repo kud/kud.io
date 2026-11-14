@@ -17,6 +17,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test \"lib/**/*.test.ts\" \"scripts/**/*.test.js\"",
     "sync": "node scripts/sync-content.js && node scripts/sync-notion.js",
+    "newsletter:fixtures": "node lib/newsletter/__fixtures__/generate.ts",
     "check": "node scripts/check-repos.js",
     "share-images": "node scripts/share-images.js",
     "cover-images": "node scripts/cover-images.js"
