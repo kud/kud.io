@@ -213,9 +213,16 @@ html[data-vt="morph"]::view-transition-new(*) {
   animation-duration: 0.34s;
 }
 
-/* The index row and the post page both mark their cover and title with
-   data-morph-cover and data-morph-title. The class is set here, not in the
-   CSS modules, which would hash its value. */
+/* Blog index ↔ post (components/post-morph-link.tsx, blog-morph-arrival.tsx).
+   Erwann's rule (2026-11-13): what is on both pages never fades. The cover and
+   the title only move; the header, the theme picker and the footer stay
+   exactly where they are; only what differs, the list and the body, crosses.
+   Each piece is lifted out of the root snapshot into a group of its own, its
+   outgoing snapshot is hidden from the first frame and its incoming one is
+   shown whole, so the only thing that changes is where the group sits.
+   Scoped to the morph flag: any other transition keeps the browser default.
+
+   The class is set here, not in the CSS modules, which would hash its value. */
 [data-morph-cover] {
   view-transition-class: post-cover;
 }
@@ -224,46 +231,80 @@ html[data-vt="morph"]::view-transition-new(*) {
   view-transition-class: post-title;
 }
 
-/* Blog index → post: the cover glides from its thumb into the hero. The two
-   boxes differ in shape (a 96px square, a 16:9 lead or pair card, the wide
-   hero), and a snapshot keeps its own aspect by default, so it would spill
-   out of the moving frame; filling and cropping it keeps the picture whole
-   at every step, the way object-fit does on the page. */
+html[data-vt="morph"] #blog-root [data-morph-still],
+html[data-vt="morph"] #blog-root > .blog-picker,
+html[data-vt="morph"] #blog-root > button[class*="trigger"],
+html[data-vt="morph"] #blog-root > footer {
+  view-transition-class: blog-still;
+}
+
+html[data-vt="morph"] #blog-root [data-morph-still] {
+  view-transition-name: blog-header;
+}
+
+html[data-vt="morph"] #blog-root > .blog-picker {
+  view-transition-name: blog-picker;
+}
+
+html[data-vt="morph"] #blog-root > footer {
+  view-transition-name: blog-footer;
+}
+
+/* The launcher's floating Search button (components/launcher). */
+html[data-vt="morph"] #blog-root > button[class*="trigger"] {
+  view-transition-name: blog-search;
+}
+
+html[data-vt="morph"]::view-transition-old(*.post-cover),
+html[data-vt="morph"]::view-transition-old(*.post-title),
+html[data-vt="morph"]::view-transition-old(*.blog-still) {
+  /* opacity, not display: Chrome keeps painting a display:none snapshot. */
+  animation: none;
+  opacity: 0;
+}
+
+html[data-vt="morph"]::view-transition-new(*.post-cover),
+html[data-vt="morph"]::view-transition-new(*.post-title),
+html[data-vt="morph"]::view-transition-new(*.blog-still),
+html[data-vt="morph"]::view-transition-group(*.blog-still) {
+  animation: none;
+}
+
+/* The cover's frame changes shape on the way (a 96px square, a 16:9 card, the
+   wide hero); the picture fills and crops it at every step, the way
+   object-fit does on the page, rather than stretching. */
 html[data-vt="morph"]::view-transition-group(*.post-cover) {
   overflow: clip;
 }
 
-html[data-vt="morph"]::view-transition-old(*.post-cover),
 html[data-vt="morph"]::view-transition-new(*.post-cover) {
   height: 100%;
   object-fit: cover;
 }
 
-/* Preview only (anim-2, Glide 2 on the preview banner): the title stays in the
-   page and arrives with the fade. */
-html[data-blog-morph="cover"] [data-morph-title] {
-  view-transition-name: none !important;
+/* The incoming cover is a live snapshot, so its own load-in (a fade over the
+   blurred preview) would play inside the glide. During the move the blur
+   steps aside for the thumb the index already loaded (--thumb, set on the
+   post's hero), and the full image, preloaded from the press, shows at once. */
+html[data-vt="morph"] [data-morph-cover] {
+  background: var(--thumb, none) center / cover no-repeat;
 }
 
-/* Preview only (anim-0, Glide now): today's plain cross-fade, so the post
-   names nothing either. */
+html[data-vt="morph"] [data-morph-cover]::before {
+  visibility: hidden;
+}
+
+html[data-vt="morph"] [data-morph-cover] img {
+  transition: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Preview only (Glide now on the preview banner): today's plain cross-fade,
+   so nothing is named on either side. */
 html[data-blog-morph="none"] [data-morph-title],
 html[data-blog-morph="none"] [data-morph-cover] {
   view-transition-name: none !important;
-}
-
-/* Preview only (anim-3, Glide 3 on the preview banner): the title glides as the post's own
-   heading only. A cross-fade of the two snapshots ghosts whenever the line
-   breaks differ, which on a phone is nearly always (a one-line row title
-   becoming a two-line heading); dropping the outgoing one leaves a single
-   piece of text that grows into place. */
-html[data-vt="morph"][data-blog-morph="solo"]::view-transition-old(*.post-title) {
-  animation: none;
-  opacity: 0;
-}
-
-html[data-vt="morph"][data-blog-morph="solo"]::view-transition-new(*.post-title) {
-  animation: none;
 }
 
 /* The home ↔ /projects "ink" transition is handled on desktop by the

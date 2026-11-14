@@ -12,10 +12,9 @@ import styles from "./blog-morph-preview.module.css"
 const KEY = "kud.blog-morph-preview"
 const SLOW_KEY = "kud.blog-morph-preview-slow"
 
-// now: today's plain cross-fade (anim-0). 1: cover and title glide, the
-// default. 2: the cover alone. 3: cover and title, the title as the post's
-// own heading only.
-const VALUES = ["now", "1", "2", "3"] as const
+// now: today's plain cross-fade. glide: what is on both pages only moves
+// (the cover, the title) or stays still (header, picker, footer).
+const VALUES = ["now", "glide"] as const
 type Glide = (typeof VALUES)[number]
 
 const isGlide = (value: string | null): value is Glide =>
@@ -32,15 +31,9 @@ const readStored = (): Glide | null => {
   }
 }
 
-// What the click does, in the html[data-blog-morph] vocabulary global.css
-// keys on: "none" (no glide), undefined (anim-1), "cover", "solo".
-export const readGlide = (): "none" | "cover" | "solo" | undefined => {
-  const glide = typeof window === "undefined" ? null : readStored()
-  if (glide === "now") return "none"
-  if (glide === "2") return "cover"
-  if (glide === "3") return "solo"
-  return undefined
-}
+// "none" when the banner says now (no glide), otherwise undefined.
+export const readGlide = (): "none" | undefined =>
+  typeof window !== "undefined" && readStored() === "now" ? "none" : undefined
 
 let snapshot: string | undefined
 const listeners = new Set<() => void>()

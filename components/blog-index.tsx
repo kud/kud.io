@@ -1,6 +1,6 @@
 "use client"
 
-import { PostMorphLink } from "@/components/post-morph-link"
+import { BlogMorphArrival, PostMorphLink } from "@/components/post-morph-link"
 import { postPath } from "@/lib/blog-path"
 import { useEffect, useId, useMemo, useState, type CSSProperties } from "react"
 import { CoverImage } from "@/components/blog-cover"
@@ -87,6 +87,7 @@ export const BlogIndex = ({
 
   return (
     <div className={styles.index}>
+      <BlogMorphArrival />
       {/* The filter bar is the index; the row tags are a reversal of an earlier
           "tags once, at the top" rule, asked for by Erwann so a post shows its
           topics at a glance. They stay quieter than the titles (smaller, no
@@ -144,6 +145,7 @@ export const BlogIndex = ({
                 <PostMorphLink
                   href={postPath(post)}
                   slug={post.slug}
+                  hero={post.cover?.hero}
                   className={styles.thumb}
                   data-morph-cover={post.cover ? true : undefined}
                   data-tag={post.tags[0]}
@@ -185,7 +187,11 @@ export const BlogIndex = ({
                     post has a summary. */}
                 <div className={styles.text}>
                   <h2 data-morph-title>
-                    <PostMorphLink href={postPath(post)} slug={post.slug}>
+                    <PostMorphLink
+                      href={postPath(post)}
+                      slug={post.slug}
+                      hero={post.cover?.hero}
+                    >
                       {post.title}
                     </PostMorphLink>
                   </h2>
