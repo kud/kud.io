@@ -897,6 +897,31 @@
   gap: 6px;
 }
 
+/* Drawn by hand: <html> is forced dark site-wide, so a native radio paints
+   its unchecked state filled dark even on the light page, which reads as the
+   chosen one. An empty ring and a ring with a dot never depend on colour. */
+.signupLangs input {
+  appearance: none;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border: 1.5px solid var(--fg-2);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.signupLangs input:checked {
+  border-color: var(--fg);
+  box-shadow: inset 0 0 0 3px var(--bg), inset 0 0 0 8px var(--fg);
+}
+
+.signupLangs input:focus-visible {
+  outline: 2px solid var(--c-fn);
+  outline-offset: 2px;
+}
+
 .signupForm .barPrimary {
   justify-self: start;
 }
