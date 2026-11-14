@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import type { Lang } from "@/lib/newsletter/language";
+import { useEffect, useState } from "react"
+import type { Lang } from "@/lib/newsletter/language"
 
 // Reading preferences, after the ones ai-feed-digest offers, cut to what
 // kud.io can honour without a new web font: the site's sans, a system serif
@@ -22,9 +22,9 @@ export const READER_PREFS = {
     values: ["narrow", "normal", "wide"],
     fallback: "normal",
   },
-} as const;
+} as const
 
-type Pref = keyof typeof READER_PREFS;
+type Pref = keyof typeof READER_PREFS
 
 const LABELS: Record<
   Lang,
@@ -60,9 +60,9 @@ const LABELS: Record<
       options: { narrow: "Narrow", normal: "Normal", wide: "Wide" },
     },
   },
-};
+}
 
-const PREFS = Object.keys(READER_PREFS) as Pref[];
+const PREFS = Object.keys(READER_PREFS) as Pref[]
 
 // Replays stored choices onto the element it sits in, before first paint.
 export const READER_SCRIPT = `try{var e=document.currentScript.parentElement,p=${JSON.stringify(
@@ -72,48 +72,48 @@ export const READER_SCRIPT = `try{var e=document.currentScript.parentElement,p=$
       [READER_PREFS[pref].key, READER_PREFS[pref].values],
     ]),
   ),
-)};for(var k in p){var v=localStorage.getItem(p[k][0]);if(p[k][1].indexOf(v)>=0)e.dataset[k]=v}}catch(e){}`;
+)};for(var k in p){var v=localStorage.getItem(p[k][0]);if(p[k][1].indexOf(v)>=0)e.dataset[k]=v}}catch(e){}`
 
 const read = (pref: Pref): string => {
-  const { key, values, fallback } = READER_PREFS[pref];
+  const { key, values, fallback } = READER_PREFS[pref]
   try {
-    const stored = localStorage.getItem(key);
-    if (stored && (values as readonly string[]).includes(stored)) return stored;
+    const stored = localStorage.getItem(key)
+    if (stored && (values as readonly string[]).includes(stored)) return stored
   } catch {}
-  return fallback;
-};
+  return fallback
+}
 
 export const ReaderPreferences = ({
   lang,
   rootId,
   styles,
 }: {
-  lang: Lang;
-  rootId: string;
-  styles: Record<string, string>;
+  lang: Lang
+  rootId: string
+  styles: Record<string, string>
 }) => {
-  const labels = LABELS[lang];
+  const labels = LABELS[lang]
   const [prefs, setPrefs] = useState<Record<Pref, string>>({
     font: READER_PREFS.font.fallback,
     size: READER_PREFS.size.fallback,
     width: READER_PREFS.width.fallback,
-  });
+  })
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setPrefs({ font: read("font"), size: read("size"), width: read("width") });
-  }, []);
+    setPrefs({ font: read("font"), size: read("size"), width: read("width") })
+  }, [])
 
   const choose = (pref: Pref, value: string) => {
-    setPrefs((previous) => ({ ...previous, [pref]: value }));
-    const root = document.getElementById(rootId);
-    if (root) root.dataset[pref] = value;
+    setPrefs((previous) => ({ ...previous, [pref]: value }))
+    const root = document.getElementById(rootId)
+    if (root) root.dataset[pref] = value
     try {
-      localStorage.setItem(READER_PREFS[pref].key, value);
+      localStorage.setItem(READER_PREFS[pref].key, value)
     } catch {
       // Not persisted; this visit still reads as chosen.
     }
-  };
+  }
 
   return (
     <details className={styles.prefs}>
@@ -143,5 +143,5 @@ export const ReaderPreferences = ({
         ))}
       </div>
     </details>
-  );
-};
+  )
+}

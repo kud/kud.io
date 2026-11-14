@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   createContext,
@@ -9,26 +9,26 @@ import {
   useRef,
   useState,
   type ReactNode,
-} from "react";
-import type { Edition } from "@/lib/newsletter/content";
-import { COPY, type Lang } from "@/lib/newsletter/language";
-import { buildResearchPrompt } from "@/lib/newsletter/prompt";
+} from "react"
+import type { Edition } from "@/lib/newsletter/content"
+import { COPY, type Lang } from "@/lib/newsletter/language"
+import { buildResearchPrompt } from "@/lib/newsletter/prompt"
 
 // Selection is page state and nothing else: it is not stored, not sent, and
 // gone on reload. The prompt is assembled locally by buildResearchPrompt and
 // only leaves the page through the reader's own clipboard.
 
 type Selection = {
-  selected: ReadonlySet<string>;
-  toggle: (id: string, on: boolean) => void;
-  clear: () => void;
-};
+  selected: ReadonlySet<string>
+  toggle: (id: string, on: boolean) => void
+  clear: () => void
+}
 
-type ResearchEdition = Pick<Edition, "date" | "items" | "narrative">;
+type ResearchEdition = Pick<Edition, "date" | "items" | "narrative">
 
-const SelectionContext = createContext<Selection | null>(null);
+const SelectionContext = createContext<Selection | null>(null)
 
-type Styles = Record<string, string>;
+type Styles = Record<string, string>
 
 export const SelectionProvider = ({
   edition,
@@ -36,39 +36,39 @@ export const SelectionProvider = ({
   styles,
   children,
 }: {
-  edition: ResearchEdition;
-  lang: Lang;
-  styles: Styles;
-  children: ReactNode;
+  edition: ResearchEdition
+  lang: Lang
+  styles: Styles
+  children: ReactNode
 }) => {
-  const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
+  const [selected, setSelected] = useState<ReadonlySet<string>>(new Set())
   const toggle = useCallback((id: string, on: boolean) => {
     setSelected((previous) => {
-      const next = new Set(previous);
-      if (on) next.add(id);
-      else next.delete(id);
-      return next;
-    });
-  }, []);
-  const clear = useCallback(() => setSelected(new Set()), []);
+      const next = new Set(previous)
+      if (on) next.add(id)
+      else next.delete(id)
+      return next
+    })
+  }, [])
+  const clear = useCallback(() => setSelected(new Set()), [])
   const value = useMemo(
     () => ({ selected, toggle, clear }),
     [selected, toggle, clear],
-  );
+  )
 
   return (
     <SelectionContext.Provider value={value}>
       {children}
       <ResearchBar edition={edition} lang={lang} styles={styles} />
     </SelectionContext.Provider>
-  );
-};
+  )
+}
 
 const useSelection = () => {
-  const selection = useContext(SelectionContext);
-  if (!selection) throw new Error("ItemSelect outside SelectionProvider");
-  return selection;
-};
+  const selection = useContext(SelectionContext)
+  if (!selection) throw new Error("ItemSelect outside SelectionProvider")
+  return selection
+}
 
 // The visible word is short ("Select"); the accessible name carries the item,
 // so a screen reader hears "Select 01 · Title" rather than eight "Select"s.
@@ -79,15 +79,15 @@ export const ItemSelect = ({
   className,
   hiddenClassName,
 }: {
-  id: string;
-  title: string;
-  lang: Lang;
-  className?: string;
-  hiddenClassName?: string;
+  id: string
+  title: string
+  lang: Lang
+  className?: string
+  hiddenClassName?: string
 }) => {
-  const { selected, toggle } = useSelection();
-  const label = COPY[lang].select(id, title);
-  const word = lang === "fr" ? "Sélectionner" : "Select";
+  const { selected, toggle } = useSelection()
+  const label = COPY[lang].select(id, title)
+  const word = lang === "fr" ? "Sélectionner" : "Select"
   return (
     <label className={className}>
       <input
@@ -98,51 +98,51 @@ export const ItemSelect = ({
       <span aria-hidden>{word}</span>
       <span className={hiddenClassName}>{label}</span>
     </label>
-  );
-};
+  )
+}
 
 const ResearchBar = ({
   edition,
   lang,
   styles,
 }: {
-  edition: ResearchEdition;
-  lang: Lang;
-  styles: Styles;
+  edition: ResearchEdition
+  lang: Lang
+  styles: Styles
 }) => {
-  const { selected, clear } = useSelection();
-  const copy = COPY[lang];
-  const [status, setStatus] = useState("");
-  const [fallback, setFallback] = useState<string | null>(null);
-  const dialog = useRef<HTMLDialogElement>(null);
-  const area = useRef<HTMLTextAreaElement>(null);
-  const count = selected.size;
+  const { selected, clear } = useSelection()
+  const copy = COPY[lang]
+  const [status, setStatus] = useState("")
+  const [fallback, setFallback] = useState<string | null>(null)
+  const dialog = useRef<HTMLDialogElement>(null)
+  const area = useRef<HTMLTextAreaElement>(null)
+  const count = selected.size
 
   useEffect(() => {
-    if (!status) return;
-    const timer = window.setTimeout(() => setStatus(""), 4000);
-    return () => window.clearTimeout(timer);
-  }, [status]);
+    if (!status) return
+    const timer = window.setTimeout(() => setStatus(""), 4000)
+    return () => window.clearTimeout(timer)
+  }, [status])
 
   useEffect(() => {
-    if (fallback === null) return;
-    dialog.current?.showModal();
-    area.current?.focus();
-    area.current?.select();
-  }, [fallback]);
+    if (fallback === null) return
+    dialog.current?.showModal()
+    area.current?.focus()
+    area.current?.select()
+  }, [fallback])
 
   const copyPrompt = async () => {
-    const text = buildResearchPrompt(edition, selected, lang);
+    const text = buildResearchPrompt(edition, selected, lang)
     try {
-      await navigator.clipboard.writeText(text);
-      setStatus(copy.copied);
+      await navigator.clipboard.writeText(text)
+      setStatus(copy.copied)
     } catch {
       // No clipboard (an older browser, an insecure context, a denied
       // permission): hand the text over selected, ready for the reader's
       // own copy.
-      setFallback(text);
+      setFallback(text)
     }
-  };
+  }
 
   return (
     <>
@@ -190,8 +190,8 @@ const ResearchBar = ({
         </form>
       </dialog>
     </>
-  );
-};
+  )
+}
 
 // Copies the address of one story, edition and anchor included. The link is
 // the canonical dated one, so it still points at the same story tomorrow.
@@ -202,29 +202,29 @@ export const ShareItem = ({
   className,
   hiddenClassName,
 }: {
-  href: string;
-  title: string;
-  lang: Lang;
-  className?: string;
-  hiddenClassName?: string;
+  href: string
+  title: string
+  lang: Lang
+  className?: string
+  hiddenClassName?: string
 }) => {
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState(false)
   useEffect(() => {
-    if (!done) return;
-    const timer = window.setTimeout(() => setDone(false), 2500);
-    return () => window.clearTimeout(timer);
-  }, [done]);
-  const word = lang === "fr" ? "Partager" : "Share";
-  const copied = lang === "fr" ? "Lien copié" : "Link copied";
+    if (!done) return
+    const timer = window.setTimeout(() => setDone(false), 2500)
+    return () => window.clearTimeout(timer)
+  }, [done])
+  const word = lang === "fr" ? "Partager" : "Share"
+  const copied = lang === "fr" ? "Lien copié" : "Link copied"
   const share = async () => {
-    const url = new URL(href, location.origin).toString();
+    const url = new URL(href, location.origin).toString()
     try {
-      await navigator.clipboard.writeText(url);
-      setDone(true);
+      await navigator.clipboard.writeText(url)
+      setDone(true)
     } catch {
-      window.prompt(word, url);
+      window.prompt(word, url)
     }
-  };
+  }
   return (
     <button type="button" className={className} onClick={share}>
       <span aria-hidden>{done ? copied : word}</span>
@@ -232,5 +232,5 @@ export const ShareItem = ({
         {done ? copied : `${word} ${title}`}
       </span>
     </button>
-  );
-};
+  )
+}
