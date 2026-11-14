@@ -1,13 +1,11 @@
 import { notFound } from "next/navigation"
 import {
-  ArchiveView,
   EditionView,
-  EmptyEdition,
+  EditionsView,
   newsletterMetadata,
 } from "@/components/newsletter/edition-view"
 import {
   getEditions,
-  getLatestEdition,
   listEditionDates,
   loadEdition,
 } from "@/lib/newsletter/content"
@@ -19,20 +17,16 @@ import type { Lang } from "@/lib/newsletter/language"
 // prerendered in its own language, metadata included, and the public URL
 // keeps the language in the query.
 
-export const latestMetadata = async (lang: Lang) =>
-  newsletterMetadata({ edition: await getLatestEdition(), lang, page: {} })
+// The list of every edition describes the newsletter, not whichever edition
+// is newest: an edition's own metadata lives at its own address. The bare
+// /newsletter redirects to the newest edition (next.config.mjs) and renders
+// this list only while there is none, so the list's canonical is its own.
+export const editionsMetadata = (lang: Lang) =>
+  newsletterMetadata({ edition: null, lang, page: { editions: true } })
 
-export const LatestPage = async ({ lang }: { lang: Lang }) => {
-  const [edition, dates] = await Promise.all([
-    getLatestEdition(),
-    listEditionDates(),
-  ])
-  return edition ? (
-    <EditionView edition={edition} lang={lang} dates={dates} latest />
-  ) : (
-    <EmptyEdition lang={lang} />
-  )
-}
+export const EditionsPage = async ({ lang }: { lang: Lang }) => (
+  <EditionsView editions={await getEditions()} lang={lang} />
+)
 
 export const dateParams = async () =>
   (await listEditionDates()).map((date) => ({ date }))
@@ -58,10 +52,3 @@ export const DatePage = async ({
   if (!edition) notFound()
   return <EditionView edition={edition} lang={lang} dates={dates} />
 }
-
-export const archiveMetadata = (lang: Lang) =>
-  newsletterMetadata({ edition: null, lang, page: { archive: true } })
-
-export const ArchivePage = async ({ lang }: { lang: Lang }) => (
-  <ArchiveView editions={await getEditions()} lang={lang} />
-)

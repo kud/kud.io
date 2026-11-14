@@ -9,7 +9,7 @@ never in the skeleton.
 
 | Property       | Type           | Meaning                                                   |
 | -------------- | -------------- | --------------------------------------------------------- |
-| `Name`         | title          | `Newsletter · YYYY-MM-DD`                                 |
+| `Name`         | title          | `YYYY-MM-DD`                                              |
 | `Date`         | date           | The edition's date (Europe/London). One edition per date. |
 | `Status`       | select         | `Draft` → `Ready` → `Published`, or `Failed`              |
 | `Generated at` | date with time | When the editor finished writing                          |
@@ -286,5 +286,5 @@ For each published date, the sync writes `content/newsletter/YYYY-MM-DD/`:
 `fr.md`, `en.md` and `edition.json`, the machine-readable data (the
 intro and other narrative sections, the items with their kickers,
 summaries and sources, the timeline, the in-brief facts, reading time and word count) that drives the
-archive, language switch and research prompt. These are build artefacts: fix
+index, language switch and research prompt. These are build artefacts: fix
 an edition in Notion, never in those files.

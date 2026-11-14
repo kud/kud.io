@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs"
+import { existsSync, readdirSync, readFileSync } from "node:fs"
+import path from "node:path"
 import { createMDX } from "fumadocs-mdx/next"
 
 // Written by scripts/sync-notion.js from posts marked Retired in Notion.
@@ -8,6 +9,37 @@ const readBlogRedirects = () => {
   } catch {
     return []
   }
+}
+
+// The newest newsletter edition with an edition.json, read the way
+// lib/newsletter/content.ts reads it (NEWSLETTER_CONTENT_DIR for fixtures).
+// Plain JavaScript because this file cannot import the TypeScript loader.
+const newsletterRedirects = () => {
+  const dir = process.env.NEWSLETTER_CONTENT_DIR
+    ? path.resolve(process.env.NEWSLETTER_CONTENT_DIR)
+    : path.join("content", "newsletter")
+  let latest
+  try {
+    latest = readdirSync(dir)
+      .filter(
+        (name) =>
+          /^\d{4}-\d{2}-\d{2}$/.test(name) &&
+          existsSync(path.join(dir, name, "edition.json")),
+      )
+      .sort()
+      .at(-1)
+  } catch {
+    return []
+  }
+  return latest
+    ? [
+        {
+          source: "/newsletter",
+          destination: `/newsletter/${latest}`,
+          permanent: false,
+        },
+      ]
+    : []
 }
 
 /** @type {import('next').NextConfig} */
@@ -48,6 +80,20 @@ const config = {
       source: "/blog/2017/12/01/macos-ssh-passphrase-fix",
       destination: "/blog/2020/06/08/ssh-config-include",
       permanent: true,
+    },
+    // The newsletter opens on its newest edition, at that edition's own dated
+    // address. Temporary, because the target moves with every edition; built
+    // here from the content on disk because the site rebuilds on each publish,
+    // so the build that ships an edition is the build that points at it.
+    // Redirects run before the proxy and keep the query, so ?lang=en survives
+    // the hop and the proxy then serves the English twin. With no edition yet
+    // there is no redirect and /newsletter renders the (empty) list instead.
+    ...newsletterRedirects(),
+    // The old archive is the list of every edition.
+    {
+      source: "/newsletter/archive",
+      destination: "/newsletter/editions",
+      permanent: false,
     },
     // Referrals left the catalogue for a footer link; its old landing goes
     // straight to the site.

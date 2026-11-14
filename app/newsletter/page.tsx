@@ -1,9 +1,9 @@
-import { LatestPage, latestMetadata } from "@/app/newsletter/pages"
+import { EditionsPage, editionsMetadata } from "@/app/newsletter/pages"
 
 export const dynamic = "force-static"
 
-export const generateMetadata = () => latestMetadata("fr")
+export const metadata = editionsMetadata("fr")
 
-const Page = () => <LatestPage lang="fr" />
+const Page = () => <EditionsPage lang="fr" />
 
 export default Page

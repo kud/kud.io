@@ -43,17 +43,19 @@ export const isEditionDate = (value: string) => {
 export const itemAnchor = (id: string) => `item-${id}`
 
 // Public URLs always carry the language in the query, never in the path: the
-// path is the edition, the query is how you read it. French needs no query
-// but gets one when a link has to override a remembered English choice.
+// path is the page, the query is how you read it. French needs no query but
+// gets one when a link has to override a remembered English choice. The bare
+// /newsletter redirects to the newest edition (next.config.mjs), so a link to
+// the list of every edition names /newsletter/editions.
 export const newsletterHref = (
-  page: { date?: string; archive?: boolean },
+  page: { date?: string; editions?: boolean },
   lang: Lang,
   { explicit = false, hash }: { explicit?: boolean; hash?: string } = {},
 ) => {
-  const path = page.archive
-    ? "/newsletter/archive"
-    : page.date
-      ? `/newsletter/${page.date}`
+  const path = page.date
+    ? `/newsletter/${page.date}`
+    : page.editions
+      ? "/newsletter/editions"
       : "/newsletter"
   const query = explicit || lang !== DEFAULT_LANG ? `?lang=${lang}` : ""
   return `${path}${query}${hash ? `#${hash}` : ""}`
@@ -121,13 +123,21 @@ export const COPY = {
     previous: "Édition précédente",
     next: "Édition suivante",
     archive: "Toutes les éditions",
+    editions: "Éditions",
+    calendar: "Calendrier",
+    calendarLabel: "Calendrier des éditions",
+    previousMonth: "Mois précédent",
+    nextMonth: "Mois suivant",
+    noEdition: "pas d’édition",
+    current: "édition affichée",
     latest: "Dernière édition",
     feed: "Flux RSS",
     emptyTitle: "Pas encore d’édition.",
     emptyBody:
       "La première arrive bientôt, un soir de semaine. Revenez un peu plus tard.",
-    archiveTitle: "Archives",
-    archiveIntro: "Chaque édition, de la plus récente à la plus ancienne.",
+    read: "Lire l’édition",
+    more: (count: number) =>
+      count === 1 ? "1 autre sujet" : `${count} autres sujets`,
     items: (count: number) => (count === 1 ? "1 sujet" : `${count} sujets`),
     signupTitle: "Recevoir l’édition par e-mail",
     signupBody: "Un e-mail par édition, rien d’autre.",
@@ -171,13 +181,21 @@ export const COPY = {
     previous: "Previous edition",
     next: "Next edition",
     archive: "All editions",
+    editions: "Editions",
+    calendar: "Calendar",
+    calendarLabel: "Calendar of editions",
+    previousMonth: "Previous month",
+    nextMonth: "Next month",
+    noEdition: "no edition",
+    current: "edition shown",
     latest: "Latest edition",
     feed: "RSS feed",
     emptyTitle: "No edition yet.",
     emptyBody:
       "The first one lands soon, on a weekday evening. Do come back a little later.",
-    archiveTitle: "Archive",
-    archiveIntro: "Every edition, newest first.",
+    read: "Read the edition",
+    more: (count: number) =>
+      count === 1 ? "1 more subject" : `${count} more subjects`,
     items: (count: number) => (count === 1 ? "1 subject" : `${count} subjects`),
     signupTitle: "Get each edition by email",
     signupBody: "One email per edition, nothing else.",
@@ -193,7 +211,8 @@ export const COPY = {
       confirmed: "You’re in: the next edition will land in your inbox.",
       invalid: "That address doesn’t look right. Do try again.",
       link: "That confirmation link isn’t valid. Sign up again for a fresh one.",
-      expired: "That confirmation link has expired. Sign up again for a fresh one.",
+      expired:
+        "That confirmation link has expired. Sign up again for a fresh one.",
       failed: "The email didn’t go out. Please try again in a moment.",
       unavailable: "Email sign-up isn’t open yet.",
     },
