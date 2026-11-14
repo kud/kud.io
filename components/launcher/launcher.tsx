@@ -56,6 +56,7 @@ import {
 } from "@/components/scoped-theme"
 import type { InkTone, ThemeStyle } from "@/components/scoped-theme"
 import type { LauncherIndex, LauncherProject } from "@/lib/launcher-index"
+import { formatEditionDate } from "@/lib/newsletter/language"
 import { fuzzyScore } from "./fuzzy"
 import { DetailView, formatDate } from "./detail-view"
 import type { Detail } from "./detail-view"
@@ -71,6 +72,7 @@ type SectionKey =
   | "projects"
   | "releases"
   | "writing"
+  | "newsletter"
   | "docs"
   | "actions"
   | "elsewhere"
@@ -83,6 +85,7 @@ const SECTION_LABEL: Record<SectionKey, string> = {
   projects: "Projects",
   releases: "Latest releases",
   writing: "Writing",
+  newsletter: "Newsletter",
   docs: "Docs",
   actions: "Actions",
   elsewhere: "Elsewhere",
@@ -352,6 +355,7 @@ const LIMIT: Record<SectionKey, number> = {
   projects: 6,
   releases: 5,
   writing: 6,
+  newsletter: 5,
   docs: 8,
   actions: 6,
   elsewhere: 5,
@@ -432,6 +436,7 @@ const sectionOrder = (
           "filters",
           "releases",
           "writing",
+          "newsletter",
           "pages",
           "elsewhere",
           "settings",
@@ -440,6 +445,7 @@ const sectionOrder = (
         ? [
             "outline",
             "writing",
+            "newsletter",
             "pages",
             "projects",
             "filters",
@@ -455,6 +461,7 @@ const sectionOrder = (
             "filters",
             "releases",
             "writing",
+            "newsletter",
             "actions",
             "elsewhere",
             "docs",
@@ -865,6 +872,22 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       detail: { kind: "post" as const, post },
     }))
 
+    // An edition is its date; the lead story says which one it was, and every
+    // story's title answers a search, so "measles" finds the evening it ran.
+    const editions: Item[] = (index?.editions ?? []).map((edition) => {
+      const date = formatEditionDate(edition.date, "en")
+      return {
+        id: `edition:${edition.date}`,
+        section: "newsletter",
+        title: date,
+        text: date,
+        meta: edition.lead,
+        extras: ["newsletter", "edition", "news", ...edition.titles],
+        visual: { kind: "glyph", Icon: Newspaper },
+        href: edition.href,
+      }
+    })
+
     // The newest versions, with a dot on what shipped since the last visit.
     // A release row opens its project as a project row does.
     const releases: Item[] = (index?.releases ?? []).flatMap((release) => {
@@ -1224,6 +1247,7 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
       projects,
       releases,
       writing: [...writing, rss],
+      newsletter: editions,
       docs: docItems,
       actions,
       elsewhere,
@@ -1253,6 +1277,8 @@ const LauncherPanel = ({ onClose }: PanelProps) => {
           (item) => projectsById.get(item.id.slice(8))?.pinned,
         )
       if (key === "writing") return [...writing.slice(0, onPost ? 5 : 3), rss]
+      // The empty box offers tonight's edition only; the rest are a search away.
+      if (key === "newsletter") return editions.slice(0, 1)
       if (key === "outline") return outlineItems.slice(0, 8)
       return pools[key]
     }
