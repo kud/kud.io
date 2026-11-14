@@ -351,6 +351,12 @@ html[data-blog-slow][data-vt="morph"]::view-transition-new(*.post-cover) {
 @keyframes post-title-shrink-out {
   to {
     transform: scale(calc(1 / var(--title-from, 1)));
+  }
+}
+/* The hand-over is a blink, not the length of the move: two line breaks on
+   screen at once read as a double (2026-11-14, phone). */
+@keyframes post-title-out {
+  to {
     opacity: 0;
   }
 }
@@ -371,13 +377,15 @@ html[data-title-morph="2"][data-vt="morph"]::view-transition-old(*.post-title) {
   transform-origin: 0 0;
   mix-blend-mode: plus-lighter;
   opacity: 1;
-  animation: post-title-shrink-out 0.34s ease both;
+  animation:
+    post-title-shrink-out 0.34s ease both,
+    post-title-out 0.1s ease both;
 }
 html[data-title-morph="2"][data-vt="morph"]::view-transition-new(*.post-title) {
   mix-blend-mode: plus-lighter;
   animation:
     post-title-grow 0.34s ease both,
-    post-title-in 0.2s ease both;
+    post-title-in 0.1s ease both;
 }
 html[data-title-morph][data-blog-slow][data-vt="morph"]::view-transition-old(
     *.post-title
@@ -387,10 +395,13 @@ html[data-title-morph][data-blog-slow][data-vt="morph"]::view-transition-new(
   ) {
   animation-duration: 1.7s;
 }
+html[data-title-morph="2"][data-blog-slow][data-vt="morph"]::view-transition-old(
+    *.post-title
+  ),
 html[data-title-morph="2"][data-blog-slow][data-vt="morph"]::view-transition-new(
     *.post-title
   ) {
-  animation-duration: 1.7s, 1s;
+  animation-duration: 1.7s, 0.5s;
 }
 html[data-title-morph="3"] h1[data-morph-title] {
   font-weight: 600;
