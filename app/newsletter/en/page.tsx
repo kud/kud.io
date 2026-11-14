@@ -1,9 +1,9 @@
-import { IndexPage, indexMetadata } from "@/app/newsletter/pages"
+import { EditionsPage, editionsMetadata } from "@/app/newsletter/pages"
 
 export const dynamic = "force-static"
 
-export const metadata = indexMetadata("en")
+export const metadata = editionsMetadata("en")
 
-const Page = () => <IndexPage lang="en" />
+const Page = () => <EditionsPage lang="en" />
 
 export default Page

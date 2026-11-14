@@ -83,6 +83,173 @@
   gap: 8px;
 }
 
+/* The edition's top bar: two ways around (every edition, the calendar) on
+ * the left, the reading controls on the right. Words in the kicker's voice,
+ * not buttons: the bar is a line of type, nothing framed. */
+.topBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin-bottom: 20px;
+}
+
+.topNav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 20px;
+}
+
+.topNav a,
+.topNav button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.topNav a:hover,
+.topNav button:hover,
+.topNav button[aria-expanded="true"] {
+  color: var(--fg);
+}
+
+.topNav a:hover span,
+.topNav button:hover span,
+.topNav button[aria-expanded="true"] span {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.topNav a:focus-visible,
+.topNav button:focus-visible,
+.calendar button:focus-visible,
+.calendarGrid a:focus-visible {
+  outline: 2px solid var(--c-fn);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.masthead > .kicker {
+  margin-bottom: 12px;
+}
+
+/* The calendar opens in the flow, under the bar, between two hairlines: a
+ * month of days, the ones with an edition set as links, the edition on screen
+ * filled with ink. Days without one stay quiet and are not links. */
+.calendar {
+  max-width: 360px;
+  margin: 0 0 32px;
+  padding: 12px 0 16px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.calendarHead {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.calendarHead button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font-size: 16px;
+  color: var(--fg-2);
+  cursor: pointer;
+}
+
+.calendarHead button:hover:not(:disabled) {
+  background: var(--bg-2);
+  color: var(--fg);
+}
+
+.calendarHead button:disabled {
+  color: var(--fg-3);
+  opacity: 0.45;
+  cursor: default;
+}
+
+.calendarMonth {
+  margin: 0;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.calendarGrid {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.calendarGrid th {
+  padding: 0 0 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--fg-3);
+}
+
+.calendarGrid td {
+  padding: 2px 0;
+  text-align: center;
+  font-size: 14.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.calendarGrid a,
+.calendarGrid td[data-empty] > span:first-child {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+}
+
+.calendarGrid a {
+  font-weight: 650;
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 4px;
+}
+
+.calendarGrid a:hover {
+  background: var(--bg-2);
+  text-decoration-color: currentColor;
+}
+
+.calendarGrid a[aria-current="page"] {
+  background: var(--fg);
+  color: var(--bg);
+  text-decoration: none;
+}
+
+.calendarGrid td[data-empty] {
+  color: var(--fg-3);
+}
+
 .kicker {
   margin: 0;
   font-family: var(--mono);
@@ -939,7 +1106,7 @@
 
 /* Index ----------------------------------------------------------------------- */
 
-/* /newsletter: the latest edition pinned with its summary, the rest by month.
+/* /newsletter/editions: the latest edition pinned with its summary, the rest by month.
  * The pin is carried by size and order, not a box: a larger date, the lede at
  * reading size, its first subjects over hairlines, then one way in. */
 

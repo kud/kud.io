@@ -43,6 +43,7 @@ export const proxy = (request: NextRequest) => {
 export const config = {
   matcher: [
     "/newsletter",
+    "/newsletter/editions",
     "/newsletter/:date(\\d{4}-\\d{2}-\\d{2})",
     "/newsletter/en",
     "/newsletter/en/:path*",

@@ -18,6 +18,7 @@ import {
   type Lang,
 } from "@/lib/newsletter/language"
 import { headline } from "@/lib/newsletter/prompt"
+import { EditionBar } from "@/components/newsletter/edition-bar"
 import { LangSwitch } from "@/components/newsletter/lang-switch"
 import { Prose } from "@/components/newsletter/prose"
 import {
@@ -96,28 +97,31 @@ export const EditionView = ({
       >
         <script dangerouslySetInnerHTML={{ __html: READER_SCRIPT }} />
         <header className={styles.masthead}>
-          <div className={styles.mastRow}>
-            <p className={styles.kicker}>
-              {copy.name}
-              {latest && (
-                <span className={styles.kickerNote}> · {copy.latest}</span>
-              )}
-            </p>
-            <div className={styles.mastTools}>
-              <ReaderPreferences
-                lang={lang}
-                rootId={EDITION_ROOT_ID}
-                styles={styles}
-              />
-              <LangSwitch
-                to={otherLang(lang)}
-                page={page}
-                label={copy.switchTo}
-                short={copy.switchShort}
-                className={styles.langSwitch}
-              />
-            </div>
-          </div>
+          <EditionBar
+            date={edition.date}
+            dates={dates}
+            lang={lang}
+            styles={styles}
+          >
+            <ReaderPreferences
+              lang={lang}
+              rootId={EDITION_ROOT_ID}
+              styles={styles}
+            />
+            <LangSwitch
+              to={otherLang(lang)}
+              page={page}
+              label={copy.switchTo}
+              short={copy.switchShort}
+              className={styles.langSwitch}
+            />
+          </EditionBar>
+          <p className={styles.kicker}>
+            {copy.name}
+            {latest && (
+              <span className={styles.kickerNote}> · {copy.latest}</span>
+            )}
+          </p>
           <h1 className={styles.title}>
             {capitalise(formatEditionDate(edition.date, lang))}
           </h1>
@@ -310,7 +314,9 @@ export const EditionView = ({
             )}
           </nav>
           <p className={styles.footLinks}>
-            <Link href={newsletterHref({}, lang)}>{copy.archive}</Link>
+            <Link href={newsletterHref({ editions: true }, lang)}>
+              {copy.archive}
+            </Link>
             <a href={`/newsletter/${lang}.xml`}>{copy.feed}</a>
           </p>
           {emailConfigured() && <Signup lang={lang} styles={styles} />}
@@ -332,10 +338,10 @@ const summaryOf = (edition: Edition, lang: Lang) =>
     .map((item) => item.title[lang])
     .join(" · ")
 
-// /newsletter: the latest edition pinned at the top with its summary, then
+// /newsletter/editions: the latest edition pinned at the top with its summary, then
 // every earlier one by month. Each edition keeps its own address; this page
 // only points at them.
-export const IndexView = ({
+export const EditionsView = ({
   editions,
   lang,
 }: {
@@ -360,7 +366,7 @@ export const IndexView = ({
         <p className={styles.kicker}>{copy.name}</p>
         <LangSwitch
           to={otherLang(lang)}
-          page={{}}
+          page={{ editions: true }}
           label={copy.switchTo}
           short={copy.switchShort}
           className={styles.langSwitch}
@@ -472,7 +478,7 @@ export const newsletterMetadata = ({
 }: {
   edition: Edition | null
   lang: Lang
-  page: { date?: string }
+  page: { date?: string; editions?: boolean }
 }): Metadata => {
   const copy = COPY[lang]
   const title = edition

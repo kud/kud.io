@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import {
   EditionView,
-  IndexView,
+  EditionsView,
   newsletterMetadata,
 } from "@/components/newsletter/edition-view"
 import {
@@ -17,13 +17,15 @@ import type { Lang } from "@/lib/newsletter/language"
 // prerendered in its own language, metadata included, and the public URL
 // keeps the language in the query.
 
-// The index describes the newsletter, not whichever edition is newest: an
-// edition's own metadata lives at its own address.
-export const indexMetadata = (lang: Lang) =>
-  newsletterMetadata({ edition: null, lang, page: {} })
+// The list of every edition describes the newsletter, not whichever edition
+// is newest: an edition's own metadata lives at its own address. The bare
+// /newsletter redirects to the newest edition (next.config.mjs) and renders
+// this list only while there is none, so the list's canonical is its own.
+export const editionsMetadata = (lang: Lang) =>
+  newsletterMetadata({ edition: null, lang, page: { editions: true } })
 
-export const IndexPage = async ({ lang }: { lang: Lang }) => (
-  <IndexView editions={await getEditions()} lang={lang} />
+export const EditionsPage = async ({ lang }: { lang: Lang }) => (
+  <EditionsView editions={await getEditions()} lang={lang} />
 )
 
 export const dateParams = async () =>
