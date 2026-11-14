@@ -318,13 +318,18 @@
   margin-bottom: 0;
 }
 
-.prose a {
+.prose a,
+.facts a,
+.timeline a {
   color: inherit;
+  text-decoration: underline;
   text-decoration-color: var(--line-2);
   text-underline-offset: 3px;
 }
 
-.prose a:hover {
+.prose a:hover,
+.facts a:hover,
+.timeline a:hover {
   text-decoration-color: currentColor;
 }
 

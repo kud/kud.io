@@ -56,17 +56,6 @@ const writtenAt = (iso: string | null, lang: Lang) => {
     : `Written at ${time}, London time`
 }
 
-const SourceLinks = ({ urls }: { urls: string[] }) => (
-  <>
-    {urls.map((url) => (
-      <a key={url} href={url} rel="noreferrer" className={styles.citation}>
-        <span aria-hidden>↗ </span>
-        {hostOf(url)}
-      </a>
-    ))}
-  </>
-)
-
 export const EditionView = ({
   edition,
   lang,
@@ -205,9 +194,7 @@ export const EditionView = ({
                       {formatEditionDate(entry.date, lang, "short")}{" "}
                       {entry.date.slice(0, 4)}
                     </time>
-                    <span>
-                      {entry.text[lang]} <SourceLinks urls={entry.urls} />
-                    </span>
+                    <Prose markdown={entry.text[lang]} inline />
                   </li>
                 ))}
               </ol>
@@ -217,7 +204,7 @@ export const EditionView = ({
               <ul className={styles.facts}>
                 {edition.inBrief.map((fact) => (
                   <li key={fact.text.en}>
-                    {fact.text[lang]} <SourceLinks urls={fact.urls} />
+                    <Prose markdown={fact.text[lang]} inline />
                   </li>
                 ))}
               </ul>
