@@ -275,8 +275,13 @@ section:first-of-type .year {
   transition: border-color 130ms;
 }
 
-.list h2 a:hover {
-  border-bottom-color: var(--c-gold);
+/* Hover answers only a real pointer. On a phone a tap is also a hover: the
+   cover leaned in and the tile lit at the press, then the glide to the post
+   started from that half-step (Erwann, 2026-11-14). */
+@media (hover: hover) {
+  .list h2 a:hover {
+    border-bottom-color: var(--c-gold);
+  }
 }
 
 /* Row tags mirror the date as metadata on the right. One size under the filter
@@ -412,8 +417,10 @@ section:first-of-type .year {
    neighbouring thumbs (Erwann, 2026-11-10). The thumb is a pointer-only twin
    of the title link, so keyboard focus on the title drives the cover too.
    Under reduced motion only the underline answers. */
-.list li:has(.thumb:hover, h2 a:hover) h2 a {
-  border-bottom-color: var(--c-gold);
+@media (hover: hover) {
+  .list li:has(.thumb:hover, h2 a:hover) h2 a {
+    border-bottom-color: var(--c-gold);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -422,8 +429,13 @@ section:first-of-type .year {
       opacity 320ms ease-out,
       transform 0.6s cubic-bezier(0.2, 0, 0, 1);
   }
-  .list li:has(.thumb:hover, h2 a:hover, h2 a:focus-visible) .thumb img {
+  .list li:has(h2 a:focus-visible) .thumb img {
     transform: scale(1.06);
+  }
+  @media (hover: hover) {
+    .list li:has(.thumb:hover, h2 a:hover) .thumb img {
+      transform: scale(1.06);
+    }
   }
 }
 
@@ -452,8 +464,10 @@ section:first-of-type .year {
   transition: opacity 130ms;
 }
 
-.list li:hover::before {
-  opacity: 1;
+@media (hover: hover) {
+  .list li:hover::before {
+    opacity: 1;
+  }
 }
 
 .list h2 a::after {
@@ -477,6 +491,8 @@ section:first-of-type .year {
   outline-offset: 0;
 }
 
-.list li:has(.thumb:hover, h2 a:hover) h2 a {
-  border-bottom-color: transparent;
+@media (hover: hover) {
+  .list li:has(.thumb:hover, h2 a:hover) h2 a {
+    border-bottom-color: transparent;
+  }
 }
