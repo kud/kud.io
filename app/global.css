@@ -78,6 +78,13 @@ body {
   --hover-speed: 0.18s;
 }
 
+/* The search bubble sits fixed, bottom right (components/launcher): 18px off
+   the edge, 40px tall. A sticky rail, left or right, ends this far above the
+   window's bottom so it never runs behind it. */
+:root {
+  --launcher-clear: calc(max(18px, env(safe-area-inset-bottom)) + 40px + 16px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --hover-lift: none;

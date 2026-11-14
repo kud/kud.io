@@ -135,7 +135,7 @@
     align-self: start;
     position: sticky;
     top: var(--sidebar-top);
-    max-height: calc(100svh - var(--sidebar-top) * 2);
+    max-height: calc(100svh - var(--sidebar-top) - var(--launcher-clear));
     margin-top: 60px;
   }
   .sidebarScroll {

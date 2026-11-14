@@ -1034,7 +1034,7 @@ a.badge:focus-visible {
 @media (min-width: 901px) {
   .recordRail {
     position: sticky;
-    top: min(28px, calc(100dvh - var(--box-h, 0px) - 28px));
+    top: min(28px, calc(100dvh - var(--box-h, 0px) - var(--launcher-clear)));
   }
 }
 @media (max-width: 900px) {

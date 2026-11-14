@@ -398,6 +398,6 @@
 @media (min-width: 861px) {
   .rail {
     position: sticky;
-    top: min(28px, calc(100dvh - var(--box-h, 0px) - 28px));
+    top: min(28px, calc(100dvh - var(--box-h, 0px) - var(--launcher-clear)));
   }
 }
