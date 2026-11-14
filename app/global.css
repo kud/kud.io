@@ -220,6 +220,124 @@ html[data-vt="morph"]::view-transition-new(*) {
   animation-duration: 0.34s;
 }
 
+/* Blog index ↔ post (components/post-morph-link.tsx, blog-morph-arrival.tsx).
+   Erwann's rule (2026-11-13): what is on both pages never fades. The cover and
+   the title only move; the header, the theme picker and the footer stay
+   exactly where they are; only what differs, the list and the body, crosses.
+   Each piece is lifted out of the root snapshot into a group of its own, its
+   outgoing snapshot is hidden from the first frame and its incoming one is
+   shown whole, so the only thing that changes is where the group sits.
+   Scoped to the morph flag: any other transition keeps the browser default.
+
+   The class is set here, not in the CSS modules, which would hash its value. */
+[data-morph-cover] {
+  view-transition-class: post-cover;
+}
+
+[data-morph-title] {
+  view-transition-class: post-title;
+}
+
+html[data-vt="morph"] #blog-root [data-morph-still],
+html[data-vt="morph"] #blog-root > .blog-picker,
+html[data-vt="morph"] #blog-root > button[class*="trigger"],
+html[data-vt="morph"] #blog-root > footer {
+  view-transition-class: blog-still;
+}
+
+html[data-vt="morph"] #blog-root [data-morph-still] {
+  view-transition-name: blog-header;
+}
+
+html[data-vt="morph"] #blog-root > .blog-picker {
+  view-transition-name: blog-picker;
+}
+
+html[data-vt="morph"] #blog-root > footer {
+  view-transition-name: blog-footer;
+}
+
+/* The launcher's floating Search button (components/launcher). */
+html[data-vt="morph"] #blog-root > button[class*="trigger"] {
+  view-transition-name: blog-search;
+}
+
+html[data-vt="morph"]::view-transition-old(*.post-cover),
+html[data-vt="morph"]::view-transition-old(*.post-title),
+html[data-vt="morph"]::view-transition-old(*.blog-still) {
+  /* opacity, not display: Chrome keeps painting a display:none snapshot. */
+  animation: none;
+  opacity: 0;
+}
+
+html[data-vt="morph"]::view-transition-new(*.post-title),
+html[data-vt="morph"]::view-transition-new(*.blog-still),
+html[data-vt="morph"]::view-transition-group(*.blog-still) {
+  animation: none;
+}
+
+/* The cover's frame changes shape on the way (a 96px square, a 16:9 card, the
+   wide hero); the picture fills and crops it at every step, the way
+   object-fit does on the page, rather than stretching. */
+html[data-vt="morph"]::view-transition-group(*.post-cover) {
+  overflow: clip;
+}
+
+html[data-vt="morph"]::view-transition-new(*.post-cover) {
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The incoming cover is a live snapshot, so its own load-in (a fade over the
+   blurred preview) would play inside the glide. During the move the blur
+   steps aside for the thumb the index already loaded (--thumb, set on the
+   post's hero), and the full image, preloaded from the press, shows at once. */
+html[data-vt="morph"] [data-morph-cover] {
+  background: var(--thumb, none) center / cover no-repeat;
+}
+
+html[data-vt="morph"] [data-morph-cover]::before {
+  visibility: hidden;
+}
+
+html[data-vt="morph"] [data-morph-cover] img {
+  transition: none !important;
+  opacity: 1 !important;
+}
+
+/* The post hero's own load-in lean (scale 1.045) is reset; the index thumb
+   keeps whatever hover lean it had at the press, so nothing snaps back to 1
+   before the snapshot. */
+html[data-vt="morph"] figure[data-morph-cover] img {
+  transform: none !important;
+}
+
+/* The thumb leans in on hover (scale 1.06, page.module.css). The press reads
+   that lean into --morph-zoom (PostMorphLink), and the incoming cover starts
+   at it and settles to 1 as it travels, so the zoom carries straight into the
+   hero: no unzoom at the snapshot, no second zoom. Same timing as the group
+   so the two land together. */
+@keyframes post-cover-settle {
+  from {
+    transform: scale(var(--morph-zoom, 1));
+  }
+}
+
+html[data-vt="morph"]::view-transition-new(*.post-cover) {
+  animation: post-cover-settle 0.34s ease both;
+}
+
+html[data-blog-slow][data-vt="morph"]::view-transition-new(*.post-cover) {
+  animation-duration: 1.7s;
+}
+
+/* Preview only (Glide now on the preview banner): today's plain cross-fade,
+   so nothing is named on either side. */
+html[data-blog-morph="none"] [data-morph-title],
+html[data-blog-morph="none"] [data-morph-cover] {
+  view-transition-name: none !important;
+}
+
 /* The home ↔ /projects "ink" transition is handled on desktop by the
    InkTransition overlay, which spills cover ink out of the pressed control and
    reveals the new route once it commits (via @kud/inkblot, which injects its
@@ -319,4 +437,29 @@ html[data-arrive="ink"] body::after {
   font-size: 18px;
   font-weight: 700;
   color: var(--text);
+}
+
+/* Preview only: the glide banner's "slow ×5" (components/blog-morph-preview.tsx),
+   so the candidates can be told apart by eye. Every duration above, times five:
+   the morph's 0.75s root and 0.34s glide, and the plain cross-fade's 0.25s. */
+html[data-blog-slow]::view-transition-old(root),
+html[data-blog-slow]::view-transition-new(root) {
+  animation-duration: 1.25s;
+}
+
+html[data-blog-slow][data-vt="morph"]::view-transition-old(root),
+html[data-blog-slow][data-vt="morph"]::view-transition-new(root) {
+  animation-duration: 3.75s;
+}
+
+html[data-blog-slow]::view-transition-group(*),
+html[data-blog-slow]::view-transition-old(*),
+html[data-blog-slow]::view-transition-new(*) {
+  animation-duration: 1.25s;
+}
+
+html[data-blog-slow][data-vt="morph"]::view-transition-group(*),
+html[data-blog-slow][data-vt="morph"]::view-transition-old(*),
+html[data-blog-slow][data-vt="morph"]::view-transition-new(*) {
+  animation-duration: 1.7s;
 }

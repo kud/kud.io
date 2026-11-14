@@ -1,0 +1,123 @@
+/* Preview banner for the glide candidates. Tokens come from #blog-root
+ * (app/blog/blog.module.css); nothing here declares a colour. */
+
+.banner {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  z-index: 60;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 8px;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  padding: 7px 10px 7px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  background: var(--bg-2);
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.12);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--fg-2);
+}
+
+.badge {
+  color: var(--fg);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.rowLabel {
+  margin-right: 4px;
+  color: var(--fg-3);
+}
+
+.row button,
+.close {
+  padding: 3px 7px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.row button:hover,
+.close:hover {
+  color: var(--fg);
+}
+
+.row button[aria-checked="true"] {
+  background: var(--bg);
+  color: var(--fg);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+
+.close {
+  font-size: 14px;
+  line-height: 1;
+}
+
+@media print {
+  .banner {
+    display: none;
+  }
+}
+
+/* Copy: the picks as one pasteable line. Fixed width, so "Copied" doesn't
+ * nudge the close button. */
+.copy {
+  min-width: 7ch;
+  padding: 3px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+  color: var(--fg);
+  font: inherit;
+  cursor: pointer;
+}
+
+.copy:hover {
+  box-shadow: inset 0 0 0 1px var(--fg-3);
+}
+
+/* Slow ×5: a two-state toggle, styled as the checked radio when on. */
+.toggle {
+  padding: 3px 7px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.toggle:hover {
+  color: var(--fg);
+}
+
+.toggle[aria-pressed="true"] {
+  background: var(--bg);
+  color: var(--fg);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+
+/* One line on a phone: the row's own label goes first, the numbers read
+ * without it next to the badge. */
+@media (max-width: 420px) {
+  .rowLabel {
+    display: none;
+  }
+}

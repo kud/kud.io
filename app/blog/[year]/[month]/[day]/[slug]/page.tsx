@@ -28,6 +28,7 @@ import { imageDimensions } from "@/lib/image-dimensions"
 import { BlogMermaid } from "@/components/blog-mermaid"
 import { BlogContents } from "@/components/blog-contents"
 import { BlogMorePicks } from "@/components/blog-more-picks"
+import { PostMorphReturn } from "@/components/post-morph-link"
 import { pickMore } from "@/lib/blog-more"
 import styles from "./page.module.css"
 
@@ -260,12 +261,18 @@ const BlogPostPage = async ({ params }: Params) => {
   return (
     <>
       <div className={styles.progress} aria-hidden="true" />
+      <PostMorphReturn slug={post.slug} />
       <article>
         {cover && (
           <figure
             className={styles.hero}
+            data-morph-cover
             style={
               {
+                viewTransitionName: `post-cover-${post.slug}`,
+                // The sharp picture under the glide (global.css): the thumb the
+                // index already loaded, not the blurred preview.
+                "--thumb": `url(${cover.thumb})`,
                 ...(cover.preview && { "--preview": `url(${cover.preview})` }),
                 ...(coverSize && {
                   "--ratio": `${coverSize.width} / ${coverSize.height}`,
@@ -281,7 +288,13 @@ const BlogPostPage = async ({ params }: Params) => {
             />
           </figure>
         )}
-        <h1 className={styles.title}>{post.title}</h1>
+        <h1
+          className={styles.title}
+          data-morph-title
+          style={{ viewTransitionName: `post-title-${post.slug}` }}
+        >
+          {post.title}
+        </h1>
         <div className={styles.meta}>
           <span>
             {[post.date, `${readingMinutes(post.body)} min`]
