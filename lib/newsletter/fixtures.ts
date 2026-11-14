@@ -86,7 +86,7 @@ const rendition = (lang: "fr" | "en", intro: string | null | undefined, spec: Se
   return out
 }
 
-export const OVERVIEW = { fr: "L’essentiel du jour", en: "Today’s briefing" }
+export const OVERVIEW = { fr: "Ce soir", en: "Tonight" }
 export const BRIEF = { fr: "L’essentiel", en: "The essentials" }
 export const DEPTH = { fr: "Le sujet du jour", en: "Today’s focus" }
 export const EXPLAINER = { fr: "C’est quoi ?", en: "Explainer" }

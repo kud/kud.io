@@ -77,7 +77,7 @@ const bullets = (key: SectionKey, fr: string, en: string): SectionSpec =>
 // The intro is normally the paragraphs before the first section heading, with
 // no heading of its own; the overview heading is still accepted for it.
 export const SECTIONS: readonly SectionSpec[] = [
-  narrative("overview", "L’essentiel du jour", "Today’s briefing", { required: true, paragraphs: [1, 2], strict: true }),
+  narrative("overview", "Ce soir", "Tonight", { required: true, paragraphs: [1, 2], strict: true }),
   items("depth", "Le sujet du jour", "Today’s focus", true, 1),
   items("brief", "L’essentiel", "The essentials"),
   items("explainer", "C’est quoi ?", "Explainer", true, 1),
@@ -91,8 +91,8 @@ export const SECTIONS: readonly SectionSpec[] = [
 ]
 
 // Typed apostrophes drift between ' and ’ depending on the keyboard and on
-// Notion's smart quotes, so both spellings of L’essentiel du jour (and of
-// Today’s briefing) are the same section.
+// Notion's smart quotes, so both spellings of L’essentiel (and of C’est
+// quoi ?) are the same section.
 const canonical = (text: string) =>
   text.normalize("NFC").replace(/[‘’']/g, "’").replace(/\s+/g, " ").trim()
 

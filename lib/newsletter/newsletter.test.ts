@@ -146,9 +146,10 @@ describe("text safety", () => {
 
 describe("sections and dates", () => {
   it("accepts both apostrophes in L’essentiel", () => {
-    assert.equal(sectionFor("L'essentiel du jour", "fr")?.key, "overview")
-    assert.equal(sectionFor("L’essentiel du jour", "fr")?.key, "overview")
-    assert.equal(sectionFor("Today's briefing", "en")?.key, "overview")
+    assert.equal(sectionFor("Ce soir", "fr")?.key, "overview")
+    assert.equal(sectionFor("Tonight", "en")?.key, "overview")
+    assert.equal(sectionFor("L'essentiel", "fr")?.key, "brief")
+    assert.equal(sectionFor("L’essentiel", "fr")?.key, "brief")
     assert.equal(sectionFor("The essentials", "fr"), undefined)
     assert.equal(sectionFor("C'est quoi\u00a0?", "fr")?.key, "explainer")
   })
@@ -400,7 +401,7 @@ describe("derived files", () => {
     assert.equal(json.publishedAt, "2026-11-14T19:00:00.000Z")
     assert.deepEqual(json.languages, ["fr", "en"])
     assert.match(json.lede.fr!, /^Ce soir, on revient sur le port de Glassmere/)
-    assert.deepEqual(json.sections[0], { key: "overview", kind: "narrative", title: { fr: "L’essentiel du jour", en: "Today’s briefing" }, items: [] })
+    assert.deepEqual(json.sections[0], { key: "overview", kind: "narrative", title: { fr: "Ce soir", en: "Tonight" }, items: [] })
     assert.deepEqual(json.sections[1], { key: "brief", kind: "items", title: { fr: "L’essentiel", en: "The essentials" }, items: ["01", "02"] })
     assert.match(json.narrative.overview.en, /^Tonight, back to Glassmere’s harbour \(\[The Fictional Daily\]\(https:\/\/news\.example\.org\/story\/1\)\)/)
     assert.equal(json.narrative.analysis, null)
@@ -497,7 +498,7 @@ describe("amendment 1: narrative and list sections", () => {
   it("accepts the intro under its heading, but not in both places", () => {
     assert.deepEqual(codes(editionBlocks(sampleSpec(), { overview: "heading" })), [])
     const blocks = editionBlocks(sampleSpec(), { overview: "heading" })
-    const at = blocks.findIndex((b) => isText(b, "L’essentiel du jour"))
+    const at = blocks.findIndex((b) => isText(b, "Ce soir"))
     const both = [...blocks.slice(0, at), p("Une autre intro."), ...blocks.slice(at)]
     assert.ok(codes(both).includes("OVERVIEW_TWICE"))
   })
