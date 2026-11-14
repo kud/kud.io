@@ -17,6 +17,10 @@ on:
         description: Edition date (YYYY-MM-DD). Empty = every Ready edition.
         type: string
         default: ""
+      validate_only:
+        description: Only parse and validate that date's edition (any status); write and publish nothing.
+        type: boolean
+        default: false
   schedule:
     - cron: "30 18 * * *"
     - cron: "30 19 * * *"
@@ -55,10 +59,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # A dry check of one edition, Draft included: parse, validate, report.
+      - name: Validate only
+        if: inputs.validate_only
+        run: node scripts/sync-newsletter.js --validate-only "--date=$DATE_INPUT"
+
       # Writes the files, the report, and this step's outputs: `publish`
       # (valid editions not yet Published) and `invalid`, space-separated dates.
       - name: Sync from Notion
         id: plan
+        if: ${{ !inputs.validate_only }}
         run: |
           node scripts/sync-newsletter.js ${DATE_INPUT:+"--date=$DATE_INPUT"} "--report=$REPORT"
           if [ -n "$(git status --porcelain -- content/newsletter)" ]; then
