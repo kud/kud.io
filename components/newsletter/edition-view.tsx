@@ -133,7 +133,10 @@ export const EditionView = ({
           <h1 className={styles.title}>
             {capitalise(formatEditionDate(edition.date, lang))}
           </h1>
-          {edition.lede[lang] && (
+          {/* The pipeline's lede is the intro itself, which opens the body
+              below; repeat it here only if an edition ever has its own. */}
+          {edition.lede[lang] &&
+            edition.lede[lang] !== edition.narrative.overview[lang] && (
             <p className={styles.lede}>{edition.lede[lang]}</p>
           )}
           <p className={styles.meta}>
