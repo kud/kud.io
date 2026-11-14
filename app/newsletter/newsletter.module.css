@@ -453,6 +453,21 @@
 
 .section {
   margin: 0 0 56px;
+  scroll-margin-top: 24px;
+  scroll-snap-align: start;
+}
+
+/* A light snap: proximity only settles the page on a section start when the
+ * scroll already ends near one, so long sections still read freely. The
+ * edition sets it on the root; reduced motion keeps plain scrolling. */
+:global(html):has(.edition) {
+  scroll-snap-type: y proximity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(html):has(.edition) {
+    scroll-snap-type: none;
+  }
 }
 
 /* A section title is a label, not a headline: small, spaced capitals over a
