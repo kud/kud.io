@@ -1,4 +1,5 @@
 import { ghHeaders } from "@/lib/projects"
+import { getPackageFact } from "@/lib/repo-facts"
 
 const OWNER = "kud"
 
@@ -31,11 +32,25 @@ const commandsOf = (pkg: PackageJson & { name: string }): string[] =>
     ? [pkg.name.replace(/^@[^/]+\//, "")]
     : Object.keys(pkg.bin ?? {})
 
-// Same URL and cache window as the release lookup, so Next serves both from
-// one fetch. A repo without a package.json (themes, Raycast, Swift) gets null.
+// Same file as the release lookup, from the synced repo facts or, failing
+// that, the same URL and cache window, so Next serves both from one fetch. A
+// repo without a package.json (themes, Raycast, Swift) gets null.
 export const getPackageFacts = async (
   slug: string,
 ): Promise<PackageFacts | null> => {
+  // Synced by scripts/sync-content.js; the live read below is for a repo the
+  // sync has not seen yet.
+  const fact = getPackageFact(slug)
+  if (fact !== undefined) {
+    if (!fact?.name || fact.private) return null
+    return {
+      name: fact.name,
+      commands: commandsOf({ name: fact.name, bin: fact.bin ?? undefined }),
+      node: fact.node,
+      peers: fact.peers,
+      dependencies: fact.dependencies,
+    }
+  }
   try {
     const res = await fetch(
       `https://api.github.com/repos/${OWNER}/${slug}/contents/package.json`,

@@ -1,6 +1,7 @@
 import { ghHeaders } from "@/lib/projects"
 import { surfaceSource } from "@/lib/monorepo"
 import { fetchWithRetry } from "@/lib/fetch-retry"
+import { getPackageFact, getRepoFacts } from "@/lib/repo-facts"
 
 const OWNER = "kud"
 
@@ -23,10 +24,15 @@ const SEMVER_TAG = /^v?(\d+)\.(\d+)\.(\d+)$/
 const compareSemver = (a: number[], b: number[]) =>
   a[0] - b[0] || a[1] - b[1] || a[2] - b[2]
 
-// What `npm install` gets: the registry's latest, read through the package
-// name in the repo's own package.json. Private and unpublished packages fall
-// through to the tags.
-const fromNpm = async (slug: string, path = ""): Promise<Release | null> => {
+// The package.json comes from the synced repo facts when the sync has seen
+// this repo; only a repo it has not (new since the last run) costs a call.
+const readPackageName = async (
+  slug: string,
+  path: string,
+): Promise<string | null> => {
+  const fact = getPackageFact(slug, path)
+  if (fact !== undefined)
+    return fact?.name && !fact.private ? fact.name : null
   const pkgRes = await fetchWithRetry(
     `https://api.github.com/repos/${OWNER}/${slug}/contents/${path ? `${path}/` : ""}package.json`,
     {
@@ -36,12 +42,20 @@ const fromNpm = async (slug: string, path = ""): Promise<Release | null> => {
   )
   if (!pkgRes.ok) return null
   const pkg = (await pkgRes.json()) as PackageJson
-  if (!pkg.name || pkg.private) return null
+  return pkg.name && !pkg.private ? pkg.name : null
+}
+
+// What `npm install` gets: the registry's latest, read through the package
+// name in the repo's own package.json. Private and unpublished packages fall
+// through to the tags.
+const fromNpm = async (slug: string, path = ""): Promise<Release | null> => {
+  const name = await readPackageName(slug, path)
+  if (!name) return null
 
   // The full packument carries `time[version]`, the publish date; the
   // `/latest` shortcut does not.
   const npmRes = await fetchWithRetry(
-    `https://registry.npmjs.org/${pkg.name.replace("/", "%2F")}`,
+    `https://registry.npmjs.org/${name.replace("/", "%2F")}`,
     { next: { revalidate: false } },
   )
   if (!npmRes.ok) return null
@@ -50,16 +64,28 @@ const fromNpm = async (slug: string, path = ""): Promise<Release | null> => {
   return version
     ? {
         version,
-        url: `https://www.npmjs.com/package/${pkg.name}`,
+        url: `https://www.npmjs.com/package/${name}`,
         publishedAt: packument.time?.[version] ?? null,
       }
     : null
 }
 
-// Apps, extensions and themes ship from tags. Only plain `vX.Y.Z` tags count:
+// Apps, extensions and themes ship from tags, read from the synced repo facts
+// when there are some. Only plain `vX.Y.Z` tags count:
 // a monorepo's prefixed tags (`webext-v1.5.0`) belong to one of its parts.
 // The API lists tags by name, not by version, so the highest is picked here.
 const fromTags = async (slug: string): Promise<Release | null> => {
+  const facts = getRepoFacts(slug)
+  if (facts) {
+    const tag = facts.tag
+    return tag
+      ? {
+          version: tag.version,
+          url: `https://github.com/${OWNER}/${slug}/releases/tag/${tag.name}`,
+          publishedAt: tag.date,
+        }
+      : null
+  }
   const res = await fetchWithRetry(
     `https://api.github.com/repos/${OWNER}/${slug}/tags?per_page=100`,
     { headers: ghHeaders(), next: { revalidate: false } },

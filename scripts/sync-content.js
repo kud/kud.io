@@ -22,6 +22,13 @@ import {
   filterLanding,
 } from "./lib/landing-filter.js"
 import { prepareDoc } from "./lib/doc-file.js"
+import {
+  latestSemverTag,
+  packageFact,
+  reusableDate,
+  sortFacts,
+  surfacePathsByRepo,
+} from "./lib/repo-facts.js"
 
 const CONTENT_DIR = "content/projects"
 const README_DIR = "content/readmes"
@@ -47,6 +54,7 @@ const RAYCAST_SLUGS = [
 ]
 const RAYCAST_REPO = "raycast/extensions"
 const RAYCAST_FILE = "content/raycast.json"
+const FACTS_FILE = "content/projects/repo-facts.json"
 
 const token = process.env.GITHUB_TOKEN
 const headers = {
@@ -386,6 +394,100 @@ const syncRepo = async (repo, warnings) => {
   return { slug, icon }
 }
 
+// A package.json, or null when the repo has none at that path. Only a 404
+// means "none": any other failure throws, so a transient error is never
+// stored as a fact and then trusted until the repo's next push.
+const readPackage = async (slug, path) => {
+  const file = `${path ? `${path}/` : ""}package.json`
+  const res = await fetch(
+    `https://raw.githubusercontent.com/${OWNER}/${slug}/HEAD/${file}`,
+    {
+      headers: {
+        "Cache-Control": "no-cache",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    },
+  )
+  if (res.status === 404) return null
+  if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${file}`)
+  try {
+    return packageFact(JSON.parse(await res.text()))
+  } catch {
+    return null
+  }
+}
+
+// The highest semver tag and the date of its commit (a tag has none of its
+// own in the listing). A failed date lookup costs only the date.
+const readTag = async (slug, previous) => {
+  const latest = latestSemverTag(
+    await api(
+      `https://api.github.com/repos/${OWNER}/${slug}/tags?per_page=100`,
+    ),
+  )
+  if (!latest) return null
+  let date = reusableDate(previous, latest)
+  if (date === undefined) {
+    date = null
+    if (latest.sha) {
+      try {
+        const commit = await api(
+          `https://api.github.com/repos/${OWNER}/${slug}/commits/${latest.sha}`,
+        )
+        date = commit.commit?.committer?.date ?? null
+      } catch {
+        // Keep the version without its date.
+      }
+    }
+  }
+  return { ...latest, date }
+}
+
+const readSurfaceDeclarations = async () => {
+  const declarations = []
+  let entries = []
+  try {
+    entries = await readdir(CONTENT_DIR, { withFileTypes: true })
+  } catch {
+    return declarations
+  }
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue
+    const decl = await readJson(join(CONTENT_DIR, entry.name, "surfaces.json"))
+    if (Array.isArray(decl.surfaces)) declarations.push(decl)
+  }
+  return declarations
+}
+
+// content/projects/repo-facts.json: per repo, its package.json facts (root and
+// any monorepo surface folder) and its latest semver tag, so the build reads
+// releases from disk instead of asking GitHub for each project. The file
+// changes only when a fact does, so it never commits (and deploys) on its own.
+// A repo that fails keeps its previous entry.
+const syncRepoFacts = async (repos, { prune }) => {
+  const previous = await readJson(FACTS_FILE)
+  const pathsByRepo = surfacePathsByRepo(await readSurfaceDeclarations())
+  const facts = prune ? {} : { ...previous }
+  const failed = []
+  await mapPool(repos, 8, async (repo) => {
+    const slug = repo.name
+    const before = previous[slug]
+    try {
+      const packages = {}
+      for (const path of pathsByRepo[slug] ?? [""])
+        packages[path] = await readPackage(slug, path)
+      facts[slug] = { packages, tag: await readTag(slug, before?.tag) }
+    } catch (error) {
+      if (before) facts[slug] = before
+      failed.push(
+        `${slug}: release facts kept from last run (${error.message})`,
+      )
+    }
+  })
+  await writeFile(FACTS_FILE, `${JSON.stringify(sortFacts(facts), null, 2)}\n`)
+  return { failed }
+}
+
 const readJson = async (path) => {
   try {
     return JSON.parse(await readFile(path, "utf8"))
@@ -589,6 +691,13 @@ const main = async () => {
       )
     }
   })
+
+  // Pruned only on a full run over a non-empty search, like the content
+  // below: a partial or failed search must not drop every other repo's facts.
+  const factsRun = await syncRepoFacts(repos, {
+    prune: !only && repos.length > 0,
+  })
+  warnings.push(...factsRun.failed)
 
   const raycastIcons = only ? {} : await syncRaycast()
   Object.assign(icons, raycastIcons)

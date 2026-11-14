@@ -74,9 +74,10 @@ const ProjectsIndex = async () => {
       )
     ).filter((entry) => entry !== null),
   )
-  // Every release comes from the GitHub API, which allows an unauthenticated
-  // caller 60 requests an hour and this page makes a few hundred. None at all
-  // means GitHub refused us, not that nothing was ever released: throwing keeps
+  // Releases come from content/projects/repo-facts.json (written by the sync)
+  // and the npm registry; only a repo the sync has not seen yet asks GitHub.
+  // None at all means a source refused us or the file is missing, not that
+  // nothing was ever released: throwing keeps
   // the last good render on a background revalidation instead of replacing it
   // with an empty "Recently released" column, and fails a build loudly.
   //
