@@ -61,7 +61,7 @@ export const LangSwitch = ({
   className,
 }: {
   to: Lang
-  page: { date?: string; archive?: boolean }
+  page: { date?: string }
   label: string
   short: string
   className?: string

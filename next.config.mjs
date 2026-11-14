@@ -49,6 +49,13 @@ const config = {
       destination: "/blog/2020/06/08/ssh-config-include",
       permanent: true,
     },
+    // The newsletter's archive became its index. Redirects run before the
+    // proxy and keep the query, so ?lang=en survives the hop.
+    {
+      source: "/newsletter/archive",
+      destination: "/newsletter",
+      permanent: false,
+    },
     // Referrals left the catalogue for a footer link; its old landing goes
     // straight to the site.
     {

@@ -1,13 +1,11 @@
 import { notFound } from "next/navigation"
 import {
-  ArchiveView,
   EditionView,
-  EmptyEdition,
+  IndexView,
   newsletterMetadata,
 } from "@/components/newsletter/edition-view"
 import {
   getEditions,
-  getLatestEdition,
   listEditionDates,
   loadEdition,
 } from "@/lib/newsletter/content"
@@ -19,20 +17,14 @@ import type { Lang } from "@/lib/newsletter/language"
 // prerendered in its own language, metadata included, and the public URL
 // keeps the language in the query.
 
-export const latestMetadata = async (lang: Lang) =>
-  newsletterMetadata({ edition: await getLatestEdition(), lang, page: {} })
+// The index describes the newsletter, not whichever edition is newest: an
+// edition's own metadata lives at its own address.
+export const indexMetadata = (lang: Lang) =>
+  newsletterMetadata({ edition: null, lang, page: {} })
 
-export const LatestPage = async ({ lang }: { lang: Lang }) => {
-  const [edition, dates] = await Promise.all([
-    getLatestEdition(),
-    listEditionDates(),
-  ])
-  return edition ? (
-    <EditionView edition={edition} lang={lang} dates={dates} latest />
-  ) : (
-    <EmptyEdition lang={lang} />
-  )
-}
+export const IndexPage = async ({ lang }: { lang: Lang }) => (
+  <IndexView editions={await getEditions()} lang={lang} />
+)
 
 export const dateParams = async () =>
   (await listEditionDates()).map((date) => ({ date }))
@@ -58,10 +50,3 @@ export const DatePage = async ({
   if (!edition) notFound()
   return <EditionView edition={edition} lang={lang} dates={dates} />
 }
-
-export const archiveMetadata = (lang: Lang) =>
-  newsletterMetadata({ edition: null, lang, page: { archive: true } })
-
-export const ArchivePage = async ({ lang }: { lang: Lang }) => (
-  <ArchiveView editions={await getEditions()} lang={lang} />
-)

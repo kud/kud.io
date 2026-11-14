@@ -9,8 +9,7 @@
 }
 
 .edition,
-.empty,
-.archive,
+.index,
 .note {
   --measure: 65ch;
   --body-size: 18px;
@@ -938,10 +937,111 @@
   left: -9999px;
 }
 
-/* Empty and archive --------------------------------------------------------- */
+/* Index ----------------------------------------------------------------------- */
 
-.empty {
-  padding: 40px 0 56px;
+/* /newsletter: the latest edition pinned with its summary, the rest by month.
+ * The pin is carried by size and order, not a box: a larger date, the lede at
+ * reading size, its first subjects over hairlines, then one way in. */
+
+.indexTitle {
+  max-width: 24ch;
+  margin: 0 0 48px;
+  font-family: var(--sans);
+  font-size: clamp(26px, 5vw, 34px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.featured {
+  margin-bottom: 16px;
+}
+
+.featuredDate {
+  margin: 0 0 8px;
+  font-size: clamp(24px, 4.5vw, 30px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.featuredDate a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.featuredDate a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.featured .meta {
+  margin-bottom: 14px;
+}
+
+.featuredLede {
+  max-width: var(--measure);
+  margin: 0 0 22px;
+  font-size: var(--body-size);
+  line-height: 1.6;
+  color: var(--fg-2);
+  text-wrap: pretty;
+}
+
+.featuredItems {
+  max-width: var(--measure);
+  margin: 0 0 20px;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.featuredItems li {
+  border-bottom: 1px solid var(--line);
+}
+
+.featuredItems a {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 11px 0;
+  font-size: 15.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.featuredItems a:hover span:last-child {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.featuredRead {
+  display: inline-block;
+  padding: 6px 0;
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 4px;
+}
+
+.featuredRead:hover {
+  text-decoration-color: currentColor;
+}
+
+.featuredMore {
+  font-weight: 400;
+  color: var(--fg-3);
+}
+
+.indexFooter {
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line-2);
 }
 
 .month {

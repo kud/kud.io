@@ -60,16 +60,15 @@ export const EditionView = ({
   edition,
   lang,
   dates,
-  latest = false,
 }: {
   edition: LoadedEdition
   lang: Lang
   dates: string[]
-  latest?: boolean
 }) => {
   const copy = COPY[lang]
-  const page = latest ? {} : { date: edition.date }
+  const page = { date: edition.date }
   const index = dates.indexOf(edition.date)
+  const latest = index === 0
   const newer = index > 0 ? dates[index - 1] : null
   const older = index >= 0 && index < dates.length - 1 ? dates[index + 1] : null
   const sections = sectionsWithItems(edition)
@@ -126,8 +125,8 @@ export const EditionView = ({
               below; repeat it here only if an edition ever has its own. */}
           {edition.lede[lang] &&
             edition.lede[lang] !== edition.narrative.overview[lang] && (
-            <p className={styles.lede}>{edition.lede[lang]}</p>
-          )}
+              <p className={styles.lede}>{edition.lede[lang]}</p>
+            )}
           <p className={styles.meta}>
             {minutes ? <strong>{minutes} min</strong> : null}
             {words ? (
@@ -311,9 +310,7 @@ export const EditionView = ({
             )}
           </nav>
           <p className={styles.footLinks}>
-            <Link href={newsletterHref({ archive: true }, lang)}>
-              {copy.archive}
-            </Link>
+            <Link href={newsletterHref({}, lang)}>{copy.archive}</Link>
             <a href={`/newsletter/${lang}.xml`}>{copy.feed}</a>
           </p>
           {emailConfigured() && <Signup lang={lang} styles={styles} />}
@@ -323,19 +320,22 @@ export const EditionView = ({
   )
 }
 
-export const EmptyEdition = ({ lang }: { lang: Lang }) => {
-  const copy = COPY[lang]
-  return (
-    <div className={styles.empty} lang={htmlLang[lang]} data-edition="">
-      <p className={styles.kicker}>{copy.name}</p>
-      <h1 className={styles.title}>{copy.emptyTitle}</h1>
-      <p className={styles.lede}>{copy.emptyBody}</p>
-      {emailConfigured() && <Signup lang={lang} styles={styles} />}
-    </div>
-  )
-}
+// How many of the latest edition's subjects the index names before handing
+// over to the edition itself: enough to show its range, few enough that the
+// lede stays the summary.
+const PREVIEW_ITEMS = 4
 
-export const ArchiveView = ({
+const summaryOf = (edition: Edition, lang: Lang) =>
+  edition.lede[lang] ??
+  edition.items
+    .slice(0, 3)
+    .map((item) => item.title[lang])
+    .join(" · ")
+
+// /newsletter: the latest edition pinned at the top with its summary, then
+// every earlier one by month. Each edition keeps its own address; this page
+// only points at them.
+export const IndexView = ({
   editions,
   lang,
 }: {
@@ -343,26 +343,75 @@ export const ArchiveView = ({
   lang: Lang
 }) => {
   const copy = COPY[lang]
+  const [latest, ...earlier] = editions
   const months = new Map<string, Edition[]>()
-  for (const edition of editions) {
+  for (const edition of earlier) {
     const month = edition.date.slice(0, 7)
     months.set(month, [...(months.get(month) ?? []), edition])
   }
+  const href = (edition: Edition, hash?: string) =>
+    newsletterHref({ date: edition.date }, lang, { hash })
+  const minutes = latest?.readingMinutes?.[lang]
+  const remaining = latest ? latest.items.length - PREVIEW_ITEMS : 0
+
   return (
-    <div className={styles.archive} lang={htmlLang[lang]}>
+    <div className={styles.index} lang={htmlLang[lang]}>
       <div className={styles.mastRow}>
         <p className={styles.kicker}>{copy.name}</p>
         <LangSwitch
           to={otherLang(lang)}
-          page={{ archive: true }}
+          page={{}}
           label={copy.switchTo}
           short={copy.switchShort}
           className={styles.langSwitch}
         />
       </div>
-      <h1 className={styles.title}>{copy.archiveTitle}</h1>
-      <p className={styles.lede}>{copy.archiveIntro}</p>
-      {editions.length === 0 && <p className={styles.lede}>{copy.emptyBody}</p>}
+      <h1 className={styles.indexTitle}>{copy.tagline}</h1>
+
+      {latest ? (
+        <section className={styles.featured} aria-labelledby="latest-edition">
+          <h2 id="latest-edition" className={styles.sectionTitle}>
+            {copy.latest}
+          </h2>
+          <h3 className={styles.featuredDate}>
+            <Link href={href(latest)}>
+              <time dateTime={latest.date}>
+                {capitalise(formatEditionDate(latest.date, lang))}
+              </time>
+            </Link>
+          </h3>
+          <p className={styles.meta}>
+            {minutes ? <strong>{minutes} min</strong> : null}
+            <span>{copy.items(latest.items.length)}</span>
+          </p>
+          <p className={styles.featuredLede}>{summaryOf(latest, lang)}</p>
+          <ol className={styles.featuredItems}>
+            {latest.items.slice(0, PREVIEW_ITEMS).map((item) => (
+              <li key={item.id}>
+                <Link href={href(latest, itemAnchor(item.id))}>
+                  <span className={styles.num}>{item.id}</span>
+                  <span>{item.title[lang]}</span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+          <Link href={href(latest)} className={styles.featuredRead}>
+            {copy.read}
+            {remaining > 0 && (
+              <span className={styles.featuredMore}>
+                {" "}
+                · {copy.more(remaining)}
+              </span>
+            )}{" "}
+            →
+          </Link>
+        </section>
+      ) : (
+        <p className={styles.featuredLede}>
+          <strong>{copy.emptyTitle}</strong> {copy.emptyBody}
+        </p>
+      )}
+
       {[...months].map(([month, list]) => (
         <section
           key={month}
@@ -373,29 +422,34 @@ export const ArchiveView = ({
             {capitalise(formatMonth(month, lang))}
           </h2>
           <ol className={styles.archiveList}>
-            {list.map((edition) => {
-              const titles = edition.items
-                .slice(0, 3)
-                .map((item) => item.title[lang])
-              return (
-                <li key={edition.date}>
-                  <Link href={newsletterHref({ date: edition.date }, lang)}>
-                    <time dateTime={edition.date}>
-                      {capitalise(formatEditionDate(edition.date, lang))}
-                    </time>
-                    <span className={styles.archiveLede}>
-                      {edition.lede[lang] ?? titles.join(" · ")}
-                    </span>
-                    <span className={styles.archiveTitles}>
-                      {titles.join(" · ")}
-                    </span>
-                  </Link>
-                </li>
-              )
-            })}
+            {list.map((edition) => (
+              <li key={edition.date}>
+                <Link href={href(edition)}>
+                  <time dateTime={edition.date}>
+                    {capitalise(formatEditionDate(edition.date, lang))}
+                  </time>
+                  <span className={styles.archiveLede}>
+                    {summaryOf(edition, lang)}
+                  </span>
+                  <span className={styles.archiveTitles}>
+                    {copy.items(edition.items.length)}
+                    {edition.readingMinutes?.[lang]
+                      ? ` · ${edition.readingMinutes[lang]} min`
+                      : ""}
+                  </span>
+                </Link>
+              </li>
+            ))}
           </ol>
         </section>
       ))}
+
+      <footer className={styles.indexFooter}>
+        <p className={styles.footLinks}>
+          <a href={`/newsletter/${lang}.xml`}>{copy.feed}</a>
+        </p>
+        {emailConfigured() && <Signup lang={lang} styles={styles} />}
+      </footer>
     </div>
   )
 }
@@ -418,23 +472,13 @@ export const newsletterMetadata = ({
 }: {
   edition: Edition | null
   lang: Lang
-  page: { date?: string; archive?: boolean }
+  page: { date?: string }
 }): Metadata => {
   const copy = COPY[lang]
-  const title = page.archive
-    ? `${copy.name} · ${copy.archiveTitle} — kud.io`
-    : edition
-      ? `${copy.name} · ${capitalise(formatEditionDate(edition.date, lang))} — kud.io`
-      : `${copy.name} — kud.io`
-  const description = page.archive
-    ? copy.tagline
-    : (edition?.lede[lang] ??
-      (edition
-        ? edition.items
-            .slice(0, 3)
-            .map((item) => item.title[lang])
-            .join(" · ")
-        : copy.tagline))
+  const title = edition
+    ? `${copy.name} · ${capitalise(formatEditionDate(edition.date, lang))} — kud.io`
+    : `${copy.name} — kud.io`
+  const description = edition ? summaryOf(edition, lang) : copy.tagline
   const href = (to: Lang) => newsletterHref(page, to, { explicit: to !== "fr" })
   return {
     title,
@@ -449,16 +493,14 @@ export const newsletterMetadata = ({
       types: feeds(lang),
     },
     openGraph: {
-      type: edition && !page.archive ? "article" : "website",
+      type: edition ? "article" : "website",
       url: `${SITE}${href(lang)}`,
       siteName: "kud.io",
       locale: ogLocale[lang],
       alternateLocale: ogLocale[otherLang(lang)],
       title,
       description,
-      ...(edition?.publishedAt && !page.archive
-        ? { publishedTime: edition.publishedAt }
-        : {}),
+      ...(edition?.publishedAt ? { publishedTime: edition.publishedAt } : {}),
     },
     twitter: { title, description },
   }

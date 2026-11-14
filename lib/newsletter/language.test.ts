@@ -44,10 +44,7 @@ describe("newsletter language", () => {
       "/newsletter/2026-11-13?lang=fr#item-03",
     )
     assert.equal(newsletterHref({}, "fr"), "/newsletter")
-    assert.equal(
-      newsletterHref({ archive: true }, "en"),
-      "/newsletter/archive?lang=en",
-    )
+    assert.equal(newsletterHref({}, "en"), "/newsletter?lang=en")
   })
 
   it("accepts only real calendar days", () => {

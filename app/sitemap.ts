@@ -35,7 +35,6 @@ const bilingual = (path: string, lastModified?: string) => ({
 
 const newsletterRoutes = (dates: string[]) => [
   bilingual("/newsletter", dates[0]),
-  bilingual("/newsletter/archive", dates[0]),
   ...dates.map((date) => bilingual(`/newsletter/${date}`, date)),
   { url: `${SITE}/newsletter/privacy` },
 ]
