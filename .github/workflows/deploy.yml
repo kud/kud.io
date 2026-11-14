@@ -60,3 +60,12 @@ jobs:
         run: npx --yes vercel@65.14.0 deploy --prebuilt --prod --archive=tgz --token="$VERCEL_TOKEN"
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+  notify:
+    needs: deploy
+    if: always()
+    permissions:
+      actions: read
+      checks: read
+    uses: ./.github/workflows/notify-slack.yml
+    secrets: inherit

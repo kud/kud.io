@@ -1,0 +1,59 @@
+name: Notify Slack
+
+# Called as the last job of another workflow: posts one message to Slack when a
+# job in the calling run failed, or when the run left warnings behind (a
+# deprecated Node version, a cache miss GitHub flags, a step's ::warning::).
+# A clean run posts nothing. Run it by hand to check the webhook still works.
+# Inside a called workflow, github.event_name is the caller's, so the ping is told
+# apart by the workflow name instead.
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  checks: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping
+        if: github.workflow == 'Notify Slack'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          jq -n --arg text "✓ ${GITHUB_REPOSITORY}: Slack notifications are wired up" '{text: $text}' \
+            | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL"
+
+      - name: Report problems in the calling run
+        if: github.workflow != 'Notify Slack'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          set -euo pipefail
+          run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          jobs=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/jobs" --paginate \
+            --jq '.jobs[] | select(.name | endswith("notify") | not)')
+
+          failed=$(jq -r 'select(.conclusion == "failure" or .conclusion == "timed_out") | "• ✗ \(.name): \(.conclusion)"' <<<"$jobs")
+
+          notes=""
+          for id in $(jq -r '.id' <<<"$jobs"); do
+            notes+=$(gh api "repos/${GITHUB_REPOSITORY}/check-runs/${id}/annotations" \
+              --jq '.[] | select(.annotation_level != "notice") | "• \(if .annotation_level == "failure" then "✗" else "⚠" end) \(.message | split("\n")[0] | .[0:200])"' || true)
+            notes+=$'\n'
+          done
+          notes=$(grep -v '^$' <<<"$notes" | sort -u | head -n 10 || true)
+
+          if [[ -z "$failed" && -z "$notes" ]]; then
+            echo "Nothing to report."
+            exit 0
+          fi
+
+          text=$(printf '*%s* · %s\n%s\n%s\n<%s|View run>' \
+            "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$failed" "$notes" "$run_url" | grep -v '^$')
+          jq -n --arg text "$text" '{text: $text}' \
+            | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL"
