@@ -30,15 +30,16 @@ import {
   ReaderPreferences,
 } from "@/components/newsletter/reader-preferences"
 import { Signup } from "@/components/newsletter/signup"
+import { isEmailAdvertised } from "@/lib/newsletter/notify/config"
 import styles from "@/app/newsletter/newsletter.module.css"
 
 export const EDITION_ROOT_ID = "newsletter-edition"
 
 const SITE = "https://kud.io"
 
-// The signup only exists once the email side is configured. A public build
-// flag for now; the server-side check lives with the subscribe endpoint.
-const emailConfigured = () => process.env.NEXT_PUBLIC_NEWSLETTER_EMAIL === "1"
+// The signup only exists once the email side is advertised: the pipeline's
+// public build flag, read in one place (notify/config) with the server check.
+const emailConfigured = isEmailAdvertised
 
 const capitalise = (text: string) =>
   text.charAt(0).toUpperCase() + text.slice(1)

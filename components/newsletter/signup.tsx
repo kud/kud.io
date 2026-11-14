@@ -1,11 +1,22 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { COPY, LANG_NAME, LANGS, type Lang } from "@/lib/newsletter/language"
+import Link from "next/link"
+import {
+  COPY,
+  LANG_NAME,
+  LANGS,
+  signupStateOf,
+  type Lang,
+  type SignupState,
+} from "@/lib/newsletter/language"
 
 // A plain form post, so it works before (and without) any script: the
-// endpoint answers with a redirect back here carrying ?subscribed=1. The
-// hidden "website" field is a honeypot; a person never sees or fills it.
+// subscribe and confirm routes answer with a redirect back here carrying
+// ?subscribed=check|1|0 (&reason=… on 0) and #signup, which lands on this
+// section. A pending or confirmed reader sees only the message; after an
+// error the form stays so they can try again. The hidden "website" field is a
+// honeypot; a person never sees or fills it.
 export const Signup = ({
   lang,
   styles,
@@ -14,26 +25,35 @@ export const Signup = ({
   styles: Record<string, string>
 }) => {
   const copy = COPY[lang]
-  const [subscribed, setSubscribed] = useState(false)
+  const [state, setState] = useState<SignupState | null>(null)
 
   useEffect(() => {
     // Read after hydration: the page is static, so the query is the browser's.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSubscribed(
-      new URLSearchParams(location.search).get("subscribed") === "1",
-    )
+    setState(signupStateOf(location.search))
   }, [])
 
+  const done = state === "check" || state === "confirmed"
+
   return (
-    <section className={styles.signup} aria-labelledby="signup-title">
+    <section
+      id="signup"
+      className={styles.signup}
+      aria-labelledby="signup-title"
+      data-signup-state={state ?? undefined}
+    >
       <h2 id="signup-title" className={styles.signupTitle}>
         {copy.signupTitle}
       </h2>
-      {subscribed ? (
-        <p className={styles.signupDone} role="status">
-          {copy.subscribed}
+      {state && (
+        <p
+          className={done ? styles.signupDone : styles.signupError}
+          role={done ? "status" : "alert"}
+        >
+          {copy.signupState[state]}
         </p>
-      ) : (
+      )}
+      {done ? null : (
         <form
           method="post"
           action="/api/newsletter/subscribe"
@@ -77,7 +97,12 @@ export const Signup = ({
               />
             </label>
           </div>
-          <p className={styles.signupConsent}>{copy.consent}</p>
+          <p className={styles.signupConsent}>
+            {copy.consent}{" "}
+            <Link href="/privacy#newsletter" hrefLang="en-GB">
+              {copy.privacy}
+            </Link>
+          </p>
           <button type="submit" className={styles.barPrimary}>
             {copy.subscribe}
           </button>

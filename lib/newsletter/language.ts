@@ -136,8 +136,19 @@ export const COPY = {
     consent:
       "Votre adresse et votre langue servent uniquement à vous envoyer la newsletter. Désinscription en un clic dans chaque e-mail.",
     subscribe: "M’inscrire",
-    subscribed:
-      "C’est presque fait : confirmez votre inscription avec le lien que nous venons de vous envoyer.",
+    privacy: "Ce que l’inscription conserve",
+    signupState: {
+      check:
+        "C’est presque fait : confirmez votre inscription avec le lien que nous venons de vous envoyer.",
+      confirmed:
+        "C’est confirmé : la prochaine édition arrivera dans votre boîte de réception.",
+      invalid: "Cette adresse ne semble pas valide. Vous pouvez réessayer.",
+      link: "Ce lien de confirmation n’est pas valide. Inscrivez-vous à nouveau pour en recevoir un autre.",
+      expired:
+        "Ce lien de confirmation a expiré. Inscrivez-vous à nouveau pour en recevoir un autre.",
+      failed: "L’envoi n’a pas abouti. Vous pouvez réessayer dans un moment.",
+      unavailable: "L’inscription par e-mail n’est pas encore ouverte.",
+    },
   },
   en: {
     name: "Newsletter",
@@ -175,12 +186,40 @@ export const COPY = {
     consent:
       "Your address and language are used only to send you the newsletter. Unsubscribe in one click from any email.",
     subscribe: "Subscribe",
-    subscribed:
-      "Nearly there: confirm your subscription with the link we’ve just sent you.",
+    privacy: "What signing up keeps",
+    signupState: {
+      check:
+        "Nearly there: confirm your subscription with the link we’ve just sent you.",
+      confirmed: "You’re in: the next edition will land in your inbox.",
+      invalid: "That address doesn’t look right. Do try again.",
+      link: "That confirmation link isn’t valid. Sign up again for a fresh one.",
+      expired: "That confirmation link has expired. Sign up again for a fresh one.",
+      failed: "The email didn’t go out. Please try again in a moment.",
+      unavailable: "Email sign-up isn’t open yet.",
+    },
   },
 } as const
 
 export const LANG_NAME: Record<Lang, string> = {
   fr: "Français",
   en: "English",
+}
+
+// The outcome the subscribe and confirm routes put in the query when they
+// redirect back: ?subscribed=check|1|0, with ?reason= when it is 0.
+export type SignupState = keyof (typeof COPY)["en"]["signupState"]
+
+export const signupStateOf = (search: string): SignupState | null => {
+  const params = new URLSearchParams(search)
+  const subscribed = params.get("subscribed")
+  if (subscribed === "check") return "check"
+  if (subscribed === "1") return "confirmed"
+  if (subscribed !== "0") return null
+  const reason = params.get("reason")
+  return reason === "invalid" ||
+    reason === "link" ||
+    reason === "expired" ||
+    reason === "unavailable"
+    ? reason
+    : "failed"
 }

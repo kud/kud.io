@@ -6,6 +6,7 @@ import {
   newsletterHref,
   parseLang,
   resolveLang,
+  signupStateOf,
 } from "./language.ts"
 
 describe("newsletter language", () => {
@@ -64,5 +65,16 @@ describe("newsletter language", () => {
       formatEditionDate("2026-11-13", "fr"),
       "vendredi 13 novembre 2026",
     )
+  })
+
+  it("reads the signup outcome the routes redirect with", () => {
+    assert.equal(signupStateOf(""), null)
+    assert.equal(signupStateOf("?subscribed=check&lang=fr"), "check")
+    assert.equal(signupStateOf("?subscribed=1&lang=en"), "confirmed")
+    for (const reason of ["invalid", "link", "expired", "unavailable"])
+      assert.equal(signupStateOf(`?subscribed=0&reason=${reason}`), reason)
+    assert.equal(signupStateOf("?subscribed=0&reason=failed"), "failed")
+    assert.equal(signupStateOf("?subscribed=0&reason=whatever"), "failed")
+    assert.equal(signupStateOf("?subscribed=maybe"), null)
   })
 })

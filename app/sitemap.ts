@@ -3,6 +3,7 @@ import { getAllPosts, postPath } from "@/lib/blog"
 import { getProjects } from "@/lib/projects"
 import { getListedRecords } from "@/lib/listed-apps"
 import { source } from "@/lib/source"
+import { listEditionDates } from "@/lib/newsletter/content"
 
 // Absolute URLs, matching the metadataBase in app/layout.tsx. A sitemap is read
 // by crawlers that have no page context to resolve a relative path against, so
@@ -19,8 +20,32 @@ const docsRoutes = () =>
     .filter((page) => page.path.endsWith(".mdx"))
     .map((page) => ({ url: `${SITE}${page.url}` }))
 
+// The newsletter has one URL per page and language: French at the bare
+// address, English behind ?lang=en (the proxy serves it from /newsletter/en).
+const bilingual = (path: string, lastModified?: string) => ({
+  url: `${SITE}${path}`,
+  lastModified,
+  alternates: {
+    languages: {
+      fr: `${SITE}${path}`,
+      "en-GB": `${SITE}${path}?lang=en`,
+    },
+  },
+})
+
+const newsletterRoutes = (dates: string[]) => [
+  bilingual("/newsletter", dates[0]),
+  bilingual("/newsletter/archive", dates[0]),
+  ...dates.map((date) => bilingual(`/newsletter/${date}`, date)),
+  { url: `${SITE}/newsletter/privacy` },
+]
+
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
-  const [posts, projects] = await Promise.all([getAllPosts(), getProjects()])
+  const [posts, projects, editions] = await Promise.all([
+    getAllPosts(),
+    getProjects(),
+    listEditionDates(),
+  ])
 
   const newest = (values: string[]) =>
     values.filter(Boolean).sort().at(-1) ?? undefined
@@ -47,6 +72,7 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
       url: `${SITE}/projects/${project.slug}`,
     })),
     ...docsRoutes(),
+    ...newsletterRoutes(editions),
   ]
 }
 

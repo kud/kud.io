@@ -41,7 +41,7 @@ const readBody = async (request: Request) => {
 const answer = (form: boolean, outcome: Outcome, lang: string) => {
   if (!form) return Response.json({ status: outcome }, { status: STATUS[outcome] })
   const query = outcome === "pending" ? "subscribed=check" : `subscribed=0&reason=${outcome}`
-  return Response.redirect(`${SITE_URL}/newsletter?${query}&lang=${lang}`, 303)
+  return Response.redirect(`${SITE_URL}/newsletter?${query}&lang=${lang}#signup`, 303)
 }
 
 export async function POST(request: Request) {

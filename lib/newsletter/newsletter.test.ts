@@ -8,7 +8,6 @@ import {
   DEPTH,
   EXPLAINER,
   INBRIEF,
-  OVERVIEW,
   TIMELINE,
   FINDS,
   SRC_A,
