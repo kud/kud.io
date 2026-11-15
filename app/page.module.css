@@ -1154,8 +1154,20 @@
     gap: clamp(14px, 2.8svh, 26px);
     margin-top: clamp(18px, 3.6svh, 38px);
   }
+  /* Three buttons never fit one phone row: the primary takes a row of its own
+     and the two secondaries pair up beneath it at equal width, one tidy block
+     rather than a lone button wrapped onto a second line. */
   .cardLinks .actions {
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
     margin-bottom: 0;
+  }
+  .cardLinks .primary {
+    grid-column: 1 / -1;
+  }
+  .cardLinks :is(.primary, .secondary) {
+    justify-content: center;
   }
   .cardLinks .socials > li > a {
     width: clamp(46px, 7svh, 54px);

@@ -10,6 +10,7 @@ import { PINNED } from "@/lib/pinned"
 import { getListedApps } from "@/lib/listed-apps"
 import { ecosystemName } from "@/lib/ecosystems"
 import { getRelease } from "@/lib/release"
+import { listEditionDates, loadEdition } from "@/lib/newsletter/content"
 
 // Everything the command launcher matches on without a round trip: the
 // projects exactly as /projects lists them, every post, and the few facts a
@@ -55,9 +56,20 @@ export type LauncherRelease = {
   publishedAt: string
 }
 
+// A newsletter edition: its date, its lead story and every story title, in
+// English, the launcher's language.
+export type LauncherEdition = {
+  date: string
+  href: string
+  lead: string
+  titles: string[]
+}
+
 export type LauncherIndex = {
   projects: LauncherProject[]
   posts: LauncherPost[]
+  // The latest editions, newest first.
+  editions: LauncherEdition[]
   // Newest first, only those with a known date.
   releases: LauncherRelease[]
 }
@@ -65,14 +77,31 @@ export type LauncherIndex = {
 // How many releases the index carries; the launcher shows fewer.
 const RELEASES = 8
 
+// How many editions the index carries.
+const EDITIONS = 5
+
+const getLauncherEditions = async (): Promise<LauncherEdition[]> => {
+  const dates = (await listEditionDates()).slice(0, EDITIONS)
+  const editions = await Promise.all(dates.map((date) => loadEdition(date)))
+  return editions
+    .filter((edition) => edition !== null)
+    .map((edition) => ({
+      date: edition.date,
+      href: `/newsletter/${edition.date}`,
+      lead: edition.items[0]?.title.en ?? "",
+      titles: edition.items.map((item) => item.title.en),
+    }))
+}
+
 // Only these ship to npm; a lookup for a theme or an app is a wasted request.
 const NPM_CATEGORIES = new Set(["cli", "mcp", "lib", "ui", "claude"])
 
 export const getLauncherIndex = async (): Promise<LauncherIndex> => {
-  const [projects, icons, posts] = await Promise.all([
+  const [projects, icons, posts, editions] = await Promise.all([
     getProjects(),
     getIcons(),
     getAllPosts(),
+    getLauncherEditions(),
   ])
 
   const launcherProjects = await Promise.all(
@@ -155,6 +184,7 @@ export const getLauncherIndex = async (): Promise<LauncherIndex> => {
 
   return {
     releases,
+    editions,
     projects: [...launcherProjects, ...listed].sort(
       (a, b) =>
         Number(b.pinned) - Number(a.pinned) || a.name.localeCompare(b.name),
