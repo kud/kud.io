@@ -8,7 +8,6 @@ import {
   useMemo,
   useRef,
   useState,
-  useSyncExternalStore,
   type ReactNode,
 } from "react"
 import { X } from "lucide-react"
@@ -103,16 +102,6 @@ export const ItemSelect = ({
   )
 }
 
-// Preview only: three phone layouts for the bar, picked with ?bar=1|2|3 so
-// each can be tried on a real phone. The two that lose go once one is chosen.
-const BAR_VARIANTS = ["1", "2", "3"]
-const DEFAULT_BAR_VARIANT = "2"
-const noop = () => () => {}
-const readBarVariant = () => {
-  const asked = new URLSearchParams(location.search).get("bar") ?? ""
-  return BAR_VARIANTS.includes(asked) ? asked : DEFAULT_BAR_VARIANT
-}
-
 const ResearchBar = ({
   edition,
   lang,
@@ -129,11 +118,6 @@ const ResearchBar = ({
   const dialog = useRef<HTMLDialogElement>(null)
   const area = useRef<HTMLTextAreaElement>(null)
   const count = selected.size
-  const variant = useSyncExternalStore(
-    noop,
-    readBarVariant,
-    () => DEFAULT_BAR_VARIANT,
-  )
 
   useEffect(() => {
     if (!status) return
@@ -165,13 +149,13 @@ const ResearchBar = ({
     <>
       <div
         className={styles.bar}
-        data-variant={variant}
         data-open={count > 0 || status ? "" : undefined}
         aria-hidden={count === 0 && !status}
         inert={count === 0 && !status}
       >
-        {/* Each label comes long and short; CSS shows one per width, and
-            display: none keeps the hidden one out of the accessible name. */}
+        {/* Labels come long and short; CSS shows one per width, and
+            display: none keeps the other out of the accessible name. On a
+            phone the count is a bare number, its words kept for readers. */}
         <p className={styles.barCount} data-status={status ? "" : undefined}>
           {status ? (
             <>
@@ -184,9 +168,6 @@ const ResearchBar = ({
                 {count}
               </span>
               <span className={styles.barLong}>{copy.selected(count)}</span>
-              <span className={styles.barShort}>
-                {copy.selectedShort(count)}
-              </span>
             </>
           )}
         </p>

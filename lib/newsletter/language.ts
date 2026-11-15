@@ -112,8 +112,6 @@ export const COPY = {
     select: (id: string, title: string) => `Sélectionner ${id} · ${title}`,
     selected: (count: number) =>
       count === 1 ? "1 sujet sélectionné" : `${count} sujets sélectionnés`,
-    selectedShort: (count: number) =>
-      count === 1 ? "1 sujet" : `${count} sujets`,
     clear: "Effacer",
     copyPrompt: "Copier le prompt de recherche",
     copyPromptShort: "Copier le prompt",
@@ -174,8 +172,6 @@ export const COPY = {
     select: (id: string, title: string) => `Select ${id} · ${title}`,
     selected: (count: number) =>
       count === 1 ? "1 subject selected" : `${count} subjects selected`,
-    selectedShort: (count: number) =>
-      count === 1 ? "1 subject" : `${count} subjects`,
     clear: "Clear",
     copyPrompt: "Copy research prompt",
     copyPromptShort: "Copy prompt",
