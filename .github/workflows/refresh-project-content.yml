@@ -118,16 +118,22 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # One line in the writing channel per new post, once its page is really
-      # served. Edits to existing posts announce nothing. Best effort: a slow
-      # deploy or a Slack hiccup never fails the refresh.
+      # Only announce genuinely new blog posts, after their public URLs are
+      # reachable. A missing or broken webhook must be visible in Actions, but
+      # cannot undo a successful content refresh.
       - name: Announce new posts
         if: steps.commit.outputs.new_posts != ''
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WRITING_WEBHOOK_URL }}
+          NEW_POSTS: ${{ steps.commit.outputs.new_posts }}
         run: |
-          [ -n "$SLACK_WEBHOOK_URL" ] || { echo "No writing webhook; skipping."; exit 0; }
-          for slug in ${{ steps.commit.outputs.new_posts }}; do
+          set -euo pipefail
+          if [[ -z "$SLACK_WEBHOOK_URL" ]]; then
+            echo "::warning title=Writing Slack webhook missing::Set SLACK_WRITING_WEBHOOK_URL; new posts were synced but #pub-writing was not notified."
+            echo "⚠️ Writing Slack webhook missing; posts not announced: $NEW_POSTS." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          for slug in $NEW_POSTS; do
             file="content/blog/$slug.md"
             title=$(sed -n 's/^title: "\(.*\)"$/\1/p' "$file" | head -1)
             description=$(sed -n 's/^description: "\(.*\)"$/\1/p' "$file" | head -1)
@@ -136,13 +142,18 @@ jobs:
             deadline=$(( $(date +%s) + 1200 ))
             until curl -fsS -o /dev/null --max-time 20 "$url" 2>/dev/null; do
               if [ "$(date +%s)" -ge "$deadline" ]; then
-                echo "$slug is not live after 20 minutes; not announcing"
+                echo "::warning title=Writing article not live::Article $slug was synced, but $url was not available after 20 minutes; no Slack announcement sent."
+                echo "⚠️ Writing article not live; skipped Slack announcement: $url." >> "$GITHUB_STEP_SUMMARY"
                 continue 2
               fi
               sleep 30
             done
-            text=$(printf '✍️ *%s*\n%s\n<%s|Read it>' "$title" "$description" "$url")
-            jq -n --arg text "$text" '{text: $text}' \
-              | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" \
-              || echo "Slack announcement failed for $slug"
+            message=$(printf '✍️ *%s*\n%s\n<%s|Read it>' "$title" "$description" "$url")
+            if jq -n --arg text "$message" '{text: $text}' \
+              | curl --fail --silent --show-error --max-time 20 -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" > /dev/null; then
+              echo "✅ Writing announcement sent for $url." >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "::warning title=Writing Slack delivery failed::Article $slug is live, but its #pub-writing announcement failed."
+              echo "⚠️ Writing Slack announcement failed: $url." >> "$GITHUB_STEP_SUMMARY"
+            fi
           done
