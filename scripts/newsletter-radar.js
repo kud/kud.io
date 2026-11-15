@@ -2,7 +2,7 @@
 // What the feeds published since the last edition, as JSON, for the
 // newsletter editor's morning scan. Read-only: writes nothing anywhere.
 //
-//   node scripts/newsletter-radar.js --feeds <newsletter-feeds.yml> [--since <ISO date>] [--editions <dir>]
+//   node scripts/newsletter-radar.js --feeds <newsletter-feeds.json> [--since <ISO date>] [--editions <dir>]
 //
 // --since defaults to the newest edition's generatedAt; --editions to
 // content/newsletter. Links any edition already cited are dropped.
@@ -10,7 +10,6 @@
 
 import { readFileSync, readdirSync, existsSync } from "node:fs"
 import { join } from "node:path"
-import { parse as parseYaml } from "yaml"
 import { parseFeed, selectFresh, editionLinks } from "./lib/feed-radar.js"
 
 const arg = (name) => {
@@ -21,7 +20,7 @@ const arg = (name) => {
 const feedsPath = arg("feeds")
 if (!feedsPath) {
   process.stderr.write(
-    "usage: newsletter-radar.js --feeds <newsletter-feeds.yml> [--since <ISO>] [--editions <dir>]\n",
+    "usage: newsletter-radar.js --feeds <newsletter-feeds.json> [--since <ISO>] [--editions <dir>]\n",
   )
   process.exit(2)
 }
@@ -45,7 +44,7 @@ const editions = existsSync(editionsDir)
 const since = arg("since") ?? editions.at(-1)?.generatedAt ?? null
 const seen = new Set(editions.flatMap(editionLinks))
 
-const config = parseYaml(readFileSync(feedsPath, "utf8"))
+const config = JSON.parse(readFileSync(feedsPath, "utf8"))
 const feeds = Object.entries(config.sections ?? {}).flatMap(
   ([section, { title, feeds = [] }]) =>
     feeds.map((feed) => ({ ...feed, section, sectionTitle: title })),
