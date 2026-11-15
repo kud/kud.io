@@ -151,14 +151,15 @@ jobs:
             node scripts/sync-newsletter.js --mark=published "--date=$date"
           done
 
-      # One line in the alerts channel per edition that went live, with its lead
-      # story. Best effort: a Slack hiccup never fails a published edition.
+      # One line in the newsletter channel per edition that went live, with its
+      # lead story. Failures go to the alerts channel through the notify job.
+      # Best effort: a Slack hiccup never fails a published edition.
       - name: Announce in Slack
         if: steps.plan.outputs.publish != ''
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_NEWSLETTER_WEBHOOK_URL }}
         run: |
-          [ -n "$SLACK_WEBHOOK_URL" ] || { echo "No webhook; skipping."; exit 0; }
+          [ -n "$SLACK_WEBHOOK_URL" ] || { echo "No newsletter webhook; skipping."; exit 0; }
           for date in ${{ steps.plan.outputs.publish }}; do
             file="content/newsletter/$date/edition.json"
             lead=$(jq -r '.items[0].title.fr // empty' "$file")
