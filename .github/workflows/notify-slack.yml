@@ -32,6 +32,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WARNINGS_WEBHOOK_URL: ${{ secrets.SLACK_WARNINGS_WEBHOOK_URL }}
         run: |
           set -euo pipefail
           run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
@@ -53,7 +54,15 @@ jobs:
             exit 0
           fi
 
+          # A failure goes to the alerts channel; a run that only left warnings goes
+          # to the warnings channel, or nowhere until that webhook exists.
+          webhook="$SLACK_WEBHOOK_URL"
+          if [[ -z "$failed" ]]; then
+            webhook="${SLACK_WARNINGS_WEBHOOK_URL:-}"
+            [[ -n "$webhook" ]] || { echo "Warnings only, no warnings webhook; skipping."; exit 0; }
+          fi
+
           text=$(printf '*%s* · %s\n%s\n%s\n<%s|View run>' \
             "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$failed" "$notes" "$run_url" | grep -v '^$')
           jq -n --arg text "$text" '{text: $text}' \
-            | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL"
+            | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$webhook"
