@@ -8,8 +8,10 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react"
+import { X } from "lucide-react"
 import type { Edition } from "@/lib/newsletter/content"
 import { COPY, type Lang } from "@/lib/newsletter/language"
 import { buildResearchPrompt } from "@/lib/newsletter/prompt"
@@ -101,6 +103,16 @@ export const ItemSelect = ({
   )
 }
 
+// Preview only: three phone layouts for the bar, picked with ?bar=1|2|3 so
+// each can be tried on a real phone. The two that lose go once one is chosen.
+const BAR_VARIANTS = ["1", "2", "3"]
+const DEFAULT_BAR_VARIANT = "2"
+const noop = () => () => {}
+const readBarVariant = () => {
+  const asked = new URLSearchParams(location.search).get("bar") ?? ""
+  return BAR_VARIANTS.includes(asked) ? asked : DEFAULT_BAR_VARIANT
+}
+
 const ResearchBar = ({
   edition,
   lang,
@@ -117,6 +129,11 @@ const ResearchBar = ({
   const dialog = useRef<HTMLDialogElement>(null)
   const area = useRef<HTMLTextAreaElement>(null)
   const count = selected.size
+  const variant = useSyncExternalStore(
+    noop,
+    readBarVariant,
+    () => DEFAULT_BAR_VARIANT,
+  )
 
   useEffect(() => {
     if (!status) return
@@ -148,22 +165,44 @@ const ResearchBar = ({
     <>
       <div
         className={styles.bar}
+        data-variant={variant}
         data-open={count > 0 || status ? "" : undefined}
         aria-hidden={count === 0 && !status}
         inert={count === 0 && !status}
       >
-        <p className={styles.barCount}>{status || copy.selected(count)}</p>
+        {/* Each label comes long and short; CSS shows one per width, and
+            display: none keeps the hidden one out of the accessible name. */}
+        <p className={styles.barCount} data-status={status ? "" : undefined}>
+          {status ? (
+            <>
+              <span className={styles.barLong}>{status}</span>
+              <span className={styles.barShort}>{copy.copiedShort}</span>
+            </>
+          ) : (
+            <>
+              <span className={styles.barNumber} aria-hidden>
+                {count}
+              </span>
+              <span className={styles.barLong}>{copy.selected(count)}</span>
+              <span className={styles.barShort}>
+                {copy.selectedShort(count)}
+              </span>
+            </>
+          )}
+        </p>
         {count > 0 && (
           <div className={styles.barActions}>
             <button type="button" className={styles.barQuiet} onClick={clear}>
-              {copy.clear}
+              <X className={styles.barIcon} aria-hidden />
+              <span className={styles.barQuietWord}>{copy.clear}</span>
             </button>
             <button
               type="button"
               className={styles.barPrimary}
               onClick={copyPrompt}
             >
-              {copy.copyPrompt}
+              <span className={styles.barLong}>{copy.copyPrompt}</span>
+              <span className={styles.barShort}>{copy.copyPromptShort}</span>
             </button>
           </div>
         )}

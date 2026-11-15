@@ -112,9 +112,13 @@ export const COPY = {
     select: (id: string, title: string) => `Sélectionner ${id} · ${title}`,
     selected: (count: number) =>
       count === 1 ? "1 sujet sélectionné" : `${count} sujets sélectionnés`,
+    selectedShort: (count: number) =>
+      count === 1 ? "1 sujet" : `${count} sujets`,
     clear: "Effacer",
     copyPrompt: "Copier le prompt de recherche",
+    copyPromptShort: "Copier le prompt",
     copied: "Prompt copié. Collez-le dans l’assistant de votre choix.",
+    copiedShort: "Prompt copié",
     copyFallback:
       "La copie automatique n’a pas fonctionné. Le prompt est sélectionné ci-dessous : copiez-le.",
     close: "Fermer",
@@ -170,9 +174,13 @@ export const COPY = {
     select: (id: string, title: string) => `Select ${id} · ${title}`,
     selected: (count: number) =>
       count === 1 ? "1 subject selected" : `${count} subjects selected`,
+    selectedShort: (count: number) =>
+      count === 1 ? "1 subject" : `${count} subjects`,
     clear: "Clear",
     copyPrompt: "Copy research prompt",
+    copyPromptShort: "Copy prompt",
     copied: "Prompt copied. Paste it into the assistant of your choice.",
+    copiedShort: "Prompt copied",
     copyFallback:
       "Copying didn’t work automatically. The prompt is selected below: copy it from there.",
     close: "Close",

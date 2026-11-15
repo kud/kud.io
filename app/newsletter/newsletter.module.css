@@ -930,6 +930,14 @@
   opacity: 0.88;
 }
 
+/* The short labels, the bare count and the clear icon are the phone's; the
+ * desktop bar has the room for words. */
+.barNumber,
+.barShort,
+.barIcon {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bar,
   .bar[data-open] {
@@ -1256,26 +1264,161 @@
   color: var(--fg-3);
 }
 
-/* On a phone the bar sits above the site's launcher button (bottom right) and
- * its two actions take a row of their own, so the long French label wraps
- * rather than being cut. */
-@media (max-width: 560px) {
+/* On a phone the bar shares one row with the site's search button (48px,
+ * bottom right, components/launcher), centred on the same line, and its
+ * labels shorten to fit. The launcher goes round at 640px, so this does too. */
+@media (max-width: 640px) {
   .bar {
-    bottom: calc(76px + env(safe-area-inset-bottom));
+    --fab: 48px;
+    box-sizing: border-box;
+    left: max(18px, env(safe-area-inset-left));
+    right: calc(max(18px, env(safe-area-inset-right)) + var(--fab) + 8px);
+    bottom: calc(max(18px, env(safe-area-inset-bottom)) - 2px);
+    flex-wrap: nowrap;
+    gap: 4px;
+    width: auto;
+    min-height: 52px;
+    padding: 3px 3px 3px 18px;
+    border-radius: 999px;
+    transform: translateY(calc(100% + 40px));
+  }
+
+  .bar[data-open] {
+    transform: none;
+  }
+
+  .barCount {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .barLong {
+    display: none;
+  }
+
+  .barShort {
+    display: inline;
   }
 
   .barActions {
-    width: 100%;
+    flex: none;
+    gap: 4px;
+    margin-left: 0;
   }
 
-  .barPrimary {
+  .bar .barQuiet,
+  .bar .barPrimary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .bar .barQuiet {
+    width: 44px;
+    flex: none;
+    padding: 0;
+    border: 0;
+  }
+
+  .barIcon {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+
+  .barQuietWord {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .bar .barPrimary {
+    padding: 0 18px;
+  }
+
+  /* 1 and 3 · the clear cross follows the count, like a filter chip's,
+   * and keeps its distance from the copy button. */
+  .bar:not([data-variant="2"]) .barCount {
+    flex: 0 1 auto;
+  }
+
+  .bar:not([data-variant="2"]) .barActions {
+    display: contents;
+  }
+
+  .bar:not([data-variant="2"]) .barPrimary {
+    margin-left: auto;
+  }
+
+  /* 2 · the count as a chip, the copy button taking the rest of the row. */
+  .bar[data-variant="2"] {
+    padding-left: 3px;
+  }
+
+  .bar[data-variant="2"] .barCount:not([data-status]) {
+    flex: none;
+  }
+
+  .bar[data-variant="2"] .barCount[data-status] {
+    padding-left: 14px;
+  }
+
+  .bar[data-variant="2"] .barCount:not([data-status]) .barShort {
+    display: none;
+  }
+
+  .bar[data-variant="2"] .barCount:not([data-status]) .barLong {
+    display: inline;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .bar[data-variant="2"] .barNumber {
+    display: grid;
+    place-items: center;
+    min-width: 44px;
+    height: 44px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--fg) 9%, transparent);
+    font-size: 15px;
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bar[data-variant="2"] .barActions,
+  .bar[data-variant="2"] .barPrimary {
     flex: 1;
-    padding-block: 8px;
-    line-height: 1.25;
+  }
+
+  /* 3 · one long pill, the search button seated in its right end. */
+  .bar[data-variant="3"] {
+    right: calc(max(18px, env(safe-area-inset-right)) - 2px);
+    padding-right: calc(1px + var(--fab) + 6px);
+  }
+
+  :global(#blog-root):has(.bar[data-variant="3"][data-open])
+    :global([data-launcher-trigger]) {
+    border-color: var(--line-2);
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
   }
 
   :global(#blog-root):has(.bar[data-open]) {
-    padding-bottom: 180px;
+    padding-bottom: 96px;
   }
 }
 
