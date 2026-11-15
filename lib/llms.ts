@@ -130,7 +130,7 @@ export const buildLlmsDocument = async (): Promise<LlmsDocument> => {
   return {
     title: "kud.io",
     summary:
-      "Personal site of Erwann Mest (kud), a systems designer and lead software engineer in London: his writing and the catalogue of open-source software he builds — web apps, CLIs, MCP servers, coding agent tools, libraries, editor and browser extensions.",
+      "Personal site of Erwann Mest (kud), a systems designer and lead software engineer in London: his writing, a daily news briefing in French and English, and the catalogue of open-source software he builds — web apps, CLIs, MCP servers, coding agent tools, libraries, editor and browser extensions.",
     details: [
       `[beansontoast.app](${APPS_HOME}) is the umbrella for Erwann's web apps; some still run on older addresses, so the Apps section links each one to wherever it runs today. Every other project links to its page on kud.io, which renders the repository's README and, where the project has them, multi-page docs under \`/projects/<slug>/docs\`. Source code lives on GitHub under [kud](https://github.com/kud).`,
       "Project pages and docs are synced from each repository, so the repository is the source of truth when the two disagree.",
@@ -155,6 +155,17 @@ export const buildLlmsDocument = async (): Promise<LlmsDocument> => {
             url: `${SITE}/blog`,
             notes: "Notes on systems, tooling, and the trade-offs behind them.",
           },
+          {
+            name: "Newsletter",
+            url: `${SITE}/newsletter`,
+            notes:
+              "A daily news briefing in French and English: the latest edition, with every earlier one in the archive.",
+          },
+          {
+            name: "Newsletter archive",
+            url: `${SITE}/newsletter/editions`,
+            notes: "Every edition by date.",
+          },
         ],
       },
       writing,
@@ -163,6 +174,8 @@ export const buildLlmsDocument = async (): Promise<LlmsDocument> => {
     optional: [
       { name: "CV (PDF)", url: `${SITE}/cv.pdf` },
       { name: "Writing feed (RSS)", url: `${SITE}/blog/feed.xml` },
+      { name: "Newsletter feed, French (RSS)", url: `${SITE}/newsletter/fr.xml` },
+      { name: "Newsletter feed, English (RSS)", url: `${SITE}/newsletter/en.xml` },
       ...docsLinks(),
     ],
   }
