@@ -94,12 +94,16 @@ jobs:
         run: npm run build
 
       - name: Commit refreshed content
+        id: commit
         if: steps.changes.outputs.changed == 'true'
         run: |
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add content/projects content/readmes content/landings content/blog content/blog-redirects.json public/blog
+          # Posts that did not exist on main before this run: the ones worth announcing.
+          new_posts=$(git diff --cached --name-only --diff-filter=A -- 'content/blog/*.md' | xargs -r -n1 basename | sed 's/\.md$//' | tr '\n' ' ')
+          echo "new_posts=${new_posts% }" >> "$GITHUB_OUTPUT"
           git commit -m "📝 docs(content): refresh project content"
           # Humans and agents push to this branch too, so a bare push races the
           # hourly run and rejects. Rebase onto whatever landed since checkout.
@@ -113,3 +117,32 @@ jobs:
           gh workflow run deploy.yml --ref "${GITHUB_REF_NAME}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # One line in the writing channel per new post, once its page is really
+      # served. Edits to existing posts announce nothing. Best effort: a slow
+      # deploy or a Slack hiccup never fails the refresh.
+      - name: Announce new posts
+        if: steps.commit.outputs.new_posts != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WRITING_WEBHOOK_URL }}
+        run: |
+          [ -n "$SLACK_WEBHOOK_URL" ] || { echo "No writing webhook; skipping."; exit 0; }
+          for slug in ${{ steps.commit.outputs.new_posts }}; do
+            file="content/blog/$slug.md"
+            title=$(sed -n 's/^title: "\(.*\)"$/\1/p' "$file" | head -1)
+            description=$(sed -n 's/^description: "\(.*\)"$/\1/p' "$file" | head -1)
+            date=$(sed -n 's/^date: "\(.*\)"$/\1/p' "$file" | head -1)
+            url="https://kud.io/blog/${date//-//}/$slug"
+            deadline=$(( $(date +%s) + 1200 ))
+            until curl -fsS -o /dev/null --max-time 20 "$url" 2>/dev/null; do
+              if [ "$(date +%s)" -ge "$deadline" ]; then
+                echo "$slug is not live after 20 minutes; not announcing"
+                continue 2
+              fi
+              sleep 30
+            done
+            text=$(printf '✍️ *%s*\n%s\n<%s|Read it>' "$title" "$description" "$url")
+            jq -n --arg text "$text" '{text: $text}' \
+              | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" \
+              || echo "Slack announcement failed for $slug"
+          done
