@@ -1,33 +1,33 @@
 {
   "schema": 1,
   "date": "2026-11-14",
-  "generatedAt": "2026-11-14T19:45:00.000+00:00",
+  "generatedAt": "2026-11-15T10:39:00.000+00:00",
   "publishedAt": "2026-11-14T19:45:00Z",
   "languages": [
     "fr",
     "en"
   ],
   "lede": {
-    "fr": "Ce soir, on revient sur l’arrêt total des décollages aux États-Unis, une panne partie d’un simple chantier de câbles. Après le tour de l’actualité, de la proposition américaine sur le Donbass à la cinquième journée de mobilisation contre la vie chère, on vous explique ce que veut dire « éliminer » la rougeole. Et quatre trouvailles qui méritent un clic, dont un essai sur l’imagination de celles et ceux qui franchissent les frontières.",
-    "en": "Tonight, we look at the nationwide halt to take-offs across the United States, an outage that began with a cabling job. After the day’s news, from an American idea for Ukraine’s Donbas to France’s fifth Saturday of cost-of-living protests, we explain what it means to “eliminate” measles. And four finds worth a click, including an essay on the imagination of people who cross borders."
+    "fr": "Deux pannes ont marqué la fin de semaine, l’une dans le ciel américain, l’autre dans les messageries professionnelles de plusieurs continents : on les lit ensemble, parce qu’elles racontent la même fragilité. Puis trois nouvelles choisies, un mot à comprendre avant la décision attendue sur la rougeole aux États-Unis, et deux trouvailles pour aller ailleurs.",
+    "en": "Two outages marked the end of the week, one in American skies, the other in workplace inboxes across several continents: we read them together, because they tell the same story of fragility. Then three chosen stories, one idea to understand before the decision on measles in the United States, and two finds to take you elsewhere."
   },
   "readingMinutes": {
-    "fr": 13,
-    "en": 12
+    "fr": 6,
+    "en": 6
   },
   "wordCount": {
-    "fr": 2659,
-    "en": 2449
+    "fr": 1183,
+    "en": 1095
   },
   "narrative": {
     "overview": {
-      "fr": "Ce soir, on revient sur l’arrêt total des décollages aux États-Unis, une panne partie d’un simple chantier de câbles. Après le tour de l’actualité, de la proposition américaine sur le Donbass à la cinquième journée de mobilisation contre la vie chère, on vous explique ce que veut dire « éliminer » la rougeole. Et quatre trouvailles qui méritent un clic, dont un essai sur l’imagination de celles et ceux qui franchissent les frontières.",
-      "en": "Tonight, we look at the nationwide halt to take-offs across the United States, an outage that began with a cabling job. After the day’s news, from an American idea for Ukraine’s Donbas to France’s fifth Saturday of cost-of-living protests, we explain what it means to “eliminate” measles. And four finds worth a click, including an essay on the imagination of people who cross borders."
+      "fr": "Deux pannes ont marqué la fin de semaine, l’une dans le ciel américain, l’autre dans les messageries professionnelles de plusieurs continents : on les lit ensemble, parce qu’elles racontent la même fragilité. Puis trois nouvelles choisies, un mot à comprendre avant la décision attendue sur la rougeole aux États-Unis, et deux trouvailles pour aller ailleurs.",
+      "en": "Two outages marked the end of the week, one in American skies, the other in workplace inboxes across several continents: we read them together, because they tell the same story of fragility. Then three chosen stories, one idea to understand before the decision on measles in the United States, and two finds to take you elsewhere."
     },
     "analysis": null,
     "closing": {
-      "fr": "Bonne soirée, et si votre vol a été annulé, courage : on vous garde une place ici demain.",
-      "en": "Good night, and if your flight was cancelled, chin up: there’s a seat for you here tomorrow."
+      "fr": "Bonne soirée, et que vos câbles tiennent bon.",
+      "en": "Good night, and may your cables hold."
     }
   },
   "sections": [
@@ -61,10 +61,7 @@
       "items": [
         "02",
         "03",
-        "04",
-        "05",
-        "06",
-        "07"
+        "04"
       ]
     },
     {
@@ -75,29 +72,8 @@
         "en": "Explainer"
       },
       "items": [
-        "08"
+        "05"
       ]
-    },
-    {
-      "key": "techsci",
-      "kind": "items",
-      "title": {
-        "fr": "Technologie & science",
-        "en": "Technology & science"
-      },
-      "items": [
-        "09",
-        "10"
-      ]
-    },
-    {
-      "key": "inbrief",
-      "kind": "bullets",
-      "title": {
-        "fr": "En bref",
-        "en": "In brief"
-      },
-      "items": []
     },
     {
       "key": "finds",
@@ -107,10 +83,8 @@
         "en": "Worth a click"
       },
       "items": [
-        "11",
-        "12",
-        "13",
-        "14"
+        "06",
+        "07"
       ]
     },
     {
@@ -121,10 +95,7 @@
         "en": "Watch next"
       },
       "items": [
-        "15",
-        "16",
-        "17",
-        "18"
+        "08"
       ]
     },
     {
@@ -142,37 +113,37 @@
       "id": "01",
       "section": "depth",
       "kicker": {
-        "fr": "TRANSPORT AÉRIEN",
-        "en": "AVIATION"
+        "fr": "INFRASTRUCTURES",
+        "en": "INFRASTRUCTURE"
       },
       "title": {
-        "fr": "Comment un câble de cuivre a cloué au sol l’aviation américaine",
-        "en": "How a copper wire grounded American aviation"
+        "fr": "Avions au sol, Outlook muet : deux pannes survenues pendant des travaux de réseau",
+        "en": "Planes grounded, Outlook silent: two outages during network work"
       },
       "summary": {
-        "fr": "Vendredi 13 novembre, aucun avion n’a pu décoller du territoire continental des États-Unis pendant plus de quatre heures, à partir du milieu d’après-midi (heure de la côte Est). C’est seulement la troisième interdiction nationale de décollage de l’histoire de la FAA (Federal Aviation Administration, l’autorité fédérale de l’aviation civile), et la plus longue depuis les attentats du 11 septembre 2001. Plus de 8 000 vols ont été annulés vendredi, et plus de 4 000 samedi en fin de matinée, selon le site de suivi FlightAware cité par The Guardian. Samedi, le secrétaire aux Transports, Sean Duffy, en a donné l’origine : un chantier de modernisation, pas une attaque.",
-        "en": "On Friday 13 November no aircraft could take off from the continental United States for more than four hours, from mid-afternoon Eastern time. It was only the third nationwide ground stop in the history of the FAA (the Federal Aviation Administration, the US civil aviation regulator), and the longest since the attacks of 11 September 2001. More than 8,000 flights were cancelled on Friday and more than 4,000 by late Saturday morning, according to the tracking site FlightAware, cited by the Guardian. On Saturday the transport secretary, Sean Duffy, gave the cause: modernisation work, not an attack."
+        "fr": "Vendredi 13 novembre, la FAA (Federal Aviation Administration, l’autorité américaine de l’aviation civile) a imposé un arrêt national des décollages à 15 h 36, heure de la côte Est, et ne l’a levé que vers 20 h 20, selon CBS News. Plus de 9 000 vols ont été annulés vendredi, d’après le site de suivi FlightAware cité par CBS. La veille, jeudi 12 novembre, Outlook, Teams et Copilot de Microsoft étaient tombés en panne sur plusieurs continents, jusqu’au vendredi.",
+        "en": "On Friday 13 November the FAA (Federal Aviation Administration, the US civil aviation regulator) halted all departures nationwide at 3.36pm Eastern time and lifted the stop only at around 8.20pm, according to CBS News. More than 9,000 flights were cancelled on Friday, according to the tracking site FlightAware, cited by CBS. The day before, on Thursday 12 November, Microsoft’s Outlook, Teams and Copilot went down across several continents, into Friday."
       },
       "sources": [
         {
-          "url": "https://www.bbc.co.uk/news/articles/c6wy9lynq4qno",
+          "url": "https://www.cbsnews.com/news/faa-ground-stop-canceled-flights-travelers-what-we-know/",
           "label": {
-            "fr": "BBC News",
-            "en": "BBC News"
+            "fr": "CBS News",
+            "en": "CBS News"
           }
         },
         {
-          "url": "https://www.theguardian.com/world/2026/nov/14/faa-ground-stop-flights-resume-airport-chaos",
+          "url": "https://www.thejournal.ie/outlook-microsoft-outage-global-7224578-Nov2026/",
           "label": {
-            "fr": "The Guardian",
-            "en": "The Guardian"
+            "fr": "TheJournal.ie",
+            "en": "TheJournal.ie"
           }
         },
         {
-          "url": "https://arstechnica.com/tech-policy/2026/11/faa-orders-third-nationwide-ground-stop-in-its-history/",
+          "url": "https://theconversation.com/the-microsoft-outage-is-an-urgent-wake-up-call-for-greater-digital-resilience-296610",
           "label": {
-            "fr": "Ars Technica",
-            "en": "Ars Technica"
+            "fr": "The Conversation",
+            "en": "The Conversation"
           }
         }
       ]
@@ -185,12 +156,12 @@
         "en": "UKRAINE"
       },
       "title": {
-        "fr": "Washington a évoqué l’Otan contre le Donbass, selon Zelensky",
-        "en": "Washington raised Nato membership in exchange for Donbas, Zelensky says"
+        "fr": "L’Otan contre le Donbass : une idée américaine, selon Zelensky",
+        "en": "Nato for Donbas: an American idea, Zelensky says"
       },
       "summary": {
-        "fr": "Les émissaires américains ont demandé à Kyiv si l’Ukraine retirerait ses forces du Donbass, la région industrielle de l’Est dont la Russie contrôle déjà l’essentiel, en échange d’une adhésion à l’Otan, l’alliance militaire occidentale, a affirmé Volodymyr Zelensky dans des propos tenus vendredi et diffusés samedi 14 novembre par sa présidence. « C’est la première fois que cette question est posée », a-t-il dit, après avoir reçu à Dublin, jeudi, les envoyés de Donald Trump, Steve Witkoff et Jared Kushner, de retour de Moscou. Le président ukrainien répète que son pays ne cédera pas de territoire, mais se dit prêt à soumettre à référendum un accord global comprenant des garanties de sécurité, une armée sans contraintes et des fonds pour la reconstruction. Il juge que l’Otan est « de retour à l’ordre du jour » tout en prévenant que la conversation est « extrêmement difficile » face aux signaux de Vladimir Poutine. Selon la BBC, Moscou a au contraire durci ses exigences, en réclamant à nouveau le retrait des infrastructures de l’Otan d’Europe centrale et orientale. La Russie occupe environ un cinquième du territoire ukrainien.",
-        "en": "US envoys asked Kyiv whether Ukraine would withdraw its forces from Donbas, the industrial eastern region most of which Russia already controls, in exchange for joining Nato, the Western military alliance, Volodymyr Zelensky said in remarks made on Friday and released by his office on Saturday 14 November. “This was the first time this had been raised,” he said, after meeting Donald Trump’s envoys Steve Witkoff and Jared Kushner in Dublin on Thursday, on their way back from Moscow. The Ukrainian president repeats that his country will not give up territory, but says he would put to a referendum a comprehensive deal including security guarantees, an unconstrained army and funds for reconstruction. He believes Nato is “back on the agenda”, while warning that the conversation is “extremely difficult” given Vladimir Putin’s signals. According to the BBC, Moscow has instead hardened its demands, again calling for Nato to roll back its infrastructure from central and eastern Europe. Russia occupies roughly a fifth of Ukraine."
+        "fr": "Les négociateurs américains ont évoqué un retrait ukrainien du Donbass, la région industrielle de l’Est en grande partie occupée par la Russie, en échange d’une adhésion à l’Otan, l’alliance militaire occidentale, a affirmé Volodymyr Zelensky dans des propos tenus vendredi 13 novembre et diffusés samedi par sa présidence. Il avait reçu jeudi à Dublin Steve Witkoff et Jared Kushner, envoyés de Donald Trump, après leur rencontre avec Vladimir Poutine à Moscou. Washington n’a pas confirmé. Selon DW, le président ukrainien se dit prêt à soumettre un éventuel accord global à référendum. Pourquoi c’est notable : l’adhésion à l’Otan et le territoire se retrouveraient sur la même table de négociation.",
+        "en": "US negotiators raised a Ukrainian withdrawal from Donbas, the industrial east largely occupied by Russia, in exchange for membership of Nato, the Western military alliance, Volodymyr Zelensky said in remarks made on Friday 13 November and released by his office on Saturday. He had met Steve Witkoff and Jared Kushner, Donald Trump’s envoys, in Dublin on Thursday, after their meeting with Vladimir Putin in Moscow. Washington has not confirmed. According to DW, the Ukrainian president says he is ready to put any comprehensive deal to a referendum. Why it matters: Nato membership and territory would be on the same negotiating table."
       },
       "sources": [
         {
@@ -206,13 +177,6 @@
             "fr": "DW",
             "en": "DW"
           }
-        },
-        {
-          "url": "https://www.courrierinternational.com/article/guerre-selon-zelensky-washington-a-suggere-d-integrer-l-ukraine-a-l-otan-si-elle-cede-le-donbass_287235",
-          "label": {
-            "fr": "Courrier international",
-            "en": "Courrier international"
-          }
         }
       ]
     },
@@ -224,12 +188,12 @@
         "en": "FRANCE"
       },
       "title": {
-        "fr": "Cinquième samedi de mobilisation contre la vie chère",
-        "en": "A fifth Saturday of protest over the cost of living"
+        "fr": "Cinquième samedi contre la vie chère",
+        "en": "A fifth Saturday against the cost of living"
       },
       "summary": {
-        "fr": "Entre 106 000 et 200 000 personnes ont manifesté en France samedi 14 novembre, pour le cinquième week-end consécutif de mobilisation « contre la vie chère » lancée par la coordination des gilets jaunes et des organisations de jeunesse : 106 000 dont 24 000 à Paris selon le ministère de l’Intérieur, 200 000 dont près de 100 000 dans la capitale selon l’intersyndicale de la jeunesse. Le ministère juge la situation « globalement maîtrisée » et fait état de 219 interpellations et de dix policiers légèrement blessés, avec des incidents à Marseille, Grenoble, Lyon, Bordeaux et Poitiers ; à Paris, la préfecture de police décrit un cortège « sans incident ». Le dispositif mobilisait environ 70 000 policiers et gendarmes, selon le ministre de l’Intérieur, Laurent Nuñez. La journée a agrégé d’autres causes, dont la protection de l’enfance portée par des collectifs dits « enfantistes ». La coordination des gilets jaunes appelle déjà à un « acte VI » le 21 novembre.",
-        "en": "Between 106,000 and 200,000 people marched across France on Saturday 14 November, the fifth weekend in a row of protests “against the high cost of living” called by the gilets jaunes (yellow vests) coordination and youth organisations: 106,000, including 24,000 in Paris, according to the interior ministry; 200,000, including nearly 100,000 in the capital, according to the youth unions. The ministry called the situation “broadly under control” and reported 219 arrests and ten police officers lightly injured, with incidents in Marseille, Grenoble, Lyon, Bordeaux and Poitiers; in Paris, the police prefecture described a march “without incident”. Around 70,000 police and gendarmes were deployed, according to the interior minister, Laurent Nuñez. The day drew in other causes, including child protection, championed by groups campaigning against violence towards children. The yellow-vest coordination is already calling for an “act VI” on 21 November."
+        "fr": "Pour le cinquième week-end d’affilée, des manifestants ont défilé en France samedi 14 novembre contre la vie chère, à l’appel de la coordination des gilets jaunes et d’organisations de jeunesse. Ils étaient 106 000, dont 24 000 à Paris, selon le ministère de l’Intérieur, et 200 000, dont environ 100 000 à Paris, selon les organisations de jeunesse. Le ministère fait état de 219 interpellations et de dix policiers légèrement blessés. Au-delà des chiffres, ce qui frappe, c’est la durée : cinq samedis de suite, et la coordination appelle déjà à un « acte VI » le samedi 21 novembre, rapporte franceinfo.",
+        "en": "For the fifth weekend running, protesters marched across France on Saturday 14 November against the high cost of living, called out by the gilets jaunes (yellow vests) coordination and youth organisations. There were 106,000, including 24,000 in Paris, according to the interior ministry, and 200,000, including about 100,000 in Paris, according to the youth organisations. The ministry reported 219 arrests and ten police officers lightly injured. Beyond the numbers, what stands out is the staying power: five Saturdays in a row, and the coordination is already calling for an “act VI” on Saturday 21 November, franceinfo reports."
       },
       "sources": [
         {
@@ -252,105 +216,16 @@
       "id": "04",
       "section": "brief",
       "kicker": {
-        "fr": "GAZA",
-        "en": "GAZA"
-      },
-      "title": {
-        "fr": "L’Union européenne réclame un accès humanitaire « immédiat »",
-        "en": "The EU calls for “immediate” humanitarian access"
-      },
-      "summary": {
-        "fr": "L’Union européenne a exhorté Israël, samedi 14 novembre, à accorder aux organisations humanitaires un accès « immédiat et sans entrave » à la bande de Gaza et à « rouvrir tous les points de passage », par la voix de sa cheffe de la diplomatie, Kaja Kallas. Depuis une semaine, de fortes pluies ont inondé des dizaines de milliers de tentes de personnes déplacées et fait cinq morts, dont trois enfants, selon les secours palestiniens. L’UE rappelle qu’Israël doit respecter le droit international humanitaire et se dit « profondément préoccupée » par la frappe aérienne de jeudi contre le complexe médical Nasser, dans le sud du territoire, qui a tué au moins six personnes, dont un chirurgien, selon Al Jazeera. Samedi encore, une frappe de drone israélienne a tué deux Palestiniens à Jabaliya, dans le nord ; l’armée israélienne affirme avoir visé deux combattants du Hamas.",
-        "en": "The European Union urged Israel on Saturday 14 November to give aid organisations “immediate and unimpeded” access to the Gaza Strip and to “reopen all crossings”, through its foreign policy chief, Kaja Kallas. For a week, heavy rain has flooded tens of thousands of tents sheltering displaced people and killed five people, three of them children, according to Palestinian rescuers. The EU reminded Israel that it must respect international humanitarian law and said the air strike on Thursday on the Nasser medical complex in the south of the territory, which killed at least six people including a surgeon according to Al Jazeera, was “deeply concerning”. On Saturday an Israeli drone strike killed two more Palestinians in Jabaliya, in the north; the Israeli military says it targeted two Hamas militants."
-      },
-      "sources": [
-        {
-          "url": "https://www.franceinfo.fr/monde/proche-orient/israel-palestine/l-union-europeenne-exhorte-israel-a-permettre-l-acces-immediat-et-sans-entrave-de-l-aide-humanitaire-a-gaza_8282525.html",
-          "label": {
-            "fr": "franceinfo",
-            "en": "franceinfo"
-          }
-        },
-        {
-          "url": "https://www.aljazeera.com/news/2026/11/14/eu-calls-for-immediate-humanitarian-access-to-gaza",
-          "label": {
-            "fr": "Al Jazeera",
-            "en": "Al Jazeera"
-          }
-        }
-      ]
-    },
-    {
-      "id": "05",
-      "section": "brief",
-      "kicker": {
-        "fr": "HONGRIE",
-        "en": "HUNGARY"
-      },
-      "title": {
-        "fr": "Près de 20 millions de dollars en liquide déterrés chez un ex-ministre d’Orbán",
-        "en": "Nearly 20 million dollars in cash dug up in a case against an Orbán-era minister"
-      },
-      "summary": {
-        "fr": "Les enquêteurs hongrois ont saisi près de 20 millions de dollars (17,7 millions d’euros) en billets, enterrés dans des forêts et cachés dans des bâtiments agricoles, des entrepôts et des logements, a annoncé vendredi 13 novembre le nouvel Office national de recouvrement et de protection des avoirs. L’argent est lié à l’enquête sur Miklós Seszták, ministre du Développement national de Viktor Orbán de 2014 à 2018, soupçonné d’avoir touché plus de 37 millions de dollars de pots-de-vin sur des achats de bus d’occasion surfacturés et des chantiers publics ; placé en garde à vue fin septembre, il nie toute faute, rapporte DW. Douze agents du Trésor ont mis huit heures à compter les billets, selon le ministre des Finances, András Kármán. Le Premier ministre Péter Magyar, qui a battu Viktor Orbán aux législatives d’avril, présente la saisie comme un tournant de sa campagne anticorruption.",
-        "en": "Hungarian investigators have seized nearly 20 million dollars (€17.7 million) in banknotes buried in forests and hidden in farm buildings, warehouses and homes, the new National Asset Recovery and Protection Office announced on Friday 13 November. The money is linked to the inquiry into Miklós Seszták, Viktor Orbán’s national development minister from 2014 to 2018, who is suspected of taking more than 37 million dollars in bribes over overpriced second-hand buses and public building projects; taken into custody in late September, he denies wrongdoing, DW reports. Twelve treasury staff took eight hours to count the notes, according to the finance minister, András Kármán. The prime minister, Péter Magyar, who defeated Orbán in April’s election, calls the seizure a turning point in his anti-corruption campaign."
-      },
-      "sources": [
-        {
-          "url": "https://www.dw.com/en/hungary-millions-in-hidden-cash-found-in-orban-graft-probe/a-79946923",
-          "label": {
-            "fr": "DW",
-            "en": "DW"
-          }
-        }
-      ]
-    },
-    {
-      "id": "06",
-      "section": "brief",
-      "kicker": {
-        "fr": "CLIMAT",
-        "en": "CLIMATE"
-      },
-      "title": {
-        "fr": "À la COP31, la rue presse les négociateurs",
-        "en": "At COP31, the streets press the negotiators"
-      },
-      "summary": {
-        "fr": "Des milliers de personnes ont défilé sous la pluie samedi 14 novembre à Antalya, en Turquie, où se tient la COP31, la conférence annuelle des Nations unies sur le climat : plus de 7 000 selon la police, citée par franceinfo, des dizaines de milliers selon les organisateurs, cités par DW. Les autorités turques ont autorisé ce rassemblement, dans un pays qui interdit souvent les grands rassemblements publics. À l’ouverture de la seconde semaine, le chef de l’ONU Climat (la CCNUCC, la convention-cadre des Nations unies sur les changements climatiques), Simon Stiell, a appelé les délégations de plus de 200 pays à « éviter les manœuvres dilatoires » et à aborder vite les questions les plus difficiles. Les organisateurs d’un sommet citoyen parallèle reprochent à la Turquie, coprésidente de la conférence, de ne disposer d’aucune feuille de route de sortie des énergies fossiles et d’ouvrir encore des centrales et des mines de charbon.",
-        "en": "Thousands of people marched in the rain on Saturday 14 November in Antalya, Turkey, host of COP31, the annual United Nations climate conference: more than 7,000 according to the police, cited by franceinfo, tens of thousands according to the organisers, cited by DW. The Turkish authorities allowed the march, in a country that often bans large public gatherings. As the second week began, the UN climate chief (head of the UNFCCC, the United Nations Framework Convention on Climate Change), Simon Stiell, urged delegations from more than 200 countries to “avoid tactical delays” and move swiftly to the hardest issues. Organisers of a parallel people’s summit accuse Turkey, the conference’s co-president, of having no roadmap away from fossil fuels while still opening coal plants and mines."
-      },
-      "sources": [
-        {
-          "url": "https://www.dw.com/en/cop31-protesters-un-urge-swift-climate-deal/a-79948501",
-          "label": {
-            "fr": "DW",
-            "en": "DW"
-          }
-        },
-        {
-          "url": "https://www.franceinfo.fr/environnement/crise-climatique/cop-climat/la-voix-des-citoyens-ne-doit-pas-etre-ignoree-a-antalya-des-milliers-de-manifestants-denoncent-une-cop-sourde-aux-populations_8282576.html",
-          "label": {
-            "fr": "franceinfo",
-            "en": "franceinfo"
-          }
-        }
-      ]
-    },
-    {
-      "id": "07",
-      "section": "brief",
-      "kicker": {
         "fr": "DONNÉES PERSONNELLES",
         "en": "PRIVACY"
       },
       "title": {
-        "fr": "L’Italie inflige 805 millions d’euros d’amende à Meta",
+        "fr": "805 millions d’euros d’amende pour Meta en Italie",
         "en": "Italy fines Meta €805 million"
       },
       "summary": {
-        "fr": "L’autorité italienne de protection des données personnelles (la Garante) a infligé samedi 14 novembre une amende de 805 millions d’euros à Meta, maison mère de Facebook, pour avoir accédé aux photos et vidéos d’utilisateurs d’Android sans leur consentement « spécifique ». En cause, la fonction de l’application Facebook qui suggère, depuis 2023, des images de la galerie du téléphone comme idées de publication : l’accès reposait sur une autorisation unique pour toute l’application, précédée d’un avis jugé trop vague. Environ 20 millions d’utilisateurs n’auraient pas été correctement informés, selon le régulateur, qui laisse 60 jours à Meta pour désactiver la fonction par défaut. C’est l’une des plus lourdes sanctions jamais prononcées par une autorité italienne contre un géant technologique. Meta conteste « fermement » l’analyse et le montant, et peut faire appel. Fin octobre, le groupe avait été condamné au Nouveau-Mexique à verser 25 milliards de dollars pour avoir trompé le public sur l’usage des données.",
-        "en": "Italy’s data protection authority (the Garante) fined Meta, Facebook’s parent company, €805 million on Saturday 14 November for accessing Android users’ photos and videos without their “specific” consent. At issue is the Facebook app feature that, since 2023, suggests images from the phone’s gallery as ideas for posts: access rested on a single, app-wide permission, preceded by a notice the regulator found too vague. Around 20 million users were not properly informed, according to the regulator, which has given Meta 60 days to switch the feature off by default. It is among the largest fines an Italian authority has ever imposed on a tech giant. Meta “strongly” disputes the assessment and the amount, and can appeal. In late October the group was ordered in New Mexico to pay 25 billion dollars for misleading the public about its use of data."
+        "fr": "L’autorité italienne de protection des données (la Garante) a infligé à Meta, maison mère de Facebook, une amende de 805 millions d’euros pour avoir accédé aux photos d’utilisateurs d’Android sans leur consentement « spécifique ». Le mécanisme en cause est discret : une autorisation unique, accordée une fois à l’application, ne vaut pas accord pour chaque usage qu’elle en fait ensuite. Selon la BBC, environ 20 millions d’utilisateurs seraient concernés et Meta dispose de 60 jours pour se mettre en conformité. Le groupe conteste la décision et va faire appel.",
+        "en": "Italy’s data protection authority (the Garante) has fined Meta, Facebook’s parent company, €805 million for accessing Android users’ photos without their “specific” consent. The mechanism at stake is a quiet one: a single permission, granted once to an app, is not consent to every use the app later makes of it. According to the BBC, around 20 million users are affected and Meta has 60 days to comply. The company disputes the decision and will appeal."
       },
       "sources": [
         {
@@ -370,7 +245,7 @@
       ]
     },
     {
-      "id": "08",
+      "id": "05",
       "section": "explainer",
       "kicker": null,
       "title": {
@@ -378,8 +253,8 @@
         "en": "An “eliminated” disease"
       },
       "summary": {
-        "fr": "Pourquoi on en parle. Selon le Wall Street Journal, repris par DW et Courrier international, l’Organisation panaméricaine de la santé (OPS, la branche américaine de l’OMS) va retirer aux États-Unis leur statut de pays ayant éliminé la rougeole, acquis en 2000 ; l’annonce officielle est attendue le 17 novembre. Les Centres pour le contrôle et la prévention des maladies (CDC) ont recensé 5 182 cas confirmés cette année, dans 45 États, plus du double de 2025, selon DW.",
-        "en": "Why it's in the news. According to the Wall Street Journal, as reported by DW and Courrier international, the Pan American Health Organization (PAHO, the World Health Organization’s office for the Americas) is to strip the United States of the measles-elimination status it has held since 2000; the official announcement is expected on 17 November. The Centers for Disease Control and Prevention (CDC), the US public health agency, has recorded 5,182 confirmed cases this year in 45 states, more than double 2025’s total, according to DW."
+        "fr": "Pourquoi on en parle. Les États-Unis risquent de perdre leur statut de pays ayant éliminé la rougeole : une commission d’experts de l’OPS (Organisation panaméricaine de la santé, le bureau régional de l’OMS pour les Amériques) examine ce mois-ci leur situation, après un report d’avril à novembre. Les CDC (Centres pour le contrôle et la prévention des maladies, l’agence fédérale de santé publique) recensaient au 12 novembre 5 412 cas confirmés en 2026, contre 2 289 sur toute l’année 2025.",
+        "en": "Why it's in the news. The United States may lose its measles-elimination status: a commission of experts from PAHO (the Pan American Health Organization, the World Health Organization’s regional office for the Americas) is reviewing its case this month, after a postponement from April to November. The CDC (Centers for Disease Control and Prevention, the US federal public health agency) had counted 5,412 confirmed cases in 2026 as of 12 November, against 2,289 in the whole of 2025."
       },
       "sources": [
         {
@@ -397,87 +272,16 @@
           }
         },
         {
-          "url": "https://www.dw.com/en/us-loses-measles-elimination-status-after-26-years-wsj-reports/a-79946974",
+          "url": "https://www.cdc.gov/measles/data-research/index.html",
           "label": {
-            "fr": "DW",
-            "en": "DW"
-          }
-        },
-        {
-          "url": "https://www.courrierinternational.com/article/sante-la-rougeole-n-est-plus-une-maladie-eradiquee-aux-etats-unis_287202",
-          "label": {
-            "fr": "Courrier international",
-            "en": "Courrier international"
+            "fr": "CDC · données rougeole",
+            "en": "CDC · measles data"
           }
         }
       ]
     },
     {
-      "id": "09",
-      "section": "techsci",
-      "kicker": {
-        "fr": "NUMÉRIQUE",
-        "en": "MICROSOFT"
-      },
-      "title": {
-        "fr": "Microsoft rétablit ses services après une panne mondiale",
-        "en": "Services restored after a global outage"
-      },
-      "summary": {
-        "fr": "Microsoft a annoncé tôt samedi 14 novembre le rétablissement complet d’Outlook, Teams et Copilot, après une panne d’environ une journée qui a touché plus de 70 pays et des produits utilisés par plus de 430 millions de personnes, selon la BBC. L’entreprise, qui s’est excusée, attribue l’incident à une « mise à niveau de la capacité réseau » et écarte une cyberattaque comme l’action d’un agent d’intelligence artificielle. La panne a perturbé des administrations, des tribunaux, des hôpitaux et des écoles, du gouvernement japonais à la Cour suprême des Philippines. Une analyse publiée par The Conversation y voit surtout le risque de la concentration : quelques grandes entreprises fournissent désormais l’essentiel des services numériques dont dépendent les institutions.",
-        "en": "Microsoft said early on Saturday 14 November that Outlook, Teams and Copilot were fully restored after an outage of about a day that hit more than 70 countries and products used by more than 430 million people, according to the BBC. The company, which apologised, blames a “network capacity upgrade” and rules out both a cyber-attack and an artificial intelligence agent. The outage disrupted government offices, courts, hospitals and schools, from the Japanese government to the Supreme Court of the Philippines. An analysis in The Conversation sees in it above all the risk of concentration: a handful of large companies now provide most of the digital services institutions depend on."
-      },
-      "sources": [
-        {
-          "url": "https://www.bbc.co.uk/news/articles/c6rrg51rkz09o",
-          "label": {
-            "fr": "BBC News",
-            "en": "BBC News"
-          }
-        },
-        {
-          "url": "https://theconversation.com/the-microsoft-outage-is-an-urgent-wake-up-call-for-greater-digital-resilience-296610",
-          "label": {
-            "fr": "The Conversation",
-            "en": "The Conversation"
-          }
-        }
-      ]
-    },
-    {
-      "id": "10",
-      "section": "techsci",
-      "kicker": {
-        "fr": "ASTRONOMIE",
-        "en": "ASTRONOMY"
-      },
-      "title": {
-        "fr": "Autour d’une jeune étoile, une glace venue d’avant sa naissance",
-        "en": "Around a young star, ice from before it was born"
-      },
-      "summary": {
-        "fr": "Le télescope spatial James-Webb a détecté de la glace d’eau et de dioxyde de carbone dans le disque de débris qui entoure Bêta Pictoris, une étoile d’environ 20 millions d’années située à 64 années-lumière, où des planètes sont encore en formation, selon une étude menée par Sarah Betti, du Space Telescope Science Institute, et rapportée par Ars Technica. La glace d’eau est presque entièrement amorphe, un solide désordonné comme du verre (moins de 7 % de cristaux), et le CO₂ y est intimement mêlé, à raison d’environ une molécule pour dix, une proportion proche de celle des comètes du Système solaire. Les chercheurs en déduisent que cette glace s’est probablement formée dans le milieu interstellaire, avant l’étoile elle-même. Si c’est la règle, les ingrédients de mondes riches en eau seraient courants autour des jeunes étoiles.",
-        "en": "The James Webb Space Telescope has detected water and carbon dioxide ice in the debris disc around Beta Pictoris, a star about 20 million years old and 64 light years away where planets are still forming, according to a study led by Sarah Betti of the Space Telescope Science Institute and reported by Ars Technica. The water ice is almost entirely amorphous, a disordered, glass-like solid (under 7% crystalline), and the CO₂ is intimately mixed in, at roughly one molecule for every ten, a proportion close to that of comets in our Solar System. The researchers conclude that the ice probably formed in the interstellar medium, before the star itself. If that is the rule, the ingredients of water-rich worlds may be common around young stars."
-      },
-      "sources": [
-        {
-          "url": "https://arstechnica.com/science/2026/11/james-webb-telescope-finds-ice-older-than-the-star-it-orbits/",
-          "label": {
-            "fr": "Ars Technica",
-            "en": "Ars Technica"
-          }
-        },
-        {
-          "url": "https://datadryad.org/dataset/doi:10.5061/dryad.n8pk0p36d",
-          "label": {
-            "fr": "Dryad · données de l’étude",
-            "en": "Dryad · the study’s data"
-          }
-        }
-      ]
-    },
-    {
-      "id": "11",
+      "id": "06",
       "section": "finds",
       "kicker": null,
       "title": {
@@ -485,8 +289,8 @@
         "en": "To cross a border, first imagine it"
       },
       "summary": {
-        "fr": "À 19 ans, Shahram Khosravi, aujourd’hui anthropologue à l’université de Stockholm, était détenu dans une petite prison à la frontière entre l’Iran et le Pakistan, au milieu de passeurs, de travailleurs sans papiers et de réfugiés. Dans cet essai pour Aeon (en anglais), il soutient que partout où l’on enferme et déplace des gens naît une « imagination fugitive », un savoir pratique qui pense le monde au-delà des frontières des États. Un passeur interrogé en prison lui dit qu’il « conçoit un voyage comme un architecte conçoit un bâtiment ». Un texte de philosophie politique ancré dans l’expérience, qui oblige à regarder les frontières depuis ceux qui les franchissent.",
-        "en": "At 19, Shahram Khosravi, now an anthropologist at Stockholm University, was held in a small prison on the border between Iran and Pakistan, among smugglers, undocumented workers and refugees. In this essay for Aeon he argues that wherever people are confined and displaced, a “fugitive imagination” emerges: a practical knowledge that thinks the world beyond the borders of states. A smuggler interviewed in prison told him he designs “a journey, like an architect designs a building”. Political philosophy rooted in lived experience, which makes you look at borders from the side of those who cross them."
+        "fr": "« En 1986, j’avais 19 ans et j’étais derrière les barreaux d’une petite prison à la frontière entre l’Iran et le Pakistan. » Ainsi commence l’essai de Shahram Khosravi, anthropologue à l’université de Stockholm, publié vendredi 13 novembre par Aeon (en anglais). Il y défend l’idée d’une « imagination fugitive » : la capacité, chez celles et ceux que l’on enferme ou déplace, d’imaginer et de mener une vie au-delà des mondes qui cherchent à les contenir. Un passeur lui confie : « Je conçois un voyage comme un architecte conçoit un bâtiment. » Pourquoi cliquer : c’est rare, un texte de philosophie politique écrit depuis l’intérieur de son sujet.",
+        "en": "“In 1986, I was 19 and behind bars in a small prison on the border between Iran and Pakistan.” So opens Shahram Khosravi’s essay for Aeon, published on Friday 13 November; he is an anthropologist at Stockholm University. He argues for a “fugitive imagination”: the capacity of people who are confined or displaced to envision and live a life beyond the worlds that seek to contain them. A smuggler tells him: “I design a journey, like an architect designs a building.” Why click: political philosophy written from inside its subject is rare."
       },
       "sources": [
         {
@@ -499,29 +303,7 @@
       ]
     },
     {
-      "id": "12",
-      "section": "finds",
-      "kicker": null,
-      "title": {
-        "fr": "Le philosophe du « oui, mais »",
-        "en": "The philosopher of “yes, but”"
-      },
-      "summary": {
-        "fr": "Philosophie Magazine fait redécouvrir Jean Wahl (1888-1974), figure majeure de la vie intellectuelle d’après-guerre et pourtant largement oublié. Le philosophe Bernardo Tavares, qui lui a consacré une thèse, retrace un parcours de la Sorbonne au camp de Drancy, et une pensée qui, persuadée que la réalité déborde les idées, accueillait les points de vue les plus divers pour en éprouver les limites. Une belle porte d’entrée vers une philosophie du doute fécond, loin des systèmes clos.",
-        "en": "Philosophie Magazine (in French) revisits Jean Wahl (1888-1974), a major figure of post-war intellectual life who is now largely forgotten. The philosopher Bernardo Tavares, who wrote his thesis on him, traces a life that ran from the Sorbonne to the Drancy internment camp, and a way of thinking that, convinced reality overflows our ideas, welcomed the most varied viewpoints to test their limits. A fine way into a philosophy of productive doubt, far from closed systems."
-      },
-      "sources": [
-        {
-          "url": "https://www.philomag.com/articles/redecouvrir-jean-wahl-le-philosophe-du-oui-mais",
-          "label": {
-            "fr": "Philosophie Magazine",
-            "en": "Philosophie Magazine"
-          }
-        }
-      ]
-    },
-    {
-      "id": "13",
+      "id": "07",
       "section": "finds",
       "kicker": null,
       "title": {
@@ -529,8 +311,8 @@
         "en": "All of London on the move, live"
       },
       "summary": {
-        "fr": "ZONE ONE est une carte vivante du centre de Londres : chaque métro, bus, train, bateau sur la Tamise et avion qui s’y affiche est réel et se déplace en temps réel, placé à partir des flux publics de Transport for London, des départs ferroviaires nationaux et des balises de suivi des avions et des navires. On survole un véhicule pour savoir ce qu’il est, on clique sur une gare pour ses départs, ou sur une caméra de circulation pour son image du moment. Un bel hommage à l’open data, et une manière étrangement apaisante de regarder une ville respirer.",
-        "en": "ZONE ONE is a live map of central London: every tube train, bus, mainline train, riverboat and aircraft on screen is real and moving in real time, placed from Transport for London’s public feeds, National Rail departures and aircraft and ship tracking signals. Hover over a vehicle to see what it is, click a station for its departures, or a traffic camera for its current picture. A fine tribute to open data, and a strangely calming way to watch a city breathe."
+        "fr": "ZONE ONE est une carte vivante du centre de Londres : métros, bus, trains, bateaux sur la Tamise et avions s’y déplacent en temps réel, à partir des données ouvertes de Transport for London, des départs ferroviaires nationaux et des signaux de suivi des avions et des navires. On clique sur une gare pour ses prochains départs, sur une caméra de circulation pour son image du moment. Pourquoi cliquer : après deux pannes, une jolie démonstration de ce que des données publiques bien reliées permettent de voir.",
+        "en": "ZONE ONE is a live map of central London: tube trains, buses, mainline trains, riverboats and aircraft move on it in real time, drawn from Transport for London’s open data, National Rail departures and aircraft and ship tracking signals. Click a station for its next departures, or a traffic camera for its current picture. Why click: after two outages, a lovely demonstration of what well-joined public data lets you see."
       },
       "sources": [
         {
@@ -543,143 +325,28 @@
       ]
     },
     {
-      "id": "14",
-      "section": "finds",
-      "kicker": null,
-      "title": {
-        "fr": "Un jeu rétro de poche, sans coder",
-        "en": "A pocket retro game, no coding needed"
-      },
-      "summary": {
-        "fr": "GB Studio est un créateur de jeux rétro à base de glisser-déposer pour console portable d’époque : un script visuel sans programmation, un débogueur intégré quand le jeu se complique, et un éditeur de musique avec piano roll et mode tracker. Il produit de vraies ROM, jouables sur n’importe quel émulateur GB, et les jeux s’exportent aussi pour le web, avec des commandes adaptées au mobile. Selon le site, il sert aussi bien aux parents qui apprennent à coder à leurs enfants qu’à des jeux professionnels sortis en version physique.",
-        "en": "GB Studio is a drag-and-drop maker of retro games for a classic handheld: visual scripting with no programming, a built-in debugger for when the game gets complicated, and a music editor with piano-roll and tracker modes. It builds real ROM files that play on any GB emulator, and games also export to the web, with controls made for mobile. According to the site, it serves parents teaching their children to code as well as professional games with physical releases."
-      },
-      "sources": [
-        {
-          "url": "https://www.gbstudio.dev/",
-          "label": {
-            "fr": "GB Studio",
-            "en": "GB Studio"
-          }
-        }
-      ]
-    },
-    {
-      "id": "15",
+      "id": "08",
       "section": "watch",
       "kicker": null,
       "title": {
-        "fr": "Trump, Xi et Poutine à Shenzhen",
-        "en": "Trump, Xi and Putin in Shenzhen"
+        "fr": "La décision sur la rougeole aux États-Unis",
+        "en": "The measles decision for the United States"
       },
       "summary": {
-        "fr": "Donald Trump, Xi Jinping et Vladimir Poutine doivent se retrouver la semaine prochaine en marge du sommet de l’Apec (la Coopération économique Asie-Pacifique) à Shenzhen, en Chine, a annoncé la Maison-Blanche ; franceinfo situe la rencontre jeudi 19 novembre. Washington veut y parler de réduction des arsenaux nucléaires, alors que le dernier traité de maîtrise des armements entre les États-Unis et la Russie a expiré en février. Pékin n’a pas encore confirmé, et aucun accord n’est attendu, selon un responsable américain.",
-        "en": "Donald Trump, Xi Jinping and Vladimir Putin are due to meet next week on the sidelines of the Apec (Asia-Pacific Economic Cooperation) summit in Shenzhen, China, the White House has announced; franceinfo puts the meeting on Thursday 19 November. Washington wants to discuss reducing nuclear arsenals, after the last arms control treaty between the United States and Russia expired in February. Beijing has yet to confirm, and no agreement is expected, according to a US official."
+        "fr": "L’avis de l’OPS sur le statut d’élimination des États-Unis est attendu en début de semaine prochaine, selon le News Tribune. À regarder : si la transmission est déclarée endémique, ce que la décision dit du délai et des conditions pour retrouver le statut.",
+        "en": "PAHO’s ruling on US elimination status is expected early next week, according to the News Tribune. What to watch: whether transmission is declared endemic, and what the decision says about the time and conditions for regaining the status."
       },
       "sources": [
         {
-          "url": "https://www.bbc.co.uk/news/articles/ckz74jzpy18do",
+          "url": "https://www.newstribune.com/news/2026/nov/11/us-faces-loss-of-measles-free-status-as-experts-meet-for-review/",
           "label": {
-            "fr": "BBC News",
-            "en": "BBC News"
-          }
-        },
-        {
-          "url": "https://www.franceinfo.fr/monde/usa/presidentielle/donald-trump/que-faut-il-attendre-du-sommet-inedit-entre-xi-jinping-vladimir-poutine-et-donald-trump-attendu-jeudi-en-chine_8282519.html",
-          "label": {
-            "fr": "franceinfo",
-            "en": "franceinfo"
-          }
-        }
-      ]
-    },
-    {
-      "id": "16",
-      "section": "watch",
-      "kicker": null,
-      "title": {
-        "fr": "Voyager 1 à un jour-lumière de la Terre",
-        "en": "Voyager 1, one light day from Earth"
-      },
-      "summary": {
-        "fr": "Mercredi, selon la NASA, la sonde Voyager 1, lancée en 1977, deviendra le premier objet fabriqué par l’humanité à se trouver à un jour-lumière de la Terre, la distance que parcourt la lumière en 24 heures, soit environ 26 milliards de kilomètres. Elle transmet toujours chaque jour des mesures du milieu interstellaire.",
-        "en": "On Wednesday, according to NASA, the Voyager 1 probe, launched in 1977, will become the first human-made object to be one light day from Earth, the distance light travels in 24 hours, about 26 billion kilometres. It still sends back daily readings from interstellar space."
-      },
-      "sources": [
-        {
-          "url": "https://www.aljazeera.com/news/2026/11/14/nasas-voyager-1-to-hit-new-space-distance-record-of-one-light-day",
-          "label": {
-            "fr": "Al Jazeera",
-            "en": "Al Jazeera"
-          }
-        }
-      ]
-    },
-    {
-      "id": "17",
-      "section": "watch",
-      "kicker": null,
-      "title": {
-        "fr": "Le statut de la rougeole aux États-Unis",
-        "en": "Measles status in the United States"
-      },
-      "summary": {
-        "fr": "L’annonce officielle de l’OPS est attendue le 17 novembre, selon Courrier international. Elle ferait des États-Unis un pays où la rougeole circule de nouveau de façon endémique.",
-        "en": "PAHO’s official announcement is expected on 17 November, according to Courrier international. It would make the United States a country where measles is again endemic."
-      },
-      "sources": [
-        {
-          "url": "https://www.courrierinternational.com/article/sante-la-rougeole-n-est-plus-une-maladie-eradiquee-aux-etats-unis_287202",
-          "label": {
-            "fr": "Courrier international",
-            "en": "Courrier international"
-          }
-        }
-      ]
-    },
-    {
-      "id": "18",
-      "section": "watch",
-      "kicker": null,
-      "title": {
-        "fr": "Une semaine sociale chargée",
-        "en": "A busy week of protest"
-      },
-      "summary": {
-        "fr": "Les gilets jaunes rejoindront la journée syndicale du 17 novembre, huit ans jour pour jour après la naissance du mouvement, puis appellent à un « acte VI » le samedi 21 novembre, faute de réponse à leurs revendications, a annoncé leur coordination sur franceinfo.",
-        "en": "The yellow vests will join the unions’ day of action on 17 November, eight years to the day after the movement began, then call for an “act VI” on Saturday 21 November because their demands have not been met, their coordination announced on franceinfo."
-      },
-      "sources": [
-        {
-          "url": "https://www.franceinfo.fr/economie/transports/mobilisation-du-17-novembre/les-revendications-ne-sont-pas-satisfaites-les-gilets-jaunes-appellent-a-un-acte-vi-de-mobilisation-samedi-21-novembre_8282648.html",
-          "label": {
-            "fr": "franceinfo",
-            "en": "franceinfo"
+            "fr": "News Tribune",
+            "en": "News Tribune"
           }
         }
       ]
     }
   ],
   "timeline": [],
-  "inBrief": [
-    {
-      "text": {
-        "fr": "Les Philippines ont remporté samedi à Bangkok la première édition de l’Eurovision Asie, avec la chanteuse Carmelle, 19 ans, et sa chanson Sobra-Sobra, parmi onze pays en lice selon la BBC ([BBC News](https://www.bbc.co.uk/news/articles/cqrlgnx9dx6eo), [franceinfo](https://www.franceinfo.fr/culture/musique/la-chanteuse-carmelle-offre-la-victoire-aux-philippines-pour-la-premiere-edition-du-concours-eurovision-d-asie_8282693.html)).",
-        "en": "The Philippines won the first Eurovision Song Contest Asia in Bangkok on Saturday with the 19-year-old singer Carmelle and her song Sobra-Sobra, in a field of eleven countries according to the BBC ([BBC News](https://www.bbc.co.uk/news/articles/cqrlgnx9dx6eo), [franceinfo](https://www.franceinfo.fr/culture/musique/la-chanteuse-carmelle-offre-la-victoire-aux-philippines-pour-la-premiere-edition-du-concours-eurovision-d-asie_8282693.html))."
-      },
-      "urls": [
-        "https://www.bbc.co.uk/news/articles/cqrlgnx9dx6eo",
-        "https://www.franceinfo.fr/culture/musique/la-chanteuse-carmelle-offre-la-victoire-aux-philippines-pour-la-premiere-edition-du-concours-eurovision-d-asie_8282693.html"
-      ]
-    },
-    {
-      "text": {
-        "fr": "Lors du 15e vol d’essai de Starship, vendredi, le premier étage de la fusée de SpaceX a interrompu sa récupération par la tour de lancement et explosé au-dessus de la mer, tandis que le second étage a déployé 26 satellites Starlink ([BBC News](https://www.bbc.co.uk/news/articles/ckregdgnl0xpo)).",
-        "en": "On Starship’s 15th test flight on Friday, SpaceX’s booster aborted its catch by the launch tower and exploded above the sea, while the upper stage deployed 26 Starlink satellites ([BBC News](https://www.bbc.co.uk/news/articles/ckregdgnl0xpo))."
-      },
-      "urls": [
-        "https://www.bbc.co.uk/news/articles/ckregdgnl0xpo"
-      ]
-    }
-  ]
+  "inBrief": []
 }
