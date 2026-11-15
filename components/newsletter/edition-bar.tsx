@@ -8,6 +8,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react"
+import { useDismiss } from "@/components/newsletter/use-dismiss"
 import { InkLink as Link } from "@/components/ink-link"
 import {
   monthBounds,
@@ -84,7 +85,10 @@ export const EditionBar = ({
   const copy = COPY[lang]
   const [open, setOpen] = useState(false)
   const toggle = useRef<HTMLButtonElement>(null)
+  const panel = useRef<HTMLDivElement>(null)
   const panelId = useId()
+
+  useDismiss(open, () => setOpen(false), [toggle, panel])
 
   useEffect(() => {
     if (!open) return
@@ -121,7 +125,7 @@ export const EditionBar = ({
         </nav>
         <div className={styles.mastTools}>{children}</div>
       </div>
-      <div id={panelId} hidden={!open}>
+      <div ref={panel} id={panelId} hidden={!open}>
         {open && (
           <EditionCalendar
             date={date}
