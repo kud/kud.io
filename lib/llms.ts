@@ -174,8 +174,14 @@ export const buildLlmsDocument = async (): Promise<LlmsDocument> => {
     optional: [
       { name: "CV (PDF)", url: `${SITE}/cv.pdf` },
       { name: "Writing feed (RSS)", url: `${SITE}/blog/feed.xml` },
-      { name: "Newsletter feed, French (RSS)", url: `${SITE}/newsletter/fr.xml` },
-      { name: "Newsletter feed, English (RSS)", url: `${SITE}/newsletter/en.xml` },
+      {
+        name: "Newsletter feed, French (RSS)",
+        url: `${SITE}/newsletter/fr.xml`,
+      },
+      {
+        name: "Newsletter feed, English (RSS)",
+        url: `${SITE}/newsletter/en.xml`,
+      },
       ...docsLinks(),
     ],
   }
