@@ -21,6 +21,10 @@ on:
         description: Only parse and validate that date's edition (any status); write and publish nothing.
         type: boolean
         default: false
+      test_slack:
+        description: Send a Slack test only; do not touch Notion or publish an edition.
+        type: boolean
+        default: false
   schedule:
     - cron: "30 18 * * *"
     - cron: "30 19 * * *"
@@ -38,6 +42,7 @@ concurrency:
 
 jobs:
   publish:
+    if: ${{ !inputs.test_slack }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -151,15 +156,20 @@ jobs:
             node scripts/sync-newsletter.js --mark=published "--date=$date"
           done
 
-      # One line in the newsletter channel per edition that went live, with its
-      # lead story. Failures go to the alerts channel through the notify job.
-      # Best effort: a Slack hiccup never fails a published edition.
+      # A missing or broken webhook must be visible, but must never undo a
+      # successful publication. ::warning:: is surfaced in the Actions run and
+      # forwarded by notify-slack.yml when the warnings webhook is configured.
       - name: Announce in Slack
         if: steps.plan.outputs.publish != ''
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_NEWSLETTER_WEBHOOK_URL }}
         run: |
-          [ -n "$SLACK_WEBHOOK_URL" ] || { echo "No newsletter webhook; skipping."; exit 0; }
+          set -euo pipefail
+          if [[ -z "$SLACK_WEBHOOK_URL" ]]; then
+            echo "::warning title=Newsletter Slack webhook missing::Set the SLACK_NEWSLETTER_WEBHOOK_URL Actions secret; the edition is published, but #pub-newsletter was not notified."
+            echo "⚠️ Slack announcement skipped: SLACK_NEWSLETTER_WEBHOOK_URL is not configured." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
           for date in ${{ steps.plan.outputs.publish }}; do
             file="content/newsletter/$date/edition.json"
             lead=$(jq -r '.items[0].title.fr // empty' "$file")
@@ -167,9 +177,13 @@ jobs:
             minutes=$(jq -r '.readingMinutes.fr // empty' "$file")
             text=$(printf '📰 *Newsletter du %s publiée* · %s sujets%s\n%s\n<https://kud.io/newsletter/%s|Lire l’édition>' \
               "$date" "$count" "${minutes:+ · $minutes min}" "$lead" "$date")
-            jq -n --arg text "$text" '{text: $text}' \
-              | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" \
-              || echo "Slack announcement failed for $date"
+            if jq -n --arg text "$text" '{text: $text}' \
+              | curl --fail --silent --show-error --max-time 20 -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" > /dev/null; then
+              echo "✅ Slack announcement sent for $date." >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "::warning title=Newsletter Slack delivery failed::The $date edition is live, but its Slack announcement failed; inspect this step and the webhook."
+              echo "⚠️ Slack announcement failed for $date." >> "$GITHUB_STEP_SUMMARY"
+            fi
           done
 
       # After Published, never before: the script refuses any other status and
@@ -205,10 +219,28 @@ jobs:
           echo "Invalid editions: ${{ steps.plan.outputs.invalid }} (reasons in Notion's Error property)"
           exit 1
 
-  # A failed or warning-laden run lands in the alerts channel too.
+  # Test the newsletter-specific webhook without touching Notion or the site.
+  test-slack:
+    if: inputs.test_slack
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send newsletter Slack test
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_NEWSLETTER_WEBHOOK_URL }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$SLACK_WEBHOOK_URL" ]]; then
+            echo "::error title=Newsletter Slack webhook missing::Set SLACK_NEWSLETTER_WEBHOOK_URL before running this test."
+            exit 1
+          fi
+          jq -n --arg text "✓ kud.io newsletter: Slack notifications are configured (test only)." '{text: $text}' \
+            | curl --fail --silent --show-error --max-time 20 -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" > /dev/null
+          echo "✅ Newsletter Slack webhook delivered a test message." >> "$GITHUB_STEP_SUMMARY"
+
+  # A failed or warning-laden publication run lands in the alerts channel too.
   notify:
     needs: publish
-    if: always()
+    if: ${{ always() && !inputs.test_slack }}
     permissions:
       actions: read
       checks: read
