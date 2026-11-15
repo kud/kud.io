@@ -1,0 +1,392 @@
+{
+  "schema": 1,
+  "date": "2026-11-15",
+  "generatedAt": "2026-11-15T18:43:00.000+00:00",
+  "publishedAt": "2026-11-15T22:53:37Z",
+  "languages": [
+    "fr",
+    "en"
+  ],
+  "lede": {
+    "fr": "La conférence de l’ONU sur le climat entre lundi dans sa semaine décisive, et c’est elle qu’on prend le temps d’expliquer : qui décide, comment, et ce qui bloque. Puis quatre nouvelles choisies, un mot sur l’El Niño qui s’annonce historique, et deux lectures pour aller ailleurs.",
+    "en": "The UN climate conference enters its decisive week on Monday, and we take the time to explain it: who decides, how, and what is stuck. Then four chosen stories, a word on an El Niño that could be historic, and two reads to take you elsewhere."
+  },
+  "readingMinutes": {
+    "fr": 7,
+    "en": 7
+  },
+  "wordCount": {
+    "fr": 1433,
+    "en": 1363
+  },
+  "narrative": {
+    "overview": {
+      "fr": "La conférence de l’ONU sur le climat entre lundi dans sa semaine décisive, et c’est elle qu’on prend le temps d’expliquer : qui décide, comment, et ce qui bloque. Puis quatre nouvelles choisies, un mot sur l’El Niño qui s’annonce historique, et deux lectures pour aller ailleurs.",
+      "en": "The UN climate conference enters its decisive week on Monday, and we take the time to explain it: who decides, how, and what is stuck. Then four chosen stories, a word on an El Niño that could be historic, and two reads to take you elsewhere."
+    },
+    "analysis": null,
+    "closing": {
+      "fr": "Bonne soirée. À demain.",
+      "en": "Have a good evening. See you tomorrow."
+    }
+  },
+  "sections": [
+    {
+      "key": "overview",
+      "kind": "narrative",
+      "title": {
+        "fr": "Ce soir",
+        "en": "Tonight"
+      },
+      "items": []
+    },
+    {
+      "key": "depth",
+      "kind": "items",
+      "title": {
+        "fr": "Le sujet du jour",
+        "en": "Today’s focus"
+      },
+      "items": [
+        "01"
+      ]
+    },
+    {
+      "key": "brief",
+      "kind": "items",
+      "title": {
+        "fr": "L’essentiel",
+        "en": "The essentials"
+      },
+      "items": [
+        "02",
+        "03",
+        "04",
+        "05"
+      ]
+    },
+    {
+      "key": "explainer",
+      "kind": "items",
+      "title": {
+        "fr": "C’est quoi ?",
+        "en": "Explainer"
+      },
+      "items": [
+        "06"
+      ]
+    },
+    {
+      "key": "finds",
+      "kind": "items",
+      "title": {
+        "fr": "Ça vaut un clic",
+        "en": "Worth a click"
+      },
+      "items": [
+        "07",
+        "08"
+      ]
+    },
+    {
+      "key": "watch",
+      "kind": "items",
+      "title": {
+        "fr": "À surveiller",
+        "en": "Watch next"
+      },
+      "items": [
+        "09"
+      ]
+    },
+    {
+      "key": "closing",
+      "kind": "narrative",
+      "title": {
+        "fr": "Pour finir",
+        "en": "To close"
+      },
+      "items": []
+    }
+  ],
+  "items": [
+    {
+      "id": "01",
+      "section": "depth",
+      "kicker": {
+        "fr": "CLIMAT",
+        "en": "CLIMATE"
+      },
+      "title": {
+        "fr": "COP31 : financement et objectifs au cœur des désaccords",
+        "en": "COP31: funding and targets remain disputed"
+      },
+      "summary": {
+        "fr": "Lundi 16 novembre s’ouvre la seconde et dernière semaine de la COP31, la conférence annuelle de l’ONU sur le climat, réunie à Antalya, en Turquie, du 9 au 20 novembre. Le bilan de la première semaine tient dans le titre de Climate Home News samedi : « progrès limités ». Les négociateurs ont mené les textes aussi loin que possible sans arbitrage politique ; ce sont maintenant les ministres qui arrivent pour trancher.",
+        "en": "On Monday 16 November the second and final week of COP31 begins: the UN’s annual climate conference, meeting in Antalya, Türkiye, from 9 to 20 November. The first week fits into the headline Climate Home News ran on Saturday: “limited progress”. Negotiators have taken the texts as far as they can without political decisions; now ministers are arriving to make them."
+      },
+      "sources": [
+        {
+          "url": "https://www.climatechangenews.com/2026/11/14/cop31-bulletin-day-6-limited-progress-as-ministers-arrive-in-antalya/",
+          "label": {
+            "fr": "Climate Home News",
+            "en": "Climate Home News"
+          }
+        },
+        {
+          "url": "https://www.hurriyetdailynews.com/turkiye-eyes-ambitious-climate-outcome-as-cop31-enters-final-week-229417",
+          "label": {
+            "fr": "Hürriyet Daily News",
+            "en": "Hürriyet Daily News"
+          }
+        },
+        {
+          "url": "https://unfccc.int/sites/default/files/resource/COP_31_Overview_Schedule.pdf",
+          "label": {
+            "fr": "CCNUCC · calendrier de la COP31",
+            "en": "UNFCCC · COP31 schedule"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "section": "brief",
+      "kicker": {
+        "fr": "TCHÉQUIE",
+        "en": "CZECH REPUBLIC"
+      },
+      "title": {
+        "fr": "Prague dans la rue pour son audiovisuel public",
+        "en": "Prague rallies for its public broadcasters"
+      },
+      "summary": {
+        "fr": "Dimanche 15 novembre, une foule immense s’est rassemblée sur la plaine de Letná, à Prague, contre le projet du gouvernement d’Andrej Babiš de remplacer la redevance de la télévision et de la radio publiques par un financement sur le budget de l’État. Son ampleur est disputée : « des dizaines de milliers » selon Al Jazeera, 350 000 à 400 000 selon des estimations de médias citées par Euronews. La redevance coûte aujourd’hui 205 couronnes par mois et par foyer. C’est tout l’argument des opposants : un média financé directement par ses publics dépendrait moins du pouvoir qu’un média dont l’enveloppe est votée chaque année. Le gouvernement assure que l’indépendance éditoriale ne sera pas touchée ; l’UER (Union européenne de radio-télévision) et Reporters sans frontières, entre autres, critiquent la réforme, déjà adoptée en première lecture.",
+        "en": "On Sunday 15 November a huge crowd gathered on Letná plain in Prague against a plan by Andrej Babiš’s government to replace the licence fee for public television and radio with funding from the state budget. Its size is disputed: “tens of thousands” according to Al Jazeera, 350,000 to 400,000 according to media estimates cited by Euronews. The fee currently costs 205 crowns a month per household. That is the critics’ whole argument: a broadcaster paid directly by its audience would depend less on those in power than one whose budget is voted every year. The government says editorial independence will not be affected; the EBU (European Broadcasting Union) and Reporters Without Borders, among others, criticise the reform, which has already passed a first reading."
+      },
+      "sources": [
+        {
+          "url": "https://www.aljazeera.com/news/2026/11/15/thousands-rally-in-czech-republic-against-state-media-funding-changes",
+          "label": {
+            "fr": "Al Jazeera",
+            "en": "Al Jazeera"
+          }
+        },
+        {
+          "url": "https://www.euronews.com/2026/11/15/hundreds-of-thousands-in-prague-protest-czech-governments-public-media-funding-plans",
+          "label": {
+            "fr": "Euronews",
+            "en": "Euronews"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "section": "brief",
+      "kicker": {
+        "fr": "FONCTION PUBLIQUE",
+        "en": "PUBLIC SECTOR"
+      },
+      "title": {
+        "fr": "Une hausse pour les bas salaires, surtout grâce au Smic",
+        "en": "A rise for France’s lowest-paid civil servants, mostly thanks to the minimum wage"
+      },
+      "summary": {
+        "fr": "Invité de franceinfo dimanche 15 novembre, David Amiel, ministre de l’Action et des Comptes publics, a confirmé « une hausse des points pour les plus bas salaires de la fonction publique ». Au total, 1,35 million d’agents verront leur salaire augmenter, pour un gain moyen d’environ 350 euros brut par an, et un coût d’« un peu plus d’un milliard d’euros ». Le détail des chiffres compte : 1,1 million d’entre eux le doivent à la hausse du Smic (le salaire minimum) annoncée lundi 9 novembre. Vendredi 13 novembre, le Premier ministre Sébastien Lecornu a ouvert un mois de discussion avec les syndicats sur les bas salaires ; la CFDT a rejoint le même jour l’appel à la grève, estimant que les propositions « ne constituent pas de véritables avancées ».",
+        "en": "Speaking on franceinfo on Sunday 15 November, David Amiel, France’s minister for public action and accounts, confirmed “a rise in points for the lowest salaries in the civil service”. In all, 1.35 million public employees will get a pay rise, worth about 350 euros gross a year on average, at a cost of “a little over a billion euros”. The breakdown matters: 1.1 million of them owe it to the rise in the Smic (the minimum wage) announced on Monday 9 November. On Friday 13 November, Prime Minister Sébastien Lecornu opened a month of talks with the unions on low pay; the same day, the CFDT union joined the strike call, saying the proposals “do not amount to real progress”."
+      },
+      "sources": [
+        {
+          "url": "https://www.franceinfo.fr/economie/pouvoir-achat/il-y-aura-bien-une-hausse-des-points-pour-les-plus-bas-salaires-de-la-fonction-publique-confirme-le-ministre-david-amiel_8283254.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        },
+        {
+          "url": "https://www.ici.fr/infos/politique/fonction-publique-il-y-aura-bien-une-hausse-des-points-pour-les-plus-bas-salaires-confirme-le-ministre-david-amiel-4699084",
+          "label": {
+            "fr": "ICI",
+            "en": "ICI"
+          }
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "section": "brief",
+      "kicker": {
+        "fr": "CYBERSÉCURITÉ",
+        "en": "CYBERSECURITY"
+      },
+      "title": {
+        "fr": "Les coordonnées de 22 millions de personnes volées chez une filiale de La Poste",
+        "en": "Contact details of 22 million people stolen from a La Poste subsidiary"
+      },
+      "summary": {
+        "fr": "La Poste a annoncé samedi 14 novembre que Maileva, sa plateforme d’envoi de courrier pour les entreprises, avait subi mi-septembre une cyberattaque : les noms, prénoms et adresses postales d’environ 22 millions de personnes, destinataires de lettres envoyées par ses clients, ont été dérobés, selon le groupe. Les coordonnées bancaires ne sont pas concernées, selon Maileva. Le parquet de Paris a confirmé dimanche que la brigade de lutte contre la cybercriminalité enquêtait. Pourquoi c’est notable : les victimes ne sont pas clientes de Maileva, mais d’un bailleur social ou d’un hôpital qui passait par elle. L’hôpital Foch, à Suresnes, a prévenu des patients que des courriers de relance « ont pu être lus par un pirate informatique ». Le risque principal, selon un expert cité par franceinfo : de faux courriers. En cas de demande inhabituelle, mieux vaut contacter l’expéditeur par un autre canal.",
+        "en": "La Poste announced on Saturday 14 November that Maileva, its business mail platform, was hit by a cyber-attack in mid-September: the names and postal addresses of about 22 million people, recipients of letters sent by its clients, were stolen, according to the group. Bank details are not affected, according to Maileva. The Paris prosecutor’s office confirmed on Sunday that the cybercrime brigade is investigating. Why it matters: the victims are not Maileva’s customers but those of a social landlord or a hospital that used it. Foch hospital in Suresnes warned patients that payment reminders “may have been read by a hacker”. The main risk, according to an expert quoted by franceinfo, is fake letters. If a request looks unusual, contact the sender through another channel."
+      },
+      "sources": [
+        {
+          "url": "https://www.franceinfo.fr/internet/securite-sur-internet/cyberattaques/des-courriers-ont-pu-etre-lus-ce-que-l-on-sait-de-la-cyberattaque-contre-maileva-filiale-de-la-poste-qui-a-conduit-au-vol-de-donnees-de-22-millions-de-personnes_8283266.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        },
+        {
+          "url": "https://www.ici.fr/infos/faits-divers-justice/cyberattaque-contre-maileva-filiale-de-la-poste-la-brigade-de-lutte-contre-la-cybercriminalite-chargee-de-l-enquete-4022466",
+          "label": {
+            "fr": "ICI",
+            "en": "ICI"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "section": "brief",
+      "kicker": {
+        "fr": "MIGRATIONS",
+        "en": "MIGRATION"
+      },
+      "title": {
+        "fr": "Journée record aux Canaries",
+        "en": "A record day in the Canaries"
+      },
+      "summary": {
+        "fr": "Selon un bilan provisoire actualisé dimanche 15 novembre par l’agence espagnole EFE, 1 580 personnes ont débarqué samedi aux îles Canaries, l’archipel espagnol au large de l’Afrique de l’Ouest, à bord de quinze embarcations, dont 1 327 à El Hierro. Un premier bilan, repris par Euronews, en comptait 1 488 ; l’arrivée tardive d’une embarcation transportant 92 personnes explique l’écart. Le précédent record journalier, 1 461 personnes, datait du 7 novembre 2020. L’île d’El Hierro, qui a accueilli plus de 8 000 personnes en cinq semaines, a déclaré une urgence sociale. La route est longue de plus de 1 000 kilomètres depuis le Sénégal, la Gambie et la Mauritanie, et meurtrière : l’OIM (Organisation internationale pour les migrations) y a recensé au moins 450 morts sur les dix premiers mois de 2026, selon Al Jazeera.",
+        "en": "According to an updated provisional tally published on Sunday 15 November by Spain’s EFE news agency, 1,580 people arrived in the Canary Islands, the Spanish archipelago off West Africa, on Saturday aboard fifteen boats, including 1,327 at El Hierro. An earlier tally, reported by Euronews, counted 1,488; a late arrival carrying another 92 people accounts for the difference. The previous daily record was 1,461, set on 7 November 2020. El Hierro, which has taken in more than 8,000 people in five weeks, has declared a social emergency. The route runs more than 1,000 kilometres from Senegal, Gambia and Mauritania, and it kills: the IOM (International Organization for Migration) recorded at least 450 deaths on it in the first ten months of 2026, according to Al Jazeera."
+      },
+      "sources": [
+        {
+          "url": "https://www.euronews.com/2026/11/15/record-immigration-day-in-el-hierro-as-1488-arrive-in-canary-islands",
+          "label": {
+            "fr": "Euronews",
+            "en": "Euronews"
+          }
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/11/15/record-number-of-migrants-arrive-in-spains-canary-islands",
+          "label": {
+            "fr": "Al Jazeera",
+            "en": "Al Jazeera"
+          }
+        },
+        {
+          "url": "https://efe.com/canarias/2026-11-15/record-de-rescates-de-miergrantes-en-un-solo-dia-en-la-ruta-canaria/",
+          "label": {
+            "fr": "EFE · bilan actualisé du 15 novembre",
+            "en": "EFE · bilan actualisé du 15 novembre"
+          }
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "section": "explainer",
+      "kicker": null,
+      "title": {
+        "fr": "El Niño",
+        "en": "El Niño"
+      },
+      "summary": {
+        "fr": "Pourquoi on en parle. Le 12 novembre, le Centre de prévision climatique de la NOAA (l’agence américaine d’observation de l’océan et de l’atmosphère) a relevé l’anomalie de température de surface à +2,5 °C dans la zone de référence du Pacifique, dite Niño-3.4. Il estime à plus de 79 % la probabilité d’un épisode fort à très fort jusqu’en janvier-mars 2027. La probabilité d’un record depuis 1950 est d’environ 60 %, selon un indice relatif calculé sur trois mois : elle ne se déduit pas de la seule mesure actuelle à +2,5 °C.",
+        "en": "Why it's in the news. On 12 November the Climate Prediction Center of NOAA (the US ocean and atmosphere agency) put the surface temperature anomaly at +2.5°C in the Pacific’s reference zone, known as Niño-3.4. It estimates a better than 79% chance of a strong to very strong event through January–March 2027. The chance of a record since 1950 is about 60%, according to a three-month relative index: it cannot be inferred from the current +2.5°C reading alone."
+      },
+      "sources": [
+        {
+          "url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/enso_advisory/ensodisc.shtml",
+          "label": {
+            "fr": "NOAA · discussion ENSO du 12 novembre",
+            "en": "NOAA · ENSO discussion, 12 November"
+          }
+        },
+        {
+          "url": "https://www.wmo.int/news/media-centre/el-nino-set-become-very-strong-raising-risks-of-extreme-weather-2027",
+          "label": {
+            "fr": "OMM",
+            "en": "WMO"
+          }
+        },
+        {
+          "url": "https://www.climate.gov/news-features/blogs/enso/what-el-ni%C3%B1o%E2%80%93southern-oscillation-enso-nutshell",
+          "label": {
+            "fr": "NOAA Climate.gov",
+            "en": "NOAA Climate.gov"
+          }
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Interdire le téléphone ne suffit pas à apprendre",
+        "en": "Banning the phone is not the same as teaching it"
+      },
+      "summary": {
+        "fr": "Depuis le 1er septembre 2026, téléphones et objets connectés sont interdits au lycée, y compris pendant les pauses. Dans The Conversation, Anne Cordier, professeure en sciences de l’information et de la communication à l’université de Lorraine, prend la mesure au sérieux sans s’en contenter : « mettre un téléphone hors de portée n’apprend pas à s’en servir ». Elle rappelle que les plateformes sont conçues pour capter l’attention, donc que la seule maîtrise de soi n’y suffit pas, et propose d’associer les élèves à l’écriture des règles. Pourquoi cliquer : un texte qui refuse à la fois la panique et le laisser-faire.",
+        "en": "Since 1 September 2026, phones and connected devices have been banned in French lycées (upper secondary schools), breaks included. In The Conversation (in French), Anne Cordier, professor of information and communication sciences at the University of Lorraine, takes the measure seriously without settling for it: “putting a phone out of reach does not teach you how to use it”. She points out that platforms are designed to capture attention, so self-control alone cannot be the answer, and suggests involving pupils in writing the rules. Why click: a piece that refuses both panic and laissez-faire."
+      },
+      "sources": [
+        {
+          "url": "https://theconversation.com/telephone-au-lycee-comment-transformer-une-interdiction-en-education-290377",
+          "label": {
+            "fr": "The Conversation",
+            "en": "The Conversation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Le web qu’on n’a pas eu",
+        "en": "The web we didn’t get"
+      },
+      "summary": {
+        "fr": "En 1965, Ted Nelson lance Xanadu : des documents qui gardent toutes leurs versions, des liens qui connaissent leurs deux extrémités, des citations toujours reliées à leur source. Sa règle : « ne jamais copier, toujours référencer ». Dans un essai (en anglais), Nathan Sobo, cofondateur de l’éditeur de code Zed, soutient que les pièces manquantes existent désormais, et qu’il manquait surtout un lecteur capable de suivre toutes ces couches de liens : les agents d’IA. Le texte présente aussi un produit de son entreprise : à lire en connaissance de cause. Pourquoi cliquer : l’histoire d’une idée de soixante ans, racontée avec soin.",
+        "en": "In 1965 Ted Nelson started Xanadu: documents that keep every version, links that know both their ends, quotations always tied to their source. His rule: “never copy, always reference”. In an essay, Nathan Sobo, co-founder of the code editor Zed, argues that the missing pieces now exist, and that what was missing above all was a reader able to follow all those layers of links: AI agents. The piece also presents one of his company’s products, so read it with that in mind. Why click: the story of a sixty-year-old idea, carefully told."
+      },
+      "sources": [
+        {
+          "url": "https://zed.dev/blog/agentic-xanadu",
+          "label": {
+            "fr": "Zed",
+            "en": "Zed"
+          }
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "La grève de la fonction publique, mardi 17 novembre",
+        "en": "France’s civil-service strike, Tuesday 17 November"
+      },
+      "summary": {
+        "fr": "Plusieurs syndicats, dont la CFDT depuis vendredi, appellent à la grève dans la fonction publique le mardi 17 novembre. À regarder : la participation, et si le mois de discussion ouvert par Sébastien Lecornu va au-delà de ce que le Smic apporte déjà.",
+        "en": "Several unions, the CFDT among them since Friday, have called a civil-service strike in France for Tuesday 17 November. What to watch: turnout, and whether the month of talks opened by Sébastien Lecornu goes beyond what the minimum wage already delivers."
+      },
+      "sources": [
+        {
+          "url": "https://www.ici.fr/infos/politique/fonction-publique-il-y-aura-bien-une-hausse-des-points-pour-les-plus-bas-salaires-confirme-le-ministre-david-amiel-4699084",
+          "label": {
+            "fr": "ICI",
+            "en": "ICI"
+          }
+        }
+      ]
+    }
+  ],
+  "timeline": [],
+  "inBrief": []
+}
