@@ -1,0 +1,491 @@
+{
+  "schema": 1,
+  "date": "2026-11-16",
+  "generatedAt": "2026-11-16T21:51:00.000+00:00",
+  "publishedAt": "2026-11-16T21:52:25Z",
+  "languages": [
+    "fr",
+    "en"
+  ],
+  "lede": {
+    "fr": "Cinq pays de l’Union européenne entament des négociations avec le Rwanda pour y transférer des personnes sans droit au séjour : on examine le projet et le principe juridique qui avait fait échouer le précédent britannique. Puis direction Antalya pour les négociations climatiques, avant un détour par l’Ukraine et les droits reproductifs au Royaume-Uni. Côté logiciel, Rust, Dart et la fin prochaine des nouveaux dépôts CocoaPods méritent aussi l’attention, avec trois trouvailles pour finir.",
+    "en": "Five EU countries are beginning talks with Rwanda about transferring people with no right to remain in Europe. We examine the proposal and the legal principle that derailed Britain’s earlier attempt. Then there is the climate summit in Antalya, a French position on Ukraine and a change to abortion law in England and Wales. Rust, Dart and the approaching end of new CocoaPods submissions make the technical selection, alongside three finds."
+  },
+  "readingMinutes": {
+    "fr": 9,
+    "en": 9
+  },
+  "wordCount": {
+    "fr": 1876,
+    "en": 1784
+  },
+  "narrative": {
+    "overview": {
+      "fr": "Cinq pays de l’Union européenne entament des négociations avec le Rwanda pour y transférer des personnes sans droit au séjour : on examine le projet et le principe juridique qui avait fait échouer le précédent britannique. Puis direction Antalya pour les négociations climatiques, avant un détour par l’Ukraine et les droits reproductifs au Royaume-Uni. Côté logiciel, Rust, Dart et la fin prochaine des nouveaux dépôts CocoaPods méritent aussi l’attention, avec trois trouvailles pour finir.",
+      "en": "Five EU countries are beginning talks with Rwanda about transferring people with no right to remain in Europe. We examine the proposal and the legal principle that derailed Britain’s earlier attempt. Then there is the climate summit in Antalya, a French position on Ukraine and a change to abortion law in England and Wales. Rust, Dart and the approaching end of new CocoaPods submissions make the technical selection, alongside three finds."
+    },
+    "analysis": null,
+    "closing": {
+      "fr": "Bonne soirée, et à demain pour d’autres idées à explorer.",
+      "en": "Good night, and see you tomorrow for something else worth exploring."
+    }
+  },
+  "sections": [
+    {
+      "key": "overview",
+      "kind": "narrative",
+      "title": {
+        "fr": "Ce soir",
+        "en": "Tonight"
+      },
+      "items": []
+    },
+    {
+      "key": "depth",
+      "kind": "items",
+      "title": {
+        "fr": "Le sujet du jour",
+        "en": "Today’s focus"
+      },
+      "items": [
+        "01"
+      ]
+    },
+    {
+      "key": "brief",
+      "kind": "items",
+      "title": {
+        "fr": "L’essentiel",
+        "en": "The essentials"
+      },
+      "items": [
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "key": "explainer",
+      "kind": "items",
+      "title": {
+        "fr": "C’est quoi ?",
+        "en": "Explainer"
+      },
+      "items": [
+        "05"
+      ]
+    },
+    {
+      "key": "techsci",
+      "kind": "items",
+      "title": {
+        "fr": "Technologie & science",
+        "en": "Technology & science"
+      },
+      "items": [
+        "06",
+        "07",
+        "08"
+      ]
+    },
+    {
+      "key": "finds",
+      "kind": "items",
+      "title": {
+        "fr": "Ça vaut un clic",
+        "en": "Worth a click"
+      },
+      "items": [
+        "09",
+        "10",
+        "11"
+      ]
+    },
+    {
+      "key": "watch",
+      "kind": "items",
+      "title": {
+        "fr": "À surveiller",
+        "en": "Watch next"
+      },
+      "items": [
+        "12"
+      ]
+    },
+    {
+      "key": "closing",
+      "kind": "narrative",
+      "title": {
+        "fr": "Pour finir",
+        "en": "To close"
+      },
+      "items": []
+    }
+  ],
+  "items": [
+    {
+      "id": "01",
+      "section": "depth",
+      "kicker": {
+        "fr": "MIGRATIONS",
+        "en": "MIGRATION"
+      },
+      "title": {
+        "fr": "Cinq pays de l’UE préparent des expulsions vers le Rwanda",
+        "en": "Five EU countries prepare deportations to Rwanda"
+      },
+      "summary": {
+        "fr": "Lundi 16 novembre à Vienne, l’Allemagne, l’Autriche, le Danemark, la Grèce et les Pays-Bas ont annoncé le début de négociations concrètes avec le Rwanda en vue d’y créer un « hub de retour », destiné à des personnes sans droit au séjour dans l’Union européenne (UE). L’accord définitif reste à conclure : les gouvernements visent de premiers transferts en 2027. Le projet pilote pourrait accueillir environ cent personnes à la fois, selon Euronews. Ce centre n’est donc pas encore opérationnel, et ses conditions ne sont pas toutes fixées.",
+        "en": "On Monday 16 November in Vienna, Germany, Austria, Denmark, Greece and the Netherlands announced the start of concrete negotiations with Rwanda to establish a “return hub” for people with no right to remain in the European Union (EU). No final agreement has yet been reached: the governments aim for the first transfers in 2027. Euronews reports that the pilot facility could accommodate around 100 people at a time. This is a proposal under negotiation, not an operating centre with settled terms."
+      },
+      "sources": [
+        {
+          "url": "https://www.euronews.com/2026/11/16/five-eu-countries-unveil-rwanda-deportation-plan-in-migration-crackdown",
+          "label": {
+            "fr": "Euronews",
+            "en": "Euronews"
+          }
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/11/16/five-eu-countries-announce-plan-to-send-rejected-asylum-seekers-to-rwanda",
+          "label": {
+            "fr": "Al Jazeera",
+            "en": "Al Jazeera"
+          }
+        },
+        {
+          "url": "https://www.franceinfo.fr/monde/europe/migrants/cinq-pays-devoilent-leur-projet-de-hub-de-retour-au-rwanda-pour-des-personnes-migrantes-expulsees-de-l-union-europeenne_8285039.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        },
+        {
+          "url": "https://uim.dk/nyhedsarkiv/2026/november/rwanda-and-five-eu-member-states-are-jointly-exploring-the-possibility-of-establishing-a-return-hub-in-rwanda-based-on-an-equal-and-mutually-beneficial-partnership/",
+          "label": {
+            "fr": "Gouvernement danois · communiqué officiel",
+            "en": "Gouvernement danois · communiqué officiel"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "section": "brief",
+      "kicker": {
+        "fr": "CLIMAT",
+        "en": "CLIMATE"
+      },
+      "title": {
+        "fr": "COP31 : un premier projet d’accord, et déjà des réserves",
+        "en": "COP31: a first draft deal, and reservations already"
+      },
+      "summary": {
+        "fr": "La présidence de la COP31, la conférence des Nations unies sur le climat réunie à Antalya, a diffusé lundi 16 novembre un projet de décision de 18 pages. Le texte appelle à accélérer la sortie des combustibles fossiles et propose que le triplement du financement de l’adaptation des pays en développement atteigne au moins 120 milliards de dollars par an d’ici 2035. Mais la base de calcul de ce triplement reste à négocier : le document demande justement de la définir. Selon le Programme des Nations unies pour l’environnement (PNUE), les financements publics internationaux versés en 2024 représentaient 28 à 32 milliards, face à des besoins estimés à environ 305 milliards par an en 2035. Tripler ces flux de 2024 ne couvrirait que 20 à 29 % des besoins : ce pourcentage ne se rapporte donc pas directement à l’objectif distinct de 120 milliards. Une source d’une délégation africaine interrogée par Anadolu réclame des engagements financiers vérifiables plutôt qu’une déclaration générale. Chris Bowen, qui préside les négociations, prévient que certaines dispositions ne feront pas consensus. Ce texte n’est pas encore un accord adopté.",
+        "en": "The presidency of COP31, the UN climate conference in Antalya, circulated an 18-page draft decision on Monday 16 November. It calls for faster action to move away from fossil fuels and proposes that tripling adaptation finance for developing countries should reach at least $120 billion a year by 2035. But the baseline for that tripling has not been agreed: the draft explicitly calls for one to be established. According to the UN Environment Programme (UNEP), international public adaptation finance stood at $28–32 billion in 2024, against needs estimated at around $305 billion a year by 2035. Tripling those 2024 flows would cover only 20–29% of projected needs; that percentage is not a calculation of the separate $120 billion proposal. A source from an African delegation told Anadolu that measurable finance commitments matter more than broad declarations. Chris Bowen, who chairs the negotiations, warned that not every provision would command consensus. The draft remains a proposal, not a final agreement."
+      },
+      "sources": [
+        {
+          "url": "https://www.aa.com.tr/en/turkiye/cop31-draft-decision-calls-for-tripling-adaptation-finance-to-120b-speeding-shift-away-from-fossil-fuels/4126715",
+          "label": {
+            "fr": "Anadolu",
+            "en": "Anadolu"
+          }
+        },
+        {
+          "url": "https://unfccc.int/sites/default/files/resource/dt_cop31_cover_decision.pdf",
+          "label": {
+            "fr": "UNFCCC · COP31 draft decision",
+            "en": "UNFCCC · COP31 draft decision"
+          }
+        },
+        {
+          "url": "https://www.unep.org/en/news-and-stories/press-release/world-heads-overshoot-15degc-adaptation-too-slow",
+          "label": {
+            "fr": "UNEP · Adaptation Gap Report 2026",
+            "en": "UNEP · Adaptation Gap Report 2026"
+          }
+        },
+        {
+          "url": "https://aa.com.tr/en/turkiye/african-countries-say-1st-draft-from-cop31-conference-risks-distraction-from-climate-finance-accountability/4126797",
+          "label": {
+            "fr": "Anadolu · réaction africaine",
+            "en": "Anadolu · African reaction"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "section": "brief",
+      "kicker": {
+        "fr": "FRANCE",
+        "en": "FRANCE"
+      },
+      "title": {
+        "fr": "Marine Le Pen veut cesser l’aide financière à l’Ukraine",
+        "en": "Marine Le Pen would end financial aid to Ukraine"
+      },
+      "summary": {
+        "fr": "Lundi 16 novembre, après avoir reçu l’ambassadeur d’Ukraine en France, Vadym Omelchenko, Marine Le Pen, candidate du RN (Rassemblement national), a réaffirmé que, si elle était élue, « l’état des finances publiques » ne permettrait plus d’aider financièrement Kiev. Selon un communiqué du parti, elle honorerait les engagements existants, dont le prêt européen de 90 milliards d’euros, et maintiendrait dons de matériel, aide humanitaire et diplomatie. Elle dit depuis plusieurs semaines vouloir maintenir les versements six mois avant d’arrêter, rappelle franceinfo. La veille, l’entourage d’Emmanuel Macron estimait que ceux qui veulent couper l’aide « jouent contre nous, pas contre l’Ukraine ». Pourquoi c’est notable : elle arrive en tête du sondage Elabe publié le 14 novembre, avec environ 32 % des intentions de vote, selon Euronews.",
+        "en": "On Monday 16 November, after meeting Ukraine’s ambassador to France, Vadym Omelchenko, Marine Le Pen, the presidential candidate of the RN (Rassemblement national, the National Rally), repeated that if elected, the state of France’s public finances would no longer allow financial aid to Kyiv. According to a party statement, she would honour existing commitments, including the EU’s €90 billion loan, and keep up equipment donations, humanitarian aid and diplomacy. For several weeks she has said she would keep paying for six months before stopping, franceinfo recalls. The day before, Emmanuel Macron’s entourage said those who want to cut aid “are playing against us, not against Ukraine”. Why it matters: she leads the Elabe poll published on 14 November, with about 32% of voting intentions, according to Euronews."
+      },
+      "sources": [
+        {
+          "url": "https://www.franceinfo.fr/monde/europe/manifestations-en-ukraine/marine-le-pen-reitere-aupres-de-l-ambassadeur-ukrainien-que-la-france-ne-pourrait-plus-aider-financierement-kiev-si-elle-est-elue_8285462.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        },
+        {
+          "url": "https://www.euronews.com/2026/11/16/france-can-no-longer-support-kyiv-financially-le-pen-tells-ukrainian-ambassador",
+          "label": {
+            "fr": "Euronews",
+            "en": "Euronews"
+          }
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "section": "brief",
+      "kicker": {
+        "fr": "ROYAUME-UNI",
+        "en": "UK"
+      },
+      "title": {
+        "fr": "Les femmes condamnées pour avoir avorté graciées",
+        "en": "Women convicted over abortions are pardoned"
+      },
+      "summary": {
+        "fr": "Depuis lundi 16 novembre, les femmes condamnées ou averties par la police en Angleterre et au pays de Galles pour une infraction liée à leur propre grossesse sont automatiquement graciées, sans aucune démarche à faire, a indiqué le ministère de la Justice, cité par UPI. Police et tribunaux doivent aussi effacer les traces d’arrestations et d’enquêtes. Le mécanisme : la loi Crime and Policing Act 2026 retire aux femmes toute responsabilité pénale pour leur propre grossesse, mais ne change pas l’accès à l’IVG (interruption volontaire de grossesse) ; aider une femme à avorter hors du cadre légal reste un délit. Combien de femmes sont concernées ? Le gouvernement lui-même dit ne pas pouvoir le chiffrer. Pour Heidi Stewart, directrice du BPAS (British Pregnancy Advisory Service, qui pratique des IVG), la réforme « reconnaît le profond préjudice causé par leur criminalisation ».",
+        "en": "Since Monday 16 November, women convicted or cautioned in England and Wales for an offence relating to their own pregnancy have been automatically pardoned, with nothing to apply for, the Ministry of Justice said, according to UPI. Police and courts must also delete records of arrests and investigations. The mechanism: the Crime and Policing Act 2026 removes women’s criminal liability for their own pregnancy, but leaves access to abortion unchanged; helping a woman to end a pregnancy outside the law remains an offence. How many women are affected? The government itself says it cannot put a number on it. For Heidi Stewart, chief executive of BPAS (the British Pregnancy Advisory Service, an abortion provider), the reform recognises “the profound harm caused by their criminalisation”."
+      },
+      "sources": [
+        {
+          "url": "https://www.franceinfo.fr/societe/ivg/le-gouvernement-britannique-gracie-les-femmes-condamnees-pour-avoir-avorte-apres-l-entree-en-vigueur-d-une-loi-depenalisant-l-ivg-hors-delai_8285327.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        },
+        {
+          "url": "https://www.upi.com/Top_News/World-News/2026/11/16/abortion-pardons/3581794804371/",
+          "label": {
+            "fr": "UPI",
+            "en": "UPI"
+          }
+        },
+        {
+          "url": "https://www.gov.uk/government/publications/crime-and-policing-act-2026-equality-impact-assessments/equalities-impact-assessment-abortion-and-pardons",
+          "label": {
+            "fr": "Gouvernement britannique · étude d’impact",
+            "en": "UK government · impact assessment"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "section": "explainer",
+      "kicker": null,
+      "title": {
+        "fr": "Le non-refoulement",
+        "en": "Non-refoulement"
+      },
+      "summary": {
+        "fr": "Pourquoi on en parle. C’est ce principe qui a fait tomber le plan britannique d’expulsions vers le Rwanda : le 15 novembre 2023, la Cour suprême du Royaume-Uni a jugé à l’unanimité qu’il existait des « motifs sérieux » de croire que des personnes envoyées au Rwanda couraient « un risque réel » d’être renvoyées dans leur pays d’origine, rapporte Human Rights Watch. Le projet européen annoncé lundi devra passer le même examen.",
+        "en": "Why it's in the news. This is the principle that brought down Britain’s plan to deport people to Rwanda: on 15 November 2023, the UK Supreme Court ruled unanimously that there were “substantial grounds for believing” that people sent to Rwanda faced “a real risk of being returned to their home country”, Human Rights Watch reports. The European plan announced on Monday will face the same test."
+      },
+      "sources": [
+        {
+          "url": "https://emergency.unhcr.org/node/657",
+          "label": {
+            "fr": "HCR · non-refoulement",
+            "en": "UNHCR · non-refoulement"
+          }
+        },
+        {
+          "url": "https://hrw.org/news/2023/11/15/uk-supreme-court-finds-uk-rwanda-asylum-scheme-unlawful",
+          "label": {
+            "fr": "Human Rights Watch · 15 novembre 2023",
+            "en": "Human Rights Watch · 15 November 2023"
+          }
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "section": "techsci",
+      "kicker": {
+        "fr": "LANGAGES",
+        "en": "LANGUAGES"
+      },
+      "title": {
+        "fr": "Rust 1.100 : le type qui ne revient jamais",
+        "en": "Rust 1.100 names code that never returns"
+      },
+      "summary": {
+        "fr": "Rust 1.100, publié le 12 novembre, stabilise enfin le type !, dit « never type », après une décennie de discussions et plusieurs tentatives infructueuses. Il représente un calcul qui ne produit jamais de valeur, par exemple une fonction qui termine le programme ou une branche qui quitte immédiatement la fonction. Rust savait souvent inférer ce comportement, mais ne permettait pas de nommer ! partout dans une signature de type. Le changement rend certaines API plus précises, notamment des résultats dont le cas d’erreur est impossible. Il modifie aussi discrètement les règles de repli de type dans les anciennes éditions : quelques projets devront actualiser leurs dépendances. Cargo, le gestionnaire de paquets, peut désormais retarder la sélection des versions nouvellement publiées, par exemple de trois jours, pour laisser du temps à la détection des versions malveillantes. Ce délai réduit un risque de chaîne d’approvisionnement ; il ne remplace pas la vérification des dépendances.",
+        "en": "Rust 1.100, released on 12 November, finally stabilises the ! or “never” type after a decade of discussion and several unsuccessful attempts. It describes a computation that can never yield a value, such as a branch that returns early or a function that terminates a process. Rust could often infer that behaviour already, but programmers could not name ! everywhere in a type signature. The change makes some APIs more precise, including results whose error case is impossible. There is a subtle compatibility consequence: fallback rules change in older Rust editions, and some projects may need updated dependencies. Cargo, Rust's package manager, also gains a practical supply-chain precaution. It can delay selecting newly published package versions, for example for three days, giving maintainers and security researchers time to catch malicious releases. A cooldown is no substitute for checking dependencies, but it is a useful option."
+      },
+      "sources": [
+        {
+          "url": "https://blog.rust-lang.org/2026/11/12/Rust-1.100.0/",
+          "label": {
+            "fr": "Rust · annonce de la version 1.100",
+            "en": "Rust · version 1.100 announcement"
+          }
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "section": "techsci",
+      "kicker": {
+        "fr": "MOBILE & WEB",
+        "en": "MOBILE & WEB"
+      },
+      "title": {
+        "fr": "Dart 3.14 simplifie les migrations",
+        "en": "Dart 3.14 makes upgrading less awkward"
+      },
+      "summary": {
+        "fr": "Dart 3.14, sorti le 11 novembre, améliore surtout les outils du langage utilisé notamment par Flutter. La nouvelle commande dart migrate automatise une partie du passage vers une version plus récente du SDK : corrections préparatoires, évolution des contraintes de version et adoption facultative de fonctionnalités. Côté navigateur, le compilateur WebAssembly émet désormais des instructions standardisées pour gérer les exceptions ; ses modules autonomes peuvent fonctionner dans un moteur comme Wasmtime sans dépendre d’un hôte JavaScript pour cette tâche. Le traitement SIMD sur 128 bits, qui exécute plusieurs opérations numériques en parallèle, bénéficie lui aussi d’optimisations, avec des accélérations allant jusqu’à quatre fois dans certains bancs d’essai. Cela ne signifie pas que chaque application Flutter tournera quatre fois plus vite. L’intérêt est ailleurs : moins de manutention lors des migrations et davantage de possibilités d’exécuter du code Dart hors du navigateur.",
+        "en": "Dart 3.14, released on 11 November, improves the tools surrounding the language used by Flutter. Its new dart migrate command automates parts of the move to a newer SDK: preparatory fixes, version constraints and optional adoption of features. On the web side, the WebAssembly compiler now emits standard exception-handling instructions, allowing standalone modules to run in runtimes such as Wasmtime without relying on a JavaScript host for exceptions. There are also improvements to 128-bit SIMD, a way of carrying out multiple numerical operations in parallel, with up to fourfold gains in selected benchmarks according to the Dart team. Those figures do not mean every Flutter application will become four times faster. The more useful story is a smoother migration path and more scope for running Dart code outside browsers."
+      },
+      "sources": [
+        {
+          "url": "https://dart.dev/blog/announcing-dart-3-14",
+          "label": {
+            "fr": "Dart · annonce de la version 3.14",
+            "en": "Dart · version 3.14 announcement"
+          }
+        },
+        {
+          "url": "https://dart.dev/changelog",
+          "label": {
+            "fr": "Dart · historique des versions",
+            "en": "Dart · changelog"
+          }
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "section": "techsci",
+      "kicker": {
+        "fr": "IOS",
+        "en": "IOS DEVELOPMENT"
+      },
+      "title": {
+        "fr": "CocoaPods s’apprête à fermer ses publications",
+        "en": "CocoaPods stops taking new releases soon"
+      },
+      "summary": {
+        "fr": "CocoaPods cessera d’accepter de nouveaux paquets et de nouvelles versions le 2 décembre 2026, après deux ans de transition, indique le projet CocoaPods. Ce gestionnaire de dépendances a longtemps été central pour les applications iOS et les bibliothèques Objective-C. Les paquets existants resteront accessibles en lecture seule : les applications qui les utilisent ne cesseront donc pas brutalement de compiler. En revanche, elles ne recevront plus de nouvelles versions par ce canal. Les équipes concernées doivent vérifier la disponibilité de leurs bibliothèques dans Swift Package Manager et tester la migration, surtout avec des dépendances anciennes ou des scripts de construction particuliers. Une évolution de l’écosystème mobile plus profonde qu’une simple date d’arrêt.",
+        "en": "CocoaPods will stop accepting new packages and versions on 2 December 2026, after a two-year wind-down, the CocoaPods team explains. The dependency manager was once central to building iOS and Objective-C applications. Existing packages will remain available in read-only form, so projects that depend on them will not suddenly fail to build. They will, however, stop receiving new releases through that channel. Teams still using CocoaPods need to check whether their libraries are available through Swift Package Manager and test migration, particularly where older dependencies or bespoke build scripts are involved. This is a change in the shape of the mobile development ecosystem, rather than merely a shutdown date."
+      },
+      "sources": [
+        {
+          "url": "https://blog.cocoapods.org/CocoaPods-Specs-Repo/",
+          "label": {
+            "fr": "CocoaPods · annonce officielle",
+            "en": "CocoaPods · official announcement"
+          }
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Et si c’était le cheval qui avait fait l’État ?",
+        "en": "What if the horse made the state?"
+      },
+      "summary": {
+        "fr": "On apprend souvent que l’État est né des greniers : des surplus de céréales, des paysans à taxer. Dans un essai publié lundi 16 novembre par Aeon (en anglais), Lhamsuren Munkh-Erdene, historien et anthropologue à l’Université nationale de Mongolie, défend une autre origine : « le transport, et non le grain ». Chars de la steppe, ânes d’Égypte, cavaliers comanches et mongols : selon lui, ce sont des bandes guerrières rendues mobiles par l’animal qui ont fondé les premiers États. Il soutient aussi que la thèse dominante doit beaucoup à la politique de la guerre froide. Pourquoi cliquer : une thèse discutée, mais qui oblige à regarder l’histoire depuis la steppe plutôt que depuis le champ.",
+        "en": "We are often taught that the state was born of granaries: grain surpluses, farmers to tax. In an essay published by Aeon on Monday 16 November, Lhamsuren Munkh-Erdene, a historian and anthropologist at the National University of Mongolia, argues for another origin: “transportation – not grain”. Steppe chariots, Egyptian donkeys, Comanche and Mongol riders: in his view, warbands made mobile by animals founded the first states. He also argues that the dominant theory owes much to Cold War politics. Why click: a contested thesis, but one that makes you look at history from the steppe rather than the field."
+      },
+      "sources": [
+        {
+          "url": "https://aeon.co/essays/the-origins-of-the-state-are-not-agrarian-but-pastoralist",
+          "label": {
+            "fr": "Aeon",
+            "en": "Aeon"
+          }
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Votre écriture devient une police de caractères",
+        "en": "Your handwriting, as a font"
+      },
+      "summary": {
+        "fr": "Ductus vous fait tracer, lettre après lettre, l’alphabet à la main dans le navigateur, puis vous laisse ajuster le résultat et l’exporter en police de caractères. Le site précise que votre écriture est traitée sur votre appareil et « jamais envoyée » en ligne. Pourquoi cliquer : un outil simple et soigné, pour une lettre, une invitation ou une carte de vœux qui garde votre main.",
+        "en": "Ductus has you draw the alphabet by hand, letter by letter, in your browser, then lets you adjust the result and export it as a font. The site says your handwriting is processed on your device and “never uploaded”. Why click: a simple, well-made tool, for a letter, an invitation or a greetings card that keeps your hand."
+      },
+      "sources": [
+        {
+          "url": "https://ductus.sorenblank.com/",
+          "label": {
+            "fr": "Ductus",
+            "en": "Ductus"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Un navigateur Rust pour comprendre le Web de l’intérieur",
+        "en": "A Rust browser for seeing how the Web works"
+      },
+      "summary": {
+        "fr": "Un développeur a construit bare, un moteur de navigateur expérimental en Rust, en réimplémentant des briques aussi variées que TLS, l’analyse HTML, la cascade CSS, le rendu et un interpréteur JavaScript. Son intérêt n’est pas de concurrencer Firefox demain, mais de rendre chaque couche inspectable : lorsqu’une page échoue, on peut suivre son parcours à travers le moteur. Des parcours de test pilotables par des agents passent par les mêmes événements de saisie qu’un utilisateur. Le créateur annonce 48 scénarios publics réussis au 10 novembre, mais précise que le projet reste pédagogique, incomplet et impropre à la navigation quotidienne. Une plongée dans la complexité cachée derrière un clic.",
+        "en": "A developer has built bare, an experimental browser engine in Rust, reimplementing components ranging from TLS and HTML parsing to CSS layout, painting and a JavaScript interpreter. Its value is not that it will replace Firefox tomorrow. It is that each layer is inspectable: when a page fails, the developer can follow the problem through the engine. Agent-driven tests use the same input path as an ordinary visitor. The creator reports 48 passing public-site journeys as of 10 November, but says this is an incomplete learning project, not a browser safe for everyday use. It is an intriguing look at the machinery behind a click."
+      },
+      "sources": [
+        {
+          "url": "https://www.arjunp.pro/projects/bare.html",
+          "label": {
+            "fr": "bare · présentation du projet",
+            "en": "bare · project overview"
+          }
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "La fin de la COP31, vendredi 20 novembre",
+        "en": "The end of COP31, Friday 20 November"
+      },
+      "summary": {
+        "fr": "La conférence d’Antalya doit s’achever vendredi 20 novembre, et toute décision exige le consensus. À regarder : si la « transition immédiate » hors des fossiles et l’objectif de 120 milliards pour l’adaptation survivent au texte final.",
+        "en": "The Antalya conference is due to close on Friday 20 November, and every decision needs consensus. What to watch: whether the “immediate transition” away from fossil fuels and the 120 billion adaptation target survive into the final text."
+      },
+      "sources": [
+        {
+          "url": "https://www.aa.com.tr/en/turkiye/cop31-draft-decision-calls-for-tripling-adaptation-finance-to-120b-speeding-shift-away-from-fossil-fuels/4126715",
+          "label": {
+            "fr": "Anadolu",
+            "en": "Anadolu"
+          }
+        }
+      ]
+    }
+  ],
+  "timeline": [],
+  "inBrief": []
+}
