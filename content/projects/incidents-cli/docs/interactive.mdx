@@ -12,7 +12,17 @@ incidents github
 
 The view opens only when both stdin and stdout are terminals, `CI` is not set and `--json` was not passed. Otherwise every form falls back to the static output described in [Scripting](/projects/incidents-cli/docs/scripting), so pipes and cron never hang. Quitting the interactive view exits 0.
 
-Rows fill in as each page answers, and hold still until every service has replied; only then do they take their worst-first order. The header shows how many services are declaring trouble and when the data was last updated.
+Rows fill in as each page answers, and hold still until every service has replied; only then do they take their worst-first order.
+
+## The header
+
+The header answers first: how many services are in trouble, how many pages could not be read, then the number of services, the order and when the data was last updated.
+
+```text
+◆ Incidents · 9 in trouble · 1 unreadable · 21 services · by status ↓ · updated 14:35
+```
+
+An unreadable page is counted on its own, never folded into "in trouble". On a narrow terminal the header gives up its dashed rule first, then the order, then the time; the product name is never cut. A service's page shows where you are instead: `◆ Incidents › GitHub · updated 14:36`.
 
 ## Statuses
 
@@ -24,16 +34,30 @@ Rows fill in as each page answers, and hold still until every service has replie
 | `● minor`       | A minor incident                                              |
 | `◌ maintenance` | Maintenance in progress; counts as clear                      |
 | `● ok`          | Operational                                                   |
-| `→ manual`      | No machine-readable page: the row links to it, claims nothing |
+| `↗ manual`      | No machine-readable page: the row links to it, claims nothing |
+
+Colour follows one rule: hues are statuses, and orange is only the product's mark and the line under the focused pane's title. On the board every card's frame is its status colour, heavy when the service is on fire; the selected card is drawn at full brightness with a bold title and the others muted. In the list and the filters the selected row has `❯` and the faintest band. With `NO_COLOR` set, the selected card's title is drawn in inverse; where a terminal shows no styling at all, the card takes `❯` too.
+
+## Moving around
+
+The arrows mean depth. The screen is three levels, left to right: the filters, the services, and a service's page. `←` and `→` move between levels; `↑↓` (or `j k`) move within the one that has the keys.
+
+- In the filters, `↑↓` step through them and `⏎` or `→` opens the services.
+- In the list, `→` or `⏎` opens the selected service, and `←` steps out to the filters.
+- On a service's page, `←` (or `esc`) comes back to the same row.
+
+`tab` also switches between the filters and the services. The focused pane's title is bright, with a line under it; the other's is muted.
+
+`?` opens every key, grouped, with the note that statuses are declared, not measured. `esc` closes it.
 
 ## The filter column
 
-Both views share a column of filters on the left, which doubles as the tally: each entry carries how many services it holds.
+Both views share a column of filters on the left, which doubles as the tally: each entry carries how many services it holds. A filter with nothing in it dims its count but keeps its colour.
 
 | Filter      | Holds                        |
 | ----------- | ---------------------------- |
-| All         | Every service                |
-| Trouble     | Everything that is not clear |
+| all         | Every service                |
+| trouble     | Everything that is not clear |
 | major       | `critical` and `major`       |
 | minor       | `minor`                      |
 | unreadable  | Pages that could not be read |
@@ -41,34 +65,49 @@ Both views share a column of filters on the left, which doubles as the tally: ea
 | ok          | Operational                  |
 | manual      | Link-only services           |
 
-`tab` moves the keys between the filter column and the services. In the column, `↑↓` or `j k` step through the filters, and `⏎` or `→` go back to the services. On a narrow terminal the column collapses and the active filter's name moves into the services title.
-
-## The board
-
-The interactive view opens on the list unless `view: board` is set in the configuration, and `v` switches between the two at any time.
-
-The board is a card for each service in trouble, with the healthy ones in a grid beneath. `↑↓` (or `j k`) and `←→` move between cards and card columns; `←` from the first column steps into the filters, and `→` comes back.
+The names stay down to 100 columns; the list gives up its preview first. Below that the column shows glyphs and counts only, and the active filter's name moves into the services title (`Services · trouble`).
 
 ## The list
 
-The list shows every service, worst first, one per row, with a preview of the selected one. `↑↓` or `j k` move, and `←→` cycle the filters directly (All, Trouble, then one per status) without leaving the list. The view to open on is set by `view` in the [configuration](/projects/incidents-cli/docs/configuration).
+The list shows every service, worst first, one per row: the name, the status, how long the trouble has run, then the headline. On a wide terminal a preview of the selected service sits beside it, ending on `→ history and every incident`. `v` switches between the list and the board at any time, and the view you leave it on is the one the next run opens on; until then, `view` in the [configuration](/projects/incidents-cli/docs/configuration) decides.
 
-## Searching, folding and sorting
+## The board
 
-- `/` searches service names and aliases; `esc` clears the search.
-- `z` folds the operational services into one line, and shows them again.
+The board is a card for each service in trouble or in maintenance, then a strip of the ok services, then the manual pages in a group of their own. On the board `←→` and `↑↓` move between cards and down the strip; `←` from the first column steps into the filters, and `→` comes back. `⏎` opens a service.
+
+While services are answering, each one stays a card in config order, filled in where it stands as it answers. Once every service has answered, the board fades out while the ok cards close to lines, and fades back in sorted, with the lines in the strip. Rows that move on a filter change fade the same way, in the list as well as on the board, and showing or hiding the ok strip folds it in a short step. No transition runs longer than about 300ms, a key press lands on the final state at once, and there is no motion at all without a terminal, or with `NO_COLOR`, `NO_MOTION`, `CI` or `TERM=dumb` set.
+
+When the cards and the strip do not both fit, the strip folds to one line, `● 9 ok · z show`, before any card is scrolled off. If the cards still overflow, the count of what is off screen sits at the bottom right of the cards.
+
+## Pinned services
+
+`p` pins the selected service, or unpins it. Pinned services sit at the top of both views under a `Pinned` heading, worst status first and then in the order they were pinned, each marked `◆`. On the board a pinned service is always a card, even when it is ok. The `all` and `trouble` filters keep the pinned group whole; a status filter shows a pin only when it matches. `z` never hides one. Pins set with `p` are remembered with the view, in the same state file, and override `pinned` in the [configuration](/projects/incidents-cli/docs/configuration) until changed again.
+
+## Searching, hiding and sorting
+
+- `/` searches service names and aliases. The search sits on the services title row, `Services  / mail▏  2 of 21`, so nothing below it moves; `⏎` stops typing and `esc` clears it.
+- `z` hides the ok services, and shows them again.
 - `s` toggles the order between by status (worst first) and by name. The view and the order are independent.
+- `g` and `G` go to the first and the last service; `PgUp` and `PgDn` move a page at a time.
 
-Whenever a filter, the fold or a search hides services, a line under the list says how many and which key brings them back.
+Whenever a filter, `z` or a search hides services, a line under the list says how many and which key brings them back. When nothing is left at all, one line says why and how to undo it, naming the narrowest cause:
+
+```text
+No match for "zzz" in major · esc clears search
+```
+
+## Opening in the browser
+
+`o` opens the selected service in your browser: the open incident when there is one, otherwise the status page. It works the same in the list, on the board and on a service's page. Addresses on screen are hyperlinks in terminals that support them.
 
 ## The detail page
 
-`⏎` on a service opens its detail page, and loads its history if it has not been loaded yet. The page has two parts:
+`→` or `⏎` on a service opens its detail page, and loads its history if it has not been loaded yet. The page has two parts:
 
-- **Now** — what the vendor declares: its summary, open incidents and affected components with their status.
+- **Now** — what the vendor declares: its summary, open incidents with when they started and for how long, and the affected components, with the operational ones counted under them.
 - **History** — earlier incidents, newest first, grouped by period, with a count of any upcoming maintenance. If the history feed could not be read, the page says so rather than showing an empty list.
 
-On a wide terminal the two sit side by side and History scrolls; on a narrow one they stack into a single scrolling column. A `note` from the service's configuration appears at the end.
+On a wide terminal the two sit side by side, each titled, and History scrolls; on a narrow one they stack into a single scrolling column. A `note` from the service's configuration appears at the end.
 
 | Key                  | Action               |
 | -------------------- | -------------------- |
@@ -76,22 +115,27 @@ On a wide terminal the two sit side by side and History scrolls; on a narrow one
 | `space`, `f`, `PgDn` | Scroll a page down   |
 | `b`, `PgUp`          | Scroll a page up     |
 | `g` / `G`            | Top / bottom         |
+| `o`                  | Open in the browser  |
 | `r`                  | Re-read this service |
-| `esc` or `⌫`         | Back to the overview |
+| `←` or `esc`         | Back to the same row |
 
 ## All keys
 
-| Key         | Action                                                                |
-| ----------- | --------------------------------------------------------------------- |
-| `↑↓`, `j k` | Move                                                                  |
-| `←→`        | Board: move between columns and into the filters. List: cycle filters |
-| `tab`       | Switch between the filters and the services                           |
-| `⏎`         | Open a service                                                        |
-| `/`         | Search names and aliases                                              |
-| `z`         | Fold or show the operational services                                 |
-| `v`         | Switch between the board and the list                                 |
-| `s`         | Sort by status or by name                                             |
-| `r`         | Refresh                                                               |
-| `esc`       | Clear a search, or go back                                            |
-| `⌫`         | Go back                                                               |
-| `q`         | Quit                                                                  |
+| Key           | Action                                                  |
+| ------------- | ------------------------------------------------------- |
+| `↑↓`, `j k`   | Move within the pane that has the keys                  |
+| `←→`          | Between the filters, the services and a service's page  |
+| `⏎`           | Open the service, or the filter                         |
+| `tab`         | Switch between the filters and the services             |
+| `g` / `G`     | First / last                                            |
+| `PgUp` `PgDn` | A page up / down                                        |
+| `/`           | Search names and aliases                                |
+| `esc`         | Clear a search, close the keys, or go back              |
+| `z`           | Hide or show the ok services                            |
+| `p`           | Pin or unpin the selected service                       |
+| `v`           | Switch between the board and the list                   |
+| `s`           | Sort by status or by name                               |
+| `o`           | Open in the browser: the incident, else the status page |
+| `r`           | Refresh                                                 |
+| `?`           | Every key                                               |
+| `q`           | Quit                                                    |

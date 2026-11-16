@@ -19,21 +19,32 @@ incidents watch --interval 2 --json
 | `--json`               | One JSON object per change instead of a text line          |
 | `--mock`               | Replay a scenario in which services flip between polls     |
 
-An invalid `--interval` or an empty `--exec` exits 2, as does a configuration with no services.
+An invalid `--interval`, an unknown flag or an empty `--exec` exits 2, as does a configuration with no services.
 
 ## What counts as a change
 
 Each service is reduced to one level: `clear`, `minor`, `major`, `critical` or `unreadable`. Operational, maintenance and link-only services all count as `clear`; a page that cannot be read is `unreadable`, which counts as trouble.
 
-A line is printed when a service moves between levels: clear to trouble, trouble to clear, a change of severity, or a page becoming unreadable or readable again. The first poll sets the baseline and reports only what is already in trouble, with `from` set to `null` (shown as `already <level>` in text).
+A line is printed when a service moves between levels: clear to trouble, trouble to clear, a change of severity, or a page becoming unreadable or readable again.
+
+The first poll sets the baseline. As text, it is one line on stderr saying what is being watched and how much is already in trouble, so stdout carries only changes:
+
+```text
+watching 21 services every 5m · 2 in trouble now
+```
+
+With `--json`, and for `--exec`, each service already in trouble on the first poll is still reported, with `from` set to `null`.
 
 ## Output
 
-A text line carries the time, the service, the move, the headline and a link:
+A text line carries the time, the service, the move as `old → new`, the headline and a link. The service and the move are padded, so every headline starts in the same column:
 
 ```text
-10:00:00  GitHub  clear → minor  Elevated API errors  https://stspg.io/abc
+10:00:00  GitHub      clear → minor          Elevated API errors  https://stspg.io/abc
+10:05:00  Cloudflare  unreadable → clear     All Systems Operational  https://www.cloudflarestatus.com
 ```
+
+Once a watch has run past midnight, each line starts with the date as well: `2026-01-02 00:10:00`.
 
 With `--json`, each change is one JSON object per line:
 

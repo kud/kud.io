@@ -5,14 +5,25 @@ description: One-shot output with incidents list, JSON records, the services lis
 
 ## incidents list
 
-`incidents list` prints the status once and exits. With a service id or alias it prints that service's detail, history included.
+`incidents list` prints the status once and exits. Each service is one line, as the interactive list draws it: the name, the status, how long the trouble has run, then the headline. The declared-status note and the hint for more follow on lines of their own.
+
+```text
+  GitHub      ● minor  1h 12m  Elevated API errors
+  Cloudflare  ● ok
+  npm         ● ok
+
+  Declared status only: green is not proof your calls work.
+  incidents list <service> for detail.
+```
+
+With a service id or alias it prints that service in full: its name on the first line, what it declares and where, then its open incidents and its components as two tables, and its history.
 
 ```sh
 incidents list
 incidents list github
 ```
 
-The same static output is what `incidents` and `incidents <service>` print when there is no terminal on stdin or stdout, or `CI` is set. Colour and links are used only when stdout is a terminal and `NO_COLOR` is unset.
+The same static output is what `incidents` and `incidents <service>` print when there is no terminal on stdin or stdout, or `CI` is set. Colour and links are used only when stdout is a terminal and `NO_COLOR` is unset; links are OSC 8 hyperlinks, which terminals without support print as plain text.
 
 ## JSON
 
@@ -65,7 +76,7 @@ incidents list github --json
 | `historyFailed` | `true` when the history feed could not be read, so an empty `recent` claims nothing                 |
 | `note`          | The service's configured `note`, or an empty string                                                 |
 
-`unknown` means the page could not be read. It sorts above every healthy row and fails the exit code.
+`unknown` is the JSON name for what the screen shows as `? unreadable`: the page could not be read. It sorts above every healthy row and fails the exit code.
 
 For example, to list only the services in trouble:
 
@@ -79,9 +90,9 @@ incidents list --json | jq -r '.[] | select(.indicator != "none" and .indicator 
 | ---- | ---------------------------------------------------------- |
 | 0    | All clear: `none`, `maintenance` and `link` count as clear |
 | 1    | Something is degraded, or a page could not be read         |
-| 2    | Usage or configuration error, or an unknown service        |
+| 2    | Usage: an unknown service, flag or value, or a bad config  |
 
-The interactive view and `incidents watch` exit 0 when stopped. With no services configured, `incidents list` prints `No services configured.` and exits 0.
+A typo is never read as an outage: every usage error exits 2, never 1. `incidents --help` lists the codes too. The interactive view and `incidents watch` exit 0 when stopped. With no services configured, `incidents list` prints `No services configured.` and exits 0.
 
 ```sh
 if ! incidents list >/dev/null; then

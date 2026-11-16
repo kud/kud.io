@@ -19,6 +19,8 @@ services:
   github: {} # take the built-in entry as it is
   aws:
     regions: [us-east-1, us-west-2] # override fields of a built-in entry
+  claude:
+    pinned: true # always at the top of the overview, always a card
   npm:
     enabled: false # drop one
   acme:
@@ -37,22 +39,25 @@ services:
 
 For `timeout`, `view` and `sort`, the last file to set them wins. Any other value for `view` or `sort` is an error naming the file.
 
+The interactive view remembers the last view you chose with `v`, in `${XDG_STATE_HOME:-~/.local/state}/incidents/state.json`, and opens on it next time; `view` is the start until you have pressed `v` once. Delete that file to go back to `view`. A state file that cannot be read is ignored, and `--mock` never reads or writes it.
+
 Within `services`, a drop-in's fields are merged over the same id's fields from earlier files, so one file can add `regions` to a service another file declared.
 
 ## Service fields
 
-| Field     | Meaning                                                                            |
-| --------- | ---------------------------------------------------------------------------------- |
-| `name`    | Display name; defaults to the id                                                   |
-| `kind`    | `statuspage`, `rss`, `slack`, `aws` or `link`; required for a service not built in |
-| `url`     | The status page; must be `https://` for `statuspage`, `rss` and `link`             |
-| `feed`    | The incident feed URL; required for `rss`                                          |
-| `window`  | For `rss`: hours a post counts as current, default `6`                             |
-| `regions` | For `aws`: the regions to count; global events always count                        |
-| `aliases` | Other words that name the service on the command line and in search                |
-| `note`    | A line printed under the detail                                                    |
-| `timeout` | Milliseconds per request for this service, overriding the global one               |
-| `enabled` | `false` drops the service                                                          |
+| Field     | Meaning                                                                             |
+| --------- | ----------------------------------------------------------------------------------- |
+| `name`    | Display name; defaults to the id                                                    |
+| `kind`    | `statuspage`, `rss`, `slack`, `aws` or `link`; required for a service not built in  |
+| `url`     | The status page; must be `https://` for `statuspage`, `rss` and `link`              |
+| `feed`    | The incident feed URL; required for `rss`                                           |
+| `window`  | For `rss`: hours a post counts as current, default `6`                              |
+| `regions` | For `aws`: the regions to count; global events always count                         |
+| `aliases` | Other words that name the service on the command line and in search                 |
+| `note`    | A line printed under the detail                                                     |
+| `timeout` | Milliseconds per request for this service, overriding the global one                |
+| `enabled` | `false` drops the service                                                           |
+| `pinned`  | `true` keeps the service at the top of the interactive view; `p` there overrides it |
 
 ## Kinds
 
@@ -80,6 +85,7 @@ Listing one with `{}` takes its built-in entry as it is; any fields you give ove
 | ------------------ | -------------------------------------------------- |
 | `INCIDENTS_CONFIG` | A single config file, replacing the default lookup |
 | `XDG_CONFIG_HOME`  | Moves the default config directory                 |
+| `XDG_STATE_HOME`   | Moves the file that remembers the last view        |
 | `NO_COLOR`         | Plain output                                       |
 | `CI`               | Forces the static output                           |
 
