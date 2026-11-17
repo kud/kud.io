@@ -31,6 +31,8 @@ permissions:
   contents: write
   # To start the production deploy after a refresh commit.
   actions: write
+  # For the failure notifier, which reads this run's jobs and annotations.
+  checks: read
 
 jobs:
   refresh:
@@ -91,7 +93,20 @@ jobs:
       # runs that changed nothing have nothing to guard.
       - name: Build website
         if: steps.changes.outputs.changed == 'true'
-        run: npm run build
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee "$RUNNER_TEMP/build.log"
+          if grep -q 'releases-unavailable:' "$RUNNER_TEMP/build.log"
+          then
+            echo "::warning title=Release data unavailable::GitHub served no release data to this check build. The content built, and the deploy reads releases again with its own token."
+          fi
+        env:
+          # The same token the deploy builds with: unauthenticated, /projects
+          # gets 60 GitHub requests an hour and needs a few hundred.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Nothing this build renders ships, so a GitHub outage downgrades the
+          # release column to a warning here instead of holding back content.
+          RELEASES_BEST_EFFORT: "1"
 
       - name: Commit refreshed content
         id: commit
@@ -157,3 +172,16 @@ jobs:
               echo "⚠️ Writing Slack announcement failed: $url." >> "$GITHUB_STEP_SUMMARY"
             fi
           done
+
+  # A failed refresh lands in the alerts channel. It runs every hour, so only a
+  # change is reported: the first failure, and the run that recovers.
+  notify:
+    needs: refresh
+    if: always()
+    permissions:
+      actions: read
+      checks: read
+    uses: ./.github/workflows/notify-slack.yml
+    with:
+      on_change_only: true
+    secrets: inherit

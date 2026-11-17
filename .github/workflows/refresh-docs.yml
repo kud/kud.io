@@ -7,6 +7,8 @@ on:
 permissions:
   contents: write
   actions: write
+  # Passed down to the refresh's failure notifier.
+  checks: read
 
 jobs:
   refresh:

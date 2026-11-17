@@ -6,9 +6,19 @@ name: Notify Slack
 # A clean run posts nothing. Run it by hand to check the webhook still works.
 # Inside a called workflow, github.event_name is the caller's, so the ping is told
 # apart by the workflow name instead.
+#
+# A caller that runs every hour sets on_change_only: a failure is reported once,
+# when the previous run of the same workflow did not fail, and the first clean
+# run after a failure says it recovered. Warnings are left to the workflows that
+# run less often, since the hourly ones repeat the same ones every run.
 
 on:
   workflow_call:
+    inputs:
+      on_change_only:
+        description: Report only a new failure and its recovery, never warnings.
+        type: boolean
+        default: false
   workflow_dispatch:
 
 permissions:
@@ -33,6 +43,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WARNINGS_WEBHOOK_URL: ${{ secrets.SLACK_WARNINGS_WEBHOOK_URL }}
+          ON_CHANGE_ONLY: ${{ inputs.on_change_only }}
         run: |
           set -euo pipefail
           run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
@@ -49,6 +60,33 @@ jobs:
           done
           notes=$(grep -v '^$' <<<"$notes" | sort -u | head -n 10 || true)
 
+          if [[ "${ON_CHANGE_ONLY:-false}" == "true" ]]
+          then
+            # The run this job belongs to is still in progress, so the newest
+            # completed run of its workflow is the one before it.
+            workflow_id=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" --jq '.workflow_id')
+            previous=$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/runs?status=completed&branch=${GITHUB_REF_NAME}&per_page=1" \
+              --jq '.workflow_runs[0].conclusion // ""')
+            echo "Previous run: ${previous:-none}"
+            if [[ -n "$failed" && "$previous" == "failure" ]]
+            then
+              echo "Still failing, and the first failure was already reported."
+              exit 0
+            fi
+            if [[ -z "$failed" ]]
+            then
+              if [[ "$previous" == "failure" ]]
+              then
+                text=$(printf '✓ *%s* · %s recovered\n<%s|View run>' "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$run_url")
+                jq -n --arg text "$text" '{text: $text}' \
+                  | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL"
+              else
+                echo "No failure, and none before it."
+              fi
+              exit 0
+            fi
+          fi
+
           if [[ -z "$failed" && -z "$notes" ]]; then
             echo "Nothing to report."
             exit 0
@@ -57,7 +95,8 @@ jobs:
           # A failure goes to the alerts channel; a run that only left warnings goes
           # to the warnings channel, or nowhere until that webhook exists.
           webhook="$SLACK_WEBHOOK_URL"
-          if [[ -z "$failed" ]]; then
+          if [[ -z "$failed" ]]
+          then
             webhook="${SLACK_WARNINGS_WEBHOOK_URL:-}"
             [[ -n "$webhook" ]] || { echo "Warnings only, no warnings webhook; skipping."; exit 0; }
           fi
