@@ -96,6 +96,49 @@ describe("fetchWithRetry", () => {
     assert.deepEqual(slept, [])
   })
 
+  it("returns an exhausted primary limit with no reset at once", async () => {
+    const { fetchImpl, calls } = scripted([response(403, { "x-ratelimit-remaining": "0" }), response(200)])
+    const { slept, sleep } = recordSleeps()
+    const res = await fetchWithRetry("https://x", undefined, { fetchImpl, sleep })
+    assert.equal(res.status, 403)
+    assert.equal(calls(), 1)
+    assert.deepEqual(slept, [])
+  })
+
+  it("returns a 429 that gives no timing at once", async () => {
+    const { fetchImpl, calls } = scripted([response(429), response(200)])
+    const { slept, sleep } = recordSleeps()
+    const res = await fetchWithRetry("https://x", undefined, { fetchImpl, sleep })
+    assert.equal(res.status, 429)
+    assert.equal(calls(), 1)
+    assert.deepEqual(slept, [])
+  })
+
+  it("waits for a primary limit that resets within the cap", async () => {
+    const soon = response(403, { "x-ratelimit-remaining": "0", "x-ratelimit-reset": "5" })
+    const { fetchImpl, calls } = scripted([soon, response(200)])
+    const { slept, sleep } = recordSleeps()
+    const res = await fetchWithRetry("https://x", undefined, { fetchImpl, sleep, now: () => 0 })
+    assert.equal(res.status, 200)
+    assert.equal(calls(), 2)
+    assert.deepEqual(slept, [5000])
+  })
+
+  it("never spends a backoff on a run of exhausted limits", async () => {
+    const limited = () => response(403, { "x-ratelimit-remaining": "0", "x-ratelimit-reset": "3600" })
+    const { slept, sleep } = recordSleeps()
+    await Promise.all(
+      Array.from({ length: 50 }, () =>
+        fetchWithRetry("https://x", undefined, {
+          fetchImpl: scripted([limited()]).fetchImpl,
+          sleep,
+          now: () => 0,
+        }),
+      ),
+    )
+    assert.deepEqual(slept, [])
+  })
+
   it("retries a network error, then rethrows the last one", async () => {
     const { fetchImpl, calls } = scripted([new TypeError("fetch failed")])
     const { sleep } = recordSleeps()

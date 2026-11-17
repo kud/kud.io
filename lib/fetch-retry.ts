@@ -1,10 +1,15 @@
-// A fetch that rides out a passing GitHub or registry hiccup. It retries a
-// network error, a 5xx, a 429 and a rate-limited 403 a bounded number of
-// times, waiting longer each time or as long as the server asks. It never
-// waits past `maxWaitMs` for a single retry: a primary rate limit that resets
-// in forty minutes is handed back at once, so the caller fails or degrades
-// visibly instead of stalling the build. Anything else (200, 404, a plain 403)
-// is returned untouched on the first try.
+// A fetch that rides out a passing GitHub or registry hiccup without stalling
+// a build that has no token.
+//
+// - A network error or a 5xx is retried a bounded number of times, waiting
+//   longer each time (or as long as a retry-after asks, within `maxWaitMs`).
+// - A rate limit (a 429, or a 403 that says so) is retried only when the server
+//   says it lifts within `maxWaitMs`, through retry-after or x-ratelimit-reset.
+//   An exhausted primary limit, whose reset is far off or not given, comes back
+//   at once with no backoff. A tokenless preview build makes hundreds of
+//   lookups against 60 requests an hour, and backing off on every one of them
+//   once pushed a page past Next's 60 second limit (2026-11-17).
+// - Anything else (200, 404, a plain 403) is returned on the first try.
 //
 // No imports beyond the platform, so `node --test` can load it directly.
 
@@ -19,7 +24,7 @@ export type RetryOptions = {
 
 const wait = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
 
-const isRateLimited = (res: Response) =>
+export const isRateLimited = (res: Response) =>
   res.status === 429 ||
   (res.status === 403 &&
     (res.headers.get("x-ratelimit-remaining") === "0" || res.headers.has("retry-after")))
@@ -72,6 +77,8 @@ export const fetchWithRetry = async (
     if (!isRetryable(res) || last) return res
 
     const asked = requestedDelay(res, now())
+    // A rate limit is only worth waiting for when the server says it ends soon.
+    if (isRateLimited(res) && asked === null) return res
     const delay = asked ?? baseDelayMs * 2 ** (attempt - 1)
     // Waiting out an hour-long limit helps nobody: hand the response back.
     if (delay > maxWaitMs) return res
