@@ -11,6 +11,10 @@ name: Notify Slack
 # Against the previous run of the same workflow, a failure is reported to the
 # alerts channel when it first appears and again when a clean run recovers, and
 # warnings to the warnings channel when they first appear and when they clear.
+#
+# Secrets: SLACK_ALERTS_WEBHOOK_URL (failures, #ops-alerts) and
+# SLACK_WARNINGS_WEBHOOK_URL (warnings, #ops-warnings). The older
+# SLACK_WEBHOOK_URL still stands in for the alerts one until it is retired.
 
 on:
   workflow_call:
@@ -32,7 +36,7 @@ jobs:
       - name: Ping
         if: github.workflow == 'Notify Slack'
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         run: |
           jq -n --arg text "✓ ${GITHUB_REPOSITORY}: Slack notifications are wired up" '{text: $text}' \
             | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL"
@@ -41,7 +45,7 @@ jobs:
         if: github.workflow != 'Notify Slack'
         env:
           GH_TOKEN: ${{ github.token }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
           SLACK_WARNINGS_WEBHOOK_URL: ${{ secrets.SLACK_WARNINGS_WEBHOOK_URL }}
           ON_CHANGE_ONLY: ${{ inputs.on_change_only }}
         run: |
