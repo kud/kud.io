@@ -3,6 +3,7 @@ import { enrichWebextProjects } from "@/lib/webext"
 import { applyMonorepos } from "@/lib/monorepo"
 import { getApp } from "@/lib/app"
 import { getListedRecords } from "@/lib/listed-apps"
+import { fetchWithRetry } from "@/lib/fetch-retry"
 
 const OWNER = "kud"
 const TOPIC = "kud-site"
@@ -141,7 +142,7 @@ const toProject = (repo: Repo): Project => ({
 })
 
 export const getProjects = async (): Promise<Project[]> => {
-  const res = await fetch(
+  const res = await fetchWithRetry(
     `https://api.github.com/search/repositories?q=user:${OWNER}+topic:${TOPIC}+archived:false&sort=updated&per_page=100`,
     { headers: ghHeaders(), next: { revalidate: false } },
   )
@@ -166,7 +167,7 @@ export const getProject = async (slug: string): Promise<Project | null> => {
   const listed = getListedRecords().find((project) => project.slug === slug)
   if (listed) return listed
 
-  const res = await fetch(`https://api.github.com/repos/${OWNER}/${slug}`, {
+  const res = await fetchWithRetry(`https://api.github.com/repos/${OWNER}/${slug}`, {
     headers: ghHeaders(),
     next: { revalidate: false },
   })

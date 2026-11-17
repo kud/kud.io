@@ -1,5 +1,6 @@
 import { ghHeaders } from "@/lib/projects"
 import { surfaceSource } from "@/lib/monorepo"
+import { fetchWithRetry } from "@/lib/fetch-retry"
 
 const OWNER = "kud"
 
@@ -26,7 +27,7 @@ const compareSemver = (a: number[], b: number[]) =>
 // name in the repo's own package.json. Private and unpublished packages fall
 // through to the tags.
 const fromNpm = async (slug: string, path = ""): Promise<Release | null> => {
-  const pkgRes = await fetch(
+  const pkgRes = await fetchWithRetry(
     `https://api.github.com/repos/${OWNER}/${slug}/contents/${path ? `${path}/` : ""}package.json`,
     {
       headers: { ...ghHeaders(), Accept: "application/vnd.github.raw+json" },
@@ -39,7 +40,7 @@ const fromNpm = async (slug: string, path = ""): Promise<Release | null> => {
 
   // The full packument carries `time[version]`, the publish date; the
   // `/latest` shortcut does not.
-  const npmRes = await fetch(
+  const npmRes = await fetchWithRetry(
     `https://registry.npmjs.org/${pkg.name.replace("/", "%2F")}`,
     { next: { revalidate: false } },
   )
@@ -59,7 +60,7 @@ const fromNpm = async (slug: string, path = ""): Promise<Release | null> => {
 // a monorepo's prefixed tags (`webext-v1.5.0`) belong to one of its parts.
 // The API lists tags by name, not by version, so the highest is picked here.
 const fromTags = async (slug: string): Promise<Release | null> => {
-  const res = await fetch(
+  const res = await fetchWithRetry(
     `https://api.github.com/repos/${OWNER}/${slug}/tags?per_page=100`,
     { headers: ghHeaders(), next: { revalidate: false } },
   )
@@ -83,7 +84,7 @@ const fromTags = async (slug: string): Promise<Release | null> => {
 // A tag has no date of its own in the tags list; its commit's does. A failed
 // lookup costs only the date, never the version.
 const tagDate = async (slug: string, sha: string): Promise<string | null> => {
-  const res = await fetch(
+  const res = await fetchWithRetry(
     `https://api.github.com/repos/${OWNER}/${slug}/commits/${sha}`,
     { headers: ghHeaders(), next: { revalidate: false } },
   )

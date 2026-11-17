@@ -79,8 +79,19 @@ const ProjectsIndex = async () => {
   // means GitHub refused us, not that nothing was ever released: throwing keeps
   // the last good render on a background revalidation instead of replacing it
   // with an empty "Recently released" column, and fails a build loudly.
+  //
+  // The content refresh and the newsletter build the site only to prove the
+  // new content does not break it, then hand over to the deploy, which builds
+  // again with a token. Those guard builds set RELEASES_BEST_EFFORT: a GitHub
+  // outage must not hold back an unrelated post or edition, and nothing they
+  // render ships. They still say so: the workflow turns this line into a
+  // warning. A production build never sets it, so production keeps its last
+  // good deployment instead of shipping an empty column.
   if (projects.length > 0 && Object.keys(releases).length === 0) {
-    throw new Error("No release could be read from GitHub (rate limit?)")
+    if (process.env.RELEASES_BEST_EFFORT !== "1") {
+      throw new Error("No release could be read from GitHub (rate limit?)")
+    }
+    console.log("releases-unavailable: no release could be read from GitHub, rendered without them")
   }
   // Apps overlay a curated icon + accent from app.json (their PWA icons live
   // outside the sync detector's reach); every other project keeps the synced icon.
