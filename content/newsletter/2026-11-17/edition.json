@@ -1,0 +1,618 @@
+{
+  "schema": 1,
+  "date": "2026-11-17",
+  "generatedAt": "2026-11-17T18:46:00.000+00:00",
+  "publishedAt": "2026-11-17T23:12:29Z",
+  "languages": [
+    "fr",
+    "en"
+  ],
+  "lede": {
+    "fr": "Ce soir, on démonte l’attaque qui a transformé lundi les sites de la BBC, de Zoom ou d’IKEA en distributeurs de code malveillant, sans que ces entreprises aient touché à leur propre code. Puis la grève des fonctionnaires, une COP31 qui se tend et la CNIL qui sanctionne des collectivités mal protégées, avant d’expliquer ce qu’est le budget carbone. Côté technique, PostgreSQL, Node.js, C++26 et des poissons des grands fonds ; et sept trouvailles, de l’histoire de l’égalité aux bus de San Francisco.",
+    "en": "Tonight, we take apart the attack that on Monday turned the websites of the BBC, Zoom and IKEA into malware dispensers, without those companies touching their own code. Then France’s civil-service strike, rising tension at COP31 and a French regulator fining poorly protected local councils, before we explain what a carbon budget is. On the technical side, PostgreSQL, Node.js, C++26 and some deep-sea fish; and seven finds, from the history of equality to San Francisco’s buses."
+  },
+  "readingMinutes": {
+    "fr": 15,
+    "en": 14
+  },
+  "wordCount": {
+    "fr": 3086,
+    "en": 2865
+  },
+  "narrative": {
+    "overview": {
+      "fr": "Ce soir, on démonte l’attaque qui a transformé lundi les sites de la BBC, de Zoom ou d’IKEA en distributeurs de code malveillant, sans que ces entreprises aient touché à leur propre code. Puis la grève des fonctionnaires, une COP31 qui se tend et la CNIL qui sanctionne des collectivités mal protégées, avant d’expliquer ce qu’est le budget carbone. Côté technique, PostgreSQL, Node.js, C++26 et des poissons des grands fonds ; et sept trouvailles, de l’histoire de l’égalité aux bus de San Francisco.",
+      "en": "Tonight, we take apart the attack that on Monday turned the websites of the BBC, Zoom and IKEA into malware dispensers, without those companies touching their own code. Then France’s civil-service strike, rising tension at COP31 and a French regulator fining poorly protected local councils, before we explain what a carbon budget is. On the technical side, PostgreSQL, Node.js, C++26 and some deep-sea fish; and seven finds, from the history of equality to San Francisco’s buses."
+    },
+    "analysis": null,
+    "closing": {
+      "fr": "Bonne soirée, et à demain : d’ici là, Mercure n’aura plus que trois jours à attendre.",
+      "en": "Good night, and see you tomorrow: by then, Mercury will have only three days left to wait."
+    }
+  },
+  "sections": [
+    {
+      "key": "overview",
+      "kind": "narrative",
+      "title": {
+        "fr": "Ce soir",
+        "en": "Tonight"
+      },
+      "items": []
+    },
+    {
+      "key": "depth",
+      "kind": "items",
+      "title": {
+        "fr": "Le sujet du jour",
+        "en": "Today’s focus"
+      },
+      "items": [
+        "01"
+      ]
+    },
+    {
+      "key": "brief",
+      "kind": "items",
+      "title": {
+        "fr": "L’essentiel",
+        "en": "The essentials"
+      },
+      "items": [
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "key": "explainer",
+      "kind": "items",
+      "title": {
+        "fr": "C’est quoi ?",
+        "en": "Explainer"
+      },
+      "items": [
+        "05"
+      ]
+    },
+    {
+      "key": "techsci",
+      "kind": "items",
+      "title": {
+        "fr": "Technologie & science",
+        "en": "Technology & science"
+      },
+      "items": [
+        "06",
+        "07",
+        "08",
+        "09"
+      ]
+    },
+    {
+      "key": "finds",
+      "kind": "items",
+      "title": {
+        "fr": "Ça vaut un clic",
+        "en": "Worth a click"
+      },
+      "items": [
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16"
+      ]
+    },
+    {
+      "key": "watch",
+      "kind": "items",
+      "title": {
+        "fr": "À surveiller",
+        "en": "Watch next"
+      },
+      "items": [
+        "17",
+        "18"
+      ]
+    },
+    {
+      "key": "closing",
+      "kind": "narrative",
+      "title": {
+        "fr": "Pour finir",
+        "en": "To close"
+      },
+      "items": []
+    }
+  ],
+  "items": [
+    {
+      "id": "01",
+      "section": "depth",
+      "kicker": {
+        "fr": "SÉCURITÉ",
+        "en": "SECURITY"
+      },
+      "title": {
+        "fr": "OPTIMJACK : quand un script tiers trahit 178 sites",
+        "en": "OPTIMJACK: when a third-party script betrays 178 websites"
+      },
+      "summary": {
+        "fr": "Lundi 16 novembre, des sites parmi les plus visités du Web ont servi du code malveillant à leurs visiteurs. Le chercheur Scott Helme, de la société Report URI, l’a trouvé dans 188 des 1 611 extraits de code Optimizely qu’il a examinés, chez au moins 178 organisations : BBC, CNN, Zoom, IKEA, Salesforce, GitLab, HSBC ou Air France-KLM. Optimizely vend un outil de tests A/B, qui montre des variantes d’une page à différents visiteurs pour mesurer laquelle fonctionne le mieux. Report URI n’a examiné qu’une partie des clients : le nombre réel de sites touchés est probablement plus élevé.",
+        "en": "On Monday 16 November, some of the most visited sites on the web served malicious code to their visitors. Security researcher Scott Helme of Report URI found it in 188 of the 1,611 Optimizely code snippets he examined, at no fewer than 178 organisations: the BBC, CNN, Zoom, IKEA, Salesforce, GitLab, HSBC and Air France-KLM among them. Optimizely sells A/B testing software, which shows different versions of a page to different visitors to measure which works best. Report URI examined only some customers, so the real number of affected sites is probably higher."
+      },
+      "sources": [
+        {
+          "url": "https://blog.report-uri.com/worlds-largest-brands-infected-with-malware-via-optimizely/",
+          "label": {
+            "fr": "Report URI",
+            "en": "Report URI"
+          }
+        },
+        {
+          "url": "https://www.stepsecurity.io/blog/optimjack-optimizely-hosted-scripts-crypto-clipper-card-skimmer",
+          "label": {
+            "fr": "StepSecurity",
+            "en": "StepSecurity"
+          }
+        },
+        {
+          "url": "https://www.theregister.com/cyber-crime/2026/11/17/optimizely-hack-turns-worlds-biggest-websites-into-malware-dispensers/5310448",
+          "label": {
+            "fr": "The Register",
+            "en": "The Register"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "section": "brief",
+      "kicker": {
+        "fr": "SOCIAL",
+        "en": "FRANCE"
+      },
+      "title": {
+        "fr": "Grève des fonctionnaires : moins de grévistes, une bataille de chiffres",
+        "en": "Civil-service strike: fewer strikers, a battle over numbers"
+      },
+      "summary": {
+        "fr": "Mardi 17 novembre, la journée de grève et de manifestations lancée par les syndicats de la fonction publique, rejoints par des organisations de lycéens et d’étudiants et par des salariés du privé, a réuni 146 000 personnes en France selon le ministère de l’Intérieur, dont 28 000 à Paris selon la préfecture de police. La CGT en revendique plus de 500 000, dont 175 000 à Paris. L’écart est saisissant à Marseille : 4 900 selon la préfecture, 80 000 selon la CGT. Les taux de grévistes, estimations partielles du ministère de l’Action et des Comptes publics, reculent : 2,59 % dans la fonction publique d’État contre près de 10 % le 5 novembre, 1,96 % dans la territoriale contre 4,60 %, et 3,93 % à l’hôpital, comme le 5 novembre. Dans l’Éducation nationale, le ministère compte 3,76 % d’enseignants grévistes, le Snes-FSU 20 % à 10 h 30. Le cœur du conflit : avec la hausse du Smic (le salaire minimum) au 1er décembre, environ 1,1 million d’agents verraient leur traitement de base passer sous ce seuil, et quelque 660 000 resteraient payés sous le Smic, compensés par une indemnité qui ne compte pas pour la retraite, selon l’AFP citée par Sud Radio. Les syndicats jugent insuffisantes les mesures annoncées vendredi 13 novembre par le Premier ministre, Sébastien Lecornu. « Seule la réponse à nos revendications arrêtera la mobilisation », prévient Sophie Binet, secrétaire générale de la CGT.",
+        "en": "On Tuesday 17 November, the day of strikes and marches called by France’s public-sector unions, joined by school and university student groups and private-sector workers, drew 146,000 people across France according to the Interior Ministry, 28,000 of them in Paris according to the police. The CGT union claims more than 500,000, including 175,000 in Paris. The gap is striking in Marseille: 4,900 according to the prefecture, 80,000 according to the CGT. Strike rates, partial estimates from the ministry for public action and accounts, are down: 2.59% in the state civil service against nearly 10% on 5 November, 1.96% in local government against 4.60%, and 3.93% in hospitals, the same as on 5 November. In schools, the education ministry counts 3.76% of teachers on strike; the Snes-FSU union says 20% at 10.30am. The heart of the dispute: when the Smic (France’s minimum wage) rises on 1 December, about 1.1 million public employees would see their base pay fall below it, and some 660,000 would remain paid below the Smic, topped up by an allowance that does not count towards their pension, according to AFP as reported by Sud Radio. Unions consider the measures announced on Friday 13 November by Prime Minister Sébastien Lecornu inadequate. “Only an answer to our demands will stop the mobilisation,” warned Sophie Binet, the CGT’s general secretary."
+      },
+      "sources": [
+        {
+          "url": "https://www.ici.fr/infos/economie-social/direct-mobilisation-du-17-novembre-suivez-la-nouvelle-journee-de-greve-et-de-manifestations-3379678",
+          "label": {
+            "fr": "ICI",
+            "en": "ICI"
+          }
+        },
+        {
+          "url": "https://www.sudradio.fr/societe/fonctionnaires-jeunesse-salaries-du-prive-une-colere-qui-converge-malgre-des-corteges-moins-fournis",
+          "label": {
+            "fr": "Sud Radio · AFP",
+            "en": "Sud Radio · AFP"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "section": "brief",
+      "kicker": {
+        "fr": "CLIMAT",
+        "en": "CLIMATE"
+      },
+      "title": {
+        "fr": "COP31 : l’Union européenne veut revoir le projet d’accord",
+        "en": "COP31: the EU wants the draft deal rewritten"
+      },
+      "summary": {
+        "fr": "Au lendemain de la publication du premier projet de « décision chapeau » de la COP31, la conférence de l’ONU sur le climat réunie à Antalya, en Turquie, les positions se sont durcies mardi 17 novembre. Wopke Hoekstra, qui négocie pour l’Union européenne, estime que le texte a « beaucoup des caractéristiques d’une liste de courses », qu’il « ne va pas dans la bonne direction et doit être profondément modifié », rapporte l’AFP. Selon Reuters, le projet de 18 pages laisse deux options sur les combustibles fossiles : la formule adoptée en 2023 sur une « transition » hors des fossiles, ou une référence plus forte à leur « sortie » ; les deux pourraient disparaître du texte final. Il appelle aussi les pays riches à la neutralité carbone dès 2030, un objectif que certains jugent irréaliste. Un autre front s’est ouvert sur le calendrier du GIEC (Groupe d’experts intergouvernemental sur l’évolution du climat) : des dizaines de pays européens, africains et du Pacifique veulent ses prochains rapports avant le bilan mondial de 2028, tandis que l’Arabie saoudite et l’Inde sont accusées de pousser à repousser le septième rapport à 2029. Ilana Seid, présidente de l’Alliance des petits États insulaires (AOSIS), juge un tel retard « injustifiable » ; la délégation saoudienne dit défendre des délais qui permettent un « examen scientifique suffisant ». Pourquoi c’est important : à la COP, chaque décision exige le consensus, et un seul pays peut bloquer. Les négociations doivent s’achever vendredi 20 novembre.",
+        "en": "A day after the first draft “cover decision” of COP31, the UN climate conference in Antalya, Türkiye, was published, positions hardened on Tuesday 17 November. Wopke Hoekstra, who negotiates for the European Union, said the text has “many of the characteristics of a shopping list” and that it “does not go in the right direction and needs significant change”, AFP reports. According to Reuters, the 18-page draft offers two options on fossil fuels: the 2023 wording on “transitioning away” from them, or a stronger reference to phasing them out; either could be dropped from the final text. It also calls for wealthy countries to reach net zero by 2030, a goal some consider unrealistic. Another front has opened over the timetable of the IPCC (the UN’s Intergovernmental Panel on Climate Change): dozens of European, African and Pacific countries want its next reports out before the 2028 global stocktake, while Saudi Arabia and India are accused of pushing to delay the seventh assessment report to 2029. Ilana Seid, who chairs the Alliance of Small Island States (AOSIS), called any such delay “unjustifiable”; the Saudi delegation says it advocates timelines that allow “sufficient scientific review”. Why it matters: at a COP every decision needs consensus, so a single country can block. Talks are due to end on Friday 20 November."
+      },
+      "sources": [
+        {
+          "url": "https://www.arabnews.pk/middle-east/tensions-rise-over-cop31-draft-deal-3007317",
+          "label": {
+            "fr": "Arab News · AFP",
+            "en": "Arab News · AFP"
+          }
+        },
+        {
+          "url": "https://whbl.com/2026/11/16/first-draft-of-cop31-deal-signals-tough-negotiations-to-come/",
+          "label": {
+            "fr": "Reuters · WHBL",
+            "en": "Reuters · WHBL"
+          }
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "section": "brief",
+      "kicker": {
+        "fr": "DONNÉES",
+        "en": "DATA"
+      },
+      "title": {
+        "fr": "La CNIL sanctionne dix collectivités mal protégées",
+        "en": "France’s privacy regulator fines ten poorly protected councils"
+      },
+      "summary": {
+        "fr": "La CNIL (Commission nationale de l’informatique et des libertés, l’autorité française de protection des données personnelles) a annoncé le 9 novembre dix sanctions visant des collectivités territoriales et un établissement public, avec des amendes de 3 000 à 20 000 euros, le maximum prévu par la procédure simplifiée. Les manquements relèvent surtout de l’article 32 du RGPD (règlement général sur la protection des données), qui impose de sécuriser les données : pas d’authentification multifacteur pour les administrateurs, prestataires disposant d’un accès permanent au réseau ou de comptes partagés, journaux incomplets ou jamais relus, réseau mal cloisonné, serveurs sous des systèmes qui ne reçoivent plus de correctifs, mots de passe faibles ou envoyés en clair. Plusieurs collectivités avaient déjà subi des fuites que la CNIL juge évitables. D’autres ont installé de la vidéosurveillance sur la voie publique sans analyse d’impact préalable, obligatoire pour ce que la CNIL qualifie de « surveillance systématique à grande échelle d’une zone accessible au public ». Pour fixer les montants, l’autorité dit avoir tenu compte notamment du budget de chaque collectivité et de la sensibilité des données, comme celles de mineurs ou les coordonnées bancaires. Pourquoi c’est notable : la liste se lit comme une check-list d’hygiène informatique de base, appliquée à des services publics qui détiennent beaucoup de données sur leurs habitants.",
+        "en": "The CNIL (France’s data protection authority) announced on 9 November ten penalties against local authorities and one public body, with fines from €3,000 to €20,000, the maximum under its simplified procedure. Most of the failings fall under Article 32 of the GDPR (the EU’s General Data Protection Regulation), which requires data to be kept secure: no multi-factor authentication for administrators, contractors with permanent network access or shared accounts, incomplete logs or logs nobody read, poorly segmented networks, servers on operating systems that no longer receive patches, and weak passwords or passwords sent in plain text. Several of the authorities had already suffered breaches that the CNIL considers preventable. Others installed CCTV on public streets without a prior impact assessment, which is mandatory for what the CNIL calls “systematic large-scale monitoring of a publicly accessible area”. In setting the fines, the regulator says it took into account each authority’s budget and how sensitive the data was, such as children’s data or bank details. Why it matters: the list reads like a basic IT-hygiene checklist, applied to public services that hold a great deal of data about their residents."
+      },
+      "sources": [
+        {
+          "url": "https://www.cnil.fr/fr/sanctions-cybersecurite-collectivites-territoriales",
+          "label": {
+            "fr": "CNIL",
+            "en": "CNIL"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "section": "explainer",
+      "kicker": null,
+      "title": {
+        "fr": "Le budget carbone restant",
+        "en": "The remaining carbon budget"
+      },
+      "summary": {
+        "fr": "Pourquoi on en parle. Le 10 novembre, le Global Carbon Project, un consortium international de chercheurs dirigé par Pierre Friedlingstein, de l’université d’Exeter, a publié son bilan annuel : les émissions de CO2 d’origine fossile devraient baisser de 0,4 % en 2026, à 38,2 milliards de tonnes, mais les émissions totales, déforestation comprise, atteindre 43,3 milliards de tonnes, contre 42,8 en 2025. Le budget restant pour limiter le réchauffement à 1,5 °C serait de 150 milliards de tonnes, soit moins de quatre ans au rythme actuel. La baisse du pétrole (−1,9 %) tient en partie au choc énergétique lié au conflit iranien, ce qui n’est « pas une solution climatique durable », prévient Pierre Friedlingstein.",
+        "en": "Why it's in the news. On 10 November the Global Carbon Project, an international research consortium led by Pierre Friedlingstein of the University of Exeter, published its annual assessment: fossil CO2 emissions are projected to fall by 0.4% in 2026, to 38.2 billion tonnes, but total emissions, including deforestation, to reach 43.3 billion tonnes, up from 42.8 billion in 2025. The remaining budget for limiting warming to 1.5°C would be 150 billion tonnes: less than four years at the current rate. The 1.9% drop in oil is partly down to the energy shock linked to the Iran conflict, which is “not a sustainable climate solution”, Pierre Friedlingstein warns."
+      },
+      "sources": [
+        {
+          "url": "https://www.lmu.de/en/newsroom/news-overview/news/fossil-co2-emissions-set-to-fall-slightly-in-2026-25d47770.html",
+          "label": {
+            "fr": "Université LMU de Munich",
+            "en": "LMU Munich"
+          }
+        },
+        {
+          "url": "https://sciencedaily.com/releases/2026/11/261109205358.htm",
+          "label": {
+            "fr": "Université d’Exeter · ScienceDaily",
+            "en": "University of Exeter · ScienceDaily"
+          }
+        },
+        {
+          "url": "https://www.carbonbrief.org/analysis-how-much-carbon-budget-is-left-to-limit-global-warming-to-1-5c/",
+          "label": {
+            "fr": "Carbon Brief",
+            "en": "Carbon Brief"
+          }
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "section": "techsci",
+      "kicker": {
+        "fr": "BASES DE DONNÉES",
+        "en": "DATABASES"
+      },
+      "title": {
+        "fr": "PostgreSQL : une mise à jour mineure qui demande du travail",
+        "en": "PostgreSQL: a minor update that needs real work"
+      },
+      "summary": {
+        "fr": "Le 12 novembre, PostgreSQL a publié des versions correctives pour ses branches maintenues, dont la 18.7. Ses notes de version listent une cinquantaine d’identifiants CVE (le registre public des failles) : contournement de la sécurité au niveau des lignes via INSERT … ON CONFLICT sur une vue, détournement d’objets pendant un CREATE EXTENSION, injections SQL dans les outils reindexdb, vacuumdb et pg_dump, nombreuses erreurs mémoire. Aucun dump/restore n’est nécessaire depuis une 18.x, mais plusieurs bugs pouvaient corrompre des index : les notes demandent un REINDEX des index btree sur des colonnes bpchar sans longueur et des index gist_trgm_ops. Les sauvegardes incrémentales existantes ne doivent plus être considérées comme fiables : il faut refaire une sauvegarde complète après la mise à jour. Les extensions écrites en C qui manipulent des types composites doivent être recompilées, et certaines modifiées. Pourquoi c’est notable : une version dite mineure qui mérite une vraie fenêtre de maintenance, pas un simple redémarrage.",
+        "en": "On 12 November PostgreSQL released fixes for its supported branches, including 18.7. The release notes list around fifty CVE identifiers (the public register of vulnerabilities): row-level security bypassed through INSERT … ON CONFLICT on a view, objects hijacked during CREATE EXTENSION, SQL injection in the reindexdb, vacuumdb and pg_dump tools, and many memory-safety bugs. No dump and restore is needed from an 18.x release, but several bugs could corrupt indexes: the notes call for a REINDEX of btree indexes on unbounded bpchar columns and of gist_trgm_ops indexes. Existing incremental backups should no longer be trusted: take a fresh full backup after updating. C extensions that handle composite types must be rebuilt, and some changed. Why it matters: a so-called minor release that deserves a proper maintenance window, not just a restart."
+      },
+      "sources": [
+        {
+          "url": "https://www.postgresql.org/docs/release/18.7/",
+          "label": {
+            "fr": "PostgreSQL · notes de version 18.7",
+            "en": "PostgreSQL · 18.7 release notes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "section": "techsci",
+      "kicker": {
+        "fr": "JAVASCRIPT",
+        "en": "JAVASCRIPT"
+      },
+      "title": {
+        "fr": "Node.js corrige seize failles, surtout dans HTTP/2 et TLS",
+        "en": "Node.js fixes sixteen flaws, mostly in HTTP/2 and TLS"
+      },
+      "summary": {
+        "fr": "Node.js 26.13.1, version à support long (LTS) baptisée « Lithium », publiée le 11 novembre, est une mise à jour de sécurité : seize failles, dont sept jugées élevées, six moyennes et trois faibles. La plupart touchent les modules http2 et tls. L’une d’elles, CVE-2026-126051, permettait à un client distant de faire planter un serveur TLS. La version met aussi à jour des dépendances embarquées, dont undici, le client HTTP de Node, et llhttp, son analyseur de requêtes. Pourquoi c’est notable : tout serveur Node exposé en HTTPS ou HTTP/2 est concerné, et une faille qui fait tomber un serveur à distance ne demande pas d’accès particulier pour être exploitée.",
+        "en": "Node.js 26.13.1, the long-term support (LTS) release codenamed “Lithium”, published on 11 November, is a security update: sixteen vulnerabilities, seven rated high, six medium and three low. Most affect the http2 and tls modules. One of them, CVE-2026-126051, allowed a remote client to crash a TLS server. The release also updates bundled dependencies, including undici, Node’s HTTP client, and llhttp, its request parser. Why it matters: any Node server exposed over HTTPS or HTTP/2 is affected, and a flaw that crashes a server remotely needs no special access to exploit."
+      },
+      "sources": [
+        {
+          "url": "https://nodejs.org/en/blog/release/v26.13.1",
+          "label": {
+            "fr": "Node.js · notes de version 26.13.1",
+            "en": "Node.js · 26.13.1 release notes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "section": "techsci",
+      "kicker": {
+        "fr": "LANGAGES",
+        "en": "LANGUAGES"
+      },
+      "title": {
+        "fr": "C++26 bute sur les contrats",
+        "en": "C++26 trips over contracts"
+      },
+      "summary": {
+        "fr": "Le projet de norme internationale C++26 a été rejeté en octobre lors du vote des organismes nationaux de normalisation, avant-dernière étape de l’ISO (l’Organisation internationale de normalisation) : neuf votes négatifs, au-delà du plafond de 25 % fixé par l’ISO, selon The Register et le blog Mond. En cause, les « contrats » (proposition P2900) : des préconditions, postconditions et assertions qui permettent de déclarer ce qu’une fonction attend et garantit, pour attraper des erreurs avant qu’elles ne mènent à un comportement indéfini. Le comité les avait adoptés, mais Bjarne Stroustrup, le créateur du langage, y voit avec ses coauteurs « une menace existentielle pour C++ », rapporte The Register. Pour Harry Bott, de la C++ Alliance, ce renvoi est au contraire « le processus qui fonctionne comme prévu ». Le groupe de travail WG21 se réunit du 16 au 21 novembre à Búzios, au Brésil, avec trois pistes : retirer les contrats, les isoler dans une spécification technique séparée, ou revoter un texte légèrement revu. Si la norme glisse à l’an prochain, elle s’appellera ISO/IEC 14882:2027.",
+        "en": "The draft international standard for C++26 was rejected in October in the vote of national standards bodies, the penultimate stage at ISO (the International Organization for Standardization): nine votes against, above ISO’s 25% ceiling, according to The Register and Mond’s Blog. The sticking point is “contracts” (proposal P2900): preconditions, postconditions and assertions that let programmers state what a function expects and guarantees, to catch errors before they lead to undefined behaviour. The committee had adopted them, but Bjarne Stroustrup, the language’s creator, and his co-authors call them “an existential threat to C++”, The Register reports. For Harry Bott of the C++ Alliance, the rejection is instead “the process working as intended”. The WG21 working group meets from 16 to 21 November in Búzios, Brazil, with three paths: drop contracts, move them into a separate technical specification, or re-vote a lightly revised text. If the standard slips into next year, it will be named ISO/IEC 14882:2027."
+      },
+      "sources": [
+        {
+          "url": "https://www.theregister.com/devops/2026/11/13/c26-stumbles-at-finish-line-over-contracts-dispute/5309526",
+          "label": {
+            "fr": "The Register",
+            "en": "The Register"
+          }
+        },
+        {
+          "url": "https://buttondown.com/mond/archive/mond-for-the-first-time-a-c-standard-failed-to/",
+          "label": {
+            "fr": "Mond’s Blog",
+            "en": "Mond’s Blog"
+          }
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "section": "techsci",
+      "kicker": {
+        "fr": "OCÉANS",
+        "en": "OCEANS"
+      },
+      "title": {
+        "fr": "Les espèces des grands fonds, plus fragiles qu’on ne le pensait",
+        "en": "Deep-sea species are more fragile than we thought"
+      },
+      "summary": {
+        "fr": "Une étude publiée le 12 novembre dans Nature Communications a suivi l’ADN de cinq espèces des profondeurs du golfe du Mexique, trois poissons-lanternes et deux crevettes, à partir de 486 spécimens prélevés entre 2011 et 2023 à plusieurs centaines de mètres de profondeur. Le poisson-lanterne Diaphus dumerilii a perdu environ 8 % de sa diversité génétique en douze ans. Les cinq espèces présentent une petite « taille efficace de population » : peu d’individus transmettent réellement leurs gènes, ce qui ne veut pas dire qu’ils sont peu nombreux. Or la diversité génétique est la réserve de variations qui permet de s’adapter. Des modèles climatiques projettent, pour quatre espèces, une perte allant jusqu’à 70 % de leur habitat favorable dans le golfe d’ici 2050 ou 2100. « Cela remet en question l’idée que les espèces des grands fonds seraient naturellement plus résistantes parce qu’elles occupent des environnements si vastes », dit l’auteur principal, Pedro Peres, de l’Université internationale de Floride (FIU). Limites : les auteurs n’attribuent pas ces pertes à la marée noire de Deepwater Horizon (2010), et les deux comptes rendus disponibles reprennent le communiqué de l’université.",
+        "en": "A study published on 12 November in Nature Communications tracked the DNA of five deep-sea species in the Gulf of Mexico, three lanternfish and two shrimps, using 486 specimens collected between 2011 and 2023 from several hundred metres down. The lanternfish Diaphus dumerilii lost about 8% of its genetic diversity in twelve years. All five species have a small “effective population size”: few individuals actually pass on their genes, which does not mean there are few of them. Genetic diversity is the stock of variation that lets a population adapt. Climate models project that four of the species could lose up to 70% of their suitable habitat in the Gulf by 2050 or 2100. “This challenges the idea that deep-sea species are naturally more resilient because they occupy such vast environments,” says lead author Pedro Peres of Florida International University (FIU). Limits: the authors do not attribute the losses to the 2010 Deepwater Horizon oil spill, and both available accounts draw on the university’s press release."
+      },
+      "sources": [
+        {
+          "url": "https://www.eurekalert.org/news-releases/1151718",
+          "label": {
+            "fr": "EurekAlert · FIU",
+            "en": "EurekAlert · FIU"
+          }
+        },
+        {
+          "url": "https://phys.org/news/2026-11-genetic-reveal-hidden-extinction-deep.html",
+          "label": {
+            "fr": "Phys.org",
+            "en": "Phys.org"
+          }
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "L’égalité, ça se pratique",
+        "en": "Equality is something you practise"
+      },
+      "summary": {
+        "fr": "Dans un essai publié par Aeon le 9 novembre (en anglais), Teresa M. Bejan, professeure de théorie politique à Oxford, explique pourquoi le mot « égalité » nous divise : il a accumulé des sens différents (similitude, équilibre, indifférence, parité), et c’est justement cette ambiguïté qui lui a donné sa force politique. On y croise John Lilburne, qui refusa en 1646 de s’agenouiller et d’ôter son chapeau devant la Chambre des lords. Sa thèse : l’égalité « n’est pas d’abord une idée à laquelle croire », mais une pratique, entretenue par des institutions comme le jury, où chacun doit agir en pair. Limite : une histoire très centrée sur l’Angleterre, et un remède esquissé plus que démontré.",
+        "en": "In an essay published by Aeon on 9 November, Teresa M Bejan, professor of political theory at Oxford, explains why the word “equality” divides us: it has piled up different meanings (sameness, balance, indifference, parity), and that very ambiguity gave it political force. Along the way we meet John Lilburne, who in 1646 refused to kneel or doff his hat before the House of Lords. Her argument: equality “is not primarily an idea to be believed in”, but a practice, sustained by institutions such as the jury, where people must act as peers. The limit: a history centred on England, and a remedy sketched rather than demonstrated."
+      },
+      "sources": [
+        {
+          "url": "https://aeon.co/essays/historical-ideas-of-equality-help-us-imagine-an-equal-world",
+          "label": {
+            "fr": "Aeon",
+            "en": "Aeon"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Croire et penser, ce n’est pas la même chose",
+        "en": "Believing is not the same as thinking"
+      },
+      "summary": {
+        "fr": "Le philosophe Neil Van Leeuwen et le juriste Jacob Eisler, tous deux à l’université d’État de Floride, défendent dans Aeon (3 novembre, en anglais) une idée surprenante : la séparation des Églises et de l’État repose sur une distinction psychologique. La croyance factuelle s’impose à nous et suit les preuves ; la « créance » religieuse, elle, se choisit, résiste aux preuves et se range dans un compartiment. Ils s’appuient sur l’ethnographie, sur des expériences montrant des comportements différents le dimanche, et sur des langues qui distinguent « croire » et « penser ». Limite : la thèse prolonge le livre de Van Leeuwen lui-même, et son passage au droit est rapide.",
+        "en": "The philosopher Neil Van Leeuwen and the legal scholar Jacob Eisler, both at Florida State University, make a surprising case in Aeon (3 November): the separation of church and state rests on a psychological distinction. Factual belief is involuntary and tracks evidence; religious “credence” is chosen, resists evidence and is kept in its own compartment. They draw on ethnography, on experiments showing people behave differently on Sundays, and on languages that distinguish “believe” from “think”. The limit: the argument extends Van Leeuwen’s own book, and the move to law is quick."
+      },
+      "sources": [
+        {
+          "url": "https://aeon.co/essays/the-psychology-of-separating-church-and-state",
+          "label": {
+            "fr": "Aeon",
+            "en": "Aeon"
+          }
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "La révolte d’une génération",
+        "en": "A generation in revolt"
+      },
+      "summary": {
+        "fr": "Dans Noema (12 novembre, en anglais), le journaliste John Last relie les mobilisations de jeunes en France et en Italie à une même cause : des générations plus âgées qui concentrent patrimoine et poids politique, pendant que les plus jeunes héritent d’emplois précaires, de logements inaccessibles et de services publics fragilisés. Il interroge politistes et philosophes, et met en garde contre le désespoir que les extrêmes savent exploiter. « Le désespoir est contagieux, et nous sommes en pleine pandémie », écrit-il. Limite : un cadrage générationnel large, qui gomme parfois les écarts de classe à l’intérieur d’une même génération.",
+        "en": "In Noema (12 November), the journalist John Last links youth protests in France and Italy to a common cause: older generations holding wealth and political weight while the young inherit insecure jobs, unaffordable housing and strained public services. He interviews political scientists and philosophers, and warns of a despair that extremists know how to exploit. “Hopelessness is infectious, and we’re in a pandemic,” he writes. The limit: a broad generational frame that sometimes blurs the class divides within a single generation."
+      },
+      "sources": [
+        {
+          "url": "https://www.noemamag.com/a-generation-revolts",
+          "label": {
+            "fr": "Noema",
+            "en": "Noema"
+          }
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Un moniteur système qui sait se faire discret",
+        "en": "A system monitor that keeps quiet"
+      },
+      "summary": {
+        "fr": "ftop affiche, dans un unique panneau flottant redimensionnable, l’état d’un Mac à puce Apple : charge de chaque cœur, GPU, mémoire, réseau, consommation, température et applications les plus gourmandes. Il est pensé pour les moments de forte charge (modèles locaux, longues compilations) et ne montre que l’instant présent, sans historique. Libre (licence MIT), il consomme moins de 0,8 % d’un cœur, selon son auteur. Limites : macOS 15 minimum, puces Apple uniquement, et certaines mesures reposent sur des interfaces privées de macOS qui peuvent changer.",
+        "en": "ftop shows the state of an Apple Silicon Mac in a single floating, resizable panel: per-core load, GPU, memory, network, power, temperature and the hungriest apps. It is designed for heavy-load moments (local models, long builds) and shows only the present, with no history. Free and open source (MIT licence), it uses under 0.8% of one core, according to its author. The limits: macOS 15 or later, Apple Silicon only, and some readings rely on private macOS interfaces that may change."
+      },
+      "sources": [
+        {
+          "url": "https://github.com/Nongfsq/ftop",
+          "label": {
+            "fr": "ftop · GitHub",
+            "en": "ftop · GitHub"
+          }
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Soixante-deux outils de développeur, sans connexion",
+        "en": "Sixty-two developer tools, offline"
+      },
+      "summary": {
+        "fr": "DevTools rassemble dans une application de bureau 62 utilitaires du quotidien : visionneuse JSON, testeur d’expressions régulières, décodeur JWT et de certificats X.509, calculateur cron et CIDR, comparaison de textes, compteur de jetons et masquage des secrets et données personnelles avant d’envoyer un texte à une IA. Tout fonctionne hors ligne, sans compte, et le projet affirme n’embarquer aucune télémétrie. Libre (MIT), il tourne sur macOS, Windows et Linux. Pourquoi cliquer : remplacer une poignée de sites web à qui l’on colle parfois des jetons qui n’auraient jamais dû sortir de la machine.",
+        "en": "DevTools gathers 62 everyday utilities in one desktop app: a JSON viewer, regex tester, JWT and X.509 certificate decoder, cron and CIDR calculators, text diff, a token counter and a redactor that masks secrets and personal data before you send text to an AI. Everything works offline, with no account, and the project says it ships no telemetry. Free and open source (MIT), it runs on macOS, Windows and Linux. Why click: it replaces a handful of websites into which we sometimes paste tokens that should never have left the machine."
+      },
+      "sources": [
+        {
+          "url": "https://github.com/me-shaon/devtools",
+          "label": {
+            "fr": "DevTools · GitHub",
+            "en": "DevTools · GitHub"
+          }
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Trente expériences en trente jours",
+        "en": "Thirty experiments in thirty days"
+      },
+      "summary": {
+        "fr": "Chaque jour de novembre, le développeur connu sous le pseudonyme mrdoob, créateur de la bibliothèque 3D three.js, publie une expérience visuelle interactive sur un thème imposé : pliage, fonte, mousse, caustiques, labyrinthe… Le quinzième, « Mirage », vous fait traverser des dunes, à l’aube, en plein jour ou au coucher du soleil. Le dépôt décrit des expériences de « codage agentique », c’est-à-dire réalisées avec des agents d’IA, et le code est libre. Limite : il faut un navigateur compatible WebGPU, et une machine qui suit.",
+        "en": "Every day this November, the developer known as mrdoob, creator of the three.js 3D library, is publishing an interactive visual experiment on a set theme: fold, melt, moss, caustics, labyrinth… The fifteenth, “Mirage”, takes you across sand dunes at dawn, in full daylight or at sunset. The repository describes the pieces as “agentic coding” experiments, meaning they are made with AI agents, and the code is open source. The limit: you need a WebGPU-capable browser, and a machine that can keep up."
+      },
+      "sources": [
+        {
+          "url": "https://mrdoob.github.io/codevember-2026/",
+          "label": {
+            "fr": "(Vibe)Codevember 2026",
+            "en": "(Vibe)Codevember 2026"
+          }
+        },
+        {
+          "url": "https://github.com/mrdoob/codevember-2026",
+          "label": {
+            "fr": "Code source · GitHub",
+            "en": "Source code · GitHub"
+          }
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Les bus de San Francisco, version musée",
+        "en": "San Francisco’s buses, as a museum"
+      },
+      "summary": {
+        "fr": "Muni Gallery présente en 3D les publicités peintes sur les bus de San Francisco par des entreprises de la tech, de Cloudflare à Sentry en passant par Granola ou Ramp. On fait défiler les bus au clavier ou du doigt, on zoome sur chacun. Le site, réalisé par Luc Chaissac, précise n’avoir aucun lien avec la régie des transports de la ville. Pourquoi cliquer : un objet de design soigné, et un instantané de l’époque, quand des outils pour développeurs s’affichent en lettres géantes dans la rue.",
+        "en": "Muni Gallery presents, in 3D, the adverts tech companies have painted on San Francisco’s buses, from Cloudflare to Sentry by way of Granola and Ramp. You scroll through the buses with the keyboard or a swipe and zoom in on each one. The site, made by Luc Chaissac, says it has no connection with the city’s transit agency. Why click: a carefully made piece of design, and a snapshot of an era when developer tools are advertised in giant letters on the street."
+      },
+      "sources": [
+        {
+          "url": "https://muni.gallery/",
+          "label": {
+            "fr": "Muni Gallery",
+            "en": "Muni Gallery"
+          }
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "BepiColombo arrive à Mercure, samedi 21 novembre",
+        "en": "BepiColombo reaches Mercury, Saturday 21 November"
+      },
+      "summary": {
+        "fr": "Après environ huit ans de voyage dans le Système solaire intérieur, la mission européano-japonaise BepiColombo (ESA et JAXA) doit s’insérer en orbite autour de Mercure samedi 21 novembre. À regarder : la réussite de la manœuvre, puis la séparation des deux orbiteurs, MPO et Mio, prévue les 9 et 10 décembre, avant une phase scientifique qui commence en avril 2027.",
+        "en": "After some eight years travelling through the inner Solar System, the European-Japanese BepiColombo mission (ESA and JAXA) is due to enter orbit around Mercury on Saturday 21 November. What to watch: whether the manoeuvre succeeds, then the separation of the two orbiters, MPO and Mio, planned for 9 and 10 December, ahead of a science phase that begins in April 2027."
+      },
+      "sources": [
+        {
+          "url": "https://www.esa.int/Science_Exploration/Space_Science/BepiColombo/Latest_updates_BepiColombo_s_arrival_at_Mercury",
+          "label": {
+            "fr": "ESA",
+            "en": "ESA"
+          }
+        }
+      ]
+    },
+    {
+      "id": "18",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "Le sort de C++26, d’ici samedi 21 novembre",
+        "en": "The fate of C++26, by Saturday 21 November"
+      },
+      "summary": {
+        "fr": "La réunion du comité C++ à Búzios s’achève samedi. À regarder : si les contrats restent dans la norme, en sortent, ou si C++26 devient de fait C++27.",
+        "en": "The C++ committee’s meeting in Búzios ends on Saturday. What to watch: whether contracts stay in the standard or come out, and whether C++26 effectively becomes C++27."
+      },
+      "sources": [
+        {
+          "url": "https://buttondown.com/mond/archive/mond-for-the-first-time-a-c-standard-failed-to/",
+          "label": {
+            "fr": "Mond’s Blog",
+            "en": "Mond’s Blog"
+          }
+        }
+      ]
+    }
+  ],
+  "timeline": [],
+  "inBrief": []
+}
