@@ -1,6 +1,6 @@
 ---
 title: "1 LOC - JavaScript Utilities in Single Line of Code"
-description: "Browse JavaScript Utilities from 1loc.dev"
+description: "Search and browse one-line JavaScript utility snippets from 1loc.dev, and copy the code you need."
 ---
 
 Browse JavaScript utilities from [1loc](https://github.com/phuocng/1loc).
