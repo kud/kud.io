@@ -6,9 +6,15 @@ name: Publish newsletter
 # it Published in Notion and mails the teaser. It never writes or edits prose.
 #
 # The editor writes from 18:30 London and sets the edition Ready. The schedules
-# pick it up at 19:30 London on either side of DST (18:30 UTC in summer, 19:30
-# UTC in winter), then twice more an hour apart in case writing ran long; a run
-# that finds nothing Ready stops after the sync.
+# look for it at 18:52, 19:52, 20:52 and 21:52 UTC, so at least two of them land
+# after it is Ready on either side of DST. A run that finds nothing Ready stops
+# after the sync, and one that finds it already Published does nothing.
+#
+# GitHub starts scheduled runs late, or not at all, when it is busy, and the top
+# and half of the hour are its busiest minutes: on 2026-11-17 the runs meant for
+# the evening before started between 01:54 and 04:06 UTC. Hence the odd minute.
+# A schedule is a fallback, not a promise: a run that never starts cannot report
+# itself, so a late edition is caught by whoever checks it is live.
 
 on:
   workflow_dispatch:
@@ -26,10 +32,10 @@ on:
         type: boolean
         default: false
   schedule:
-    - cron: "30 18 * * *"
-    - cron: "30 19 * * *"
-    - cron: "30 20 * * *"
-    - cron: "30 21 * * *"
+    - cron: "52 18 * * *"
+    - cron: "52 19 * * *"
+    - cron: "52 20 * * *"
+    - cron: "52 21 * * *"
 
 permissions:
   contents: write
@@ -106,7 +112,20 @@ jobs:
 
       - name: Build website
         if: steps.plan.outputs.changed == 'true'
-        run: npm run build
+        run: |
+          set -o pipefail
+          npm run build 2>&1 | tee "$RUNNER_TEMP/build.log"
+          if grep -q 'releases-unavailable:' "$RUNNER_TEMP/build.log"
+          then
+            echo "::warning title=Release data unavailable::GitHub served no release data to this check build. The content built, and the deploy reads releases again with its own token."
+          fi
+        env:
+          # The same token the deploy builds with: unauthenticated, /projects
+          # gets 60 GitHub requests an hour and needs a few hundred.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Nothing this build renders ships, so a GitHub outage downgrades the
+          # release column to a warning here instead of holding back content.
+          RELEASES_BEST_EFFORT: "1"
 
       - name: Commit and push
         if: steps.plan.outputs.changed == 'true'
