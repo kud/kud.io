@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { useDismiss } from "@/components/newsletter/use-dismiss"
 import type { Lang } from "@/lib/newsletter/language"
 
 // Reading preferences, after the ones ai-feed-digest offers, cut to what
@@ -104,6 +105,25 @@ export const ReaderPreferences = ({
     setPrefs({ font: read("font"), size: read("size"), width: read("width") })
   }, [])
 
+  const panel = useRef<HTMLDetailsElement>(null)
+  const [open, setOpen] = useState(false)
+  const close = () => {
+    if (panel.current) panel.current.open = false
+  }
+  useDismiss(open, close, [panel])
+
+  // Escape closes the settings too, and gives focus back to their summary.
+  useEffect(() => {
+    if (!open) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return
+      close()
+      panel.current?.querySelector("summary")?.focus()
+    }
+    document.addEventListener("keydown", onKey)
+    return () => document.removeEventListener("keydown", onKey)
+  }, [open])
+
   const choose = (pref: Pref, value: string) => {
     setPrefs((previous) => ({ ...previous, [pref]: value }))
     const root = document.getElementById(rootId)
@@ -116,7 +136,11 @@ export const ReaderPreferences = ({
   }
 
   return (
-    <details className={styles.prefs}>
+    <details
+      ref={panel}
+      className={styles.prefs}
+      onToggle={(event) => setOpen(event.currentTarget.open)}
+    >
       <summary>
         <span aria-hidden className={styles.prefsMark}>
           Aa
