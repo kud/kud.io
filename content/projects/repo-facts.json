@@ -1,0 +1,1939 @@
+{
+  "ai-conventional-commit-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/ai-conventional-commit-cli",
+        "private": false,
+        "bin": {
+          "ai-conventional-commit": "dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@anthropic-ai/sdk",
+          "@inquirer/prompts",
+          "@opencode-ai/sdk",
+          "chalk",
+          "clipanion",
+          "cosmiconfig",
+          "execa",
+          "fast-glob",
+          "inquirer",
+          "keyv",
+          "lru-cache",
+          "ora",
+          "pathe",
+          "simple-git",
+          "strip-ansi",
+          "zod"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v4.4.1",
+      "version": "4.4.1",
+      "sha": "b95919f0c7c19d25ab414f7e10b746ea73c51b91",
+      "date": "2026-11-18T16:57:08Z"
+    }
+  },
+  "am-i-admin-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/am-i-admin-cli",
+        "private": false,
+        "bin": {
+          "am-i-admin": "./index.js"
+        },
+        "node": null,
+        "peers": [],
+        "dependencies": [
+          "chalk",
+          "zx"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.0.1",
+      "version": "1.0.1",
+      "sha": "31cda3ead214d3ff3d8422c0225aacaf5fa4fc70",
+      "date": "2024-10-17T16:05:52Z"
+    }
+  },
+  "amo": {
+    "packages": {
+      "": {
+        "name": "@kud/amo",
+        "private": false,
+        "bin": null,
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": {
+      "name": "v0.1.2",
+      "version": "0.1.2",
+      "sha": "4bd6f0fbd69c084d16640af2a1d53e386e9c8f0d",
+      "date": "2026-10-05T00:10:02Z"
+    }
+  },
+  "amo-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/amo-cli",
+        "private": false,
+        "bin": {
+          "amo": "dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/amo",
+          "citty"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.1.1",
+      "version": "0.1.1",
+      "sha": "0753df2e22d5eb632c307f53138b652540f92eed",
+      "date": "2026-10-05T00:12:44Z"
+    }
+  },
+  "androidtv-remote": {
+    "packages": {
+      "": {
+        "name": "@kud/androidtv-remote",
+        "private": false,
+        "bin": null,
+        "node": ">=22.0.0",
+        "peers": [],
+        "dependencies": [
+          "node-forge",
+          "protobufjs"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.1.2",
+      "version": "0.1.2",
+      "sha": "5a05d73eb477688fa04117961d9c7596fce31828",
+      "date": "2026-07-10T20:52:35Z"
+    }
+  },
+  "awesome-terminal-aesthetics": {
+    "packages": {
+      "": null
+    },
+    "tag": null
+  },
+  "brit-ready": {
+    "packages": {
+      "": {
+        "name": "brit-ready",
+        "private": true,
+        "bin": null,
+        "node": null,
+        "peers": [],
+        "dependencies": [
+          "canvas-confetti",
+          "clsx",
+          "idb-keyval",
+          "lucide-react",
+          "motion",
+          "next",
+          "next-themes",
+          "react",
+          "react-dom",
+          "tailwind-merge",
+          "vaul",
+          "zustand"
+        ]
+      }
+    },
+    "tag": null
+  },
+  "bsky": {
+    "packages": {
+      "": {
+        "name": "@kud/bsky",
+        "private": false,
+        "bin": null,
+        "node": ">=20",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": null
+  },
+  "bsky-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/bsky-cli",
+        "private": false,
+        "bin": {
+          "bsky": "./dist/index.js"
+        },
+        "node": ">=20",
+        "peers": [],
+        "dependencies": [
+          "@inkjs/ui",
+          "@kud/bsky",
+          "citty",
+          "ink",
+          "react"
+        ]
+      }
+    },
+    "tag": null
+  },
+  "bt-switch-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/bt-switch-cli",
+        "private": false,
+        "bin": {
+          "bt-switch": "dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "chalk",
+          "citty",
+          "execa",
+          "ink",
+          "ink-spinner",
+          "react"
+        ]
+      }
+    },
+    "tag": null
+  },
+  "claude-dash-cli": {
+    "packages": {
+      "": null
+    },
+    "tag": {
+      "name": "v0.9.3",
+      "version": "0.9.3",
+      "sha": "6c57af3f2cfe6bfe85416e8827e13c10f3c933fb",
+      "date": "2026-04-09T15:41:08Z"
+    }
+  },
+  "claude-plugins": {
+    "packages": {
+      "": {
+        "name": "claude-plugins",
+        "private": true,
+        "bin": null,
+        "node": null,
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": {
+      "name": "v2.10.1",
+      "version": "2.10.1",
+      "sha": "08d3e7a586b9cf7cba647ed7c059124f7c5f0ccb",
+      "date": "2026-11-13T17:59:17Z"
+    }
+  },
+  "claude-sessions-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/claude-sessions-cli",
+        "private": false,
+        "bin": {
+          "claude-sessions": "dist/index.js"
+        },
+        "node": ">=24.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/ink-ui",
+          "ink",
+          "ink-spinner",
+          "ink-text-input",
+          "react"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v2.7.0",
+      "version": "2.7.0",
+      "sha": "8e866cffb66461647ab88fcd43c753d15e79638b",
+      "date": "2026-10-05T18:33:17Z"
+    }
+  },
+  "cli-shot": {
+    "packages": {
+      "": {
+        "name": "@kud/cli-shot",
+        "private": false,
+        "bin": {
+          "cli-shot": "dist/cli.js"
+        },
+        "node": ">=20",
+        "peers": [],
+        "dependencies": [
+          "@xterm/addon-serialize",
+          "@xterm/headless",
+          "commander",
+          "node-pty"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.2.1",
+      "version": "0.2.1",
+      "sha": "742cea1b0291b510cbab42954fe608aa821b3f10",
+      "date": "2026-08-02T20:11:36Z"
+    }
+  },
+  "cli-testing": {
+    "packages": {
+      "": {
+        "name": "@kud/cli-testing",
+        "private": false,
+        "bin": null,
+        "node": ">=20",
+        "peers": [
+          "ink",
+          "ink-testing-library",
+          "react"
+        ],
+        "dependencies": []
+      }
+    },
+    "tag": {
+      "name": "v0.1.0",
+      "version": "0.1.0",
+      "sha": "cfe5b26633989df46e703a722db09c6a6405f6f2",
+      "date": "2026-08-02T11:46:58Z"
+    }
+  },
+  "cli-update": {
+    "packages": {
+      "": {
+        "name": "@kud/cli-update",
+        "private": false,
+        "bin": null,
+        "node": ">=22.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/ink-ui",
+          "ink",
+          "react",
+          "semver"
+        ]
+      }
+    },
+    "tag": null
+  },
+  "ding-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/ding-cli",
+        "private": false,
+        "bin": {
+          "ding": "dist/bin.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@inkjs/ui",
+          "chalk",
+          "citty",
+          "ink",
+          "node-notifier",
+          "react"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.1.0",
+      "version": "1.1.0",
+      "sha": "0925dd1044d169d334b4f7184f06ef759fccc317",
+      "date": "2026-08-18T21:16:58Z"
+    }
+  },
+  "duux": {
+    "packages": {
+      "": {
+        "name": "@kud/duux",
+        "private": false,
+        "bin": null,
+        "node": ">=22.0.0",
+        "peers": [],
+        "dependencies": [
+          "mqtt"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.7.0",
+      "version": "0.7.0",
+      "sha": "8aef9f95bf7dfdc7997cf23e762591d8895c65aa",
+      "date": "2026-08-01T22:15:49Z"
+    }
+  },
+  "duux-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/duux-cli",
+        "private": false,
+        "bin": {
+          "duux": "dist/index.js"
+        },
+        "node": ">=22.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/cli-update",
+          "@kud/duux",
+          "@kud/ink-ui",
+          "chalk",
+          "commander",
+          "ink",
+          "ink-spinner",
+          "inquirer",
+          "ora",
+          "react"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.9.0",
+      "version": "0.9.0",
+      "sha": "6e33607f3d49189c41667bbdbf8d0a82605e094f",
+      "date": "2026-08-01T23:59:28Z"
+    }
+  },
+  "foxhop": {
+    "packages": {
+      "": {
+        "name": "foxhop",
+        "private": true,
+        "bin": null,
+        "node": null,
+        "peers": [],
+        "dependencies": []
+      },
+      "cli": {
+        "name": "@kud/foxhop-cli",
+        "private": false,
+        "bin": {
+          "foxhop": "./dist/cli.js",
+          "foxhop-host": "./dist/host-cli.js"
+        },
+        "node": ">=20",
+        "peers": [],
+        "dependencies": [
+          "citty"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.0.0",
+      "version": "1.0.0",
+      "sha": "eb8ea82d071a71b518a2333b812a612904bfeeab",
+      "date": "2026-06-29T21:12:28Z"
+    }
+  },
+  "gamme": {
+    "packages": {
+      "": null
+    },
+    "tag": null
+  },
+  "gandi": {
+    "packages": {
+      "": {
+        "name": "@kud/gandi",
+        "private": false,
+        "bin": null,
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "smol-toml"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.1.0",
+      "version": "0.1.0",
+      "sha": "f227dea0be8fd1b15519d3944effc992c465a673",
+      "date": "2026-08-01T22:17:45Z"
+    }
+  },
+  "gandi-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/gandi-cli",
+        "private": false,
+        "bin": {
+          "gandi": "./dist/index.js"
+        },
+        "node": ">=20",
+        "peers": [],
+        "dependencies": [
+          "@kud/gandi",
+          "@kud/gandi-ink",
+          "commander",
+          "ink",
+          "react"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.7.0",
+      "version": "0.7.0",
+      "sha": "6af35f0a98e51b587a1c344734c2ef3c67718255",
+      "date": "2026-08-02T00:31:40Z"
+    }
+  },
+  "gandi-ink": {
+    "packages": {
+      "": {
+        "name": "@kud/gandi-ink",
+        "private": false,
+        "bin": null,
+        "node": ">=20",
+        "peers": [
+          "ink",
+          "react"
+        ],
+        "dependencies": [
+          "@kud/gandi",
+          "@kud/ink-ui"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.2.0",
+      "version": "0.2.0",
+      "sha": "f0167b88f93be2d03acb96b173891f4c8259c742",
+      "date": "2026-08-02T00:19:31Z"
+    }
+  },
+  "gh": {
+    "packages": {
+      "": {
+        "name": "kud-gh-monorepo",
+        "private": true,
+        "bin": null,
+        "node": ">=22",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": null
+  },
+  "git-cherry-pick-interactive-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/git-cherry-pick-interactive-cli",
+        "private": false,
+        "bin": {
+          "git-cherry-pick-interactive": "dist/index.js"
+        },
+        "node": ">=20",
+        "peers": [],
+        "dependencies": [
+          "@inquirer/prompts",
+          "chalk",
+          "simple-git"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.0.1",
+      "version": "1.0.1",
+      "sha": "0e38ead660d46ac45473548a9b1ebe5f4165c678",
+      "date": "2026-07-15T16:37:28Z"
+    }
+  },
+  "globetrotter": {
+    "packages": {
+      "": {
+        "name": "globetrotter",
+        "private": true,
+        "bin": null,
+        "node": null,
+        "peers": [],
+        "dependencies": [
+          "@vercel/functions",
+          "d3-geo",
+          "d3-selection",
+          "d3-transition",
+          "d3-zoom",
+          "framer-motion",
+          "next",
+          "react",
+          "react-dom",
+          "react-globe.gl",
+          "three",
+          "topojson-client",
+          "world-atlas",
+          "zustand"
+        ]
+      }
+    },
+    "tag": null
+  },
+  "glyphs": {
+    "packages": {
+      "": {
+        "name": "@kud/glyphs",
+        "private": false,
+        "bin": null,
+        "node": ">=20",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": {
+      "name": "v0.4.0",
+      "version": "0.4.0",
+      "sha": "dcb2b1a2f722baf0f7fa174dc4721b0915ea22f1",
+      "date": "2026-09-10T10:43:35Z"
+    }
+  },
+  "gpuswitch-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/gpuswitch-cli",
+        "private": false,
+        "bin": {
+          "gpuswitch": "dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "chalk",
+          "ink",
+          "ink-spinner",
+          "react"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.1.1",
+      "version": "0.1.1",
+      "sha": "6232333ee3f88115c17781e55ac8fc2346badbec",
+      "date": "2026-04-18T19:07:43Z"
+    }
+  },
+  "gtv": {
+    "packages": {
+      "": {
+        "name": "@kud/gtv",
+        "private": false,
+        "bin": null,
+        "node": ">=22.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/androidtv-remote"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.2.0",
+      "version": "0.2.0",
+      "sha": "3e63472d10d79b3e82c1b46d2cfd445f926eb787",
+      "date": "2026-07-12T11:59:43Z"
+    }
+  },
+  "gtv-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/gtv-cli",
+        "private": false,
+        "bin": {
+          "gtv": "dist/index.js"
+        },
+        "node": ">=22.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/gtv",
+          "chalk",
+          "commander",
+          "ink",
+          "ink-spinner",
+          "inquirer",
+          "ora",
+          "react"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.6.0",
+      "version": "0.6.0",
+      "sha": "12a0c194fdddd79aaea97e09822303b19576e544",
+      "date": "2026-07-12T12:03:54Z"
+    }
+  },
+  "harness-fme": {
+    "packages": {
+      "": {
+        "name": "@kud/harness-fme",
+        "private": false,
+        "bin": null,
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": null
+  },
+  "harness-fme-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/harness-fme-cli",
+        "private": false,
+        "bin": {
+          "harness-fme": "./dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/harness-fme",
+          "@kud/harness-fme-ink",
+          "@kud/ink-ui",
+          "commander",
+          "ink",
+          "react"
+        ]
+      }
+    },
+    "tag": null
+  },
+  "incidents-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/incidents-cli",
+        "private": false,
+        "bin": {
+          "incidents": "dist/bin/incidents.js"
+        },
+        "node": ">=22",
+        "peers": [],
+        "dependencies": [
+          "@kud/ink-ui",
+          "chalk",
+          "commander",
+          "ink",
+          "js-yaml",
+          "react"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.7.1",
+      "version": "0.7.1",
+      "sha": "763f827b1a98bf189857b0f7883bae78768df55e",
+      "date": "2026-11-17T11:14:37Z"
+    }
+  },
+  "ink-markdown": {
+    "packages": {
+      "": {
+        "name": "@kud/ink-markdown",
+        "private": false,
+        "bin": null,
+        "node": ">=20.0.0",
+        "peers": [
+          "ink",
+          "react"
+        ],
+        "dependencies": [
+          "chalk",
+          "cli-highlight",
+          "slice-ansi",
+          "string-width",
+          "wrap-ansi"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.3.3",
+      "version": "0.3.3",
+      "sha": "e5495dac6bd0ad6d882a1ea962de25d71e7a025d",
+      "date": "2026-10-23T11:37:55Z"
+    }
+  },
+  "ink-ui": {
+    "packages": {
+      "": {
+        "name": "@kud/ink-ui",
+        "private": false,
+        "bin": null,
+        "node": ">=20",
+        "peers": [
+          "ink",
+          "react"
+        ],
+        "dependencies": [
+          "@kud/glyphs",
+          "cli-spinners",
+          "figures",
+          "string-width"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.44.1",
+      "version": "0.44.1",
+      "sha": "7c5e03774086d064dce79a60961bdf4dac8c8fd1",
+      "date": "2026-11-13T21:02:17Z"
+    }
+  },
+  "inkblot": {
+    "packages": {
+      "": {
+        "name": "@kud/inkblot",
+        "private": false,
+        "bin": null,
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": null
+  },
+  "jenkins": {
+    "packages": {
+      "": {
+        "name": "@kud/jenkins",
+        "private": false,
+        "bin": null,
+        "node": ">=22",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": {
+      "name": "v2.7.1",
+      "version": "2.7.1",
+      "sha": "abbe42fb01c935d2578451c8d2d8690f230a708f",
+      "date": "2026-11-10T23:35:35Z"
+    }
+  },
+  "jenkins-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/jenkins-cli",
+        "private": false,
+        "bin": {
+          "jenkins": "dist/bin/jenkins-cli.js"
+        },
+        "node": ">=22",
+        "peers": [],
+        "dependencies": [
+          "@kud/ink-ui",
+          "@kud/jenkins",
+          "@kud/jenkins-ink",
+          "chalk",
+          "commander",
+          "highlight.js",
+          "ink",
+          "react",
+          "wrap-ansi"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v2.6.2",
+      "version": "2.6.2",
+      "sha": "083345067b1dc5da9d56e9dc91bcbf07da4feed4",
+      "date": "2026-11-09T12:47:40Z"
+    }
+  },
+  "jenkins-ink": {
+    "packages": {
+      "": {
+        "name": "@kud/jenkins-ink",
+        "private": false,
+        "bin": null,
+        "node": ">=20",
+        "peers": [
+          "@kud/jenkins",
+          "ink",
+          "react"
+        ],
+        "dependencies": [
+          "@kud/ink-ui",
+          "chalk",
+          "highlight.js",
+          "wrap-ansi"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.6.0",
+      "version": "0.6.0",
+      "sha": "48a69b5bfac954ef27925a687f58cbf508e008bb",
+      "date": "2026-11-09T11:34:19Z"
+    }
+  },
+  "jira": {
+    "packages": {
+      "": {
+        "name": "@kud/jira",
+        "private": false,
+        "bin": null,
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": {
+      "name": "v0.6.0",
+      "version": "0.6.0",
+      "sha": "6a06220acd21d048b8d7b0d491d5a585e64d3d3a",
+      "date": "2026-10-30T12:00:13Z"
+    }
+  },
+  "jira-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/jira-cli",
+        "private": false,
+        "bin": {
+          "jira": "dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/ink-ui",
+          "@kud/jira",
+          "@kud/jira-ink",
+          "commander",
+          "ink",
+          "react"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.13.0",
+      "version": "0.13.0",
+      "sha": "bde26b36ec39a85f4abbb4bb18fd8c518180ba85",
+      "date": "2026-11-04T15:55:42Z"
+    }
+  },
+  "jira-ink": {
+    "packages": {
+      "": {
+        "name": "@kud/jira-ink",
+        "private": false,
+        "bin": null,
+        "node": ">=20",
+        "peers": [
+          "@kud/ink-ui",
+          "ink",
+          "react"
+        ],
+        "dependencies": [
+          "@kud/ink-markdown",
+          "@kud/jira"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.17.1",
+      "version": "0.17.1",
+      "sha": "cdbf9c2df9db8e6820b8030b88e1be41b1d6ef63",
+      "date": "2026-10-26T13:03:42Z"
+    }
+  },
+  "macos-media-keys": {
+    "packages": {
+      "": {
+        "name": "@kud/macos-media-keys",
+        "private": false,
+        "bin": null,
+        "node": ">=20",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": null
+  },
+  "macos-media-keys-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/macos-media-keys-cli",
+        "private": false,
+        "bin": {
+          "media-keys": "./dist/index.js"
+        },
+        "node": ">=20",
+        "peers": [],
+        "dependencies": [
+          "@kud/macos-media-keys",
+          "citty"
+        ]
+      }
+    },
+    "tag": null
+  },
+  "macos-nowplaying-bridge": {
+    "packages": {
+      "": {
+        "name": "@kud/macos-nowplaying-bridge",
+        "private": false,
+        "bin": null,
+        "node": ">=20",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": null
+  },
+  "mcp-bsky": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-bsky",
+        "private": false,
+        "bin": {
+          "mcp-bsky": "./dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/bsky",
+          "@modelcontextprotocol/sdk",
+          "zod"
+        ]
+      }
+    },
+    "tag": null
+  },
+  "mcp-bugzilla": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-bugzilla",
+        "private": false,
+        "bin": {
+          "mcp-bugzilla": "./dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@modelcontextprotocol/sdk",
+          "zod"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.1.4",
+      "version": "1.1.4",
+      "sha": "a062dc2c5fc7845277c30d6b2614fcd1379785ab",
+      "date": "2026-04-25T23:13:41Z"
+    }
+  },
+  "mcp-getstream-feeds": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-getstream-feeds",
+        "private": false,
+        "bin": {
+          "mcp-getstream-feeds": "./dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@modelcontextprotocol/sdk",
+          "getstream",
+          "zod"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.1.1",
+      "version": "1.1.1",
+      "sha": "7074459e4b4518bfcde443210c2711710b1e9b78",
+      "date": "2026-04-10T19:53:23Z"
+    }
+  },
+  "mcp-github-copilot": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-github-copilot",
+        "private": false,
+        "bin": {
+          "mcp-github-copilot": "./dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@github/copilot-sdk",
+          "@modelcontextprotocol/sdk",
+          "zod"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.2.0",
+      "version": "1.2.0",
+      "sha": "5bc592caa7bbacd7e99ea66ab4405bc24b07db03",
+      "date": "2026-08-03T16:19:47Z"
+    }
+  },
+  "mcp-google-keep": {
+    "packages": {
+      "": null
+    },
+    "tag": {
+      "name": "v1.1.1",
+      "version": "1.1.1",
+      "sha": "3cc8642fec1117fa2edc9ed5587e077422b0248a",
+      "date": "2026-04-10T19:15:52Z"
+    }
+  },
+  "mcp-gtv": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-gtv",
+        "private": false,
+        "bin": {
+          "mcp-gtv": "./dist/index.js"
+        },
+        "node": ">=22.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/gtv",
+          "@modelcontextprotocol/sdk",
+          "zod"
+        ]
+      }
+    },
+    "tag": null
+  },
+  "mcp-harness-fme": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-harness-fme",
+        "private": false,
+        "bin": {
+          "mcp-harness-fme": "./dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/harness-fme",
+          "@modelcontextprotocol/sdk",
+          "zod"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.7.0",
+      "version": "1.7.0",
+      "sha": "ffbc46f4d9a43c330d9e68e5d86b48fd1b5458a8",
+      "date": "2026-11-12T16:08:48Z"
+    }
+  },
+  "mcp-jenkins": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-jenkins",
+        "private": false,
+        "bin": {
+          "mcp-jenkins": "dist/index.js"
+        },
+        "node": ">=22",
+        "peers": [],
+        "dependencies": [
+          "@kud/jenkins",
+          "@modelcontextprotocol/sdk"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v4.0.0",
+      "version": "4.0.0",
+      "sha": "27e56a3cf3179bea4bc4a7fc87afd0cf7d1d09d0",
+      "date": "2026-11-10T13:06:48Z"
+    }
+  },
+  "mcp-lastfm": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-lastfm",
+        "private": false,
+        "bin": {
+          "mcp-lastfm": "./dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@modelcontextprotocol/sdk",
+          "zod"
+        ]
+      }
+    },
+    "tag": null
+  },
+  "mcp-opencode": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-opencode",
+        "private": false,
+        "bin": {
+          "mcp-opencode": "./dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@modelcontextprotocol/sdk",
+          "@opencode/client",
+          "zod"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v2.1.0",
+      "version": "2.1.0",
+      "sha": "4613d9cc63cd8b12c3495f1eb66e15a077083b31",
+      "date": "2026-10-28T18:29:00Z"
+    }
+  },
+  "mcp-pcloud": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-pcloud",
+        "private": false,
+        "bin": {
+          "mcp-pcloud": "./dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/pcloud",
+          "@modelcontextprotocol/sdk",
+          "zod"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.1.1",
+      "version": "1.1.1",
+      "sha": "d7b967d8145e9c8b50e7ceaaa844ce0aa2cff9c7",
+      "date": "2026-07-31T00:11:12Z"
+    }
+  },
+  "mcp-qobuz": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-qobuz",
+        "private": false,
+        "bin": {
+          "mcp-qobuz": "./dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/qobuz",
+          "@modelcontextprotocol/sdk",
+          "zod"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.0.1",
+      "version": "1.0.1",
+      "sha": "96004d32d5919890f3668dc15f23316fca230e9d",
+      "date": "2026-06-24T10:44:45Z"
+    }
+  },
+  "mcp-sonarqube": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-sonarqube",
+        "private": false,
+        "bin": {
+          "mcp-sonarqube": "./dist/index.js"
+        },
+        "node": ">=22.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/sonarqube",
+          "@modelcontextprotocol/sdk",
+          "zod"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.1.0",
+      "version": "0.1.0",
+      "sha": "8eca694771b8280048231f220389cd71d4e7ebcd",
+      "date": "2026-10-30T10:46:45Z"
+    }
+  },
+  "mcp-trakt": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-trakt",
+        "private": false,
+        "bin": {
+          "mcp-trakt": "dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@modelcontextprotocol/sdk",
+          "zod"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.5.3",
+      "version": "1.5.3",
+      "sha": "1a3b1b003d13009f0723b8112b768dbbb0898f30",
+      "date": "2026-06-23T15:01:33Z"
+    }
+  },
+  "mcp-unsplash": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-unsplash",
+        "private": false,
+        "bin": {
+          "mcp-unsplash": "./dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@modelcontextprotocol/sdk",
+          "zod"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v2.1.0",
+      "version": "2.1.0",
+      "sha": "d3e337329f674644db5e44b89b22e3b38daa0806",
+      "date": "2026-07-03T15:46:19Z"
+    }
+  },
+  "mcp-youtube": {
+    "packages": {
+      "": {
+        "name": "@kud/mcp-youtube",
+        "private": false,
+        "bin": {
+          "mcp-youtube": "dist/index.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "@modelcontextprotocol/sdk",
+          "googleapis",
+          "zod"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.2.0",
+      "version": "0.2.0",
+      "sha": "2a1b3002b0cb065f527d650cbb4e444614c253f7",
+      "date": "2026-07-11T23:38:40Z"
+    }
+  },
+  "models-dev-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/models-dev-cli",
+        "private": false,
+        "bin": {
+          "models-dev": "./index.js",
+          "mdl": "./index.js"
+        },
+        "node": ">=18",
+        "peers": [],
+        "dependencies": [
+          "blessed",
+          "chalk",
+          "cli-table3",
+          "clipboardy",
+          "commander",
+          "fuse.js",
+          "inquirer",
+          "node-fetch"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.3.3",
+      "version": "0.3.3",
+      "sha": "085313ce8edf413a637a6672ecbaa29d917dbe4a",
+      "date": "2025-09-06T20:16:01Z"
+    }
+  },
+  "modern-cobalt2-vscode": {
+    "packages": {
+      "": {
+        "name": "modern-cobalt2-vscode",
+        "private": false,
+        "bin": null,
+        "node": null,
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": {
+      "name": "v1.0.2",
+      "version": "1.0.2",
+      "sha": "5d6fd795f9c29cd7673166aa1551e186e43ba3c8",
+      "date": "2026-04-05T20:41:14Z"
+    }
+  },
+  "november-opencode": {
+    "packages": {
+      "": null
+    },
+    "tag": null
+  },
+  "november-vscode": {
+    "packages": {
+      "": {
+        "name": "november-vscode",
+        "private": false,
+        "bin": null,
+        "node": null,
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": {
+      "name": "v1.0.10",
+      "version": "1.0.10",
+      "sha": "acc854cbbffda3c1bbf69d57f2ce1f788b26c95e",
+      "date": "2026-04-05T21:04:18Z"
+    }
+  },
+  "opencode-plugins": {
+    "packages": {
+      "": {
+        "name": "opencode-plugins",
+        "private": true,
+        "bin": null,
+        "node": null,
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": null
+  },
+  "opencode-sessions-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/opencode-sessions-cli",
+        "private": false,
+        "bin": {
+          "opencode-sessions": "dist/cli.js",
+          "ocs": "dist/cli.js"
+        },
+        "node": ">=20",
+        "peers": [],
+        "dependencies": [
+          "@kud/ink-ui",
+          "@opencode/client",
+          "ink",
+          "react"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.0.0",
+      "version": "1.0.0",
+      "sha": "1054d6b71c7381a863d02a473f71aaf9d515c0b9",
+      "date": "2026-10-21T12:54:16Z"
+    }
+  },
+  "pcloud": {
+    "packages": {
+      "": {
+        "name": "@kud/pcloud",
+        "private": false,
+        "bin": null,
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": [
+          "open"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.2.1",
+      "version": "1.2.1",
+      "sha": "8ae1b46b5fc908ea73365c3500d6c980117a7307",
+      "date": "2026-08-02T11:12:32Z"
+    }
+  },
+  "pcloud-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/pcloud-cli",
+        "private": false,
+        "bin": {
+          "pcloud": "./dist/cli.js"
+        },
+        "node": ">=24",
+        "peers": [],
+        "dependencies": [
+          "@kud/ink-ui",
+          "@kud/pcloud",
+          "@kud/pcloud-ink",
+          "commander",
+          "dotenv",
+          "ink",
+          "react"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.2.5",
+      "version": "1.2.5",
+      "sha": "a3e6df91119379a335f61ed68391e6033cab947c",
+      "date": "2026-08-02T15:23:52Z"
+    }
+  },
+  "pcloud-ink": {
+    "packages": {
+      "": {
+        "name": "@kud/pcloud-ink",
+        "private": false,
+        "bin": null,
+        "node": ">=20",
+        "peers": [
+          "@kud/pcloud",
+          "ink",
+          "react"
+        ],
+        "dependencies": [
+          "@kud/ink-ui",
+          "ink-picture",
+          "open"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v2.0.8",
+      "version": "2.0.8",
+      "sha": "c6545b093e82d2c6ee7e4264eb40670b1dcef35f",
+      "date": "2026-08-02T13:23:06Z"
+    }
+  },
+  "planning-poker": {
+    "packages": {
+      "": {
+        "name": "planning-poker",
+        "private": true,
+        "bin": null,
+        "node": null,
+        "peers": [],
+        "dependencies": [
+          "@base-ui/react",
+          "canvas-confetti",
+          "class-variance-authority",
+          "clsx",
+          "framer-motion",
+          "lucide-react",
+          "next",
+          "partyserver",
+          "partysocket",
+          "react",
+          "react-dom",
+          "tailwind-merge",
+          "tw-animate-css"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.0.2",
+      "version": "1.0.2",
+      "sha": "60189ac8fcd60eb3da852eaa2d50af36f4a72f2c",
+      "date": "2026-06-29T17:52:12Z"
+    }
+  },
+  "qobuz": {
+    "packages": {
+      "": {
+        "name": "@kud/qobuz",
+        "private": false,
+        "bin": null,
+        "node": ">=20",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": {
+      "name": "v0.5.5",
+      "version": "0.5.5",
+      "sha": "ec99e8616a79acca3e75b141b1f03a50c5cf1263",
+      "date": "2026-06-23T20:55:14Z"
+    }
+  },
+  "qobuz-bridge": {
+    "packages": {
+      "": {
+        "name": "@kud/qobuz-bridge",
+        "private": false,
+        "bin": {
+          "qobuz-bridge": "dist/index.js"
+        },
+        "node": ">=20",
+        "peers": [],
+        "dependencies": [
+          "@kud/macos-media-keys",
+          "@kud/macos-nowplaying-bridge",
+          "@kud/qobuz"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.2.1",
+      "version": "0.2.1",
+      "sha": "015c20ab10adc09cc177c00883d2b952d738e7d3",
+      "date": "2026-07-10T10:01:39Z"
+    }
+  },
+  "qobuz-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/qobuz-cli",
+        "private": false,
+        "bin": {
+          "qobuz": "./dist/index.js"
+        },
+        "node": ">=20",
+        "peers": [],
+        "dependencies": [
+          "@kud/qobuz",
+          "citty",
+          "ink",
+          "ink-text-input",
+          "react"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.0.0",
+      "version": "1.0.0",
+      "sha": "51d913d00b4d017ccc60cf5f1a659ed5a1aee420",
+      "date": "2026-06-24T10:33:34Z"
+    }
+  },
+  "revu-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/revu-cli",
+        "private": false,
+        "bin": {
+          "revu": "bin/revu.js"
+        },
+        "node": null,
+        "peers": [
+          "typescript"
+        ],
+        "dependencies": [
+          "@opentui/core"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.1.2",
+      "version": "1.1.2",
+      "sha": "a33320f74a5922bb0b065d1683579350d7d564c1",
+      "date": "2026-07-01T16:29:20Z"
+    }
+  },
+  "revu-vscode": {
+    "packages": {
+      "": {
+        "name": "revu-vscode",
+        "private": false,
+        "bin": null,
+        "node": null,
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": {
+      "name": "v1.0.6",
+      "version": "1.0.6",
+      "sha": "de234c7757ada18e6bf9663919730d58f84f1f50",
+      "date": "2026-04-08T23:42:01Z"
+    }
+  },
+  "segment": {
+    "packages": {
+      "": {
+        "name": "kud-segment-monorepo",
+        "private": true,
+        "bin": null,
+        "node": ">=22",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": null
+  },
+  "shui": {
+    "packages": {
+      "": null
+    },
+    "tag": {
+      "name": "v1.4.0",
+      "version": "1.4.0",
+      "sha": "8eeb3490d180992d599d683cb11d435e9ce5671c",
+      "date": "2026-09-30T22:02:06Z"
+    }
+  },
+  "sim-crafter-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/sim-crafter-cli",
+        "private": false,
+        "bin": {
+          "sim-crafter": "./index.js"
+        },
+        "node": null,
+        "peers": [],
+        "dependencies": [
+          "@inquirer/select",
+          "chalk",
+          "cli-table3",
+          "inquirer",
+          "yargs",
+          "zx"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.0.3",
+      "version": "1.0.3",
+      "sha": "1cbc2a8af64bd24288b2e176a1a8b3da618f06b6",
+      "date": "2024-08-23T14:04:53Z"
+    }
+  },
+  "smart-tv-for-browser": {
+    "packages": {
+      "": {
+        "name": "smart-tv-for-browser",
+        "private": true,
+        "bin": null,
+        "node": ">=22.0.0",
+        "peers": [],
+        "dependencies": [
+          "@noriginmedia/norigin-spatial-navigation",
+          "clsx",
+          "motion",
+          "next",
+          "partysocket",
+          "qrcode",
+          "react",
+          "react-dom",
+          "react-icons"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.1.2",
+      "version": "0.1.2",
+      "sha": "fc5d0a162403eb5688b94ef08200ca4e148c72be",
+      "date": "2025-07-19T14:16:29Z"
+    }
+  },
+  "soap-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/soap-cli",
+        "private": false,
+        "bin": {
+          "soap": "dist/index.js"
+        },
+        "node": null,
+        "peers": [],
+        "dependencies": [
+          "chalk",
+          "inquirer",
+          "signale",
+          "trash",
+          "zx"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v3.0.18",
+      "version": "3.0.18",
+      "sha": "977b756b9228e3556e5d5e8542384d1561147afc",
+      "date": "2026-04-12T01:30:36Z"
+    }
+  },
+  "sonarqube": {
+    "packages": {
+      "": {
+        "name": "@kud/sonarqube",
+        "private": false,
+        "bin": null,
+        "node": ">=22",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": {
+      "name": "v0.1.0",
+      "version": "0.1.0",
+      "sha": "ede1e2df5c6a8e18a0024dac273e7d534f34c62e",
+      "date": "2026-10-29T17:54:41Z"
+    }
+  },
+  "sonarqube-cli": {
+    "packages": {
+      "": {
+        "name": "@kud/sonarqube-cli",
+        "private": false,
+        "bin": {
+          "sonarqube": "dist/bin/sonarqube.js",
+          "sonarqube-dash": "dist/bin/sonarqube.js"
+        },
+        "node": ">=22",
+        "peers": [],
+        "dependencies": [
+          "@kud/sonarqube",
+          "blessed",
+          "chalk",
+          "cli-highlight",
+          "commander"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v0.3.0",
+      "version": "0.3.0",
+      "sha": "c24cbd330f24ae95b5e5e987a9ed6de1f1abe81a",
+      "date": "2026-11-10T16:42:36Z"
+    }
+  },
+  "tutti": {
+    "packages": {
+      "": null
+    },
+    "tag": {
+      "name": "v0.3.1",
+      "version": "0.3.1",
+      "sha": "97a19b53a520e01e3db6f1eb50e0b916154be508",
+      "date": "2026-11-13T23:12:08Z"
+    }
+  },
+  "webext": {
+    "packages": {
+      "": {
+        "name": "@kud/webext",
+        "private": false,
+        "bin": null,
+        "node": null,
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": {
+      "name": "v0.2.0",
+      "version": "0.2.0",
+      "sha": "18a278d513a740ed288f0aeb995ce551fccace2f",
+      "date": "2026-08-22T10:21:39Z"
+    }
+  },
+  "webext-email-address-plus": {
+    "packages": {
+      "": {
+        "name": "webext-email-address-plus",
+        "private": true,
+        "bin": null,
+        "node": ">=22.0.0",
+        "peers": [],
+        "dependencies": [
+          "@kud/webext",
+          "@kud/webext-ui"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v5.5.1",
+      "version": "5.5.1",
+      "sha": "933ac2a5a316eba2f90db72184795884a923950b",
+      "date": "2026-10-07T15:07:00Z"
+    }
+  },
+  "webext-gmeet-unmirror": {
+    "packages": {
+      "": {
+        "name": "webext-gmeet-unmirror",
+        "private": true,
+        "bin": null,
+        "node": ">=20",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": null
+  },
+  "webext-notionish": {
+    "packages": {
+      "": {
+        "name": "webext-notionish",
+        "private": true,
+        "bin": null,
+        "node": ">=20",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": null
+  },
+  "webext-ui": {
+    "packages": {
+      "": {
+        "name": "@kud/webext-ui",
+        "private": false,
+        "bin": {
+          "webext-ui": "./dist/cli.js"
+        },
+        "node": ">=20.0.0",
+        "peers": [],
+        "dependencies": []
+      }
+    },
+    "tag": {
+      "name": "v0.3.0",
+      "version": "0.3.0",
+      "sha": "8c6e2834631232c48ad03f1235c9196d8cde25ca",
+      "date": "2026-10-02T22:52:23Z"
+    }
+  },
+  "your-move": {
+    "packages": {
+      "": {
+        "name": "@kud/your-move",
+        "private": true,
+        "bin": null,
+        "node": null,
+        "peers": [],
+        "dependencies": [
+          "@kud/gh",
+          "@kud/gh-workflow",
+          "next",
+          "react",
+          "react-dom"
+        ]
+      }
+    },
+    "tag": {
+      "name": "v1.2.0",
+      "version": "1.2.0",
+      "sha": "ed6cd88d2c1301d58ada5fae6ad3941fd4aba3a8",
+      "date": "2026-09-07T12:56:41Z"
+    }
+  }
+}
