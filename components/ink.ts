@@ -37,6 +37,10 @@ export const resolveScheme = (theme: ScopedTheme): Scheme => {
 const scopeGround = (pathname: string, scheme: Scheme): string | null => {
   if (pathname === "/blog" || pathname.startsWith("/blog/"))
     return BLOG_GROUND[scheme]
+  // The newsletter wears Writing's shell (app/newsletter/layout.tsx), so it
+  // paints Writing's ground.
+  if (pathname === "/newsletter" || pathname.startsWith("/newsletter/"))
+    return BLOG_GROUND[scheme]
   if (pathname === "/projects" || pathname.startsWith("/projects/"))
     return DUSK_GROUND[scheme]
   return null
@@ -76,7 +80,7 @@ export const inkFor = (ground: string): string => {
 
 // The site's worlds, by first path segment: "/" is home, the rest are named
 // by their section. A path no world claims is its own.
-const WORLDS = ["projects", "blog"]
+const WORLDS = ["projects", "blog", "newsletter"]
 const worldOf = (pathname: string): string => {
   const head = pathname.split("/")[1] ?? ""
   if (head === "") return "home"
