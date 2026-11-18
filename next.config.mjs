@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs"
 import path from "node:path"
 import { createMDX } from "fumadocs-mdx/next"
+import { dashedDateRedirects } from "./lib/newsletter/dashed-date-redirects.mjs"
 
 // Written by scripts/sync-notion.js from posts marked Retired in Notion.
 const readBlogRedirects = () => {
@@ -35,7 +36,7 @@ const newsletterRedirects = () => {
     ? [
         {
           source: "/newsletter",
-          destination: `/newsletter/${latest}`,
+          destination: `/newsletter/${latest.replaceAll("-", "/")}`,
           permanent: false,
         },
       ]
@@ -89,6 +90,8 @@ const config = {
     // the hop and the proxy then serves the English twin. With no edition yet
     // there is no redirect and /newsletter renders the (empty) list instead.
     ...newsletterRedirects(),
+    // Editions' old dashed addresses, for one week: remove after 2026-11-25.
+    ...dashedDateRedirects,
     // The old archive is the list of every edition.
     {
       source: "/newsletter/archive",

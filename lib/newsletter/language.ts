@@ -86,6 +86,28 @@ export const isEditionDate = (value: string) => {
 
 export const itemAnchor = (id: string) => `item-${id}`
 
+// An edition's address nests by date like a blog post's
+// (/newsletter/2026/11/18), so a reader can read the day off the path. The date
+// itself stays one string (2026-11-18) everywhere else: the content folder,
+// edition.json, data-edition, the share card route. Every edition URL is built
+// from this one function.
+export const editionPath = (date: string) =>
+  `/newsletter/${date.replaceAll("-", "/")}`
+
+export type EditionSegments = { year: string; month: string; day: string }
+
+export const editionSegments = (date: string): EditionSegments => {
+  const [year, month, day] = date.split("-")
+  return { year, month, day }
+}
+
+// The route's three segments back into an edition date, or null when they do
+// not name a real calendar day.
+export const editionDateOf = ({ year, month, day }: EditionSegments) => {
+  const date = `${year}-${month}-${day}`
+  return isEditionDate(date) ? date : null
+}
+
 // Public URLs carry the language in the query, never in the path: the path is
 // the page, the query is how you read it. Every link names its language, since
 // the bare address is resolved per reader (resolveLang) and so belongs to no
@@ -94,7 +116,7 @@ export const itemAnchor = (id: string) => `item-${id}`
 // /newsletter/editions.
 export const newsletterPath = (page: { date?: string; editions?: boolean }) =>
   page.date
-    ? `/newsletter/${page.date}`
+    ? editionPath(page.date)
     : page.editions
       ? "/newsletter/editions"
       : "/newsletter"

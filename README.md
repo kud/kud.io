@@ -93,7 +93,9 @@ pipeline has three parts, each with one job:
   `content/newsletter/<date>/{fr.md,en.md,edition.json}`. `lib/newsletter/`
   parses and validates it first (sections, item ids, French and English
   matching, every link public and safe) and refuses the edition otherwise.
-  Those files are derived: never edit them by hand.
+  Those files are derived: never edit them by hand. Each edition is served at
+  `/newsletter/<year>/<month>/<day>` (`?lang=fr` or `?lang=en`), the folder's
+  date with slashes.
 - **`.github/workflows/newsletter.yml`** publishes: sync, build, commit,
   deploy, wait until the page is live, mark the edition Published in Notion,
   then mail the teaser once. It runs when dispatched and as a safety net at

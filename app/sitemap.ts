@@ -4,6 +4,7 @@ import { getProjects } from "@/lib/projects"
 import { getListedRecords } from "@/lib/listed-apps"
 import { source } from "@/lib/source"
 import { listEditionDates } from "@/lib/newsletter/content"
+import { editionPath } from "@/lib/newsletter/language"
 
 // Absolute URLs, matching the metadataBase in app/layout.tsx. A sitemap is read
 // by crawlers that have no page context to resolve a relative path against, so
@@ -37,7 +38,7 @@ const bilingual = (path: string, lastModified?: string) => ({
 
 const newsletterRoutes = (dates: string[]) => [
   bilingual("/newsletter/editions", dates[0]),
-  ...dates.map((date) => bilingual(`/newsletter/${date}`, date)),
+  ...dates.map((date) => bilingual(editionPath(date), date)),
   { url: `${SITE}/newsletter/privacy` },
 ]
 

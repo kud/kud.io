@@ -9,7 +9,12 @@ import {
   listEditionDates,
   loadEdition,
 } from "@/lib/newsletter/content"
-import type { Lang } from "@/lib/newsletter/language"
+import {
+  editionDateOf,
+  editionSegments,
+  type EditionSegments,
+  type Lang,
+} from "@/lib/newsletter/language"
 
 // One implementation per page, called by a French route (/newsletter/...) and
 // its English twin (/newsletter/en/...). The English tree is internal: proxy.ts
@@ -28,23 +33,29 @@ export const EditionsPage = async ({ lang }: { lang: Lang }) => (
   <EditionsView editions={await getEditions()} lang={lang} />
 )
 
+// An edition's route is /newsletter/[year]/[month]/[day], the blog's shape;
+// the date is put back together here and nowhere else.
 export const dateParams = async () =>
-  (await listEditionDates()).map((date) => ({ date }))
+  (await listEditionDates()).map(editionSegments)
 
-export const dateMetadata = async (date: string, lang: Lang) =>
-  newsletterMetadata({
-    edition: await loadEdition(date),
+export const dateMetadata = async (segments: EditionSegments, lang: Lang) => {
+  const date = editionDateOf(segments)
+  return newsletterMetadata({
+    edition: date ? await loadEdition(date) : null,
     lang,
-    page: { date },
+    page: date ? { date } : {},
   })
+}
 
 export const DatePage = async ({
-  date,
+  segments,
   lang,
 }: {
-  date: string
+  segments: EditionSegments
   lang: Lang
 }) => {
+  const date = editionDateOf(segments)
+  if (!date) notFound()
   const [edition, dates] = await Promise.all([
     loadEdition(date),
     listEditionDates(),

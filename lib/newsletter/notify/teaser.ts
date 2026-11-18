@@ -7,6 +7,7 @@
 // what was deployed. Plain HTML, inline styles, no images, no tracking.
 
 import type { EditionJson } from "../derive.ts"
+import { editionPath } from "../language.ts"
 import { longDate, type Lang } from "../sections.ts"
 import { SITE_URL } from "./config.ts"
 import type { Message } from "./provider.ts"
@@ -32,7 +33,7 @@ export const plainMarkdown = (markdown: string) =>
     .trim()
 
 export const editionUrl = (date: string, lang: Lang) =>
-  `${SITE_URL}/newsletter/${date}?lang=${lang}`
+  `${SITE_URL}${editionPath(date)}?lang=${lang}`
 
 export const campaignName = (date: string, lang: Lang) => `newsletter-${date}-${lang}`
 

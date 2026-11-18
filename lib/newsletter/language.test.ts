@@ -1,6 +1,9 @@
 import { describe, it } from "node:test"
 import assert from "node:assert/strict"
 import {
+  editionDateOf,
+  editionPath,
+  editionSegments,
   formatEditionDate,
   isEditionDate,
   newsletterHref,
@@ -56,11 +59,11 @@ describe("newsletter language", () => {
   it("keeps the date and the item anchor when switching language", () => {
     assert.equal(
       newsletterHref({ date: "2026-11-13" }, "en", { hash: "item-03" }),
-      "/newsletter/2026-11-13?lang=en#item-03",
+      "/newsletter/2026/11/13?lang=en#item-03",
     )
     assert.equal(
       newsletterHref({ date: "2026-11-13" }, "fr", { hash: "item-03" }),
-      "/newsletter/2026-11-13?lang=fr#item-03",
+      "/newsletter/2026/11/13?lang=fr#item-03",
     )
     assert.equal(newsletterHref({}, "fr"), "/newsletter?lang=fr")
     assert.equal(newsletterHref({}, "en"), "/newsletter?lang=en")
@@ -72,6 +75,29 @@ describe("newsletter language", () => {
       newsletterHref({ editions: true }, "fr"),
       "/newsletter/editions?lang=fr",
     )
+  })
+
+  it("nests an edition's address by date, like a blog post", () => {
+    assert.equal(editionPath("2026-11-18"), "/newsletter/2026/11/18")
+    assert.equal(
+      newsletterHref({ date: "2026-11-18" }, "fr"),
+      "/newsletter/2026/11/18?lang=fr",
+    )
+    assert.deepEqual(editionSegments("2026-11-18"), {
+      year: "2026",
+      month: "11",
+      day: "18",
+    })
+  })
+
+  it("reads a date back from the route's segments", () => {
+    assert.equal(
+      editionDateOf({ year: "2026", month: "11", day: "18" }),
+      "2026-11-18",
+    )
+    assert.equal(editionDateOf(editionSegments("2028-02-29")), "2028-02-29")
+    assert.equal(editionDateOf({ year: "2026", month: "02", day: "29" }), null)
+    assert.equal(editionDateOf({ year: "2026", month: "1", day: "01" }), null)
   })
 
   it("accepts only real calendar days", () => {

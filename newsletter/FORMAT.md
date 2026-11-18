@@ -288,3 +288,7 @@ intro and other narrative sections, the items with their kickers,
 summaries and sources, the timeline, the in-brief facts, reading time and word count) that drives the
 index, language switch and research prompt. These are build artefacts: fix
 an edition in Notion, never in those files.
+
+The folder is named by the date; the published page nests it like a blog
+post: the edition of `2026-11-18` lives at `/newsletter/2026/11/18`, in English
+at `/newsletter/2026/11/18?lang=en`.

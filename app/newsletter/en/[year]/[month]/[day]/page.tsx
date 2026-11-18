@@ -1,6 +1,7 @@
 import { DatePage, dateMetadata, dateParams } from "@/app/newsletter/pages"
+import type { EditionSegments } from "@/lib/newsletter/language"
 
-type Params = { params: Promise<{ date: string }> }
+type Params = { params: Promise<EditionSegments> }
 
 // Only dates that exist on disk are pages; anything else is a 404.
 export const dynamicParams = false
@@ -8,10 +9,10 @@ export const dynamicParams = false
 export const generateStaticParams = dateParams
 
 export const generateMetadata = async ({ params }: Params) =>
-  dateMetadata((await params).date, "fr")
+  dateMetadata(await params, "en")
 
 const Page = async ({ params }: Params) => (
-  <DatePage date={(await params).date} lang="fr" />
+  <DatePage segments={await params} lang="en" />
 )
 
 export default Page

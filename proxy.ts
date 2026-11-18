@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server"
 import { LANG_COOKIE, parseLang, resolveLang } from "@/lib/newsletter/language"
+import { proxyRoute } from "@/lib/newsletter/proxy-route"
 
 // The newsletter's language lives in the query (?lang=en) and in the reader's
 // remembered choice, else in the browser's language or the country, yet
@@ -9,19 +10,8 @@ import { LANG_COOKIE, parseLang, resolveLang } from "@/lib/newsletter/language"
 // all English before anything paints. French is the plain route, served when
 // the reader resolves to French. An explicit
 // ?lang is remembered in a cookie. Scoped to the newsletter by the matcher.
-const EN_PREFIX = "/newsletter/en"
-
 export const proxy = (request: NextRequest) => {
   const { pathname, searchParams } = request.nextUrl
-
-  // The English tree is an implementation detail: send direct visits to the
-  // public address, so one edition has one URL per language.
-  if (pathname === EN_PREFIX || pathname.startsWith(`${EN_PREFIX}/`)) {
-    const url = request.nextUrl.clone()
-    url.pathname = `/newsletter${pathname.slice(EN_PREFIX.length)}`
-    url.searchParams.set("lang", "en")
-    return NextResponse.redirect(url, 308)
-  }
 
   const query = parseLang(searchParams.get("lang"))
   const cookie = request.cookies.get(LANG_COOKIE)?.value ?? null
@@ -31,11 +21,21 @@ export const proxy = (request: NextRequest) => {
     acceptLanguage: request.headers.get("accept-language"),
     country: request.headers.get("x-vercel-ip-country"),
   })
+  const route = proxyRoute(pathname, lang)
+
+  // The English tree is an implementation detail: send direct visits to the
+  // public address, so one edition has one URL per language.
+  if ("redirect" in route) {
+    const url = request.nextUrl.clone()
+    url.pathname = route.redirect
+    url.searchParams.set("lang", "en")
+    return NextResponse.redirect(url, 308)
+  }
 
   let response = NextResponse.next()
-  if (lang === "en") {
+  if ("rewrite" in route) {
     const url = request.nextUrl.clone()
-    url.pathname = `${EN_PREFIX}${pathname.slice("/newsletter".length)}`
+    url.pathname = route.rewrite
     response = NextResponse.rewrite(url)
   }
   if (query && query !== cookie)
@@ -51,7 +51,7 @@ export const config = {
   matcher: [
     "/newsletter",
     "/newsletter/editions",
-    "/newsletter/:date(\\d{4}-\\d{2}-\\d{2})",
+    "/newsletter/:year(\\d{4})/:month(\\d{2})/:day(\\d{2})",
     "/newsletter/en",
     "/newsletter/en/:path*",
   ],

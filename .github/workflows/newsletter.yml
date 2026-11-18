@@ -158,7 +158,7 @@ jobs:
         run: |
           for date in ${{ steps.plan.outputs.publish }}; do
             deadline=$(( $(date +%s) + 1200 ))
-            until curl -fsS --max-time 20 "https://kud.io/newsletter/$date" 2>/dev/null | grep -q "data-edition=\"$date\""; do
+            until curl -fsS --max-time 20 "https://kud.io/newsletter/${date//-//}" 2>/dev/null | grep -q "data-edition=\"$date\""; do
               if [ "$(date +%s)" -ge "$deadline" ]; then
                 echo "$date is not live after 20 minutes"
                 exit 1
@@ -194,8 +194,8 @@ jobs:
             lead=$(jq -r '.items[0].title.fr // empty' "$file")
             count=$(jq -r '.items | length' "$file")
             minutes=$(jq -r '.readingMinutes.fr // empty' "$file")
-            text=$(printf '📰 *Newsletter du %s publiée* · %s sujets%s\n%s\n<https://kud.io/newsletter/%s|Lire l’édition>' \
-              "$date" "$count" "${minutes:+ · $minutes min}" "$lead" "$date")
+            text=$(printf '📰 *Newsletter du %s publiée* · %s sujets%s\n%s\n<https://kud.io/newsletter/%s?lang=fr|Lire l’édition>' \
+              "$date" "$count" "${minutes:+ · $minutes min}" "$lead" "${date//-//}")
             if jq -n --arg text "$text" '{text: $text}' \
               | curl --fail --silent --show-error --max-time 20 -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" > /dev/null; then
               echo "✅ Slack announcement sent for $date." >> "$GITHUB_STEP_SUMMARY"

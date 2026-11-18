@@ -114,7 +114,7 @@ describe("teaser", () => {
   })
   it("links to the edition in that language and carries the unsubscribe link", () => {
     const { html, text, subject } = buildTeaser(edition(), "en", "{{{UNSUB}}}")
-    assert.match(text, /https:\/\/kud\.io\/newsletter\/2026-11-14\?lang=en/)
+    assert.match(text, /https:\/\/kud\.io\/newsletter\/2026\/11\/14\?lang=en/)
     assert.match(html, /href="\{\{\{UNSUB\}\}\}"/)
     assert.match(text, /Unsubscribe: \{\{\{UNSUB\}\}\}/)
     assert.equal(subject, "Tonight on kud.io · 14 November 2026")

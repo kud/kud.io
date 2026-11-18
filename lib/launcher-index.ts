@@ -11,6 +11,7 @@ import { getListedApps } from "@/lib/listed-apps"
 import { ecosystemName } from "@/lib/ecosystems"
 import { getRelease } from "@/lib/release"
 import { listEditionDates, loadEdition } from "@/lib/newsletter/content"
+import { editionPath } from "@/lib/newsletter/language"
 
 // Everything the command launcher matches on without a round trip: the
 // projects exactly as /projects lists them, every post, and the few facts a
@@ -87,7 +88,7 @@ const getLauncherEditions = async (): Promise<LauncherEdition[]> => {
     .filter((edition) => edition !== null)
     .map((edition) => ({
       date: edition.date,
-      href: `/newsletter/${edition.date}`,
+      href: editionPath(edition.date),
       lead: edition.items[0]?.title.en ?? "",
       titles: edition.items.map((item) => item.title.en),
     }))
