@@ -1,6 +1,6 @@
 ---
 title: "Whimsical"
-description: "Transform ideas into beautiful diagrams using AI. Automatically generates flowcharts, mindmaps, and sequence diagrams from natural language descriptions."
+description: "Describe an idea and let Raycast AI generate Whimsical flowcharts, mind maps and sequence diagrams for you."
 ---
 
 Transform your ideas into beautiful visual diagrams using AI! This Raycast extension intelligently creates flowcharts, mindmaps, and sequence diagrams from your natural language descriptions.

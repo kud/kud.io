@@ -1,6 +1,6 @@
 ---
 title: "Nerd Font Picker"
-description: "Browse and copy Nerd Font glyphs from your installed fonts"
+description: "Search and copy Nerd Font icons and glyphs from your installed fonts offline, with codepoints and other details."
 ---
 
 ## Features

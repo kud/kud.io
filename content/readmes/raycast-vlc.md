@@ -1,6 +1,6 @@
 ---
 title: "VLC"
-description: "Seamlessly control VLC Media Player from Raycast. Play, pause, skip tracks, adjust volume, seek, toggle fullscreen, and more—all from your keyboard. Requires VLC's HTTP interface enabled."
+description: "Control VLC media player on your Mac: play, pause, skip, volume, seek, playback speed, fullscreen, open videos with subtitles and browse the playlist."
 ---
 
 > **Seamlessly control VLC Media Player from Raycast.**

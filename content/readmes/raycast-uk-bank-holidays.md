@@ -1,6 +1,6 @@
 ---
 title: "UK Bank Holidays"
-description: "Display the upcoming bank holiday information for England and Wales."
+description: "See upcoming UK bank holidays for England and Wales, and check when the next bank holiday is."
 ---
 
 This Raycast extension provides upcoming bank holiday information for England and Wales.

@@ -1,6 +1,6 @@
 ---
 title: "LocalSend"
-description: "Share files to nearby devices using LocalSend protocol"
+description: "Send files, folders, text and clipboard content to nearby devices with LocalSend, and receive files from them, on Mac and Windows."
 ---
 
 ## ✨ Features

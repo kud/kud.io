@@ -1,6 +1,6 @@
 ---
 title: "Gandi"
-description: "Manage your Gandi domains, DNS records, and check domain availability"
+description: "List your Gandi domains with expiry dates, check domain name availability and manage DNS records."
 ---
 
 Manage your Gandi domains, DNS records, and check domain availability directly from Raycast.

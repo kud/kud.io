@@ -14,13 +14,13 @@ It reads each vendor's own status page, worst first, and tells you what they hav
 - **Scriptable** — `--json` on every form, meaningful exit codes, static output whenever there is no TTY
 - **Configurable** — 21 built-in services, plus any Statuspage, RSS feed or plain link you add
 
-![The board: a filter column that doubles as the tally, a card per service in trouble, the healthy ones in a grid](https://raw.githubusercontent.com/kud/incidents-cli/HEAD/assets/board.png)
+![The board: a filter column that doubles as the tally, a card per service in trouble, the healthy ones a line each](https://raw.githubusercontent.com/kud/incidents-cli/HEAD/assets/board.png)
 
 ![The list (v): every service, worst first, with a preview of the selected one](https://raw.githubusercontent.com/kud/incidents-cli/HEAD/assets/list.png)
 
 ![One service in detail: open incidents, affected components, earlier ones](https://raw.githubusercontent.com/kud/incidents-cli/HEAD/assets/detail.png)
 
-▶ [Watch the 47-second demo](https://github.com/kud/incidents-cli/blob/HEAD/assets/demo.mp4), recorded from the real CLI on invented services. Music: "[Nightfall](https://freemusicarchive.org/music/beat-mekanik/euphoria/nightfall-4/)" by Beat Mekanik, CC BY 4.0.
+▶ [Watch the 54-second demo](https://github.com/kud/incidents-cli/blob/HEAD/assets/demo.mp4), recorded from the real CLI on invented services. Music: "[Nightfall](https://freemusicarchive.org/music/beat-mekanik/euphoria/nightfall-4/)" by Beat Mekanik, CC BY 4.0.
 
 ## Install
 

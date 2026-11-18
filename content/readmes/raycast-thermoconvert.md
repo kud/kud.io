@@ -1,6 +1,6 @@
 ---
 title: "ThermoConvert"
-description: "Instantly convert between all major temperature scales"
+description: "Convert temperatures between Celsius, Fahrenheit, Kelvin, Rankine and Réaumur, offline."
 ---
 
 Instantly convert between all major temperature scales directly from Raycast.

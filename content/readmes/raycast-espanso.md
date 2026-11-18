@@ -1,6 +1,6 @@
 ---
 title: "Espanso"
-description: "The Raycast version of Espanso Search Bar"
+description: "Search and paste your Espanso text expansion matches, add new matches, and enable, disable or toggle Espanso on your Mac."
 ---
 
 The Raycast version of Espanso Search Bar
