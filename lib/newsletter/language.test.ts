@@ -10,9 +10,31 @@ import {
 } from "./language.ts"
 
 describe("newsletter language", () => {
-  it("defaults to French", () => {
-    assert.equal(resolveLang({}), "fr")
-    assert.equal(resolveLang({ query: "de", cookie: "xx" }), "fr")
+  it("defaults to English", () => {
+    assert.equal(resolveLang({}), "en")
+    assert.equal(resolveLang({ query: "de", cookie: "xx" }), "en")
+  })
+
+  it("follows the browser's language when nothing was chosen", () => {
+    assert.equal(resolveLang({ acceptLanguage: "fr-FR,fr;q=0.9,en;q=0.8" }), "fr")
+    assert.equal(resolveLang({ acceptLanguage: "en-GB,en;q=0.9,fr;q=0.8" }), "en")
+    assert.equal(resolveLang({ acceptLanguage: "de-DE,fr;q=0.5,en;q=0.7" }), "en")
+    assert.equal(resolveLang({ acceptLanguage: "en;q=0,fr-CA" }), "fr")
+  })
+
+  it("uses the country only when the browser names neither language", () => {
+    assert.equal(resolveLang({ acceptLanguage: "de-DE", country: "FR" }), "fr")
+    assert.equal(resolveLang({ acceptLanguage: "en-US", country: "FR" }), "en")
+    assert.equal(resolveLang({ country: "be" }), "fr")
+    assert.equal(resolveLang({ country: "GB" }), "en")
+  })
+
+  it("lets a remembered choice beat the browser and the country", () => {
+    assert.equal(
+      resolveLang({ cookie: "en", acceptLanguage: "fr-FR", country: "FR" }),
+      "en",
+    )
+    assert.equal(resolveLang({ cookie: "fr", acceptLanguage: "en-GB" }), "fr")
   })
 
   it("lets an explicit query beat the remembered choice", () => {
@@ -37,13 +59,10 @@ describe("newsletter language", () => {
       "/newsletter/2026-11-13?lang=en#item-03",
     )
     assert.equal(
-      newsletterHref({ date: "2026-11-13" }, "fr", {
-        explicit: true,
-        hash: "item-03",
-      }),
+      newsletterHref({ date: "2026-11-13" }, "fr", { hash: "item-03" }),
       "/newsletter/2026-11-13?lang=fr#item-03",
     )
-    assert.equal(newsletterHref({}, "fr"), "/newsletter")
+    assert.equal(newsletterHref({}, "fr"), "/newsletter?lang=fr")
     assert.equal(newsletterHref({}, "en"), "/newsletter?lang=en")
     assert.equal(
       newsletterHref({ editions: true }, "en"),
@@ -51,7 +70,7 @@ describe("newsletter language", () => {
     )
     assert.equal(
       newsletterHref({ editions: true }, "fr"),
-      "/newsletter/editions",
+      "/newsletter/editions?lang=fr",
     )
   })
 

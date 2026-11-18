@@ -25,7 +25,7 @@ export const feed = async (lang: Lang) => {
   const copy = COPY[lang]
   const self = `${SITE}/newsletter/${lang}.xml`
   const items = editions.map((edition) => {
-    const url = `${SITE}${newsletterHref({ date: edition.date }, lang, { explicit: true })}`
+    const url = `${SITE}${newsletterHref({ date: edition.date }, lang)}`
     const description =
       edition.lede[lang] ??
       edition.items
@@ -47,7 +47,7 @@ export const feed = async (lang: Lang) => {
     '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
     "  <channel>",
     `    <title>${escapeXml(`${copy.name} — kud.io`)}</title>`,
-    `    <link>${SITE}${newsletterHref({}, lang, { explicit: true })}</link>`,
+    `    <link>${SITE}${newsletterHref({}, lang)}</link>`,
     `    <description>${escapeXml(copy.tagline)}</description>`,
     `    <language>${lang === "fr" ? "fr" : "en-GB"}</language>`,
     `    <atom:link href="${self}" rel="self" type="application/rss+xml"/>`,

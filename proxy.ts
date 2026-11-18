@@ -2,10 +2,12 @@ import { NextResponse, type NextRequest } from "next/server"
 import { LANG_COOKIE, parseLang, resolveLang } from "@/lib/newsletter/language"
 
 // The newsletter's language lives in the query (?lang=en) and in the reader's
-// remembered choice, yet every edition is a static page. This keeps both true:
+// remembered choice, else in the browser's language or the country, yet
+// every edition is a static page. This keeps both true:
 // an English request is rewritten onto the prerendered English twin under
 // /newsletter/en/, so the page, its lang, its metadata and its share card are
-// all English before anything paints. French is the plain route. An explicit
+// all English before anything paints. French is the plain route, served when
+// the reader resolves to French. An explicit
 // ?lang is remembered in a cookie. Scoped to the newsletter by the matcher.
 const EN_PREFIX = "/newsletter/en"
 
@@ -23,7 +25,12 @@ export const proxy = (request: NextRequest) => {
 
   const query = parseLang(searchParams.get("lang"))
   const cookie = request.cookies.get(LANG_COOKIE)?.value ?? null
-  const lang = resolveLang({ query, cookie })
+  const lang = resolveLang({
+    query,
+    cookie,
+    acceptLanguage: request.headers.get("accept-language"),
+    country: request.headers.get("x-vercel-ip-country"),
+  })
 
   let response = NextResponse.next()
   if (lang === "en") {

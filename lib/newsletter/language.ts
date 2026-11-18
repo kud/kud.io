@@ -1,12 +1,12 @@
-// The newsletter is the one bilingual surface on kud.io: French by default,
-// British English on request. Everything here is pure so the proxy, the pages,
+// The newsletter is the one bilingual surface on kud.io: British English or
+// French, picked per reader. Everything here is pure so the proxy, the pages,
 // the client controls and the tests all read one definition of a language.
 
 export const LANGS = ["fr", "en"] as const
 
 export type Lang = (typeof LANGS)[number]
 
-export const DEFAULT_LANG: Lang = "fr"
+export const DEFAULT_LANG: Lang = "en"
 
 // One name for both stores: the cookie lets the proxy serve the right static
 // page before anything paints; localStorage is the client's own copy, kept in
@@ -19,14 +19,58 @@ export const parseLang = (value: unknown): Lang | null =>
     ? (value as Lang)
     : null
 
-// An explicit ?lang wins, then the reader's remembered choice, then French.
+// The browser's own ranking (Accept-Language), best first. Only the language
+// part counts: fr-CA and fr-BE are French, en-US is English. q=0 means "not
+// this one".
+export const langFromAcceptLanguage = (header?: string | null): Lang | null => {
+  if (!header) return null
+  const ranked = header
+    .split(",")
+    .map((part, index) => {
+      const [tag, ...params] = part.trim().split(";")
+      const q = params.map((p) => p.trim()).find((p) => p.startsWith("q="))
+      return {
+        tag: tag.trim().toLowerCase(),
+        q: q ? Number(q.slice(2)) : 1,
+        index,
+      }
+    })
+    .filter(({ q }) => Number.isFinite(q) && q > 0)
+    .sort((a, b) => b.q - a.q || a.index - b.index)
+  for (const { tag } of ranked) {
+    const lang = parseLang(tag.split("-")[0])
+    if (lang) return lang
+  }
+  return null
+}
+
+// Where the request comes from, as the host reports it (Vercel's
+// x-vercel-ip-country). A weaker hint than the browser's language, so it only
+// counts when the browser names neither: countries whose everyday language is
+// French.
+const FRENCH_COUNTRIES = new Set(["FR", "BE", "LU", "MC"])
+
+export const langFromCountry = (country?: string | null): Lang | null =>
+  country && FRENCH_COUNTRIES.has(country.toUpperCase()) ? "fr" : null
+
+// An explicit ?lang wins, then the reader's remembered choice (cookie), then
+// the browser's language, then the country, then English.
 export const resolveLang = ({
   query,
   cookie,
+  acceptLanguage,
+  country,
 }: {
   query?: string | null
   cookie?: string | null
-}): Lang => parseLang(query) ?? parseLang(cookie) ?? DEFAULT_LANG
+  acceptLanguage?: string | null
+  country?: string | null
+}): Lang =>
+  parseLang(query) ??
+  parseLang(cookie) ??
+  langFromAcceptLanguage(acceptLanguage) ??
+  langFromCountry(country) ??
+  DEFAULT_LANG
 
 export const otherLang = (lang: Lang): Lang => (lang === "fr" ? "en" : "fr")
 
@@ -42,22 +86,26 @@ export const isEditionDate = (value: string) => {
 
 export const itemAnchor = (id: string) => `item-${id}`
 
-// Public URLs always carry the language in the query, never in the path: the
-// path is the page, the query is how you read it. French needs no query but
-// gets one when a link has to override a remembered English choice. The bare
-// /newsletter redirects to the newest edition (next.config.mjs), so a link to
-// the list of every edition names /newsletter/editions.
-export const newsletterHref = (
-  page: { date?: string; editions?: boolean },
-  lang: Lang,
-  { explicit = false, hash }: { explicit?: boolean; hash?: string } = {},
-) => {
-  const path = page.date
+// Public URLs carry the language in the query, never in the path: the path is
+// the page, the query is how you read it. Every link names its language, since
+// the bare address is resolved per reader (resolveLang) and so belongs to no
+// language: it is the x-default. The bare /newsletter redirects to the newest
+// edition (next.config.mjs), so a link to the list of every edition names
+// /newsletter/editions.
+export const newsletterPath = (page: { date?: string; editions?: boolean }) =>
+  page.date
     ? `/newsletter/${page.date}`
     : page.editions
       ? "/newsletter/editions"
       : "/newsletter"
-  const query = explicit || lang !== DEFAULT_LANG ? `?lang=${lang}` : ""
+
+export const newsletterHref = (
+  page: { date?: string; editions?: boolean },
+  lang: Lang,
+  { hash }: { hash?: string } = {},
+) => {
+  const path = newsletterPath(page)
+  const query = `?lang=${lang}`
   return `${path}${query}${hash ? `#${hash}` : ""}`
 }
 

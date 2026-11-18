@@ -66,7 +66,7 @@ export const LangSwitch = ({
   short: string
   className?: string
 }) => {
-  const href = newsletterHref(page, to, { explicit: true })
+  const href = newsletterHref(page, to)
   useEffect(trackReading, [])
   // The anchor is set as the pointer goes down (and on focus for the
   // keyboard), not on click: the site's ink transition reads href from a
@@ -76,7 +76,6 @@ export const LangSwitch = ({
       (window.scrollY > 400 ? itemAtTop() : lastRead) ??
       (location.hash.slice(1) || undefined)
     event.currentTarget.href = newsletterHref(page, to, {
-      explicit: true,
       hash,
     })
   }

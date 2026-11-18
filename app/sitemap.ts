@@ -20,15 +20,17 @@ const docsRoutes = () =>
     .filter((page) => page.path.endsWith(".mdx"))
     .map((page) => ({ url: `${SITE}${page.url}` }))
 
-// The newsletter has one URL per page and language: French at the bare
-// address, English behind ?lang=en (the proxy serves it from /newsletter/en).
+// The newsletter has one URL per page and language, ?lang=fr or ?lang=en (the
+// proxy serves English from /newsletter/en). The bare address picks a language
+// per reader, so it is the x-default.
 const bilingual = (path: string, lastModified?: string) => ({
   url: `${SITE}${path}`,
   lastModified,
   alternates: {
     languages: {
-      fr: `${SITE}${path}`,
+      fr: `${SITE}${path}?lang=fr`,
       "en-GB": `${SITE}${path}?lang=en`,
+      "x-default": `${SITE}${path}`,
     },
   },
 })

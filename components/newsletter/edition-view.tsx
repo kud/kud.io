@@ -13,6 +13,7 @@ import {
   htmlLang,
   itemAnchor,
   newsletterHref,
+  newsletterPath,
   ogLocale,
   otherLang,
   type Lang,
@@ -244,7 +245,6 @@ export const EditionView = ({
                     <div className={styles.itemTools}>
                       <ShareItem
                         href={newsletterHref({ date: edition.date }, lang, {
-                          explicit: lang !== "fr",
                           hash: itemAnchor(item.id),
                         })}
                         lang={lang}
@@ -485,7 +485,7 @@ export const newsletterMetadata = ({
     ? `${copy.name} · ${capitalise(formatEditionDate(edition.date, lang))} — kud.io`
     : `${copy.name} — kud.io`
   const description = edition ? summaryOf(edition, lang) : copy.tagline
-  const href = (to: Lang) => newsletterHref(page, to, { explicit: to !== "fr" })
+  const href = (to: Lang) => newsletterHref(page, to)
   // An edition shares its own card (app/newsletter/og), in the page's language;
   // listed under twitter too, since only an explicit list there displaces the
   // site-wide twitter-image every route inherits.
@@ -507,7 +507,7 @@ export const newsletterMetadata = ({
       languages: {
         fr: href("fr"),
         "en-GB": href("en"),
-        "x-default": href("fr"),
+        "x-default": newsletterPath(page),
       },
       types: feeds(lang),
     },
