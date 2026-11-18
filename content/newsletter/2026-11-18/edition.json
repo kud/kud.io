@@ -1,0 +1,599 @@
+{
+  "schema": 1,
+  "date": "2026-11-18",
+  "generatedAt": "2026-11-18T18:47:00.000+00:00",
+  "publishedAt": "2026-11-18T18:49:21Z",
+  "languages": [
+    "fr",
+    "en"
+  ],
+  "lede": {
+    "fr": "Ce soir, on suit Voyager 1, devenue mercredi le premier engin humain à se trouver à un jour-lumière de la Terre, et on explique ce qu’elle mesure encore là-bas. Puis le résolveur DNS Quad9 qui quitte la France, la BCE inquiète des valorisations de l’IA et la censure que Pékin exporte jusqu’aux footballeurs, avant de démêler ce que sont vraiment les terres rares. Côté technique, une faille critique dans nginx, la fin de Redict et une courbe qui relie climat et développement ; et cinq trouvailles, d’Escher à une sonde que l’on démonte pièce par pièce.",
+    "en": "Tonight, we follow Voyager 1, which on Wednesday became the first human-made object to sit one light-day from Earth, and explain what it is still measuring out there. Then the DNS resolver Quad9 pulling out of France, the European Central Bank’s worries about AI valuations and the censorship Beijing exports as far as football, before we untangle what rare earths really are. On the technical side, a critical flaw in nginx, the end of Redict and a curve linking climate and development; and five finds, from Escher to a space probe you can take apart piece by piece."
+  },
+  "readingMinutes": {
+    "fr": 15,
+    "en": 14
+  },
+  "wordCount": {
+    "fr": 2944,
+    "en": 2735
+  },
+  "narrative": {
+    "overview": {
+      "fr": "Ce soir, on suit Voyager 1, devenue mercredi le premier engin humain à se trouver à un jour-lumière de la Terre, et on explique ce qu’elle mesure encore là-bas. Puis le résolveur DNS Quad9 qui quitte la France, la BCE inquiète des valorisations de l’IA et la censure que Pékin exporte jusqu’aux footballeurs, avant de démêler ce que sont vraiment les terres rares. Côté technique, une faille critique dans nginx, la fin de Redict et une courbe qui relie climat et développement ; et cinq trouvailles, d’Escher à une sonde que l’on démonte pièce par pièce.",
+      "en": "Tonight, we follow Voyager 1, which on Wednesday became the first human-made object to sit one light-day from Earth, and explain what it is still measuring out there. Then the DNS resolver Quad9 pulling out of France, the European Central Bank’s worries about AI valuations and the censorship Beijing exports as far as football, before we untangle what rare earths really are. On the technical side, a critical flaw in nginx, the end of Redict and a curve linking climate and development; and five finds, from Escher to a space probe you can take apart piece by piece."
+    },
+    "analysis": null,
+    "closing": {
+      "fr": "Bonne soirée : si vous envoyez un message ce soir, il arrivera à destination bien plus vite que n’importe quel bonjour à Voyager.",
+      "en": "Have a good evening: any message you send tonight will arrive far sooner than a hello to Voyager would."
+    }
+  },
+  "sections": [
+    {
+      "key": "overview",
+      "kind": "narrative",
+      "title": {
+        "fr": "Ce soir",
+        "en": "Tonight"
+      },
+      "items": []
+    },
+    {
+      "key": "depth",
+      "kind": "items",
+      "title": {
+        "fr": "Le sujet du jour",
+        "en": "Today’s focus"
+      },
+      "items": [
+        "01"
+      ]
+    },
+    {
+      "key": "brief",
+      "kind": "items",
+      "title": {
+        "fr": "L’essentiel",
+        "en": "The essentials"
+      },
+      "items": [
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "key": "explainer",
+      "kind": "items",
+      "title": {
+        "fr": "C’est quoi ?",
+        "en": "Explainer"
+      },
+      "items": [
+        "05"
+      ]
+    },
+    {
+      "key": "techsci",
+      "kind": "items",
+      "title": {
+        "fr": "Technologie & science",
+        "en": "Technology & science"
+      },
+      "items": [
+        "06",
+        "07",
+        "08"
+      ]
+    },
+    {
+      "key": "inbrief",
+      "kind": "bullets",
+      "title": {
+        "fr": "En bref",
+        "en": "In brief"
+      },
+      "items": []
+    },
+    {
+      "key": "finds",
+      "kind": "items",
+      "title": {
+        "fr": "Ça vaut un clic",
+        "en": "Worth a click"
+      },
+      "items": [
+        "09",
+        "10",
+        "11",
+        "12",
+        "13"
+      ]
+    },
+    {
+      "key": "watch",
+      "kind": "items",
+      "title": {
+        "fr": "À surveiller",
+        "en": "Watch next"
+      },
+      "items": [
+        "14",
+        "15"
+      ]
+    },
+    {
+      "key": "closing",
+      "kind": "narrative",
+      "title": {
+        "fr": "Pour finir",
+        "en": "To close"
+      },
+      "items": []
+    }
+  ],
+  "items": [
+    {
+      "id": "01",
+      "section": "depth",
+      "kicker": {
+        "fr": "ESPACE",
+        "en": "SPACE"
+      },
+      "title": {
+        "fr": "Voyager 1, à un jour de lumière de chez nous",
+        "en": "Voyager 1, one day of light away"
+      },
+      "summary": {
+        "fr": "Mercredi 18 novembre à 10 h 16 min 07 s UTC, Voyager 1 s’est trouvée à 25 902 068 356 kilomètres de la Terre, selon la NASA : la distance que parcourt la lumière en vingt-quatre heures. Aucun objet fabriqué par l’humanité n’était allé aussi loin. Lancée le 5 septembre 1977, la sonde a mis 49 ans, 2 mois et 11 jours pour y arriver, à près de 61 000 km/h. Pour mesurer l’écart, le physicien Ed Macaulay, de l’université Queen Mary de Londres, rappelle dans The Conversation qu’elle est plus de 63 000 fois plus loin que l’équipage d’Artemis II lors de son record d’éloignement d’avril 2026.",
+        "en": "At 10.16.07 UTC on Wednesday 18 November, Voyager 1 was 25,902,068,356 kilometres from Earth, according to NASA: the distance light travels in twenty-four hours. No human-made object had ever gone so far. Launched on 5 September 1977, the probe took 49 years, 2 months and 11 days to get there, travelling at nearly 61,000 km/h. To give a sense of scale, the physicist Ed Macaulay of Queen Mary University of London points out in The Conversation that it is more than 63,000 times farther away than the Artemis II crew were at their record distance in April 2026."
+      },
+      "sources": [
+        {
+          "url": "https://science.nasa.gov/mission/voyager/voyager-1/voyager-1-what-is-a-light-day/",
+          "label": {
+            "fr": "NASA · Voyager 1 et le jour-lumière",
+            "en": "NASA · Voyager 1 and the light-day"
+          }
+        },
+        {
+          "url": "https://sciencenews.org/article/voyager-1-light-day-exploration",
+          "label": {
+            "fr": "Science News",
+            "en": "Science News"
+          }
+        },
+        {
+          "url": "https://theconversation.com/nasas-voyager-1-probe-launched-in-1977-reaches-distance-milestone-of-one-light-day-from-earth-296713",
+          "label": {
+            "fr": "The Conversation",
+            "en": "The Conversation"
+          }
+        },
+        {
+          "url": "https://earthsky.org/space/voyager-1-1-light-day-from-earth-november-17-18-2026/",
+          "label": {
+            "fr": "EarthSky",
+            "en": "EarthSky"
+          }
+        },
+        {
+          "url": "https://www.franceinfo.fr/sciences/espace/la-sonde-voyager-1-depasse-la-distance-d-un-jour-lumiere-de-la-terre-soit-25-9-milliards-de-kilometres_8288360.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "section": "brief",
+      "kicker": {
+        "fr": "INTERNET",
+        "en": "INTERNET"
+      },
+      "title": {
+        "fr": "Quad9 quitte la France plutôt que de bloquer des sites",
+        "en": "Quad9 leaves France rather than block websites"
+      },
+      "summary": {
+        "fr": "Quad9, une fondation suisse à but non lucratif qui exploite le résolveur DNS public 9.9.9.9, cessera de répondre aux internautes situés en France le mardi 24 novembre. Un résolveur DNS est l’annuaire qui traduit un nom de domaine en adresse de serveur : sans lui, un navigateur ne trouve plus rien. Dans une affaire portée par beIN Sports, un tribunal parisien a ordonné à Quad9 de bloquer des domaines de diffusion pirate de matchs, sous astreinte ramenée de 580 000 euros à 1 000 euros par jour, selon l’annonce de la fondation. Le fondement est l’article L.333-10 du code du sport, qui permet aux détenteurs de droits sportifs de viser toute personne susceptible de faire cesser une atteinte, y compris un résolveur, explique le site Tech Stackups. Quad9 répond qu’il ne conserve aucune donnée sur ses utilisateurs et ne peut donc pas savoir lesquels sont en France ; bloquer pour tout le monde reviendrait à imposer une décision française au monde entier. La fondation dit faire face à une vingtaine d’autres procédures en France. Le précédent existe : Cisco a retiré son service OpenDNS du pays en juin 2024. Pourquoi c’est important : le blocage par DNS se contourne en changeant de résolveur, et la mesure prive d’un service gratuit des utilisateurs, entreprises et administrations comprises, qui n’avaient rien piraté.",
+        "en": "Quad9, a Swiss non-profit foundation that runs the public DNS resolver 9.9.9.9, will stop answering users in France on Tuesday 24 November. A DNS resolver is the directory that turns a domain name into a server address: without one, a browser can find nothing. In a case brought by beIN Sports, a Paris court ordered Quad9 to block domains streaming pirated matches, under a penalty reduced from €580,000 to €1,000 a day, according to the foundation’s announcement. The legal basis is Article L.333-10 of France’s sports code, which lets sports rights holders target anyone able to help stop an infringement, resolvers included, Tech Stackups explains. Quad9 replies that it keeps no data on its users, so it cannot tell which of them are in France; blocking for everyone would impose a French ruling on the whole world. The foundation says it faces about twenty other cases in France. There is a precedent: Cisco withdrew its OpenDNS service from the country in June 2024. Why it matters: DNS blocking is sidestepped by switching resolvers, and the measure takes a free service away from users, businesses and public bodies among them, who had pirated nothing."
+      },
+      "sources": [
+        {
+          "url": "https://quad9.net/news/blog/au-revoir-france/",
+          "label": {
+            "fr": "Quad9",
+            "en": "Quad9"
+          }
+        },
+        {
+          "url": "https://techstackups.com/articles/quad9-leaves-france-dns-blocking/",
+          "label": {
+            "fr": "Tech Stackups",
+            "en": "Tech Stackups"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "section": "brief",
+      "kicker": {
+        "fr": "ÉCONOMIE",
+        "en": "ECONOMY"
+      },
+      "title": {
+        "fr": "La BCE s’inquiète des paris sur l’intelligence artificielle",
+        "en": "The ECB worries about the bets on artificial intelligence"
+      },
+      "summary": {
+        "fr": "Dans sa revue de stabilité financière publiée mercredi 18 novembre, la Banque centrale européenne (BCE) estime que « les risques liés aux valorisations de l’IA, aux déséquilibres budgétaires et aux tensions géoéconomiques assombrissent les perspectives ». Les valorisations boursières actuelles reposent, écrit-elle, sur des attentes de bénéfices « très ambitieuses » pour les entreprises de l’IA. Leurs besoins de financement sont immenses : les grands groupes technologiques américains devraient cumuler 5 500 milliards de dollars d’investissements d’ici 2030, et une part croissante est empruntée sur les marchés obligataires, où les émissions liées aux infrastructures d’IA atteignent des records cette année. Une part notable est libellée en euros, ce qui augmente l’exposition directe des investisseurs de la zone euro. La BCE note aussi que les introductions en Bourse liées à l’IA sont en passe de dépasser, rapportées au PIB américain, le pic de la bulle Internet. Les banques, elles, prêtent peu directement à l’IA et affichent un taux de prêts non performants au plus bas historique, 2,2 % en septembre ; mais la qualité de leurs crédits se dégrade auprès des éditeurs de logiciels et des fabricants de semi-conducteurs. Pourquoi c’est notable : une banque centrale ne prédit pas un krach, elle cartographie par où un choc se propagerait, et ce document la dessine.",
+        "en": "In its Financial Stability Review published on Wednesday 18 November, the European Central Bank (ECB) says that “risks from AI valuations, fiscal imbalances and geoeconomic tensions cloud the financial stability outlook”. Current share prices, it writes, “depend on very ambitious earnings expectations for AI-related firms”. Their financing needs are vast: big US tech firms are projected to invest a cumulative $5.5 trillion by 2030, and a growing share is borrowed in bond markets, where issuance linked to AI infrastructure has hit records this year. A notable part is denominated in euros, raising euro area investors’ direct exposure. The ECB also notes that AI-related stock market listings are on track to exceed the dotcom peak as a share of US GDP. Banks, for their part, lend little directly to AI and report a record-low non-performing loan ratio of 2.2% in September; but credit quality is deteriorating in their exposures to software firms and chipmakers. Why it matters: a central bank does not forecast a crash, it maps where a shock would travel, and this document draws that map."
+      },
+      "sources": [
+        {
+          "url": "https://www.ecb.europa.eu/press/financial-stability-publications/fsr/html/ecb.fsr202611~e03b919d36.en.html",
+          "label": {
+            "fr": "BCE · Revue de stabilité financière, novembre 2026",
+            "en": "ECB · Financial Stability Review, November 2026"
+          }
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "section": "brief",
+      "kicker": {
+        "fr": "CHINE",
+        "en": "CHINA"
+      },
+      "title": {
+        "fr": "Un mème, Mao et la censure que Pékin exporte",
+        "en": "A meme, Mao and the censorship Beijing exports"
+      },
+      "summary": {
+        "fr": "Au printemps 2026, dans une vidéo légère sur les mèmes qui le concernent, Kylian Mbappé qualifie de « dictateur chinois » le personnage d’un mème qui représente Mao Zedong, sans le nommer. La vidéo ressurgit le 26 octobre, soir du Ballon d’or. Dès le lendemain, trois sponsors chinois rompent avec lui ; il perd ses comptes sur deux réseaux sociaux chinois et sa place dans le jeu FC Online ; la télévision publique CCTV suspend la diffusion de la Liga et réclame des excuses. Selon Bloomberg, cité par Thierry Kellner, spécialiste de la politique étrangère chinoise, de l’Université libre de Bruxelles, la plateforme Migu a repris la Liga deux semaines plus tard, sans les matchs du Real Madrid. Les médias d’État parlent de « propos inappropriés » sans jamais citer Mao, de sorte que la plupart des internautes chinois ignorent ce qui a été dit. Kellner relie l’affaire à des précédents : les magasins Lotte Mart fermés en Chine après le déploiement du bouclier antimissile américain en Corée du Sud en 2017, ou la NBA privée d’écrans chinois après un tweet de soutien aux manifestants de Hong Kong en 2019. Il reprend l’image du sinologue Perry Link : la censure chinoise est moins un dragon qu’un anaconda enroulé dans un lustre, qui bouge peu, parce que chacun s’ajuste avant qu’on le lui demande.",
+        "en": "In spring 2026, in a light-hearted video about memes featuring him, Kylian Mbappé called the figure in a meme depicting Mao Zedong a “Chinese dictator”, without naming him. The video resurfaced on 26 October, the night of the Ballon d’Or. The next day three Chinese sponsors dropped him; he lost his accounts on two Chinese social networks and his place in the game FC Online; state broadcaster CCTV suspended its coverage of La Liga and demanded an apology. According to Bloomberg, cited by Thierry Kellner, a specialist in Chinese foreign policy of the Université libre de Bruxelles, the platform Migu brought La Liga back two weeks later, minus Real Madrid’s matches. State media speak of “inappropriate remarks” without ever mentioning Mao, so most Chinese internet users do not know what was said. Kellner links the affair to earlier cases: Lotte Mart shops closed in China after the US missile shield was deployed in South Korea in 2017, and the NBA kept off Chinese screens after a tweet supporting Hong Kong protesters in 2019. He borrows the sinologist Perry Link’s image: Chinese censorship is less a fire-breathing dragon than an anaconda coiled in a chandelier, which rarely needs to move because everyone adjusts before being asked."
+      },
+      "sources": [
+        {
+          "url": "https://theconversation.com/mbappe-mao-et-lanaconda-comment-pekin-exporte-sa-censure-296740",
+          "label": {
+            "fr": "The Conversation",
+            "en": "The Conversation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "section": "explainer",
+      "kicker": null,
+      "title": {
+        "fr": "Les terres rares",
+        "en": "Rare earths"
+      },
+      "summary": {
+        "fr": "Pourquoi on en parle. Le mot revient dans chaque débat sur la dépendance industrielle à la Chine, sans qu’on sache toujours de quoi il s’agit. Marie-Odile Simonnot et Baptiste Laubie, chercheurs en génie des procédés à l’université de Lorraine et au CNRS (Centre national de la recherche scientifique), rappellent dans The Conversation qu’elles ne sont « ni rares, ni même des terres ».",
+        "en": "Why it's in the news. The term comes up in every debate about industrial dependence on China, often without anyone saying what it means. Marie-Odile Simonnot and Baptiste Laubie, process engineering researchers at the University of Lorraine and the CNRS (France’s national research centre), point out in The Conversation that they are “neither rare nor even earths”."
+      },
+      "sources": [
+        {
+          "url": "https://theconversation.com/les-terres-rares-ne-sont-ni-rares-ni-meme-des-terres-alors-quest-ce-que-cest-288663",
+          "label": {
+            "fr": "The Conversation",
+            "en": "The Conversation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "section": "techsci",
+      "kicker": {
+        "fr": "SÉCURITÉ",
+        "en": "SECURITY"
+      },
+      "title": {
+        "fr": "nginx : une faille vieille de onze ans, exploitable sans authentification",
+        "en": "nginx: an eleven-year-old flaw, exploitable without logging in"
+      },
+      "summary": {
+        "fr": "nginx, l’un des serveurs web les plus utilisés au monde, a corrigé mercredi 18 novembre une série de failles révélées par la société de sécurité Xint sous le nom de « NGINX2Root ». La plus grave, CVE-2026-123007, est un dépassement d’entier dans le contrôle de flux du protocole HTTP/2 : présente depuis l’arrivée d’HTTP/2 dans nginx 1.9.5, en 2015, elle permet à un attaquant non authentifié d’exécuter du code avec les droits du processus nginx, pour peu qu’HTTP/2 soit activé. Xint décrit quatre autres failles de type « use-after-free » (réutilisation d’une zone mémoire déjà libérée), touchant HTTP/2, HTTP/3, le module de résolution DNS et le proxy de messagerie. La société Wiz, qui a analysé les deux failles HTTP/2 publiées par F5, l’éditeur de nginx, les note 9,2 sur 10. Les correctifs sont dans nginx 1.31.9 et 1.30.7 ; les distributions Linux peuvent les intégrer sans changer le numéro de version affiché. Plus inquiétant : enchaînée avec une faille du noyau Linux dans le protocole SCTP, présente depuis 2018, l’attaque a donné à Xint un accès root à la machine hôte, y compris depuis un conteneur Docker. Aucun correctif noyau n’était disponible mercredi. Aucune exploitation active n’est signalée ; en attendant de mettre à jour, désactiver HTTP/2 et bloquer le chargement du module sctp réduisent l’exposition. Détail notable : selon Xint, quatre des cinq failles ont été trouvées par une analyse entièrement automatisée.",
+        "en": "nginx, one of the most widely used web servers in the world, shipped fixes on Wednesday 18 November for a set of flaws disclosed by the security firm Xint under the name “NGINX2Root”. The most serious, CVE-2026-123007, is an integer overflow in HTTP/2 flow control: present since HTTP/2 arrived in nginx 1.9.5 in 2015, it lets an unauthenticated attacker run code with the nginx worker’s privileges, as long as HTTP/2 is switched on. Xint describes four more use-after-free bugs (reusing memory that has already been released) affecting HTTP/2, HTTP/3, the DNS resolver module and the mail proxy. The security company Wiz, which analysed the two HTTP/2 flaws published by F5, nginx’s owner, rates them 9.2 out of 10. The fixes are in nginx 1.31.9 and 1.30.7; Linux distributions may backport them without changing the version number shown. More worrying: chained with a Linux kernel flaw in the SCTP protocol, present since 2018, the attack gave Xint root on the host machine, even from inside a Docker container. No kernel fix was available on Wednesday. No active exploitation has been reported; until you can update, turning off HTTP/2 and stopping the sctp module from loading reduce exposure. A notable detail: according to Xint, four of the five flaws were found by a fully automated scan."
+      },
+      "sources": [
+        {
+          "url": "https://xint.io/blog/nginx2root-remote-code-execution",
+          "label": {
+            "fr": "Xint",
+            "en": "Xint"
+          }
+        },
+        {
+          "url": "https://www.wiz.io/blog/nginx-http2-rce-vulnerabilities",
+          "label": {
+            "fr": "Wiz",
+            "en": "Wiz"
+          }
+        },
+        {
+          "url": "https://lwn.net/Articles/1108362/",
+          "label": {
+            "fr": "LWN.net",
+            "en": "LWN.net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "section": "techsci",
+      "kicker": {
+        "fr": "OPEN SOURCE",
+        "en": "OPEN SOURCE"
+      },
+      "title": {
+        "fr": "Redict s’arrête et renvoie vers Valkey",
+        "en": "Redict winds down and points to Valkey"
+      },
+      "summary": {
+        "fr": "Le développeur Drew DeVault a annoncé le 17 novembre l’abandon de Redict, le fork de la base de données en mémoire Redis qu’il avait lancé après le changement de licence de Redis en 2024. La version 7.3.6 sera la dernière. Son explication : Redict voulait fédérer une communauté autour d’une licence copyleft, qui oblige à partager les modifications, mais « avec le succès du projet Valkey et le retour de Redis à une licence copyleft », il n’a pas trouvé de communauté durable. Il recommande Valkey, le fork sous licence permissive soutenu par la Linux Foundation, compatible avec Redict : la migration consiste surtout à installer le paquet et renommer le fichier de configuration. Il déconseille en revanche de revenir à Redis, qui impose à ses contributeurs un accord de cession de droits (CLA) permettant, selon lui, un futur changement de licence. Pourquoi c’est notable : deux ans après la crise, l’écosystème se consolide autour d’un seul fork communautaire.",
+        "en": "The developer Drew DeVault announced on 17 November that he is ending Redict, the fork of the in-memory database Redis he started after Redis changed its licence in 2024. Version 7.3.6 will be the last. His explanation: Redict set out to build a community around a copyleft licence, which requires changes to be shared, but “with the valkey project’s success, and Redis’s return to a copyleft license”, it could not find a sustainable one. He recommends Valkey, the permissively licensed fork backed by the Linux Foundation, which is compatible with Redict: migrating mostly means installing the package and renaming the configuration file. He advises against going back to Redis, which requires contributors to sign a contributor licence agreement (CLA) that, in his view, makes a future licence change possible. Why it matters: two years after the split, the ecosystem is consolidating around a single community fork."
+      },
+      "sources": [
+        {
+          "url": "https://redict.io/posts/2026-11-17-redict-deprecated/",
+          "label": {
+            "fr": "Redict",
+            "en": "Redict"
+          }
+        },
+        {
+          "url": "https://lwn.net/Articles/1108155/",
+          "label": {
+            "fr": "LWN.net",
+            "en": "LWN.net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "section": "techsci",
+      "kicker": {
+        "fr": "CLIMAT",
+        "en": "CLIMATE"
+      },
+      "title": {
+        "fr": "La « courbe champagne » : se développer sans émettre toujours plus",
+        "en": "The “champagne curve”: development without ever more emissions"
+      },
+      "summary": {
+        "fr": "Cinq économistes et politistes, dont François Gemenne (HEC Paris) et Thomas Porcher (PSB Paris School of Business), présentent dans The Conversation un résultat qu’ils ont publié en 2025 dans une revue à comité de lecture. En croisant les données de 119 États entre 2000 et 2022, ils comparent l’indice de développement humain (IDH, qui combine santé, éducation et revenu, calculé par le Programme des Nations unies pour le développement) aux émissions de CO2 liées à la consommation, c’est-à-dire en comptant le carbone des produits importés. La courbe monte vite, puis s’aplatit comme une coupe de champagne : au-delà d’un IDH de 0,8, des émissions supplémentaires n’apportent plus de gain significatif de développement. Ils en tirent l’idée de politiques climatiques différenciées selon trois groupes de pays, avec des seuils à 0,6 et 0,8. Limites, reconnues par les auteurs : l’IDH est un indicateur imparfait, la mesure ne retient que le CO2, et la relation varie fortement d’un pays à l’autre.",
+        "en": "Five economists and political scientists, among them François Gemenne (HEC Paris) and Thomas Porcher (PSB Paris School of Business), present in The Conversation a finding they published in 2025 in a peer-reviewed journal. Using data from 119 countries between 2000 and 2022, they compare the Human Development Index (HDI, which combines health, education and income and is calculated by the UN Development Programme) with consumption-based CO2 emissions, meaning the carbon in imported goods is counted too. The curve rises steeply, then flattens like a champagne coupe: beyond an HDI of 0.8, extra emissions bring no significant gain in development. They argue for climate policies tailored to three groups of countries, with thresholds at 0.6 and 0.8. The limits, which the authors acknowledge: the HDI is an imperfect measure, only CO2 is counted, and the relationship varies widely from one country to another."
+      },
+      "sources": [
+        {
+          "url": "https://theconversation.com/la-courbe-champagne-ou-pourquoi-on-peut-reduire-les-emissions-de-co-sans-freiner-le-developpement-296210",
+          "label": {
+            "fr": "The Conversation",
+            "en": "The Conversation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Voyager 1, en pièces détachées",
+        "en": "Voyager 1, in pieces"
+      },
+      "summary": {
+        "fr": "Le site de Raj Shekhar permet de suivre en 3D la trajectoire des deux sondes Voyager depuis 1977, de rejouer le voyage depuis le lancement ou de revenir à aujourd’hui. Surtout, on peut ouvrir la sonde baie par baie, la démonter jusqu’aux modules et aux puces de mémoire, puis la remonter, au clavier ou avec un récit commenté. Pourquoi cliquer : le complément idéal au sujet du jour, pour voir à quoi ressemble la machine qui parle encore depuis un jour-lumière. Limite : le site ne cite pas les données et les plans sur lesquels il s’appuie.",
+        "en": "Raj Shekhar’s site lets you follow both Voyager probes in 3D since 1977, replay the journey from launch or jump back to today. Best of all, you can open the spacecraft bay by bay, take it apart down to its modules and memory chips, then put it back together, from the keyboard or with a narrated tour. Why click: the perfect companion to tonight’s focus, to see the machine still talking to us from a light-day away. The limit: the site does not say which data and plans it is based on."
+      },
+      "sources": [
+        {
+          "url": "https://rshekhar.com/voyager/",
+          "label": {
+            "fr": "Voyager · Raj Shekhar",
+            "en": "Voyager · Raj Shekhar"
+          }
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Escher, mathématicien malgré lui",
+        "en": "Escher, the accidental mathematician"
+      },
+      "summary": {
+        "fr": "Quanta Magazine (18 novembre, en anglais) parcourt dix œuvres de M. C. Escher pour montrer les mathématiques qu’elles cachent : pavages et symétries, figures impossibles, géométrie hyperbolique des « Limite circulaire ». On y apprend qu’Escher découvre les 17 groupes de symétrie du plan dans un article de George Pólya, rencontre le géomètre H. S. M. Coxeter en 1954, et que la boucle vertigineuse de « Galerie d’estampes » a été reconstituée mathématiquement en 2003 par Hendrik Lenstra et Bart de Smit. Pourquoi cliquer : chaque image est accompagnée de l’idée qui la fait tenir.",
+        "en": "Quanta Magazine (18 November) walks through ten works by M.C. Escher to show the mathematics hidden inside them: tilings and symmetry, impossible figures, the hyperbolic geometry of the “Circle Limit” prints. We learn that Escher found the 17 symmetry groups of the plane in a paper by George Pólya, met the geometer H.S.M. Coxeter in 1954, and that the dizzying loop of “Print Gallery” was reconstructed mathematically in 2003 by Hendrik Lenstra and Bart de Smit. Why click: every image comes with the idea that holds it together."
+      },
+      "sources": [
+        {
+          "url": "https://www.quantamagazine.org/how-m-c-eschers-art-creates-bizarre-mathematical-worlds-20261118/",
+          "label": {
+            "fr": "Quanta Magazine",
+            "en": "Quanta Magazine"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Une injustice qui se voit",
+        "en": "An injustice you can see"
+      },
+      "summary": {
+        "fr": "Dans Psyche (12 novembre, en anglais), le philosophe Giacomo Floris, de l’université de Leyde, soutient que les personnes sans abri subissent une « injustice esthétique » : faute de douches, de savon ou de vêtements propres, elles ne contrôlent plus l’image qu’elles donnent, et on les écarte pour cette apparence même, des bancs « anti-SDF » aux recruteurs. Il en conclut que l’accès à ces ressources est une question de justice, pas de charité. Limite : un essai normatif, appuyé surtout sur des exemples américains et canadiens, qui esquisse des remèdes sans les chiffrer.",
+        "en": "In Psyche (12 November), the philosopher Giacomo Floris of Leiden University argues that homeless people suffer an “aesthetic injustice”: without showers, soap or clean clothes they lose control of how they appear, and are then shut out for that very appearance, from “anti-sleep” benches to recruiters. He concludes that access to those resources is a matter of justice, not charity. The limit: a normative essay, drawing mostly on US and Canadian examples, that sketches remedies without costing them."
+      },
+      "sources": [
+        {
+          "url": "https://psyche.co/ideas/shunning-people-who-look-homeless-is-an-aesthetic-injustice",
+          "label": {
+            "fr": "Psyche",
+            "en": "Psyche"
+          }
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "La peur, outil de gouvernement ?",
+        "en": "Fear as a tool of government?"
+      },
+      "summary": {
+        "fr": "Trois chercheurs en psychologie sociale d’Aix-Marseille Université font, dans The Conversation, le tour de ce que la recherche dit de la peur en politique : elle pousse à la conformité, au besoin de certitudes et à la préférence pour un pouvoir fort, mais son usage trop visible peut provoquer l’effet inverse, la « réactance », ce réflexe de défendre une liberté qu’on sent menacée. Pourquoi cliquer : une boîte à outils utile avant une campagne présidentielle qui s’annonce sécuritaire. Limite : une synthèse de travaux souvent menés en laboratoire, dont l’application au débat public reste une extrapolation.",
+        "en": "Three social psychologists at Aix-Marseille University survey, in The Conversation (in French), what research says about fear in politics: it encourages conformity, a craving for certainty and a preference for strong leadership, but using it too openly can backfire through “reactance”, the reflex to defend a freedom we feel is under threat. Why click: a useful toolkit ahead of a French presidential campaign shaping up around security. The limit: a synthesis of studies often run in the lab, whose application to public debate remains an extrapolation."
+      },
+      "sources": [
+        {
+          "url": "https://theconversation.com/la-peur-nous-rend-elle-plus-faciles-a-gouverner-290546",
+          "label": {
+            "fr": "The Conversation",
+            "en": "The Conversation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Des vidéos écrites en HTML",
+        "en": "Videos written in HTML"
+      },
+      "summary": {
+        "fr": "HyperFrames, projet libre (licence Apache 2.0) publié par HeyGen, transforme des pages HTML, du CSS et des animations en vidéos MP4 : chaque scène est un fichier HTML dont les attributs fixent le début, la durée et la piste, puis un Chrome sans interface capture chaque image et FFmpeg assemble le tout. L’outil s’adresse explicitement aux agents d’IA, qui écrivent les scènes, mais il s’utilise aussi à la main avec Node.js 22. Pourquoi cliquer : une approche « la vidéo comme du code », rejouable à l’identique. Limites : c’est l’outil d’un éditeur commercial, et certaines fonctions et l’application Studio passent par un compte HeyGen ou une offre payante.",
+        "en": "HyperFrames, an open-source project (Apache 2.0 licence) published by HeyGen, turns HTML pages, CSS and animations into MP4 videos: each scene is an HTML file whose attributes set its start, duration and track, then a headless Chrome captures every frame and FFmpeg stitches them together. It is aimed squarely at AI agents, which write the scenes, but works by hand too with Node.js 22. Why click: a “video as code” approach that renders identically every time. The limits: it is a commercial vendor’s tool, and some features and the Studio app go through a HeyGen account or a paid plan."
+      },
+      "sources": [
+        {
+          "url": "https://hyperframes.heygen.com/",
+          "label": {
+            "fr": "HyperFrames",
+            "en": "HyperFrames"
+          }
+        },
+        {
+          "url": "https://github.com/heygen-com/hyperframes",
+          "label": {
+            "fr": "HyperFrames · GitHub",
+            "en": "HyperFrames · GitHub"
+          }
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "Le sommet à trois de Shenzhen, jeudi 19 novembre",
+        "en": "The three-way summit in Shenzhen, Thursday 19 November"
+      },
+      "summary": {
+        "fr": "En marge du sommet de l’APEC (le forum de coopération Asie-Pacifique), Donald Trump, Xi Jinping et Vladimir Poutine doivent tenir jeudi la première rencontre formelle de l’histoire entre les dirigeants des États-Unis, de la Chine et de la Russie. À regarder : si Washington obtient une discussion sur le contrôle des armes nucléaires, que Pékin a jusqu’ici refusée, et si l’Ukraine, que la Chine veut tenir à l’écart, s’invite malgré tout ; le Kremlin juge un tête-à-tête Trump-Poutine « pas exclu ».",
+        "en": "On the sidelines of the APEC summit (the Asia-Pacific Economic Cooperation forum), Donald Trump, Xi Jinping and Vladimir Putin are due on Thursday to hold the first formal meeting ever between the leaders of the United States, China and Russia. What to watch: whether Washington gets a discussion on nuclear arms control, which Beijing has so far refused, and whether Ukraine, which China wants kept off the agenda, comes up anyway; the Kremlin says a Trump–Putin one-to-one is “not excluded”."
+      },
+      "sources": [
+        {
+          "url": "https://theconversation.com/beijing-has-three-priorities-at-the-shenzhen-summit-a-china-expert-explains-296734",
+          "label": {
+            "fr": "The Conversation",
+            "en": "The Conversation"
+          }
+        },
+        {
+          "url": "https://legrandcontinent.eu/fr/2026/11/18/a-shenzhen-la-premiere-rencontre-de-lhistoire-entre-les-dirigeants-des-etats-unis-de-la-chine-et-de-la-russie/",
+          "label": {
+            "fr": "Le Grand Continent",
+            "en": "Le Grand Continent"
+          }
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "Le correctif du noyau Linux pour SCTP",
+        "en": "The Linux kernel fix for SCTP"
+      },
+      "summary": {
+        "fr": "La faille du noyau qui permet de passer de nginx à l’accès root n’avait pas de correctif mercredi. À regarder : sa publication et sa reprise par les distributions, qui décideront de la durée pendant laquelle bloquer le module sctp reste la seule protection.",
+        "en": "The kernel flaw that turns an nginx compromise into root access had no fix on Wednesday. What to watch: its release and how quickly distributions ship it, which will decide how long blocking the sctp module remains the only protection."
+      },
+      "sources": [
+        {
+          "url": "https://xint.io/blog/nginx2root-remote-code-execution",
+          "label": {
+            "fr": "Xint",
+            "en": "Xint"
+          }
+        }
+      ]
+    }
+  ],
+  "timeline": [],
+  "inBrief": [
+    {
+      "text": {
+        "fr": "Mercredi, l’armée israélienne a lancé une opération terrestre dans le centre de la bande de Gaza, au-delà de la « ligne jaune » qui sépare les zones contrôlées par Israël et par le Hamas depuis le cessez-le-feu d’octobre 2025 ; le Hamas y voit une violation grave de l’accord, et plus de 1 600 Palestiniens ont été tués depuis la trêve selon un décompte de l’AFP fondé sur les chiffres du ministère de la Santé de Gaza ([France 24](https://www.france24.com/en/middle-east/20261118-gazans-flee-shelters-as-israeli-army-launches-ground-operation-beyond-yellow-line)).",
+        "en": "On Wednesday the Israeli army launched a ground operation in central Gaza, beyond the “Yellow Line” dividing Israeli- and Hamas-controlled areas since the October 2025 ceasefire; Hamas called it a serious breach of the deal, and more than 1,600 Palestinians have been killed since the truce according to an AFP tally based on Gaza health ministry figures ([France 24](https://www.france24.com/en/middle-east/20261118-gazans-flee-shelters-as-israeli-army-launches-ground-operation-beyond-yellow-line))."
+      },
+      "urls": [
+        "https://www.france24.com/en/middle-east/20261118-gazans-flee-shelters-as-israeli-army-launches-ground-operation-beyond-yellow-line"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Rafael Grossi, directeur de l’Agence internationale de l’énergie atomique (AIEA), a annoncé qu’une extension de l’usine d’enrichissement d’uranium de Yongbyon, en Corée du Nord, était achevée à l’extérieur depuis fin octobre, une expansion qui reste « un motif de sérieuse inquiétude » ([DW](https://www.dw.com/en/north-korea-expanded-uranium-enrichment-plant-says-iaea-head/a-79982758)).",
+        "en": "Rafael Grossi, head of the International Atomic Energy Agency (IAEA), said an extension to North Korea’s Yongbyon uranium enrichment plant had been externally complete since late October, an expansion that remains “a cause for serious concern” ([DW](https://www.dw.com/en/north-korea-expanded-uranium-enrichment-plant-says-iaea-head/a-79982758))."
+      },
+      "urls": [
+        "https://www.dw.com/en/north-korea-expanded-uranium-enrichment-plant-says-iaea-head/a-79982758"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Après deux ans de protestations de ses supporters, le Borussia Dortmund ne renouvellera pas au-delà de juin 2027 son contrat de sponsoring avec le fabricant d’armes Rheinmetall, estimé entre 7 et 9 millions d’euros par an ([DW](https://www.dw.com/en/borussia-dortmund-bows-to-fan-pressure-and-end-rheinmetall-deal/a-79980121)).",
+        "en": "After two years of fan protests, Borussia Dortmund will not renew its sponsorship deal with the arms maker Rheinmetall beyond June 2027, a deal estimated at €7–9 million a year ([DW](https://www.dw.com/en/borussia-dortmund-bows-to-fan-pressure-and-end-rheinmetall-deal/a-79980121))."
+      },
+      "urls": [
+        "https://www.dw.com/en/borussia-dortmund-bows-to-fan-pressure-and-end-rheinmetall-deal/a-79980121"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Le Cambridge Dictionary a choisi « human » comme mot de l’année 2026, une année marquée selon ses lexicographes par le débat sur ce qui distingue l’humain de la machine ([Université de Cambridge](https://www.cam.ac.uk/news/cambridge-dictionary-reveals-word-of-the-year-2026)).",
+        "en": "Cambridge Dictionary has chosen “human” as its word of the year for 2026, a year its lexicographers say was shaped by debate over what separates people from machines ([University of Cambridge](https://www.cam.ac.uk/news/cambridge-dictionary-reveals-word-of-the-year-2026))."
+      },
+      "urls": [
+        "https://www.cam.ac.uk/news/cambridge-dictionary-reveals-word-of-the-year-2026"
+      ]
+    }
+  ]
+}
