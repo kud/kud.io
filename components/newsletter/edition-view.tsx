@@ -272,7 +272,7 @@ export const EditionView = ({
                         <ul>
                           {item.sources.map((source) => (
                             <li key={source.url}>
-                              <a href={source.url} rel="noreferrer">
+                              <a href={source.url} target="_blank" rel="noreferrer">
                                 {source.label[lang]}
                               </a>
                               <span className={styles.host}>

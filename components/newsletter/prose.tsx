@@ -9,7 +9,8 @@ import { unified } from "unified"
 // An item's prose: paragraphs, lists, quotes, emphasis and links. No raw HTML
 // (remark-rehype drops it unless rehype-raw is added, and it must not be), no
 // code highlighting, no slugs: an item is a few paragraphs, not a post, and its
-// anchor is the item's own id.
+// anchor is the item's own id. Links leave in a new tab, as everywhere else on
+// the site, so the reader keeps their place in the edition.
 const External = ({
   href,
   children,
@@ -17,7 +18,7 @@ const External = ({
   href?: string
   children?: ReactNode
 }) => (
-  <a href={href} rel="noreferrer">
+  <a href={href} target="_blank" rel="noreferrer">
     {children}
   </a>
 )
@@ -34,7 +35,7 @@ const citationLink = (className?: string) => {
     href?: string
     children?: ReactNode
   }) => (
-    <a href={href} rel="noreferrer" className={className}>
+    <a href={href} target="_blank" rel="noreferrer" className={className}>
       {children}
       <span aria-hidden> ↗</span>
     </a>
