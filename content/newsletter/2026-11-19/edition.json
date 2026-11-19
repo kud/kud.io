@@ -1,0 +1,594 @@
+{
+  "schema": 1,
+  "date": "2026-11-19",
+  "generatedAt": "2026-11-19T18:47:00.000+00:00",
+  "publishedAt": "2026-11-19T19:14:25Z",
+  "languages": [
+    "fr",
+    "en"
+  ],
+  "lede": {
+    "fr": "Ce soir, on revient sur l’arrêt historique de la Cour internationale de justice, qui reconnaît pour la première fois un État, la Birmanie, coupable de génocide. Puis la déclaration de Shenzhen, une COP31 qui efface les énergies fossiles, l’encadrement des loyers prolongé, les créateurs de contenus soumis au pluralisme et la sortie de GTA VI, avant d’expliquer ce qu’est le leasehold britannique. Côté technique, des failles dans Ruby, PostgreSQL 19, Android qui verrouille l’installation d’applications et les mondes jouables de Google ; et trois trouvailles, du cheval bâtisseur d’États à Hobbes et aux fanzines.",
+    "en": "Tonight, we look at a landmark ruling by the International Court of Justice, which for the first time has found a state, Myanmar, responsible for genocide. Then the Shenzhen declaration, a COP31 draft that erases fossil fuels, France’s rent controls extended, online creators brought under election fairness rules and the release of GTA VI, before we explain what English leasehold is. On the technical side, flaws in Ruby, PostgreSQL 19, Android locking down app installs and Google’s playable worlds; and three finds, from the horse as state-builder to Hobbes and paper zines."
+  },
+  "readingMinutes": {
+    "fr": 18,
+    "en": 16
+  },
+  "wordCount": {
+    "fr": 3608,
+    "en": 3338
+  },
+  "narrative": {
+    "overview": {
+      "fr": "Ce soir, on revient sur l’arrêt historique de la Cour internationale de justice, qui reconnaît pour la première fois un État, la Birmanie, coupable de génocide. Puis la déclaration de Shenzhen, une COP31 qui efface les énergies fossiles, l’encadrement des loyers prolongé, les créateurs de contenus soumis au pluralisme et la sortie de GTA VI, avant d’expliquer ce qu’est le leasehold britannique. Côté technique, des failles dans Ruby, PostgreSQL 19, Android qui verrouille l’installation d’applications et les mondes jouables de Google ; et trois trouvailles, du cheval bâtisseur d’États à Hobbes et aux fanzines.",
+      "en": "Tonight, we look at a landmark ruling by the International Court of Justice, which for the first time has found a state, Myanmar, responsible for genocide. Then the Shenzhen declaration, a COP31 draft that erases fossil fuels, France’s rent controls extended, online creators brought under election fairness rules and the release of GTA VI, before we explain what English leasehold is. On the technical side, flaws in Ruby, PostgreSQL 19, Android locking down app installs and Google’s playable worlds; and three finds, from the horse as state-builder to Hobbes and paper zines."
+    },
+    "analysis": null,
+    "closing": {
+      "fr": "Bonne soirée, et que votre curiosité, n’en déplaise à Hobbes, vous laisse dormir tranquille.",
+      "en": "Have a good evening, and may your curiosity, whatever Hobbes thought, let you sleep soundly."
+    }
+  },
+  "sections": [
+    {
+      "key": "overview",
+      "kind": "narrative",
+      "title": {
+        "fr": "Ce soir",
+        "en": "Tonight"
+      },
+      "items": []
+    },
+    {
+      "key": "depth",
+      "kind": "items",
+      "title": {
+        "fr": "Le sujet du jour",
+        "en": "Today’s focus"
+      },
+      "items": [
+        "01"
+      ]
+    },
+    {
+      "key": "brief",
+      "kind": "items",
+      "title": {
+        "fr": "L’essentiel",
+        "en": "The essentials"
+      },
+      "items": [
+        "02",
+        "03",
+        "04",
+        "05",
+        "06"
+      ]
+    },
+    {
+      "key": "explainer",
+      "kind": "items",
+      "title": {
+        "fr": "C’est quoi ?",
+        "en": "Explainer"
+      },
+      "items": [
+        "07"
+      ]
+    },
+    {
+      "key": "techsci",
+      "kind": "items",
+      "title": {
+        "fr": "Technologie & science",
+        "en": "Technology & science"
+      },
+      "items": [
+        "08",
+        "09",
+        "10",
+        "11"
+      ]
+    },
+    {
+      "key": "inbrief",
+      "kind": "bullets",
+      "title": {
+        "fr": "En bref",
+        "en": "In brief"
+      },
+      "items": []
+    },
+    {
+      "key": "finds",
+      "kind": "items",
+      "title": {
+        "fr": "Ça vaut un clic",
+        "en": "Worth a click"
+      },
+      "items": [
+        "12",
+        "13",
+        "14"
+      ]
+    },
+    {
+      "key": "watch",
+      "kind": "items",
+      "title": {
+        "fr": "À surveiller",
+        "en": "Watch next"
+      },
+      "items": [
+        "15",
+        "16"
+      ]
+    },
+    {
+      "key": "closing",
+      "kind": "narrative",
+      "title": {
+        "fr": "Pour finir",
+        "en": "To close"
+      },
+      "items": []
+    }
+  ],
+  "items": [
+    {
+      "id": "01",
+      "section": "depth",
+      "kicker": {
+        "fr": "JUSTICE",
+        "en": "JUSTICE"
+      },
+      "title": {
+        "fr": "La Birmanie reconnue coupable de génocide contre les Rohingyas",
+        "en": "Myanmar found responsible for genocide against the Rohingya"
+      },
+      "summary": {
+        "fr": "Jeudi 19 novembre, la Cour internationale de justice (CIJ), la plus haute juridiction des Nations unies, chargée de trancher les différends entre États, a jugé que la Birmanie avait commis un génocide contre les Rohingyas, une minorité majoritairement musulmane de l’État de Rakhine, dans l’ouest du pays. La décision a été prise par neuf voix contre six parmi les quinze juges. Selon la BBC, c’est la première fois qu’une juridiction internationale conclut qu’un État, et non des individus, a commis un génocide. L’arrêt porte sur les « opérations de nettoyage » lancées par l’armée en août 2017, après des attaques de l’Armée du salut des Rohingyas de l’Arakan (ARSA), un groupe armé, contre plus de trente postes de police. D’après la cour, environ 10 000 Rohingyas ont été « tués violemment » et quelque 815 000 ont été visés d’une manière ou d’une autre ; plus de 700 000 ont fui au Bangladesh, où environ un million de réfugiés vivent aujourd’hui dans les camps de Cox’s Bazar, rapporte la BBC.",
+        "en": "On Thursday 19 November the International Court of Justice (ICJ), the UN’s highest court, which settles disputes between states, ruled that Myanmar had committed genocide against the Rohingya, a largely Muslim minority in Rakhine State in the west of the country. The decision was taken by nine votes to six among the fifteen judges. According to the BBC, it is the first time an international court has found that a state, rather than individuals, committed genocide. The ruling concerns the “clearance operations” the army launched in August 2017, after the Arakan Rohingya Salvation Army (ARSA), an armed group, attacked more than thirty police posts. The court found that around 10,000 Rohingya were “violently killed” and some 815,000 targeted in one way or another; more than 700,000 fled to Bangladesh, where around a million refugees now live in the camps at Cox’s Bazar, the BBC reports."
+      },
+      "sources": [
+        {
+          "url": "https://www.bbc.co.uk/news/articles/c804wzp20ddvo",
+          "label": {
+            "fr": "BBC",
+            "en": "BBC"
+          }
+        },
+        {
+          "url": "https://www.dw.com/en/myanmar-committed-genocide-against-rohingya-top-un-court-rules/a-79987898",
+          "label": {
+            "fr": "DW",
+            "en": "DW"
+          }
+        },
+        {
+          "url": "https://www.hrw.org/news/2026/11/03/questions-and-answers-international-court-of-justice-judgment-in-myanmar-genocide",
+          "label": {
+            "fr": "Human Rights Watch",
+            "en": "Human Rights Watch"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "section": "brief",
+      "kicker": {
+        "fr": "GÉOPOLITIQUE",
+        "en": "GEOPOLITICS"
+      },
+      "title": {
+        "fr": "À Shenzhen, une « déclaration de paix » qui contourne les guerres",
+        "en": "In Shenzhen, a “peace declaration” that steps around the wars"
+      },
+      "summary": {
+        "fr": "Jeudi 19 novembre, en marge du sommet de l’APEC (le forum de coopération Asie-Pacifique), Xi Jinping, Donald Trump et Vladimir Poutine ont conclu la première rencontre formelle entre les dirigeants de la Chine, des États-Unis et de la Russie par une « déclaration de paix » en quatre points, diffusée par le Kremlin et les médias d’État chinois, rapporte franceinfo. Ils s’y engagent à préserver la « stabilité stratégique », réaffirment qu’« une guerre nucléaire ne peut être gagnée et ne doit jamais être livrée » et promettent d’« engager un dialogue » sur la réduction des risques nucléaires, sans mesure concrète. Ils prévoient aussi d’augmenter la production de produits pétroliers raffinés, soutiennent une réforme de l’ONU et affirment que la Cour pénale internationale (CPI), qui juge des individus et a émis un mandat d’arrêt contre Vladimir Poutine, « ne doit pas abuser » de ses compétences. Le texte ne mentionne ni la guerre de la Russie en Ukraine ni la guerre menée par les États-Unis en Iran, relève DW. Sur le nucléaire, le traité russo-américain New START a expiré en février, et Pékin, avec un arsenal estimé à environ 500 ogives contre plus de 5 000 chacun pour Moscou et Washington, refuse toujours d’être limité au même titre, explique Chim Lee, analyste à l’Economist Intelligence Unit. Pour lui comme pour Emma Chanlett-Avery, de l’Asia Society Policy Institute, c’est Vladimir Poutine qui gagne le plus : l’image d’un égal des deux autres, malgré les efforts occidentaux pour l’isoler.",
+        "en": "On Thursday 19 November, on the sidelines of the APEC summit (the Asia-Pacific Economic Cooperation forum), Xi Jinping, Donald Trump and Vladimir Putin ended the first formal meeting between the leaders of China, the United States and Russia with a four-point “peace declaration”, released by the Kremlin and Chinese state media, franceinfo reports. In it they commit to preserving “strategic stability”, reaffirm that “a nuclear war cannot be won and must never be fought” and promise to “engage in dialogue” on reducing nuclear risks, without any concrete measure. They also plan to increase output of refined petroleum products, back reform of the UN and say the International Criminal Court (ICC), which tries individuals and has issued an arrest warrant for Vladimir Putin, “must not abuse” its powers. The text mentions neither Russia’s war in Ukraine nor the US-led war in Iran, DW notes. On nuclear weapons, the US–Russian New START treaty expired in February, and Beijing, with an estimated arsenal of around 500 warheads against more than 5,000 each for Moscow and Washington, still refuses to be capped on the same terms, Chim Lee, an analyst at the Economist Intelligence Unit, explains. For him, as for Emma Chanlett-Avery of the Asia Society Policy Institute, Vladimir Putin gained most: the image of an equal to the other two, despite Western efforts to isolate him."
+      },
+      "sources": [
+        {
+          "url": "https://www.franceinfo.fr/monde/usa/presidentielle/donald-trump/xi-jinping-vladimir-poutine-et-donald-trump-adoptent-une-declaration-de-paix-apres-un-sommet-inedit_8290064.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        },
+        {
+          "url": "https://www.dw.com/en/xi-trump-putin-summit-what-did-it-achieve/a-79996668",
+          "label": {
+            "fr": "DW",
+            "en": "DW"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "section": "brief",
+      "kicker": {
+        "fr": "CLIMAT",
+        "en": "CLIMATE"
+      },
+      "title": {
+        "fr": "COP31 : les énergies fossiles disparaissent du projet d’accord",
+        "en": "COP31: fossil fuels vanish from the draft deal"
+      },
+      "summary": {
+        "fr": "Le nouveau projet de décision publié jeudi 19 novembre à la COP31, la conférence des Nations unies sur le climat réunie à Antalya, en Turquie, ne mentionne plus les énergies fossiles, rapporte DW. Diffusé par l’Australie, qui coorganise le sommet, il supprime deux références à une transition hors du charbon, du pétrole et du gaz, ainsi qu’un appel à en accélérer l’abandon, présents dans la version précédente. La décision finale de la COP28 de Dubaï, en 2023, appelait pourtant à s’éloigner progressivement des combustibles fossiles. Le texte retient un objectif défendu par la Turquie : porter la part de l’électricité dans la consommation finale d’énergie à 35 % d’ici 2035, contre environ 20 % aujourd’hui, sans préciser si cette électricité doit être bas carbone. Sur l’argent, il appelle à poursuivre les discussions sur un triplement des financements pour l’adaptation des pays en développement, à au moins 120 milliards de dollars, et note des besoins d’adaptation estimés à 305 milliards de dollars par an jusqu’en 2035 : rapporté à ces besoins annuels, l’objectif en couvrirait environ 39 %. Les décisions se prennent par consensus, et le Panama a annoncé qu’il bloquerait tout accord sans plafonnement de la production de pétrole ni mesures contre le méthane. « Insuffisant », juge Jan Kowalzig, spécialiste du financement climatique chez Oxfam Allemagne.",
+        "en": "The new draft decision published on Thursday 19 November at COP31, the UN climate conference in Antalya, Turkey, no longer mentions fossil fuels, DW reports. Released by Australia, the summit’s co-host, it drops two references to a transition away from coal, oil and gas, and a call to speed up their phase-out, that were in the previous version. Yet the final decision at COP28 in Dubai, in 2023, called for a gradual transition away from fossil fuels. The text keeps a target pushed by Turkey: raising electricity’s share of final energy demand to 35% by 2035, from around 20% today, without saying whether that electricity must be low-carbon. On money, it calls for further talks on tripling funding for adaptation in developing countries to at least $120 billion, and notes adaptation needs estimated at $305 billion a year up to 2035: set against those annual needs, the target would cover about 39%. Decisions are taken by consensus, and Panama has said it will block any deal without a cap on oil production and action on methane. “Insufficient,” says Jan Kowalzig, a climate finance expert at Oxfam Germany."
+      },
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/no-mention-of-fossil-fuels-in-latest-cop31-draft-deal/a-79992394",
+          "label": {
+            "fr": "DW",
+            "en": "DW"
+          }
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "section": "brief",
+      "kicker": {
+        "fr": "LOGEMENT",
+        "en": "HOUSING"
+      },
+      "title": {
+        "fr": "L’encadrement des loyers prolongé de deux ans",
+        "en": "France extends rent controls for two years"
+      },
+      "summary": {
+        "fr": "Le Parlement a prolongé jeudi 19 novembre, pour deux ans, l’encadrement des loyers, qui plafonne les loyers dans environ 70 communes, dont Paris, Lyon, Bordeaux et Lille, et concerne 1,2 million de locataires, selon franceinfo. Le dispositif, expérimental, devait s’éteindre le 24 novembre. La proposition de loi du député socialiste Inaki Echaniz visait à le rendre permanent et à l’étendre ; le Sénat l’a ramenée à une simple prolongation, que l’Assemblée nationale a adoptée par 148 voix contre 95. Pour y parvenir, le ministre du Logement, Vincent Jeanbrun, a utilisé l’article 44, alinéa 2, de la Constitution pour écarter sans examen des centaines de sous-amendements du Rassemblement national, une « obstruction » selon lui. Plusieurs groupes lui ont reproché de ne pas avoir fait de même face à d’autres obstructions par le passé. Détail politique : le ministre, issu des Républicains, était personnellement opposé à la mesure, que le gouvernement soutenait, comme la gauche ; une partie du centre, la droite et l’extrême droite la combattaient. Le dispositif reste donc temporaire, et la question de sa pérennisation reviendra dans deux ans.",
+        "en": "On Thursday 19 November the French Parliament extended rent controls for two years. The scheme caps rents in about 70 towns and cities, including Paris, Lyon, Bordeaux and Lille, and covers 1.2 million tenants, according to franceinfo. It is an experiment that was due to lapse on 24 November. The bill, tabled by the Socialist MP Inaki Echaniz, set out to make it permanent and wider; the Senate cut it back to a plain extension, which the National Assembly passed by 148 votes to 95. To get there, the housing minister, Vincent Jeanbrun, used Article 44, paragraph 2, of the Constitution to set aside, without debate, hundreds of sub-amendments tabled by the far-right Rassemblement national, which he called “obstruction”. Several groups accused the government of not doing the same against other filibusters in the past. A political twist: the minister, from the conservative Les Républicains, was personally opposed to the measure, which the government backed, as did the left; parts of the centre, the right and the far right fought it. The scheme therefore remains temporary, and the question of making it permanent will return in two years."
+      },
+      "sources": [
+        {
+          "url": "https://www.franceinfo.fr/economie/immobilier/encadrement-des-loyers/le-parlement-prolonge-l-encadrement-des-loyers-de-deux-ans_8290517.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "section": "brief",
+      "kicker": {
+        "fr": "MÉDIAS",
+        "en": "MEDIA"
+      },
+      "title": {
+        "fr": "Les créateurs de contenus soumis au pluralisme pendant la présidentielle",
+        "en": "France’s online creators must give candidates fair airtime"
+      },
+      "summary": {
+        "fr": "L’Arcom, l’autorité de régulation de la communication audiovisuelle et numérique, a annoncé jeudi 19 novembre que les principaux créateurs de contenus vidéo, sur YouTube et les réseaux sociaux, devront pour la première fois respecter les règles de pluralisme politique pendant l’élection présidentielle de 2027, comme les télévisions et les radios. Son président, Martin Ajdari, invoque des audiences qui dépassent parfois celles des chaînes traditionnelles. Du 16 mars au 4 avril, les candidats et leurs soutiens devront bénéficier d’une « présentation et d’un accès équitables », en fonction de leur représentativité ; du 5 au 30 avril, de temps de parole et d’antenne égaux. Les créateurs concernés seront désignés selon trois critères, le contenu, l’impact et la régularité : une chaîne consacrée au jeu vidéo, à la cuisine ou au sport, sans incursion régulière dans le débat public, n’entre pas dans le champ. En cas de manquement, l’Arcom pourra adresser des mises en garde, puis des mises en demeure, puis des sanctions financières en cas de récidive. Les podcasts audio ne sont pas visés. Pourquoi c’est notable : le régulateur traite pour la première fois certains créateurs comme des éditeurs, avec les obligations qui vont avec.",
+        "en": "Arcom, France’s audiovisual and digital communications regulator, announced on Thursday 19 November that the main video creators on YouTube and social media will, for the first time, have to follow the rules on political pluralism during the 2027 presidential election, as television and radio already do. Its chair, Martin Ajdari, pointed to audiences that sometimes exceed those of traditional channels. From 16 March to 4 April, candidates and their supporters must receive “fair presentation and access”, in line with their standing; from 5 to 30 April, equal speaking time and airtime. Creators will be brought in on three criteria, content, impact and regularity: a channel devoted to gaming, cooking or sport, with no regular forays into public debate, is outside the scope. For breaches, Arcom can issue warnings, then formal notices, then fines for repeated failures. Audio podcasts are not covered. Why it matters: for the first time, the regulator is treating some creators as publishers, with the obligations that come with it."
+      },
+      "sources": [
+        {
+          "url": "https://www.franceinfo.fr/internet/les-principaux-createurs-de-contenus-devront-desormais-respecter-le-pluralisme-dans-leur-traitement-de-l-election-presidentielle_8290187.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "section": "brief",
+      "kicker": {
+        "fr": "JEU VIDÉO",
+        "en": "GAMES"
+      },
+      "title": {
+        "fr": "GTA VI, enfin sorti, et ce que dit l’attente",
+        "en": "GTA VI is out, and what the wait says"
+      },
+      "summary": {
+        "fr": "GTA VI, nouvel épisode de la série Grand Theft Auto de l’éditeur américain Rockstar Games, est sorti jeudi 19 novembre, treize ans et deux mois après GTA V. La critique est très largement enthousiaste : jeudi, l’agrégateur de critiques Metacritic lui attribuait 99/100, une note inédite depuis Zelda : Ocarina of Time il y a vingt-huit ans, selon le site Clubic cité par franceinfo. Le joueur incarne tour à tour Lucia et Jason, un couple de criminels, dans Leonida, un État fictif inspiré de la Floride ; leur relation influe sur le scénario, et une conduite nihiliste et solitaire risque de la détruire, prévient le New York Times. Les critiques saluent surtout la densité du monde ouvert ; BFM Tech trouve l’histoire lente à démarrer. Dans La Vie des idées, un article s’intéresse à l’autre prouesse de Rockstar : une communication rare et minutieusement orchestrée, dont la première bande-annonce, en décembre 2023, a dépassé 93 millions de vues en une journée sans montrer comment on jouerait. Pourquoi c’est notable : au-delà du jeu, l’article lit dans cette attente un rapport à la culture où l’on commente les œuvres bien avant qu’elles existent.",
+        "en": "GTA VI, the new instalment of Rockstar Games’ Grand Theft Auto series, came out on Thursday 19 November, thirteen years and two months after GTA V. Reviews are overwhelmingly enthusiastic: on Thursday the review aggregator Metacritic gave it 99/100, a score unseen since Zelda: Ocarina of Time twenty-eight years ago, according to the site Clubic, cited by franceinfo. Players switch between Lucia and Jason, a criminal couple, in Leonida, a fictional state modelled on Florida; their relationship shapes the story, and nihilistic, lone-wolf play can wreck it, the New York Times warns. Critics mostly praise the density of the open world; BFM Tech finds the story slow to get going. In La Vie des idées, an essay looks at Rockstar’s other feat: rare, meticulously staged communication, whose first trailer, in December 2023, passed 93 million views in a day without showing how the game would play. Why it matters: beyond the game itself, the essay reads in the wait a culture in which we discuss works long before they exist."
+      },
+      "sources": [
+        {
+          "url": "https://www.franceinfo.fr/culture/jeux-video/gta-vi/je-n-ai-jamais-joue-a-un-jeu-aussi-marquant-le-jeu-video-gta-vi-recoit-les-eloges-de-la-presse-specialisee-du-monde-entier_8289947.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        },
+        {
+          "url": "https://laviedesidees.fr/GTA-ou-comment-se-faire-desirer",
+          "label": {
+            "fr": "La Vie des idées",
+            "en": "La Vie des idées"
+          }
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "section": "explainer",
+      "kicker": null,
+      "title": {
+        "fr": "Le leasehold",
+        "en": "Leasehold"
+      },
+      "summary": {
+        "fr": "Pourquoi on en parle. Le gouvernement britannique a présenté jeudi 19 novembre au Parlement son projet de loi sur le commonhold et le leasehold (Commonhold and Leasehold Reform Bill), qui fixe le calendrier de la fin du leasehold en Angleterre et au pays de Galles, où environ cinq millions de logements relèvent de ce régime, selon la BBC.",
+        "en": "Why it's in the news. On Thursday 19 November the government introduced the Commonhold and Leasehold Reform Bill in Parliament, setting a timetable for ending leasehold in England and Wales, where around five million homes are held this way, according to the BBC."
+      },
+      "sources": [
+        {
+          "url": "https://www.bbc.co.uk/news/articles/cw987ynpd0n1o",
+          "label": {
+            "fr": "BBC",
+            "en": "BBC"
+          }
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "section": "techsci",
+      "kicker": {
+        "fr": "SÉCURITÉ",
+        "en": "SECURITY"
+      },
+      "title": {
+        "fr": "Ruby : sept failles mémoire, un correctif dans l’interpréteur",
+        "en": "Ruby: seven memory bugs, fixed in the interpreter"
+      },
+      "summary": {
+        "fr": "L’équipe du langage Ruby a publié mercredi 18 novembre les versions 4.0.10, 3.4.13 et 3.3.14, qui corrigent sept vulnérabilités dans son moteur d’expressions régulières et dans la conversion de casse des chaînes de caractères (le passage en majuscules ou en minuscules). Pour plusieurs d’entre elles, elle dit connaître des preuves de concept permettant une exécution de code à distance « dans certains scénarios ». La plus commentée, baptisée « ruby2ßhell » par la société de sécurité Veria Labs, est un dépassement de tampon d’un octet : la plupart des encodages à un octet n’ont pas de ß majuscule, si bien que mettre un « ß » en majuscules écrit deux lettres, « SS », là où le code n’a vérifié la place que pour une. Les chaînes en UTF-8 ne sont pas concernées. Selon Veria Labs, la faille est atteignable sans authentification dans la configuration par défaut des frameworks web Rails et Sinatra, mais pas des autres ; l’entreprise publiera sa preuve de concept dans une semaine. Il faut bien distinguer les couches : la faille est dans l’interpréteur Ruby, pas dans Rails, et le correctif consiste à mettre à jour Ruby lui-même, ou les logiciels qui l’embarquent. À 18 h 30 UTC jeudi, Veria Labs listait encore GitLab 19.6.0, GitHub Enterprise Server 3.22.5 et Chatwoot 4.20.0 parmi les versions livrées avec un Ruby vulnérable, et Mastodon, OpenProject et Discourse parmi celles déjà corrigées. Ruby 3.2 et les versions antérieures, en fin de vie, ne recevront pas de correctif, et les identifiants CVE n’étaient pas encore attribués.",
+        "en": "The Ruby language team released versions 4.0.10, 3.4.13 and 3.3.14 on Wednesday 18 November, fixing seven vulnerabilities in its regular-expression engine and in string case conversion (turning text into upper or lower case). For several of them, it says it knows of proofs of concept showing remote code execution is possible “in some scenarios”. The most discussed, dubbed “ruby2ßhell” by the security firm Veria Labs, is a one-byte buffer overflow: most single-byte encodings have no capital ß, so upper-casing a “ß” writes two letters, “SS”, where the code has only checked room for one. UTF-8 strings are not affected. According to Veria Labs, the flaw can be reached without authentication in the default configuration of the Rails and Sinatra web frameworks, but not others; the firm will publish its proof of concept in a week. Keep the layers apart: the bug is in the Ruby interpreter, not in Rails, and the fix is to upgrade Ruby itself, or the software that bundles it. At 18.30 UTC on Thursday, Veria Labs still listed GitLab 19.6.0, GitHub Enterprise Server 3.22.5 and Chatwoot 4.20.0 as shipping a vulnerable Ruby, and Mastodon, OpenProject and Discourse as already fixed. Ruby 3.2 and older, which have reached end of life, will get no fix, and CVE identifiers had not yet been assigned."
+      },
+      "sources": [
+        {
+          "url": "https://www.ruby-lang.org/en/news/2026/11/18/multiple-vulnerabilities-in-regexp-and-string/",
+          "label": {
+            "fr": "Ruby · avis de sécurité",
+            "en": "Ruby · security advisory"
+          }
+        },
+        {
+          "url": "https://verialabs.com/ruby2shell/",
+          "label": {
+            "fr": "Veria Labs",
+            "en": "Veria Labs"
+          }
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "section": "techsci",
+      "kicker": {
+        "fr": "BASES DE DONNÉES",
+        "en": "DATABASES"
+      },
+      "title": {
+        "fr": "PostgreSQL 19 : nettoyer une table sans l’arrêter",
+        "en": "PostgreSQL 19: clean up a table without stopping it"
+      },
+      "summary": {
+        "fr": "La base de données relationnelle libre PostgreSQL est sortie jeudi 19 novembre en version 19. La nouveauté la plus concrète pour ceux qui l’exploitent est la commande REPACK. Les tables souvent modifiées accumulent de l’espace inutilisé, le « bloat », qui ralentit les requêtes ; jusqu’ici, VACUUM FULL ou CLUSTER le récupéraient en bloquant l’accès à la table pendant l’opération. REPACK (CONCURRENTLY) le fait sans bloquer ni lectures ni écritures, et remplace ces deux commandes, conservées pour compatibilité. L’extension pg_plan_advice permet de figer les choix du planificateur de requêtes, qui peut changer de plan quand les données évoluent, parfois pour un plan plus lent ; sa compagne pg_stash_advice applique ces consignes automatiquement, sans toucher au code de l’application. Pour les architectures qui lisent sur des serveurs secondaires, la commande WAIT FOR LSN permet à une session d’attendre que ses propres écritures y soient répliquées avant de lire ; et la réplication logique n’exige plus de redémarrer le serveur pour être activée. Limite : LWN rappelle que plusieurs fonctionnalités initialement prévues ont été retirées de cette version avant sa sortie.",
+        "en": "The open-source relational database PostgreSQL reached version 19 on Thursday 19 November. The most practical change for the people who run it is the REPACK command. Heavily updated tables build up unused space, known as “bloat”, which slows queries down; until now VACUUM FULL or CLUSTER reclaimed it but locked the table while they worked. REPACK (CONCURRENTLY) does it without blocking reads or writes, and replaces both commands, which stay available for compatibility. The pg_plan_advice extension lets you pin the query planner’s choices, which can shift as data changes, sometimes to a slower plan; its companion pg_stash_advice applies that advice automatically, without touching application code. For set-ups that read from standby servers, the WAIT FOR LSN command lets a session wait until its own writes have been replayed there before reading; and logical replication no longer needs a server restart to switch on. The limit: LWN notes that several features originally planned for this release were removed before it shipped."
+      },
+      "sources": [
+        {
+          "url": "https://www.postgresql.org/about/news/postgresql-19-released-3449/",
+          "label": {
+            "fr": "PostgreSQL",
+            "en": "PostgreSQL"
+          }
+        },
+        {
+          "url": "https://lwn.net/Articles/1108561/",
+          "label": {
+            "fr": "LWN.net",
+            "en": "LWN.net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "section": "techsci",
+      "kicker": {
+        "fr": "ANDROID",
+        "en": "ANDROID"
+      },
+      "title": {
+        "fr": "La vérification des développeurs devient mondiale en janvier",
+        "en": "Developer verification goes global in January"
+      },
+      "summary": {
+        "fr": "Google commencera à imposer dans toutes les régions, à partir de janvier 2027, la vérification des développeurs Android, rapporte Ars Technica. Une fois la règle active, un téléphone certifié par Google refusera d’installer une application obtenue hors du Play Store si son développeur ne s’est pas enregistré, ce qui suppose une pièce d’identité officielle et 25 dollars de frais. Google présente la mesure comme une protection contre les logiciels malveillants ; elle s’applique depuis septembre au Brésil, en Indonésie, à Singapour et en Thaïlande, et l’entreprise affirme que les applications déjà enregistrées représentent plus de 99 % des installations d’applications Android dans le monde. Après les critiques, Google a ajouté un compte gratuit pour les amateurs, limité à 50 installations, et un « parcours avancé » qui permet d’installer n’importe quelle application, au prix d’avertissements appuyés et d’un délai de 24 heures. Ars Technica relève des limites : les développeurs de pays sous sanctions ne pourront pas se faire vérifier, et certaines installations nécessiteront une connexion aux serveurs de Google. Les grands magasins d’applications tiers, dont ceux de Samsung, Xiaomi et Oppo, se sont engagés à n’afficher que des applications vérifiées.",
+        "en": "Google will start enforcing Android developer verification in every region from January 2027, Ars Technica reports. Once it is live, a Google-certified phone will refuse to install an app from outside the Play Store if its developer has not registered, which requires official ID and a $25 fee. Google presents it as protection against malware; it has applied since September in Brazil, Indonesia, Singapore and Thailand, and the company says apps already registered account for more than 99% of Android app installs worldwide. After criticism, Google added a free hobbyist account limited to 50 installs, and an “advanced flow” that lets users install anything, at the cost of stern warnings and a 24-hour wait. Ars Technica points to the limits: developers in sanctioned countries will not be able to verify, and some installs will require a connection to Google’s servers. The big third-party app stores, including Samsung’s, Xiaomi’s and Oppo’s, have agreed to list only verified apps."
+      },
+      "sources": [
+        {
+          "url": "https://arstechnica.com/gadgets/2026/11/google-will-launch-android-app-verification-requirement-globally-in-january-2027/",
+          "label": {
+            "fr": "Ars Technica",
+            "en": "Ars Technica"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "section": "techsci",
+      "kicker": {
+        "fr": "IA",
+        "en": "AI"
+      },
+      "title": {
+        "fr": "Genie 4 : Google facture des mondes jouables générés en direct",
+        "en": "Genie 4: Google sells playable worlds generated on the fly"
+      },
+      "summary": {
+        "fr": "Google a rendu disponible jeudi 19 novembre, dans l’API Gemini destinée aux développeurs, Genie 4, un modèle qui génère en temps réel un monde en vidéo que l’on peut parcourir, selon les notes de version de l’API. On part d’un texte, d’une image de référence ou des deux, puis on se déplace au clavier et on modifie la scène en cours par des instructions écrites ; le flux sort à 24 images par seconde, au format 16:9, avec un son stéréo synchronisé. Le tarif de la vidéo, 17,50 dollars par million de jetons produits, revient selon Google à environ 10 cents par seconde. La même mise à jour introduit, en préversion, la « recherche d’outils » : au lieu d’envoyer à chaque requête la description complète de tous les outils qu’un agent peut appeler, le modèle va chercher celles dont il a besoin, ce qui allège le contexte des agents qui en manipulent beaucoup. Pourquoi c’est notable : les « modèles de monde », capables de simuler un environnement interactif, passent de la démonstration de recherche au produit facturé à la seconde. Limites : ces caractéristiques sont celles qu’annonce Google, sans évaluation indépendante à ce stade, et l’offre est réservée au niveau payant.",
+        "en": "On Thursday 19 November Google made Genie 4 generally available in the Gemini API for developers: a model that generates, in real time, a video world you can move through, according to the API’s release notes. You start from text, a reference image or both, then move with the keyboard and change the scene mid-session with written instructions; the stream runs at 24 frames per second in 16:9, with synchronised stereo sound. Video costs $17.50 per million output tokens, which Google puts at about 10 cents a second. The same update adds “tool retrieval”, in preview: instead of sending the full description of every tool an agent can call with each request, the model fetches the ones it needs, which lightens the context for agents that juggle many tools. Why it matters: “world models”, which simulate an interactive environment, are moving from research demos to a product billed by the second. The limits: these are Google’s own specifications, with no independent evaluation yet, and the offer is limited to the paid tier."
+      },
+      "sources": [
+        {
+          "url": "https://aistudio.google.com/docs/changelog",
+          "label": {
+            "fr": "Google · notes de version de l’API Gemini",
+            "en": "Google · Gemini API release notes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Et si le cheval, plutôt que le blé, avait fait l’État ?",
+        "en": "What if the horse, not wheat, made the state?"
+      },
+      "summary": {
+        "fr": "Dans Aeon (16 novembre, en anglais), Lhamsuren Munkh-Erdene conteste une idée devenue presque un lieu commun, de Jared Diamond à James C. Scott, et jusqu’à David Graeber et David Wengrow : l’agriculture céréalière et la sédentarité auraient fait naître l’État. Pour lui, la condition décisive est le transport non humain, animaux de bât, chevaux, bateaux, qui permet de concentrer hommes et ressources et de conquérir ; il cite l’empire comanche, bâti sans agriculture, et les puissances des steppes comme les Mongols. Il soutient aussi que le paradigme céréalier doit beaucoup à la guerre froide et aux querelles politiques sur les origines de la Chine. Pourquoi cliquer : une thèse franche, qui bouscule des livres que beaucoup ont lus. Limite : un essai polémique, qui range des auteurs très différents sous une même étiquette, et dont l’argument reste à confronter aux spécialistes.",
+        "en": "In Aeon (16 November), Lhamsuren Munkh-Erdene takes on an idea that has become almost common sense, from Jared Diamond to James C. Scott and even David Graeber and David Wengrow: that grain farming and settled life gave birth to the state. For him the decisive condition is transport beyond human legs, pack animals, horses, boats, which lets people and resources be concentrated and territory conquered; he points to the Comanche empire, built without agriculture, and to steppe powers such as the Mongols. He also argues that the grain paradigm owes much to the Cold War and to political quarrels over China’s origins. Why click: a bold thesis that unsettles books many of us have read. The limit: a polemical essay that lumps very different authors together, and whose argument still has to face the specialists."
+      },
+      "sources": [
+        {
+          "url": "https://aeon.co/essays/the-origins-of-the-state-are-not-agrarian-but-pastoralist",
+          "label": {
+            "fr": "Aeon",
+            "en": "Aeon"
+          }
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Hobbes, philosophe de la curiosité",
+        "en": "Hobbes, philosopher of curiosity"
+      },
+      "summary": {
+        "fr": "Dans The Conversation (19 novembre), Philippe Silberzahn, professeur à EM Lyon Business School, relit le Léviathan (1651) de Thomas Hobbes, réputé pour sa vision sombre de l’humain, sous un angle inattendu : la curiosité, cet « appétit de connaissance », serait ce qui distingue l’homme de l’animal. Née de l’angoisse de l’avenir, elle pousse à chercher les causes des choses, au risque de ronger celui qui regarde trop loin, comme l’aigle dévore le foie de Prométhée. Hobbes distingue deux manières de penser : chercher les moyens d’obtenir un effet voulu, ce que l’animal sait faire aussi, et imaginer tout ce qu’un moyen disponible pourrait produire. Pourquoi cliquer : une lecture courte et claire, appuyée sur les travaux de la philosophe Kathryn Tabb. Limite : l’auteur, spécialiste de l’entrepreneuriat, tire Hobbes vers une théorie de l’innovation, une lecture parmi d’autres.",
+        "en": "In The Conversation (19 November, in French), Philippe Silberzahn, a professor at EM Lyon Business School, rereads Thomas Hobbes’s Leviathan (1651), known for its bleak view of humanity, from an unexpected angle: curiosity, an “appetite for knowledge”, is what sets humans apart from animals. Born of anxiety about the future, it drives us to seek the causes of things, at the risk of gnawing at anyone who looks too far ahead, like the eagle at Prometheus’s liver. Hobbes distinguishes two ways of thinking: looking for the means to a desired effect, which animals can do too, and imagining everything an available means might produce. Why click: a short, clear read that draws on the philosopher Kathryn Tabb’s work. The limit: the author, a specialist in entrepreneurship, pulls Hobbes towards a theory of innovation, one reading among others."
+      },
+      "sources": [
+        {
+          "url": "https://theconversation.com/pour-thomas-hobbes-la-curiosite-est-le-propre-de-lhomme-et-le-ressort-de-toute-innovation-287011",
+          "label": {
+            "fr": "The Conversation",
+            "en": "The Conversation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Un fanzine de huit pages, plié par le navigateur",
+        "en": "An eight-page zine, folded by your browser"
+      },
+      "summary": {
+        "fr": "Une seule feuille A4, pliée trois fois et fendue au centre, donne un livret de huit pages sans agrafe ni colle ; le casse-tête, c’est la mise en page, car les pages s’impriment dans un ordre étrange, la rangée du haut à l’envers. fanzines.app, l’outil de Wilson Tovar, laisse composer chaque page à l’endroit, avec photos et texte, puis place tout sur la feuille et produit un PDF à 300 points par pouce. Tout reste dans le navigateur : aucune photo n’est envoyée sur un serveur, selon son auteur, qui vient d’ajouter l’édition par doubles pages et des marges adaptées aux imprimantes. Pourquoi cliquer : un petit outil bien pensé pour un plaisir très concret, à faire ce week-end. Limite : un projet personnel, disponible en anglais et en espagnol.",
+        "en": "A single A4 sheet, folded three times and slit down the middle, makes an eight-page booklet with no staples or glue; the puzzle is the layout, because the pages print in an odd order, with the top row upside down. fanzines.app, Wilson Tovar’s tool, lets you lay out each page the right way up, with photos and text, then places everything on the sheet and produces a 300 DPI PDF. Everything stays in the browser, with no photos uploaded to a server, according to its maker, who has just added spread-based editing and printer-safe margins. Why click: a small, well-thought-out tool for a very tangible pleasure, ready for the weekend. The limit: a personal project, available in English and Spanish."
+      },
+      "sources": [
+        {
+          "url": "https://krthr.co/paper-folds-and-whats-new-in-fanzines-app/",
+          "label": {
+            "fr": "krthr.co · fanzines.app",
+            "en": "krthr.co · fanzines.app"
+          }
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "La clôture de la COP31, vendredi 20 novembre",
+        "en": "The close of COP31, Friday 20 November"
+      },
+      "summary": {
+        "fr": "La conférence d’Antalya doit s’achever officiellement vendredi, mais ces négociations débordent souvent. À regarder : si une référence aux énergies fossiles revient dans le texte final, si le Panama maintient son blocage, et si le financement de l’adaptation dépasse le stade d’un appel à discuter.",
+        "en": "The Antalya conference is officially due to end on Friday, but these talks often overrun. What to watch: whether any reference to fossil fuels returns in the final text, whether Panama keeps up its blockade, and whether adaptation finance moves beyond a call for more talks."
+      },
+      "sources": [
+        {
+          "url": "https://www.dw.com/en/no-mention-of-fossil-fuels-in-latest-cop31-draft-deal/a-79992394",
+          "label": {
+            "fr": "DW",
+            "en": "DW"
+          }
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "La preuve de concept de ruby2ßhell",
+        "en": "The ruby2ßhell proof of concept"
+      },
+      "summary": {
+        "fr": "Veria Labs prévoit de la publier dans une semaine. À regarder : d’ici là, les mises à jour de GitLab, GitHub Enterprise Server et des autres logiciels qui embarquent un Ruby vulnérable ; après, une faille documentée devient plus facile à exploiter.",
+        "en": "Veria Labs plans to publish it in a week. What to watch: updates before then from GitLab, GitHub Enterprise Server and other software that bundles a vulnerable Ruby; once a flaw is documented, it becomes easier to exploit."
+      },
+      "sources": [
+        {
+          "url": "https://verialabs.com/ruby2shell/",
+          "label": {
+            "fr": "Veria Labs",
+            "en": "Veria Labs"
+          }
+        }
+      ]
+    }
+  ],
+  "timeline": [],
+  "inBrief": [
+    {
+      "text": {
+        "fr": "Anthropic, l’entreprise d’IA qui développe Claude, a fait jeudi ses débuts au Nasdaq : l’action a ouvert à 111,50 dollars, 34 % au-dessus du prix d’introduction de 83 dollars, ce qui la valorisait à 2 000 milliards de dollars après une levée record de 81 milliards, alors que l’entreprise n’est pas encore rentable, rappelle DW ([DW](https://www.dw.com/en/anthropic-trading-tests-investors-appetite-for-ai/a-79993163)).",
+        "en": "Anthropic, the AI company behind Claude, made its Nasdaq debut on Thursday: its shares opened at $111.50, 34% above the $83 offer price, valuing it at $2 trillion after a record $81 billion raise, even though the company is not yet profitable, DW notes ([DW](https://www.dw.com/en/anthropic-trading-tests-investors-appetite-for-ai/a-79993163))."
+      },
+      "urls": [
+        "https://www.dw.com/en/anthropic-trading-tests-investors-appetite-for-ai/a-79993163"
+      ]
+    },
+    {
+      "text": {
+        "fr": "L’application Gemini pour Mac peut désormais utiliser l’ordinateur pour enchaîner des tâches dans les fichiers, les applications et le web, avec un accès choisi application par application, une fonction déployée en anglais aux États-Unis ([The Verge](https://www.theverge.com/tech/1037902/google-gemini-macos-ai-computer-use)).",
+        "en": "Google’s Gemini app for Mac can now operate the computer to carry out multi-step tasks across files, apps and the web, with access granted app by app, rolling out in English in the US ([The Verge](https://www.theverge.com/tech/1037902/google-gemini-macos-ai-computer-use))."
+      },
+      "urls": [
+        "https://www.theverge.com/tech/1037902/google-gemini-macos-ai-computer-use"
+      ]
+    },
+    {
+      "text": {
+        "fr": "La Commission européenne a confirmé avoir été visée fin octobre par une « cyber campagne générée par l’IA », détectée le 22 octobre, sans preuve à ce stade de vol de données personnelles ni attribution ([franceinfo](https://www.franceinfo.fr/monde/europe/union-europeenne/la-commission-europeenne-annonce-avoir-ete-la-cible-d-une-cyberattaque-assistee-par-l-intelligence-artificielle-en-octobre_8289959.html)).",
+        "en": "The European Commission confirmed it was targeted in late October by an “AI-generated cyber campaign”, detected on 22 October, with no evidence so far of personal data being stolen and no attribution ([franceinfo](https://www.franceinfo.fr/monde/europe/union-europeenne/la-commission-europeenne-annonce-avoir-ete-la-cible-d-une-cyberattaque-assistee-par-l-intelligence-artificielle-en-octobre_8289959.html))."
+      },
+      "urls": [
+        "https://www.franceinfo.fr/monde/europe/union-europeenne/la-commission-europeenne-annonce-avoir-ete-la-cible-d-une-cyberattaque-assistee-par-l-intelligence-artificielle-en-octobre_8289959.html"
+      ]
+    }
+  ]
+}
