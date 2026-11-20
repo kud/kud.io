@@ -18,6 +18,7 @@
 // and the findings are therefore incomplete.
 import { readFile, readdir, access } from "node:fs/promises"
 import { join } from "node:path"
+import { fileURLToPath } from "node:url"
 import {
   OWNER,
   TOPIC,
@@ -30,9 +31,12 @@ import {
   readmeHeadings,
 } from "./lib/kud-site.js"
 
-const CONTENT_DIR = "content/projects"
-const PUBLIC_APPS_DIR = "public/apps"
-const IGNORE_FILE = "scripts/kud-site-ignore.txt"
+// Resolved from this file rather than the working directory: run from anywhere
+// else, relative paths made every §9 file and every ignore line read as absent.
+const ROOT = fileURLToPath(new URL("..", import.meta.url))
+const CONTENT_DIR = join(ROOT, "content/projects")
+const PUBLIC_APPS_DIR = join(ROOT, "public/apps")
+const IGNORE_FILE = join(ROOT, "scripts/kud-site-ignore.txt")
 const BATCH_SIZE = 10
 
 // Paths whose changes can plausibly contradict a usage doc. An internal
@@ -235,7 +239,7 @@ const siteSideFacts = async (slug, group) => {
     facts["public/apps/<slug>.png"] = (await exists(
       join(PUBLIC_APPS_DIR, `${slug}.png`),
     ))
-      ? `${PUBLIC_APPS_DIR}/${slug}.png`
+      ? `public/apps/${slug}.png`
       : null
   }
   return facts
@@ -490,7 +494,7 @@ const render = (report) => {
 
   for (const slug of report.taggedAndArchived) {
     lines.push(
-      `⚠ ${slug} is tagged ${TOPIC} and archived — still rendering as live`,
+      `⚠ ${slug} is tagged ${TOPIC} and archived — the sync skips it, only the topic is stale`,
     )
   }
 
