@@ -1,0 +1,562 @@
+{
+  "schema": 1,
+  "date": "2026-11-20",
+  "generatedAt": "2026-11-20T18:47:00.000+00:00",
+  "publishedAt": "2026-11-20T18:46:46Z",
+  "languages": [
+    "fr",
+    "en"
+  ],
+  "lede": {
+    "fr": "Ce soir, on s’arrête sur une annonce vertigineuse : un mathématicien d’Anthropic affirme avoir démontré, avec Claude, l’hypothèse de Riemann, sous la forme d’une preuve que seule une machine peut encore lire. Puis l’accord entre Londres et Bruxelles, un missile russe tombé en Pologne, un espoir prudent contre le cancer du pancréas et une COP31 qui joue les prolongations, avant d’expliquer comment on « tatoue » un texte écrit par une IA. Côté technique, Signal qui ferme la porte aux assistants des systèmes d’exploitation et une belle preuve sur les réseaux ; et quatre trouvailles, de la colère comme objet d’étude à un monde en pixel art compilé comme du code.",
+    "en": "Tonight, we stop on a dizzying announcement: an Anthropic mathematician says that, working with Claude, he has proved the Riemann hypothesis, in a proof that for now only a machine can read. Then the deal between London and Brussels, a Russian missile in Poland, cautious hope against pancreatic cancer and a COP31 running into extra time, before we explain how text written by an AI gets “watermarked”. On the technical side, Signal shutting out operating-system assistants and an elegant proof about networks; and four finds, from anger as an object of study to a pixel-art world compiled like code."
+  },
+  "readingMinutes": {
+    "fr": 15,
+    "en": 15
+  },
+  "wordCount": {
+    "fr": 3088,
+    "en": 2959
+  },
+  "narrative": {
+    "overview": {
+      "fr": "Ce soir, on s’arrête sur une annonce vertigineuse : un mathématicien d’Anthropic affirme avoir démontré, avec Claude, l’hypothèse de Riemann, sous la forme d’une preuve que seule une machine peut encore lire. Puis l’accord entre Londres et Bruxelles, un missile russe tombé en Pologne, un espoir prudent contre le cancer du pancréas et une COP31 qui joue les prolongations, avant d’expliquer comment on « tatoue » un texte écrit par une IA. Côté technique, Signal qui ferme la porte aux assistants des systèmes d’exploitation et une belle preuve sur les réseaux ; et quatre trouvailles, de la colère comme objet d’étude à un monde en pixel art compilé comme du code.",
+      "en": "Tonight, we stop on a dizzying announcement: an Anthropic mathematician says that, working with Claude, he has proved the Riemann hypothesis, in a proof that for now only a machine can read. Then the deal between London and Brussels, a Russian missile in Poland, cautious hope against pancreatic cancer and a COP31 running into extra time, before we explain how text written by an AI gets “watermarked”. On the technical side, Signal shutting out operating-system assistants and an elegant proof about networks; and four finds, from anger as an object of study to a pixel-art world compiled like code."
+    },
+    "analysis": null,
+    "closing": {
+      "fr": "Bonne soirée, et si vous comptez les nombres premiers pour vous endormir, sachez que Riemann veille encore sur le troupeau.",
+      "en": "Have a good evening, and if you count primes to fall asleep, rest assured Riemann is still watching over the flock."
+    }
+  },
+  "sections": [
+    {
+      "key": "overview",
+      "kind": "narrative",
+      "title": {
+        "fr": "Ce soir",
+        "en": "Tonight"
+      },
+      "items": []
+    },
+    {
+      "key": "depth",
+      "kind": "items",
+      "title": {
+        "fr": "Le sujet du jour",
+        "en": "Today’s focus"
+      },
+      "items": [
+        "01"
+      ]
+    },
+    {
+      "key": "brief",
+      "kind": "items",
+      "title": {
+        "fr": "L’essentiel",
+        "en": "The essentials"
+      },
+      "items": [
+        "02",
+        "03",
+        "04",
+        "05"
+      ]
+    },
+    {
+      "key": "explainer",
+      "kind": "items",
+      "title": {
+        "fr": "C’est quoi ?",
+        "en": "Explainer"
+      },
+      "items": [
+        "06"
+      ]
+    },
+    {
+      "key": "techsci",
+      "kind": "items",
+      "title": {
+        "fr": "Technologie & science",
+        "en": "Technology & science"
+      },
+      "items": [
+        "07",
+        "08"
+      ]
+    },
+    {
+      "key": "inbrief",
+      "kind": "bullets",
+      "title": {
+        "fr": "En bref",
+        "en": "In brief"
+      },
+      "items": []
+    },
+    {
+      "key": "finds",
+      "kind": "items",
+      "title": {
+        "fr": "Ça vaut un clic",
+        "en": "Worth a click"
+      },
+      "items": [
+        "09",
+        "10",
+        "11",
+        "12"
+      ]
+    },
+    {
+      "key": "watch",
+      "kind": "items",
+      "title": {
+        "fr": "À surveiller",
+        "en": "Watch next"
+      },
+      "items": [
+        "13",
+        "14"
+      ]
+    },
+    {
+      "key": "closing",
+      "kind": "narrative",
+      "title": {
+        "fr": "Pour finir",
+        "en": "To close"
+      },
+      "items": []
+    }
+  ],
+  "items": [
+    {
+      "id": "01",
+      "section": "depth",
+      "kicker": {
+        "fr": "MATHÉMATIQUES",
+        "en": "MATHEMATICS"
+      },
+      "title": {
+        "fr": "L’hypothèse de Riemann revendiquée, dans une preuve que personne n’a encore lue",
+        "en": "The Riemann hypothesis, claimed in a proof nobody has yet read"
+      },
+      "summary": {
+        "fr": "Levent Alpöge, mathématicien employé par Anthropic, l’entreprise qui développe l’IA Claude, et membre de la Society of Fellows de Harvard, a publié jeudi soir sur son site un texte où il écrit : « Je crois avoir, en travaillant avec Claude, découvert une preuve de l’hypothèse de Riemann ». Il ajoute que la méthode s’étend à l’hypothèse de Riemann généralisée. Rien n’est encore vérifié de façon indépendante, souligne The Verge, et Anthropic n’a pas commenté. Ce qui rend l’annonce singulière, c’est sa forme : la preuve n’existe pour l’instant qu’en Lean, un langage où chaque étape d’un raisonnement est contrôlée par ordinateur, découpée en quatorze archives. Alpöge dit avoir renoncé à publier un « énorme document illisible » et vouloir d’abord comprendre et rédiger proprement l’argument.",
+        "en": "Levent Alpöge, a mathematician employed by Anthropic, the company behind the Claude AI, and a member of Harvard’s Society of Fellows, posted a note on his website on Thursday evening saying: “I believe I have, working with Claude, discovered a proof of the Riemann Hypothesis.” He adds that the method extends to the Generalized Riemann Hypothesis. None of it has been independently verified, The Verge stresses, and Anthropic has not commented. What makes the announcement unusual is its form: for now the proof exists only in Lean, a language in which every step of an argument is checked by computer, split across fourteen archive files. Alpöge says he chose not to post a “massive unreadable” document and wants first to understand and write up the argument properly."
+      },
+      "sources": [
+        {
+          "url": "https://www.theverge.com/ai-artificial-intelligence/1010051/anthropic-riemann-hypothesis-millennium-prize-problem",
+          "label": {
+            "fr": "The Verge",
+            "en": "The Verge"
+          }
+        },
+        {
+          "url": "https://alpo.ge/remark.pdf",
+          "label": {
+            "fr": "Levent Alpöge · remarque",
+            "en": "Levent Alpöge · remark"
+          }
+        },
+        {
+          "url": "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/",
+          "label": {
+            "fr": "Terence Tao · What's new",
+            "en": "Terence Tao · What's new"
+          }
+        },
+        {
+          "url": "https://www.anthropic.com/research/riemann-zeta",
+          "label": {
+            "fr": "Anthropic · La fonction zêta de Riemann",
+            "en": "Anthropic · The Riemann zeta function"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "section": "brief",
+      "kicker": {
+        "fr": "EUROPE",
+        "en": "EUROPE"
+      },
+      "title": {
+        "fr": "Londres et Bruxelles signent la suite du « reset » post-Brexit",
+        "en": "London and Brussels sign the next stage of the post-Brexit reset"
+      },
+      "summary": {
+        "fr": "Réunis vendredi 20 novembre à Bruxelles, le Premier ministre britannique Andy Burnham, la présidente de la Commission européenne Ursula von der Leyen et le président du Conseil européen António Costa ont conclu un accord qualifié d’« historique » par Londres et de « tournant » par la Commission, dix ans après le référendum sur le Brexit. Il prévoit, à partir de 2028, la suppression de la plupart des contrôles sur les exportations alimentaires britanniques vers l’UE, en échange de l’application par le Royaume-Uni de certaines règles européennes ; un programme d’« expérience » pour les 18-31 ans, jusqu’à 100 000 jeunes par an dans chaque sens, pour vivre, étudier ou travailler jusqu’à trois ans, au plus tard en janvier 2030 ; et le raccordement des deux marchés du carbone, ces systèmes où les industriels achètent des quotas d’émission, à partir de 2028. Les frais universitaires des étudiants européens restent à négocier, dans un délai de six mois. Selon Andy Burnham, le Trésor estime que l’accord pourrait ajouter « jusqu’à » 0,5 % au PIB, soit 17 milliards de livres par an ; la cheffe des conservateurs, Kemi Badenoch, l’accuse d’avoir « sorti ce chiffre de nulle part », et Nigel Farage, du parti Reform, parle de « trahison ». Les lignes rouges restent en place : ni marché unique, ni union douanière, ni libre circulation. Le Premier ministre juge l’accord « probablement la limite » de ce que permet cette législature et renvoie le débat sur une relation plus étroite aux prochaines élections, d’ici août 2029.",
+        "en": "Meeting in Brussels on Friday 20 November, the UK Prime Minister Andy Burnham, the European Commission President Ursula von der Leyen and the European Council President António Costa concluded a deal that London calls “historic” and the Commission a “turning point”, ten years after the Brexit referendum. From 2028 it scraps most checks on British food exports to the EU, in return for the UK following some EU rules; it creates a “youth experience” scheme letting up to 100,000 people aged 18 to 31 a year in each direction live, study or work for up to three years, by January 2030 at the latest; and it links the two carbon markets, the systems in which industry buys emission allowances, from 2028. Tuition fees for European students are still to be negotiated, within six months. According to Andy Burnham, the Treasury estimates the deal could add “up to” 0.5% to GDP, or £17bn a year; the Conservative leader Kemi Badenoch accuses him of having “plucked that figure out of the air”, and Reform UK’s Nigel Farage calls it a “betrayal”. The red lines stay in place: no single market, no customs union, no freedom of movement. The Prime Minister calls the deal “probably the limit” of what this Parliament can achieve and leaves the case for closer ties to the next general election, due by August 2029."
+      },
+      "sources": [
+        {
+          "url": "https://www.bbc.co.uk/news/articles/c6jreyqgw4e9o",
+          "label": {
+            "fr": "BBC",
+            "en": "BBC"
+          }
+        },
+        {
+          "url": "https://www.franceinfo.fr/monde/royaume-uni/le-royaume-uni-annonce-un-accord-historique-avec-l-union-europeenne-bruxelles-salue-un-tournant-dix-ans-apres-le-referendum-sur-le-brexit_8292233.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "section": "brief",
+      "kicker": {
+        "fr": "GUERRE EN UKRAINE",
+        "en": "WAR IN UKRAINE"
+      },
+      "title": {
+        "fr": "Un missile russe tombe en Pologne, près d’un exercice allié",
+        "en": "A Russian missile comes down in Poland, near an allied exercise"
+      },
+      "summary": {
+        "fr": "Un missile de croisière russe Kh-101 s’est écrasé vendredi 20 novembre vers 6 h 30, heure locale, dans un champ de Nowy Lipowiec, dans le sud-est de la Pologne, à une cinquantaine de kilomètres de la frontière ukrainienne, selon le ministre polonais de la Défense, Władysław Kosiniak-Kamysz, cité par la BBC. Trois objets ont violé l’espace aérien polonais : un second missile présumé est tombé près de Rudnik nad Sanem et un drone à réaction près de Mołodycz. Il n’y a ni blessé ni dégât signalé. Ces violations ont eu lieu pendant l’une des plus vastes attaques aériennes russes contre l’Ukraine depuis 2022, qui a tué au moins huit personnes, visant des ponts de Kyiv et une gare de Lviv. Le Premier ministre Donald Tusk estime que ce n’était pas un accident : les engins sont tombés près de Nowa Dęba, où se déroule Koalicja 2026, un exercice mené par le Royaume-Uni et la France avec onze pays de la « coalition des volontaires », ces États qui préparent une force de garantie en cas d’accord de paix en Ukraine. Varsovie parle de « provocation » ; le secrétaire général de l’Otan, Mark Rutte, condamne de « graves violations » et indique que des avions ont décollé en réponse. La Russie n’a pas réagi. Un précédent remonte à juillet, quand un missile avait laissé un cratère de dix mètres dans l’est du pays.",
+        "en": "A Russian Kh-101 cruise missile crashed into a field at Nowy Lipowiec, in south-eastern Poland, about 50km from the Ukrainian border, at around 06.30 local time on Friday 20 November, according to the Polish defence minister, Władysław Kosiniak-Kamysz, quoted by the BBC. Three objects violated Polish airspace: a second suspected missile came down near Rudnik nad Sanem and a jet-powered drone near Mołodycz. No injuries or damage were reported. The incursions happened during one of Russia’s largest air attacks on Ukraine since 2022, which killed at least eight people as it targeted bridges in Kyiv and a station in Lviv. The Prime Minister, Donald Tusk, says it was no accident: the objects fell near Nowa Dęba, where Koalicja 2026 is under way, an exercise led by the UK and France with eleven countries from the “coalition of the willing”, the states preparing a reassurance force in case of a peace deal in Ukraine. Warsaw calls it a “provocation”; Nato’s Secretary General, Mark Rutte, condemned “grave violations” and said jets had been scrambled in response. Russia has not commented. There is a precedent from July, when a missile left a ten-metre crater in the east of the country."
+      },
+      "sources": [
+        {
+          "url": "https://www.bbc.co.uk/news/articles/cqx2x9dklxnro",
+          "label": {
+            "fr": "BBC",
+            "en": "BBC"
+          }
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "section": "brief",
+      "kicker": {
+        "fr": "SANTÉ",
+        "en": "HEALTH"
+      },
+      "title": {
+        "fr": "Cancer du pancréas : un comprimé ciblé fait reculer les tumeurs, sans promettre la guérison",
+        "en": "Pancreatic cancer: a targeted pill shrinks tumours, without promising a cure"
+      },
+      "summary": {
+        "fr": "Dans un essai précoce présenté au congrès européen de cancérologie EORTC-NCI-AACR, le daraxonrasib, un comprimé quotidien, associé à une chimiothérapie, a stoppé la croissance des tumeurs chez 90 % des 61 patients, tous atteints d’un cancer du pancréas récemment diagnostiqué et déjà métastatique, rapporte la BBC. Un peu plus de 60 % ont vu leurs tumeurs diminuer ou disparaître, et chez environ un patient sur douze, elles sont devenues invisibles au scanner. Le médicament, déjà autorisé aux États-Unis, bloque les mutations du gène RAS, présentes dans la plupart des cancers du pancréas et longtemps jugées impossibles à cibler par un médicament. L’association Cancer Research UK parle du « plus grand bond en avant depuis des décennies » ; selon Sam Godfrey, qui y travaille, le traitement a trouvé le moyen de « cibler l’inciblable ». Pourquoi c’est notable : ce cancer a le plus faible taux de survie de tous les cancers courants au Royaume-Uni, où il tue environ 10 200 personnes par an, et la plupart des malades à un stade avancé vivent quelques mois. Limites, soulignées par les médecins eux-mêmes : les patients ont été suivis en moyenne un an et demi, on ignore combien de temps l’effet dure, et une tumeur invisible au scanner n’est pas une guérison.",
+        "en": "In an early trial presented at the EORTC–NCI–AACR cancer symposium, daraxonrasib, a daily pill, given alongside chemotherapy, stopped tumours growing in 90% of 61 patients, all recently diagnosed with pancreatic cancer that had already spread, the BBC reports. Just over 60% saw their tumours shrink or disappear, and in about one patient in twelve they became undetectable on CT scans. The drug, already approved in the United States, blocks mutations in the RAS gene, found in most pancreatic cancers and long thought impossible to target with a drug. Cancer Research UK calls it “the biggest leap forward in decades”; according to the charity’s Sam Godfrey, the treatment has found a way of “drugging the undruggable”. Why it matters: this cancer has the lowest survival rate of all common cancers in the UK, where it kills about 10,200 people a year, and most patients with advanced disease survive months. The limits, stressed by the doctors themselves: patients were followed for a year and a half on average, nobody yet knows how long the effect lasts, and a tumour that cannot be seen on a scan is not a cure."
+      },
+      "sources": [
+        {
+          "url": "https://www.bbc.co.uk/news/articles/cqrmgjnzz9l0o",
+          "label": {
+            "fr": "BBC",
+            "en": "BBC"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "section": "brief",
+      "kicker": {
+        "fr": "CLIMAT",
+        "en": "CLIMATE"
+      },
+      "title": {
+        "fr": "La COP31 en prolongation, et la science elle-même en négociation",
+        "en": "COP31 goes into extra time, with the science itself up for negotiation"
+      },
+      "summary": {
+        "fr": "La conférence des Nations unies sur le climat d’Antalya, en Turquie, devait s’achever vendredi 20 novembre ; elle se prolonge sans accord en vue. Au moins huit pays, dont la France, la Finlande, le Panama, la Côte d’Ivoire et les îles Salomon, exigent dans une lettre publique que la décision finale mentionne « une transition claire hors des énergies fossiles » et une « électrification propre et immédiate », deux points absents du projet diffusé jeudi, rapporte franceinfo. Le groupe des petits États insulaires (Aosis) prévient que la COP serait « un échec » sans réponse à un réchauffement « hors de contrôle ». Un second conflit, moins visible, porte sur le calendrier du Giec, le groupe d’experts de l’ONU dont les rapports fondent les accords climatiques : sa dernière session plénière a été suspendue en octobre à la demande de la Russie, de l’Iran, de l’Arabie saoudite et du Kenya, explique DW, si bien que ses prochains rapports risquent de ne pas être prêts pour le deuxième bilan mondial de l’accord de Paris, attendu en 2028. Pourquoi c’est important : sans évaluation scientifique à jour, ce bilan des efforts nationaux se ferait sur des données de 2023.",
+        "en": "The UN climate conference in Antalya, Turkey, was due to end on Friday 20 November; it is running on with no deal in sight. At least eight countries, among them France, Finland, Panama, Côte d’Ivoire and the Solomon Islands, demand in a public letter that the final decision mention “a clear transition away from fossil fuels” and “clean and immediate electrification”, both missing from the draft released on Thursday, franceinfo reports. The Alliance of Small Island States (Aosis) warns the COP would be “a failure” if it does not respond to warming that is “out of control”. A second, less visible fight concerns the timetable of the IPCC, the UN’s panel of climate scientists whose reports underpin climate agreements: its last plenary session was put on hold in October at the urging of Russia, Iran, Saudi Arabia and Kenya, DW explains, so its next reports may not be ready for the Paris Agreement’s second global stocktake, due in 2028. Why it matters: without an up-to-date scientific assessment, that review of national efforts would rely on figures from 2023."
+      },
+      "sources": [
+        {
+          "url": "https://www.franceinfo.fr/environnement/crise-climatique/cop-climat/plusieurs-pays-dont-la-france-exigent-une-decision-finale-de-la-cop31-incluant-une-transition-claire-hors-des-energies-fossiles_8292470.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        },
+        {
+          "url": "https://www.dw.com/en/at-cop31-conflict-over-climate-science-slows-action-on-global-warming/a-80004894",
+          "label": {
+            "fr": "DW",
+            "en": "DW"
+          }
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "section": "explainer",
+      "kicker": null,
+      "title": {
+        "fr": "Le filigrane d’un texte écrit par une IA",
+        "en": "The watermark in AI-written text"
+      },
+      "summary": {
+        "fr": "Pourquoi on en parle. Anthropic a annoncé le 16 novembre que les textes produits par plusieurs de ses anciens modèles Claude portent désormais son « filigrane » (watermark), comme ceux de ses modèles lancés depuis le 2 août. L’entreprise applique ainsi le code de bonnes pratiques qu’elle a signé au titre de l’article 50 du règlement européen sur l’intelligence artificielle (AI Act), qui impose de marquer les contenus générés de façon lisible par une machine.",
+        "en": "Why it's in the news. Anthropic announced on 16 November that text produced by several of its older Claude models now carries its watermark, as text from its models launched since 2 August already does. The company is applying the code of practice it signed under Article 50 of the EU’s Artificial Intelligence Act, which requires generated content to be marked in a machine-readable way."
+      },
+      "sources": [
+        {
+          "url": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
+          "label": {
+            "fr": "Claude · Comment Claude marque les contenus générés",
+            "en": "Claude · How Claude marks AI-generated content"
+          }
+        },
+        {
+          "url": "https://platform.claude.com/docs/en/release-notes/overview",
+          "label": {
+            "fr": "Claude Platform · notes de version",
+            "en": "Claude Platform · release notes"
+          }
+        },
+        {
+          "url": "https://arxiv.org/abs/2301.10226",
+          "label": {
+            "fr": "arXiv · A Watermark for Large Language Models",
+            "en": "arXiv · A Watermark for Large Language Models"
+          }
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "section": "techsci",
+      "kicker": {
+        "fr": "VIE PRIVÉE",
+        "en": "PRIVACY"
+      },
+      "title": {
+        "fr": "Signal ferme la porte aux assistants IA d’Android et d’iOS",
+        "en": "Signal shuts out the AI assistants in Android and iOS"
+      },
+      "summary": {
+        "fr": "La messagerie chiffrée Signal a annoncé qu’elle bloque désormais les captures d’écran dans son application sur iOS 27, et sur Android lorsqu’elle détecte qu’un assistant IA tente de lire l’écran. En cause : les agents intégrés aux systèmes d’exploitation, que Signal nomme Gemini Intelligence chez Google et Onscreen Awareness de Siri chez Apple, qui « lisent » l’écran pour répondre aux questions de l’utilisateur ; une fois capturés, les messages échappent au chiffrement de bout en bout et peuvent finir dans une base locale ou sur un serveur distant. Signal avait fait de même l’an dernier contre Recall, la fonction de Windows 11 qui photographie l’écran en continu. Le réglage peut être désactivé, au prix, prévient Signal, de la confidentialité de ses correspondants. La fondation reconnaît que la parade est incomplète : un agent pourrait lire des données déjà stockées sur l’appareil, elle ne peut rien faire sur macOS faute d’outils, et elle reproche à Google, Apple et Microsoft de ne fournir ni documentation ni moyen simple de tenir ces agents à l’écart. Pourquoi c’est notable : le chiffrement protège le trajet d’un message, pas l’écran sur lequel il s’affiche ; c’est désormais là que se joue la confidentialité.",
+        "en": "The encrypted messenger Signal has announced that it now blocks screenshots in its app on iOS 27, and on Android when it detects an AI assistant trying to read the screen. The target: agents built into operating systems, which Signal names as Google’s Gemini Intelligence and Siri’s Onscreen Awareness at Apple, that “read” the screen to answer the user’s questions; once captured, messages are beyond the reach of end-to-end encryption and may end up in a local database or on a remote server. Signal did the same last year against Recall, the Windows 11 feature that continuously captures the screen. The setting can be switched off, at the cost, Signal warns, of your contacts’ privacy. The foundation admits the fix is incomplete: an agent could read data already stored on the device, it can do nothing on macOS for lack of tools, and it faults Google, Apple and Microsoft for providing neither documentation nor a simple way to keep these agents out. Why it matters: encryption protects a message in transit, not the screen it is displayed on; that is now where privacy is won or lost."
+      },
+      "sources": [
+        {
+          "url": "https://signal.org/blog/protecting-your-privacy/",
+          "label": {
+            "fr": "Signal",
+            "en": "Signal"
+          }
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "section": "techsci",
+      "kicker": {
+        "fr": "RÉSEAUX",
+        "en": "NETWORKS"
+      },
+      "title": {
+        "fr": "Quatre motifs suffisent à empêcher un réseau d’être parfaitement résilient",
+        "en": "Four patterns are all it takes to stop a network being perfectly resilient"
+      },
+      "summary": {
+        "fr": "Quand un câble lâche, un routeur doit renvoyer les paquets ailleurs sans attendre qu’une carte complète du réseau soit recalculée, avec ses seules informations locales : la destination, le lien d’arrivée, les liens voisins en panne. Un réseau est dit « parfaitement résilient » si de telles règles locales livrent toujours les paquets tant qu’un chemin existe. En 2012, des chercheurs avaient formalisé la question et montré, sur un exemple, que c’est parfois impossible. Matthias Bentert et Stefan Schmid, de l’université technique de Berlin, ont bouclé le problème, présenté en juin au Symposium on Theory of Computing et raconté par Quanta Magazine : exactement quatre motifs de connexion, des « mineurs interdits » au sens de la théorie des graphes, rendent la résilience parfaite impossible, et tout réseau qui n’en contient aucun peut l’atteindre. La preuve fournit même un algorithme rapide, fondé sur la vieille astuce pour sortir d’un labyrinthe : tourner toujours à droite. Limites : le modèle ignore la vitesse et la congestion, et les réseaux réels, très denses, contiennent souvent l’un des quatre motifs, reconnaît Brighten Godfrey, coauteur des travaux de 2012.",
+        "en": "When a cable fails, a router has to send packets elsewhere without waiting for a full map of the network to be recalculated, using only local information: the destination, the link a packet arrived on, the neighbouring links that are down. A network is called “perfectly resilient” if such local rules always deliver packets as long as some path exists. In 2012, researchers formalised the question and showed, with one example, that it is sometimes impossible. Matthias Bentert and Stefan Schmid of the Technical University of Berlin have now settled the problem, presented in June at the Symposium on Theory of Computing and described by Quanta Magazine: exactly four connection patterns, “forbidden minors” in graph-theory terms, make perfect resilience impossible, and any network containing none of them can achieve it. The proof even yields a fast algorithm, based on the old trick for escaping a maze: always turn right. The limits: the model ignores speed and congestion, and dense real-world networks often contain one of the four patterns, concedes Brighten Godfrey, a co-author of the 2012 work."
+      },
+      "sources": [
+        {
+          "url": "https://www.quantamagazine.org/network-researchers-nail-down-theory-of-perfect-resilience-20261120/",
+          "label": {
+            "fr": "Quanta Magazine",
+            "en": "Quanta Magazine"
+          }
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "La colère n’explique rien, elle s’explique",
+        "en": "Anger explains nothing; it needs explaining"
+      },
+      "summary": {
+        "fr": "Grèves, cortèges lycéens, gilets jaunes : depuis le 5 novembre, on résume les mobilisations par un mot, la « colère », décrite comme une météo qui « monte » puis « explose ». Dans The Conversation (20 novembre), le politiste Frédéric Gonthier, de Sciences Po Grenoble, retourne la formule : la colère n’est pas une explication, c’est un phénomène à expliquer. Il distingue la peur, l’anxiété et la colère, qui naît d’une règle violée dont on tient quelqu’un pour responsable, et rappelle avec l’historien E. P. Thompson et son « économie morale » que le passage du malheur à l’injustice est un jugement politique. Pourquoi cliquer : une petite leçon de méthode contre une manière de dépolitiser ceux qui protestent. Limite : la tribune est une synthèse ; son résultat sur 26 pays, qui relie colère face aux inégalités et vote redistributif, renvoie à ses propres travaux sans les détailler.",
+        "en": "Strikes, school pupils’ marches, the gilets jaunes: since 5 November, France’s protests have been summed up in one word, “anger”, described like the weather as it “rises” and then “explodes”. In The Conversation (20 November, in French), the political scientist Frédéric Gonthier of Sciences Po Grenoble turns the formula round: anger is not an explanation but something to be explained. He separates fear, anxiety and anger, which arises from a broken rule for which someone is held responsible, and recalls, with the historian E.P. Thompson and his “moral economy”, that the step from misfortune to injustice is a political judgement. Why click: a short lesson in method against a way of depoliticising people who protest. The limit: it is a synthesis; its finding across 26 countries, linking anger at inequality with votes for redistribution, refers to his own research without detailing it."
+      },
+      "sources": [
+        {
+          "url": "https://theconversation.com/la-colere-nest-pas-une-explication-cest-un-phenomene-a-expliquer-296714",
+          "label": {
+            "fr": "The Conversation",
+            "en": "The Conversation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Une nounou qui se souvient de tout",
+        "en": "A nanny that remembers everything"
+      },
+      "summary": {
+        "fr": "Dans Aeon (19 novembre, en anglais), le psychologue et psychanalyste Tom Wooldridge, de l’université Golden Gate de San Francisco, part d’une nouvelle de Geoff Ryman où un robot nounou sauve un enfant délaissé, puis d’une adolescente qui, la nuit, se confie à une IA parce qu’elle « se souvient ». Sa thèse : pour certains enfants, ces compagnons artificiels sont à la fois un sauvetage et un piège, car l’IA peut répondre, mais ne peut pas être changée par l’enfant, et c’est cette résistance d’un autre esprit qui apprend que les autres sont réels. Il répond d’avance à l’objection d’une IA programmée pour contredire : un désaccord programmé n’est pas un esprit distinct. Limite : un essai clinique et théorique, appuyé sur un cas composite, plus qu’une démonstration empirique.",
+        "en": "In Aeon (19 November), the psychologist and psychoanalyst Tom Wooldridge of Golden Gate University in San Francisco starts from a Geoff Ryman short story in which a robot nanny rescues a neglected boy, then turns to a teenager who confides in an AI at night because it “remembers”. His argument: for some children, these artificial companions are both a rescue and a trap, because an AI can respond but cannot be changed by the child, and it is the resistance of another mind that teaches a child that other people are real. He anticipates the objection of an AI built to disagree: programmed disagreement is not a separate mind. The limit: a clinical and theoretical essay, built on a composite case, rather than an empirical demonstration."
+      },
+      "sources": [
+        {
+          "url": "https://aeon.co/essays/what-would-parenting-by-ai-look-like",
+          "label": {
+            "fr": "Aeon",
+            "en": "Aeon"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Un monde en pixel art compilé comme du code",
+        "en": "A pixel-art world, compiled like code"
+      },
+      "summary": {
+        "fr": "Frostwind, publié sous licence MIT par Trinity Labs, se présente comme un « compilateur de mondes » : il transforme des modèles explicites de terrain, d’eau, de météo, d’animaux, de gens et d’architecture vernaculaire en scènes de pixel art déterministes, qu’on peut inspecter et reproduire à l’identique. Cinq mondes jouables dans le navigateur, de la forêt boréale au marais, respectent une échelle unique (26 pixels pour 1,70 mètre), et le dépôt fournit des consignes pour que des agents de programmation ajoutent mondes et personnages. Pourquoi cliquer : une approche rare de la génération procédurale, fondée sur la physique plutôt que sur une image générée à la demande. Limites, listées par le projet : pas de nuit, pas de dialogues ni de quêtes, et un dépôt encore très jeune.",
+        "en": "Frostwind, released under the MIT licence by Trinity Labs, calls itself a “world compiler”: it turns explicit models of terrain, water, weather, animals, people and vernacular building into deterministic pixel-art scenes you can inspect and reproduce exactly. Five worlds playable in the browser, from boreal forest to swamp, share a single scale (26 pixels to 1.70 metres), and the repository includes guidance for coding agents to add worlds and characters. Why click: an unusual take on procedural generation, grounded in physics rather than images generated on demand. The limits, as the project lists them: no night, no dialogue or quests, and a repository that is still very young."
+      },
+      "sources": [
+        {
+          "url": "https://github.com/trinity-works/frostwind",
+          "label": {
+            "fr": "Frostwind · GitHub",
+            "en": "Frostwind · GitHub"
+          }
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Des icônes qui bougent dans le Dock",
+        "en": "Icons that move in your Dock"
+      },
+      "summary": {
+        "fr": "IconSwapper, l’application Mac du designer d’icônes Michael Flarup, permet de repeindre les icônes du Dock : partir de l’icône d’origine, d’une image ou de collections partagées, puis appliquer des effets (feuille métallique, néon, verre) et des « Live Icons » qui reflètent l’activité, un compteur d’usage ou la lecture en cours. Pourquoi cliquer : un petit objet de design soigné, qui pense aux détails comme la réduction des animations. Limites : 19 dollars au lancement, macOS 14 au minimum, les changements ne tiennent que tant que l’application tourne, et les icônes vivantes demandent des permissions d’automatisation et d’accessibilité étendues.",
+        "en": "IconSwapper, a Mac app by the icon designer Michael Flarup, lets you repaint the icons in your Dock: start from the original icon, an image or shared sets, then add effects (foil, neon, glass) and “Live Icons” that reflect activity, a usage meter or what is playing. Why click: a small, carefully made piece of design that thinks about details such as reduced motion. The limits: $19 at launch, macOS 14 or later, changes only hold while the app is running, and live icons ask for broad automation and accessibility permissions."
+      },
+      "sources": [
+        {
+          "url": "https://iconswapper.app/",
+          "label": {
+            "fr": "IconSwapper",
+            "en": "IconSwapper"
+          }
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "La vérification de la preuve de Riemann",
+        "en": "Checking the Riemann proof"
+      },
+      "summary": {
+        "fr": "Le travail de vérification a commencé dans la communauté Lean. À regarder : si l’énoncé formel correspond bien à l’hypothèse de Riemann et n’ajoute aucun axiome, puis si une version lisible par des humains apparaît ; le prix Clay, lui, exige deux ans d’examen après publication.",
+        "en": "Verification has begun in the Lean community. What to watch: whether the formal statement really matches the Riemann hypothesis and adds no axioms, then whether a human-readable version appears; the Clay prize itself requires two years of scrutiny after publication."
+      },
+      "sources": [
+        {
+          "url": "https://terrytao.wordpress.com/2026/11/20/unforced-euler-singularity-unforced-navier-stokes-singularity-and-the-generalized-riemann-hypothesis/",
+          "label": {
+            "fr": "Terence Tao · What's new",
+            "en": "Terence Tao · What's new"
+          }
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "La décision finale de la COP31",
+        "en": "COP31’s final decision"
+      },
+      "summary": {
+        "fr": "Les négociations d’Antalya continuent au-delà de vendredi. À regarder : si la « transition hors des énergies fossiles » revient dans le texte, et si les rapports du Giec sont programmés à temps pour le bilan mondial de 2028.",
+        "en": "The Antalya talks are running past Friday. What to watch: whether a “transition away from fossil fuels” returns to the text, and whether the IPCC’s reports are scheduled in time for the 2028 global stocktake."
+      },
+      "sources": [
+        {
+          "url": "https://www.franceinfo.fr/environnement/crise-climatique/cop-climat/plusieurs-pays-dont-la-france-exigent-une-decision-finale-de-la-cop31-incluant-une-transition-claire-hors-des-energies-fossiles_8292470.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        },
+        {
+          "url": "https://www.dw.com/en/at-cop31-conflict-over-climate-science-slows-action-on-global-warming/a-80004894",
+          "label": {
+            "fr": "DW",
+            "en": "DW"
+          }
+        }
+      ]
+    }
+  ],
+  "timeline": [],
+  "inBrief": [
+    {
+      "text": {
+        "fr": "Le directeur national de la cybersécurité américain, Sean Cairncross, a été écarté après une série de pannes dans la banque et le contrôle aérien que les autorités disent sans lien avec une cyberattaque, selon CBS et l’AFP ; la Maison Blanche n’a pas confirmé, mais Marco Rubio a nommé Kirsten Davies à sa place ([BBC](https://www.bbc.co.uk/news/articles/cwz0k3nn5p5mo)).",
+        "en": "The US national cyber director, Sean Cairncross, has been removed after a string of outages in banking and air traffic control that officials say were not caused by cyber-attacks, according to CBS and AFP; the White House has not confirmed, but Marco Rubio has named Kirsten Davies to the post ([BBC](https://www.bbc.co.uk/news/articles/cwz0k3nn5p5mo))."
+      },
+      "urls": [
+        "https://www.bbc.co.uk/news/articles/cwz0k3nn5p5mo"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Google a rendu disponible le 18 novembre Gemini 4 Neon dans son API, facturé 3 dollars par million de jetons en entrée et 15 en sortie, avec une fenêtre de contexte d’un million de jetons ([Google · notes de version de l’API Gemini](https://aistudio.google.com/docs/changelog)).",
+        "en": "Google made Gemini 4 Neon generally available in its API on 18 November, priced at $3 per million input tokens and $15 per million output tokens, with a one-million-token context window ([Google · Gemini API release notes](https://aistudio.google.com/docs/changelog))."
+      },
+      "urls": [
+        "https://aistudio.google.com/docs/changelog"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Le projet de compilateurs LLVM clôt après huit ans son changement de licence vers Apache 2.0 : plus de 99,5 % des lignes jamais contribuées sont désormais couvertes, trop courtes pour être protégées ou supprimées ([LWN.net](https://lwn.net/Articles/1108818/)).",
+        "en": "The LLVM compiler project is closing its eight-year move to the Apache 2.0 licence: more than 99.5% of all lines ever contributed are now covered, too small to be protected, or gone ([LWN.net](https://lwn.net/Articles/1108818/))."
+      },
+      "urls": [
+        "https://lwn.net/Articles/1108818/"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Le Booker Prize 2026 récompense The End of Everything de M. John Harrison, 81 ans, premier lauréat clairement issu de la science-fiction selon le chercheur Jon Quayle ([The Conversation](https://theconversation.com/m-john-harrisons-2026-booker-prize-win-signals-an-end-for-literary-snobbery-towards-science-fiction-297073)).",
+        "en": "The 2026 Booker Prize goes to The End of Everything by M. John Harrison, 81, the first winner clearly from the world of science fiction according to the scholar Jon Quayle ([The Conversation](https://theconversation.com/m-john-harrisons-2026-booker-prize-win-signals-an-end-for-literary-snobbery-towards-science-fiction-297073))."
+      },
+      "urls": [
+        "https://theconversation.com/m-john-harrisons-2026-booker-prize-win-signals-an-end-for-literary-snobbery-towards-science-fiction-297073"
+      ]
+    }
+  ]
+}
