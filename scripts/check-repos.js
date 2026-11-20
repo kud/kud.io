@@ -19,6 +19,7 @@
 import { readFile, readdir, access } from "node:fs/promises"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
+import { realpathSync } from "node:fs"
 import {
   OWNER,
   TOPIC,
@@ -33,10 +34,10 @@ import {
 
 // Resolved from this file rather than the working directory: run from anywhere
 // else, relative paths made every §9 file and every ignore line read as absent.
-const ROOT = fileURLToPath(new URL("..", import.meta.url))
-const CONTENT_DIR = join(ROOT, "content/projects")
-const PUBLIC_APPS_DIR = join(ROOT, "public/apps")
-const IGNORE_FILE = join(ROOT, "scripts/kud-site-ignore.txt")
+export const ROOT = fileURLToPath(new URL("..", import.meta.url))
+export const CONTENT_DIR = join(ROOT, "content/projects")
+export const PUBLIC_APPS_DIR = join(ROOT, "public/apps")
+export const IGNORE_FILE = join(ROOT, "scripts/kud-site-ignore.txt")
 const BATCH_SIZE = 10
 
 // Paths whose changes can plausibly contradict a usage doc. An internal
@@ -401,6 +402,11 @@ const pad = (text, width) => {
   return value.length >= width ? `${value.slice(0, width - 2)}… ` : value.padEnd(width)
 }
 
+// The sync's archived:false filter already keeps such a repo off the site, so
+// the finding is a stale topic, not a live page.
+export const taggedAndArchivedLine = (slug) =>
+  `⚠ ${slug} is tagged ${TOPIC} and archived — the sync skips it, only the topic is stale`
+
 const render = (report) => {
   const lines = []
   const { probe } = report
@@ -492,11 +498,8 @@ const render = (report) => {
     lines.push("")
   }
 
-  for (const slug of report.taggedAndArchived) {
-    lines.push(
-      `⚠ ${slug} is tagged ${TOPIC} and archived — the sync skips it, only the topic is stale`,
-    )
-  }
+  for (const slug of report.taggedAndArchived)
+    lines.push(taggedAndArchivedLine(slug))
 
   for (const [name, members] of Object.entries(report.ecosystems)) {
     if (members.length < report.spec.minEcosystemMembers) {
@@ -634,7 +637,14 @@ const main = async () => {
   if (report.probe.failed > 0) process.exitCode = 1
 }
 
-main().catch((error) => {
-  console.error(`check failed: ${error.message}`)
-  process.exit(2)
-})
+// Run only as a script, so the tests can import the path constants and the
+// report lines without probing GitHub.
+const isEntryPoint =
+  process.argv[1] !== undefined &&
+  realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))
+
+if (isEntryPoint)
+  main().catch((error) => {
+    console.error(`check failed: ${error.message}`)
+    process.exit(2)
+  })
