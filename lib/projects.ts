@@ -141,19 +141,40 @@ const toProject = (repo: Repo): Project => ({
   isPrivate: repo.private ?? false,
 })
 
+// Paginated, as the sync's search is: a single per_page=100 call drops every
+// project past the hundredth with no error at all, and the tagged set is close.
+// Any page failing returns null, so a half-read catalogue is never served as
+// the whole one; the caller treats that exactly like the old single-call failure.
+const SEARCH_PER_PAGE = 100
+
+const searchTaggedRepos = async (): Promise<Repo[] | null> => {
+  const repos: Repo[] = []
+  for (let page = 1; ; page += 1) {
+    const res = await fetchWithRetry(
+      `https://api.github.com/search/repositories?q=user:${OWNER}+topic:${TOPIC}+archived:false&sort=updated&per_page=${SEARCH_PER_PAGE}&page=${page}`,
+      { headers: ghHeaders(), next: { revalidate: false } },
+    )
+    if (!res.ok) return null
+    const data = (await res.json()) as { items?: Repo[]; total_count?: number }
+    const items = data.items ?? []
+    repos.push(...items)
+    if (
+      items.length < SEARCH_PER_PAGE ||
+      repos.length >= (data.total_count ?? 0)
+    )
+      return repos
+  }
+}
+
 export const getProjects = async (): Promise<Project[]> => {
-  const res = await fetchWithRetry(
-    `https://api.github.com/search/repositories?q=user:${OWNER}+topic:${TOPIC}+archived:false&sort=updated&per_page=100`,
-    { headers: ghHeaders(), next: { revalidate: false } },
-  )
+  const repos = await searchTaggedRepos()
   // Raycast extensions come from content/raycast.json (no GitHub repo to tag), so
   // they're appended regardless — even when the topic search fails or is empty.
   const raycast = getRaycastProjects()
-  if (!res.ok) return raycast
-  const data = (await res.json()) as { items?: Repo[] }
+  if (!repos) return raycast
   // Firefox add-ons need a live AMO lookup (listing URL + user count) layered on
   // top of their GitHub metadata; every other category passes through untouched.
-  const items = await enrichWebextProjects((data.items ?? []).map(toProject))
+  const items = await enrichWebextProjects(repos.map(toProject))
   // Expand monorepos into their per-surface cards + stamp shared ecosystems.
   // Runs last, so it can see both repo cards and synthesised Raycast cards.
   return applyMonorepos([...items, ...raycast])
