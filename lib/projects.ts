@@ -4,6 +4,7 @@ import { applyMonorepos } from "@/lib/monorepo"
 import { getApp } from "@/lib/app"
 import { getListedRecords } from "@/lib/listed-apps"
 import { fetchWithRetry } from "@/lib/fetch-retry"
+import { readAllSearchPages } from "@/lib/paginate-search"
 
 const OWNER = "kud"
 const TOPIC = "kud-site"
@@ -141,19 +142,29 @@ const toProject = (repo: Repo): Project => ({
   isPrivate: repo.private ?? false,
 })
 
-export const getProjects = async (): Promise<Project[]> => {
-  const res = await fetchWithRetry(
-    `https://api.github.com/search/repositories?q=user:${OWNER}+topic:${TOPIC}+archived:false&sort=updated&per_page=100`,
-    { headers: ghHeaders(), next: { revalidate: false } },
+// Paginated, as the sync's search is: the tagged set is close to 100, and the
+// caller treats a failed page exactly like the old single-call failure.
+const SEARCH_PER_PAGE = 100
+
+const searchTaggedRepos = (): Promise<Repo[] | null> =>
+  readAllSearchPages<Repo>(
+    (page) =>
+      fetchWithRetry(
+        `https://api.github.com/search/repositories?q=user:${OWNER}+topic:${TOPIC}+archived:false&sort=updated&per_page=${SEARCH_PER_PAGE}&page=${page}`,
+        { headers: ghHeaders(), next: { revalidate: false } },
+      ),
+    SEARCH_PER_PAGE,
   )
+
+export const getProjects = async (): Promise<Project[]> => {
+  const repos = await searchTaggedRepos()
   // Raycast extensions come from content/raycast.json (no GitHub repo to tag), so
   // they're appended regardless — even when the topic search fails or is empty.
   const raycast = getRaycastProjects()
-  if (!res.ok) return raycast
-  const data = (await res.json()) as { items?: Repo[] }
+  if (!repos) return raycast
   // Firefox add-ons need a live AMO lookup (listing URL + user count) layered on
   // top of their GitHub metadata; every other category passes through untouched.
-  const items = await enrichWebextProjects((data.items ?? []).map(toProject))
+  const items = await enrichWebextProjects(repos.map(toProject))
   // Expand monorepos into their per-surface cards + stamp shared ecosystems.
   // Runs last, so it can see both repo cards and synthesised Raycast cards.
   return applyMonorepos([...items, ...raycast])
