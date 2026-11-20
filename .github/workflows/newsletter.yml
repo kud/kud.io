@@ -194,8 +194,9 @@ jobs:
             lead=$(jq -r '.items[0].title.fr // empty' "$file")
             count=$(jq -r '.items | length' "$file")
             minutes=$(jq -r '.readingMinutes.fr // empty' "$file")
+            day=$(node -e 'process.stdout.write(new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(`${process.argv[1]}T00:00:00Z`)))' "$date")
             text=$(printf '📰 *Newsletter du %s publiée* · %s sujets%s\n%s\n<https://kud.io/newsletter/%s?lang=fr|Lire l’édition>' \
-              "$date" "$count" "${minutes:+ · $minutes min}" "$lead" "${date//-//}")
+              "$day" "$count" "${minutes:+ · $minutes min}" "$lead" "${date//-//}")
             if jq -n --arg text "$text" '{text: $text}' \
               | curl --fail --silent --show-error --max-time 20 -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" > /dev/null; then
               echo "✅ Slack announcement sent for $date." >> "$GITHUB_STEP_SUMMARY"
