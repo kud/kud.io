@@ -76,4 +76,8 @@ Switch icon sets with `SHUI_ICONS`:
 SHUI_ICONS=nerd  # default — requires a Nerd Font
 SHUI_ICONS=emoji # Unicode emoji, no special font
 SHUI_ICONS=none  # no icons at all
+SHUI_ICONS=ascii # 7-bit ASCII glyphs, safe under any locale
 ```
+
+Under a non-UTF-8 locale (`LANG`/`LC_ALL` unset, as on many bare Linux shells)
+shui loads the `ascii` set on its own rather than failing; `none` is honoured as is.

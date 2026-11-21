@@ -63,14 +63,14 @@ if (!plan.inSync) {
 
 The plan is `{ inSync, reason, deletes, uploads }`. It is in sync only when the live preview ids and captions match the recorded `state` and every local shot's `sha256` and caption match too. Otherwise it deletes every live preview and uploads all local shots in order, with `position` set to their index.
 
-| `reason`               | Meaning                                                      |
-| ---------------------- | ------------------------------------------------------------ |
-| `in-sync`              | Nothing to do                                                |
-| `no-local-screenshots` | No local shots were given; nothing is deleted                |
-| `forced`               | `force: true` was passed                                     |
-| `no-state`             | No recorded state to compare against                         |
-| `live-changed`         | Live ids or captions differ from the recorded state          |
-| `local-changed`        | A local file hash or caption differs, or the count changed   |
+| `reason`               | Meaning                                                    |
+| ---------------------- | ---------------------------------------------------------- |
+| `in-sync`              | Nothing to do                                              |
+| `no-local-screenshots` | No local shots were given; nothing is deleted              |
+| `forced`               | `force: true` was passed                                   |
+| `no-state`             | No recorded state to compare against                       |
+| `live-changed`         | Live ids or captions differ from the recorded state        |
+| `local-changed`        | A local file hash or caption differs, or the count changed |
 
 Computing `sha256` is up to you; a shot without one never counts as in sync.
 
@@ -82,7 +82,12 @@ After a successful sync, record what is now live so the next run can compare. `p
 {
   "version": 1,
   "previews": [
-    { "id": 1001, "file": "shots/main.png", "sha256": "<hash>", "caption": "The main view" }
+    {
+      "id": 1001,
+      "file": "shots/main.png",
+      "sha256": "<hash>",
+      "caption": "The main view"
+    }
   ]
 }
 ```

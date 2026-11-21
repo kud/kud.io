@@ -78,4 +78,4 @@ import { parseRef, formatRef } from "@kud/gh/ref"
 - `resolveCurrentPr()` and `resolveCurrentRepo()` read the branch or repo you are standing in.
 - Webhooks: `fetchHooks`, `findHook` (by URL substring or id), `findJenkinsHook`, `fetchLatestPrDeliveryId`, `replayDelivery`, `replayLatestPrDelivery` and `retriggerJenkinsWebhook`.
 
-The `./ref`, `./health`, `./inbox` and `./pulse` subpaths exist so transport-free code can import a single concern without pulling in `execa`.
+The `./ref`, `./health`, `./inbox` and `./pulse` subpaths let code import a single concern rather than the whole package. Only `./ref` and `./health` are transport-free and leave `execa` out; `./inbox` and `./pulse` reach `gh` through `ghGraphql`, so they bring it in.

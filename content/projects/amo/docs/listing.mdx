@@ -62,12 +62,12 @@ Recognised fields (`LISTING_FIELDS`): `name`, `summary`, `description`, `homepag
 
 These are exported for building your own comparisons.
 
-| Helper                                | Description                                                                 |
-| ------------------------------------- | --------------------------------------------------------------------------- |
-| `normalizeText(value)`                | Decode entities and unwrap AMO outgoing URLs                                |
-| `sameText(a, b)`                      | Compare two values after normalising and trimming                           |
-| `localizedEnUs(value, locale?)`       | Pick a string from a plain string or locale map; defaults to `en-US`        |
-| `categorySlugs(value)`                | Sorted slugs from either live category shape                                |
-| `extractCaption(caption)`             | The `en-US` caption text, or `null`                                         |
-| `markdownToPlainText(value)`          | Strip Markdown (and inline HTML) to collapsed plain text                    |
-| `htmlToPlainText(value)`              | Strip HTML to collapsed plain text; links become `label (url)`              |
+| Helper                          | Description                                                          |
+| ------------------------------- | -------------------------------------------------------------------- |
+| `normalizeText(value)`          | Decode entities and unwrap AMO outgoing URLs                         |
+| `sameText(a, b)`                | Compare two values after normalising and trimming                    |
+| `localizedEnUs(value, locale?)` | Pick a string from a plain string or locale map; defaults to `en-US` |
+| `categorySlugs(value)`          | Sorted slugs from either live category shape                         |
+| `extractCaption(caption)`       | The `en-US` caption text, or `null`                                  |
+| `markdownToPlainText(value)`    | Strip Markdown (and inline HTML) to collapsed plain text             |
+| `htmlToPlainText(value)`        | Strip HTML to collapsed plain text; links become `label (url)`       |

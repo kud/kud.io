@@ -26,6 +26,7 @@ npm install -g @kud/qobuz-cli
 $ qobuz                            # open interactive TUI
 $ qobuz tui                        # same — explicit subcommand
 $ qobuz login                      # connect (opens browser, paste app_id + token)
+$ qobuz login --browser            # connect by signing in; token captured automatically
 $ qobuz search "radiohead"
 $ qobuz album 0634904032432
 $ qobuz fav list

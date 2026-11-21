@@ -90,3 +90,18 @@ choices=$(shui multiselect "Which packages?" brew npm cargo)
 # Input — prints the entered value to stdout
 name=$(shui input --default="world" "Your name:")
 ```
+
+Every prompt reads its answer from the terminal, not from stdin. When there is no
+terminal to ask (cron, CI, a detached process), it draws nothing, prints
+`shui: no terminal to ask; pass --yes` to stderr and exits **2** — a default is
+never taken on the user's behalf, so `--default=y` cannot turn into consent
+nobody gave. Scripts can tell the three outcomes apart:
+
+```zsh
+shui confirm "Deploy to production?"
+case $? in
+  0) deploy ;;
+  1) echo "cancelled" ;;
+  2) echo "no terminal: rerun with --yes" >&2; exit 2 ;;
+esac
+```

@@ -6,10 +6,10 @@ hasDocs: true
 
 ## 🌟 Features
 
-- 🧩 **Single client, full surface** — `JenkinsClient` covers job/build metadata, console logs (with live streaming), artifacts, the build queue, and triggers
-- ⚙️ **Layered config resolution** — named server → environment variables → per-call overrides, so callers never hardcode credentials
+- 🧩 **Single client, full surface** — `JenkinsClient` covers job/build metadata, console logs (with live streaming), failure diagnosis, artifacts, the build queue, triggers, and job/node/view/system administration
+- ⚙️ **Layered config resolution** — stored server profile, overridden by instances declared in the environment, overridden by per-call overrides, so callers never hardcode credentials
 - 🗂 **Multi-server profiles** — add, switch, and remove named Jenkins servers without touching env vars
-- 🔁 **Resilient HTTP layer** — timeout and bounded retry with backoff on network errors and 5xx responses, automatic CSRF crumb handling on every mutating call
+- 🔁 **Resilient HTTP layer** — per-request timeout (15 s by default), opt-in bounded retry with backoff for reads on network errors, timeouts and 5xx responses (writes never retry), automatic CSRF crumb handling on every mutating call
 - 🌲 **Recursive job search** — BFS traversal across nested folders, plus an incremental/concurrent variant with progress callbacks for large instances
 - 🧼 **Log sanitisation** — strips ANSI escape codes and control characters from console output for clean rendering
 - 📐 **Fully typed** — exported TypeScript types for jobs, builds, artifacts, parameters, and changesets
@@ -34,7 +34,7 @@ const build = await client.getBuild("my-service")
 console.log(build.result, build.building)
 ```
 
-Configuration resolves in layers — named server profile → environment variables → explicit overrides:
+Configuration resolves in layers, from lowest to highest priority: a stored server profile, then instances declared in the environment (which win over the stored file when present), then `JENKINS_SERVER` / `JENKINS_TIMEOUT` / `JENKINS_RETRIES`, then explicit overrides. The resolved `timeout` and `retries` are not applied for you; pass them to the client's options (`new JenkinsClient(url, user, token, { timeout, retries })`).
 
 ```sh
 export JENKINS_URL=https://ci.example.com
@@ -68,5 +68,5 @@ addServer("prod", {
   token: "xxxx",
 })
 useServer("prod")
-listServers() // [{ name: "prod", url: "...", current: true }]
+listServers() // [{ name: "prod", url: "…", user: "erwann", token: "…", current: true }]
 ```

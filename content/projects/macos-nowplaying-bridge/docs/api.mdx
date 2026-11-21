@@ -20,7 +20,7 @@ import {
 createNowPlayingBridge(): Promise<NowPlayingBridge>
 ```
 
-Compiles the Swift source if no cached binary exists, then spawns it as a persistent co-process and resolves with the bridge. The first call per machine waits for `swiftc`; later calls start immediately. See [How it works](/projects/macos-nowplaying-bridge/docs/how-it-works).
+Compiles the Swift source if no cached binary exists for its current hash, then spawns it as a persistent co-process and resolves with the bridge. The first call per machine, and the first after an upgrade that changes the Swift source, waits for `swiftc`; later calls start immediately. See [How it works](/projects/macos-nowplaying-bridge/docs/how-it-works).
 
 It rejects with `@kud/macos-nowplaying-bridge only works on macOS` when `process.platform` is not `darwin`, and with the `swiftc` error if compilation fails.
 
@@ -60,7 +60,7 @@ Serialises `info` as one JSON line and writes it to the co-process. It returns i
 Behaviour worth knowing:
 
 - **Updates merge.** The co-process starts from whatever is already published and overwrites only the fields you send, so an omitted `artist` keeps its last value.
-- **`rate` defaults to `1`.** If you omit it, it is set to `1` on every update, even when `state` is `"paused"`. Send `rate: 0` alongside `state: "paused"` if you want the progress bar to stop advancing.
+- **`rate` is remembered.** An explicit `rate` is published as sent. Without one, `state: "paused"` publishes `0` so the progress bar stops, `state: "playing"` restores the last non-zero rate (initially `1`), and any other update keeps the last published rate.
 - **`state` is only touched when sent.** Leaving it out keeps the current playback state.
 - **Artwork is cached by URL.** A different URL replaces the artwork once the download finishes; a failed download leaves the previous artwork in place.
 

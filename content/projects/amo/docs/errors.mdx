@@ -7,23 +7,23 @@ description: Handle AmoError failures, and how Amo keeps secrets out of messages
 
 Every failed request throws an `AmoError`, an `Error` with `name === "AmoError"` and these extra fields:
 
-| Field          | Description                                                  |
-| -------------- | ------------------------------------------------------------ |
-| `kind`         | One of the kinds below                                       |
-| `status`       | HTTP status, or `null` for a network failure                 |
-| `detail`       | Message from AMO (the `detail` field, or its field errors)   |
-| `retryAfterMs` | Parsed `Retry-After` header, or `null`                       |
+| Field          | Description                                                |
+| -------------- | ---------------------------------------------------------- |
+| `kind`         | One of the kinds below                                     |
+| `status`       | HTTP status, or `null` for a network failure               |
+| `detail`       | Message from AMO (the `detail` field, or its field errors) |
+| `retryAfterMs` | Parsed `Retry-After` header, or `null`                     |
 
-| `kind`         | When                          |
-| -------------- | ----------------------------- |
-| `bad-request`  | HTTP 400                      |
-| `unauthorized` | HTTP 401                      |
-| `forbidden`    | HTTP 403                      |
-| `not-found`    | HTTP 404                      |
-| `rate-limited` | HTTP 429                      |
-| `server`       | HTTP 5xx                      |
+| `kind`         | When                           |
+| -------------- | ------------------------------ |
+| `bad-request`  | HTTP 400                       |
+| `unauthorized` | HTTP 401                       |
+| `forbidden`    | HTTP 403                       |
+| `not-found`    | HTTP 404                       |
+| `rate-limited` | HTTP 429                       |
+| `server`       | HTTP 5xx                       |
 | `network`      | No response (`status` is null) |
-| `unexpected`   | Any other status              |
+| `unexpected`   | Any other status               |
 
 ```ts
 import { isAmoError } from "@kud/amo"

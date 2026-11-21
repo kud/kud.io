@@ -33,9 +33,9 @@ sonarqube gate --fail
 Pass the connection through the environment so no token lands in the job definition:
 
 ```sh
-SONARQUBE_DASH_HOST=https://sonarqube.example.com \
-SONARQUBE_DASH_TOKEN="$SONAR_TOKEN" \
-SONARQUBE_DASH_PROJECT=my-project \
+SONARQUBE_HOST=https://sonarqube.example.com \
+SONARQUBE_TOKEN="$CI_SONARQUBE_TOKEN" \
+SONARQUBE_PROJECT=my-project \
 sonarqube gate --fail
 ```
 

@@ -39,13 +39,14 @@ If stdin closes, the co-process exits, which means it does not outlive a crashed
 
 There are no prebuilt binaries. On the first call to `createNowPlayingBridge()` the package:
 
-1. creates `NowPlayingBridge.app` under `$TMPDIR/macos-nowplaying-bridge/`
-2. compiles the Swift source into `Contents/MacOS/nowplaying-bridge` with `swiftc -O -swift-version 5`
+1. hashes the shipped Swift source (SHA-256) to pick a cache directory, `$TMPDIR/macos-nowplaying-bridge/<hash>/`
+2. compiles the source into `NowPlayingBridge.app/Contents/MacOS/nowplaying-bridge` with `swiftc -O -swift-version 5`, inside a private staging directory
 3. writes an `Info.plist` with the bundle identifier `io.kud.macos-nowplaying-bridge`, marked `LSUIElement` so it has no Dock icon
+4. renames the finished bundle into place in one step, so a concurrent call never launches a half-written helper
 
 The bundle matters: macOS only surfaces a process in Now Playing when it lives in an app bundle with a `CFBundleIdentifier`.
 
-Later calls find the binary and skip all three steps. The cache is keyed only on the binary existing, so clearing the temporary directory (a reboot usually does) triggers a recompile, and a package upgrade that changes the Swift source will not rebuild until the cached binary is removed:
+Later calls find the binary for the current source hash and skip all of this. A package upgrade that changes the Swift source produces a new hash and therefore one fresh compile; clearing the temporary directory (a reboot usually does) also triggers a recompile. Bundles from older versions are left behind and can be removed safely:
 
 ```sh
 rm -rf "$TMPDIR/macos-nowplaying-bridge"

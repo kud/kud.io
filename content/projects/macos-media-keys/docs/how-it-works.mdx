@@ -20,10 +20,10 @@ Given a key name as its only argument, the helper looks up the matching IOKit ke
 There are no prebuilt binaries. On the first call, the library compiles the helper with `swiftc -O` and writes it to:
 
 ```text
-<os.tmpdir()>/macos-media-keys/media-key
+<os.tmpdir()>/macos-media-keys/media-key-<hash>
 ```
 
-Later calls find the file and skip compilation, so only the first call pays the cost of the compile. Because the cache lives in the system temporary directory, macOS may clear it eventually and the next call quietly rebuilds it. The cache is keyed by path only: a newer version of the package will reuse an existing binary until it is deleted.
+`<hash>` is derived from the contents of `native/media-key.swift`. Later calls find the file and skip compilation, so only the first call pays the cost of the compile. When an upgrade ships a changed helper source, the hash changes and the first call after the upgrade compiles the new helper once; older binaries are left in place for the system to clean up. Because the cache lives in the system temporary directory, macOS may clear it eventually and the next call quietly rebuilds it.
 
 ## Requirements
 

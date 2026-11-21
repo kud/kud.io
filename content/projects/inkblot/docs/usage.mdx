@@ -18,6 +18,7 @@ type SpillOptions = {
   colour?: string
   duration?: number
   inject?: boolean
+  reducedMotion?: boolean
 }
 ```
 
@@ -66,13 +67,14 @@ window.addEventListener("pageshow", (event) => {
 
 ## Options
 
-| Option     | Description                                                                                                                  |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `mode`     | `cover`, `reveal` or `veil`. Required.                                                                                       |
-| `from`     | Where the ink starts: a viewport `{ x, y }` point, or an element (its centre is used). Defaults to the centre of the screen. |
-| `colour`   | Any CSS colour, set as `--inkblot-colour` on the overlay. Falls back to black.                                               |
-| `duration` | Milliseconds. Overrides the mode's default.                                                                                  |
-| `inject`   | `false` skips the injected style tag, for a strict CSP. Default `true`. See [Styling](/projects/inkblot/docs/styling).       |
+| Option          | Description                                                                                                                                                                                                                    |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `mode`          | `cover`, `reveal` or `veil`. Required.                                                                                                                                                                                         |
+| `from`          | Where the ink starts: a viewport `{ x, y }` point, or an element (its centre is used). Defaults to the centre of the screen.                                                                                                   |
+| `colour`        | Any CSS colour, set as `--inkblot-colour` on the overlay. Falls back to black.                                                                                                                                                 |
+| `duration`      | Milliseconds. Overrides the mode's default.                                                                                                                                                                                    |
+| `inject`        | `false` skips the injected style tag, for a strict CSP. Default `true`. See [Styling](/projects/inkblot/docs/styling).                                                                                                         |
+| `reducedMotion` | Leave it out (recommended) to follow the OS `prefers-reduced-motion` setting. `true` forces the fade; `false` is only for an explicit in-app opt-in or previews. See [Styling](/projects/inkblot/docs/styling#reduced-motion). |
 
 ## Modes
 

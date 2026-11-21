@@ -31,16 +31,19 @@ console.log(redactToken(someText, config.token))
 | Error | Thrown when |
 | --- | --- |
 | `MissingHostError` | A client is constructed without a host |
+| `SonarQubeAuthError` | The server answers 401; a subclass of `SonarQubeHttpError` whose message names the env var the token came from when it is known |
 | `SonarQubeHttpError` | The server answers with a non-2xx status; exposes `status` and `path` |
 
 ```ts
-import { SonarQubeHttpError } from "@kud/sonarqube"
+import { SonarQubeAuthError, SonarQubeHttpError } from "@kud/sonarqube"
 
 try {
   await client.getIssues({ project: "acme-api" })
 } catch (err) {
-  if (err instanceof SonarQubeHttpError && err.status === 401) {
+  if (err instanceof SonarQubeAuthError) {
     // token missing or rejected
+  } else if (err instanceof SonarQubeHttpError) {
+    // other server error
   }
   throw err
 }

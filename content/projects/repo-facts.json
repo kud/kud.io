@@ -591,10 +591,10 @@
       }
     },
     "tag": {
-      "name": "v0.4.0",
-      "version": "0.4.0",
-      "sha": "dcb2b1a2f722baf0f7fa174dc4721b0915ea22f1",
-      "date": "2026-09-10T10:43:35Z"
+      "name": "v0.5.0",
+      "version": "0.5.0",
+      "sha": "012f8c5a4fcc97642c4a78753b277b1696a43ac8",
+      "date": "2026-11-21T00:42:58Z"
     }
   },
   "gpuswitch-cli": {
@@ -1568,10 +1568,10 @@
       }
     },
     "tag": {
-      "name": "v0.5.5",
-      "version": "0.5.5",
-      "sha": "ec99e8616a79acca3e75b141b1f03a50c5cf1263",
-      "date": "2026-06-23T20:55:14Z"
+      "name": "v0.6.0",
+      "version": "0.6.0",
+      "sha": "e1cb602ce1fe6038b2b341e040ed024104d7e3b6",
+      "date": "2026-11-21T00:47:26Z"
     }
   },
   "qobuz-bridge": {
@@ -1592,10 +1592,10 @@
       }
     },
     "tag": {
-      "name": "v0.2.1",
-      "version": "0.2.1",
-      "sha": "015c20ab10adc09cc177c00883d2b952d738e7d3",
-      "date": "2026-07-10T10:01:39Z"
+      "name": "v0.2.2",
+      "version": "0.2.2",
+      "sha": "9d4f8015b96bf3d43113865df7665239f8114d76",
+      "date": "2026-11-21T00:58:15Z"
     }
   },
   "qobuz-cli": {
@@ -1607,7 +1607,9 @@
           "qobuz": "./dist/index.js"
         },
         "node": ">=20",
-        "peers": [],
+        "peers": [
+          "playwright"
+        ],
         "dependencies": [
           "@kud/qobuz",
           "citty",
@@ -1618,10 +1620,10 @@
       }
     },
     "tag": {
-      "name": "v1.0.0",
-      "version": "1.0.0",
-      "sha": "51d913d00b4d017ccc60cf5f1a659ed5a1aee420",
-      "date": "2026-06-24T10:33:34Z"
+      "name": "v1.1.0",
+      "version": "1.1.0",
+      "sha": "a4e838b7a15e959657903024e4aae2504bb5453d",
+      "date": "2026-11-21T00:55:09Z"
     }
   },
   "revu-cli": {
@@ -1783,10 +1785,10 @@
       }
     },
     "tag": {
-      "name": "v0.1.0",
-      "version": "0.1.0",
-      "sha": "ede1e2df5c6a8e18a0024dac273e7d534f34c62e",
-      "date": "2026-10-29T17:54:41Z"
+      "name": "v0.2.0",
+      "version": "0.2.0",
+      "sha": "dfa84ef973bf4b0cd3af6841b8030b2186ff74a4",
+      "date": "2026-11-21T00:37:42Z"
     }
   },
   "sonarqube-cli": {

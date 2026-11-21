@@ -35,11 +35,12 @@ configureInbox({ repoPriority: ["acme/api-gateway", "acme/"], cacheNamespace: "m
 const fetchCockpit = async () => {
   const result = await withRetry(() => $`gh api graphql -f query=${buildInboxQuery({})}`.quiet())
   const data = JSON.parse(result.stdout).data
+  const login = data.viewer.login
   const rows = (nodes, standing) => (nodes ?? []).map((n) => ({ ...toGHItem(n), standing }))
   return {
-    login: data.viewer.login,
+    login,
     sections: [
-      { id: "mine", label: "Mine", items: layoutGHItems(rows(data.myPRs.nodes, "authored"), "mine") },
+      { id: "mine", label: "Mine", items: layoutGHItems(rows(data.myPRs.nodes, "authored"), "mine", login) },
     ],
   }
 }
@@ -47,7 +48,7 @@ const fetchCockpit = async () => {
 render(<App fetcher={fetchCockpit} cacheKey="cockpit" title="cockpit" detailFor={detailFor} watchPath={signalPath()} />, { alternateScreen: true })
 ```
 
-Point a `bin` at it in your own `package.json` and it is a command. `withRetry` matters: GitHub returns 502 under load, and a 502 is the server declining to answer, not an answer.
+Point a `bin` at it in your own `package.json` and it is a command. `layoutGHItems` takes the viewer's login because the bands read every row against it (who spoke last, whose repo it is); without it those claims collapse and rows file under the wrong band. `withRetry` matters: GitHub returns 502 under load, and a 502 is the server declining to answer, not an answer.
 
 ## Exports
 
@@ -57,7 +58,7 @@ Point a `bin` at it in your own `package.json` and it is a command. `withRetry` 
 | `configureInbox(config)` | Applies host opinions, as described under [Workflow](/projects/gh/docs/workflow). |
 | `parseArgs(argv)` | Parses `--here`, `--include`, `--exclude` and a positional named filter. |
 | `registerCheckDrills(drills)` | Where a CI check drills in; unregistered checks open in a browser. |
-| `registerPrompts(forms)` | What a delegated agent is told. With none registered, `y` copies the row URL. |
+| `registerPrompts(forms)` | What a delegated session is told. With none registered, `y` copies the row URL. |
 | `registerDecisionHooks(hooks)` | Hooks for the decision block shown in a PR view. |
 | `detailFor(ctx)` · `PrView` · `IssueView` | The drill-in views. |
 | `withRetry(fn)` | Retries transient 50x responses. |

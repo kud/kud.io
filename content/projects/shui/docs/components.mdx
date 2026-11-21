@@ -31,6 +31,10 @@ shui message warning "API key expires in 3 days"
 ⚠️ API key expires in 3 days
 ```
 
+`error` and `warning` print to **stderr**, `success`, `info` and `muted` to
+stdout, so `result=$(cmd)` or `cmd | jq` never captures a diagnostic as data.
+An explicit `>&2` from the caller still works.
+
 The top-level shorthands `shui success`, `shui error`, `shui warning`, and
 `shui info` remain available for quick one-liners.
 

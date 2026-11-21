@@ -41,14 +41,14 @@ A non-zero exit, a signal or a command that cannot start (reported as status 127
 Fire-and-forget, with no banner and no countdown:
 
 ```sh
-ding 21:40 --detach --no-notify --exec 'say "quota is back"'
+ding 21:40 --detach --no-notify --exec 'say "backup is done"'
 ```
 
-Ring when Claude's usage window resets. Rather than guess `5h`, read the exact remaining time from [ccusage](https://github.com/ryoppippi/ccusage), which parses Claude Code's local logs, and pass it to ding:
+Derive the delay from another tool rather than guess it. Any command that prints a number of minutes can feed ding; here, an invented status endpoint reports how long a build has left:
 
 ```sh
-mins=$(ccusage blocks --active --json --offline | node -e 'const {blocks=[]}=JSON.parse(require("node:fs").readFileSync(0));const a=blocks.find(b=>b.isActive);process.stdout.write(String(a?.projection?.remainingMinutes??""))')
-[ -n "$mins" ] && ding "${mins}m" "Claude quota is back"
+mins=$(curl -s https://example.com/api/build/status | node -e 'const s=JSON.parse(require("node:fs").readFileSync(0));process.stdout.write(String(s.remainingMinutes??""))')
+[ -n "$mins" ] && ding "${mins}m" "build finished"
 ```
 
-`--offline` keeps it fast, and `remainingMinutes` is already relative, so there is no timezone arithmetic to get wrong.
+`remainingMinutes` is already relative, so there is no timezone arithmetic to get wrong.

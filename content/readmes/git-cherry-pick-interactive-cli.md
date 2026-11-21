@@ -9,7 +9,7 @@ hasDocs: true
 - **Interactive UI** — easily view and select commits with an intuitive interface
 - **Only what's missing** — lists the commits on the branch that aren't already on yours, oldest first, so they replay the right way round
 - **Clear output** — each cherry-picked commit is displayed with its hash and message, providing clarity and transparency
-- **Error handling** — clear error messages and instructions for better usability
+- **Plain errors** — if git fails, its message is printed after `❌ Error:` and the command exits with `1`
 
 ## Install
 

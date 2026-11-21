@@ -10,7 +10,7 @@ pCloud accepts two kinds of credential, and the client treats them differently.
 | Session token (`auth`) | `login()`, `sessionLogin()`, `setAuth()` | The more capable tier. Revisions, trash, zip links and downloads only work with this |
 | OAuth access token | `setAccessToken()` | Fine for listing and basic file operations; pCloud answers `result 1000` ("Log in required") to it for the calls above |
 
-When both are present on a client, the access token is the one sent. When resolving stored credentials, the session token wins.
+When both are present on a client, or when resolving stored credentials, the session token wins.
 
 ## Direct use
 

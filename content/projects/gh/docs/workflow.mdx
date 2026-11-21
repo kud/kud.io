@@ -26,7 +26,7 @@ npm install @kud/gh-workflow
 ## Rows and layout
 
 - `toGHItem(node)` maps a GraphQL node to a `GHItem`, and `computeHealth` / `healthOf` give the token behind it.
-- `sortItems`, `sortByRecency` and `insertRepoHeaders` order and group rows; `layoutGHItems(items, sectionId)` does it per tab, and `layoutSides` splits a tab into named sides.
+- `sortItems`, `sortByRecency` and `insertRepoHeaders` order and group rows; `layoutGHItems(items, sectionId, login)` does it per tab (the login is required: without it the reply-owed and repo-you-own claims cannot be made), and `layoutSides` splits a tab into named sides.
 - `filterByRepos`, `filterByOrigin` and `filterBySearch` narrow a list.
 - `relativeTime`, `sizeOf`, `sizePartsOf` and `filesOf` format the small labels.
 

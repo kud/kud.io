@@ -26,9 +26,9 @@ Two binaries, same program: `sonarqube` and `sonarqube-dash` (kept for existing 
 ## Usage
 
 ```bash
-export SONARQUBE_DASH_HOST=https://sonarqube.example.com
-export SONARQUBE_DASH_TOKEN=<token>
-export SONARQUBE_DASH_PROJECT=my-project
+export SONARQUBE_HOST=https://sonarqube.example.com
+export SONARQUBE_TOKEN=<token>
+export SONARQUBE_PROJECT=my-project
 
 sonarqube                         # open the issues dashboard
 sonarqube quality-gate            # why is the gate red

@@ -44,7 +44,7 @@ document.addEventListener("click", async (event) => {
 })
 ```
 
-Arrive on the new page and lift the ink. Call this before first paint if the page should start covered:
+Arrive on the new page and lift the ink. To have the page start covered before any script runs, see [Start covered without JavaScript](#start-covered-without-javascript); otherwise call `spill()` before first paint:
 
 ```ts
 import { clear, spill } from "@kud/inkblot"

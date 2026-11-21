@@ -18,13 +18,13 @@ From lowest to highest priority:
 
 1. A stored server profile (see below), or the legacy top-level `url`, `user` and `token` keys when the file has no `servers`.
 2. Instances declared in the environment. When one is found it takes precedence over the stored file.
-3. The non-empty environment variables `JENKINS_SERVER`, `JENKINS_TIMEOUT` and `JENKINS_RETRIES`.
+3. The non-empty environment variables `JENKINS_SERVER`, `JENKINS_TIMEOUT` and `JENKINS_RETRIES`. A timeout that is not a positive whole number, or a retry count that is not a whole number, is ignored, so the client keeps its default.
 4. The overrides object you pass to `resolveConfig()`; keys set to `undefined` are ignored.
 
 The overrides accepted are `url`, `user`, `token`, `server`, `timeout` and `retries`. The result can carry `server`, `timeout` and `retries` as well as the credentials, so pass the latter two on to the client yourself:
 
 ```ts
-const cfg: any = resolveConfig({ server: "staging" })
+const cfg = resolveConfig({ server: "staging" })
 const client = new JenkinsClient(cfg.url, cfg.user, cfg.token, {
   timeout: cfg.timeout,
   retries: cfg.retries,
@@ -65,7 +65,7 @@ export JENKINS_API_TOKEN=tok1,tok2
 
 - A user or token list of length one applies to every instance, so a shared account needs stating once.
 - Without `JENKINS_INSTANCES`, each name is derived from the first label of the URL's hostname (`pipeline` for `https://pipeline.example.com`).
-- If `JENKINS_INSTANCES` is set and its length differs from `JENKINS_URL`, `envInstances()` throws rather than guess. A short list would quietly authenticate one server with another's credentials.
+- If `JENKINS_INSTANCES` is set and its length differs from `JENKINS_URL`, `envInstances()` (and so `resolveConfig()` and `listInstances()`) throws a `JenkinsConfigError` with `code` `"JENKINS_INSTANCES_MISMATCH"` rather than guess, naming both lists and the fix. A short list would quietly authenticate one server with another's credentials.
 - Trailing slashes are stripped from each URL.
 
 Select a non-default instance with `JENKINS_SERVER` or `resolveConfig({ server: "scheduler" })`. If the name is not an environment instance, resolution falls through to the stored profiles.

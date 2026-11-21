@@ -21,16 +21,18 @@ const config = resolveConfig({ branch: "main" })
 
 | Setting | Environment (first set wins) | File key |
 | --- | --- | --- |
-| host | `SONARQUBE_DASH_HOST`, `SONAR_HOST_URL` | `host` |
-| token | `SONARQUBE_DASH_TOKEN`, `SONARQUBE_TOKEN`, `SONAR_TOKEN` | `token` |
-| project | `SONARQUBE_DASH_PROJECT` | `project` |
-| branch | `SONARQUBE_DASH_BRANCH` | `branch` |
+| host | `SONARQUBE_HOST`, `SONAR_HOST_URL` | `host` |
+| token | `SONARQUBE_TOKEN`, `SONAR_TOKEN` | `token` |
+| project | `SONARQUBE_PROJECT` | `project` |
+| branch | `SONARQUBE_BRANCH` | `branch` |
+
+The older `SONARQUBE_DASH_*` names are still read as fallbacks: for host, token, project and branch alike, the names above win over them.
 
 There is no default host. Constructing a client without one throws `MissingHostError`.
 
 ## Config file
 
-The file is `$XDG_CONFIG_HOME/sonarqube-dash-cli/config.json`, defaulting to `~/.config/sonarqube-dash-cli/config.json`. The path is resolved on every call, so changes to `XDG_CONFIG_HOME` are honoured.
+The file is `$XDG_CONFIG_HOME/sonarqube/config.json`, defaulting to `~/.config/sonarqube/config.json`. The path is resolved on every call, so changes to `XDG_CONFIG_HOME` are honoured. The legacy `~/.config/sonarqube-dash-cli/config.json` is still read when the new file does not exist, and `writeConfig()` carries its values across on the first write to the new location.
 
 ```json
 {

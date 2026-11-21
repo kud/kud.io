@@ -13,7 +13,7 @@ hasDocs: true
 - 🏷 **Editorial topics** — list Unsplash's curated topics, fetch one by ID/slug, and the photos within each one
 - 👤 **User profiles** — public profile, photos, collections, and statistics for any Unsplash user
 - 📊 **Statistics** — per-photo and per-user download/view/like statistics, plus platform-wide totals and monthly stats
-- ✂️ **LLM-trimmed responses** — every tool strips API payloads down to the fields an LLM actually needs (id, description, dimensions, colour, a small set of image URLs, author name + profile link)
+- ✂️ **Trimmed responses** — list, search and browse tools strip API payloads down to the fields a model actually needs (id, description, dimensions, colour, a small set of image URLs, author name + profile link); single-photo lookups keep the full metadata, and statistics are passed through as Unsplash returns them
 - ✅ **Guideline-compliant** — `get_photo` fires the Unsplash download-tracking ping automatically, as required by the API terms
 
 ## 🚀 Quick Start

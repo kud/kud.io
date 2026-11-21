@@ -47,7 +47,7 @@ bridge.update({ title, elapsed: 41, state: "paused" })
 bridge.update({ title, elapsed: seekPosition, state: "playing" })
 ```
 
-Fields you omit keep their previous value in Control Center, with one exception: `rate` resets to `1` on every update. See the [API reference](/projects/macos-nowplaying-bridge/docs/api#update) for the details.
+Fields you omit keep their previous value in Control Center. `rate` follows `state` when you do not send it: a pause stops the progress bar and resuming restores the last playing rate. See the [API reference](/projects/macos-nowplaying-bridge/docs/api#update) for the details.
 
 ## Handle every button
 
