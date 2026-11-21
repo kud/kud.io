@@ -69,12 +69,16 @@ export const generateMetadata = async ({
   // The opengraph-image.tsx / twitter-image.tsx in this segment are attached by
   // Next automatically; here we just override the canonical URL so the share card
   // points at the project, not the site root inherited from the root metadata.
+  // openGraph replaces the root's whole, so siteName and locale are restated.
   return {
     title,
     description,
+    alternates: { canonical: `/projects/${slug}` },
     openGraph: {
       type: "article",
       url: `https://kud.io/projects/${slug}`,
+      siteName: "kud.io",
+      locale: "en_GB",
       title,
       description,
     },

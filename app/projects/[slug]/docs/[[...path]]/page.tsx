@@ -76,11 +76,26 @@ export const generateMetadata = async ({
   // would otherwise inherit. The card is a static route (app/og/docs), like
   // the blog's, so it renders per docs page rather than per project.
   const images = [`/og/docs/${slug}${rest}`]
+  // A project with no authored docs still renders a generated index that
+  // re-shows its README (the sitemap leaves it out for that reason), so its
+  // canonical is the project's own landing rather than a second copy.
+  const canonical = page.path.endsWith(".mdx")
+    ? `/projects/${slug}/docs${rest}`
+    : `/projects/${slug}`
 
   return {
     title,
     description,
-    openGraph: { type: "article", url, title, description, images },
+    alternates: { canonical },
+    openGraph: {
+      type: "article",
+      url,
+      siteName: "kud.io",
+      locale: "en_GB",
+      title,
+      description,
+      images,
+    },
     twitter: { title, description, images },
   }
 }
