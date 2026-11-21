@@ -499,11 +499,14 @@ export const newsletterMetadata = ({
         },
       ]
     : undefined
+  // The bare address is the canonical, the sitemap entry (app/sitemap.ts) and
+  // the x-default alike, so all three name one URL; the ?lang= variants stay
+  // listed as its language alternates.
   return {
     title,
     description,
     alternates: {
-      canonical: href(lang),
+      canonical: newsletterPath(page),
       languages: {
         fr: href("fr"),
         "en-GB": href("en"),
