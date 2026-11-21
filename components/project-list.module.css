@@ -782,6 +782,9 @@
 .icon[data-tile] {
   padding: 0;
   object-fit: cover;
+  /* A cream tile on the cream page keeps its edge: a hairline drawn inside. */
+  outline: 1px solid color-mix(in oklab, currentColor 10%, transparent);
+  outline-offset: -1px;
 }
 
 .monogram {
