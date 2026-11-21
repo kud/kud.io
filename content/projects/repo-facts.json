@@ -585,7 +585,7 @@
         "name": "@kud/glyphs",
         "private": false,
         "bin": null,
-        "node": ">=20",
+        "node": ">=22",
         "peers": [],
         "dependencies": []
       }
@@ -739,7 +739,7 @@
         "name": "@kud/ink-markdown",
         "private": false,
         "bin": null,
-        "node": ">=20.0.0",
+        "node": ">=22",
         "peers": [
           "ink",
           "react"
@@ -792,7 +792,7 @@
         "name": "@kud/inkblot",
         "private": false,
         "bin": null,
-        "node": ">=20.0.0",
+        "node": ">=22",
         "peers": [],
         "dependencies": []
       }
