@@ -467,6 +467,7 @@ export const ProjectList = ({
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   className={styles.icon}
+                  data-tile={project.iconTiled ? "" : undefined}
                   src={project.icon}
                   alt=""
                   loading="lazy"

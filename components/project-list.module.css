@@ -777,6 +777,16 @@
   padding: 3px;
 }
 
+/* An icon that draws its own tile fills the plate, so the plate's corners clip
+   it into one shape rather than framing a square inside a rounded one. */
+.icon[data-tile] {
+  padding: 0;
+  object-fit: cover;
+  /* A cream tile on the cream page keeps its edge: a hairline drawn inside. */
+  outline: 1px solid color-mix(in oklab, currentColor 10%, transparent);
+  outline-offset: -1px;
+}
+
 .monogram {
   display: inline-flex;
   align-items: center;
