@@ -16,6 +16,8 @@ import { yearsOfExperience } from "@/lib/experience"
 import { ThemeScopeScript } from "@/components/scoped-theme"
 import { BlueskySocial } from "@/components/bluesky-card"
 import { ContactLink } from "@/components/contact-link"
+import { JsonLd } from "@/components/json-ld"
+import { person, website } from "@/lib/json-ld"
 import styles from "./page.module.css"
 
 const socials = [
@@ -278,6 +280,9 @@ const Home = () => (
     suppressHydrationWarning
   >
     <ThemeScopeScript />
+    <JsonLd
+      data={{ "@context": "https://schema.org", "@graph": [website, person] }}
+    />
     <HeroDesktop />
     <AboutDesktop />
     <HeroMobile />

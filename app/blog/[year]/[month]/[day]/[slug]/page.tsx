@@ -30,6 +30,8 @@ import { BlogContents } from "@/components/blog-contents"
 import { BlogMorePicks } from "@/components/blog-more-picks"
 import { PostMorphReturn } from "@/components/post-morph-link"
 import { pickMore } from "@/lib/blog-more"
+import { JsonLd } from "@/components/json-ld"
+import { PERSON_ID, SITE_URL, WEBSITE_ID, person } from "@/lib/json-ld"
 import styles from "./page.module.css"
 
 const FEED_TITLE = "Writing — kud.io"
@@ -257,9 +259,30 @@ const BlogPostPage = async ({ params }: Params) => {
   const body = await renderMarkdown(post.body, components)
   const cover = coverImages(post.cover)
   const coverSize = cover ? imageDimensions(cover.hero) : null
+  const url = `${SITE_URL}${postPath(post)}`
+  const share = shareImage(post)
 
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          "@id": `${url}#post`,
+          mainEntityOfPage: url,
+          url,
+          headline: post.title,
+          description: post.description || undefined,
+          datePublished: post.date || undefined,
+          dateModified: post.updated || post.date || undefined,
+          image: `${SITE_URL}${share ? share.url : `/blog/og/${post.slug}`}`,
+          keywords: post.tags.length > 0 ? post.tags : undefined,
+          inLanguage: "en-GB",
+          author: { ...person, "@id": PERSON_ID },
+          publisher: { "@id": PERSON_ID },
+          isPartOf: { "@id": WEBSITE_ID },
+        }}
+      />
       <div className={styles.progress} aria-hidden="true" />
       <PostMorphReturn slug={post.slug} />
       <article>
