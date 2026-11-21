@@ -30,7 +30,7 @@ import { frameworksOf, getPackageFacts } from "@/lib/package-facts"
 import { getLandingMdx } from "@/lib/landings"
 import { projectShare } from "@/lib/project-share"
 import { getProjectReadme, projectDocsHref } from "@/lib/source"
-import { getIcons } from "@/lib/icons"
+import { getIcons, isTiledIcon } from "@/lib/icons"
 import { landingComponents } from "@/components/landing-kit"
 import { getMDXComponents } from "@/components/mdx"
 import { getRelease, releaseAge, type Release } from "@/lib/release"
@@ -631,31 +631,35 @@ const getFamily = async (
 ): Promise<{ name: string; members: FamilyMember[] } | null> => {
   if (!project.ecosystem) return null
   const [projects, icons] = await Promise.all([getProjects(), getIcons()])
-  const members = projects
-    .filter(
-      (other) =>
-        other.ecosystem === project.ecosystem && other.slug !== project.slug,
-    )
-    .sort(
-      (a, b) =>
-        Number(b.category === "lib") - Number(a.category === "lib") ||
-        a.name.localeCompare(b.name),
-    )
-    .map((other): FamilyMember => {
-      const app = isAppCategory(other.category) ? getApp(other.slug) : null
-      const product = app !== null && isProduct(app)
-      const icon = app?.icon ?? icons[other.slug] ?? other.icon ?? null
-      return {
-        slug: other.slug,
-        name: app ? appDisplayName(other.slug, app) : other.name,
-        type: typeFor(other.category),
-        summary: (product ? app.summary : null) ?? other.description ?? null,
-        icon,
-        morphIcon: Boolean(
-          app?.icon && (product || appHasContent(app)) && icon === app.icon,
-        ),
-      }
-    })
+  const members = await Promise.all(
+    projects
+      .filter(
+        (other) =>
+          other.ecosystem === project.ecosystem && other.slug !== project.slug,
+      )
+      .sort(
+        (a, b) =>
+          Number(b.category === "lib") - Number(a.category === "lib") ||
+          a.name.localeCompare(b.name),
+      )
+      .map(async (other): Promise<FamilyMember> => {
+        const app = isAppCategory(other.category) ? getApp(other.slug) : null
+        const product = app !== null && isProduct(app)
+        const icon = app?.icon ?? icons[other.slug] ?? other.icon ?? null
+        return {
+          slug: other.slug,
+          name: app ? appDisplayName(other.slug, app) : other.name,
+          type: typeFor(other.category),
+          summary:
+            (product ? app.summary : null) ?? other.description ?? null,
+          icon,
+          tiled: await isTiledIcon(icon),
+          morphIcon: Boolean(
+            app?.icon && (product || appHasContent(app)) && icon === app.icon,
+          ),
+        }
+      }),
+  )
   return members.length > 0
     ? { name: ecosystemName(project.ecosystem), members }
     : null

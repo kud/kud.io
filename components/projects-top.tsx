@@ -9,6 +9,7 @@ export type TopProject = {
   name: string
   description: string | null
   icon?: string | null
+  iconTiled?: boolean
 }
 
 export type TopRelease = {
@@ -28,6 +29,7 @@ const Icon = ({ project, size }: { project: TopProject; size: number }) =>
     // eslint-disable-next-line @next/next/no-img-element
     <img
       className={styles.icon}
+      data-tile={project.iconTiled ? "" : undefined}
       src={project.icon}
       alt=""
       width={size}

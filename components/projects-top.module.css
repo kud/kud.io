@@ -284,6 +284,15 @@
   height: 1.1em;
   padding: 1px;
 }
+
+/* An icon that draws its own tile fills the plate, so the plate's corners clip
+   it into one shape rather than framing a square inside a rounded one. Last, so
+   it outranks the pinned title's padding too. */
+.icon[data-tile],
+.pinName .icon[data-tile] {
+  padding: 0;
+  object-fit: cover;
+}
 .pinName .monogram {
   background: var(--surface-2);
   color: var(--primary-light);

@@ -72,7 +72,8 @@
   object-fit: contain;
 }
 
-/* SVG icons are glyphs: contained on a plate rather than filling the square. */
+/* Bare glyphs (no tile of their own) sit contained on a plate; tiled icons
+   fill the square and take its corners. */
 .icon[data-glyph] {
   padding: 4px;
   background: var(--surface-2);
