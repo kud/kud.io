@@ -91,6 +91,69 @@ choices=$(shui multiselect "Which packages?" brew npm cargo)
 name=$(shui input --default="world" "Your name:")
 ```
 
+`radio` and `multiselect` take options as `label⇥hint` and print only the labels.
+A list taller than the terminal scrolls with the cursor, under a position line
+such as `12–30 of 76`, and a line wider than the terminal is cut with an
+ellipsis on screen, never in what is printed. `q`, Esc and Ctrl-C cancel with
+exit 130.
+
+### Columns, a detail pane and a footer
+
+`multiselect` can draw each row as aligned columns, with a pane under the list
+that follows the cursor and a footer that follows the ticks. Every flag is
+opt-in; without them the list is the plain `label⇥hint` one above.
+
+```zsh
+rows=(
+  $'alpha\t{success:●●●}\talpha\t1.2.0 → 1.2.{success:1}\t{success:patch}\t~2m'
+  $'beta\t{muted:●}\tbeta\t2.4.0 → {error:3.0.0}\t{error:MAJOR}\t~8m'
+)
+details=(
+  $'alpha · a small example library\nVersion   1.2.0 → 1.2.1  patch\nBuild     ~2m estimated'
+  $'beta · another one\nVersion   2.4.0 → 3.0.0  MAJOR\nBuild     ~8m estimated\nNote      may change behaviour'
+)
+total() { print -r -- "$# ticked · {bold:about $(( $# * 5 ))m}" }
+
+ids=$(shui multiselect \
+  --columns='l:3:1,l:*:0,r:16:3,l:7:0,r:4:0' \
+  --header=$'\tname\tfrom → to\tlevel\ttime' \
+  --keys='↑↓ move · space tick · a all · enter build · q later' \
+  --details=details --footer=total \
+  "Build which now?" "${rows[@]}")
+```
+
+- **Rows** are `id⇥cell⇥cell…`. The id is never drawn; it is what comes back
+  for each ticked row, one per line.
+- **`--columns`** takes one `align:width:drop` entry per cell: `l` or `r`; a
+  width, or `*` for the one flexible column, which takes the room left up to
+  its widest cell (at least 12 wide, `*N` for a larger minimum); and a drop
+  number. When a row does not fit, the column with the highest drop number goes
+  first, then the next; `0` never goes. Fixed widths come from you and the
+  flexible one is measured once over every row, so nothing shifts as the list
+  scrolls.
+- **`--header`** is a row of cells with no id, drawn muted above the list.
+- **`--keys`** replaces the key hint, so the words can match what enter does.
+- **`--details`** names an array with one element per row. Its lines are joined
+  by newlines; the first is drawn as a rule (`── text ───`), the rest under it.
+  The pane keeps the height of the longest element (at most 6 lines), so the
+  list never jumps, and it is the first thing given up in a short terminal.
+- **`--footer`** names a function. It runs in a subshell with the ticked ids as
+  arguments, once at the start and again whenever the ticks change, never on a
+  cursor move. Its first line of output is the footer; no output or a failure
+  is an empty footer. Keep it fast and free of side effects: a footer that
+  hangs cannot be interrupted.
+
+Cells, the header, detail lines and the footer take colour spans:
+`{success:text}`, `{warning:…}`, `{error:…}`, `{info:…}`, `{muted:…}` and
+`{bold:…}`, mapped to the theme, so they disappear under `plain`. `{{` is a
+literal `{`, and inside a span `}}` is a literal `}`. Anything else in braces is
+drawn as written; still, escape text you did not write with `${s//\{/{{}`.
+The cursor row's flexible cell is drawn bold, beside the pointer.
+
+`--details` and `--footer` name things in the calling shell, so they work with
+a sourced shui only, which is how shui is used. A malformed flag prints the
+reason to stderr and exits 1 before anything is drawn.
+
 Every prompt reads its answer from the terminal, not from stdin. When there is no
 terminal to ask (cron, CI, a detached process), it draws nothing, prints
 `shui: no terminal to ask; pass --yes` to stderr and exits **2** — a default is

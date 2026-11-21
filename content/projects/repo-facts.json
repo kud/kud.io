@@ -65,7 +65,7 @@
         "name": "@kud/amo",
         "private": false,
         "bin": null,
-        "node": ">=20.0.0",
+        "node": ">=22",
         "peers": [],
         "dependencies": []
       }
@@ -1686,10 +1686,10 @@
       "": null
     },
     "tag": {
-      "name": "v1.4.0",
-      "version": "1.4.0",
-      "sha": "8eeb3490d180992d599d683cb11d435e9ce5671c",
-      "date": "2026-09-30T22:02:06Z"
+      "name": "v1.6.0",
+      "version": "1.6.0",
+      "sha": "a3e69bfce26773bdd4597d9914755b0f3410e844",
+      "date": "2026-11-21T22:41:15Z"
     }
   },
   "sim-crafter-cli": {
