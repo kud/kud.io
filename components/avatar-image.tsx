@@ -10,6 +10,11 @@ type AvatarImageProps = {
   height: number
   className?: string
   placeholderIcon?: boolean
+  srcSet?: string
+  sizes?: string
+  // The page's largest paint: fetched first, and shown as soon as it decodes
+  // rather than after hydration, so the fade-in never holds back the LCP.
+  priority?: boolean
 }
 
 const cx = (...classes: Array<string | false | undefined>) =>
@@ -22,8 +27,11 @@ export const AvatarImage = ({
   height,
   className,
   placeholderIcon = true,
+  srcSet,
+  sizes,
+  priority = false,
 }: AvatarImageProps) => {
-  const [loaded, setLoaded] = useState(false)
+  const [loaded, setLoaded] = useState(priority)
   const imageRef = useRef<HTMLImageElement>(null)
   const markLoaded = () => setLoaded(true)
 
@@ -44,10 +52,14 @@ export const AvatarImage = ({
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
+        srcSet={srcSet}
+        sizes={sizes}
         alt=""
         aria-hidden="true"
         width={width}
         height={height}
+        loading={priority ? "eager" : undefined}
+        fetchPriority={priority ? "high" : undefined}
         className={styles.image}
         ref={imageRef}
         onLoad={markLoaded}

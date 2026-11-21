@@ -32,11 +32,14 @@ const socials = [
   { label: "Email", href: "mailto:m+site@kud.io", Icon: MailIcon },
 ]
 
-const AVATAR =
-  "https://www.gravatar.com/avatar/e6eaeaa6da69e804c27c2d4cd55107e0?s=512"
+// Self-hosted WebP cuts of the Gravatar portrait, sized to where they are drawn:
+// the mobile card at 156px (312 for 2x), and the desktop half-screen photo,
+// which covers max(42vw, 100vh) square (1024, and 2048 for 2x).
+const AVATAR = "/avatar/erwann-mest-312.webp"
 
-const DESKTOP_AVATAR =
-  "https://www.gravatar.com/avatar/e6eaeaa6da69e804c27c2d4cd55107e0?s=2056"
+const DESKTOP_AVATAR = "/avatar/erwann-mest-1024.webp"
+const DESKTOP_AVATAR_SRCSET =
+  "/avatar/erwann-mest-1024.webp 1024w, /avatar/erwann-mest-2048.webp 2048w"
 
 const isExternal = (href: string) => href.startsWith("http")
 
@@ -199,11 +202,14 @@ const HeroDesktop = () => (
   <section className={styles.hero}>
     <AvatarImage
       src={DESKTOP_AVATAR}
+      srcSet={DESKTOP_AVATAR_SRCSET}
+      sizes="max(42vw, 100vh)"
       alt="Erwann Mest"
-      width={1028}
-      height={1028}
+      width={1024}
+      height={1024}
       className={styles.photo}
       placeholderIcon={false}
+      priority
     />
 
     <div className={styles.content}>
