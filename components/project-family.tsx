@@ -7,6 +7,8 @@ export type FamilyMember = {
   type: string
   summary: string | null
   icon: string | null
+  // The icon draws its own tile, so it fills the plate instead of padding on it.
+  tiled: boolean
   // The sibling's own page shows this icon under the same transition name, so
   // it can glide across; on a page without one it would only fade, so it is
   // left unnamed.
@@ -37,7 +39,7 @@ export const ProjectFamily = ({
               {member.icon ? (
                 <span
                   className={styles.icon}
-                  data-glyph={member.icon.endsWith(".svg") ? "" : undefined}
+                  data-glyph={member.tiled ? undefined : ""}
                   style={
                     member.morphIcon
                       ? { viewTransitionName: `app-icon-${member.slug}` }

@@ -6,7 +6,7 @@ import { ThemePicker } from "@/components/theme-picker"
 import { ThemeScopeScript } from "@/components/scoped-theme"
 import { getProjects } from "@/lib/projects"
 import { getEcosystems } from "@/lib/ecosystems"
-import { getIcons } from "@/lib/icons"
+import { getIcons, isTiledIcon } from "@/lib/icons"
 import { getApp, appDisplayName, isProduct } from "@/lib/app"
 import { getListedApps } from "@/lib/listed-apps"
 import { isAppCategory, groupByCategory } from "@/lib/categories"
@@ -96,7 +96,7 @@ const ProjectsIndex = async () => {
   }
   // Apps overlay a curated icon + accent from app.json (their PWA icons live
   // outside the sync detector's reach); every other project keeps the synced icon.
-  const withIcons = projects.map((project) => {
+  const overlaid = projects.map((project) => {
     if (isAppCategory(project.category)) {
       const app = getApp(project.slug)
       // A beansontoast product moves into its own section, whose tiles open
@@ -113,6 +113,12 @@ const ProjectsIndex = async () => {
     }
     return { ...project, icon: icons[project.slug] ?? project.icon ?? null }
   })
+  const withIcons = await Promise.all(
+    overlaid.map(async (project) => ({
+      ...project,
+      iconTiled: await isTiledIcon(project.icon),
+    })),
+  )
   // Live apps with no public source join their section here: no release lookup,
   // no pin, and a page only when they carry a record (lib/listed-apps.ts).
   const listed = getListedApps().filter(

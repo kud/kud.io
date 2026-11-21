@@ -24,6 +24,9 @@ export type Project = {
   readmeLanding: boolean
   tags: string[]
   icon?: string | null
+  // The icon draws its own tile (lib/icons isTiledIcon), so it bleeds to the
+  // edge of its rounded plate instead of sitting padded on it.
+  iconTiled?: boolean
   // Decorative accent (hex) for the app-launcher tiles, overlaid from app.json
   // for `kud-site-app` projects. Absent for every other category.
   accent?: string | null
