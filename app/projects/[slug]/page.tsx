@@ -31,6 +31,8 @@ import { getLandingMdx } from "@/lib/landings"
 import { projectShare } from "@/lib/project-share"
 import { getProjectReadme, projectDocsHref } from "@/lib/source"
 import { getIcons, isTiledIcon } from "@/lib/icons"
+import { postsAboutProject } from "@/lib/post-project-links"
+import { ProjectPosts } from "@/components/project-posts"
 import { landingComponents } from "@/components/landing-kit"
 import { getMDXComponents } from "@/components/mdx"
 import { getRelease, releaseAge, type Release } from "@/lib/release"
@@ -69,12 +71,16 @@ export const generateMetadata = async ({
   // The opengraph-image.tsx / twitter-image.tsx in this segment are attached by
   // Next automatically; here we just override the canonical URL so the share card
   // points at the project, not the site root inherited from the root metadata.
+  // openGraph replaces the root's whole, so siteName and locale are restated.
   return {
     title,
     description,
+    alternates: { canonical: `/projects/${slug}` },
     openGraph: {
       type: "article",
       url: `https://kud.io/projects/${slug}`,
+      siteName: "kud.io",
+      locale: "en_GB",
       title,
       description,
     },
@@ -688,6 +694,7 @@ const ProjectLanding = async ({
       ? null
       : ((await getIcons())[slug] ?? project.icon ?? null)
   const family = await getFamily(project)
+  const posts = await postsAboutProject(slug)
 
   return (
     <main
@@ -716,6 +723,7 @@ const ProjectLanding = async ({
           release={await getRelease(project.slug)}
         />
       )}
+      <ProjectPosts posts={posts} />
       {family ? (
         <ProjectFamily name={family.name} members={family.members} />
       ) : null}
