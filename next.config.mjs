@@ -2,6 +2,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs"
 import path from "node:path"
 import { createMDX } from "fumadocs-mdx/next"
 import { dashedDateRedirects } from "./lib/newsletter/dashed-date-redirects.mjs"
+import { demoRewrites, readDemos } from "./lib/demos.mjs"
 
 // Written by scripts/sync-notion.js from posts marked Retired in Notion.
 const readBlogRedirects = () => {
@@ -110,6 +111,10 @@ const config = {
       permanent: true,
     })),
   ],
+
+  // Hosted demos (content/projects/demos.json) live in their own Vercel
+  // projects and are served under /projects/<slug>/demo. See lib/demos.mjs.
+  rewrites: async () => demoRewrites(readDemos()),
 }
 
 const withMDX = createMDX()

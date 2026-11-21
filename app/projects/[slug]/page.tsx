@@ -30,6 +30,9 @@ import { frameworksOf, getPackageFacts } from "@/lib/package-facts"
 import { getLandingMdx } from "@/lib/landings"
 import { projectShare } from "@/lib/project-share"
 import { getProjectReadme, projectDocsHref } from "@/lib/source"
+import { demoPath } from "@/lib/demos.mjs"
+// Bundled rather than read from disk, so a revalidating function still has it.
+import demos from "@/content/projects/demos.json"
 import { getIcons, isTiledIcon } from "@/lib/icons"
 import { postsAboutProject } from "@/lib/post-project-links"
 import { ProjectPosts } from "@/components/project-posts"
@@ -95,6 +98,15 @@ const DocsButton = ({ href, lead }: { href: string; lead?: boolean }) => (
     <ButtonIcon name="docs" />
     Documentation →
   </Link>
+)
+
+// A hosted demo (content/projects/demos.json) is served on this site by a
+// rewrite, so it is a plain anchor: client-side navigation cannot reach it.
+const DemoButton = ({ href }: { href: string }) => (
+  <a href={href} className={styles.secondary}>
+    <ButtonIcon name="web" />
+    Live demo →
+  </a>
 )
 
 const DocsCta = ({ href }: { href: string }) => (
@@ -439,6 +451,7 @@ const ReadmeLanding = async ({
     )
     .map(linkTo)
   const readme = getProjectReadme(project.readmeSlug ?? project.slug)
+  const demoHref = project.slug in demos ? demoPath(project.slug) : null
   const cover = coverOf(project)
   const Body = readme?.data.body
   // Section headings (depth 2) drive a simple right-rail TOC.
@@ -591,6 +604,7 @@ const ReadmeLanding = async ({
                 </a>
               </>
             )}
+            {demoHref ? <DemoButton href={demoHref} /> : null}
           </div>
           <RecordTimeline project={project} />
         </div>
