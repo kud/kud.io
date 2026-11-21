@@ -1087,6 +1087,37 @@
   }
 }
 
+/* Project links -------------------------------------------------------------
+ *
+ * The projects a post is about, read from its own links (lib/post-projects.ts),
+ * set like the meta line under the title so it reads as the post's footnote. */
+
+.projectLinks {
+  margin: 40px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 16px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--fg-3);
+}
+
+.projectLinksLabel {
+  letter-spacing: 0.06em;
+}
+
+.projectLink {
+  color: var(--fg);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.projectLink:hover,
+.projectLink:focus-visible {
+  border-bottom-color: currentColor;
+}
+
 /* More ---------------------------------------------------------------------
  *
  * Every value below is the index's own (app/blog/page.module.css) — the two
@@ -1123,34 +1154,6 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 6px;
   align-content: start;
-}
-
-/* Which rows show. The list carries every other post. Without scripting only
- * the two date neighbours ([data-default]) show. The inline script
- * (lib/blog-more.ts) marks the nav data-for and three rows data-pick before
- * first paint: the newest other post, then two at random, in that order. */
-.moreList li:not([data-default]) {
-  display: none;
-}
-
-.more[data-for] .moreList li {
-  display: none;
-}
-
-.more[data-for] .moreList li[data-pick] {
-  display: grid;
-}
-
-.more[data-for] .moreList li[data-pick="1"] {
-  order: 1;
-}
-
-.more[data-for] .moreList li[data-pick="2"] {
-  order: 2;
-}
-
-.more[data-for] .moreList li[data-pick="3"] {
-  order: 3;
 }
 
 /* The index's thumb: same frame, the cover's blurred preview while it loads,

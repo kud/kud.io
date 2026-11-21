@@ -11,7 +11,6 @@ import { notFound } from "next/navigation"
 // transition on every in-blog hop.
 import { InkLink as Link } from "@/components/ink-link"
 import type { Components } from "hast-util-to-jsx-runtime"
-import type { Post } from "@/lib/blog"
 import {
   coverImages,
   getAllPosts,
@@ -27,9 +26,9 @@ import { CoverImage } from "@/components/blog-cover"
 import { imageDimensions } from "@/lib/image-dimensions"
 import { BlogMermaid } from "@/components/blog-mermaid"
 import { BlogContents } from "@/components/blog-contents"
-import { BlogMorePicks } from "@/components/blog-more-picks"
 import { PostMorphReturn } from "@/components/post-morph-link"
-import { pickMore } from "@/lib/blog-more"
+import { pickMore } from "@/lib/blog-picks"
+import { projectsOfPost } from "@/lib/post-project-links"
 import { JsonLd } from "@/components/json-ld"
 import { PERSON_ID, SITE_URL, WEBSITE_ID, person } from "@/lib/json-ld"
 import styles from "./page.module.css"
@@ -38,26 +37,6 @@ const FEED_TITLE = "Writing — kud.io"
 
 type Params = {
   params: Promise<{ year: string; month: string; day: string; slug: string }>
-}
-
-// Two rows: the post either side by date, newest first, off the one sorted
-// list getAllPosts already returns — a second sort here could tie-break
-// differently and put the index and this block in disagreement.
-//
-// A three-wide window around the post, clamped to the ends, then the post
-// itself removed. The clamp is what handles the edges: the newest post has no
-// newer neighbour, so its window slides down to the two below it, and the
-// oldest slides up to the two above. One post total leaves an empty window.
-const NEIGHBOURS = 2
-
-const neighboursOf = (posts: Post[], index: number) => {
-  const start = Math.min(
-    Math.max(index - 1, 0),
-    Math.max(posts.length - NEIGHBOURS - 1, 0),
-  )
-  return posts
-    .slice(start, start + NEIGHBOURS + 1)
-    .filter((_, offset) => start + offset !== index)
 }
 
 // Only the date/slug combinations generateStaticParams emits are real. The
@@ -251,11 +230,10 @@ const BlogPostPage = async ({ params }: Params) => {
   if (index === -1) notFound()
 
   const post = posts[index]
-  // Every other post, newest first, goes into the list: today's two
-  // neighbours are the no-script default, and the inline script draws the
-  // mixed picks from the rest (lib/blog-more.ts).
-  const defaults = new Set(neighboursOf(posts, index).map((p) => p.slug))
-  const others = posts.filter((entry) => entry.slug !== slug)
+  // Chosen at build time, so readers and crawlers see the same three
+  // (lib/blog-picks.ts).
+  const picks = pickMore(posts, slug)
+  const projects = await projectsOfPost(post)
   const body = await renderMarkdown(post.body, components)
   const cover = coverImages(post.cover)
   const coverSize = cover ? imageDimensions(cover.hero) : null
@@ -341,30 +319,33 @@ const BlogPostPage = async ({ params }: Params) => {
           )}
         </div>
         <div className={styles.body}>{body}</div>
+        {projects.length > 0 && (
+          <p className={styles.projectLinks}>
+            <span className={styles.projectLinksLabel}>
+              {projects.length === 1 ? "Project" : "Projects"}
+            </span>
+            {projects.map((project) => (
+              <Link
+                key={project.slug}
+                href={`/projects/${project.slug}`}
+                className={styles.projectLink}
+              >
+                {project.name} →
+              </Link>
+            ))}
+          </p>
+        )}
       </article>
       <BlogContents key={slug} />
 
-      {others.length > 0 && (
-        // suppressHydrationWarning on the nav and rows: the inline script
-        // below marks them (data-for, data-pick) before React hydrates.
-        <nav
-          className={styles.more}
-          aria-label="More posts"
-          data-more
-          suppressHydrationWarning
-        >
+      {picks.length > 0 && (
+        <nav className={styles.more} aria-label="More posts">
           <p className={styles.moreLabel}>More</p>
           <ul className={styles.moreList}>
-            {others.map((entry) => {
+            {picks.map((entry) => {
               const thumb = coverImages(entry.cover)
               return (
-                <li
-                  key={entry.slug}
-                  data-slug={entry.slug}
-                  data-default={defaults.has(entry.slug) || undefined}
-                  data-recent={entry.slug === others[0].slug || undefined}
-                  suppressHydrationWarning
-                >
+                <li key={entry.slug}>
                   <time dateTime={entry.date}>{entry.date}</time>
                   <Link
                     href={postPath(entry)}
@@ -396,12 +377,6 @@ const BlogPostPage = async ({ params }: Params) => {
               )
             })}
           </ul>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `(${pickMore.toString()})(document.currentScript.parentElement, ${JSON.stringify(slug)})`,
-            }}
-          />
-          <BlogMorePicks slug={slug} />
         </nav>
       )}
     </>

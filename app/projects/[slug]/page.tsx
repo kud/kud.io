@@ -31,6 +31,8 @@ import { getLandingMdx } from "@/lib/landings"
 import { projectShare } from "@/lib/project-share"
 import { getProjectReadme, projectDocsHref } from "@/lib/source"
 import { getIcons } from "@/lib/icons"
+import { postsAboutProject } from "@/lib/post-project-links"
+import { ProjectPosts } from "@/components/project-posts"
 import { landingComponents } from "@/components/landing-kit"
 import { getMDXComponents } from "@/components/mdx"
 import { getRelease, releaseAge, type Release } from "@/lib/release"
@@ -688,6 +690,7 @@ const ProjectLanding = async ({
       ? null
       : ((await getIcons())[slug] ?? project.icon ?? null)
   const family = await getFamily(project)
+  const posts = await postsAboutProject(slug)
 
   return (
     <main
@@ -716,6 +719,7 @@ const ProjectLanding = async ({
           release={await getRelease(project.slug)}
         />
       )}
+      <ProjectPosts posts={posts} />
       {family ? (
         <ProjectFamily name={family.name} members={family.members} />
       ) : null}
