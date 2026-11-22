@@ -48,7 +48,7 @@ describe("edition markdown", () => {
     )
     assert.ok(!md.includes('title: "'))
     assert.ok(!md.includes("{#item-01}"))
-    assert.ok(md.includes("### 01 · CLIMAT · Un titre\n"))
+    assert.ok(md.includes("### 01 · CLIMAT · Un titre\n\nUn paragraphe."))
     assert.ok(md.includes("- [BBC](https://www.bbc.co.uk/news/x)"))
     assert.ok(md.endsWith("\n"))
   })

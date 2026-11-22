@@ -56,7 +56,7 @@ const stripFrontMatter = (markdown: string) =>
 
 // "### 01 · TITLE {#item-01}": the anchor is the page's, not the text's.
 const stripHeadingAnchors = (markdown: string) =>
-  markdown.replace(/^(#{1,6} .*?)\s*\{#[\w-]+\}\s*$/gm, "$1")
+  markdown.replace(/^(#{1,6} .*?)[ \t]*\{#[\w-]+\}[ \t]*$/gm, "$1")
 
 export const editionMarkdown = ({
   date,
