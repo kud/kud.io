@@ -135,6 +135,32 @@ language, with an unsubscribe link.
 | `NEWSLETTER_FROM`               | variable        | Actions, Vercel             | Sender, e.g. `kud.io <newsletter@your-domain>`               |
 | `NEXT_PUBLIC_NEWSLETTER_EMAIL`  | variable (`1`)  | Vercel                      | Shows the sign-up form; set it once the values above exist   |
 
+## ▲ Vercel watch
+
+`.github/workflows/vercel-watch.yml` runs `scripts/vercel-watch.js` every ten
+minutes. It reads the last 30 minutes of deployments across every Vercel team
+the token sees and takes the newest finished one per project and branch
+(cancelled deployments are ignored). A failure opens a thread in the Comms
+ops-alerts channel, posted by Mochi, titled `▲ <project> · <branch> failed to
+deploy`; a later successful deployment of the same project and branch closes
+it. The channel is the only state: an open thread with that title means the
+failure is already reported, so nothing is posted twice. At most ten new
+threads open per run.
+
+| Name                      | Kind     | Purpose                                       |
+| ------------------------- | -------- | --------------------------------------------- |
+| `VERCEL_READ_TOKEN`       | secret   | Read-only Vercel token scoped to the team     |
+| `TODOIST_MOCHI_BOT_TOKEN` | secret   | Mochi's Comms token                           |
+| `VERCEL_TEAM_ID`          | variable | Optional: watch one team instead of all       |
+
+Without either secret the workflow skips with a notice. To run it by hand,
+`gh workflow run vercel-watch.yml --repo kud/kud.io`, or locally, printing what
+it would post instead of posting:
+
+```bash
+VERCEL_READ_TOKEN=… TODOIST_MOCHI_BOT_TOKEN=… node scripts/vercel-watch.js --dry-run
+```
+
 ## 🤝 Contributing
 
 This is a personal portfolio project, but suggestions and feedback are welcome! Feel free to:

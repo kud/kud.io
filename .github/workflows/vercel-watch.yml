@@ -1,0 +1,49 @@
+name: Vercel watch
+
+# Reports failed Vercel deployments of every project the token sees as Todoist
+# Comms threads in ops-alerts (posted by Mochi), and closes a thread once the
+# same project and branch deploys again. Vercel's own account webhooks need a
+# paid plan; polling every ten minutes is the free stand-in.
+#
+# Secrets: VERCEL_READ_TOKEN (a read-only token scoped to the team) and
+# TODOIST_MOCHI_BOT_TOKEN. Without either, the run skips with a notice.
+# Optional repository variable VERCEL_TEAM_ID narrows it to one team.
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: vercel-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      # Only whether the secrets exist: `if:` cannot read secrets directly.
+      HAS_SECRETS: ${{ secrets.VERCEL_READ_TOKEN != '' && secrets.TODOIST_MOCHI_BOT_TOKEN != '' }}
+    steps:
+      - name: Skip without secrets
+        if: env.HAS_SECRETS != 'true'
+        run: echo "::notice title=Vercel watch skipped::Set VERCEL_READ_TOKEN and TODOIST_MOCHI_BOT_TOKEN to watch Vercel deployments."
+
+      - name: Check out the script
+        if: env.HAS_SECRETS == 'true'
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: scripts/vercel-watch.js
+          sparse-checkout-cone-mode: false
+
+      - name: Watch deployments
+        if: env.HAS_SECRETS == 'true'
+        env:
+          VERCEL_READ_TOKEN: ${{ secrets.VERCEL_READ_TOKEN }}
+          TODOIST_MOCHI_BOT_TOKEN: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
+          VERCEL_TEAM_ID: ${{ vars.VERCEL_TEAM_ID }}
+        run: node scripts/vercel-watch.js
