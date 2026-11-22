@@ -1,0 +1,104 @@
+---
+title: 🎞️ Recordings
+description: Writing asciicast v2 recordings with --format cast, a static replay page with --format web, and GIF or MP4 with --format gif and mp4.
+---
+
+## From the same capture
+
+`--format` chooses what each screen becomes. It takes a comma-separated list, and every format comes from one capture of the screen:
+
+| format | writes                                                                                        |
+| ------ | --------------------------------------------------------------------------------------------- |
+| `png`  | `<screen>.png`, rendered through freeze (the default)                                         |
+| `cast` | `<screen>.cast`, an [asciicast v2](https://docs.asciinema.org/manual/asciicast/v2/) recording |
+| `web`  | the casts, plus `index.html`, `assets/` and `vercel.json` to replay them                      |
+| `gif`  | `<screen>.gif`, the web player's window filmed frame by frame                                 |
+| `mp4`  | `<screen>.mp4`, the same film as H.264                                                        |
+
+```sh
+cli-shot --out demo --format png,cast -- pcloud
+```
+
+A recording is the raw pty stream, timed from the moment the command was spawned, up to the moment the screen settled. Nothing after that point is kept, so the last frame of the cast is the frame the PNG shows. `--keys` works as it does for screenshots: the keystrokes are not recorded, but what the command drew in answer to them is.
+
+## The web player
+
+```sh
+cli-shot --out demo --format web --title pcloud -- pcloud
+vercel deploy demo
+```
+
+The page shows one window per screen and replays each recording into [xterm.js](https://xtermjs.org/) — the browser build of the emulator that resolved the capture. It is replay only: the terminal accepts no input and nothing runs.
+
+- **Fonts** — the Symbols Nerd Font ships in `assets/fonts/`, limited by `unicode-range` to the icon code points, so TUI icons render while letters keep the system monospace.
+- **Themes** — light by default, dark under `prefers-color-scheme: dark`; `?theme=light` or `?theme=dark` pins one.
+- **Narrow screens** — the terminal is scaled down to fit, never re-wrapped, because a recording made at 110 columns re-flowed to 40 would show a screen that never existed.
+- **Motion** — each window first shows its final frame, then plays once when it scrolls into view; under `prefers-reduced-motion` it never starts on its own.
+- **Controls** — play/pause, restart and 1×/2× speed sit in a footer under the screen, as keyboard-reachable buttons.
+
+### Theming
+
+Everything visual is in `assets/chrome.css`: the page, the macOS-style window (dark in both page themes), and the terminal palette as `--term-*` custom properties that `player.js` reads at start-up. A new look is a change to that one file.
+
+### Serving under another path
+
+The page uses relative URLs only. When a site rewrites a path of its own to the deployment — `kud.io/projects/<name>/demo`, for instance — pass that path with `--base` so the page's assets resolve against it:
+
+```sh
+cli-shot --out demo --format web --base /projects/pcloud/demo/ -- pcloud
+```
+
+## GIF and MP4
+
+One recording feeds every output, and a moving image is no exception: `gif` and `mp4` are generated from the same cast, never recorded separately.
+
+```sh
+cli-shot --out demo --format gif --title pcloud -- pcloud
+cli-shot --out demo --format gif,mp4 --speed 1.5 --max-duration 8 -- pcloud
+```
+
+Each screen is filmed in the web player itself — the macOS window from `chrome.css`, the bundled Symbols Nerd Font, xterm.js — inside headless Chromium, then encoded with ffmpeg. The player has a capture mode (`?capture`) in which nothing plays on its own and the playback controls are hidden; cli-shot steps the recording to each frame's time, waits for xterm.js to paint, and screenshots the window with a little of the page around it for its shadow.
+
+| flag                 | default | effect                                                                     |
+| -------------------- | ------- | -------------------------------------------------------------------------- |
+| `--fps <n>`          | 15      | how finely the recording is sampled                                        |
+| `--speed <n>`        | 1       | playback speed                                                             |
+| `--max-duration <s>` | none    | longest replay; a longer recording is sped up to fit, never cut            |
+| `--loop <n>`         | 0       | GIF only: times to play, `0` for forever                                   |
+| `--scale <n>`        | 1       | device pixels per CSS pixel; `2` is sharper and roughly three times larger |
+
+The final frame holds for two seconds, so a looping GIF rests on the settled screen — the one the PNG shows — before it starts again.
+
+### Why the player, and not agg
+
+[agg](https://github.com/asciinema/agg), asciinema's own GIF generator, renders the terminal grid alone: no window, no title bar, and a font it rasterises itself. Matching the web demo would mean drawing the chrome a second time and keeping two looks in step. Filming the player keeps one look in one file, at the cost of a browser.
+
+### Keeping files small
+
+- Frames are kept only where the screen changed; a still stretch is one frame with a longer delay, not a run of identical ones.
+- A single 128-colour palette is built for the whole GIF from what it shows, and applied without dithering: terminal text is flat colour, and dither noise on it costs bytes and reads as grain.
+- Only the rectangle that changed is stored for each frame.
+- The MP4 is H.264 (`yuv420p`, `-tune stillimage`), which plays in every browser and social upload.
+
+### Requirements
+
+`ffmpeg` on `PATH`, and [Playwright](https://playwright.dev/) with Chromium. Playwright is an optional peer dependency, looked for only when `gif` or `mp4` is asked for:
+
+```sh
+npm install playwright && npx playwright install chromium
+```
+
+## From the library
+
+```ts
+import { shootAll, buildPlayer, toCast, parseCast } from "@kud/cli-shot";
+
+await shootAll({ command: "pcloud", out: "demo", formats: ["web"] });
+
+// Or build the page around casts made elsewhere:
+buildPlayer({ out: "demo", screens: ["files", "sync"], title: "pcloud" });
+```
+
+`toCast(header, events)` writes asciicast v2 text from `[seconds, "o", data]` events, and `parseCast(text)` reads it back.
+
+`toMovie({ cast, screen, output, format: "gif" })` films a cast made elsewhere; pass a `browser` from `launchBrowser()` to film several without relaunching Chromium. `movieFrames(times, options)` is the frame plan on its own: which stills to take, and how long each holds.

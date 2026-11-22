@@ -273,20 +273,23 @@
           "cli-shot": "dist/cli.js"
         },
         "node": ">=20",
-        "peers": [],
+        "peers": [
+          "playwright"
+        ],
         "dependencies": [
           "@xterm/addon-serialize",
           "@xterm/headless",
+          "@xterm/xterm",
           "commander",
           "node-pty"
         ]
       }
     },
     "tag": {
-      "name": "v0.2.1",
-      "version": "0.2.1",
-      "sha": "742cea1b0291b510cbab42954fe608aa821b3f10",
-      "date": "2026-08-02T20:11:36Z"
+      "name": "v0.3.2",
+      "version": "0.3.2",
+      "sha": "73e1f69d1de5128f19c75dd0db40ca24d4b5c479",
+      "date": "2026-11-22T16:04:34Z"
     }
   },
   "cli-testing": {
@@ -591,10 +594,10 @@
       }
     },
     "tag": {
-      "name": "v0.5.0",
-      "version": "0.5.0",
-      "sha": "012f8c5a4fcc97642c4a78753b277b1696a43ac8",
-      "date": "2026-11-21T00:42:58Z"
+      "name": "v0.6.0",
+      "version": "0.6.0",
+      "sha": "c940e23f242f90296bd91800f61d8f8f43428d6b",
+      "date": "2026-11-22T11:59:17Z"
     }
   },
   "gpuswitch-cli": {
@@ -1052,30 +1055,6 @@
       "version": "1.1.1",
       "sha": "7074459e4b4518bfcde443210c2711710b1e9b78",
       "date": "2026-04-10T19:53:23Z"
-    }
-  },
-  "mcp-github-copilot": {
-    "packages": {
-      "": {
-        "name": "@kud/mcp-github-copilot",
-        "private": false,
-        "bin": {
-          "mcp-github-copilot": "./dist/index.js"
-        },
-        "node": ">=20.0.0",
-        "peers": [],
-        "dependencies": [
-          "@github/copilot-sdk",
-          "@modelcontextprotocol/sdk",
-          "zod"
-        ]
-      }
-    },
-    "tag": {
-      "name": "v1.2.0",
-      "version": "1.2.0",
-      "sha": "5bc592caa7bbacd7e99ea66ab4405bc24b07db03",
-      "date": "2026-08-03T16:19:47Z"
     }
   },
   "mcp-google-keep": {
@@ -1785,10 +1764,10 @@
       }
     },
     "tag": {
-      "name": "v0.2.0",
-      "version": "0.2.0",
-      "sha": "dfa84ef973bf4b0cd3af6841b8030b2186ff74a4",
-      "date": "2026-11-21T00:37:42Z"
+      "name": "v0.2.1",
+      "version": "0.2.1",
+      "sha": "cc3b533e4346ef315b310c8948a32d92e507e8d2",
+      "date": "2026-11-22T15:45:53Z"
     }
   },
   "sonarqube-cli": {

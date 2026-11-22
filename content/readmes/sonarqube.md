@@ -10,7 +10,7 @@ hasDocs: true
 - **Layered config** — config file < environment < explicit options; undefined never overwrites; project key falls back to `sonar-project.properties`
 - **"Why is the gate red"** — `explainGate` turns a project status into a status word, the new-code period and conditions sorted failing first, with `*_rating` metrics shown as A–E
 - **Safe auth** — the token is sent as the basic-auth username with an empty password and never appears in errors; `redactToken` and `redactConfig` are there for your own logging
-- **Typed errors** — a missing host throws `MissingHostError`; HTTP failures throw `SonarQubeHttpError`, and a 401 throws `SonarQubeAuthError`, which names the env var the token came from when it is known
+- **Typed errors** — a missing host throws `MissingHostError`; HTTP failures throw `SonarQubeHttpError`, and a 401 throws `SonarQubeAuthError`, which names the env var the token came from when it is known (or `SONARQUBE_TOKEN` / `SONAR_TOKEN` otherwise; a rejected legacy `SONARQUBE_DASH_TOKEN` points at `SONARQUBE_TOKEN`)
 
 Surface-agnostic by design: no CLI, no prompts, no rendering.
 

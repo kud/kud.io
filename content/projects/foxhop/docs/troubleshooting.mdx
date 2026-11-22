@@ -24,3 +24,7 @@ The usual cause is **Node not being on Firefox's PATH**. When Firefox is launche
 ## Moving the repo
 
 The native-messaging manifest's `path` is absolute — if you move the repo (when running from source), re-run `foxhop install`.
+
+## `foxhop needs page access for paste/read`
+
+`paste` and `read` work inside the page, which needs Firefox's access to page content on every site. The extension keeps that permission optional, so it is off after install (and after a revoke). Open Fox Hop's settings from the toolbar button → **Settings**, or from `about:addons`, and click **Grant** under **Page access**.

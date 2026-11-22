@@ -19,3 +19,21 @@ foxhop install                # (re)register the native messaging host manifest
 ```
 
 Set `FOXHOP_BROWSER` if you don't run Firefox Nightly (e.g. `FOXHOP_BROWSER=Firefox`).
+
+## Paste and read
+
+`paste` fills a text box on a target's tab (hopping to it like `focus` first) and `read` prints text from it without focusing anything. Neither submits a form or presses Enter.
+
+Both need access to page content, an optional permission the extension does not request at install. Open Fox Hop's settings (toolbar button → **Settings**) and click **Grant** under **Page access**; Firefox asks you to confirm. Until then they exit 1 with `foxhop needs page access for paste/read: …`. **Revoke** on the same page takes it back; `focus` never needs it.
+
+```sh
+git diff | foxhop paste chatgpt
+foxhop paste notes            # no stdin: uses the clipboard
+foxhop paste docs --into "#comment"
+foxhop read notes --from "article" --last
+git diff | foxhop paste review && foxhop read review --last --wait > out.md
+```
+
+`paste` picks the box it fills in this order: the `--into` selector (or the target's saved `into`); else the currently focused editable element; else the largest visible textarea, text input or contenteditable element; else it fails with `no text box on that tab`. The content is replaced, never appended, and frameworks are told about it.
+
+`read` prints each match's `innerText` as a block separated by a blank line (`--last` prints only the last). With `--wait` it polls until the text has been unchanged for 1.5 s and is non-empty, bounded by `--timeout` in seconds (default 60, cap 300).
