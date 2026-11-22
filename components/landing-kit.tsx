@@ -5,17 +5,17 @@ import styles from "./landing-kit.module.css"
 
 const isExternal = (href: string) => href.startsWith("http")
 
-export const Hero = ({
-  title,
-  tagline,
-  badge,
-  children,
-}: {
+type HeroProps = {
   title: ReactNode
   tagline?: ReactNode
   badge?: ReactNode
   children?: ReactNode
-}) => (
+  // The project's catalogue icon (lib/icons.ts), set by the route rather than
+  // the MDX, so a landing shows the same icon as its card and family tile.
+  icon?: string | null
+}
+
+export const Hero = ({ title, tagline, badge, children, icon }: HeroProps) => (
   <section className={styles.hero}>
     <div className={styles.heroGrid} />
     <Link href="/projects" className={styles.back}>
@@ -28,7 +28,17 @@ export const Hero = ({
           {badge}
         </div>
       ) : null}
-      <h1 className={styles.title}>{title}</h1>
+      <div className={styles.titleRow}>
+        {icon ? (
+          <span
+            className={`${styles.titleIcon} ${icon.endsWith(".svg") ? styles.titleGlyph : ""}`}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={icon} alt="" />
+          </span>
+        ) : null}
+        <h1 className={styles.title}>{title}</h1>
+      </div>
       {tagline ? <p className={styles.tagline}>{tagline}</p> : null}
       {children ? <div className={styles.actions}>{children}</div> : null}
     </div>
@@ -152,9 +162,10 @@ export const CTA = ({
   </section>
 )
 
-// The component vocabulary available inside a project's landing.mdx.
-export const landingComponents = {
-  Hero,
+// The component vocabulary available inside a project's landing.mdx. The
+// route binds the project's icon to the Hero, so no landing has to name it.
+export const landingComponentsFor = ({ icon }: { icon: string | null }) => ({
+  Hero: (props: HeroProps) => <Hero {...props} icon={icon} />,
   Action,
   Stats,
   Stat,
@@ -164,4 +175,4 @@ export const landingComponents = {
   Features,
   Feature,
   CTA,
-}
+})
