@@ -98,6 +98,8 @@ jobs:
             "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$run_url")"
 
           # What a run's jobs left behind, one line each, notices left out.
+          # Runs cancelled by the concurrency group (a newer deploy took over) leave
+          # two failure-level annotations; they are not failures, so they never alert.
           run_notes() {
             local run_jobs id out=""
             run_jobs=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/$1/jobs" --paginate \
@@ -105,7 +107,7 @@ jobs:
             for id in $run_jobs
             do
               out+=$(gh api "repos/${GITHUB_REPOSITORY}/check-runs/${id}/annotations" \
-                --jq '.[] | select(.annotation_level != "notice") | "• \(if .annotation_level == "failure" then "✗" else "⚠" end) \(.message | split("\n")[0] | .[0:200])"')
+                --jq '.[] | select(.annotation_level != "notice") | select(.message | test("^(Canceling since a higher priority waiting request|The operation was canceled)") | not) | "• \(if .annotation_level == "failure" then "✗" else "⚠" end) \(.message | split("\n")[0] | .[0:200])"')
               out+=$'\n'
             done
             awk 'NF && !seen[$0]++' <<<"$out" | head -n 10
