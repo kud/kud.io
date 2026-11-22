@@ -57,7 +57,7 @@ jobs:
       DATE_INPUT: ${{ inputs.date }}
       REPORT: /tmp/newsletter-report.json
       # Only whether the secret exists: `if:` cannot read secrets directly.
-      HAS_MOCHI_TOKEN: ${{ secrets.MOCHI_TOKEN != '' }}
+      HAS_TODOIST_MOCHI_BOT_TOKEN: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN != '' }}
 
     steps:
       - name: Check out repository
@@ -210,10 +210,10 @@ jobs:
 
       # The same announcement as a Todoist Comms thread in pub-newsletter. One
       # thread per run (a run nearly always publishes a single edition). Skipped
-      # without MOCHI_TOKEN, and never fails the publication.
+      # without TODOIST_MOCHI_BOT_TOKEN, and never fails the publication.
       - name: Prepare the Comms announcement
         id: comms_newsletter
-        if: steps.plan.outputs.publish != '' && env.HAS_MOCHI_TOKEN == 'true'
+        if: steps.plan.outputs.publish != '' && env.HAS_TODOIST_MOCHI_BOT_TOKEN == 'true'
         continue-on-error: true
         env:
           DATES: ${{ steps.plan.outputs.publish }}
@@ -246,7 +246,7 @@ jobs:
         continue-on-error: true
         uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
         with:
-          token: ${{ secrets.MOCHI_TOKEN }}
+          token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
           channel-id: ChJXTwsrDQncsNTd2p2Pk
           title: ${{ steps.comms_newsletter.outputs.title }}
           content: ${{ steps.comms_newsletter.outputs.content }}

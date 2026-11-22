@@ -21,7 +21,7 @@ name: Notify Slack
 # thread a failure or warning opened is closed when a later run is clean, or
 # superseded by the next one, so at most one stays open per workflow and kind.
 # The open ids are carried from run to run as a "Comms threads" notice on this
-# job. Every Comms step is skipped without MOCHI_TOKEN and never fails the job.
+# job. Every Comms step is skipped without TODOIST_MOCHI_BOT_TOKEN and never fails the job.
 
 on:
   workflow_call:
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Only whether the secret exists: `if:` cannot read secrets directly.
-      HAS_MOCHI_TOKEN: ${{ secrets.MOCHI_TOKEN != '' }}
+      HAS_TODOIST_MOCHI_BOT_TOKEN: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN != '' }}
       ALERTS_CHANNEL: ChJXTt3RDFYYZr9oTkUJu
       WARNINGS_CHANNEL: ChJXTuoq3aXYwTKBfpWzP
     steps:
@@ -208,7 +208,7 @@ jobs:
       # notify job left a "Comms threads" notice.
       - name: Find the open Comms threads
         id: comms_prev
-        if: ${{ !cancelled() && github.workflow != 'Notify Slack' && env.HAS_MOCHI_TOKEN == 'true' && steps.report.outputs.title != '' }}
+        if: ${{ !cancelled() && github.workflow != 'Notify Slack' && env.HAS_TODOIST_MOCHI_BOT_TOKEN == 'true' && steps.report.outputs.title != '' }}
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
@@ -241,7 +241,7 @@ jobs:
         continue-on-error: true
         uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
         with:
-          token: ${{ secrets.MOCHI_TOKEN }}
+          token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
           channel-id: ${{ env.ALERTS_CHANNEL }}
           title: ${{ steps.report.outputs.title }}
           content: ${{ steps.report.outputs.alert_body }}
@@ -252,7 +252,7 @@ jobs:
         continue-on-error: true
         uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
         with:
-          token: ${{ secrets.MOCHI_TOKEN }}
+          token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
           mode: close
           thread-id: ${{ steps.comms_prev.outputs.alert }}
           content: "${{ steps.report.outputs.alert == 'open' && format('Superseded by a newer failure: {0}', steps.alert_open.outputs.url || steps.report.outputs.run_url) || steps.report.outputs.alert_closing }}"
@@ -263,7 +263,7 @@ jobs:
         continue-on-error: true
         uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
         with:
-          token: ${{ secrets.MOCHI_TOKEN }}
+          token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
           channel-id: ${{ env.WARNINGS_CHANNEL }}
           title: ${{ steps.report.outputs.title }}
           content: ${{ steps.report.outputs.warning_body }}
@@ -274,7 +274,7 @@ jobs:
         continue-on-error: true
         uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
         with:
-          token: ${{ secrets.MOCHI_TOKEN }}
+          token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
           mode: close
           thread-id: ${{ steps.comms_prev.outputs.warning }}
           content: "${{ steps.report.outputs.warning == 'open' && format('Superseded by newer warnings: {0}', steps.warning_open.outputs.url || steps.report.outputs.run_url) || steps.report.outputs.warning_closing }}"
