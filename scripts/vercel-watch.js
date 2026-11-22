@@ -12,7 +12,7 @@
 // them, so a sparse checkout plus one process per post would cost more than
 // the forty lines kept here.
 //
-// Env: VERCEL_READ_TOKEN, TODOIST_MOCHI_BOT_TOKEN, optional VERCEL_TEAM_ID
+// Env: VERCEL_TOKEN, TODOIST_MOCHI_BOT_TOKEN, optional VERCEL_TEAM_ID
 // (otherwise every team the token sees), WINDOW_MINUTES (default 30), DRY_RUN.
 
 import { randomBytes } from "node:crypto"
@@ -221,10 +221,10 @@ const main = async () => {
   const dryRun = env.DRY_RUN === "true" || process.argv.includes("--dry-run")
   const windowMinutes = Number(env.WINDOW_MINUTES || 30)
   const since = Date.now() - windowMinutes * 60_000
-  const vercelToken = env.VERCEL_READ_TOKEN
+  const vercelToken = env.VERCEL_TOKEN
   const commsToken = env.TODOIST_MOCHI_BOT_TOKEN
   if (!vercelToken || !commsToken) {
-    console.log("::notice::VERCEL_READ_TOKEN or TODOIST_MOCHI_BOT_TOKEN is not set, nothing to watch.")
+    console.log("::notice::VERCEL_TOKEN or TODOIST_MOCHI_BOT_TOKEN is not set, nothing to watch.")
     return
   }
 

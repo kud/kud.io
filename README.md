@@ -147,18 +147,18 @@ it. The channel is the only state: an open thread with that title means the
 failure is already reported, so nothing is posted twice. At most ten new
 threads open per run.
 
-| Name                      | Kind     | Purpose                                       |
-| ------------------------- | -------- | --------------------------------------------- |
-| `VERCEL_READ_TOKEN`       | secret   | Read-only Vercel token scoped to the team     |
-| `TODOIST_MOCHI_BOT_TOKEN` | secret   | Mochi's Comms token                           |
-| `VERCEL_TEAM_ID`          | variable | Optional: watch one team instead of all       |
+| Name                      | Kind     | Purpose                                     |
+| ------------------------- | -------- | ------------------------------------------- |
+| `VERCEL_TOKEN`            | secret   | Vercel token, shared with `deploy.yml`      |
+| `TODOIST_MOCHI_BOT_TOKEN` | secret   | Mochi's Comms token                         |
+| `VERCEL_TEAM_ID`          | variable | Optional: watch one team instead of all     |
 
 Without either secret the workflow skips with a notice. To run it by hand,
 `gh workflow run vercel-watch.yml --repo kud/kud.io`, or locally, printing what
 it would post instead of posting:
 
 ```bash
-VERCEL_READ_TOKEN=… TODOIST_MOCHI_BOT_TOKEN=… node scripts/vercel-watch.js --dry-run
+VERCEL_TOKEN=… TODOIST_MOCHI_BOT_TOKEN=… node scripts/vercel-watch.js --dry-run
 ```
 
 ## 🤝 Contributing
