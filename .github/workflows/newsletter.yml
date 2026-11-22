@@ -56,6 +56,8 @@ jobs:
       NOTION_NEWSLETTER_DATABASE_ID: ${{ vars.NOTION_NEWSLETTER_DATABASE_ID }}
       DATE_INPUT: ${{ inputs.date }}
       REPORT: /tmp/newsletter-report.json
+      # Only whether the secret exists: `if:` cannot read secrets directly.
+      HAS_MOCHI_TOKEN: ${{ secrets.MOCHI_TOKEN != '' }}
 
     steps:
       - name: Check out repository
@@ -205,6 +207,49 @@ jobs:
               echo "⚠️ Slack announcement failed for $date." >> "$GITHUB_STEP_SUMMARY"
             fi
           done
+
+      # The same announcement as a Todoist Comms thread in pub-newsletter. One
+      # thread per run (a run nearly always publishes a single edition). Skipped
+      # without MOCHI_TOKEN, and never fails the publication.
+      - name: Prepare the Comms announcement
+        id: comms_newsletter
+        if: steps.plan.outputs.publish != '' && env.HAS_MOCHI_TOKEN == 'true'
+        continue-on-error: true
+        env:
+          DATES: ${{ steps.plan.outputs.publish }}
+        run: |
+          set -euo pipefail
+          shopt -s inherit_errexit
+          read -ra dates <<<"$DATES"
+          body=""
+          for date in "${dates[@]}"; do
+            file="content/newsletter/$date/edition.json"
+            lead=$(jq -r '.items[0].title.fr // empty' "$file")
+            count=$(jq -r '.items | length' "$file")
+            minutes=$(jq -r '.readingMinutes.fr // empty' "$file")
+            day=$(node -e 'process.stdout.write(new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(`${process.argv[1]}T00:00:00Z`)))' "$date")
+            title=$(printf '📰 Newsletter du %s publiée' "$day")
+            entry=$(printf '%s sujets%s\n\n%s\n\n[Lire l’édition](https://kud.io/newsletter/%s?lang=fr)' \
+              "$count" "${minutes:+ · $minutes min}" "$lead" "${date//-//}")
+            if (( ${#dates[@]} > 1 )); then
+              entry=$(printf '**%s**\n%s' "$title" "$entry")
+            fi
+            body+="${body:+$'\n\n'}$entry"
+          done
+          if (( ${#dates[@]} > 1 )); then
+            title="📰 ${#dates[@]} newsletters publiées"
+          fi
+          { echo "title=$title"; echo "content<<COMMS_EOF"; printf '%s\n' "$body"; echo "COMMS_EOF"; } >> "$GITHUB_OUTPUT"
+
+      - name: Announce in Comms
+        if: steps.comms_newsletter.outcome == 'success'
+        continue-on-error: true
+        uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
+        with:
+          token: ${{ secrets.MOCHI_TOKEN }}
+          channel-id: ChJXTwsrDQncsNTd2p2Pk
+          title: ${{ steps.comms_newsletter.outputs.title }}
+          content: ${{ steps.comms_newsletter.outputs.content }}
 
       # After Published, never before: the script refuses any other status and
       # skips a language already sent, so a re-run never mails twice. Without
