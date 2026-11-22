@@ -15,6 +15,13 @@ name: Notify Slack
 # Secrets: SLACK_ALERTS_WEBHOOK_URL (failures, #ops-alerts) and
 # SLACK_WARNINGS_WEBHOOK_URL (warnings, #ops-warnings). The older
 # SLACK_WEBHOOK_URL still stands in for the alerts one until it is retired.
+#
+# Each Slack post is mirrored as a Todoist Comms thread (kud/.github's
+# comms-thread action): failures in ops-alerts, warnings in ops-warnings. The
+# thread a failure or warning opened is closed when a later run is clean, or
+# superseded by the next one, so at most one stays open per workflow and kind.
+# The open ids are carried from run to run as a "Comms threads" notice on this
+# job. Every Comms step is skipped without MOCHI_TOKEN and never fails the job.
 
 on:
   workflow_call:
@@ -32,6 +39,11 @@ permissions:
 jobs:
   notify:
     runs-on: ubuntu-latest
+    env:
+      # Only whether the secret exists: `if:` cannot read secrets directly.
+      HAS_MOCHI_TOKEN: ${{ secrets.MOCHI_TOKEN != '' }}
+      ALERTS_CHANNEL: ChJXTt3RDFYYZr9oTkUJu
+      WARNINGS_CHANNEL: ChJXTuoq3aXYwTKBfpWzP
     steps:
       - name: Ping
         if: github.workflow == 'Notify Slack'
@@ -42,6 +54,7 @@ jobs:
             | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL"
 
       - name: Report problems in the calling run
+        id: report
         if: github.workflow != 'Notify Slack'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -69,6 +82,20 @@ jobs:
             fi
             post "$SLACK_WARNINGS_WEBHOOK_URL" "$1"
           }
+
+          # What the Comms steps after this one should do, written before each
+          # Slack post so a failed post does not hide it: alert / warning are
+          # "open" (a new thread), "close" (close the open one, if any) or empty.
+          comms() {
+            { echo "$1<<COMMS_EOF"; printf '%s\n' "$2"; echo "COMMS_EOF"; } >> "$GITHUB_OUTPUT"
+          }
+          comms_list() { sed 's/^• /- /' <<<"$1"; }
+          comms run_url "$run_url"
+          comms title "${GITHUB_REPOSITORY} · ${GITHUB_WORKFLOW}"
+          comms alert_closing "$(printf '✓ **%s** · %s recovered\n[View run](%s)' \
+            "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$run_url")"
+          comms warning_closing "$(printf '✓ **%s** · %s warnings cleared\n[View run](%s)' \
+            "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$run_url")"
 
           # What a run's jobs left behind, one line each, notices left out.
           run_notes() {
@@ -106,9 +133,21 @@ jobs:
             fi
             echo "Previous run: ${previous_id:-none} ${previous}"
 
+            if [[ -z "$failed" ]]
+            then
+              comms alert close
+            fi
+            if [[ -z "$warnings" ]]
+            then
+              comms warning close
+            fi
+
             # Failures to the alerts channel: the first one, then the recovery.
             if [[ -n "$failed" && "$previous" != "failure" ]]
             then
+              comms alert open
+              comms alert_body "$(printf '%s\n\n[View run](%s)' \
+                "$(printf '%s\n%s' "$(comms_list "$failed")" "$(comms_list "$notes")" | awk 'NF')" "$run_url")"
               post "$SLACK_WEBHOOK_URL" "$(printf '*%s* · %s\n%s\n%s\n<%s|View run>' \
                 "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$failed" "$notes" "$run_url" | awk 'NF')"
             elif [[ -n "$failed" ]]
@@ -123,6 +162,8 @@ jobs:
             # Warnings to the warnings channel: when they appear, then when they clear.
             if [[ -n "$warnings" && -z "$previous_warnings" ]]
             then
+              comms warning open
+              comms warning_body "$(printf '%s\n\n[View run](%s)' "$(comms_list "$warnings")" "$run_url")"
               post_warnings "$(printf '*%s* · %s\n%s\n<%s|View run>' \
                 "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$warnings" "$run_url")"
             elif [[ -z "$warnings" && -n "$previous_warnings" ]]
@@ -135,8 +176,13 @@ jobs:
             exit 0
           fi
 
+          if [[ -z "$failed" ]]
+          then
+            comms alert close
+          fi
           if [[ -z "$failed" && -z "$notes" ]]
           then
+            comms warning close
             echo "Nothing to report."
             exit 0
           fi
@@ -145,9 +191,112 @@ jobs:
             "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$failed" "$notes" "$run_url" | awk 'NF')
           # A failure goes to the alerts channel, a run that only left warnings to
           # the warnings channel.
+          comms_body=$(printf '%s\n%s' "$(comms_list "$failed")" "$(comms_list "$notes")" | awk 'NF')
           if [[ -n "$failed" ]]
           then
+            comms alert open
+            comms alert_body "$(printf '%s\n\n[View run](%s)' "$comms_body" "$run_url")"
             post "$SLACK_WEBHOOK_URL" "$text"
           else
+            comms warning open
+            comms warning_body "$(printf '%s\n\n[View run](%s)' "$comms_body" "$run_url")"
             post_warnings "$text"
           fi
+
+      # Comms, after Slack. The open threads of the previous runs of the calling
+      # workflow, read from the newest of its last ten completed runs whose
+      # notify job left a "Comms threads" notice.
+      - name: Find the open Comms threads
+        id: comms_prev
+        if: ${{ !cancelled() && github.workflow != 'Notify Slack' && env.HAS_MOCHI_TOKEN == 'true' && steps.report.outputs.title != '' }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          shopt -s inherit_errexit
+          workflow_id=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" --jq '.workflow_id')
+          runs=$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/runs?status=completed&branch=${GITHUB_REF_NAME}&per_page=10" \
+            --jq '.workflow_runs[].id')
+          state=""
+          for run in $runs
+          do
+            for job in $(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${run}/jobs" --paginate \
+              --jq '.jobs[] | select(.name | endswith("notify")) | .id')
+            do
+              state=$(gh api "repos/${GITHUB_REPOSITORY}/check-runs/${job}/annotations" \
+                --jq '[.[] | select(.title == "Comms threads") | .message][0] // ""')
+              [[ -n "$state" ]] && break 2
+            done
+          done
+          echo "Previous Comms threads: ${state:-none}"
+          alert=$(sed -n 's/.*alert=\([A-Za-z0-9]*\).*/\1/p' <<<"$state")
+          warning=$(sed -n 's/.*warning=\([A-Za-z0-9]*\).*/\1/p' <<<"$state")
+          echo "alert=$alert" >> "$GITHUB_OUTPUT"
+          echo "warning=$warning" >> "$GITHUB_OUTPUT"
+
+      - name: Open a Comms thread in ops-alerts
+        id: alert_open
+        if: ${{ !cancelled() && steps.comms_prev.outcome == 'success' && steps.report.outputs.alert == 'open' }}
+        continue-on-error: true
+        uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
+        with:
+          token: ${{ secrets.MOCHI_TOKEN }}
+          channel-id: ${{ env.ALERTS_CHANNEL }}
+          title: ${{ steps.report.outputs.title }}
+          content: ${{ steps.report.outputs.alert_body }}
+
+      - name: Close the previous ops-alerts thread
+        id: alert_close
+        if: ${{ !cancelled() && steps.comms_prev.outputs.alert != '' && (steps.report.outputs.alert == 'close' || steps.alert_open.outcome == 'success') }}
+        continue-on-error: true
+        uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
+        with:
+          token: ${{ secrets.MOCHI_TOKEN }}
+          mode: close
+          thread-id: ${{ steps.comms_prev.outputs.alert }}
+          content: "${{ steps.report.outputs.alert == 'open' && format('Superseded by a newer failure: {0}', steps.alert_open.outputs.url || steps.report.outputs.run_url) || steps.report.outputs.alert_closing }}"
+
+      - name: Open a Comms thread in ops-warnings
+        id: warning_open
+        if: ${{ !cancelled() && steps.comms_prev.outcome == 'success' && steps.report.outputs.warning == 'open' }}
+        continue-on-error: true
+        uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
+        with:
+          token: ${{ secrets.MOCHI_TOKEN }}
+          channel-id: ${{ env.WARNINGS_CHANNEL }}
+          title: ${{ steps.report.outputs.title }}
+          content: ${{ steps.report.outputs.warning_body }}
+
+      - name: Close the previous ops-warnings thread
+        id: warning_close
+        if: ${{ !cancelled() && steps.comms_prev.outputs.warning != '' && (steps.report.outputs.warning == 'close' || steps.warning_open.outcome == 'success') }}
+        continue-on-error: true
+        uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
+        with:
+          token: ${{ secrets.MOCHI_TOKEN }}
+          mode: close
+          thread-id: ${{ steps.comms_prev.outputs.warning }}
+          content: "${{ steps.report.outputs.warning == 'open' && format('Superseded by newer warnings: {0}', steps.warning_open.outputs.url || steps.report.outputs.run_url) || steps.report.outputs.warning_closing }}"
+
+      # The threads still open after this run, for the next run to find. A
+      # thread whose close failed stays listed, so the next clean run retries.
+      - name: Record the open Comms threads
+        if: ${{ !cancelled() && steps.comms_prev.outcome == 'success' }}
+        continue-on-error: true
+        env:
+          PREV_ALERT: ${{ steps.comms_prev.outputs.alert }}
+          PREV_WARNING: ${{ steps.comms_prev.outputs.warning }}
+          ALERT_OPENED: ${{ steps.alert_open.outcome == 'success' && steps.alert_open.outputs.thread-id || '' }}
+          ALERT_CLOSED: ${{ steps.alert_close.outcome == 'success' }}
+          WARNING_OPENED: ${{ steps.warning_open.outcome == 'success' && steps.warning_open.outputs.thread-id || '' }}
+          WARNING_CLOSED: ${{ steps.warning_close.outcome == 'success' }}
+        run: |
+          set -euo pipefail
+          alert=$PREV_ALERT
+          [[ "$ALERT_CLOSED" == "true" ]] && alert=""
+          [[ -n "$ALERT_OPENED" ]] && alert=$ALERT_OPENED
+          warning=$PREV_WARNING
+          [[ "$WARNING_CLOSED" == "true" ]] && warning=""
+          [[ -n "$WARNING_OPENED" ]] && warning=$WARNING_OPENED
+          echo "::notice title=Comms threads::alert=${alert} warning=${warning}"
