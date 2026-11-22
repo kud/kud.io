@@ -247,6 +247,19 @@ export const loadEdition = async (
   }
 }
 
+// An edition's committed Markdown in one language, as written, for the .md
+// route; null when the edition or that language is missing.
+export const loadEditionMarkdown = async (
+  date: string,
+  lang: Lang,
+  dir = contentDir(),
+): Promise<string | null> => {
+  if (!isEditionDate(date)) return null
+  if ((await readOptional(path.join(dir, date, "edition.json"))) === null)
+    return null
+  return readOptional(path.join(dir, date, `${lang}.md`))
+}
+
 // Every edition, newest first. A folder without edition.json is skipped: the
 // workflow writes all three files in one commit, so that is a stray folder.
 export const getEditions = async (dir = contentDir()) => {

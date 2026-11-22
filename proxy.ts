@@ -23,12 +23,13 @@ export const proxy = (request: NextRequest) => {
   })
   const route = proxyRoute(pathname, lang)
 
-  // The English tree is an implementation detail: send direct visits to the
-  // public address, so one edition has one URL per language.
+  // The English tree and the Markdown routes are implementation details: send
+  // direct visits to the public address, so one edition has one URL per
+  // language (and one .md URL per language).
   if ("redirect" in route) {
     const url = request.nextUrl.clone()
     url.pathname = route.redirect
-    url.searchParams.set("lang", "en")
+    url.searchParams.set("lang", route.lang)
     return NextResponse.redirect(url, 308)
   }
 
@@ -52,6 +53,8 @@ export const config = {
     "/newsletter",
     "/newsletter/editions",
     "/newsletter/:year(\\d{4})/:month(\\d{2})/:day(\\d{2})",
+    "/newsletter/:year(\\d{4})/:month(\\d{2})/:markdown(\\d{2}\\.md)",
+    "/newsletter/md/:path*",
     "/newsletter/en",
     "/newsletter/en/:path*",
   ],
