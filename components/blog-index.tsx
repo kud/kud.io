@@ -2,7 +2,8 @@
 
 import { BlogMorphArrival, PostMorphLink } from "@/components/post-morph-link"
 import { postPath } from "@/lib/blog-path"
-import { useEffect, useId, useMemo, useState, type CSSProperties } from "react"
+import { useId, useMemo, type CSSProperties } from "react"
+import { replaceUrlSearch, useUrlSearch } from "@/components/use-url-search"
 import { CoverImage } from "@/components/blog-cover"
 import type { CoverImages } from "@/lib/blog"
 import {
@@ -70,29 +71,26 @@ export const BlogIndex = ({
   entries: IndexEntry[]
   styles: Record<string, string>
 }) => {
-  const [tag, setTag] = useState<string | null>(null)
-
   const tags = useMemo(
     () => [...new Set(entries.flatMap((entry) => entry.tags))].sort(),
     [entries],
   )
 
-  // ?tag= is how a post page links into a filtered index. It is read after
-  // mount rather than through useSearchParams so the page stays static, and
-  // written back with replaceState so a filtered view can be shared without
-  // every click becoming a history entry.
-  useEffect(() => {
-    const requested = new URLSearchParams(location.search).get("tag")
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- the URL only exists after mount, and reading it there is what keeps the page static
-    if (requested && tags.includes(requested)) setTag(requested)
-  }, [tags])
+  // ?tag= is the filter's only state, and how a post page links into a
+  // filtered index. It is read from the URL after hydration rather than
+  // through useSearchParams so the page stays static, and written back with
+  // replaceState so a filtered view can be shared, reloaded and returned to
+  // without every click becoming a history entry (components/use-url-search.ts).
+  const search = useUrlSearch()
+  const requested = new URLSearchParams(search).get("tag")
+  const tag = requested && tags.includes(requested) ? requested : null
 
   const choose = (next: string | null) => {
-    setTag(next)
-    const url = new URL(location.href)
-    if (next) url.searchParams.set("tag", next)
-    else url.searchParams.delete("tag")
-    history.replaceState(history.state, "", url)
+    const params = new URLSearchParams(window.location.search)
+    if (next) params.set("tag", next)
+    else params.delete("tag")
+    const query = params.toString()
+    replaceUrlSearch(query ? `?${query}` : "")
   }
 
   const groups = useMemo(
