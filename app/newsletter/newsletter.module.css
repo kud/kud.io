@@ -362,6 +362,135 @@
   }
 }
 
+/* Listen (components/newsletter/listen.tsx): the same quiet pill as the
+ * language switch and the reading settings, drawn only where the browser can
+ * speak. */
+.tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 32px;
+  padding: 4px 11px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--fg-2);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.tool:hover {
+  color: var(--fg);
+  border-color: var(--fg-3);
+}
+
+.tool[data-state="playing"] {
+  color: var(--fg);
+  border-color: var(--fg-2);
+}
+
+.tool:focus-visible,
+.prefs summary:focus-visible,
+.langSwitch:focus-visible {
+  outline: 2px solid var(--c-fn);
+  outline-offset: 2px;
+}
+
+.mastTools {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+@media (max-width: 480px) {
+  .toolLabel {
+    display: none;
+  }
+}
+
+/* For an AI (components/newsletter/ask-ai.tsx): the prompt, then its ways out. */
+.aiHint {
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--fg-2);
+}
+
+.aiPrompt {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-2);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--fg);
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.aiActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  font-size: 13px;
+}
+
+.aiActions a {
+  color: var(--fg-2);
+}
+
+.aiActions a:hover {
+  color: var(--fg);
+}
+
+.aiPrimary {
+  min-height: 32px;
+  padding: 4px 12px;
+  border: 1px solid var(--fg-2);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.aiPrimary:focus-visible,
+.aiActions a:focus-visible {
+  outline: 2px solid var(--c-fn);
+  outline-offset: 2px;
+}
+
+.aiStatus:empty {
+  display: none;
+}
+
+.aiStatus {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  color: var(--fg-2);
+}
+
+/* The block being read aloud: a soft wash around it, no shift in layout. */
+.editionText [data-speaking] {
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--c-fn) 12%, transparent);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--c-fn) 12%, transparent);
+  transition:
+    background-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editionText [data-speaking] {
+    transition: none;
+  }
+}
+
 .prefs {
   position: relative;
 }
@@ -548,7 +677,7 @@
 
 .researchHint {
   max-width: var(--measure);
-  margin: 18px 0 0;
+  margin: -8px 0 24px;
   font-size: 13.5px;
   line-height: 1.5;
   color: var(--fg-3);
@@ -1399,4 +1528,23 @@
   color: var(--fg);
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+/* On a phone the pills wrap and a panel tied to its own pill could run off
+ * the screen: the reading settings and the AI prompt hang from the bar
+ * instead, across its width. Last, so it wins over .prefs above. */
+@media (max-width: 480px) {
+  .topBar {
+    position: relative;
+  }
+
+  .prefs {
+    position: static;
+  }
+
+  .prefs .prefsPanel {
+    left: 0;
+    right: 0;
+    width: auto;
+  }
 }
