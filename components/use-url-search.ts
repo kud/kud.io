@@ -23,10 +23,22 @@ const subscribe = (onChange: () => void) => {
   }
 }
 
-export const useUrlSearch = () =>
+// The last query string each listing showed. A popstate fires before the
+// page that is being left unmounts, with the next page's address already in
+// place: the list must keep its own filters for that last frame (it is what
+// the view transition snapshots), not flash unfiltered.
+const lastSearch = new Map<string, string>()
+
+// `pathname` is the listing's own address; elsewhere it keeps its last value.
+export const useUrlSearch = (pathname: string) =>
   useSyncExternalStore(
     subscribe,
-    () => window.location.search,
+    () => {
+      if (window.location.pathname !== pathname)
+        return lastSearch.get(pathname) ?? ""
+      lastSearch.set(pathname, window.location.search)
+      return window.location.search
+    },
     () => "",
   )
 

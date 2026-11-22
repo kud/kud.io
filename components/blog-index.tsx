@@ -81,7 +81,7 @@ export const BlogIndex = ({
   // through useSearchParams so the page stays static, and written back with
   // replaceState so a filtered view can be shared, reloaded and returned to
   // without every click becoming a history entry (components/use-url-search.ts).
-  const search = useUrlSearch()
+  const search = useUrlSearch("/blog")
   const requested = new URLSearchParams(search).get("tag")
   const tag = requested && tags.includes(requested) ? requested : null
 

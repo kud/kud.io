@@ -224,7 +224,7 @@ export const ProjectList = ({
   // Every filter lives in the query string (lib/projects-query.ts), so a
   // filtered view survives a reload, a shared link, and a trip into a project
   // and back. The URL is the state; nothing here mirrors it.
-  const urlSearch = useUrlSearch()
+  const urlSearch = useUrlSearch("/projects")
   const [hasFilterInteraction, setHasFilterInteraction] = useState(false)
   // The filter rail stays out of the way while the hero is in view, then fades
   // in once the browse area scrolls up. `scrollReveal` is only switched on after
