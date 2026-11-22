@@ -1,6 +1,6 @@
 name: Comms smoke test
 
-# Run by hand once MOCHI_TOKEN is set: opens one thread in ops-warnings through
+# Run by hand once TODOIST_MOCHI_BOT_TOKEN is set: opens one thread in ops-warnings through
 # kud/.github's comms-thread action, then closes it. Unlike the notifiers, it
 # fails when the secret is missing or Comms refuses, since that is the test.
 
@@ -14,19 +14,19 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Only whether the secret exists: `if:` cannot read secrets directly.
-      HAS_MOCHI_TOKEN: ${{ secrets.MOCHI_TOKEN != '' }}
+      HAS_TODOIST_MOCHI_BOT_TOKEN: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN != '' }}
     steps:
       - name: Check the secret
-        if: env.HAS_MOCHI_TOKEN != 'true'
+        if: env.HAS_TODOIST_MOCHI_BOT_TOKEN != 'true'
         run: |
-          echo "::error title=Comms token missing::Set the MOCHI_TOKEN Actions secret before running this test."
+          echo "::error title=Comms token missing::Set the TODOIST_MOCHI_BOT_TOKEN Actions secret before running this test."
           exit 1
 
       - name: Open a thread in ops-warnings
         id: open
         uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
         with:
-          token: ${{ secrets.MOCHI_TOKEN }}
+          token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
           channel-id: ChJXTuoq3aXYwTKBfpWzP
           title: Comms smoke test from kud.io
           content: |
@@ -37,7 +37,7 @@ jobs:
       - name: Close it
         uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
         with:
-          token: ${{ secrets.MOCHI_TOKEN }}
+          token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
           mode: close
           thread-id: ${{ steps.open.outputs.thread-id }}
           content: ✓ Smoke test closed.
