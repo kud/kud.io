@@ -3,6 +3,8 @@ import assert from "node:assert/strict"
 import {
   bodyFor,
   closingFor,
+  failureFor,
+  logFor,
   keyFromTitle,
   keyOf,
   newId,
@@ -144,4 +146,16 @@ test("ids are base58 UUIDv7", () => {
   const id = newId(1_700_000_000_000, Buffer.alloc(10))
   assert.match(id, /^[1-9A-HJ-NP-Za-km-z]{21,22}$/)
   assert.notEqual(newId(), newId())
+})
+
+test("log lines never name the project or the branch", () => {
+  const key = "secret-project · feat/hidden"
+  for (const type of ["open", "close", "skip"]) {
+    const line = logFor({ type, key })
+    assert.ok(line, type)
+    assert.ok(!line.includes("secret-project") && !line.includes("hidden"), line)
+  }
+  const error = new Error(`comms.todoist.com/api/v1.0/threads/add answered 400: {"title":"▲ ${key} failed to deploy"}`)
+  const line = failureFor({ type: "open", key }, error)
+  assert.equal(line, "::warning::open failed: comms.todoist.com/api/v1.0/threads/add answered 400")
 })
