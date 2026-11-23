@@ -1,0 +1,60 @@
+---
+title: 🔀 Workflows
+description: Read workflows, their statuses, transitions and conditions, and find which one an issue type uses.
+---
+
+```sh
+jira workflow list --project SHOP            # -n, --limit, --json
+jira workflow get 'SHOP: Bug workflow'       # --json
+jira workflow for Bug --project SHOP         # --json
+```
+
+## Commands
+
+| Command                     | Options                                                |
+| --------------------------- | ------------------------------------------------------ |
+| `workflow list`             | `-p, --project`, `-n, --limit` (default 100), `--json` |
+| `workflow get <name>`       | `--json`                                               |
+| `workflow for <issue-type>` | `-p, --project` (required), `--json`                   |
+
+`list --project` keeps only the workflows that project uses. `get` takes the exact name, ignoring case, and lists the near matches when there is none. `for` takes an issue type by name or ID.
+
+## Reading a workflow
+
+```console
+$ jira workflow get 'SHOP: Bug workflow'
+SHOP: Bug workflow
+How bugs move
+scope: GLOBAL
+
+Statuses
+  To Do  [TODO]
+  In Progress  [IN_PROGRESS]
+  Done  [DONE]
+
+Transitions
+  Create  (create) → To Do
+  Start work  To Do → In Progress
+    conditions
+      all of:
+        - system:restrict-issue-transition (roleIds=10002)
+    validators
+      - system:validate-field-value (fieldIds=resolution)
+  Done  (any) → Done
+```
+
+`(any)` marks a global transition, offered from every status. Conditions keep their nesting, so an `any of` group inside an `all of` reads as it does in Jira. Post functions show under `post functions`. `--json` prints the workflow as Jira returns it, with the statuses it uses attached.
+
+## Which workflow an issue type uses
+
+```console
+$ jira workflow for Bug --project SHOP
+SHOP: Bug workflow
+Bug in SHOP · scheme: SHOP workflow scheme
+```
+
+The answer comes from the project's workflow scheme when the account can read it. For a company-managed project that needs the Jira administrator global permission, so for a project admin the CLI asks Jira for the workflow by project and issue type instead, and the scheme's name is left out.
+
+## Permissions
+
+These commands only read. Jira serves them to a Jira administrator, or to anyone with **Administer projects** or **View (read-only) workflow** on the project the workflow is used in. Changing a workflow a company-managed project uses needs the Jira administrator global permission, which the CLI cannot grant; `jira whoami --permissions --project SHOP` shows which of the two this account holds.

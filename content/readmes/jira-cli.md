@@ -11,6 +11,7 @@ hasDocs: true
 - **Full issue workflow** — create, edit, transition (with a resolution), comment, link, watch, rank and log work
 - **Projects, boards and sprints** — browse projects, boards, sprints, epics and the backlog
 - **Automation rules** — list, export, import and switch Jira Automation rules, with secrets redacted on request
+- **Workflows** — read statuses, transitions and conditions, and find the workflow an issue type uses; `whoami --permissions` says what the account may administer
 - **Interactive board** — bare `jira` opens your issues as tabs, with search and in-place writes; Ink loads only for this view
 
 ## Install
@@ -46,6 +47,8 @@ $ jira project view ACME
 $ jira sprint view 1234
 $ jira search 'project = ACME AND created >= -7d' --json | jq -r '.[].key'
 $ jira automation get 0192e5ac-0e25-71de-ba7b-d972e6a2049a --redact
+$ jira workflow for Bug --project ACME
+$ jira whoami --permissions --project ACME
 ```
 
 Run `jira` with no arguments in a terminal for the interactive board. Inside an issue, description, comments and attachments sit in one scrolling view. Two flags help when exploring it: `--screen detail:ACME-1234` opens an issue directly (`--screen list` prints the available screens), and `--mock` runs against built-in sample data with no Jira needed.
