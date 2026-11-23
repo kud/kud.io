@@ -128,6 +128,19 @@ export const bodyFor = (deployment) => {
 
 export const closingFor = (key) => `✓ ${key} deployed again`
 
+// The Actions log of a public repository is public: it never names a project
+// or a branch, which may be private. The thread in Comms carries the detail.
+export const logFor = (action) =>
+  ({
+    open: "Opened an alert thread.",
+    close: "Closed an alert thread.",
+    skip: `::warning::Not opening an alert thread: already ${MAX_NEW_THREADS} new threads this run.`,
+  })[action.type]
+
+// Only "host/path answered <status>", never the response body, which may echo a title.
+export const failureFor = (action, error) =>
+  `::warning::${action.type} failed: ${String(error.message).split(":")[0]}`
+
 // ── Comms ids (copied from kud/.github comms-thread lib/id.js) ───────────────
 
 const ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
@@ -263,7 +276,7 @@ const main = async () => {
   for (const action of actions) {
     try {
       if (action.type === "skip") {
-        console.log(`::warning::Not opening ${action.key}: already ${MAX_NEW_THREADS} new threads this run.`)
+        console.log(logFor(action))
       } else if (action.type === "open") {
         const body = {
           id: newId(),
@@ -273,7 +286,10 @@ const main = async () => {
           groups: ["EVERYONE"],
         }
         if (dryRun) console.log(`[dry run] open ${JSON.stringify(body)}`)
-        else console.log(`Opened ${action.key}: ${(await post("threads/add", body, commsToken)).id}`)
+        else {
+          await post("threads/add", body, commsToken)
+          console.log(logFor(action))
+        }
       } else if (action.type === "close") {
         const body = {
           id: newId(),
@@ -286,12 +302,12 @@ const main = async () => {
         if (dryRun) console.log(`[dry run] close ${JSON.stringify(body)}`)
         else {
           await post("comments/add", body, commsToken)
-          console.log(`Closed ${action.key}: ${action.thread.id}`)
+          console.log(logFor(action))
         }
       }
     } catch (error) {
       if (error instanceof AuthError) throw error
-      console.log(`::warning::${action.type} ${action.key}: ${error.message}`)
+      console.log(failureFor(action, error))
     }
   }
 }
