@@ -1,12 +1,35 @@
 "use client"
 
 import { Link } from "next-view-transitions"
-import { useEffect } from "react"
+import { useEffect, useSyncExternalStore } from "react"
 import type { ComponentProps, MouseEvent } from "react"
 
 // sessionStorage key naming the project a return morph started from, read by
 // MorphArrival on /projects to pick the one card that glides home.
 export const MORPH_RETURN_KEY = "kud:morph-return"
+
+// sessionStorage key holding the query string /projects last showed (its
+// filters, lib/projects-query.ts), so a project's "← Projects" returns to the
+// same filtered view the reader left, not to the bare list.
+export const PROJECTS_SEARCH_KEY = "kud:projects-search"
+
+const subscribeToNothing = () => () => {}
+const readProjectsSearch = () => {
+  try {
+    return sessionStorage.getItem(PROJECTS_SEARCH_KEY) ?? ""
+  } catch {
+    return ""
+  }
+}
+
+// "/projects#apps" with "?q=ink" gives "/projects?q=ink#apps".
+const withSearch = (href: string, search: string) => {
+  if (!search) return href
+  const hashAt = href.indexOf("#")
+  return hashAt === -1
+    ? `${href}${search}`
+    : `${href.slice(0, hashAt)}${search}${href.slice(hashAt)}`
+}
 
 const NAMED = '[style*="view-transition-name"]'
 
@@ -73,7 +96,20 @@ type Props = ComponentProps<typeof Link> & {
 
 // A transition-aware Link for the /projects ↔ project moves: a shared-element
 // morph of the icon and title, with no ink.
-export const MorphLink = ({ onClick, slug, ...props }: Props) => {
+export const MorphLink = ({ onClick, slug, href, ...props }: Props) => {
+  // A way back to the list (`slug` set, and the list itself as the target)
+  // carries the filters the reader left it with. The server renders the bare
+  // address; the stored one takes over after hydration.
+  const projectsSearch = useSyncExternalStore(
+    subscribeToNothing,
+    readProjectsSearch,
+    () => "",
+  )
+  const target =
+    slug && typeof href === "string" && /^\/projects(?:#|$)/.test(href)
+      ? withSearch(href, projectsSearch)
+      : href
+
   // Back button: next-view-transitions already wraps every popstate in a view
   // transition, but unflagged, so it was a plain cross-fade with ~100 named
   // cards fading in on their own. Flag it and remember the slug, exactly as
@@ -125,5 +161,5 @@ export const MorphLink = ({ onClick, slug, ...props }: Props) => {
     onClick?.(event)
   }
 
-  return <Link {...props} onClick={handleClick} />
+  return <Link {...props} href={target} onClick={handleClick} />
 }
