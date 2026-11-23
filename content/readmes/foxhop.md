@@ -26,6 +26,8 @@ Then install the Firefox extension:
 - **Permanent** — install from [addons.mozilla.org](https://addons.mozilla.org/firefox/addon/foxhop/) — the signed, auto-updating listing.
 - **Temporary (development)** — open `about:debugging#/runtime/this-firefox`, click **Load Temporary Add-on**, and select `webextension/manifest.json` from this repo.
 
+`foxhop paste` and `foxhop read` need access to page content, which the extension does not ask for at install. To use them, open Fox Hop's settings (toolbar button → **Settings**) and click **Grant** under **Page access**. Focusing tabs works without it.
+
 ## Usage
 
 Targets live in `~/.config/foxhop/tabs.json`. Add one with `foxhop add` or by editing the file directly.
@@ -37,6 +39,8 @@ $ foxhop tabs                   # list currently open Firefox tabs   (--json)
 $ foxhop add https://mail.google.com --title Gmail   # id: gmail (slug of the title)
 $ foxhop edit gmail --url https://mail.google.com/mail/u/1   # change fields, never the id
 $ foxhop remove gmail
+$ git diff | foxhop paste chatgpt   # fill a text box on its tab (stdin, or the clipboard)
+$ foxhop read notes --from "article" --last   # print text from its tab, without focusing it
 $ foxhop sync                   # generate per-tab Raycast hotkey scripts
 ```
 

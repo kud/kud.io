@@ -27,7 +27,9 @@ Every subcommand also takes `--host <site|api>`.
 
 ## Permissions
 
-These use Atlassian's Automation REST API with the same classic API token as everything else; nothing new to configure. The account needs the **Jira administrator** global permission. Jira answers even a project admin with a bare 403, which the CLI reports before exiting 4. Project admins can still manage their project's rules in the Jira web UI.
+These use Atlassian's Automation REST API with the same classic API token as everything else; nothing new to configure. The account needs the **Jira administrator** global permission. Jira answers even a project admin with a bare 403. The CLI explains it, then checks the account's permissions and says whether it is a project admin (on the `--project` given to `list`, otherwise on any project) who can manage those rules in the Jira web UI instead, under Project settings > Automation, unless a Jira admin has turned off "Allow project administrators to manage project rules". It exits 4 either way. `jira whoami --permissions --project SHOP` runs the same check on its own.
+
+There is no link to that page: Atlassian documents the menu path, not a URL for it. The web UI's rule import is no way around the permission either, since Atlassian reserves importing and exporting rules for global administrators.
 
 ## File shape
 

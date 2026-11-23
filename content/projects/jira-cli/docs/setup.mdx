@@ -20,6 +20,21 @@ Check it worked:
 jira whoami
 ```
 
+To see what this account may administer, before reaching for `jira automation` or `jira workflow`:
+
+```console
+$ jira whoami --permissions --project SHOP
+Ada Lovelace <ada@example.com>
+5b10a2844c20165700ede21g
+
+global admin (Administer Jira)   no
+project admin on SHOP            yes
+```
+
+Without `--project`, the second line reports project admin on any project, which is how Jira answers a project permission asked globally. `--json` adds a `permissions` object to the account.
+
+`--board <id>` adds a board admin line. Board admin is a role of its own, held directly or through a group, and Jira only lists a board's admins on the board list, so the CLI looks the board up there. A board this account cannot see reads `unknown`. The board's `canEdit` flag is not used as the answer, since Jira also sets it for project and Jira admins; `--json` reports it separately.
+
 ## Environment variables
 
 | Variable                    | Purpose                                                             |

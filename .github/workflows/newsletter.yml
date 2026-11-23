@@ -27,10 +27,6 @@ on:
         description: Only parse and validate that date's edition (any status); write and publish nothing.
         type: boolean
         default: false
-      test_slack:
-        description: Send a Slack test only; do not touch Notion or publish an edition.
-        type: boolean
-        default: false
   schedule:
     - cron: "52 18 * * *"
     - cron: "52 19 * * *"
@@ -48,7 +44,6 @@ concurrency:
 
 jobs:
   publish:
-    if: ${{ !inputs.test_slack }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
@@ -56,6 +51,8 @@ jobs:
       NOTION_NEWSLETTER_DATABASE_ID: ${{ vars.NOTION_NEWSLETTER_DATABASE_ID }}
       DATE_INPUT: ${{ inputs.date }}
       REPORT: /tmp/newsletter-report.json
+      # Only whether the secret exists: `if:` cannot read secrets directly.
+      HAS_TODOIST_MOCHI_BOT_TOKEN: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN != '' }}
 
     steps:
       - name: Check out repository
@@ -175,36 +172,48 @@ jobs:
             node scripts/sync-newsletter.js --mark=published "--date=$date"
           done
 
-      # A missing or broken webhook must be visible, but must never undo a
-      # successful publication. ::warning:: is surfaced in the Actions run and
-      # forwarded by notify-slack.yml when the warnings webhook is configured.
-      - name: Announce in Slack
-        if: steps.plan.outputs.publish != ''
+      # The same announcement as a Todoist Comms thread in pub-newsletter. One
+      # thread per run (a run nearly always publishes a single edition). Skipped
+      # without TODOIST_MOCHI_BOT_TOKEN, and never fails the publication.
+      - name: Prepare the Comms announcement
+        id: comms_newsletter
+        if: steps.plan.outputs.publish != '' && env.HAS_TODOIST_MOCHI_BOT_TOKEN == 'true'
+        continue-on-error: true
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_NEWSLETTER_WEBHOOK_URL }}
+          DATES: ${{ steps.plan.outputs.publish }}
         run: |
           set -euo pipefail
-          if [[ -z "$SLACK_WEBHOOK_URL" ]]; then
-            echo "::warning title=Newsletter Slack webhook missing::Set the SLACK_NEWSLETTER_WEBHOOK_URL Actions secret; the edition is published, but #pub-newsletter was not notified."
-            echo "⚠️ Slack announcement skipped: SLACK_NEWSLETTER_WEBHOOK_URL is not configured." >> "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
-          for date in ${{ steps.plan.outputs.publish }}; do
+          shopt -s inherit_errexit
+          read -ra dates <<<"$DATES"
+          body=""
+          for date in "${dates[@]}"; do
             file="content/newsletter/$date/edition.json"
             lead=$(jq -r '.items[0].title.fr // empty' "$file")
             count=$(jq -r '.items | length' "$file")
             minutes=$(jq -r '.readingMinutes.fr // empty' "$file")
             day=$(node -e 'process.stdout.write(new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(`${process.argv[1]}T00:00:00Z`)))' "$date")
-            text=$(printf '📰 *Newsletter du %s publiée* · %s sujets%s\n%s\n<https://kud.io/newsletter/%s?lang=fr|Lire l’édition>' \
-              "$day" "$count" "${minutes:+ · $minutes min}" "$lead" "${date//-//}")
-            if jq -n --arg text "$text" '{text: $text}' \
-              | curl --fail --silent --show-error --max-time 20 -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" > /dev/null; then
-              echo "✅ Slack announcement sent for $date." >> "$GITHUB_STEP_SUMMARY"
-            else
-              echo "::warning title=Newsletter Slack delivery failed::The $date edition is live, but its Slack announcement failed; inspect this step and the webhook."
-              echo "⚠️ Slack announcement failed for $date." >> "$GITHUB_STEP_SUMMARY"
+            title=$(printf '📰 Newsletter du %s publiée' "$day")
+            entry=$(printf '%s sujets%s\n\n%s\n\n[Lire l’édition](https://kud.io/newsletter/%s?lang=fr)' \
+              "$count" "${minutes:+ · $minutes min}" "$lead" "${date//-//}")
+            if (( ${#dates[@]} > 1 )); then
+              entry=$(printf '**%s**\n%s' "$title" "$entry")
             fi
+            body+="${body:+$'\n\n'}$entry"
           done
+          if (( ${#dates[@]} > 1 )); then
+            title="📰 ${#dates[@]} newsletters publiées"
+          fi
+          { echo "title=$title"; echo "content<<COMMS_EOF"; printf '%s\n' "$body"; echo "COMMS_EOF"; } >> "$GITHUB_OUTPUT"
+
+      - name: Announce in Comms
+        if: steps.comms_newsletter.outcome == 'success'
+        continue-on-error: true
+        uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
+        with:
+          token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
+          channel-id: ChJXTwsrDQncsNTd2p2Pk
+          title: ${{ steps.comms_newsletter.outputs.title }}
+          content: ${{ steps.comms_newsletter.outputs.content }}
 
       # After Published, never before: the script refuses any other status and
       # skips a language already sent, so a re-run never mails twice. Without
@@ -239,28 +248,10 @@ jobs:
           echo "Invalid editions: ${{ steps.plan.outputs.invalid }} (reasons in Notion's Error property)"
           exit 1
 
-  # Test the newsletter-specific webhook without touching Notion or the site.
-  test-slack:
-    if: inputs.test_slack
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send newsletter Slack test
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_NEWSLETTER_WEBHOOK_URL }}
-        run: |
-          set -euo pipefail
-          if [[ -z "$SLACK_WEBHOOK_URL" ]]; then
-            echo "::error title=Newsletter Slack webhook missing::Set SLACK_NEWSLETTER_WEBHOOK_URL before running this test."
-            exit 1
-          fi
-          jq -n --arg text "✓ kud.io newsletter: Slack notifications are configured (test only)." '{text: $text}' \
-            | curl --fail --silent --show-error --max-time 20 -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" > /dev/null
-          echo "✅ Newsletter Slack webhook delivered a test message." >> "$GITHUB_STEP_SUMMARY"
-
   # A failed or warning-laden publication run lands in the alerts channel too.
   notify:
     needs: publish
-    if: ${{ always() && !inputs.test_slack }}
+    if: ${{ always() }}
     permissions:
       actions: read
       checks: read

@@ -31,7 +31,7 @@ console.log(redactToken(someText, config.token))
 | Error | Thrown when |
 | --- | --- |
 | `MissingHostError` | A client is constructed without a host |
-| `SonarQubeAuthError` | The server answers 401; a subclass of `SonarQubeHttpError` whose message names the env var the token came from when it is known |
+| `SonarQubeAuthError` | The server answers 401; a subclass of `SonarQubeHttpError` whose message names the env var the token came from when it is known, and points a rejected legacy `SONARQUBE_DASH_TOKEN` at `SONARQUBE_TOKEN` |
 | `SonarQubeHttpError` | The server answers with a non-2xx status; exposes `status` and `path` |
 
 ```ts

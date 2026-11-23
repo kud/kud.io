@@ -1,0 +1,49 @@
+name: Comms smoke test
+
+# Run by hand once TODOIST_MOCHI_BOT_TOKEN is set: opens one thread in ops-warnings through
+# kud/.github's comms-thread action, then closes it. Unlike the notifiers, it
+# fails when the secret is missing or Comms refuses, since that is the test.
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    env:
+      # Only whether the secret exists: `if:` cannot read secrets directly.
+      HAS_TODOIST_MOCHI_BOT_TOKEN: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN != '' }}
+    steps:
+      - name: Check the secret
+        if: env.HAS_TODOIST_MOCHI_BOT_TOKEN != 'true'
+        run: |
+          echo "::error title=Comms token missing::Set the TODOIST_MOCHI_BOT_TOKEN Actions secret before running this test."
+          exit 1
+
+      - name: Open a thread in ops-warnings
+        id: open
+        uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
+        with:
+          token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
+          channel-id: ChJXTuoq3aXYwTKBfpWzP
+          title: Comms smoke test from kud.io
+          content: |
+            ✓ ${{ github.repository }}: Comms notifications are configured (test only). This thread closes itself.
+            [View run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          notify: quiet
+
+      - name: Close it
+        uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
+        with:
+          token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
+          mode: close
+          thread-id: ${{ steps.open.outputs.thread-id }}
+          content: ✓ Smoke test closed.
+
+      - name: Summary
+        env:
+          URL: ${{ steps.open.outputs.url }}
+        run: |
+          echo "✅ Comms thread opened and closed: ${URL:-no link returned}" >> "$GITHUB_STEP_SUMMARY"

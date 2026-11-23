@@ -15,6 +15,7 @@ window captures that go stale the next time the UI moves.
 - **Fixtures by default** — `--mock` is on unless you opt out, because a screenshot outlives the moment it was taken
 - **Deterministic and headless** — fixed size, fixed data, no window manager, runnable in CI
 - **Scriptable last mile** — `--keys` reaches state a screen name can't address
+- **Recordings too** — `--format cast` writes asciicast v2, `--format web` a static replay page ready for Vercel, and `--format gif` / `mp4` that page's window as a moving image
 
 ## Install
 
@@ -50,14 +51,22 @@ cli-shot --out shots --keys $'jjj\r' -- pcloud    # drive deeper first
 cli-shot --out shots --no-mock -- pcloud          # real data (careful)
 ```
 
-| flag                |                                                   |
-| ------------------- | ------------------------------------------------- |
-| `-o, --out <dir>`   | directory to write PNGs into                      |
-| `--only <screen>`   | shoot one screen instead of every screen          |
-| `--list`            | print the screens the command offers, and stop    |
-| `--cols` / `--rows` | terminal size (default 110×32)                    |
-| `--settle <ms>`     | how long the screen must hold still (default 350) |
-| `--jobs <n>`        | screens shot at once; defaults to the core count  |
-| `--keys <sequence>` | keystrokes sent once the screen has drawn         |
-| `--font <family>`   | font to render with; defaults to a Nerd Font      |
-| `--no-mock`         | drive real data instead of fixtures               |
+| flag                 |                                                     |
+| -------------------- | --------------------------------------------------- |
+| `-o, --out <dir>`    | directory to write into                             |
+| `--format <list>`    | `png`, `cast`, `web`, `gif`, `mp4`, comma-separated |
+| `--only <screen>`    | shoot one screen instead of every screen            |
+| `--list`             | print the screens the command offers, and stop      |
+| `--cols` / `--rows`  | terminal size (default 110×32)                      |
+| `--settle <ms>`      | how long the screen must hold still (default 350)   |
+| `--jobs <n>`         | screens shot at once; defaults to the core count    |
+| `--keys <sequence>`  | keystrokes sent once the screen has drawn           |
+| `--font <family>`    | font to render with; defaults to a Nerd Font        |
+| `--title <text>`     | page title for `web`, window title for `gif`/`mp4`  |
+| `--base <path>`      | `<base href>` for the web page, see below           |
+| `--fps <n>`          | `gif`/`mp4` frames per second (default 15)          |
+| `--speed <n>`        | `gif`/`mp4` playback speed (default 1)              |
+| `--max-duration <s>` | `gif`/`mp4` longest replay; sped up to fit          |
+| `--loop <n>`         | `gif` plays, 0 for forever (default 0)              |
+| `--scale <n>`        | `gif`/`mp4` pixel density, 2 for retina (default 1) |
+| `--no-mock`          | drive real data instead of fixtures                 |

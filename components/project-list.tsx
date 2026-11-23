@@ -9,7 +9,15 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react"
-import { MorphLink } from "@/components/morph-link"
+import { MorphLink, PROJECTS_SEARCH_KEY } from "@/components/morph-link"
+import { replaceUrlSearch, useUrlSearch } from "@/components/use-url-search"
+import {
+  parseProjectsQuery,
+  sanitiseProjectsQuery,
+  serialiseProjectsQuery,
+  type ProjectsQuery,
+  type ProjectsSort,
+} from "@/lib/projects-query"
 import type { Project as RepoProject } from "@/lib/projects"
 
 const SEARCH_DEBOUNCE_MS = 180
@@ -90,7 +98,7 @@ const RowRelease = ({ release }: { release: ReleaseSummary | undefined }) =>
     </span>
   ) : null
 
-type SortKey = "updated" | "stars" | "name"
+type SortKey = ProjectsSort
 
 const SORTS: Record<
   SortKey,
@@ -213,18 +221,10 @@ export const ProjectList = ({
   // once the grid is narrowed to a filtered subset.
   children?: ReactNode
 }) => {
-  const [sort, setSort] = useState<SortKey>("updated")
-  const [query, setQuery] = useState("")
-  // The field answers every keystroke; the list re-filters once typing
-  // pauses, so a fast word does not redraw ninety cards per letter.
-  const [searched, setSearched] = useState("")
-  useEffect(() => {
-    const timer = setTimeout(() => setSearched(query), SEARCH_DEBOUNCE_MS)
-    return () => clearTimeout(timer)
-  }, [query])
-  const [category, setCategory] = useState<string | null>(null)
-  const [lang, setLang] = useState<string | null>(null)
-  const [activeTags, setActiveTags] = useState<string[]>([])
+  // Every filter lives in the query string (lib/projects-query.ts), so a
+  // filtered view survives a reload, a shared link, and a trip into a project
+  // and back. The URL is the state; nothing here mirrors it.
+  const urlSearch = useUrlSearch("/projects")
   const [hasFilterInteraction, setHasFilterInteraction] = useState(false)
   // The filter rail stays out of the way while the hero is in view, then fades
   // in once the browse area scrolls up. `scrollReveal` is only switched on after
@@ -237,11 +237,6 @@ export const ProjectList = ({
   )
   const [filtersRevealed, setFiltersRevealed] = useState(false)
   const revealSentinelRef = useRef<HTMLDivElement>(null)
-  // Ecosystem is single-select (unlike tags): you're looking at one family at a
-  // time. Clicking the active tile again clears it.
-  const [activeEcosystem, setActiveEcosystem] = useState<string | null>(null)
-  const compare = SORTS[sort].fn
-
   const markFilterInteraction = () => setHasFilterInteraction(true)
 
   // Keep the rail hidden over the hero, then reveal it once the top of the
@@ -274,14 +269,12 @@ export const ProjectList = ({
     }
   }, [])
 
-  const toggleTag = (tag: string) => {
-    markFilterInteraction()
-    setActiveTags((current) =>
-      current.includes(tag)
-        ? current.filter((value) => value !== tag)
-        : [...current, tag],
-    )
-  }
+  const toggleTag = (tag: string) =>
+    update({
+      tags: activeTags.includes(tag)
+        ? activeTags.filter((value) => value !== tag)
+        : [...activeTags, tag],
+    })
 
   // Languages ordered by how many projects use them, so the common ones lead.
   const languageCounts = useMemo(() => {
@@ -314,6 +307,56 @@ export const ProjectList = ({
         (counts.get(b) ?? 0) - (counts.get(a) ?? 0) || a.localeCompare(b),
     )
   }, [groups])
+
+  const ecosystemKeys = useMemo(
+    () => ecosystems.map((ecosystem) => ecosystem.key),
+    [ecosystems],
+  )
+  const groupKeys = useMemo(() => groups.map((group) => group.key), [groups])
+  const query = useMemo(
+    () =>
+      sanitiseProjectsQuery(parseProjectsQuery(urlSearch), {
+        types: groupKeys,
+        langs: languages,
+        ecos: ecosystemKeys,
+        tags,
+      }),
+    [urlSearch, groupKeys, languages, ecosystemKeys, tags],
+  )
+  const {
+    sort,
+    type: category,
+    lang,
+    eco: activeEcosystem,
+    tags: activeTags,
+  } = query
+  const searched = query.q
+  const compare = SORTS[sort].fn
+  const update = (patch: Partial<ProjectsQuery>) => {
+    markFilterInteraction()
+    replaceUrlSearch(serialiseProjectsQuery({ ...query, ...patch }))
+  }
+
+  // The field answers every keystroke; the URL, and with it the list, follows
+  // once typing pauses, so a fast word does not redraw ninety cards per
+  // letter. `draft` is null while the field simply shows the URL's query.
+  const [draft, setDraft] = useState<string | null>(null)
+  useEffect(() => {
+    if (draft === null) return
+    const timer = setTimeout(() => {
+      replaceUrlSearch(serialiseProjectsQuery({ ...query, q: draft }))
+      setDraft(null)
+    }, SEARCH_DEBOUNCE_MS)
+    return () => clearTimeout(timer)
+  }, [draft, query])
+
+  // Remembered for the project pages' "← Projects", which returns to this
+  // exact view rather than to the bare list (components/morph-link.tsx).
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(PROJECTS_SEARCH_KEY, urlSearch)
+    } catch {}
+  }, [urlSearch])
 
   const needle = searched.trim().toLowerCase()
   const matches = (project: Project) =>
@@ -358,14 +401,9 @@ export const ProjectList = ({
       short: SORTS[key].short,
     }),
   )
-  const pickType = (value: string | null) => {
-    markFilterInteraction()
-    setCategory(value)
-  }
-  const pickSort = (value: string | null) => {
-    markFilterInteraction()
-    setSort((value ?? "updated") as SortKey)
-  }
+  const pickType = (value: string | null) => update({ type: value })
+  const pickSort = (value: string | null) =>
+    update({ sort: (value ?? "updated") as SortKey })
 
   const isFiltered = Boolean(
     needle || category || lang || activeTags.length > 0 || activeEcosystem,
@@ -578,10 +616,10 @@ export const ProjectList = ({
               type="search"
               className={styles.search}
               placeholder="Search projects…"
-              value={query}
+              value={draft ?? searched}
               onChange={(event) => {
                 markFilterInteraction()
-                setQuery(event.target.value)
+                setDraft(event.target.value)
               }}
               aria-label="Search projects"
             />
@@ -604,10 +642,7 @@ export const ProjectList = ({
                     type="button"
                     className={styles.chip}
                     data-active={activeEcosystem === null}
-                    onClick={() => {
-                      markFilterInteraction()
-                      setActiveEcosystem(null)
-                    }}
+                    onClick={() => update({ eco: null })}
                   >
                     All
                   </button>
@@ -617,14 +652,14 @@ export const ProjectList = ({
                       type="button"
                       className={styles.ecosystemChip}
                       data-active={activeEcosystem === ecosystem.key}
-                      onClick={() => {
-                        markFilterInteraction()
-                        setActiveEcosystem(
-                          activeEcosystem === ecosystem.key
-                            ? null
-                            : ecosystem.key,
-                        )
-                      }}
+                      onClick={() =>
+                        update({
+                          eco:
+                            activeEcosystem === ecosystem.key
+                              ? null
+                              : ecosystem.key,
+                        })
+                      }
                     >
                       {ecosystem.name}
                       <span className={styles.chipCount}>
@@ -643,10 +678,7 @@ export const ProjectList = ({
                   type="button"
                   className={styles.chip}
                   data-active={lang === null}
-                  onClick={() => {
-                    markFilterInteraction()
-                    setLang(null)
-                  }}
+                  onClick={() => update({ lang: null })}
                 >
                   All
                 </button>
@@ -656,10 +688,9 @@ export const ProjectList = ({
                     type="button"
                     className={styles.languageChip}
                     data-active={lang === language}
-                    onClick={() => {
-                      markFilterInteraction()
-                      setLang(lang === language ? null : language)
-                    }}
+                    onClick={() =>
+                      update({ lang: lang === language ? null : language })
+                    }
                   >
                     {language}
                     <span className={styles.languageCount}>
@@ -689,10 +720,7 @@ export const ProjectList = ({
                     <button
                       type="button"
                       className={styles.tagClear}
-                      onClick={() => {
-                        markFilterInteraction()
-                        setActiveTags([])
-                      }}
+                      onClick={() => update({ tags: [] })}
                     >
                       clear
                     </button>

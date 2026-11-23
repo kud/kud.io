@@ -1,0 +1,78 @@
+name: Comms post
+
+# Posts one thread to a Todoist Comms channel as Mochi, by hand or from an
+# assistant through workflow_dispatch. Automatic messages are signed by Mochi,
+# not by Erwann's own account, so they reach him unread.
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: Channel to post in
+        type: choice
+        options:
+          - ops-alerts
+          - ops-warnings
+          - pub-newsletter
+          - pub-writing
+        required: true
+      title:
+        description: Thread title
+        type: string
+        required: true
+      content:
+        description: Thread body (Markdown)
+        type: string
+        required: true
+      notify:
+        description: Who is notified
+        type: choice
+        options:
+          - channel
+          - quiet
+        default: channel
+
+permissions: {}
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    env:
+      # Only whether the secret exists: `if:` cannot read secrets directly.
+      HAS_TODOIST_MOCHI_BOT_TOKEN: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN != '' }}
+    steps:
+      - name: Check the secret
+        if: env.HAS_TODOIST_MOCHI_BOT_TOKEN != 'true'
+        run: |
+          echo "::error title=Comms token missing::Set the TODOIST_MOCHI_BOT_TOKEN Actions secret first."
+          exit 1
+
+      - name: Resolve the channel
+        id: channel
+        env:
+          CHANNEL: ${{ inputs.channel }}
+        run: |
+          case "$CHANNEL" in
+            ops-alerts)     id=ChJXTt3RDFYYZr9oTkUJu ;;
+            ops-warnings)   id=ChJXTuoq3aXYwTKBfpWzP ;;
+            pub-newsletter) id=ChJXTwsrDQncsNTd2p2Pk ;;
+            pub-writing)    id=ChJXTykiPdReqTDrD3k3e ;;
+            *) echo "::error::Unknown channel: $CHANNEL"; exit 2 ;;
+          esac
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+
+      - name: Post the thread
+        id: open
+        uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
+        with:
+          token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
+          channel-id: ${{ steps.channel.outputs.id }}
+          title: ${{ inputs.title }}
+          content: ${{ inputs.content }}
+          notify: ${{ inputs.notify }}
+
+      - name: Summary
+        env:
+          URL: ${{ steps.open.outputs.url }}
+        run: |
+          echo "✅ Posted in Comms: ${URL:-no link returned}" >> "$GITHUB_STEP_SUMMARY"

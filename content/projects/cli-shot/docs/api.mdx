@@ -12,7 +12,7 @@ import {
   capture,
   listScreens,
   toImage,
-} from "@kud/cli-shot"
+} from "@kud/cli-shot";
 ```
 
 ## `shootAll(options)`
@@ -23,7 +23,7 @@ Shoots every screen the driven CLI reports via `--screen list`, writing one PNG 
 const written = await shootAll({
   command: "pcloud",
   out: "assets/screenshots",
-})
+});
 ```
 
 ## `shootScreen(screen, options)`
@@ -34,7 +34,7 @@ Shoots a single named screen and returns the path written.
 const path = await shootScreen("sync", {
   command: "pcloud",
   out: "shots",
-})
+});
 ```
 
 Both take a `ShootOptions` object:
@@ -51,6 +51,19 @@ Both take a `ShootOptions` object:
 | `env`           | extra environment variables for the child process                            |
 | `keys`          | keystrokes sent once the first draw has settled                              |
 | `freezeArgs`    | extra flags passed straight to `freeze`, e.g. `["--theme", "nord"]`          |
+| `formats`       | `"png"`, `"cast"` and/or `"web"` — defaults to `["png"]`                     |
+| `title`         | page title for `"web"`                                                       |
+| `base`          | `<base href>` for `"web"`, when the page is served under another path        |
+
+`shootScreen` always writes a PNG. `shootFormats(screen, options)` writes one screen in every requested format and returns every path; see [Recordings](/projects/cli-shot/docs/recordings).
+
+## `buildPlayer(options)`
+
+Writes the static replay page around the `.cast` files already in `out` — `index.html`, `assets/` and `vercel.json` — and returns the paths written. `screens` picks and orders them; `title` and `base` are as above.
+
+## `toCast(header, events)` / `parseCast(text)`
+
+Write and read asciicast v2. Events are `[seconds, code, data]` tuples; times are kept to microseconds and never go backwards.
 
 ## `listScreens(command, args?)`
 

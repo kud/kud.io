@@ -36,7 +36,7 @@ jira sprint issues 1234
 jira sprint add 1234 ABC-1 ABC-2
 ```
 
-`sprint list <boardId>` takes `--state active|future|closed`, comma-separated to combine. `sprint add` moves issues into a sprint.
+`sprint list <boardId>` takes `--state active|future|closed`, comma-separated to combine. `sprint add` moves issues into a sprint. That needs the Schedule issues and Edit issues permissions on the issues' project, plus Rank issues for an active sprint; board admin and Manage sprints do not include them, and a 403 says so.
 
 ## Epics and backlog
 

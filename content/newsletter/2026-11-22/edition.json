@@ -1,0 +1,511 @@
+{
+  "schema": 1,
+  "date": "2026-11-22",
+  "generatedAt": "2026-11-22T18:37:00.000+00:00",
+  "publishedAt": "2026-11-22T18:38:31Z",
+  "languages": [
+    "fr",
+    "en"
+  ],
+  "lede": {
+    "fr": "Ce soir, on revient sur la fin de la COP31 à Antalya, qui s’est séparée dimanche sans adopter de décision finale, et sur les lignes de fracture qui l’ont fait échouer. Puis la Corée du Sud, où la triche à l’IA aux examens a coûté son poste au ministre de l’Éducation, des marchés qui doutent de l’IA, et le préfet soupçonné d’avoir renseigné le RN. On vous explique aussi ce qu’est la perplexité, la mesure qu’OpenAI propose de partager entre laboratoires. Et trois trouvailles, dont une question : les morts ont-ils des droits ?",
+    "en": "Tonight, we look at the end of COP31 in Antalya, which broke up on Sunday without adopting a final decision, and at the fault lines that sank it. Then South Korea, where AI cheating in exams has cost the education minister his job, markets losing their nerve over AI, and the French prefect suspected of passing information to the far right. We also explain perplexity, the measure OpenAI wants AI labs to share. And three finds, including a question: do the dead have rights?"
+  },
+  "readingMinutes": {
+    "fr": 11,
+    "en": 11
+  },
+  "wordCount": {
+    "fr": 2304,
+    "en": 2138
+  },
+  "narrative": {
+    "overview": {
+      "fr": "Ce soir, on revient sur la fin de la COP31 à Antalya, qui s’est séparée dimanche sans adopter de décision finale, et sur les lignes de fracture qui l’ont fait échouer. Puis la Corée du Sud, où la triche à l’IA aux examens a coûté son poste au ministre de l’Éducation, des marchés qui doutent de l’IA, et le préfet soupçonné d’avoir renseigné le RN. On vous explique aussi ce qu’est la perplexité, la mesure qu’OpenAI propose de partager entre laboratoires. Et trois trouvailles, dont une question : les morts ont-ils des droits ?",
+      "en": "Tonight, we look at the end of COP31 in Antalya, which broke up on Sunday without adopting a final decision, and at the fault lines that sank it. Then South Korea, where AI cheating in exams has cost the education minister his job, markets losing their nerve over AI, and the French prefect suspected of passing information to the far right. We also explain perplexity, the measure OpenAI wants AI labs to share. And three finds, including a question: do the dead have rights?"
+    },
+    "analysis": null,
+    "closing": {
+      "fr": "Bonne fin de dimanche, et à demain.",
+      "en": "Enjoy the rest of your Sunday, and see you tomorrow."
+    }
+  },
+  "sections": [
+    {
+      "key": "overview",
+      "kind": "narrative",
+      "title": {
+        "fr": "Ce soir",
+        "en": "Tonight"
+      },
+      "items": []
+    },
+    {
+      "key": "depth",
+      "kind": "items",
+      "title": {
+        "fr": "Le sujet du jour",
+        "en": "Today’s focus"
+      },
+      "items": [
+        "01"
+      ]
+    },
+    {
+      "key": "brief",
+      "kind": "items",
+      "title": {
+        "fr": "L’essentiel",
+        "en": "The essentials"
+      },
+      "items": [
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "key": "explainer",
+      "kind": "items",
+      "title": {
+        "fr": "C’est quoi ?",
+        "en": "Explainer"
+      },
+      "items": [
+        "05"
+      ]
+    },
+    {
+      "key": "techsci",
+      "kind": "items",
+      "title": {
+        "fr": "Technologie & science",
+        "en": "Technology & science"
+      },
+      "items": [
+        "06",
+        "07"
+      ]
+    },
+    {
+      "key": "inbrief",
+      "kind": "bullets",
+      "title": {
+        "fr": "En bref",
+        "en": "In brief"
+      },
+      "items": []
+    },
+    {
+      "key": "finds",
+      "kind": "items",
+      "title": {
+        "fr": "Ça vaut un clic",
+        "en": "Worth a click"
+      },
+      "items": [
+        "08",
+        "09",
+        "10"
+      ]
+    },
+    {
+      "key": "watch",
+      "kind": "items",
+      "title": {
+        "fr": "À surveiller",
+        "en": "Watch next"
+      },
+      "items": [
+        "11"
+      ]
+    },
+    {
+      "key": "closing",
+      "kind": "narrative",
+      "title": {
+        "fr": "Pour finir",
+        "en": "To close"
+      },
+      "items": []
+    }
+  ],
+  "items": [
+    {
+      "id": "01",
+      "section": "depth",
+      "kicker": {
+        "fr": "CLIMAT",
+        "en": "CLIMATE"
+      },
+      "title": {
+        "fr": "La COP31 s’achève sans accord : ce qui a cassé, et ce qui reste",
+        "en": "COP31 ends without a deal: what broke, and what is left"
+      },
+      "summary": {
+        "fr": "Après près de 44 heures de prolongations, la conférence de l’ONU sur le climat d’Antalya, en Turquie, s’est terminée dimanche 22 novembre sans adopter sa décision finale, le texte politique qui résume chaque COP (on parle de « décision de couverture »). « Il semble qu’il y a des parties qui s’opposent à ce texte. J’en conclus qu’il n’y a pas d’accord, ces décisions ne sont pas adoptées », a constaté le président turc de la COP31, Murat Kurum, cité par franceinfo. L’Union européenne a refusé le dernier projet des présidences turque et australienne parce qu’il ne mentionnait plus les énergies fossiles : « Nous n’approuverons pas une décision de couverture qui ne mentionne même pas les énergies fossiles, la cause du changement climatique », a déclaré le ministre irlandais du Climat, Darragh O’Brien, au nom de l’UE, selon DW. Le Panama et les îles Marshall s’y sont aussi opposés. Selon Al Jazeera, c’est la première fois depuis Copenhague, en 2009, qu’une COP annuelle se termine sans accord ; selon franceinfo, qui cite le Bulletin des négociations de la Terre, c’est aussi la plus longue de l’histoire, devant la COP25 de Madrid en 2019.",
+        "en": "After almost 44 hours of overtime, the UN climate conference in Antalya, Turkey, ended on Sunday 22 November without adopting its final decision, the political text that sums up each COP, known as the “cover decision”. “It seems there are parties opposed to this text. I conclude that there is no agreement; these decisions are not adopted,” said COP31’s Turkish president, Murat Kurum, as quoted by franceinfo. The European Union rejected the Turkish and Australian presidencies’ last draft because it no longer mentioned fossil fuels: “We will not endorse a cover decision that does not even mention fossil fuels, the driver of climate change,” said Ireland’s climate minister, Darragh O’Brien, speaking for the EU, according to DW. Panama and the Marshall Islands also objected. According to Al Jazeera, it is the first time since Copenhagen in 2009 that an annual COP has ended without an agreement; according to franceinfo, citing the Earth Negotiations Bulletin, it was also the longest on record, overtaking COP25 in Madrid in 2019."
+      },
+      "sources": [
+        {
+          "url": "https://www.franceinfo.fr/environnement/crise-climatique/cop-climat/direct-l-union-europeenne-s-oppose-a-l-adoption-de-la-declaration-finale-de-la-cop31-apres-pres-de-deux-jours-de-prolongations_8294819.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        },
+        {
+          "url": "https://www.dw.com/en/cop31-climate-talks-end-without-consensus-on-how-to-fund-vulnerable-countries-or-move-the-world-away-from-coal-oil-and-gas-use/a-80003610",
+          "label": {
+            "fr": "DW",
+            "en": "DW"
+          }
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/11/22/countries-react-after-cop31-climate-talks-end-in-collapse",
+          "label": {
+            "fr": "Al Jazeera",
+            "en": "Al Jazeera"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "section": "brief",
+      "kicker": {
+        "fr": "CORÉE DU SUD",
+        "en": "SOUTH KOREA"
+      },
+      "title": {
+        "fr": "La triche à l’IA coûte son poste au ministre de l’Éducation",
+        "en": "AI cheating costs the education minister his job"
+      },
+      "summary": {
+        "fr": "Le ministre sud-coréen de l’Éducation, Choi Kyo-jin, a démissionné dimanche, rapporte la BBC en citant l’agence Yonhap : il dit assumer la confusion créée par les mesures prises à la dernière minute contre la triche assistée par IA au Suneung, l’examen national d’entrée à l’université passé jeudi par environ 500 000 candidats. Le président Lee Jae-myung a accepté sa démission. Tout est parti d’un aveu : Han Won-seok, major de l’examen national d’expert-comptable fiscal en avril, a reconnu avoir photographié les questions avec une microcaméra, les avoir envoyées à une IA, puis lu les réponses sur son téléphone. Le gouvernement a alors innové : pour démasquer les appareils cachés, il a déclenché trois fois, le jour de l’examen, le système national d’alerte aux catastrophes, qui fait sonner tous les téléphones allumés du pays, même en mode silencieux. Selon le ministère, 111 candidats ont été trouvés avec des appareils non autorisés. Le scandale relance un débat plus profond, note le Korea Herald : que mesure un examen écrit dont une IA peut résoudre les questions ? L’un des concepteurs du Suneung, Park Do-soon, estime qu’un écrit ne teste qu’« environ un dixième » des objectifs du programme.",
+        "en": "South Korea’s education minister, Choi Kyo-jin, resigned on Sunday, the BBC reports, citing the Yonhap news agency: he said he took responsibility for the confusion caused by last-minute measures against AI-assisted cheating in the Suneung, the national university entrance exam sat on Thursday by about 500,000 candidates. President Lee Jae-myung accepted his resignation. It began with a confession: Han Won-seok, top scorer in April’s national tax accountancy exam, admitted photographing the questions with a miniature camera, sending them to an AI and reading the answers on his phone. The government then tried something new: to flush out hidden devices, it set off the national disaster alert system three times on exam day, making every switched-on phone in the country ring, even on silent. According to the ministry, 111 candidates were found with unauthorised devices. The scandal has reopened a deeper debate, the Korea Herald notes: what does a written exam measure when an AI can answer its questions? One of the Suneung’s designers, Park Do-soon, argues that a written test assesses only “about one-tenth” of the curriculum’s goals."
+      },
+      "sources": [
+        {
+          "url": "https://www.bbc.co.uk/news/articles/cw3dgk29d37no",
+          "label": {
+            "fr": "BBC",
+            "en": "BBC"
+          }
+        },
+        {
+          "url": "https://www.koreaherald.com/article/10942917",
+          "label": {
+            "fr": "The Korea Herald",
+            "en": "The Korea Herald"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "section": "brief",
+      "kicker": {
+        "fr": "ÉCONOMIE",
+        "en": "ECONOMY"
+      },
+      "title": {
+        "fr": "L’IA fait trembler Wall Street, et Trump veut garder ses data centers",
+        "en": "AI rattles Wall Street, and Trump wants data centres kept at home"
+      },
+      "summary": {
+        "fr": "La semaine s’est achevée sur une forte baisse des marchés américains : vendredi 20 novembre, le Nasdaq, l’indice riche en valeurs technologiques, a perdu 5,3 %, et le S&P 500 et le Dow Jones sont entrés en « correction », c’est-à-dire à au moins 10 % sous un récent sommet, rapporte la BBC. En cause, selon les analystes qu’elle cite, la crainte d’une bulle : une poignée de grandes entreprises a dépensé plus de 1 000 milliards de dollars en IA en un an, et les investisseurs commencent à exiger une rentabilité plus claire. L’action d’Anthropic, entrée en Bourse jeudi, en a fait les frais : introduite à 83 dollars, elle avait clôturé sa première séance à 97 dollars, puis a perdu 8,5 % vendredi. L’entreprise, qui a levé 81 milliards de dollars, n’est pas encore rentable, rappelle DW. Le même jour, Donald Trump a menacé d’une « énorme taxe » les entreprises américaines qui construiraient des centres de données à l’étranger, « parce que la Chine les prendra tous ». Il a reconnu que son équipe découvrait l’idée ; on ignore comment elle serait appliquée. Meta a pourtant déjà lancé un chantier en Alberta, au Canada, note la BBC.",
+        "en": "The week ended with a sharp fall on US markets: on Friday 20 November the tech-heavy Nasdaq lost 5.3%, and the S&P 500 and the Dow Jones entered “correction”, meaning at least 10% below a recent high, the BBC reports. The analysts it quotes point to fears of a bubble: a handful of big companies spent more than $1tn on AI in a year, and investors are starting to demand a clearer path to profit. Anthropic’s shares, which began trading on Thursday, took the hit: priced at $83, they closed their first day at $97, then lost 8.5% on Friday. The company, which raised $81bn, is not yet profitable, DW notes. The same day, Donald Trump threatened a “tremendous tax” on US companies that build data centres abroad, “because China will take all of them”. He acknowledged his own team was hearing the idea for the first time; how it would be enforced is unknown. Meta, the BBC notes, has already broken ground on one in Alberta, Canada."
+      },
+      "sources": [
+        {
+          "url": "https://www.bbc.co.uk/news/articles/c6808ym10vzgo",
+          "label": {
+            "fr": "BBC · marchés",
+            "en": "BBC · markets"
+          }
+        },
+        {
+          "url": "https://www.bbc.co.uk/news/articles/cmde1lw9y54ko",
+          "label": {
+            "fr": "BBC · centres de données",
+            "en": "BBC · data centres"
+          }
+        },
+        {
+          "url": "https://www.dw.com/en/anthropic-trading-tests-investors-appetite-for-ai/a-79993163",
+          "label": {
+            "fr": "DW",
+            "en": "DW"
+          }
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "section": "brief",
+      "kicker": {
+        "fr": "FRANCE",
+        "en": "FRANCE"
+      },
+      "title": {
+        "fr": "Soupçonné de fuites vers le RN, le préfet Hugues Moutouh demande à être relevé",
+        "en": "Suspected of leaking to the far right, a senior prefect asks to step aside"
+      },
+      "summary": {
+        "fr": "Le préfet de la région Centre-Val de Loire, Hugues Moutouh, a annoncé samedi 21 novembre avoir demandé à être relevé de ses fonctions. Secrétaire général du ministère de l’Intérieur d’avril 2025 à mai 2026, il est soupçonné d’avoir transmis au Rassemblement national (RN) des informations confidentielles sur des enquêtes visant le parti. Selon franceinfo, qui confirme une information du Monde de source proche du dossier, un mail provenant du secrétariat général qu’il dirigeait a été découvert à Rome, lors d’une perquisition menée dans le cadre d’une enquête du parquet européen chez Frédéric Chatillon, ancien président du GUD, un groupe étudiant d’extrême droite, et ami de longue date de Marine Le Pen. Le parquet de Paris a ouvert fin juillet une information judiciaire pour violation du secret professionnel, violation du secret de l’enquête et recel ; le siège du RN a été perquisitionné le 9 novembre. Hugues Moutouh dénonce une « campagne de déstabilisation » et affirme avoir agi « dans le strict respect de la loi et une absolue neutralité politique ». Marine Le Pen assure n’avoir « jamais reçu d’informations confidentielles ».",
+        "en": "Hugues Moutouh, the prefect of the Centre-Val de Loire region, the state’s top representative there, said on Saturday 21 November that he had asked to be relieved of his duties. Secretary general of the French interior ministry from April 2025 to May 2026, he is suspected of passing confidential information to the far-right Rassemblement national (RN) about investigations into the party. According to franceinfo, which confirms a Le Monde report through a source close to the case, an email from the secretariat he ran was found in Rome during a search, carried out for a European Public Prosecutor’s Office investigation, at the home of Frédéric Chatillon, a former leader of the far-right student group GUD and a long-standing friend of Marine Le Pen. Paris prosecutors opened a judicial investigation at the end of July into breaches of professional and investigative secrecy and handling the information obtained; the RN’s headquarters was searched on 9 November. Moutouh denounces a “destabilisation campaign” and says he acted “in strict compliance with the law and with absolute political neutrality”. Marine Le Pen says she “never received confidential information”."
+      },
+      "sources": [
+        {
+          "url": "https://www.franceinfo.fr/politique/front-national/le-prefet-hugues-moutouh-soupconne-d-avoir-transmis-au-rn-des-informations-confidentielles-sur-des-enquetes-visant-le-parti-demande-a-etre-releve-de-ses-fonctions_8294069.html",
+          "label": {
+            "fr": "franceinfo · demande de retrait",
+            "en": "franceinfo · request to step aside"
+          }
+        },
+        {
+          "url": "https://www.franceinfo.fr/politique/front-national/un-mail-du-service-du-prefet-hugues-moutouh-soupconne-d-avoir-renseigne-le-rn-decouvert-lors-d-une-perquisition-chez-un-proche-de-marine-le-pen_8294915.html",
+          "label": {
+            "fr": "franceinfo · le mail découvert",
+            "en": "franceinfo · the email found"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "section": "explainer",
+      "kicker": null,
+      "title": {
+        "fr": "La perplexité d’un modèle de langage",
+        "en": "A language model’s perplexity"
+      },
+      "summary": {
+        "fr": "Pourquoi on en parle. Ce dimanche, le directeur scientifique d’OpenAI, Jakub Pachocki, a publié pour la première fois les mesures internes de perplexité des modèles de l’entreprise, et propose d’en faire un indicateur commun à tous les laboratoires, voire la base de « limites communes » qu’ils s’engageraient à ne pas franchir tant que l’on ne saura pas mieux comprendre et surveiller le comportement des IA.",
+        "en": "Why it's in the news. On Sunday, OpenAI’s chief scientist, Jakub Pachocki, published the company’s internal perplexity measurements for the first time, and proposed making them a metric shared by every lab, even the basis for “common limits” labs would commit not to cross until our ability to understand and monitor AI behaviour improves."
+      },
+      "sources": [
+        {
+          "url": "https://openai.com/index/perplexity-and-intelligence/",
+          "label": {
+            "fr": "OpenAI · Jakub Pachocki",
+            "en": "OpenAI · Jakub Pachocki"
+          }
+        },
+        {
+          "url": "https://huggingface.co/docs/transformers/perplexity",
+          "label": {
+            "fr": "Hugging Face · documentation Transformers",
+            "en": "Hugging Face · Transformers documentation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "section": "techsci",
+      "kicker": {
+        "fr": "SANTÉ & ENVIRONNEMENT",
+        "en": "HEALTH & ENVIRONMENT"
+      },
+      "title": {
+        "fr": "Les médicaments anti-obésité pourraient libérer des terres agricoles",
+        "en": "Weight-loss drugs could free up farmland"
+      },
+      "summary": {
+        "fr": "Que se passerait-il pour la planète si les agonistes du GLP-1, ces médicaments qui réduisent l’appétit (Ozempic, Wegovy), étaient largement utilisés ? Une étude publiée le 19 novembre dans Nature Communications l’a simulé avec un modèle du système alimentaire mondial, jusqu’en 2050, pour les personnes obèses. Si les patients mangeaient simplement moins, le modèle estime jusqu’à 6,6 millions de décès évités par an en 2050 et 32 millions d’hectares rendus à des espaces naturels, un peu plus que la superficie de l’Italie, par la baisse des besoins en cultures, pâturages et forêts exploitées. Combinée à un régime plus sain, celui de la commission EAT–Lancet, l’estimation monte à 7,7 millions de décès évités et 46 millions d’hectares. Mais l’étude montre aussi un effet rebond : la baisse de la demande fait baisser les prix, ce qui pousse les non-utilisateurs à manger davantage, y compris des aliments mauvais pour la santé. Ce sont des scénarios de modèle, pas des observations. Les auteurs, Roslyn Henry et Peter Alexander, insistent dans The Conversation : ces médicaments ne doivent pas devenir une solution technique qui dispenserait de changer l’environnement alimentaire.",
+        "en": "What would happen to the planet if GLP-1 agonists, the appetite-suppressing drugs such as Ozempic and Wegovy, were widely used? A study published on 19 November in Nature Communications simulated it with a model of the global food system, to 2050, for people living with obesity. If patients simply ate less, the model estimates up to 6.6 million deaths avoided each year by 2050 and 32 million hectares returned to natural land, slightly more than the area of Italy, through lower demand for cropland, pasture and managed forest. Combined with a healthier diet, the one proposed by the EAT–Lancet commission, the estimate rises to 7.7 million avoided deaths and 46 million hectares. But the study also finds a rebound effect: lower demand pushes prices down, which leads people not taking the drugs to eat more, including unhealthy food. These are model scenarios, not observations. The authors, Roslyn Henry and Peter Alexander, stress in The Conversation that the drugs should not become a technological fix that lets the food environment escape scrutiny."
+      },
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41467-026-79412-w",
+          "label": {
+            "fr": "Nature Communications",
+            "en": "Nature Communications"
+          }
+        },
+        {
+          "url": "https://theconversation.com/weight-loss-drugs-could-free-up-an-area-of-farmland-larger-than-italy-new-study-291114",
+          "label": {
+            "fr": "The Conversation",
+            "en": "The Conversation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "section": "techsci",
+      "kicker": {
+        "fr": "OPEN SOURCE",
+        "en": "OPEN SOURCE"
+      },
+      "title": {
+        "fr": "LLVM clôt huit ans de changement de licence",
+        "en": "LLVM closes an eight-year relicensing effort"
+      },
+      "summary": {
+        "fr": "LLVM, la vaste infrastructure de compilation open source, a déclaré terminé le changement de licence lancé en 2018, annonce Kristof Beyls sur le forum du projet. Depuis le 19 janvier 2019, les nouvelles contributions arrivent sous Apache-2.0 avec une « exception LLVM ». Pour le code plus ancien, publié sous les licences précédentes (UIUC/NCSA, plus MIT pour certaines bibliothèques), il fallait l’accord de chaque auteur. Aujourd’hui, plus de 99,5 % des lignes jamais contribuées sont soit sous la nouvelle licence, soit trop courtes pour relever du droit d’auteur, soit sorties du dépôt. Plutôt que de « courir éternellement après la dernière infime fraction », le projet arrête la démarche ; les contributeurs d’avant 2019 qui n’ont pas signé peuvent encore demander que leur code porte l’identifiant de licence approprié. C’est un rare exemple concret de ce que coûte, en temps et en coordination, la modification de la licence d’un grand projet collectif.",
+        "en": "LLVM, the sprawling open-source compiler infrastructure, has declared its relicensing effort, begun in 2018, finished, Kristof Beyls announced on the project’s forum. Since 19 January 2019, new contributions have come in under Apache-2.0 with an “LLVM exception”. For older code, released under the previous licences (UIUC/NCSA, plus MIT for some runtime libraries), each author’s permission was needed. Today more than 99.5% of all lines ever contributed are either under the new licence, too small for copyright to apply, or no longer in the repository. Rather than “chase the last tiny fraction forever”, the project is stopping; pre-2019 contributors who never signed can still ask for their code to carry the appropriate licence identifier. It is a rare concrete measure of what changing the licence of a large collective project costs in time and coordination."
+      },
+      "sources": [
+        {
+          "url": "https://discourse.llvm.org/t/wrapping-up-llvms-relicensing-effort/92906",
+          "label": {
+            "fr": "LLVM Discourse · Kristof Beyls",
+            "en": "LLVM Discourse · Kristof Beyls"
+          }
+        },
+        {
+          "url": "https://lwn.net/Articles/1108818/",
+          "label": {
+            "fr": "LWN.net",
+            "en": "LWN.net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Les morts ont-ils des droits ?",
+        "en": "Do the dead have rights?"
+      },
+      "summary": {
+        "fr": "Un musée de Glasgow a retiré de ses salles la momie d’un prêtre égyptien au motif qu’il n’avait jamais consenti à être exposé. Dans Philosophie Magazine, Octave Larmagnac-Matheron part de cette décision contestée pour poser une vraie question : peut-on faire du tort à quelqu’un qui n’existe plus ? Il montre que le droit protège surtout les morts par des obligations imposées aux vivants (« le respect dû au corps humain ne cesse pas avec la mort », dit le Code civil), plutôt que par des droits qu’ils détiendraient, puis parcourt les positions philosophiques sur la question. Une lecture courte pour une soirée de novembre.",
+        "en": "A Glasgow museum has taken an Egyptian priest’s mummy off display on the grounds that he never consented to being exhibited. In Philosophie Magazine, Octave Larmagnac-Matheron uses that contested decision to ask a real question: can you wrong someone who no longer exists? He shows that the law mostly protects the dead through obligations placed on the living (“the respect due to the human body does not end with death”, says the French civil code) rather than through rights they would hold, then surveys the philosophical positions. A short read for a November evening, in French."
+      },
+      "sources": [
+        {
+          "url": "https://www.philomag.com/articles/les-morts-ont-ils-des-droits",
+          "label": {
+            "fr": "Philosophie Magazine",
+            "en": "Philosophie Magazine"
+          }
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Critiquer, mais d’abord reformuler",
+        "en": "Before you criticise, restate"
+      },
+      "summary": {
+        "fr": "Comment critiquer sans caricaturer ? The Marginalian ressort les quatre règles que le philosophe Daniel Dennett emprunte au théoricien des jeux Anatol Rapoport, dans « Intuition Pumps and Other Tools for Thinking ». Reformuler la position adverse si clairement que son auteur vous en remercie ; lister les points d’accord ; dire ce qu’on a appris ; seulement ensuite, réfuter. L’idée n’est pas d’être aimable par principe : c’est que l’autre devient alors capable d’entendre la critique. À essayer avant votre prochain commentaire.",
+        "en": "How do you criticise without caricaturing? The Marginalian revisits the four rules the philosopher Daniel Dennett borrowed from the game theorist Anatol Rapoport in “Intuition Pumps and Other Tools for Thinking”. Restate your opponent’s position so clearly that they thank you for it; list the points you agree on; say what you have learnt from them; only then rebut. The point is not politeness for its own sake: it is that the other person can then actually hear the criticism. Worth trying before your next comment."
+      },
+      "sources": [
+        {
+          "url": "https://www.themarginalian.org/2026/11/20/daniel-dennett-rapoport-rules-criticism/",
+          "label": {
+            "fr": "The Marginalian",
+            "en": "The Marginalian"
+          }
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Vim, version sans IA",
+        "en": "Vim, without the AI"
+      },
+      "summary": {
+        "fr": "Vim Classic est une branche de Vim maintenue sur le long terme, explicitement sans l’aide d’outils d’IA générative. Sa version 8.3.1, la deuxième, intègre les correctifs de Vim jusqu’au patch 8.2.3237 et retire la prise en charge de Python 2. Le projet reste un « charityware », comme Vim, et invite à soutenir l’association d’aide aux enfants en Ouganda que défendait Bram Moolenaar, le créateur de Vim. Intéressant pour qui veut un éditeur stable et sans surprise ; moins pour qui attend les nouveautés de Vim 9.",
+        "en": "Vim Classic is a long-term support fork of Vim, maintained explicitly without help from generative AI tools. Its second release, 8.3.1, takes in Vim’s fixes up to patch 8.2.3237 and drops Python 2 support. Like Vim, it remains “charityware”, inviting donations to the Ugandan children’s charity championed by Vim’s creator, Bram Moolenaar. Appealing if you want a stable editor with no surprises; less so if you are waiting for Vim 9’s new features."
+      },
+      "sources": [
+        {
+          "url": "https://vim-classic.org/news/vim-8.3.1-released.html",
+          "label": {
+            "fr": "Vim Classic",
+            "en": "Vim Classic"
+          }
+        },
+        {
+          "url": "https://lwn.net/Articles/1108817/",
+          "label": {
+            "fr": "LWN.net",
+            "en": "LWN.net"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "Les élections générales espagnoles, dimanche 29 novembre",
+        "en": "Spain’s general election, Sunday 29 November"
+      },
+      "summary": {
+        "fr": "Les Espagnols votent dimanche prochain. Les sondages publiés le 20 novembre, compilés par ARA, donnent au Parti populaire (PP, droite) une avance de 0,7 à 3,6 points sur les socialistes de Pedro Sánchez, et une majorité absolue au PP et à Vox, parti d’extrême droite, réunis. Un sondage Cluster 17 pour Le Grand Continent place Vox à 18,4 %, contre 12,4 % en 2023.",
+        "en": "Spain votes next Sunday. Polls published on 20 November, compiled by ARA, give the conservative People’s Party (PP) a lead of 0.7 to 3.6 points over Pedro Sánchez’s Socialists, and an absolute majority to the PP and the far-right Vox combined. A Cluster 17 poll for Le Grand Continent puts Vox at 18.4%, up from 12.4% in 2023."
+      },
+      "sources": [
+        {
+          "url": "https://en.ara.cat/politics/what-do-the-polls-for-the-spanish-elections-of-november-29-say_1_5874100.html",
+          "label": {
+            "fr": "ARA",
+            "en": "ARA"
+          }
+        },
+        {
+          "url": "https://legrandcontinent.eu/fr/2026/11/22/en-espagne-vox-est-aux-portes-du-pouvoir/",
+          "label": {
+            "fr": "Le Grand Continent",
+            "en": "Le Grand Continent"
+          }
+        }
+      ]
+    }
+  ],
+  "timeline": [],
+  "inBrief": [
+    {
+      "text": {
+        "fr": "Le FBI enquête sur une intrusion apparente dans le NCIC, sa base de données criminelles partagée avec les polices locales pour les mandats et les vérifications d’antécédents, selon des médias américains cités par la [BBC](https://www.bbc.co.uk/news/articles/cvze7de86pk3o).",
+        "en": "The FBI is investigating an apparent breach of the NCIC, the criminal database it shares with local police for warrants and background checks, according to US media cited by the [BBC](https://www.bbc.co.uk/news/articles/cvze7de86pk3o)."
+      },
+      "urls": [
+        "https://www.bbc.co.uk/news/articles/cvze7de86pk3o"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Le maire de New York, Zohran Mamdani, a présenté un plan pour fermer la prison de Rikers Island d’ici 2032, construire quatre nouvelles prisons et ramener le nombre de détenus d’environ 6 500 à 4 100, rapporte la [BBC](https://www.bbc.co.uk/news/articles/cmjeqv89egylo).",
+        "en": "New York’s mayor, Zohran Mamdani, has unveiled a plan to close the Rikers Island jail complex by 2032, build four new jails and cut the detainee population from about 6,500 to 4,100, the [BBC](https://www.bbc.co.uk/news/articles/cmjeqv89egylo) reports."
+      },
+      "urls": [
+        "https://www.bbc.co.uk/news/articles/cmjeqv89egylo"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Meta « réévalue » son objectif de neutralité carbone en 2030 après des émissions passées de 15,6 à plus de 21,7 millions de tonnes d’équivalent CO₂ entre 2024 et 2025, selon son rapport de développement durable lu par [Ars Technica](https://arstechnica.com/ai/2026/11/meta-reconsiders-2030-net-zero-goal-amid-record-emissions-from-ai-data-centers/).",
+        "en": "Meta is “re-evaluating” its 2030 net-zero goal after its emissions rose from 15.6 to more than 21.7 million tonnes of CO₂ equivalent between 2024 and 2025, according to its sustainability report as read by [Ars Technica](https://arstechnica.com/ai/2026/11/meta-reconsiders-2030-net-zero-goal-amid-record-emissions-from-ai-data-centers/)."
+      },
+      "urls": [
+        "https://arstechnica.com/ai/2026/11/meta-reconsiders-2030-net-zero-goal-amid-record-emissions-from-ai-data-centers/"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Codex, l’agent de programmation d’OpenAI, passe en version 0.171.0 avec GPT-6.2 Sol comme modèle par défaut et une commande pour lancer des sessions non interactives sur un serveur d’application existant, selon ses [notes de version](https://github.com/openai/codex/releases).",
+        "en": "Codex, OpenAI’s coding agent, reaches version 0.171.0, with GPT-6.2 Sol as the default model and a command to run non-interactive sessions on an existing app server, according to its [release notes](https://github.com/openai/codex/releases)."
+      },
+      "urls": [
+        "https://github.com/openai/codex/releases"
+      ]
+    }
+  ]
+}

@@ -37,6 +37,9 @@ permissions:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    env:
+      # Only whether the secret exists: `if:` cannot read secrets directly.
+      HAS_TODOIST_MOCHI_BOT_TOKEN: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN != '' }}
     concurrency:
       group: refresh-project-content
       cancel-in-progress: false
@@ -172,6 +175,63 @@ jobs:
               echo "⚠️ Writing Slack announcement failed: $url." >> "$GITHUB_STEP_SUMMARY"
             fi
           done
+
+      # The same announcement as a Todoist Comms thread in pub-writing: one
+      # thread for the run's live new posts. The Slack step above has already
+      # waited for them, so a live post answers at once; without that wait
+      # (no Slack webhook) this one waits up to twenty minutes in all. Skipped
+      # without TODOIST_MOCHI_BOT_TOKEN, and never fails the refresh.
+      - name: Prepare the Comms announcement
+        id: comms_writing
+        if: steps.commit.outputs.new_posts != '' && env.HAS_TODOIST_MOCHI_BOT_TOKEN == 'true'
+        continue-on-error: true
+        env:
+          NEW_POSTS: ${{ steps.commit.outputs.new_posts }}
+        run: |
+          set -euo pipefail
+          deadline=$(( $(date +%s) + 1200 ))
+          count=0
+          body=""
+          for slug in $NEW_POSTS; do
+            file="content/blog/$slug.md"
+            title=$(sed -n 's/^title: "\(.*\)"$/\1/p' "$file" | head -1)
+            description=$(sed -n 's/^description: "\(.*\)"$/\1/p' "$file" | head -1)
+            date=$(sed -n 's/^date: "\(.*\)"$/\1/p' "$file" | head -1)
+            url="https://kud.io/blog/${date//-//}/$slug"
+            until curl -fsS -o /dev/null --max-time 20 "$url" 2>/dev/null; do
+              if [ "$(date +%s)" -ge "$deadline" ]; then
+                echo "$url is not live; not announced in Comms."
+                continue 2
+              fi
+              sleep 30
+            done
+            count=$((count + 1))
+            first_title=$title
+            entry=$(printf '%s\n\n[Read it](%s)' "$description" "$url")
+            single=$entry
+            body+="${body:+$'\n\n'}$(printf '**%s**\n%s' "$title" "$entry")"
+          done
+          if (( count == 0 )); then
+            echo "No new post is live; nothing to announce."
+            exit 0
+          fi
+          if (( count == 1 )); then
+            title="✍️ $first_title"
+            body=$single
+          else
+            title="✍️ $count new posts"
+          fi
+          { echo "title=$title"; echo "content<<COMMS_EOF"; printf '%s\n' "$body"; echo "COMMS_EOF"; } >> "$GITHUB_OUTPUT"
+
+      - name: Announce new posts in Comms
+        if: steps.comms_writing.outcome == 'success' && steps.comms_writing.outputs.title != ''
+        continue-on-error: true
+        uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
+        with:
+          token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
+          channel-id: ChJXTykiPdReqTDrD3k3e
+          title: ${{ steps.comms_writing.outputs.title }}
+          content: ${{ steps.comms_writing.outputs.content }}
 
   # A failed refresh lands in the alerts channel. It runs every hour, so only a
   # change is reported: the first failure, and the run that recovers.
