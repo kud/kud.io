@@ -174,7 +174,7 @@
         "bin": {
           "bsky": "./dist/index.js"
         },
-        "node": ">=20",
+        "node": ">=22",
         "peers": [],
         "dependencies": [
           "@inkjs/ui",
@@ -195,7 +195,7 @@
         "bin": {
           "bt-switch": "dist/index.js"
         },
-        "node": ">=20.0.0",
+        "node": ">=22",
         "peers": [],
         "dependencies": [
           "chalk",
@@ -246,7 +246,7 @@
         "bin": {
           "claude-sessions": "dist/index.js"
         },
-        "node": ">=24.0.0",
+        "node": ">=22",
         "peers": [],
         "dependencies": [
           "@kud/ink-ui",
@@ -340,7 +340,7 @@
         "bin": {
           "ding": "dist/bin.js"
         },
-        "node": ">=20.0.0",
+        "node": ">=22.0.0",
         "peers": [],
         "dependencies": [
           "@inkjs/ui",
@@ -473,9 +473,9 @@
         "name": "@kud/gandi-cli",
         "private": false,
         "bin": {
-          "gandi": "./dist/index.js"
+          "gandi": "./dist/bin.js"
         },
-        "node": ">=20",
+        "node": ">=22",
         "peers": [],
         "dependencies": [
           "@kud/gandi",
@@ -606,9 +606,9 @@
         "name": "@kud/gpuswitch-cli",
         "private": false,
         "bin": {
-          "gpuswitch": "dist/index.js"
+          "gpuswitch": "dist/cli.js"
         },
-        "node": ">=20.0.0",
+        "node": ">=22",
         "peers": [],
         "dependencies": [
           "chalk",
@@ -651,7 +651,7 @@
         "name": "@kud/gtv-cli",
         "private": false,
         "bin": {
-          "gtv": "dist/index.js"
+          "gtv": "dist/bin.js"
         },
         "node": ">=22.0.0",
         "peers": [],
@@ -695,7 +695,7 @@
         "bin": {
           "harness-fme": "./dist/index.js"
         },
-        "node": ">=20.0.0",
+        "node": ">=22.0.0",
         "peers": [],
         "dependencies": [
           "@kud/harness-fme",
@@ -903,7 +903,7 @@
         "bin": {
           "jira": "dist/index.js"
         },
-        "node": ">=20.0.0",
+        "node": ">=22.0.0",
         "peers": [],
         "dependencies": [
           "@kud/ink-ui",
@@ -1412,7 +1412,7 @@
           "opencode-sessions": "dist/cli.js",
           "ocs": "dist/cli.js"
         },
-        "node": ">=20",
+        "node": ">=22",
         "peers": [],
         "dependencies": [
           "@kud/ink-ui",
@@ -1455,7 +1455,7 @@
         "name": "@kud/pcloud-cli",
         "private": false,
         "bin": {
-          "pcloud": "./dist/cli.js"
+          "pcloud": "./dist/bin.js"
         },
         "node": ">=24",
         "peers": [],
@@ -1585,7 +1585,7 @@
         "bin": {
           "qobuz": "./dist/index.js"
         },
-        "node": ">=20",
+        "node": ">=22",
         "peers": [
           "playwright"
         ],
@@ -1599,10 +1599,10 @@
       }
     },
     "tag": {
-      "name": "v1.1.0",
-      "version": "1.1.0",
-      "sha": "a4e838b7a15e959657903024e4aae2504bb5453d",
-      "date": "2026-11-21T00:55:09Z"
+      "name": "v1.1.1",
+      "version": "1.1.1",
+      "sha": "99e00ff01f0b0c3fba9fe9fe9905695983b49623",
+      "date": "2026-11-24T00:25:23Z"
     }
   },
   "revu-cli": {

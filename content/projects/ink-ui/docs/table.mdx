@@ -1,6 +1,6 @@
 ---
 title: 📊 Table
-description: Structured data grid that measures its own columns, wraps or truncates cells, and aligns them per column.
+description: Structured data grid that measures its own columns, sorts, selects and virtualises rows, and truncates by display width.
 ---
 
 `<Table>` renders a structured data grid with bold, muted column headers. Columns size themselves to their content, shrink to fit the terminal when the table is too wide, and either wrap or truncate whatever still does not fit.
@@ -19,6 +19,17 @@ import type { Column } from "@kud/ink-ui"
 | `gap`         | `number`      | `2`            | Characters between columns     |
 | `maxWidth`    | `number`      | terminal width | Width the table shrinks to fit |
 | `headerColor` | `string`      | `colors.muted` | Colour of the header row       |
+| `sort`        | `SortState \| null` | — | Sorts the rows and reserves the ↑/↓ slot on sortable headers; passing `null` makes the table sortable but unsorted |
+| `cursor`      | `number`      | —              | Active row in display order; draws the `❯` gutter |
+| `focusedColumn` | `number`    | —              | Underlines that header in the accent |
+| `selection`   | `"single" \| "multiple"` | — | Draws the selection column: `●`/`○` or `■`/`□` |
+| `selected`    | `string[]`    | `[]`           | Keys of the selected rows |
+| `rowKey`      | `(row, index) => string` | index | Identity of a row, so a selection survives a re-sort |
+| `height`      | `number`      | all rows       | Body rows on screen; only those render, under a header that stays put |
+| `offset`      | `number`      | follows `cursor` | First visible row, when the host scrolls itself |
+| `empty`       | `ReactNode`   | `"No rows"`    | Shown under the header when there are no rows |
+
+Every new prop is optional: a table given none of them renders exactly as it did before.
 
 The table is generic over the row type `T`, so column `key`s are checked against your data shape.
 
@@ -32,6 +43,12 @@ The table is generic over the row type `T`, so column `key`s are checked against
 | `minWidth` | `number`                        | `3`          | Floor a measured column shrinks to            |
 | `align`    | `"left" \| "center" \| "right"` | `"left"`     | Horizontal alignment of header and cells      |
 | `overflow` | `"wrap" \| "truncate"`          | `"truncate"` | What happens to content wider than the column |
+| `maxWidth` | `number`                        | —            | Ceiling on a measured or flex column          |
+| `flex`     | `number`                        | —            | Share of the spare width this column takes    |
+| `format`   | `(value, row) => string`        | `String`     | The text a cell shows, measures and truncates |
+| `color`    | `(value, row) => string`        | —            | A colour token for the cell — never alone     |
+| `compare`  | `(a, b) => number`              | by value     | Ascending order for this column               |
+| `sortable` | `boolean`                       | `true`       | `false` keeps the column out of the sort cycle |
 
 Missing or nullish cell values render as an empty string.
 
@@ -40,6 +57,12 @@ Missing or nullish cell values render as an empty string.
 A column without a `width` is measured: it takes the widest of its header and its cells, counting display columns, so wide glyphs and CJK text are not undercounted. A cell holding newlines is measured by its widest line.
 
 If the measured columns plus their gaps come to more than `maxWidth`, the widest column gives up characters first, one at a time, until the table fits or every measured column has reached its `minWidth`. Columns you gave an explicit `width` are never touched — an over-wide table you asked for stays over-wide rather than quietly disagreeing with you.
+
+A column with `flex` grows into whatever the table has left once every column is measured, in proportion to its weight and never past its own `maxWidth`. A fixed `width` always wins over `flex`.
+
+## ✂️ Truncation
+
+A truncated cell is clipped by display width, one grapheme at a time, and ends in `…`. A wide ideograph that would straddle the edge is dropped rather than spilling a column, and a flag, a ZWJ emoji or a letter with combining marks is kept whole or dropped whole — never cut in half.
 
 ## 🎨 Overflow and alignment
 
@@ -76,3 +99,49 @@ A wide, wrapping column beside fixed ones:
   data={items}
 />
 ```
+
+## ⌨️ Sorting, selection and ten thousand rows
+
+`Table` stays presentational: it draws what it is given and binds no keys. `useTable` owns the keyboard and hands back `tableProps` to spread onto it.
+
+```tsx
+import { Table, useTable, statusColumn, type Column } from "@kud/ink-ui"
+
+const columns: Column<Job>[] = [
+  { key: "id", header: "Job" },
+  { key: "name", header: "Name", flex: 1, maxWidth: 40 },
+  { key: "took", header: "Took", align: "right", format: (s) => `${s}s` },
+  statusColumn<Job>({ key: "state", header: "State", status: (job) => job.state }),
+]
+
+const Jobs = ({ jobs }: { jobs: Job[] }) => {
+  const table = useTable({
+    data: jobs,
+    columns,
+    rowKey: (job) => job.id,
+    selection: "multiple",
+    height: 20,
+  })
+  return <Table maxWidth={96} {...table.tableProps} />
+}
+```
+
+| Key | Does |
+| --- | --- |
+| `↑` `↓` · `k` `j` | Move the row cursor, clamped at the ends |
+| `PgUp` `PgDn` · `Home` `End` · `g` `G` | Move a page, or to either end |
+| `←` `→` · `h` `l` | Move the focused column |
+| `s` | Cycle the focused column: ascending, descending, unsorted |
+| `␣` | Toggle the row (multiple), or pick it (single) |
+| `⇧↑` `⇧↓` · `K` `J` | Extend a range from where it began; going back shrinks it |
+| `a` | Select every row, or clear them all when every row is selected |
+
+The hook never binds `q`, `esc` or `backspace` — those are the app's (see the keys contract in `AGENTS.md`). To let `esc` drop a selection, add an arm to the host's peel: `if (table.selected.length) return (table.clearSelection(), true)`. Turn `vimKeys` off while a filter is typing, and pass `isActive: false` while another region owns the keyboard. `table.hints` holds the footer cells for what the table binds.
+
+Selection and sort are each **controlled** (`selected` + `onSelectedChange`, `sort` + `onSortChange`) or **uncontrolled** (`defaultSelected`, `defaultSort`). The sort is stable, keeps empty values last in both directions and, through a re-sort, the cursor follows the row it was on.
+
+**Virtualisation.** With `height`, only that many body rows render, under a header that never scrolls away. Columns are measured across the whole data set once — memoised on `data` and `columns`, so pass the same references between renders — and the window moves only when the cursor would leave it. Measured on 10 000 rows × 6 columns: the first frame (format, measure, sort) costs about 115 ms, and a cursor move about 23 ms end-to-end, against about 12 ms for the same table on 30 rows.
+
+## 🚦 Status columns
+
+`statusColumn` turns a column into a state: a glyph, a word and a colour token together (`✓ success`, `⚠ warning`, `✗ error`, `ℹ info`, `◌ pending`), so the state reads without colour. It sorts by severity — failures first — and a row with no state stays empty.

@@ -6,15 +6,17 @@ hasDocs: true
 
 ## Features
 
-- **27 ready-made components**, pre-styled and ready to drop in:
+- **Ready-made components**, pre-styled and ready to drop in:
   - **Inputs** — `TextInput`, `EmailInput` (domain completion), `PasswordInput` (masked), `ConfirmInput`
-  - **Lists** — `UnorderedList`, `OrderedList` (both nestable), `Table`
+  - **Lists** — `UnorderedList`, `OrderedList` (both nestable), `Table` (sortable, selectable, virtualised to ten thousand rows with `useTable`, plus a `statusColumn` helper)
   - **Selection & navigation** — `Select`, `MultiSelect`, `Tabs`, `Switch`, `Toggle`, `SelectableRow`
-  - **Status & feedback** — `Spinner`, `ProgressBar`, `SkeletonBar`, `SkeletonRows`, `StatusMessage`, `Alert`, `Badge`, `Toast`
-  - **Layout & chrome** — `Banner`, `Header`, `Panel` (bordered pane, optional focus state), `Card` (six-line status card), `Columns`, `FooterHints`, `KeyValue`, `LoadingScreen`, `ScrollView`
-- **Behaviour hooks** — `useTabs` and `useListCursor` own the keyboard state that every consumer used to hand-roll, so Tab/Shift+Tab and arrow/vim navigation behave the same everywhere
+  - **Status & feedback** — `Spinner`, `ProgressBar`, `Meter`, `SkeletonBar`, `SkeletonRows`, `StatusMessage`, `Alert`, `Badge`, `Toast`
+  - **Layout & chrome** — `Banner`, `Header`, `Panel` (bordered pane, optional focus state), `Card` (six-line status card), `Columns`, `FooterHints`, `KeyValue`, `LoadingScreen`, `ScrollView`, `Divider`, `Link`
+  - **Focus & layers** — `FocusScope`, `FocusRing`, `LayerHost`, `Layer` (modal, overlay, popover), `KeyHelp` (footer and `?` legend)
+- **Behaviour hooks** — `useTabs`, `useListCursor` and `useTable` own the keyboard state that every consumer used to hand-roll, so Tab/Shift+Tab and arrow/vim navigation behave the same everywhere
 - **Full [@inkjs/ui](https://github.com/vadimdemedes/ink-ui) parity** — every upstream component has an equivalent, plus a dozen more the design system adds on top
 - **Colourblind-safe by design** — state is signalled by shape, case, and glyph, never colour alone
+- **Themed to the terminal** — `probeTerminal()` and one `ThemeProvider` pick colour depth, light or dark, motion and an ASCII fallback, honouring `NO_COLOR` and reduced motion everywhere
 - **Design tokens included** — a shared colour palette (`colors`) and spacing scale (`spacing`) to keep every screen consistent
 - **Full TypeScript support** — ships compiled output with `.d.ts` declarations for every component and token type
 - **ESM only, zero config** — no runtime bundling step; just import and render
@@ -104,13 +106,3 @@ const Inbox = ({ rows }) => {
 ```
 
 Both take `{ isActive }` so a screen with several focus regions can gate them, and `useListCursor` takes `{ wrap }` for genuinely circular lists. `useTabs` wraps by default because a tab bar is a ring; `useListCursor` clamps because a list has ends.
-
-All components accept only the props they need — no theme provider or context required. Design tokens are plain objects:
-
-```ts
-import { colors, spacing } from "@kud/ink-ui"
-
-// colors.accent   → "#FF8C00"
-// colors.success  → "#5FD7A7"
-// spacing.md      → 3
-```

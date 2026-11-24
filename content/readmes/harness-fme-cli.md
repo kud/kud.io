@@ -19,7 +19,7 @@ hasDocs: true
 npm install -g @kud/harness-fme-cli
 ```
 
-Binary: `harness-fme` · Requires Node.js >= 20
+Binary: `harness-fme` · Requires Node.js >= 22
 
 There is deliberately no second binary. If you would rather type less, alias it:
 

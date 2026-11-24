@@ -1,9 +1,9 @@
 ---
 title: ⏳ Spinner
-description: Animated dots spinner in accent colour, with an optional dimmed label.
+description: Animated spinner in accent colour, in five one-cell styles, with an optional dimmed label.
 ---
 
-`<Spinner>` renders an animated dots spinner in the accent colour, with an optional dimmed label beside it. It builds on [ink-spinner](https://github.com/vadimdemedes/ink-spinner) and is ideal for indicating in-progress work.
+`<Spinner>` renders an animated spinner in the accent colour, with an optional dimmed label beside it. It ticks on Ink's shared `useAnimation` clock, so several spinners cost one timer, and holds a still frame when stdout is not a TTY or `NO_MOTION` / `REDUCE_MOTION` is set.
 
 ```tsx
 import { Spinner } from "@kud/ink-ui";
@@ -11,9 +11,11 @@ import { Spinner } from "@kud/ink-ui";
 
 ## 🔧 Props
 
-| Prop    | Type     | Default | Description                               |
-| ------- | -------- | ------- | ----------------------------------------- |
-| `label` | `string` | —       | Optional text rendered beside the spinner |
+| Prop      | Type                                                 | Default  | Description                                         |
+| --------- | ---------------------------------------------------- | -------- | --------------------------------------------------- |
+| `label`   | `string`                                             | —        | Optional text rendered beside the spinner           |
+| `type`    | `"dots" \| "line" \| "arc" \| "pulse" \| "bounce"` | `"dots"` | Glyph cycle; every style is one cell wide           |
+| `animate` | `boolean`                                            | `true`   | `false` holds the still frame                       |
 
 The spinner glyph is coloured with `colors.accent` (`#FF8C00`).
 
@@ -25,4 +27,8 @@ The spinner glyph is coloured with `colors.accent` (`#FF8C00`).
 
 ```tsx
 <Spinner />
+```
+
+```tsx
+<Spinner type="arc" label="Fetching…" />
 ```
