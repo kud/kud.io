@@ -136,51 +136,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Only announce genuinely new blog posts, after their public URLs are
-      # reachable. A missing or broken webhook must be visible in Actions, but
-      # cannot undo a successful content refresh.
-      - name: Announce new posts
-        if: steps.commit.outputs.new_posts != ''
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WRITING_WEBHOOK_URL }}
-          NEW_POSTS: ${{ steps.commit.outputs.new_posts }}
-        run: |
-          set -euo pipefail
-          if [[ -z "$SLACK_WEBHOOK_URL" ]]; then
-            echo "::warning title=Writing Slack webhook missing::Set SLACK_WRITING_WEBHOOK_URL; new posts were synced but #pub-writing was not notified."
-            echo "⚠️ Writing Slack webhook missing; posts not announced: $NEW_POSTS." >> "$GITHUB_STEP_SUMMARY"
-            exit 0
-          fi
-          for slug in $NEW_POSTS; do
-            file="content/blog/$slug.md"
-            title=$(sed -n 's/^title: "\(.*\)"$/\1/p' "$file" | head -1)
-            description=$(sed -n 's/^description: "\(.*\)"$/\1/p' "$file" | head -1)
-            date=$(sed -n 's/^date: "\(.*\)"$/\1/p' "$file" | head -1)
-            url="https://kud.io/blog/${date//-//}/$slug"
-            deadline=$(( $(date +%s) + 1200 ))
-            until curl -fsS -o /dev/null --max-time 20 "$url" 2>/dev/null; do
-              if [ "$(date +%s)" -ge "$deadline" ]; then
-                echo "::warning title=Writing article not live::Article $slug was synced, but $url was not available after 20 minutes; no Slack announcement sent."
-                echo "⚠️ Writing article not live; skipped Slack announcement: $url." >> "$GITHUB_STEP_SUMMARY"
-                continue 2
-              fi
-              sleep 30
-            done
-            message=$(printf '✍️ *%s*\n%s\n<%s|Read it>' "$title" "$description" "$url")
-            if jq -n --arg text "$message" '{text: $text}' \
-              | curl --fail --silent --show-error --max-time 20 -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" > /dev/null; then
-              echo "✅ Writing announcement sent for $url." >> "$GITHUB_STEP_SUMMARY"
-            else
-              echo "::warning title=Writing Slack delivery failed::Article $slug is live, but its #pub-writing announcement failed."
-              echo "⚠️ Writing Slack announcement failed: $url." >> "$GITHUB_STEP_SUMMARY"
-            fi
-          done
+      # Comms is the sole writing-announcement channel. The normal
+      # preparation step waits for the public article to become reachable.
+      - name: Warn if writing Comms is not configured
+        if: steps.commit.outputs.new_posts != '' && env.HAS_TODOIST_MOCHI_BOT_TOKEN != 'true'
+        run: echo "::warning title=Writing Comms token missing::Articles were synced but not announced in pub-writing."
 
-      # The same announcement as a Todoist Comms thread in pub-writing: one
-      # thread for the run's live new posts. The Slack step above has already
-      # waited for them, so a live post answers at once; without that wait
-      # (no Slack webhook) this one waits up to twenty minutes in all. Skipped
-      # without TODOIST_MOCHI_BOT_TOKEN, and never fails the refresh.
       - name: Prepare the Comms announcement
         id: comms_writing
         if: steps.commit.outputs.new_posts != '' && env.HAS_TODOIST_MOCHI_BOT_TOKEN == 'true'
@@ -241,7 +202,7 @@ jobs:
     permissions:
       actions: read
       checks: read
-    uses: ./.github/workflows/notify-slack.yml
+    uses: ./.github/workflows/notify-comms.yml
     with:
       on_change_only: true
     secrets: inherit

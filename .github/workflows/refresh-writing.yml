@@ -1,42 +1,36 @@
 name: Refresh writing
 
-# Every blog post from Notion, without the repo and docs sync. The optional
-# Slack test sends one message to #pub-writing without refreshing any content.
+# Refresh Notion blog posts or test Todoist Comms without syncing/publishing.
 on:
   workflow_dispatch:
     inputs:
-      test_slack:
-        description: Test #pub-writing only; do not sync, deploy or publish any articles.
+      test_comms:
+        description: Test pub-writing in Comms; no content sync or publishing.
         type: boolean
         default: false
 
 permissions:
   contents: write
   actions: write
-  # Passed down to the refresh's failure notifier.
   checks: read
 
 jobs:
   refresh:
-    if: ${{ !inputs.test_slack }}
+    if: ${{ !inputs.test_comms }}
     uses: ./.github/workflows/refresh-project-content.yml
     with:
       scope: writing
     secrets: inherit
 
-  test-slack:
-    if: ${{ inputs.test_slack }}
+  test-comms:
+    if: ${{ inputs.test_comms }}
     runs-on: ubuntu-latest
     steps:
-      - name: Send writing Slack test
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WRITING_WEBHOOK_URL }}
-        run: |
-          set -euo pipefail
-          if [[ -z "$SLACK_WEBHOOK_URL" ]]; then
-            echo "::error title=Writing Slack webhook missing::Set the SLACK_WRITING_WEBHOOK_URL Actions secret before testing."
-            exit 1
-          fi
-          jq -n --arg text "✓ kud.io writing: Slack notifications are configured (test only)." '{text: $text}' \
-            | curl --fail --silent --show-error --max-time 20 -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" > /dev/null
-          echo "✅ #pub-writing webhook delivered a test message." >> "$GITHUB_STEP_SUMMARY"
+      - name: Send writing Comms test
+        uses: kud/.github/comms-thread@54f1bfdaf851d49faabd11d8f42c2c23ee087651
+        with:
+          token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
+          channel-id: ChJXTykiPdReqTDrD3k3e
+          title: "✍️ Writing notifications: test only"
+          content: "Mochi can post to pub-writing. This is a test; no article was published."
+          notify: quiet
