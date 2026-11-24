@@ -6,7 +6,9 @@ hasDocs: true
 
 ## Features
 
-- **38 tools** — covers workspaces, environments, feature flags, flag definitions, segments, rule-based segments, and change requests.
+- **40 tools** — covers workspaces, environments, feature flags, flag definitions, segments, rule-based segments, and change requests.
+- **One flag across environments** — `compare_flag_environments` reads every environment in one call and lists the fields that differ; `get_flag_history` gives a flag's change history per environment, with a field-level diff per change.
+- **Readable by default** — every epoch-millisecond time comes with an ISO 8601 twin (`lastUpdateTime` beside `lastUpdateTimeIso`), owners come back with their names, and every tool takes its workspace by name or ID.
 - **Kill & restore** — instantly kill a flag to force all traffic to the default treatment, or restore it with a single tool call.
 - **Safety guard** — every destructive operation (delete, kill, archive, disable) requires `confirm: true`, preventing accidental changes.
 - **Rule-based segments** — create, update, enable, disable, and submit change requests for rule-based segments per environment.

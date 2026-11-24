@@ -1,0 +1,47 @@
+---
+title: 🕰️ Compare and history
+description: One flag across environments side by side, readable times, owners by name, and a flag's change history from its change requests.
+---
+
+## Compare one flag across environments
+
+```ts
+import { compareFlagEnvironments } from "@kud/harness-fme"
+
+const comparison = await compareFlagEnvironments(client, {
+  workspaceId,
+  flagName: "checkout-redesign",
+})
+if (comparison.ok) console.log(comparison.data.differences) // ["defaultRule"]
+```
+
+Every environment comes back summarised: whether the flag is defined there, killed, the default treatment and rule, traffic allocation, treatments with their key counts and segments, the targeting rules, and `lastUpdateTime` with its ISO twin. `differences` lists the fields that are not the same everywhere. An environment where the flag is not defined differs on `defined` only.
+
+## Readable times and owners
+
+`withIsoTimes(value)` returns a copy where every epoch-millisecond time field gets an ISO 8601 UTC twin named `<field>Iso`, so `lastUpdateTime: 1767323045678` sits beside `lastUpdateTimeIso: "2026-01-02T03:04:05.678Z"`.
+
+`withOwnerNames(client, flag)` resolves each owner through `/users/{id}` or `/groups/{id}` and keeps the id. An owner the API will not name keeps `name: null` rather than failing the read.
+
+## Names or ids
+
+`resolveWorkspaceId(client, "acme")` turns a workspace name into its id; a GUID passes through without a call. `resolveTrafficType` does the same for traffic types, `resolveEnvironment` for environments.
+
+## Change history
+
+The admin API has no audit log for flags, and past definitions cannot be fetched by `changeNumber`. Change requests are the closest record: each carries the full definition it proposed. `getFlagHistory` reads them for one environment, keeps the flag's own, and diffs each against the one before.
+
+```ts
+import { getFlagHistory } from "@kud/harness-fme"
+
+const history = await getFlagHistory(client, {
+  environmentId,
+  flagName: "checkout-redesign",
+})
+// [{ title, changeType, approvers, editedBy, status, timeIso,
+//    defaultRuleBefore: "off 100%", defaultRuleAfter: "on 100%", diff }]
+```
+
+- Only changes made through an approval flow become change requests; a direct edit does not appear.
+- The endpoint cannot filter by flag, so up to `maxPages` pages of 100 are read and filtered here.
+- It needs an admin API key with access to change requests; a key restricted to environments gets a 401.

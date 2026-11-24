@@ -7,7 +7,7 @@ hasDocs: true
 ## Features
 
 - **Ready-made components**, pre-styled and ready to drop in:
-  - **Inputs** — `TextInput`, `EmailInput` (domain completion), `PasswordInput` (masked), `ConfirmInput`
+  - **Inputs** — `TextInput`, `EmailInput` (domain completion), `PasswordInput` (secure input by default, or masked), `ConfirmInput`
   - **Lists** — `UnorderedList`, `OrderedList` (both nestable), `Table` (sortable, selectable, virtualised to ten thousand rows with `useTable`, plus a `statusColumn` helper)
   - **Selection & navigation** — `Select`, `MultiSelect`, `Tabs`, `Switch`, `Toggle`, `SelectableRow`
   - **Status & feedback** — `Spinner`, `ProgressBar`, `Meter`, `SkeletonBar`, `SkeletonRows`, `StatusMessage`, `Alert`, `Badge`, `Toast`

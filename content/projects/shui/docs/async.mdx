@@ -89,7 +89,20 @@ choices=$(shui multiselect "Which packages?" brew npm cargo)
 
 # Input — prints the entered value to stdout
 name=$(shui input --default="world" "Your name:")
+
+# Password — nothing echoed, prints the value to stdout
+secret=$(shui password "Passphrase:")
 ```
+
+`password` reads the line the way `sudo` does, with echo off, so terminals that
+watch for password prompts (iTerm2's padlock, Terminal.app's Secure Keyboard
+Entry) engage secure input while you type. In place of stars, a muted
+`(typing hidden)` hint follows the prompt, drawn like `input`'s default.
+`--mask` shows a `*` per keystroke
+instead, but it reads key by key in raw mode, which hides the prompt from that
+check: secure input stays off. Ctrl-C is a real signal here, as under `sudo`:
+echo comes back, the prompt exits 130, and a script that does not trap `INT`
+stops.
 
 `radio` and `multiselect` take options as `label⇥hint` and print only the labels.
 A list taller than the terminal scrolls with the cursor, under a position line

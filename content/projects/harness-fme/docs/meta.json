@@ -5,6 +5,7 @@
     "errors-and-rate-limits",
     "paging",
     "flags-and-segments",
+    "history-and-compare",
     "safe-writes"
   ]
 }

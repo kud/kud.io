@@ -685,7 +685,12 @@
         "dependencies": []
       }
     },
-    "tag": null
+    "tag": {
+      "name": "v0.2.0",
+      "version": "0.2.0",
+      "sha": "c3119b2f6345b93f7001f48c217c59fa4bec930a",
+      "date": "2026-11-24T12:53:51Z"
+    }
   },
   "harness-fme-cli": {
     "packages": {
@@ -707,7 +712,12 @@
         ]
       }
     },
-    "tag": null
+    "tag": {
+      "name": "v0.2.0",
+      "version": "0.2.0",
+      "sha": "dedc78eecf8822861d7829ec236a6f3ac5d9608d",
+      "date": "2026-11-24T14:13:00Z"
+    }
   },
   "incidents-cli": {
     "packages": {
@@ -783,10 +793,10 @@
       }
     },
     "tag": {
-      "name": "v0.44.1",
-      "version": "0.44.1",
-      "sha": "7c5e03774086d064dce79a60961bdf4dac8c8fd1",
-      "date": "2026-11-13T21:02:17Z"
+      "name": "v0.47.0",
+      "version": "0.47.0",
+      "sha": "76fbf0edb6e8829a83514d7a553fcf91ffd09f5f",
+      "date": "2026-11-24T14:49:28Z"
     }
   },
   "inkblot": {
@@ -1105,10 +1115,10 @@
       }
     },
     "tag": {
-      "name": "v1.7.0",
-      "version": "1.7.0",
-      "sha": "ffbc46f4d9a43c330d9e68e5d86b48fd1b5458a8",
-      "date": "2026-11-12T16:08:48Z"
+      "name": "v1.8.0",
+      "version": "1.8.0",
+      "sha": "7a84cd46c3e3b86a8d2a43cae4b54214505e1209",
+      "date": "2026-11-24T13:07:37Z"
     }
   },
   "mcp-jenkins": {
@@ -1665,10 +1675,10 @@
       "": null
     },
     "tag": {
-      "name": "v1.6.0",
-      "version": "1.6.0",
-      "sha": "a3e69bfce26773bdd4597d9914755b0f3410e844",
-      "date": "2026-11-21T22:41:15Z"
+      "name": "v1.7.0",
+      "version": "1.7.0",
+      "sha": "5d1ccd68b14a498e558805d213f77587d2eb766f",
+      "date": "2026-11-24T14:53:40Z"
     }
   },
   "sim-crafter-cli": {

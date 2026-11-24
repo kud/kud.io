@@ -13,7 +13,9 @@ hasDocs: true
 - **Honest paging** — pages are walked to the end by what the API actually returns, using `limit` (the API ignores `size`), never by what was asked for
 - **A safe-write engine** — plan from reads only, take a backup before each write, write with a title and comment, read back and diff against the plan, stop at the first failure
 - **A production gate** — writes stay a plan until you say go; an environment matching `/prod/i` also needs its exact name typed
-- **Pure helpers** — diffing, definition normalisation, rollout classification and rollout-table builders
+- **Pure helpers** — diffing, definition normalisation, rollout classification, rollout-table builders and a cross-environment comparison
+- **Readable output** — ISO 8601 twins for epoch-millisecond times, owners by name, workspaces and traffic types by name or id
+- **Change history** — a flag's published change requests per environment, each diffed against the one before
 - **Zero runtime dependencies** — ESM only, Node.js 20 or later
 
 Surface-agnostic by design: this package holds no terminal, no MCP and no prompts, just data, actions and the write engine. Three siblings sit on top of it:

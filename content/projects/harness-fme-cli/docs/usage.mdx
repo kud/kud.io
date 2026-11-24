@@ -51,6 +51,24 @@ One flag across every environment: state, default rule, traffic, rules, keys and
 harness-fme status checkout_new_flow
 ```
 
+### `compare <flag>`
+
+One flag across environments, side by side: whether it is defined, killed, the default rule and treatment, traffic, treatments with their key counts and segments, the number of targeting rules and when it was last updated (ISO 8601, UTC). Fields that differ between environments are marked `*` and listed at the end; each environment's rules follow on one line each. `-e, --env` narrows the environments.
+
+```sh
+harness-fme compare checkout-redesign --env staging,production
+```
+
+### `history <flag> --env <env>`
+
+A flag's changes in one environment, newest first, with the columns of the web UI's audit log (time, title, change type, approvers, edited by, status) and, under each, what it changed: the default rule before and after, then a field-level diff. `--limit <n>` caps the list (default 20).
+
+The admin API has no audit log, so this reads the flag's published change requests and diffs each against the one before. A change made without an approval flow is not recorded by the API and does not appear. It needs an admin API key with access to change requests.
+
+```sh
+harness-fme history checkout-redesign --env production
+```
+
 ### `unreleased`
 
 Flags that are not fully on in an environment. `--env` is required. Also takes `--tag`, `--prefix` and `--all`.
@@ -117,6 +135,8 @@ harness-fme off checkout_new_flow --env Prod --go
 ```sh
 harness-fme --json on --prefix checkout_ --env QA | jq '.plan[] | select(.selected)'
 ```
+
+In JSON, every epoch-millisecond time comes with an ISO 8601 twin (`lastUpdateTime` beside `lastUpdateTimeIso`).
 
 ## 🚦 Exit codes
 

@@ -7,6 +7,7 @@ hasDocs: true
 ## Features
 
 - **Rollouts at a glance** — one table of flags against environments, with the rollout status and default rule for each; `unreleased` lists what is not fully on yet
+- **Compare and history** — `compare` lays one flag's environments side by side and marks what differs; `history` lists its published changes in an environment with what each one changed
 - **Interactive dashboard** — `harness-fme tui` is a full-screen view of flags and environments, read-only unless you start it with `--write`
 - **Change targeting from the shell** — add or remove an individual key on a treatment, serve `on` or `off`, ramp to a percentage, or act on a segment
 - **Plan, backup, read-back** — every write prints a plan first, saves the original definition before it lands, and checks the flag afterwards, stopping at the first failure
