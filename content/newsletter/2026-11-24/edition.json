@@ -1,0 +1,487 @@
+{
+  "schema": 1,
+  "date": "2026-11-24",
+  "generatedAt": "2026-11-24T18:37:00.000+00:00",
+  "publishedAt": "2026-11-24T18:38:53Z",
+  "languages": [
+    "fr",
+    "en"
+  ],
+  "lede": {
+    "fr": "Ce soir, on regarde ce que font des agents d’IA quand on leur confie un piratage avec une seule consigne, d’après deux enquêtes d’Amazon et de Palo Alto Networks. Ensuite, un satellite nucléaire russe dont parle la presse allemande, Tidal contre la musique générée par IA et le report européen sur le méthane importé. On explique aussi le « Code Mode » des agents, avant quatre trouvailles, dont une montre mécanique à faire tourner du doigt.",
+    "en": "Tonight, we look at what AI agents do when they are handed a hacking job with a single instruction, drawing on two investigations by Amazon and Palo Alto Networks. Then a Russian nuclear satellite reported by the German press, Tidal against AI-generated music, and Europe’s delay on imported methane. We also explain the “Code Mode” of AI agents, before four finds, including a mechanical watch you can turn with a finger."
+  },
+  "readingMinutes": {
+    "fr": 11,
+    "en": 11
+  },
+  "wordCount": {
+    "fr": 2287,
+    "en": 2156
+  },
+  "narrative": {
+    "overview": {
+      "fr": "Ce soir, on regarde ce que font des agents d’IA quand on leur confie un piratage avec une seule consigne, d’après deux enquêtes d’Amazon et de Palo Alto Networks. Ensuite, un satellite nucléaire russe dont parle la presse allemande, Tidal contre la musique générée par IA et le report européen sur le méthane importé. On explique aussi le « Code Mode » des agents, avant quatre trouvailles, dont une montre mécanique à faire tourner du doigt.",
+      "en": "Tonight, we look at what AI agents do when they are handed a hacking job with a single instruction, drawing on two investigations by Amazon and Palo Alto Networks. Then a Russian nuclear satellite reported by the German press, Tidal against AI-generated music, and Europe’s delay on imported methane. We also explain the “Code Mode” of AI agents, before four finds, including a mechanical watch you can turn with a finger."
+    },
+    "analysis": null,
+    "closing": {
+      "fr": "Bonne soirée, et à demain.",
+      "en": "Have a good evening, and see you tomorrow."
+    }
+  },
+  "sections": [
+    {
+      "key": "overview",
+      "kind": "narrative",
+      "title": {
+        "fr": "Ce soir",
+        "en": "Tonight"
+      },
+      "items": []
+    },
+    {
+      "key": "depth",
+      "kind": "items",
+      "title": {
+        "fr": "Le sujet du jour",
+        "en": "Today’s focus"
+      },
+      "items": [
+        "01"
+      ]
+    },
+    {
+      "key": "brief",
+      "kind": "items",
+      "title": {
+        "fr": "L’essentiel",
+        "en": "The essentials"
+      },
+      "items": [
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "key": "explainer",
+      "kind": "items",
+      "title": {
+        "fr": "C’est quoi ?",
+        "en": "Explainer"
+      },
+      "items": [
+        "05"
+      ]
+    },
+    {
+      "key": "techsci",
+      "kind": "items",
+      "title": {
+        "fr": "Technologie & science",
+        "en": "Technology & science"
+      },
+      "items": [
+        "06",
+        "07"
+      ]
+    },
+    {
+      "key": "inbrief",
+      "kind": "bullets",
+      "title": {
+        "fr": "En bref",
+        "en": "In brief"
+      },
+      "items": []
+    },
+    {
+      "key": "finds",
+      "kind": "items",
+      "title": {
+        "fr": "Ça vaut un clic",
+        "en": "Worth a click"
+      },
+      "items": [
+        "08",
+        "09",
+        "10",
+        "11"
+      ]
+    },
+    {
+      "key": "closing",
+      "kind": "narrative",
+      "title": {
+        "fr": "Pour finir",
+        "en": "To close"
+      },
+      "items": []
+    }
+  ],
+  "items": [
+    {
+      "id": "01",
+      "section": "depth",
+      "kicker": {
+        "fr": "CYBERSÉCURITÉ",
+        "en": "CYBERSECURITY"
+      },
+      "title": {
+        "fr": "Des agents d’IA qui piratent seuls : ce que montrent les journaux d’une campagne",
+        "en": "AI agents that hack on their own: what one campaign’s logs reveal"
+      },
+      "summary": {
+        "fr": "Le concept. Un « agent » d’IA est un modèle de langage branché sur des outils : il planifie une tâche, l’exécute par étapes, lit les résultats et décide de la suite. Cairn est un cadriciel open source qui orchestre plusieurs de ces agents, conçu pour les tests d’intrusion défensifs : on lui donne une cible et un objectif en langage courant, il se débrouille. Vendredi 20 novembre, l’équipe de renseignement sur les menaces d’Amazon a publié l’analyse d’une instance de Cairn laissée en ligne sans authentification, ce qui a exposé tout son historique : consignes, configurations et sorties des modèles. Les consignes étaient rédigées en chinois simplifié et Amazon attribue l’opération, avec une confiance qu’il qualifie de modérée, à un acteur lié à la Chine. L’objectif donné aux agents tenait en trois mots : « obtenir un shell », c’est-à-dire un accès en ligne de commande au serveur visé.",
+        "en": "The idea. An AI “agent” is a language model wired to tools: it plans a task, carries it out step by step, reads the results and decides what to do next. Cairn is an open-source framework that coordinates several such agents, built for defensive penetration testing: you give it a target and a goal in plain language, and it works out the rest. On Friday 20 November, Amazon’s threat intelligence team published its analysis of a Cairn instance left online without authentication, which exposed its whole history: instructions, configurations and model output. The prompts were written in Simplified Chinese, and Amazon attributes the operation, with what it calls moderate confidence, to a China-linked actor. The goal given to the agents was three words long: “obtain shell access”, meaning command-line control of the target server."
+      },
+      "sources": [
+        {
+          "url": "https://aws.amazon.com/blogs/security/chinese-nexus-actors-cairn-ai-agents-found-a-zero-day-on-their-own/",
+          "label": {
+            "fr": "Amazon · AWS Security Blog",
+            "en": "Amazon · AWS Security Blog"
+          }
+        },
+        {
+          "url": "https://unit42.paloaltonetworks.com/cairn-framework-ai-autonomous-attacks/",
+          "label": {
+            "fr": "Unit 42 · Palo Alto Networks",
+            "en": "Unit 42 · Palo Alto Networks"
+          }
+        },
+        {
+          "url": "https://arstechnica.com/security/2026/11/amazon-says-hackers-ai-agents-found-and-exploited-0-day-with-little-human-input/",
+          "label": {
+            "fr": "Ars Technica",
+            "en": "Ars Technica"
+          }
+        },
+        {
+          "url": "https://www.404media.co/the-code-is-already-copied-everywhere-the-ai-hacking-tool-causing-havoc-around-the-world-artex-github/",
+          "label": {
+            "fr": "404 Media",
+            "en": "404 Media"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "section": "brief",
+      "kicker": {
+        "fr": "ESPACE",
+        "en": "SPACE"
+      },
+      "title": {
+        "fr": "Un satellite nucléaire russe ? L’Otan prend au sérieux des informations allemandes",
+        "en": "A Russian nuclear satellite? Nato takes German reports seriously"
+      },
+      "summary": {
+        "fr": "Lundi 23 novembre, la Süddeutsche Zeitung et les radios-télévisions publiques NDR et WDR ont rapporté, en citant des sources militaires et du renseignement allemands non nommées, que la Russie préparait le lancement d’un satellite équipé d’une charge nucléaire, baptisé « Spoutnik-S ». Selon ces médias, cités par la BBC, des rapports évoquant un lancement possible dans les soixante jours ont circulé ce mois-ci entre pays de l’Otan, sans que l’on sache quel pays les a rédigés. Le chancelier allemand Friedrich Merz n’a ni confirmé ni démenti, jugeant ces informations « pas nouvelles, mais pas moins choquantes ». Le secrétaire général de l’Otan, Mark Rutte, a promis de défendre « chaque centimètre » du territoire de l’Alliance, espace compris. Le Kremlin a jugé ces récits anonymes peu dignes d’intérêt et l’ambassade russe à Berlin parle d’« allégations infondées ». Le traité de l’espace de 1967, que la Russie a signé, interdit les armes de destruction massive en orbite. Une explosion nucléaire en orbite basse frapperait sans distinction : lors des essais américains et soviétiques de 1961-1962, une explosion américaine a provoqué une vaste coupure de courant à Hawaï. Le chercheur Bleddyn Bowen rappelle à la BBC qu’il y a aujourd’hui plus de 15 000 satellites actifs, dont ceux de la Russie elle-même.",
+        "en": "On Monday 23 November, the Süddeutsche Zeitung and the public broadcasters NDR and WDR reported, citing unnamed German military and intelligence sources, that Russia was preparing to launch a satellite carrying a nuclear warhead, dubbed “Sputnik-S”. According to those outlets, as reported by the BBC, intelligence reports of a possible launch within the next 60 days were shared among Nato countries this month, though it is unclear which country wrote them. The German chancellor, Friedrich Merz, neither confirmed nor denied them, calling such reports “not new, yet no less shocking”. Nato’s secretary general, Mark Rutte, pledged to defend “every inch of Nato territory”, space included. The Kremlin said anonymous stories were hardly worth taking seriously, and the Russian embassy in Berlin called them “unfounded allegations”. The 1967 Outer Space Treaty, which Russia has signed, bans weapons of mass destruction from orbit. A nuclear blast in low orbit would hit indiscriminately: in the American and Soviet tests of 1961–62, one American blast caused a widespread power cut in Hawaii. The researcher Bleddyn Bowen told the BBC there are now more than 15,000 active satellites, Russia’s own among them."
+      },
+      "sources": [
+        {
+          "url": "https://www.bbc.co.uk/news/articles/c9x2er1ry2mzo",
+          "label": {
+            "fr": "BBC News",
+            "en": "BBC News"
+          }
+        },
+        {
+          "url": "https://www.franceinfo.fr/societe/armee-securite-defense/nucleaire-militaire/la-russie-soupconnee-de-vouloir-placer-une-arme-nucleaire-dans-l-espace_8297916.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "section": "brief",
+      "kicker": {
+        "fr": "MUSIQUE",
+        "en": "MUSIC"
+      },
+      "title": {
+        "fr": "Tidal va supprimer la musique entièrement générée par IA",
+        "en": "Tidal will delete music made wholly by AI"
+      },
+      "summary": {
+        "fr": "Le service de streaming musical Tidal a annoncé qu’à partir du 9 décembre, il n’accepterait plus les morceaux entièrement générés par IA et supprimerait ceux qu’il héberge. Selon Ars Technica, 27 millions de titres sont étiquetés comme IA sur la plateforme, soit 6,3 % du catalogue ; The Verge, citant le responsable musique de Tidal, Robert Andersen, évoque environ 29 millions de suppressions et 80 000 à 85 000 envois rejetés par jour. Tidal justifie la mesure par l’ampleur du flux : 43 % des nouveaux titres reçus en 90 jours étaient entièrement générés, et 96 % des morceaux étiquetés IA n’ont eu aucune écoute sur cette période. Le problème n’est pas seulement esthétique : ces titres détournent une partie des écoutes et des droits versés aux artistes, et Tidal dit avoir déjà retiré environ 66 000 morceaux qui usurpaient l’identité d’artistes. La musique composée avec l’aide d’outils d’IA reste autorisée tant que l’IA n’en est pas l’unique auteur. La détection reposera, selon The Verge, sur l’outil Ircam Amplify et des contrôles de métadonnées ; Ars Technica souligne que des modèles locaux sans filigrane y échapperont en partie. Bandcamp avait déjà banni la musique générée par IA cette année ; Spotify, Deezer ou YouTube préfèrent l’étiquetage ou le filtrage.",
+        "en": "The music streaming service Tidal has announced that from 9 December it will stop accepting tracks generated entirely by AI and remove those it already hosts. According to Ars Technica, 27 million tracks on the platform are labelled as AI, 6.3% of the catalogue; The Verge, citing Tidal’s music lead, Robert Andersen, puts the deletions at about 29 million and the rejected uploads at 80,000 to 85,000 a day. Tidal points to the sheer volume: 43% of new tracks received over 90 days were wholly generated, and 96% of AI-labelled tracks had no plays at all over that period. The problem is not only one of taste: these tracks divert some streams and royalties from artists, and Tidal says it has already removed about 66,000 tracks that impersonated artists. Music made with the help of AI tools remains allowed, as long as AI is not its sole author. Detection will rely, according to The Verge, on the Ircam Amplify tool and metadata checks; Ars Technica notes that local models without watermarks will partly slip through. Bandcamp banned AI-generated music earlier this year; Spotify, Deezer and YouTube prefer labels or filters."
+      },
+      "sources": [
+        {
+          "url": "https://www.theverge.com/entertainment/1041362/tidal-ai-music-ban",
+          "label": {
+            "fr": "The Verge",
+            "en": "The Verge"
+          }
+        },
+        {
+          "url": "https://arstechnica.com/ai/2026/11/tidal-will-ban-fully-ai-generated-music-on-december-9/",
+          "label": {
+            "fr": "Ars Technica",
+            "en": "Ars Technica"
+          }
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "section": "brief",
+      "kicker": {
+        "fr": "CLIMAT",
+        "en": "CLIMATE"
+      },
+      "title": {
+        "fr": "Méthane importé : l’Europe repousse ses contrôles à 2029",
+        "en": "Imported methane: Europe pushes its checks back to 2029"
+      },
+      "summary": {
+        "fr": "Dans la nuit du 19 novembre, les gouvernements de l’UE et le Parlement européen se sont accordés provisoirement pour repousser de deux ans les obligations du règlement européen sur le méthane qui visent les importateurs de pétrole, de gaz et de charbon : elles s’appliqueront au 1er janvier 2029 au lieu du 1er janvier 2027. La déclaration de « l’intensité méthane » des combustibles vendus dans l’UE glisse, elle, au 5 août 2030. Le compromis se situe entre la Commission et les États, qui voulaient un an, et le Parlement, qui avait voté trois ans en octobre ; l’accord doit encore être formellement adopté par les deux institutions. Le méthane, qui s’échappe des puits, des gazoducs et des mines, réchauffe environ 80 fois plus que le CO₂ sur vingt ans, mais ne reste qu’une douzaine d’années dans l’atmosphère : le réduire agit vite. Les gouvernements invoquent les risques d’approvisionnement et la flambée des prix après les perturbations des livraisons du Golfe. L’ONG Environmental Defense Fund estime que le report laissera fuir 24 milliards de mètres cubes de méthane. Un nouveau report exigerait une nouvelle loi ; la Commission fera un bilan début 2028.",
+        "en": "Overnight on 19 November, EU governments and the European Parliament reached a provisional deal to delay by two years the obligations of the EU methane regulation that apply to importers of oil, gas and coal: they will apply from 1 January 2029 instead of 1 January 2027. Reporting the “methane intensity” of fuels sold in the EU slips to 5 August 2030. The compromise falls between the Commission and member states, which wanted one year, and Parliament, which voted for three in October; it still has to be formally adopted by both institutions. Methane, which leaks from wells, pipelines and mines, traps about 80 times more heat than CO₂ over twenty years but lasts only a dozen years in the atmosphere, so cutting it works quickly. Governments cite supply risks and high prices after disruption to deliveries from the Gulf. The campaign group Environmental Defense Fund estimates the delay will let 24 billion cubic metres of methane leak. A further delay would need a new law; the Commission will review the rules in early 2028."
+      },
+      "sources": [
+        {
+          "url": "https://euobserver.com/250022/eu-gives-oil-and-gas-importers-until-2029-on-methane-checks-rules-out-more-delay/",
+          "label": {
+            "fr": "EUobserver",
+            "en": "EUobserver"
+          }
+        },
+        {
+          "url": "https://theconversation.com/leurope-reporte-le-controle-des-emissions-de-methane-de-ses-importations-au-risque-de-ne-pas-tenir-ses-promesses-climatiques-296607",
+          "label": {
+            "fr": "The Conversation France",
+            "en": "The Conversation France"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "section": "explainer",
+      "kicker": null,
+      "title": {
+        "fr": "Le « Code Mode » des agents d’IA",
+        "en": "The “Code Mode” of AI agents"
+      },
+      "summary": {
+        "fr": "Pourquoi c’est intéressant. Les agents d’IA se connectent de plus en plus à des dizaines d’outils : un calendrier, une base de données, une API (interface de programmation). La façon dont ils les appellent détermine leur coût, leur vitesse et ce qu’on peut leur confier.",
+        "en": "Why it matters. AI agents are increasingly connected to dozens of tools: a calendar, a database, an API (application programming interface). How they call those tools determines their cost, their speed and what they can be trusted with."
+      },
+      "sources": [
+        {
+          "url": "https://developers.cloudflare.com/agents/tools/codemode/",
+          "label": {
+            "fr": "Cloudflare · documentation Agents",
+            "en": "Cloudflare · Agents documentation"
+          }
+        },
+        {
+          "url": "https://blog.cloudflare.com/code-mode/",
+          "label": {
+            "fr": "Cloudflare Blog",
+            "en": "Cloudflare Blog"
+          }
+        },
+        {
+          "url": "https://www.anthropic.com/research/code-execution-with-mcp",
+          "label": {
+            "fr": "Anthropic",
+            "en": "Anthropic"
+          }
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "section": "techsci",
+      "kicker": {
+        "fr": "PALÉOANTHROPOLOGIE",
+        "en": "PALAEOANTHROPOLOGY"
+      },
+      "title": {
+        "fr": "Homo erectus a vécu bien plus tard en Chine, et en forêt tropicale",
+        "en": "Homo erectus lived far later in China, and in rainforest"
+      },
+      "summary": {
+        "fr": "Des travaux publiés dans la revue Nature décrivent neuf dents d’hominines trouvées dans les grottes de Baxian et Naxian, dans le Guangxi, au sud de la Chine, datées d’entre 324 000 et 184 000 ans. Huit sont attribuées à Homo erectus, l’espèce apparue il y a environ deux millions d’années et la première à quitter l’Afrique. Sur le continent asiatique, on la croyait disparue vers 400 000 ans. L’ADN ne survit pas si longtemps sous ce climat chaud et humide, mais les protéines de l’émail, oui : leurs séquences ont permis l’attribution. Les isotopes de l’émail indiquent un mode de vie en forêt tropicale dense, un milieu qu’on pensait réservé à notre espèce. La neuvième dent ne correspond pas à Homo erectus ; elle pourrait appartenir à un Dénisovien, mais ses protéines ne correspondent exactement à aucune séquence connue, et les chercheurs restent prudents.",
+        "en": "Research published in the journal Nature describes nine hominin teeth found in the Baxian and Naxian caves in Guangxi, southern China, dated to between 324,000 and 184,000 years ago. Eight are attributed to Homo erectus, the species that emerged about two million years ago and was the first to leave Africa. On the Asian mainland, it was thought to have died out around 400,000 years ago. DNA does not survive that long in a hot, humid climate, but enamel proteins do: their sequences made the attribution possible. Isotopes in the enamel point to a life in dense tropical forest, an environment thought to have been our own species’ preserve. The ninth tooth does not match Homo erectus; it may have belonged to a Denisovan, but its proteins match no known sequence exactly, and the researchers remain cautious."
+      },
+      "sources": [
+        {
+          "url": "https://arstechnica.com/science/2026/11/homo-erectus-lived-in-the-rainforest-alongside-denisovans/",
+          "label": {
+            "fr": "Ars Technica",
+            "en": "Ars Technica"
+          }
+        },
+        {
+          "url": "https://www.eurekalert.org/news-releases/1152475",
+          "label": {
+            "fr": "EurekAlert! · Université de Copenhague",
+            "en": "EurekAlert! · University of Copenhagen"
+          }
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "section": "techsci",
+      "kicker": {
+        "fr": "WEB",
+        "en": "WEB"
+      },
+      "title": {
+        "fr": "Firefox 161 apporte le hasard dans les CSS",
+        "en": "Firefox 161 brings chance to CSS"
+      },
+      "summary": {
+        "fr": "Firefox 161, sorti mardi 24 novembre, prend en charge la fonction CSS random(), qui tire une valeur aléatoire dans un intervalle, avec un pas optionnel, là où les fonctions mathématiques sont permises : de quoi décaler des étoiles ou varier des rotations sans JavaScript. Il ajoute aussi le CSS Typed Object Model, qui permet aux scripts de lire et d’écrire des valeurs CSS comme des objets typés plutôt que des chaînes de caractères (sans les couleurs, pour l’instant). Côté utilisateur : un raccourci configurable pour copier l’adresse de l’onglet, le retour du thème Proton parmi des thèmes « classiques », et un VPN intégré activable site par site.",
+        "en": "Firefox 161, released on Tuesday 24 November, supports the CSS random() function, which picks a random value within a range, with an optional step, wherever maths functions are allowed: enough to scatter stars or vary rotations without JavaScript. It also adds the CSS Typed Object Model, which lets scripts read and write CSS values as typed objects rather than strings (colours excepted, for now). For users: a configurable shortcut to copy the tab’s address, the return of the Proton theme among “classic” themes, and a built-in VPN that can be switched on site by site."
+      },
+      "sources": [
+        {
+          "url": "https://www.firefox.com/en-US/firefox/161.0/releasenotes/",
+          "label": {
+            "fr": "Firefox · notes de version 161.0",
+            "en": "Firefox · 161.0 release notes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "La folie a-t-elle un passeport ?",
+        "en": "Does madness carry a passport?"
+      },
+      "summary": {
+        "fr": "Dans un essai d’Aeon finaliste du premier prix de philosophie de la revue, Alexander Pereira demande si les troubles mentaux sont universels. Son point de départ : à Hong Kong, avant 1994, les femmes anorexiques que suivait le psychiatre Sing Lee ne disaient presque jamais craindre de grossir ; en 2007, plus des trois quarts invoquaient cette peur. Sa thèse, le « façonnement profond », va plus loin que l’idée que la culture colore l’expression d’un trouble : dans certains cas, elle pourrait en modifier les mécanismes mêmes, parce que le cerveau est plastique. Il le présente comme une hypothèse à tester, pas comme un résultat.",
+        "en": "In an Aeon essay shortlisted for the magazine’s first philosophy prize, Alexander Pereira asks whether mental disorders are universal. His starting point: in Hong Kong before 1994, the anorexic women treated by the psychiatrist Sing Lee rarely said they feared getting fat; by 2007, more than three quarters gave that fear as a central reason. His thesis, “deep shaping”, goes further than the idea that culture colours how a disorder is expressed: in some cases it might change the underlying mechanisms themselves, because the brain is plastic. He offers it as a hypothesis to test, not a finding."
+      },
+      "sources": [
+        {
+          "url": "https://aeon.co/essays/are-mental-illnesses-universal-or-are-they-culturally-specific",
+          "label": {
+            "fr": "Aeon",
+            "en": "Aeon"
+          }
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Des places comme des pièces à vivre",
+        "en": "Squares as rooms to live in"
+      },
+      "summary": {
+        "fr": "En 1889, l’architecte autrichien Camillo Sitte publiait L’Art de bâtir les villes, un manifeste contre les grilles répétitives et les boulevards interminables. Works in Progress résume ses principes : des places petites et fermées, comme des « pièces à ciel ouvert », des monuments poussés en bordure plutôt qu’au centre, des bâtiments publics imbriqués dans l’habitat ordinaire. Une lecture stimulante pour comprendre pourquoi une rue d’Osaka peut charmer autant qu’une ruelle de Bruges, même si l’article défend un point de vue plus qu’il ne le démontre.",
+        "en": "In 1889, the Austrian architect Camillo Sitte published The Art of Building Cities, a manifesto against repetitive grids and endless boulevards. Works in Progress sets out his principles: small, enclosed squares that work as “outdoor rooms”, monuments pushed to the edges rather than the centre, public buildings woven into ordinary housing. A stimulating read on why a street in Osaka can charm as much as a lane in Bruges, though the piece argues a case more than it proves one."
+      },
+      "sources": [
+        {
+          "url": "https://www.worksinprogress.news/p/how-to-make-a-lovable-city",
+          "label": {
+            "fr": "Works in Progress",
+            "en": "Works in Progress"
+          }
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Une montre à démonter du bout du doigt",
+        "en": "A watch to take apart with your fingertip"
+      },
+      "summary": {
+        "fr": "Une page explique pièce par pièce le fonctionnement d’une montre mécanique, en commençant par le spiral, inventé par Christiaan Huygens en 1675, qui bat la mesure. Chaque schéma est un modèle 3D qu’on fait pivoter pour voir les engrenages de profil. Elle se présente comme une introduction plus simple à la page de Bartosz Ciechanowski sur le même sujet.",
+        "en": "A web page explains a mechanical watch part by part, starting with the hairspring, invented by Christiaan Huygens in 1675, which beats time for the rest. Every diagram is a 3D model you can turn to see the gears side on. It presents itself as a gentler introduction to Bartosz Ciechanowski’s page on the same subject."
+      },
+      "sources": [
+        {
+          "url": "https://martincmartin.github.io/slidev-stem/watches/article/1/",
+          "label": {
+            "fr": "How a Mechanical Watch Keeps Time",
+            "en": "How a Mechanical Watch Keeps Time"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Deux frères, un canal pollué et la mafia russe",
+        "en": "Two brothers, a polluted canal and the Russian mob"
+      },
+      "summary": {
+        "fr": "Paper Tiger, de James Gray, présenté en compétition à Cannes en 2026, suit Irwin (Miles Teller), un père de famille ingénieur, que son frère aîné Gary (Adam Driver) entraîne dans un projet immobilier au bord d’un canal pollué, contrôlé par des mafieux russes. Sight and Sound y voit un drame criminel à hauteur d’homme, dans la veine de Little Odessa et de The Yards, où personne ne règle ses problèmes à coups de fusil. Un film de tension plus que d’action.",
+        "en": "James Gray’s Paper Tiger, shown in competition at Cannes in 2026, follows Irwin (Miles Teller), an engineer and family man, whose older brother Gary (Adam Driver) draws him into a property venture on a polluted canal controlled by Russian gangsters. Sight and Sound sees a human-scale crime drama in the vein of Little Odessa and The Yards, in which nobody shoots their way out of trouble. A film of tension rather than action."
+      },
+      "sources": [
+        {
+          "url": "https://www.bfi.org.uk/sight-and-sound/reviews/paper-tiger-adam-driver-brings-dangerous-charm-james-grays-tense-crime-thriller",
+          "label": {
+            "fr": "BFI · Sight and Sound",
+            "en": "BFI · Sight and Sound"
+          }
+        }
+      ]
+    }
+  ],
+  "timeline": [],
+  "inBrief": [
+    {
+      "text": {
+        "fr": "La Cour de cassation a rejeté mardi le pourvoi d’Éric Zemmour, désormais définitivement condamné pour « contestation de crime contre l’humanité » après avoir affirmé que Pétain « avait sauvé les juifs français » ([franceinfo](https://www.franceinfo.fr/politique/eric-zemmour/eric-zemmour-definitivement-condamne-pour-contestation-de-l-existence-de-crime-contre-l-humanite-apres-avoir-affirme-que-le-marechal-petain-avait-sauve-les-juifs-francais_8297988.html)).",
+        "en": "France’s top court for criminal appeals, the Cour de cassation, on Tuesday rejected Éric Zemmour’s appeal, making final his conviction for “disputing a crime against humanity” after he claimed Pétain “saved French Jews” ([franceinfo](https://www.franceinfo.fr/politique/eric-zemmour/eric-zemmour-definitivement-condamne-pour-contestation-de-l-existence-de-crime-contre-l-humanite-apres-avoir-affirme-que-le-marechal-petain-avait-sauve-les-juifs-francais_8297988.html))."
+      },
+      "urls": [
+        "https://www.franceinfo.fr/politique/eric-zemmour/eric-zemmour-definitivement-condamne-pour-contestation-de-l-existence-de-crime-contre-l-humanite-apres-avoir-affirme-que-le-marechal-petain-avait-sauve-les-juifs-francais_8297988.html"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Selon France Télévisions, qui cite une source proche du dossier, Nicolas Sarkozy et Carla Bruni sont renvoyés devant le tribunal correctionnel dans l’affaire de la fausse rétractation de Ziad Takieddine, avec un procès prévu fin 2027 ([franceinfo](https://www.franceinfo.fr/societe/justice/nicolas-sarkozy-et-carla-bruni-sont-renvoyes-en-proces-dans-l-affaire-de-la-fausse-retractation-de-ziad-takieddine-notamment-pour-association-de-malfaiteurs_8297655.html)).",
+        "en": "According to France Télévisions, citing a source close to the case, Nicolas Sarkozy and Carla Bruni have been sent for trial over the false retraction by Ziad Takieddine, with a trial expected in late 2027 ([franceinfo](https://www.franceinfo.fr/societe/justice/nicolas-sarkozy-et-carla-bruni-sont-renvoyes-en-proces-dans-l-affaire-de-la-fausse-retractation-de-ziad-takieddine-notamment-pour-association-de-malfaiteurs_8297655.html))."
+      },
+      "urls": [
+        "https://www.franceinfo.fr/societe/justice/nicolas-sarkozy-et-carla-bruni-sont-renvoyes-en-proces-dans-l-affaire-de-la-fausse-retractation-de-ziad-takieddine-notamment-pour-association-de-malfaiteurs_8297655.html"
+      ]
+    },
+    {
+      "text": {
+        "fr": "La cour d’appel de Versailles a confirmé le renvoi devant les assises, pour meurtre, du policier qui a tué Nahel Merzouk à Nanterre en juin 2023 ; son avocat dénonce « un manque de courage judiciaire » ([franceinfo](https://www.franceinfo.fr/faits-divers/adolescent-tue-par-un-policier-a-nanterre/la-mere-de-nahel-merzouk-se-dit-soulagee-et-contente-alors-que-la-justice-confirme-en-appel-le-renvoi-du-policier-pour-meurtre_8297925.html)).",
+        "en": "The Versailles appeal court confirmed that the police officer who killed Nahel Merzouk in Nanterre in June 2023 will stand trial for murder; his lawyer called the ruling “a lack of judicial courage” ([franceinfo](https://www.franceinfo.fr/faits-divers/adolescent-tue-par-un-policier-a-nanterre/la-mere-de-nahel-merzouk-se-dit-soulagee-et-contente-alors-que-la-justice-confirme-en-appel-le-renvoi-du-policier-pour-meurtre_8297925.html))."
+      },
+      "urls": [
+        "https://www.franceinfo.fr/faits-divers/adolescent-tue-par-un-policier-a-nanterre/la-mere-de-nahel-merzouk-se-dit-soulagee-et-contente-alors-que-la-justice-confirme-en-appel-le-renvoi-du-policier-pour-meurtre_8297925.html"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Le département américain du Commerce a inscrit la société singapourienne Megaspeed et ses filiales en Malaisie et en Thaïlande sur sa liste noire commerciale, en invoquant un risque de détournement de puces d’IA avancées ([The Verge](https://www.theverge.com/policy/1041270/nvidia-megaspeed-commerce-dept-entity-list)).",
+        "en": "The US Commerce Department added the Singaporean company Megaspeed and its affiliates in Malaysia and Thailand to its trade blacklist, citing a risk that advanced AI chips could be diverted ([The Verge](https://www.theverge.com/policy/1041270/nvidia-megaspeed-commerce-dept-entity-list))."
+      },
+      "urls": [
+        "https://www.theverge.com/policy/1041270/nvidia-megaspeed-commerce-dept-entity-list"
+      ]
+    }
+  ]
+}
