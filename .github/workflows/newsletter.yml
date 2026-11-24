@@ -255,5 +255,5 @@ jobs:
     permissions:
       actions: read
       checks: read
-    uses: ./.github/workflows/notify-slack.yml
+    uses: ./.github/workflows/notify-comms.yml
     secrets: inherit

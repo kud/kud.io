@@ -1,42 +1,19 @@
 name: Refresh writing
 
-# Every blog post from Notion, without the repo and docs sync. The optional
-# Slack test sends one message to #pub-writing without refreshing any content.
+# Refresh the blog from Notion, without the project/docs sync.
+# New live posts are announced in Todoist Comms by the called workflow.
+# For a Comms-only test, use the existing comms-post workflow.
 on:
   workflow_dispatch:
-    inputs:
-      test_slack:
-        description: Test #pub-writing only; do not sync, deploy or publish any articles.
-        type: boolean
-        default: false
 
 permissions:
   contents: write
   actions: write
-  # Passed down to the refresh's failure notifier.
   checks: read
 
 jobs:
   refresh:
-    if: ${{ !inputs.test_slack }}
     uses: ./.github/workflows/refresh-project-content.yml
     with:
       scope: writing
     secrets: inherit
-
-  test-slack:
-    if: ${{ inputs.test_slack }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send writing Slack test
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WRITING_WEBHOOK_URL }}
-        run: |
-          set -euo pipefail
-          if [[ -z "$SLACK_WEBHOOK_URL" ]]; then
-            echo "::error title=Writing Slack webhook missing::Set the SLACK_WRITING_WEBHOOK_URL Actions secret before testing."
-            exit 1
-          fi
-          jq -n --arg text "✓ kud.io writing: Slack notifications are configured (test only)." '{text: $text}' \
-            | curl --fail --silent --show-error --max-time 20 -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL" > /dev/null
-          echo "✅ #pub-writing webhook delivered a test message." >> "$GITHUB_STEP_SUMMARY"
