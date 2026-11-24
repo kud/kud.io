@@ -1,27 +1,11 @@
-name: Notify Slack
+name: Notify Comms
 
-# Called as the last job of another workflow: posts one message to Slack when a
-# job in the calling run failed, or when the run left warnings behind (a
-# deprecated Node version, a cache miss GitHub flags, a step's ::warning::).
-# A clean run posts nothing. Run it by hand to check the webhook still works.
-# Inside a called workflow, github.event_name is the caller's, so the ping is told
-# apart by the workflow name instead.
-#
-# A caller that runs every hour sets on_change_only, so nothing repeats hourly.
-# Against the previous run of the same workflow, a failure is reported to the
-# alerts channel when it first appears and again when a clean run recovers, and
-# warnings to the warnings channel when they first appear and when they clear.
-#
-# Secrets: SLACK_ALERTS_WEBHOOK_URL (failures, #ops-alerts) and
-# SLACK_WARNINGS_WEBHOOK_URL (warnings, #ops-warnings). The older
-# SLACK_WEBHOOK_URL still stands in for the alerts one until it is retired.
-#
-# Each Slack post is mirrored as a Todoist Comms thread (kud/.github's
-# comms-thread action): failures in ops-alerts, warnings in ops-warnings. The
-# thread a failure or warning opened is closed when a later run is clean, or
-# superseded by the next one, so at most one stays open per workflow and kind.
-# The open ids are carried from run to run as a "Comms threads" notice on this
-# job. Every Comms step is skipped without TODOIST_MOCHI_BOT_TOKEN and never fails the job.
+# Reusable notification workflow: report failed jobs and GitHub Actions
+# warning annotations through Todoist Comms only, as Mochi.
+# A clean run leaves no new notification; an hourly caller may request
+# change-only alerts. Previously open Comms threads are closed on recovery
+# and superseded on a new warning/failure.
+# The token is TODOIST_MOCHI_BOT_TOKEN. No Slack webhooks are used.
 
 on:
   workflow_call:
@@ -30,7 +14,6 @@ on:
         description: Report failures and warnings only when they appear or clear.
         type: boolean
         default: false
-  workflow_dispatch:
 
 permissions:
   actions: read
@@ -45,21 +28,10 @@ jobs:
       ALERTS_CHANNEL: ChJXTt3RDFYYZr9oTkUJu
       WARNINGS_CHANNEL: ChJXTuoq3aXYwTKBfpWzP
     steps:
-      - name: Ping
-        if: github.workflow == 'Notify Slack'
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
-        run: |
-          jq -n --arg text "✓ ${GITHUB_REPOSITORY}: Slack notifications are wired up" '{text: $text}' \
-            | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$SLACK_WEBHOOK_URL"
-
       - name: Report problems in the calling run
         id: report
-        if: github.workflow != 'Notify Slack'
         env:
           GH_TOKEN: ${{ github.token }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ALERTS_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WARNINGS_WEBHOOK_URL: ${{ secrets.SLACK_WARNINGS_WEBHOOK_URL }}
           ON_CHANGE_ONLY: ${{ inputs.on_change_only }}
         run: |
           set -euo pipefail
@@ -68,23 +40,8 @@ jobs:
           shopt -s inherit_errexit
           run_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
-          post() {
-            jq -n --arg text "$2" '{text: $text}' \
-              | curl -fsS -X POST -H 'Content-Type: application/json' --data @- "$1"
-          }
-
-          # Warnings go to the warnings channel, or nowhere until that webhook exists.
-          post_warnings() {
-            if [[ -z "${SLACK_WARNINGS_WEBHOOK_URL:-}" ]]
-            then
-              echo "No warnings webhook, skipping: $1"
-              return 0
-            fi
-            post "$SLACK_WARNINGS_WEBHOOK_URL" "$1"
-          }
-
           # What the Comms steps after this one should do, written before each
-          # Slack post so a failed post does not hide it: alert / warning are
+          # Comms report so a failed post does not hide it: alert / warning are
           # "open" (a new thread), "close" (close the open one, if any) or empty.
           comms() {
             { echo "$1<<COMMS_EOF"; printf '%s\n' "$2"; echo "COMMS_EOF"; } >> "$GITHUB_OUTPUT"
@@ -144,34 +101,25 @@ jobs:
               comms warning close
             fi
 
-            # Failures to the alerts channel: the first one, then the recovery.
+            # Failures and warnings become Comms threads only; the close
+            # intent above handles recovery without a second notification.
             if [[ -n "$failed" && "$previous" != "failure" ]]
             then
               comms alert open
               comms alert_body "$(printf '%s\n\n[View run](%s)' \
                 "$(printf '%s\n%s' "$(comms_list "$failed")" "$(comms_list "$notes")" | awk 'NF')" "$run_url")"
-              post "$SLACK_WEBHOOK_URL" "$(printf '*%s* · %s\n%s\n%s\n<%s|View run>' \
-                "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$failed" "$notes" "$run_url" | awk 'NF')"
             elif [[ -n "$failed" ]]
             then
               echo "Still failing, and the first failure was already reported."
-            elif [[ "$previous" == "failure" ]]
-            then
-              post "$SLACK_WEBHOOK_URL" "$(printf '✓ *%s* · %s recovered\n<%s|View run>' \
-                "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$run_url")"
             fi
 
-            # Warnings to the warnings channel: when they appear, then when they clear.
             if [[ -n "$warnings" && -z "$previous_warnings" ]]
             then
               comms warning open
               comms warning_body "$(printf '%s\n\n[View run](%s)' "$(comms_list "$warnings")" "$run_url")"
-              post_warnings "$(printf '*%s* · %s\n%s\n<%s|View run>' \
-                "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$warnings" "$run_url")"
             elif [[ -z "$warnings" && -n "$previous_warnings" ]]
             then
-              post_warnings "$(printf '✓ *%s* · %s warnings cleared\n<%s|View run>' \
-                "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$run_url")"
+              echo "Warnings cleared; close the previous Comms thread."
             else
               echo "Warnings unchanged since the previous run."
             fi
@@ -189,28 +137,23 @@ jobs:
             exit 0
           fi
 
-          text=$(printf '*%s* · %s\n%s\n%s\n<%s|View run>' \
-            "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$failed" "$notes" "$run_url" | awk 'NF')
-          # A failure goes to the alerts channel, a run that only left warnings to
-          # the warnings channel.
+          # A failure goes to ops-alerts; a warning-only run to ops-warnings.
           comms_body=$(printf '%s\n%s' "$(comms_list "$failed")" "$(comms_list "$notes")" | awk 'NF')
           if [[ -n "$failed" ]]
           then
             comms alert open
             comms alert_body "$(printf '%s\n\n[View run](%s)' "$comms_body" "$run_url")"
-            post "$SLACK_WEBHOOK_URL" "$text"
           else
             comms warning open
             comms warning_body "$(printf '%s\n\n[View run](%s)' "$comms_body" "$run_url")"
-            post_warnings "$text"
           fi
 
-      # Comms, after Slack. The open threads of the previous runs of the calling
+      # Comms, after the report step. The open threads of the previous runs of the calling
       # workflow, read from the newest of its last ten completed runs whose
       # notify job left a "Comms threads" notice.
       - name: Find the open Comms threads
         id: comms_prev
-        if: ${{ !cancelled() && github.workflow != 'Notify Slack' && env.HAS_TODOIST_MOCHI_BOT_TOKEN == 'true' && steps.report.outputs.title != '' }}
+        if: ${{ !cancelled() && env.HAS_TODOIST_MOCHI_BOT_TOKEN == 'true' && steps.report.outputs.title != '' }}
         continue-on-error: true
         env:
           GH_TOKEN: ${{ github.token }}
