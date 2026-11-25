@@ -48,7 +48,7 @@ import {
 } from "@/components/product-record"
 import styles from "./page.module.css"
 
-// The release pill says how old the latest version is, so the deploy workflow rebuilds the site every six hours; ISR used up the free tier's writes.
+// The release pill says how old the latest version is, so the deploy workflow rebuilds the site daily; ISR used up the free tier's writes.
 export const revalidate = false
 
 // Unknown slugs 404 without a write: crawlers probing made-up paths each cost one.
