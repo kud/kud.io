@@ -10,10 +10,12 @@ on:
   # The hourly content refresh pushes with GITHUB_TOKEN, which never triggers
   # `push`; it dispatches this workflow instead when it committed something.
   workflow_dispatch:
-  # Every page is static (no ISR, whose writes the free tier caps), so release
-  # ages, contributions and the Bluesky feed refresh by rebuilding.
+  # Every page is prerendered, and each production deploy re-seeds ~5.8k
+  # prerender entries, which Vercel counts against the free tier's ISR writes.
+  # So scheduled rebuilds run once a day: release ages, contributions and the
+  # Bluesky feed refresh by rebuilding, a day stale at worst.
   schedule:
-    - cron: "41 */6 * * *"
+    - cron: "41 5 * * *"
 
 permissions:
   contents: read
