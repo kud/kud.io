@@ -12,6 +12,7 @@ hasDocs: true
 - **Config-driven** — declare the tabs you care about in `~/.config/foxhop/tabs.json`; nothing is hardcoded and the file is editable by hand, by the CLI, or from Raycast
 - **Smart matching** — match tabs by hostname, prefix, exact URL, or full search; choose the recent, first, or pinned tab when several match
 - **Opens if missing** — focuses the existing tab when it is already open, or opens it at the configured URL when it is not
+- **Containers** — a target can live in a Firefox container, and `foxhop open <url> --container <name>` opens any URL in one
 - **Two Raycast surfaces** — a manage-and-focus extension for searching, adding, and editing targets, plus generated per-tab hotkey scripts via `foxhop sync`
 
 ## Install
@@ -36,6 +37,7 @@ Targets live in `~/.config/foxhop/tabs.json`. Add one with `foxhop add` or by ed
 $ foxhop focus chatgpt          # focus a saved target (foregrounds Firefox)
 $ foxhop list                   # list saved targets   (--json for machine output)
 $ foxhop tabs                   # list currently open Firefox tabs   (--json)
+$ foxhop open https://example.com --container Personal   # open a URL in a Firefox container
 $ foxhop add https://mail.google.com --title Gmail   # id: gmail (slug of the title)
 $ foxhop edit gmail --url https://mail.google.com/mail/u/1   # change fields, never the id
 $ foxhop remove gmail

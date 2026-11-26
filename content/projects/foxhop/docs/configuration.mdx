@@ -36,6 +36,7 @@ description: The tabs.json target format.
 | `navigate` | let `foxhop focus <name> --url <url>` repoint the matching tab (default `false`) |
 | `into`     | CSS selector `foxhop paste` fills when no `--into` is given                      |
 | `from`     | CSS selector `foxhop read` prints when no `--from` is given                     |
+| `container` | Firefox container to look for the tab in and open the URL in (by name)         |
 
 ## Navigating a matching tab
 
@@ -49,6 +50,24 @@ foxhop focus chatgpt --url https://chatgpt.com/c/abc123
 - The URL must be `http(s)` and must itself satisfy the target's `match`. Anything else is refused and no tab is touched, so a ChatGPT target can never repoint an unrelated tab. This also means `navigate` does nothing useful with `strategy: "exact"`.
 - If nothing matches, the URL opens in a new tab.
 - Focusing from the extension popup never navigates.
+
+## Containers
+
+Give a target a `container` and foxhop keeps it inside that [Firefox container](https://support.mozilla.org/kb/containers): focusing looks only at tabs in that container, and opens the URL there when none matches. `paste` and `read` follow the same rule.
+
+```sh
+foxhop add https://shop.example.com --title Shop --container Shopping
+foxhop edit shop --container ""        # back to the default container
+foxhop open https://example.com --container Personal   # ad-hoc: a new tab in that container
+foxhop focus shop --container Personal # override the saved container for one call
+foxhop focus shop --container ""       # the default container, for this call only
+```
+
+- The name is matched ignoring case. The container must already exist: an unknown name fails with the list of the ones that do (`unknown container "Shoping" (available: Personal, Shopping)`), and foxhop never creates one.
+- The extension needs the `contextualIdentities` and `cookies` permissions for this, so Firefox asks you to accept them when it updates. Installing an extension with `contextualIdentities` turns containers on in Firefox, so the Containers tab in Firefox's settings appears even if you never used them.
+- If containers are turned off anyway, a target that names one fails instead of opening in the default container.
+- Firefox keeps containers out of private windows: a container tab opens in a normal window, and fails with a clear message when only private windows are open.
+- An extension older than this feature cannot honour a container, so foxhop checks first and stops with "update it; nothing was opened" rather than acting in the default container.
 
 > [!WARNING]
 > Navigation replaces the page in that tab. There is no guard for an unsent draft or a half-filled form, which is one reason the option is off by default.

@@ -9,6 +9,7 @@ Targets live in `~/.config/foxhop/tabs.json` (see [Configuration](/projects/foxh
 foxhop focus chatgpt          # focus a saved target (foregrounds Firefox)
 foxhop focus chatgpt --url https://chatgpt.com/c/abc   # repoint its tab there, if the target has navigate: true
 foxhop focus --match figma.com --url https://figma.com   # ad-hoc, no config entry
+foxhop open https://example.com --container Personal   # a new tab in a Firefox container
 foxhop list                   # saved targets (--json for machine output)
 foxhop tabs                   # currently open Firefox tabs (--json)
 foxhop add https://mail.google.com --title Gmail   # id: gmail (slug of the title)
