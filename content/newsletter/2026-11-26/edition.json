@@ -1,0 +1,418 @@
+{
+  "schema": 1,
+  "date": "2026-11-26",
+  "generatedAt": "2026-11-26T18:37:00.000+00:00",
+  "publishedAt": "2026-11-26T18:39:18Z",
+  "languages": [
+    "fr",
+    "en"
+  ],
+  "lede": {
+    "fr": "Ce soir, on part en Espagne, où des législatives anticipées se jouent dimanche sur une question qui touche chaque foyer : le logement. Ensuite, une injection contre le VIH vendue 40 dollars par an qui arrive en Afrique, un parc new-yorkais surélevé pour arrêter la mer, et la question de la conscience des IA posée par un grand philosophe. On explique aussi pourquoi les tourbières asséchées réchauffent encore la planète, avant deux trouvailles, dont trois navigateurs qui tournent dans un seul onglet.",
+    "en": "Tonight, we head to Spain, where a snap general election on Sunday turns on a question that reaches every household: housing. Then an HIV prevention jab costing $40 a year arrives in Africa, a New York park raised to hold back the sea, and a great philosopher’s answer on whether AI can be conscious. We also explain why drained peatlands are still warming the planet, before two finds, including three browsers running in a single tab."
+  },
+  "readingMinutes": {
+    "fr": 13,
+    "en": 12
+  },
+  "wordCount": {
+    "fr": 2629,
+    "en": 2473
+  },
+  "narrative": {
+    "overview": {
+      "fr": "Ce soir, on part en Espagne, où des législatives anticipées se jouent dimanche sur une question qui touche chaque foyer : le logement. Ensuite, une injection contre le VIH vendue 40 dollars par an qui arrive en Afrique, un parc new-yorkais surélevé pour arrêter la mer, et la question de la conscience des IA posée par un grand philosophe. On explique aussi pourquoi les tourbières asséchées réchauffent encore la planète, avant deux trouvailles, dont trois navigateurs qui tournent dans un seul onglet.",
+      "en": "Tonight, we head to Spain, where a snap general election on Sunday turns on a question that reaches every household: housing. Then an HIV prevention jab costing $40 a year arrives in Africa, a New York park raised to hold back the sea, and a great philosopher’s answer on whether AI can be conscious. We also explain why drained peatlands are still warming the planet, before two finds, including three browsers running in a single tab."
+    },
+    "analysis": null,
+    "closing": {
+      "fr": "Bonne soirée, et à demain.",
+      "en": "Have a good evening, and see you tomorrow."
+    }
+  },
+  "sections": [
+    {
+      "key": "overview",
+      "kind": "narrative",
+      "title": {
+        "fr": "Ce soir",
+        "en": "Tonight"
+      },
+      "items": []
+    },
+    {
+      "key": "depth",
+      "kind": "items",
+      "title": {
+        "fr": "Le sujet du jour",
+        "en": "Today’s focus"
+      },
+      "items": [
+        "01"
+      ]
+    },
+    {
+      "key": "brief",
+      "kind": "items",
+      "title": {
+        "fr": "L’essentiel",
+        "en": "The essentials"
+      },
+      "items": [
+        "02",
+        "03",
+        "04",
+        "05"
+      ]
+    },
+    {
+      "key": "explainer",
+      "kind": "items",
+      "title": {
+        "fr": "C’est quoi ?",
+        "en": "Explainer"
+      },
+      "items": [
+        "06"
+      ]
+    },
+    {
+      "key": "techsci",
+      "kind": "items",
+      "title": {
+        "fr": "Technologie & science",
+        "en": "Technology & science"
+      },
+      "items": [
+        "07"
+      ]
+    },
+    {
+      "key": "inbrief",
+      "kind": "bullets",
+      "title": {
+        "fr": "En bref",
+        "en": "In brief"
+      },
+      "items": []
+    },
+    {
+      "key": "finds",
+      "kind": "items",
+      "title": {
+        "fr": "Ça vaut un clic",
+        "en": "Worth a click"
+      },
+      "items": [
+        "08",
+        "09"
+      ]
+    },
+    {
+      "key": "closing",
+      "kind": "narrative",
+      "title": {
+        "fr": "Pour finir",
+        "en": "To close"
+      },
+      "items": []
+    }
+  ],
+  "items": [
+    {
+      "id": "01",
+      "section": "depth",
+      "kicker": {
+        "fr": "ESPAGNE",
+        "en": "SPAIN"
+      },
+      "title": {
+        "fr": "Législatives anticipées : le logement, l’enjeu qui a fait tomber le calendrier",
+        "en": "A snap election, and the housing crisis that forced it"
+      },
+      "summary": {
+        "fr": "Les Espagnols votent dimanche 29 novembre, huit mois avant l’échéance prévue. Le Premier ministre socialiste Pedro Sánchez, au pouvoir depuis 2018, a dissous le Parlement le 5 octobre, trois jours après que le Congrès des députés a rejeté deux décrets renforçant la protection des locataires, avec les voix du Parti populaire (PP, droite), de Vox (extrême droite) et de Junts, le parti indépendantiste catalan de Carles Puigdemont. Il parie que la crise du logement lui donne l’avantage. Les sondages disent plutôt l’inverse.",
+        "en": "Spaniards vote on Sunday 29 November, eight months ahead of schedule. The Socialist prime minister, Pedro Sánchez, in power since 2018, dissolved parliament on 5 October, three days after the Congress of Deputies rejected two decrees strengthening tenants’ protections, with the votes of the People’s Party (PP, centre right), Vox (far right) and Junts, Carles Puigdemont’s Catalan pro-independence party. He is betting that the housing crisis works in his favour. The polls suggest otherwise."
+      },
+      "sources": [
+        {
+          "url": "https://theconversation.com/le-nouveau-quitte-ou-double-de-pedro-sanchez-les-elections-generales-espagnoles-anticipees-au-29-novembre-2026-297308",
+          "label": {
+            "fr": "The Conversation France",
+            "en": "The Conversation France"
+          }
+        },
+        {
+          "url": "https://www.france24.com/en/europe/20261126-how-far-right-vox-winning-over-young-voters-ahead-spain-snap-election",
+          "label": {
+            "fr": "France 24",
+            "en": "France 24"
+          }
+        },
+        {
+          "url": "https://www.aljazeera.com/news/2026/11/26/andalusia-offers-a-glimpse-of-spains-future-as-the-far-right-gains-ground",
+          "label": {
+            "fr": "Al Jazeera",
+            "en": "Al Jazeera"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "section": "brief",
+      "kicker": {
+        "fr": "SANTÉ",
+        "en": "HEALTH"
+      },
+      "title": {
+        "fr": "L’injection anti-VIH générique arrive en Afrique, à 40 dollars par an",
+        "en": "The generic HIV prevention jab reaches Africa, at $40 a year"
+      },
+      "summary": {
+        "fr": "Les premières doses génériques de lénacapavir, une injection qui protège du VIH pendant six mois, sont arrivées mercredi 25 novembre en Zambie ; l’Ouganda doit être livré dans les prochains jours et le Zimbabwe début 2027, a annoncé le Fonds mondial de lutte contre le sida, la tuberculose et le paludisme, qui finance ces achats. Le lénacapavir s’attaque à la coque protéique qui enveloppe le virus et l’empêche de se multiplier. C’est une prophylaxie pré-exposition (PrEP) : un traitement pris avant tout contact avec le virus pour éviter l’infection. Dans un essai mené en 2024 en Ouganda et en Afrique du Sud auprès de plus de 5 000 adolescentes et jeunes femmes, aucune de celles qui ont reçu l’injection n’a été infectée, rappelle la BBC ; l’Organisation mondiale de la santé (OMS) le recommande depuis juillet 2025. Le prix change l’échelle : la version originale du laboratoire américain Gilead coûte environ 28 000 dollars par an aux États-Unis, la version générique devrait coûter environ 40 dollars, selon la BBC. Selon le Fonds mondial, plus de 189 000 personnes ont déjà reçu une première dose dans dix pays, 24 pays devraient être approvisionnés d’ici la fin de l’année, et l’objectif, fixé avec le gouvernement américain, est d’atteindre au moins 3 millions de personnes d’ici fin 2028. Deux injections par an évitent la prise quotidienne d’un comprimé, une contrainte parfois stigmatisante. L’enjeu reste le financement : ce déploiement intervient alors que les coupes dans l’aide américaine menacent la prévention du VIH dans des pays qui en dépendent largement.",
+        "en": "The first generic doses of lenacapavir, an injection that protects against HIV for six months, arrived in Zambia on Wednesday 25 November; Uganda is due to receive supplies in the coming days and Zimbabwe in early 2027, according to the Global Fund to Fight AIDS, Tuberculosis and Malaria, which is paying for them. Lenacapavir targets the protein shell around the virus and stops it multiplying. It is a form of pre-exposure prophylaxis (PrEP): medication taken before any contact with the virus to prevent infection. In a 2024 trial in Uganda and South Africa involving more than 5,000 adolescent girls and young women, none of those who received the injection was infected, the BBC notes; the World Health Organization (WHO) has recommended it since July 2025. The price changes the scale: Gilead’s original version costs about $28,000 a year in the United States, while the generic is expected to cost about $40, according to the BBC. According to the Global Fund, more than 189,000 people in ten countries have already had a first dose, 24 countries should have supplies by the end of the year, and the goal, shared with the US government, is to reach at least 3 million people by the end of 2028. Two injections a year spare people a daily pill, which can carry a stigma. Funding remains the question: the rollout comes as cuts to US foreign aid threaten HIV prevention in countries that rely heavily on it."
+      },
+      "sources": [
+        {
+          "url": "https://www.theglobalfund.org/en/news/2026/2026-11-25-first-deliveries-generic-lenacapavir-hiv-prevention-arrive/",
+          "label": {
+            "fr": "Fonds mondial",
+            "en": "The Global Fund"
+          }
+        },
+        {
+          "url": "https://www.bbc.co.uk/news/articles/cmly7jve72r2o",
+          "label": {
+            "fr": "BBC News",
+            "en": "BBC News"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "section": "brief",
+      "kicker": {
+        "fr": "URBANISME",
+        "en": "CITIES"
+      },
+      "title": {
+        "fr": "À Manhattan, un parc surélevé de trois mètres contre la mer",
+        "en": "In Manhattan, a park raised three metres against the sea"
+      },
+      "summary": {
+        "fr": "Sur la rive est de Manhattan, entre la 25e rue et Montgomery Street, la ville de New York achève un vaste chantier d’adaptation au climat : l’East Side Coastal Resiliency, un projet de 1,45 milliard de dollars. Plutôt que de bâtir une simple digue devant l’East River Park, la ville a surélevé des parties du parc de 2,4 à 3 mètres, au-dessus d’un mur de béton de 60 centimètres d’épaisseur, complété par des talus et des portes anti-crue mobiles. L’ouvrage est conçu pour résister à une montée des eaux d’environ 5 mètres au-dessus du niveau de la mer, plus une marge de 60 centimètres, et doit protéger environ 110 000 habitants. « Si l’eau monte, elle s’arrêtera sur les marches : le parc est désormais trop haut pour être inondé », résume un responsable du service municipal de la construction, cité par Inside Climate News. Le chantier, lancé en 2020, doit se terminer en 2027. Il a un coût visible : l’abattage d’arbres matures, contesté depuis la reconception du projet en 2018, la perte d’accès au parc pendant les travaux et la démolition de la maison du bateau-pompe, qui abritait un centre d’écologie. Environ 600 des 2 000 nouveaux arbres prévus ont été plantés. Des habitants estiment qu’on aurait pu obtenir la même protection sans détruire le parc ; la ville reconnaît ne pas avoir assez expliqué l’ampleur des abattages. C’est un cas d’école : protéger une ville contre la mer passe parfois par sacrifier, pour un temps, ce qui la rend vivable.",
+        "en": "On Manhattan’s east side, between 25th Street and Montgomery Street, New York City is finishing a major climate-adaptation project: the East Side Coastal Resiliency project, costing $1.45bn. Rather than build a plain sea wall in front of East River Park, the city raised parts of the park by 8 to 10 feet (2.4 to 3 metres), above a concrete wall 2 feet (60 centimetres) thick, backed by berms and movable floodgates. It is designed to withstand water about 16.5 feet (5 metres) above sea level, plus a 2-foot margin, and should protect around 110,000 residents. “If the water rises, it will go on the steps; the park is now too high to be flooded,” an official at the city’s Department of Design and Construction told Inside Climate News. Work began in 2020 and is due to finish in 2027. The cost is visible: the felling of mature trees, contested since the project’s 2018 redesign, the loss of access to the park during the works and the demolition of the fireboat house, home to an ecology centre. About 600 of a planned 2,000 new trees have been planted. Some residents argue the same protection could have been had without destroying the park; the city admits it did not explain the scale of the tree removal well enough. It is a textbook case: protecting a city from the sea sometimes means sacrificing, for a while, what makes it liveable."
+      },
+      "sources": [
+        {
+          "url": "https://insideclimatenews.org/news/26112026/manhattan-east-river-park-flood-resiliency/",
+          "label": {
+            "fr": "Inside Climate News",
+            "en": "Inside Climate News"
+          }
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "section": "brief",
+      "kicker": {
+        "fr": "JEU VIDÉO",
+        "en": "GAMES"
+      },
+      "title": {
+        "fr": "Chez Rockstar, les salariés rejettent la reconnaissance du syndicat",
+        "en": "Rockstar staff vote down union recognition"
+      },
+      "summary": {
+        "fr": "Les salariés de Rockstar Games, le studio de Grand Theft Auto VI, ont rejeté un accord de reconnaissance syndicale : seuls 25 % des votes étaient favorables, selon The Verge. Le scrutin, organisé du 12 au 26 novembre en pleine sortie du jeu, portait sur l’IWGB (Independent Workers Union of Great Britain), un syndicat britannique. Une victoire aurait créé un cadre de négociation collective sur les salaires, les heures supplémentaires, les primes, les congés et les retraites, et un droit d’être consulté sur l’usage de l’IA et les licenciements. Sans elle, Rockstar n’a aucune obligation de rencontrer les représentants du syndicat. Le contexte pèse : le studio a licencié l’an dernier 31 membres de l’IWGB, ce que le syndicat a qualifié de cas de répression syndicale le plus flagrant de l’histoire du secteur ; l’affaire est devant un tribunal du travail britannique, qui n’a pas encore statué. Le syndicat dit que des centaines de salariés ont voté pour lui et qu’il continuera de s’organiser. La direction, citée par Bloomberg, y voit le soutien de l’équipe à des « relations directes ». Les salariés syndiqués pourront toujours faire pression, mais de manière informelle.",
+        "en": "Staff at Rockstar Games, the studio behind Grand Theft Auto VI, have rejected a union recognition agreement, with only 25% of votes in favour, according to The Verge. The vote, held from 12 to 26 November as the game launched, concerned the IWGB (Independent Workers Union of Great Britain), a British union. A win would have set up a framework for collective bargaining on pay, overtime, bonuses, leave and pensions, and a right to be consulted on the use of AI and on lay-offs. Without it, Rockstar has no obligation to meet union representatives. The background matters: last year the studio fired 31 IWGB members, which the union called the most blatant case of union-busting in the industry’s history; the case is before a UK employment tribunal, which has yet to rule. The union says hundreds of staff voted for it and that it will keep organising. Rockstar’s management, quoted by Bloomberg, sees the result as the team’s support for “direct relationships”. Unionised staff can still push for change, but only informally."
+      },
+      "sources": [
+        {
+          "url": "https://www.theverge.com/games/1043169/rockstar-games-union-vote-iwgb",
+          "label": {
+            "fr": "The Verge",
+            "en": "The Verge"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "section": "brief",
+      "kicker": {
+        "fr": "PHILOSOPHIE",
+        "en": "PHILOSOPHY"
+      },
+      "title": {
+        "fr": "Une IA peut-elle être consciente ? Thomas Nagel répond non",
+        "en": "Can an AI be conscious? Thomas Nagel says no"
+      },
+      "summary": {
+        "fr": "Thomas Nagel, auteur en 1974 d’un essai célèbre, « Quel effet cela fait-il d’être une chauve-souris ? », vient de recevoir le prix Berggruen de philosophie, doté d’un million de dollars. Dans un entretien au magazine Wired, il a jugé infondée l’idée que les IA actuelles soient conscientes, rapporte la MIT Technology Review. Ses arguments, selon cet article : produire du langage ne prouve pas qu’on ressent quoi que ce soit ; s’en tenir au traitement de l’information néglige la différence entre un cerveau biologique et des circuits de silicium ; reproduire ce que fait un cerveau n’est pas reproduire ce qu’il éprouve. La question n’est pas théorique pour Anthropic, qui mène depuis avril 2025 un programme de recherche sur le « bien-être des modèles », en soulignant qu’il n’existe aucun consensus scientifique sur la possibilité que des IA actuelles ou futures soient conscientes. Selon le San Francisco Standard, son document d’introduction en Bourse cite ce bien-être parmi les risques pour l’entreprise. Le débat est ouvert chez les philosophes : certains ont trouvé la certitude de Nagel déplacée, d’autres l’ont lue comme l’idée que le vivant est une condition de la conscience. Un doctorant de New York pose une objection simple : pourquoi supposerait-on conscient un modèle qui converse, et pas un modèle qui reconnaît des visages ou conduit une voiture ? Dans une enquête de 2020 auprès de 1 092 philosophes, 39 % s’attendaient à ce que certaines IA futures soient conscientes.",
+        "en": "Thomas Nagel, who in 1974 wrote a famous essay, “What Is It Like to Be a Bat?”, has just won the Berggruen Prize for philosophy, worth $1m. In an interview with Wired, he dismissed the idea that today’s AI systems are conscious, MIT Technology Review reports. His arguments, according to that piece: producing language does not show that anything is felt; looking only at information processing ignores the difference between a biological brain and silicon circuits; reproducing what a brain does is not reproducing what it experiences. The question is not academic for Anthropic, which since April 2025 has run a research programme on “model welfare”, noting that there is no scientific consensus on whether current or future AI systems could be conscious. According to the San Francisco Standard, its flotation prospectus lists model welfare among the risks to the business. Philosophers are divided: some found Nagel’s certainty misplaced, others read him as saying that being alive is a condition of consciousness. A New York doctoral student puts a simple objection: why would we assume a model that chats is conscious, but not one that recognises faces or drives a car? In a 2020 survey of 1,092 philosophers, 39% expected some future AI systems to be conscious."
+      },
+      "sources": [
+        {
+          "url": "https://www.technologyreview.com/2026/11/23/1149569/a-legendary-philosopher-isnt-buying-anthropics-consciousness-argument/",
+          "label": {
+            "fr": "MIT Technology Review",
+            "en": "MIT Technology Review"
+          }
+        },
+        {
+          "url": "https://www.anthropic.com/research/exploring-model-welfare",
+          "label": {
+            "fr": "Anthropic · Exploring model welfare",
+            "en": "Anthropic · Exploring model welfare"
+          }
+        },
+        {
+          "url": "https://sfstandard.com/2026/10/26/anthropic-ipo-risk-factors/",
+          "label": {
+            "fr": "The San Francisco Standard",
+            "en": "The San Francisco Standard"
+          }
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "section": "explainer",
+      "kicker": null,
+      "title": {
+        "fr": "Une tourbière drainée",
+        "en": "A drained peatland"
+      },
+      "summary": {
+        "fr": "Pourquoi c’est intéressant. Quand on parle de réchauffement, on pense aux énergies fossiles, et à juste titre. Une étude publiée dans Nature par une équipe du MIT mesure à l’échelle mondiale l’effet d’une pratique ancienne et discrète : l’assèchement des tourbières pour l’agriculture ou d’autres usages. Il représenterait 2,7 % (entre 1,8 et 3,6 %) du déséquilibre énergétique causé par l’humanité depuis l’ère industrielle, à partir de 0,4 à 0,5 % seulement des terres émergées.",
+        "en": "Why it matters. Talk of global warming turns to fossil fuels, and rightly so. A study published in Nature by an MIT-led team measures, at global scale, the effect of an old and quiet practice: draining peatlands for farming or other uses. It would account for 2.7% (between 1.8 and 3.6%) of the energy imbalance humanity has caused since the industrial era, from just 0.4 to 0.5% of the world’s land."
+      },
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-11339-0",
+          "label": {
+            "fr": "Nature · Yu et al., An enduring climatic burden from past peatland drainage",
+            "en": "Nature · Yu et al., An enduring climatic burden from past peatland drainage"
+          }
+        },
+        {
+          "url": "https://arstechnica.com/science/2026/11/draining-peatlands-is-responsible-for-a-few-percent-of-our-global-warming/",
+          "label": {
+            "fr": "Ars Technica",
+            "en": "Ars Technica"
+          }
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "section": "techsci",
+      "kicker": {
+        "fr": "LOGICIEL",
+        "en": "SOFTWARE"
+      },
+      "title": {
+        "fr": "Anthropic réécrit son API en Rust, avec l’IA pour faire la traduction",
+        "en": "Anthropic rewrites its API in Rust, with AI doing the translating"
+      },
+      "summary": {
+        "fr": "Anthropic a publié le 25 novembre le récit de la migration de son API Messages, la porte d’entrée par laquelle clients et applications de l’entreprise interrogent ses modèles Claude, de Python vers Rust, un langage compilé réputé pour ses performances et sa gestion sûre de la mémoire. Conçu en 2023 comme un simple relais, le service fait désormais la validation des requêtes, la construction des prompts, le découpage en jetons, le filtrage de sécurité et l’analyse des réponses, alors que le trafic a été multiplié par environ 1 800 depuis début 2024, selon l’entreprise. Une première tentative partielle, en mars, ne réécrivait que l’analyse des réponses : elle a réduit l’usage processeur de 8 à 10 %, mais chaque jeton traversait trois fois la frontière entre les deux langages. L’équipe a donc tout réécrit ; le trafic public est passé sur Rust en septembre. Selon le billet, Claude a produit une première version du cœur en une semaine environ ; le vrai travail a été de prouver que la nouvelle version se comportait exactement comme l’ancienne. Les quelque 700 tests d’intégration étaient trop liés à Python, et un audit a trouvé plus de 100 assertions affaiblies lors du portage. La méthode retenue : faire tourner Rust « dans l’ombre » sur le trafic réel, en rejouant la même réponse du modèle dans les deux versions, et en ne comparant que la position et la longueur des écarts, sans lire le contenu des requêtes. En avril, Rust passait 98 % des tests mais ne reproduisait qu’environ un quart des entrées réelles ; la concordance atteignait 99,6 % en août. Anthropic annonce environ 70 % de processeur en moins par requête dans une région, plus de 80 % de mémoire en moins et un délai médian avant le premier jeton réduit d’environ 20 % sur un échantillon plus étroit. Le billet souligne aussi une limite : un agent a proposé un raccourci qui satisfaisait le test sans être correct, et un ingénieur l’a rejeté. Ces chiffres sont ceux de l’entreprise, sans mesure indépendante.",
+        "en": "On 25 November, Anthropic published an account of moving its Messages API, the gateway through which customers and the company’s own apps reach its Claude models, from Python to Rust, a compiled language known for speed and safe memory handling. Built in 2023 as a simple relay, the service now validates requests, builds prompts, splits text into tokens, runs safety screening and parses responses, while traffic has grown roughly 1,800-fold since early 2024, the company says. A first, partial attempt in March rewrote only the response parsing: it cut CPU use by 8 to 10%, but every token crossed the boundary between the two languages three times. So the team rewrote the lot; public traffic moved to Rust in September. According to the post, Claude produced a first version of the core in about a week; the real work was proving the new version behaved exactly like the old one. The 700 or so integration tests were too tied to Python, and an audit found more than 100 assertions weakened in the port. The method: run Rust “in the shadow” of real traffic, replaying the same model output through both versions, and comparing only where and by how much they differed, without reading the content of requests. In April, Rust passed 98% of the tests but matched only about a quarter of real inputs; agreement reached 99.6% by August. Anthropic reports about 70% less CPU per request in one region, more than 80% less memory, and median time to first token down about 20% on a narrower sample. The post also flags a limit: an agent proposed a shortcut that satisfied the check without being correct, and an engineer rejected it. These are the company’s figures, not independent measurements."
+      },
+      "sources": [
+        {
+          "url": "https://www.anthropic.com/research/migrating-api-to-rust",
+          "label": {
+            "fr": "Anthropic · Migrating our Messages API to Rust",
+            "en": "Anthropic · Migrating our Messages API to Rust"
+          }
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Trois navigateurs dans un onglet",
+        "en": "Three browsers, one tab"
+      },
+      "summary": {
+        "fr": "Side by Side ouvre une même adresse dans Firefox, Chromium et Epiphany, c’est-à-dire les trois grands moteurs de rendu du Web (Gecko, Blink et WebKit), chacun dans sa propre machine virtuelle Linux qui tourne dans votre onglet. L’astuce : un noyau Linux compilé en WebAssembly, qui exécute les vrais navigateurs téléchargés depuis les dépôts de la distribution NixOS, sans serveur ni installation. On clique et on fait défiler dans chaque panneau comme dans un vrai navigateur, on peut ajouter NetSurf ou basculer en format mobile, et l’adresse de la page conserve toute la comparaison pour la partager. Limites honnêtes : il faut un ordinateur avec au moins 8 Go de mémoire, le premier lancement prend une à trois minutes, et le trafic passe par un relais public qui voit quels sites sont visités.",
+        "en": "Side by Side opens the same address in Firefox, Chromium and Epiphany, which is to say the web’s three main rendering engines (Gecko, Blink and WebKit), each in its own Linux virtual machine running inside your tab. The trick is a Linux kernel compiled to WebAssembly, running the real browsers downloaded from the NixOS distribution’s package cache, with no server and nothing to install. You can click and scroll in each pane as in a real browser, add NetSurf or switch to a phone-sized view, and the page address keeps the whole comparison so you can share it. The honest limits: you need a computer with at least 8 GB of memory, the first launch takes one to three minutes, and traffic goes through a public relay that can see which sites are visited."
+      },
+      "sources": [
+        {
+          "url": "https://michidk.github.io/sidebyside/",
+          "label": {
+            "fr": "Side by Side",
+            "en": "Side by Side"
+          }
+        },
+        {
+          "url": "https://github.com/michidk/sidebyside",
+          "label": {
+            "fr": "Side by Side · dépôt GitHub",
+            "en": "Side by Side · GitHub repository"
+          }
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Kierkegaard, ou l’amour qui rend libre",
+        "en": "Kierkegaard, and the love that sets you free"
+      },
+      "summary": {
+        "fr": "Comment distinguer l’amour d’une passion qui enferme ? Ross Channing Reed, professeur de philosophie à l’université des sciences et technologies du Missouri, relit Søren Kierkegaard. Dans Ou bien… ou bien… (1843), le philosophe danois oppose l’amour « esthétique », celui dans lequel on « tombe » et qui fait de l’autre le remède à son propre vide, à l’amour « éthique », choisi, fondé sur la confiance et le respect, qu’il développe dans Les Œuvres de l’amour (1847). Son paradoxe : c’est l’engagement, pas l’élan, qui rend libre ; et « le plus grand bien qu’un être humain puisse faire à un autre, c’est de le rendre libre ». Une lecture claire d’un auteur difficile, même si l’article, nourri de l’expérience de conseil de l’auteur, glisse parfois vers le guide de vie.",
+        "en": "How do you tell love from a passion that traps you? Ross Channing Reed, who teaches philosophy at Missouri University of Science and Technology, rereads Søren Kierkegaard. In Either/Or (1843), the Danish philosopher contrasts “aesthetic” love, the kind you fall into, which turns the other person into a cure for your own emptiness, with “ethical” love, chosen and built on trust and respect, which he develops in Works of Love (1847). His paradox: it is commitment, not impulse, that sets you free, and the greatest good one person can do for another is to set them free. A clear reading of a difficult writer, though the piece, drawn from the author’s counselling work, sometimes drifts towards life advice."
+      },
+      "sources": [
+        {
+          "url": "https://theconversation.com/amour-veritable-ou-passion-obsessionnelle-kierkegaard-le-pere-de-lexistentialisme-nous-aide-a-faire-la-difference-297244",
+          "label": {
+            "fr": "The Conversation France",
+            "en": "The Conversation France"
+          }
+        }
+      ]
+    }
+  ],
+  "timeline": [],
+  "inBrief": [
+    {
+      "text": {
+        "fr": "Les États de la zone euro ont choisi l’Espagnol Pablo Hernández de Cos, 55 ans, directeur de la Banque des règlements internationaux et ancien gouverneur de la Banque d’Espagne, pour succéder à Christine Lagarde à la tête de la Banque centrale européenne (BCE) à son départ, le 7 février 2027 ; la nomination doit encore être formellement validée ([France 24](https://www.france24.com/fr/europe/20261126-pr%C3%A9sidence-bce-espagnol-pablo-hernandez-de-cos-succ%C3%A9dera-christine-lagarde)).",
+        "en": "Eurozone governments have chosen Spain’s Pablo Hernández de Cos, 55, general manager of the Bank for International Settlements and a former governor of the Bank of Spain, to succeed Christine Lagarde as head of the European Central Bank (ECB) when she leaves on 7 February 2027; the appointment still has to be formally confirmed ([France 24](https://www.france24.com/fr/europe/20261126-pr%C3%A9sidence-bce-espagnol-pablo-hernandez-de-cos-succ%C3%A9dera-christine-lagarde))."
+      },
+      "urls": [
+        "https://www.france24.com/fr/europe/20261126-pr%C3%A9sidence-bce-espagnol-pablo-hernandez-de-cos-succ%C3%A9dera-christine-lagarde"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Le chef de la junte birmane devenu président, Min Aung Hlaing, a déclaré que la Birmanie ne se plierait pas aux exigences qu’elle juge « inappropriées » de l’arrêt de la Cour internationale de justice (CIJ) qui l’a reconnue responsable de génocide contre les Rohingyas, sans préciser lesquelles ([BBC News](https://www.bbc.co.uk/news/articles/c61wr87wyg5wo)).",
+        "en": "Myanmar’s coup leader turned president, Min Aung Hlaing, said the country would not comply with what it considers “inappropriate” requirements of the International Court of Justice (ICJ) ruling that found it responsible for genocide against the Rohingya, without saying which ([BBC News](https://www.bbc.co.uk/news/articles/c61wr87wyg5wo))."
+      },
+      "urls": [
+        "https://www.bbc.co.uk/news/articles/c61wr87wyg5wo"
+      ]
+    },
+    {
+      "text": {
+        "fr": "OpenAI propose depuis le 24 novembre, dans son API Responses, des configurations de modèles destinées aux questions cliniques qui, lorsqu’elles font une recherche web, interrogent un index dédié de sources médicales ([OpenAI · journal des modifications de l’API](https://developers.openai.com/api/docs/changelog)).",
+        "en": "Since 24 November, OpenAI has offered model configurations for clinical questions in its Responses API which, when they search the web, query a dedicated index of medical sources ([OpenAI · API changelog](https://developers.openai.com/api/docs/changelog))."
+      },
+      "urls": [
+        "https://developers.openai.com/api/docs/changelog"
+      ]
+    }
+  ]
+}
