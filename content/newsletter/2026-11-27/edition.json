@@ -1,0 +1,596 @@
+{
+  "schema": 1,
+  "date": "2026-11-27",
+  "generatedAt": "2026-11-27T18:45:00.000+00:00",
+  "publishedAt": "2026-11-27T18:42:56Z",
+  "languages": [
+    "fr",
+    "en"
+  ],
+  "lede": {
+    "fr": "Ce soir, on prend le temps de lire l'arrêt par lequel la Cour suprême du Canada a validé, à quelques mots près, la loi québécoise sur la laïcité de l'État — et surtout ce qu'il dit du pouvoir des parlements de mettre les droits fondamentaux de côté. Ensuite : le budget européen qui cale à douze heures de négociation, le rapport des experts du Smic et une autre manière de compter les responsabilités climatiques. On explique ce qu'est la matière noire ultralégère, on regarde d'un œil prudent les protéines dessinées par les modèles d'OpenAI, et cinq trouvailles vous attendent, du compteur qui affiche zéro à Windows 98 dans un onglet.",
+    "en": "Tonight we take our time over the ruling in which Canada's Supreme Court upheld Quebec's state secularism law almost word for word — and, more interestingly, what it says about a parliament's power to set fundamental rights aside. Then: the EU budget that stalled after twelve hours of talks, the French minimum-wage experts' report, and another way of counting climate responsibility. We explain what ultralight dark matter is, read OpenAI's protein-design claims with a careful eye, and leave you five finds, from a counter stuck on zero to Windows 98 in a browser tab."
+  },
+  "readingMinutes": {
+    "fr": 16,
+    "en": 15
+  },
+  "wordCount": {
+    "fr": 3226,
+    "en": 3023
+  },
+  "narrative": {
+    "overview": {
+      "fr": "Ce soir, on prend le temps de lire l'arrêt par lequel la Cour suprême du Canada a validé, à quelques mots près, la loi québécoise sur la laïcité de l'État — et surtout ce qu'il dit du pouvoir des parlements de mettre les droits fondamentaux de côté. Ensuite : le budget européen qui cale à douze heures de négociation, le rapport des experts du Smic et une autre manière de compter les responsabilités climatiques. On explique ce qu'est la matière noire ultralégère, on regarde d'un œil prudent les protéines dessinées par les modèles d'OpenAI, et cinq trouvailles vous attendent, du compteur qui affiche zéro à Windows 98 dans un onglet.",
+      "en": "Tonight we take our time over the ruling in which Canada's Supreme Court upheld Quebec's state secularism law almost word for word — and, more interestingly, what it says about a parliament's power to set fundamental rights aside. Then: the EU budget that stalled after twelve hours of talks, the French minimum-wage experts' report, and another way of counting climate responsibility. We explain what ultralight dark matter is, read OpenAI's protein-design claims with a careful eye, and leave you five finds, from a counter stuck on zero to Windows 98 in a browser tab."
+    },
+    "analysis": null,
+    "closing": {
+      "fr": "Bonne soirée, et à demain.",
+      "en": "Have a good evening, and see you tomorrow."
+    }
+  },
+  "sections": [
+    {
+      "key": "overview",
+      "kind": "narrative",
+      "title": {
+        "fr": "Ce soir",
+        "en": "Tonight"
+      },
+      "items": []
+    },
+    {
+      "key": "depth",
+      "kind": "items",
+      "title": {
+        "fr": "Le sujet du jour",
+        "en": "Today’s focus"
+      },
+      "items": [
+        "01"
+      ]
+    },
+    {
+      "key": "brief",
+      "kind": "items",
+      "title": {
+        "fr": "L’essentiel",
+        "en": "The essentials"
+      },
+      "items": [
+        "02",
+        "03",
+        "04"
+      ]
+    },
+    {
+      "key": "explainer",
+      "kind": "items",
+      "title": {
+        "fr": "C’est quoi ?",
+        "en": "Explainer"
+      },
+      "items": [
+        "05"
+      ]
+    },
+    {
+      "key": "techsci",
+      "kind": "items",
+      "title": {
+        "fr": "Technologie & science",
+        "en": "Technology & science"
+      },
+      "items": [
+        "06"
+      ]
+    },
+    {
+      "key": "timeline",
+      "kind": "bullets",
+      "title": {
+        "fr": "Chronologie",
+        "en": "Timeline"
+      },
+      "items": []
+    },
+    {
+      "key": "inbrief",
+      "kind": "bullets",
+      "title": {
+        "fr": "En bref",
+        "en": "In brief"
+      },
+      "items": []
+    },
+    {
+      "key": "finds",
+      "kind": "items",
+      "title": {
+        "fr": "Ça vaut un clic",
+        "en": "Worth a click"
+      },
+      "items": [
+        "07",
+        "08",
+        "09",
+        "10",
+        "11"
+      ]
+    },
+    {
+      "key": "watch",
+      "kind": "items",
+      "title": {
+        "fr": "À surveiller",
+        "en": "Watch next"
+      },
+      "items": [
+        "12",
+        "13"
+      ]
+    },
+    {
+      "key": "closing",
+      "kind": "narrative",
+      "title": {
+        "fr": "Pour finir",
+        "en": "To close"
+      },
+      "items": []
+    }
+  ],
+  "items": [
+    {
+      "id": "01",
+      "section": "depth",
+      "kicker": {
+        "fr": "LAÏCITÉ",
+        "en": "SECULARISM"
+      },
+      "title": {
+        "fr": "La Cour suprême du Canada valide la loi 21, et dit quand même qu'elle discrimine",
+        "en": "Canada's top court upholds Bill 21 — and still says it discriminates"
+      },
+      "summary": {
+        "fr": "La Cour suprême du Canada a confirmé vendredi 27 novembre la validité de la Loi sur la laïcité de l'État, la « loi 21 » adoptée par l'Assemblée nationale du Québec en juin 2019, qui interdit le port de signes religieux aux employés de l'État en position d'autorité : enseignants, juges, policiers, procureurs. Dans un jugement de 532 pages (English Montreal School Board c. Québec (Procureur général), 2026 CSC 41), le tribunal déclare la loi « valide et opérante », à une exception près : l'article 8, qui impose d'exercer ses fonctions à visage découvert, est inopérant à l'égard des députés de l'Assemblée nationale, parce qu'il les empêcherait de siéger — une conclusion aujourd'hui plus théorique que pratique, aucun élu québécois ne portant de couvre-visage. Les appelants, au premier rang desquels la commission scolaire anglophone English Montreal, ne peuvent plus faire appel.",
+        "en": "The Supreme Court of Canada on Friday 27 November confirmed the validity of the Act respecting the laicity of the State, the law known as Bill 21, passed by Quebec's National Assembly in June 2019, which bars public employees in positions of authority — teachers, judges, police officers, prosecutors — from wearing religious symbols at work. In a 532-page judgment (English Montreal School Board v. Quebec (Attorney General), 2026 SCC 41), the court declares the law \"valid and operative\" with one exception: section 8, which requires officials to perform their duties with their faces uncovered, is of no force or effect as it applies to members of the National Assembly, because it would prevent them from sitting — a conclusion more theoretical than practical today, since no sitting Quebec legislator wears a face covering. The appellants, chief among them the English Montreal School Board, have no further appeal."
+      },
+      "sources": [
+        {
+          "url": "https://www.scc-csc.ca/judgments-jugements/cb/2026/41231/",
+          "label": {
+            "fr": "Cour suprême du Canada · Cause en bref 41231",
+            "en": "Supreme Court of Canada · Case in Brief 41231"
+          }
+        },
+        {
+          "url": "https://decisions.scc-csc.ca/scc-csc/scc-csc/en/item/21777/index.do",
+          "label": {
+            "fr": "Cour suprême du Canada · motifs, 2026 CSC 41",
+            "en": "Supreme Court of Canada · reasons, 2026 SCC 41"
+          }
+        },
+        {
+          "url": "https://ici.radio-canada.ca/article/info/2303429/loi-21-cour-supreme-jugement",
+          "label": {
+            "fr": "Radio-Canada",
+            "en": "Radio-Canada"
+          }
+        },
+        {
+          "url": "https://www.bbc.co.uk/news/articles/cq3dgpy9lem3o",
+          "label": {
+            "fr": "BBC News",
+            "en": "BBC News"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "section": "brief",
+      "kicker": {
+        "fr": "UNION EUROPÉENNE",
+        "en": "EUROPEAN UNION"
+      },
+      "title": {
+        "fr": "Douze heures de sommet, et toujours pas de budget pour 2028-2034",
+        "en": "Twelve hours of summitry, and still no budget for 2028-34"
+      },
+      "summary": {
+        "fr": "Les Vingt-Sept ont quitté Bruxelles jeudi soir sans accord sur le cadre financier pluriannuel 2028-2034, après douze heures de discussions dont quatre pays — dont le Danemark et l'Autriche — sont sortis en cours de route. La proposition sur la table ramène le budget à 1 582 milliards d'euros, dont 140 milliards pour rembourser l'emprunt commun de la pandémie, soit environ 220 à 230 milliards de moins que les presque 2 000 milliards proposés par la Commission européenne. Ce n'est pas assez pour l'Allemagne et les contributeurs nets qui financent près de 40 % du budget et veulent concentrer la dépense sur la défense, la compétitivité et l'innovation ; c'est trop pour la France, l'Italie et les « amis de la cohésion », Emmanuel Macron jugeant qu'abaisser la dépense de long terme serait une « erreur stratégique ». Le second blocage porte sur un prêt supplémentaire de 45 milliards d'euros à l'Ukraine, partagé entre soutien civil et militaire, auquel s'opposent la Slovaquie, la Tchéquie et la Hongrie ; la Bulgarie a accepté d'en financer la part non militaire. Le chancelier Friedrich Merz a conditionné le budget à un accord à vingt-sept — « l'Union européenne compte 27 États membres, pas 23 ou 24 » — et constaté « un nouveau mouvement » vers une enveloppe réduite, « mais nous n'y sommes pas encore ». Chaque pays dispose d'un veto, et la date compte : un accord avant la fin de l'année est la condition pour que les textes d'application soient adoptés en 2027 et que l'argent arrive aux bénéficiaires en janvier 2028.",
+        "en": "The 27 leaders left Brussels on Thursday night without agreement on the multiannual financial framework for 2028-34, after twelve hours of talks from which four countries — Denmark and Austria among them — walked out partway through. The proposal on the table brings the budget down to €1.582tn, including €140bn to repay pandemic-era joint borrowing, roughly €220bn to €230bn below the nearly €2tn the European Commission had proposed. That is not enough for Germany and the net contributors who fund almost 40% of the budget and want spending concentrated on defence, competitiveness and innovation; it is too much for France, Italy and the \"friends of cohesion\", with Emmanuel Macron calling any reduction in long-term spending a \"strategic mistake\". The second blockage is an extra €45bn loan to Ukraine, split between non-military and military support, opposed by Slovakia, the Czech Republic and Hungary; Bulgaria has agreed to fund the non-military part. Chancellor Friedrich Merz made the budget conditional on a deal among all 27 — \"The European Union comprises of 27 member states, not 23 or 24\" — and saw \"new movement\" towards a smaller envelope, though \"we are not there yet\". Every country holds a veto, and the calendar matters: a deal before the year is out is what would allow the implementing legislation to pass in 2027 and the money to reach beneficiaries in January 2028."
+      },
+      "sources": [
+        {
+          "url": "https://www.bbc.co.uk/news/articles/cw4gnm3m9deno",
+          "label": {
+            "fr": "BBC News",
+            "en": "BBC News"
+          }
+        },
+        {
+          "url": "https://www.cnbc.com/2026/11/27/eu-budget-2028-2034-deadlock.html",
+          "label": {
+            "fr": "CNBC",
+            "en": "CNBC"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "section": "brief",
+      "kicker": {
+        "fr": "SALAIRES",
+        "en": "WAGES"
+      },
+      "title": {
+        "fr": "Les experts du Smic s'inquiètent de la « smicardisation » du pays",
+        "en": "France's minimum-wage experts warn against a country of minimum earners"
+      },
+      "summary": {
+        "fr": "Le groupe d'experts sur le Smic, consulté chaque année avant la revalorisation du salaire minimum, a rendu vendredi un rapport qui reste opposé au « coup de pouce » décidé par le gouvernement — le premier depuis juillet 2012 — quatre jours avant son entrée en vigueur. Selon le rapport, cité par l'AFP, « si un coup de pouce au Smic peut constituer une réponse politique à une préoccupation légitime de pouvoir d'achat, les analyses documentées dans ce rapport ne permettent pas d'en recommander un à cette fin ». La hausse du 1er décembre est de 1,6 %, dont 1 % au titre de l'inflation et 0,6 % de coup de pouce ; au total, le Smic aura progressé de 5,3 % en 2026, contre « à peine 2 % » pour les autres salaires, ce qui, écrivent les experts, « pourrait contribuer à accentuer la compression de la distribution des salaires ». Les ordres de grandeur avancés sont lourds et portent surtout sur la fiscalité : prolonger le gel du barème des allègements de cotisations au niveau du salaire minimum, comme le prévoit le projet de budget pour 2027, coûterait selon eux 110 000 emplois par an, et environ 125 000 équivalents temps plein en y ajoutant la hausse du Smic. Les emplois proches du salaire minimum se concentrent dans les entreprises de moins de 50 salariés, où 61 % des postes sont rémunérés sous 1,05 Smic, et dans l'hébergement-restauration, le commerce et les services de soutien. Le groupe recommande de recentrer les allègements généraux de cotisations sur les salaires allant jusqu'à 2 Smic, contre 3 aujourd'hui, avec un supplément pour les moins de 25 ans — leur taux de chômage atteint 21 %, contre 8,2 % pour l'ensemble des actifs — et de réviser la formule de revalorisation automatique pour y intégrer l'inflation prévue et l'évolution des salaires supérieurs au Smic. Ce sont des recommandations : le gouvernement décide, par décret.",
+        "en": "The expert group on the Smic, France's statutory minimum wage, consulted every year before the wage is uprated, delivered a report on Friday that remains opposed to the government's discretionary rise — the first since July 2012 — four days before it takes effect. According to the report, as reported by the news agency AFP, \"while a discretionary rise in the Smic may be a political answer to a legitimate concern about purchasing power, the analyses documented in this report do not support recommending one for that purpose\". The 1 December increase is 1.6%, of which 1% covers inflation and 0.6% is discretionary; across 2026 the Smic will have risen 5.3% in all, against \"barely 2%\" for other wages, which the experts say \"could further compress the distribution of wages\". The magnitudes they put forward are large, and mostly concern tax: extending the freeze on the scale of employer social-contribution reliefs at minimum-wage level, as the government's 2027 budget bill envisages, would in their estimate cost 110,000 jobs a year, or about 125,000 full-time equivalents once the Smic rise is added. Jobs near the minimum wage are concentrated in firms with fewer than 50 employees, where 61% of posts pay below 1.05 times the Smic, and in hospitality, retail and support services. The group recommends refocusing the general contribution reliefs on wages up to twice the Smic, down from three times today, with an extra allowance for workers under 25 — whose unemployment rate is 21%, against 8.2% for the workforce as a whole — and revising the automatic uprating formula to take in forecast inflation and the movement of wages above the minimum. These are recommendations: the government decides, by decree."
+      },
+      "sources": [
+        {
+          "url": "https://www.moneyvox.fr/votre-argent/actualites/111471/salaire-minimum-le-groupe-experts-oppose-au-coup-de-pouce-sur-le-smic",
+          "label": {
+            "fr": "MoneyVox · dépêche AFP",
+            "en": "MoneyVox · AFP report"
+          }
+        },
+        {
+          "url": "https://www.tresor.economie.gouv.fr/Ressources/3636_rapport-du-groupe-dexperts-smic",
+          "label": {
+            "fr": "Direction générale du Trésor · rapports du groupe d'experts",
+            "en": "Directorate General of the Treasury · expert group reports"
+          }
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "section": "brief",
+      "kicker": {
+        "fr": "CLIMAT",
+        "en": "CLIMATE"
+      },
+      "title": {
+        "fr": "Et si on comptait le CO₂ là où il sort du sol ?",
+        "en": "What if CO₂ were counted where it comes out of the ground?"
+      },
+      "summary": {
+        "fr": "Une analyse publiée le 17 novembre par Carbon Brief réattribue les émissions historiques de CO₂ au pays qui a extrait le charbon, le pétrole ou le gaz, et non à celui qui l'a brûlé. Sur la période 1850-2025, à partir d'un jeu de données de Robbie Andrew, chercheur au centre climatique norvégien CICERO, le classement bouge nettement : la Russie, l'Arabie saoudite et l'Australie apparaissent comme les premiers exportateurs de CO₂ de tous les temps. La Russie se voit créditer 69 milliards de tonnes supplémentaires au titre des combustibles exportés ; les émissions cumulées de l'Arabie saoudite plus que quadruplent, ce qui la place au cinquième rang des contributeurs au réchauffement ; la part de l'Australie double, la faisant entrer dans les dix premiers. Les États-Unis et la Chine restent en tête, mais ont été importateurs nets depuis 1850 ; l'Allemagne, l'Inde, la France et la Turquie reculent, et le Japon passe du sixième rang territorial au trente-quatrième. Par habitant, ce sont Brunei, le Koweït, le Qatar, la Norvège et Trinité-et-Tobago qui dominent. L'exercice n'est pas une comptabilité officielle et son auteur le dit : le jeu de données est une version provisoire, et la responsabilité est « conjointe entre extracteurs, producteurs et consommateurs ». Son intérêt est ailleurs : il rend visible le côté de l'offre, celui dont les négociations climatiques parlent le moins.",
+        "en": "An analysis published on 17 November by Carbon Brief reassigns historical CO₂ emissions to the country that extracted the coal, oil or gas rather than the one that burned it. Over 1850 to 2025, using a dataset from Robbie Andrew, a senior researcher at the Norwegian climate institute CICERO, the league table shifts markedly: Russia, Saudi Arabia and Australia emerge as the largest CO₂ exporters of all time. Russia is credited with an extra 69 billion tonnes from exported fuels; Saudi Arabia's cumulative total more than quadruples, making it the fifth-largest contributor to warming; Australia's share more than doubles, putting it in the top ten. The United States and China still lead overall, but both have been net importers since 1850; Germany, India, France and Turkey slide down, and Japan falls from sixth on a territorial basis to 34th. Per head, the leaders are Brunei, Kuwait, Qatar, Norway and Trinidad and Tobago. This is not official accounting, and its author says so: the dataset is a draft release, and responsibility is \"joint responsibility between extractors, producers and consumers\". Its value lies elsewhere — it makes the supply side visible, the side climate negotiations talk about least."
+      },
+      "sources": [
+        {
+          "url": "https://www.carbonbrief.org/revealed-russia-saudi-arabia-and-australia-are-largest-co2-exporters-of-all-time",
+          "label": {
+            "fr": "Carbon Brief",
+            "en": "Carbon Brief"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "section": "explainer",
+      "kicker": null,
+      "title": {
+        "fr": "La matière noire ultralégère",
+        "en": "Ultralight dark matter"
+      },
+      "summary": {
+        "fr": "Pourquoi on en parle. Plus de 90 % du contenu en matière et en énergie de l'Univers nous est inconnu — « c'est un peu embarrassant », reconnaît l'astrophysicien Atsushi Taruya, de l'université de Kyoto. Faute de détecter les particules massives longtemps privilégiées (les WIMP, pour « weakly interacting massive particles », des particules lourdes à interaction faible), les physiciens multiplient depuis quelques années des expériences d'un autre genre, décrites le 25 novembre par Quanta Magazine, pour traquer des candidats à l'autre extrémité de l'échelle des masses.",
+        "en": "Why it's in the news. More than 90% of the universe's matter and energy is unaccounted for — \"that's a bit embarrassing\", as the astrophysicist Atsushi Taruya, of Kyoto University, puts it. With the heavy particles long favoured by the field still undetected (WIMPs, or weakly interacting massive particles), physicists have been building a different kind of experiment, surveyed on 25 November by Quanta Magazine, to hunt candidates at the opposite end of the mass scale."
+      },
+      "sources": [
+        {
+          "url": "https://www.quantamagazine.org/novel-experiments-expand-the-hunt-for-ultralight-dark-matter-20261125/",
+          "label": {
+            "fr": "Quanta Magazine",
+            "en": "Quanta Magazine"
+          }
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "section": "techsci",
+      "kicker": {
+        "fr": "IA & BIOLOGIE",
+        "en": "AI & BIOLOGY"
+      },
+      "title": {
+        "fr": "OpenAI dit que ses modèles généralistes dessinent des protéines : ce que montrent les chiffres",
+        "en": "OpenAI says its general models design proteins. Read the numbers"
+      },
+      "summary": {
+        "fr": "OpenAI a publié le 24 novembre un billet et une préimpression soutenant que la famille GPT-6 possède une capacité « intrinsèque » de conception de protéines : dessiner des squelettes et des séquences par le raisonnement et des outils de code généralistes, sans modèle biologique spécialisé pour produire les candidats. L'entreprise affirme qu'un modèle interne de recherche égale ou dépasse des modèles spécialisés sur une partie de quatorze tâches, et que les consignes se donnent en langage naturel (site d'accroche, classe structurale, nombre d'hélices). Les chiffres publiés méritent d'être lus de près, parce qu'ils sont à la fois réels et modestes : sur 322 mini-liants testés en laboratoire avec la société partenaire Onava contre cinq cibles, 35 se lient effectivement, soit 10,9 % — l'entreprise note elle-même que l'étude de référence RFdiffusion rapportait de meilleurs taux. En redessinant des séquences sur des structures connues, les succès vont de 85 % (75 sur 88 pour MDM2) à 14 % (8 sur 59 pour PD-1) ; sur trente tâches du jeu d'épreuve MotifBench, le modèle interne annonce 43,7 % de réussite contre 27,8 % pour RFdiffusion, mais ce résultat est présenté comme préliminaire et purement informatique. Surtout, les candidats ont été filtrés par des modèles spécialisés (Boltz-2, OpenDDE, ESMFold2) : la conception de bout en bout sans modèle dédié n'est donc pas établie, la prédiction de structure à partir de la séquence reste loin derrière les prédicteurs spécialisés, certains scores pourraient refléter de la mémorisation, et se lier à une cible n'est qu'une étape — la spécificité, la stabilité, l'activité et l'innocuité n'ont pas été testées. C'est la revendication d'un fournisseur, documentée, avec ses limites écrites noir sur blanc.",
+        "en": "OpenAI published a post and a preprint on 24 November arguing that the GPT-6 family has an \"intrinsic\" protein-design capability: designing protein backbones and sequences through reasoning and general-purpose coding tools, with no specialised biology model generating the designs. The company says an internal research model matches or beats specialised models on a number of fourteen tasks, and that designs can be steered in plain language (attachment site, structural class, number of helices). The published figures repay a close reading, because they are both real and modest: of 322 minibinders tested in the lab with its partner Onava against five targets, 35 actually bound, a 10.9% hit rate — and OpenAI itself notes that the reference RFdiffusion study reported higher rates. Redesigning sequences on known structures, success ranges from 85% (75 of 88 for MDM2) down to 14% (8 of 59 for PD-1); on thirty tasks from the MotifBench suite the internal model claims 43.7% success against 27.8% for RFdiffusion, though that result is presented as preliminary and purely computational. Above all, candidates were filtered using specialised models (Boltz-2, OpenDDE, ESMFold2), so end-to-end design without a dedicated model is not established; predicting structure from sequence remains well behind specialised predictors; some benchmark scores may reflect memorisation; and binding to a target is only one step — specificity, stability, activity and safety were not tested. This is a vendor's claim, documented, with its limits written down."
+      },
+      "sources": [
+        {
+          "url": "https://openai.com/index/gpt-6-models-demonstrate-intrinsic-protein-design-capabilities",
+          "label": {
+            "fr": "OpenAI",
+            "en": "OpenAI"
+          }
+        },
+        {
+          "url": "https://cdn.openai.com/pdf/gpt-6-a-universal-foundation-model-for-protein-biology.pdf",
+          "label": {
+            "fr": "OpenAI · préimpression (PDF)",
+            "en": "OpenAI · preprint (PDF)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Zéro, et pas « presque une »",
+        "en": "Zero, and not \"almost one\""
+      },
+      "summary": {
+        "fr": "Un site d'une seule page tient un compteur : le nombre de maladies guéries par l'intelligence artificielle. Il affiche zéro, et précise « Zéro. Pas \"presque une\" ». Ses critères sont explicites et stricts : l'IA doit avoir trouvé la cible et la molécule, un régulateur doit avoir approuvé le traitement, et les patients doivent être guéris, la maladie éliminée ou durablement inversée. Lire des radiographies, prédire des structures de protéines ou accélérer le travail de laboratoire ne compte pas. La page liste honnêtement les candidats les plus proches — le rentosertib d'Insilico Medicine en phase III depuis septembre 2026, le zasocitinib de Takeda et Nimbus, attendu au premier trimestre 2027 devant la FDA, l'agence américaine du médicament, Isomorphic Labs encore en préclinique — et les met en regard des promesses publiques des dirigeants du secteur. L'auteur n'est pas nommé et le compteur est une capture statique, pas un suivi en direct : à lire comme un argument, pas comme un registre officiel. Un bon contrepoids à l'article précédent.",
+        "en": "A one-page site keeps a counter: the number of diseases cured by artificial intelligence. It reads zero, and spells it out — \"Zero. Not 'almost one.'\" Its criteria are explicit and strict: the AI must have found both the target and the molecule, a regulator must have approved the therapy, and patients must be cured, the disease eliminated or durably reversed. Reading scans, predicting protein structures or speeding up lab work does not count. The page honestly lists the nearest candidates — Insilico Medicine's rentosertib, in phase III since September 2026; Takeda and Nimbus's zasocitinib, with a decision due in the first quarter of 2027 from the FDA, the US drug regulator; Isomorphic Labs, still pre-clinical — and sets them against the public predictions of the industry's leaders. Its author is not named and the counter is a static snapshot rather than a live feed, so read it as an argument, not an official register. A useful counterweight to the story above."
+      },
+      "sources": [
+        {
+          "url": "https://diseasescuredbyai.com/",
+          "label": {
+            "fr": "Number of Diseases Cured by AI",
+            "en": "Number of Diseases Cured by AI"
+          }
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Windows 98 dans un onglet",
+        "en": "Windows 98 in a browser tab"
+      },
+      "summary": {
+        "fr": "Pas une image disque, pas un portage : un interpréteur x86 et une réimplémentation de l'API Win32 écrits directement en WebAssembly, sur lesquels tournent les vrais exécutables, non modifiés. On y retrouve le Pinball 3D Space Cadet, SkiFree, le Démineur, Paint, Winamp, des jeux DirectDraw et Direct3D et même des programmes Windows 3.1 en 16 bits. Le code est publié sous licence MIT, rien n'est installé et, selon la page, rien ne quitte le navigateur : réglages et scores restent en stockage local. Sur téléphone, les jeux qui réclament des touches reçoivent des commandes à l'écran. La prouesse technique est le vrai plaisir, la nostalgie n'étant qu'un bonus.",
+        "en": "No disk image, no source port: an x86 interpreter and a reimplementation of the Win32 API, written directly in WebAssembly, on which the original unmodified executables run. You will find 3D Pinball Space Cadet, SkiFree, Minesweeper, Paint, Winamp, DirectDraw and Direct3D games, and even 16-bit Windows 3.1 programs. The code is published under the MIT licence, nothing is installed and, the page says, nothing leaves the browser: settings and scores stay in local storage. On a phone, games that need keys get on-screen controls. The engineering is the real pleasure here; the nostalgia is a bonus."
+      },
+      "sources": [
+        {
+          "url": "https://berrry.wine/",
+          "label": {
+            "fr": "Berrry Wine",
+            "en": "Berrry Wine"
+          }
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Qui parle, et de qui l'on dit du mal",
+        "en": "Who does the talking, and who gets criticised"
+      },
+      "summary": {
+        "fr": "Un site français compte, jour après jour, qui parle sur les plateaux de treize chaînes et radios, et ce qui s'y dit des courants politiques. Sur les trente derniers jours, 1 850 émissions dépouillées : les animateurs et chroniqueurs occupent 59 % du temps de parole — de 31 % sur France 5 à 78 % sur RMC — contre 12 % pour les personnes rattachées à un mouvement politique. Le site distingue le temps parlé du « temps d'écoute », pondéré par l'audience de la tranche horaire, et compte aussi les jugements : l'extrême gauche reçoit 46 critiques de fond pour 100 phrases la nommant, et 70 sur CNews, contre 27 pour l'ensemble des courants. L'approche se veut plus large que celle de l'Arcom, l'autorité de régulation de l'audiovisuel, qui ne compte que la parole des politiques. Le site n'indique pas qui l'édite ni comment la classification est faite, ce qui est la limite à garder en tête : c'est une mesure à discuter, pas un verdict.",
+        "en": "A French site counts, day by day, who speaks on the debate programmes of thirteen television and radio channels, and what is said there about the country's political currents. Over the past thirty days, 1,850 broadcasts were logged: presenters and columnists take 59% of the speaking time — from 31% on France 5 to 78% on RMC — against 12% for people tied to a political movement. The site separates raw speaking time from \"listening time\", weighted by each slot's audience, and also counts judgements: the far left draws 46 substantive criticisms per 100 sentences naming it, and 70 on CNews, against 27 for all currents combined. The approach is deliberately broader than that of Arcom, the French broadcasting regulator, which counts only politicians' airtime. The site does not say who publishes it or how its classification is done, which is the limit to keep in mind: this is a measurement to argue with, not a verdict."
+      },
+      "sources": [
+        {
+          "url": "https://tempsdeparole.org/",
+          "label": {
+            "fr": "Temps de parole",
+            "en": "Temps de parole"
+          }
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Copier une base SQLite sans la copier",
+        "en": "Copying a SQLite database without copying it"
+      },
+      "summary": {
+        "fr": "sqlite3_rsync fait pour une base de données ce que rsync fait pour un dossier : la réplique envoie des empreintes cryptographiques de ses pages, l'origine ne renvoie que celles qui diffèrent, ou demande des empreintes plus fines. Deux conséquences agréables : on peut copier un instantané vers une autre machine par SSH sans avoir d'abord à dupliquer la base localement — ce que l'API de sauvegarde et VACUUM INTO exigent, un problème réel sur une petite instance à moitié pleine — et resynchroniser ensuite une copie existante coûte « quelques pour cent au plus » de la taille de la base, sauf si les deux versions ont trop divergé. L'outil est arrivé en version expérimentale avec SQLite 3.47.0 en octobre 2024 et a été enrichi dans la 3.50.0 en mai 2025 ; Simon Willison raconte ne s'être avisé que cette semaine de sa propriété la plus séduisante.",
+        "en": "sqlite3_rsync does for a database what rsync does for a folder: the replica sends cryptographic hashes of its pages, the origin returns only the pages that differ, or asks for finer-grained hashes. Two pleasant consequences: you can copy a snapshot to another machine over SSH without first duplicating the database locally — which both the backup API and VACUUM INTO require, a real problem on a small instance already more than half full — and resynchronising an existing copy afterwards costs \"a few percent at most\" of the database's size, unless the two have drifted a long way apart. The tool arrived as experimental in SQLite 3.47.0 in October 2024 and was enhanced in 3.50.0 in May 2025; Simon Willison writes that he only grasped its most attractive characteristic this week."
+      },
+      "sources": [
+        {
+          "url": "https://www.sqlite.org/rsync.html",
+          "label": {
+            "fr": "SQLite · documentation de sqlite3_rsync",
+            "en": "SQLite · sqlite3_rsync documentation"
+          }
+        },
+        {
+          "url": "https://simonwillison.net/2026/Nov/26/sqlite3-rsync/",
+          "label": {
+            "fr": "Simon Willison",
+            "en": "Simon Willison"
+          }
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "L'auto-hébergement redevenu amusant",
+        "en": "Self-hosting, fun again"
+      },
+      "summary": {
+        "fr": "Jan-Lukas Else explique, le 26 novembre, pourquoi il a retrouvé le goût d'héberger ses propres services : l'IA n'a rien changé à ses raisons, seulement à l'effort nécessaire pour passer d'une idée à sa mise en œuvre. Son infrastructure vivant dans Git, un agent de code peut y travailler comme sur n'importe quel projet ; une image Debian sur mesure pour son serveur lui a pris une demi-journée, contre une semaine estimée sans assistance ; et pour un petit besoin, écrire son propre outil est souvent devenu plus simple que d'en adapter un. Ce qui rend le texte utile, c'est qu'il énumère ses propres objections : chaque service ajouté demande de l'entretien, du code produit par une IA peut receler bogues et failles, déléguer une modification ne dispense pas de la comprendre, et la facilité de construire ne dit rien de l'utilité de construire.",
+        "en": "Jan-Lukas Else explains, in a post dated 26 November, why he has rediscovered the pleasure of hosting his own services: AI has not changed why he likes it, only how much effort it takes to get from an idea to a working thing. With his infrastructure living in Git, a coding agent can work on it like any other software project; a bespoke Debian image for his server took him about half a day, against an estimated week without help; and for a small problem, writing his own tool has often become easier than adapting someone else's. What makes the piece worth reading is that he lists his own objections: every service added needs maintaining, AI-written code can carry bugs and security holes, delegating a change does not excuse him from understanding it, and the ease of building says nothing about whether a thing is worth building."
+      },
+      "sources": [
+        {
+          "url": "https://janlukas.blog/posts/ai-self-hosting",
+          "label": {
+            "fr": "Jan-Lukas Else",
+            "en": "Jan-Lukas Else"
+          }
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "Législatives en Espagne, dimanche 29 novembre",
+        "en": "Spain votes on Sunday 29 November"
+      },
+      "summary": {
+        "fr": "Le logement a dominé le dernier débat des chefs de parti avant le scrutin de dimanche, dont nous avions expliqué les ressorts hier.",
+        "en": "Housing dominated the final leaders' debate before Sunday's general election, whose roots we explained yesterday."
+      },
+      "sources": [
+        {
+          "url": "https://www.bbc.co.uk/news/articles/ckr5gr4g8gn5o",
+          "label": {
+            "fr": "BBC News",
+            "en": "BBC News"
+          }
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "Le budget européen, deuxième tentative",
+        "en": "The EU budget, take two"
+      },
+      "summary": {
+        "fr": "Les Vingt-Sept se retrouvent à la mi-décembre ; Emmanuel Macron a prévenu qu'il ne pourrait pas rouvrir la discussion après le 31 décembre, à cause de l'élection présidentielle française.",
+        "en": "The 27 reconvene in mid-December; Emmanuel Macron has warned that he cannot reopen the discussion after 31 December, because of the French presidential election."
+      },
+      "sources": [
+        {
+          "url": "https://www.cnbc.com/2026/11/27/eu-budget-2028-2034-deadlock.html",
+          "label": {
+            "fr": "CNBC",
+            "en": "CNBC"
+          }
+        }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "date": "2019-06-16",
+      "text": {
+        "fr": "L'Assemblée nationale du Québec adopte la Loi sur la laïcité de l'État en invoquant la [disposition de dérogation](https://www.scc-csc.ca/judgments-jugements/cb/2026/41231/).",
+        "en": "Quebec's National Assembly passes the Act respecting the laicity of the State, invoking the [notwithstanding clause](https://www.scc-csc.ca/judgments-jugements/cb/2026/41231/)."
+      },
+      "urls": [
+        "https://www.scc-csc.ca/judgments-jugements/cb/2026/41231/"
+      ]
+    },
+    {
+      "date": "2021-04-20",
+      "text": {
+        "fr": "La Cour supérieure maintient la loi mais suspend certains articles touchant les commissions scolaires anglophones et les élus ([Radio-Canada](https://ici.radio-canada.ca/article/info/2303429/loi-21-cour-supreme-jugement)).",
+        "en": "The Superior Court upholds the law but suspends some provisions affecting English school boards and elected members ([Radio-Canada](https://ici.radio-canada.ca/article/info/2303429/loi-21-cour-supreme-jugement))."
+      },
+      "urls": [
+        "https://ici.radio-canada.ca/article/info/2303429/loi-21-cour-supreme-jugement"
+      ]
+    },
+    {
+      "date": "2024-02-29",
+      "text": {
+        "fr": "La Cour d'appel du Québec infirme la partie scolaire et donne raison au gouvernement, sauf pour les élus ([Radio-Canada](https://ici.radio-canada.ca/article/info/2303429/loi-21-cour-supreme-jugement)).",
+        "en": "Quebec's Court of Appeal overturns the school-board part and sides with the government, except on elected members ([Radio-Canada](https://ici.radio-canada.ca/article/info/2303429/loi-21-cour-supreme-jugement))."
+      },
+      "urls": [
+        "https://ici.radio-canada.ca/article/info/2303429/loi-21-cour-supreme-jugement"
+      ]
+    },
+    {
+      "date": "2024-05-29",
+      "text": {
+        "fr": "L'Assemblée nationale renouvelle la dérogation pour cinq ans ([Cour suprême du Canada](https://www.scc-csc.ca/judgments-jugements/cb/2026/41231/)).",
+        "en": "The National Assembly renews the override for another five years ([Supreme Court of Canada](https://www.scc-csc.ca/judgments-jugements/cb/2026/41231/))."
+      },
+      "urls": [
+        "https://www.scc-csc.ca/judgments-jugements/cb/2026/41231/"
+      ]
+    },
+    {
+      "date": "2026-03-23",
+      "text": {
+        "fr": "Quatre jours d'audience devant la Cour suprême, avec 51 intervenants ([BBC News](https://www.bbc.co.uk/news/articles/cq3dgpy9lem3o)).",
+        "en": "Four days of hearings at the Supreme Court, with 51 interveners ([BBC News](https://www.bbc.co.uk/news/articles/cq3dgpy9lem3o))."
+      },
+      "urls": [
+        "https://www.bbc.co.uk/news/articles/cq3dgpy9lem3o"
+      ]
+    },
+    {
+      "date": "2026-11-27",
+      "text": {
+        "fr": "La Cour suprême valide la loi, sauf l'article 8 appliqué aux députés ([motifs, 2026 CSC 41](https://decisions.scc-csc.ca/scc-csc/scc-csc/en/item/21777/index.do)).",
+        "en": "The Supreme Court upholds the law, bar section 8 as applied to legislators ([reasons, 2026 SCC 41](https://decisions.scc-csc.ca/scc-csc/scc-csc/en/item/21777/index.do))."
+      },
+      "urls": [
+        "https://decisions.scc-csc.ca/scc-csc/scc-csc/en/item/21777/index.do"
+      ]
+    }
+  ],
+  "inBrief": [
+    {
+      "text": {
+        "fr": "Claude Code 2.1.332 permet désormais aux serveurs MCP — le Model Context Protocol, par lequel un assistant se branche sur des outils extérieurs — de fournir des _skills_, affichées sous la forme `serveur:skill`, et ajoute un point d'accroche capable de refuser les commandes shell qu'une skill veut exécuter ([notes de version](https://github.com/anthropics/claude-code/releases/tag/v2.1.332)).",
+        "en": "Claude Code 2.1.332 lets MCP servers — the Model Context Protocol, by which an assistant plugs into outside tools — supply skills, shown as `server:skill`, and adds a hook that can refuse the shell commands a skill wants to run ([release notes](https://github.com/anthropics/claude-code/releases/tag/v2.1.332))."
+      },
+      "urls": [
+        "https://github.com/anthropics/claude-code/releases/tag/v2.1.332"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Ollama 0.40.18 accélère l'inférence locale sur Metal et abandonne la prise en charge de Jetpack 5, ce qui casse les anciennes cartes Jetson ([notes de version](https://github.com/ollama/ollama/releases/tag/v0.40.18)).",
+        "en": "Ollama 0.40.18 speeds up local inference on Metal and drops Jetpack 5 support, which breaks older Jetson boards ([release notes](https://github.com/ollama/ollama/releases/tag/v0.40.18))."
+      },
+      "urls": [
+        "https://github.com/ollama/ollama/releases/tag/v0.40.18"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Le Venezuela va abroger la loi qui interdisait à des opposants d'exercer une fonction publique ([BBC News](https://www.bbc.co.uk/news/articles/c58j4pw9xjrlo)).",
+        "en": "Venezuela is to scrap the law that barred opposition figures from holding public office ([BBC News](https://www.bbc.co.uk/news/articles/c58j4pw9xjrlo))."
+      },
+      "urls": [
+        "https://www.bbc.co.uk/news/articles/c58j4pw9xjrlo"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Les militaires au pouvoir en Guinée-Bissau repoussent à 2028 le retour à un régime civil ([BBC News](https://www.bbc.co.uk/news/articles/cm879e5yxjq5o)).",
+        "en": "Guinea-Bissau's military rulers have pushed the return to civilian rule back to 2028 ([BBC News](https://www.bbc.co.uk/news/articles/cm879e5yxjq5o))."
+      },
+      "urls": [
+        "https://www.bbc.co.uk/news/articles/cm879e5yxjq5o"
+      ]
+    }
+  ]
+}
