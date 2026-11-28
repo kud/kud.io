@@ -1,16 +1,10 @@
+/* No palette of its own: the kit draws only on the tokens the page's Dusk
+   ground sets (app/warm.css), so a landing follows the theme picker in both
+   lights like every other project page. A dark palette declared here once
+   shadowed them, leaving near-white headings on the day ground. */
 .hero,
 .section,
 .ctaSection {
-  --bg: #08080f;
-  --surface: #0e0e1a;
-  --surface-2: #141428;
-  --border: #1e1e38;
-  --border-dim: #141428;
-  --primary: #c2703d;
-  --primary-light: #e0a87e;
-  --text: #e2e8f0;
-  --muted: #8892a4;
-  --prod: #34d399;
   --mono: var(--font-mono);
 }
 
@@ -25,12 +19,12 @@
   background:
     radial-gradient(
       ellipse 80% 50% at 50% -10%,
-      rgba(194, 112, 61, 0.18) 0%,
+      rgb(var(--glow, 194 112 61) / 0.18) 0%,
       transparent 70%
     ),
     radial-gradient(
       ellipse 60% 40% at 80% 60%,
-      rgba(79, 116, 236, 0.06) 0%,
+      rgb(var(--cool, 79 116 236) / 0.06) 0%,
       transparent 60%
     );
 }
@@ -82,8 +76,8 @@
   align-items: center;
   gap: 8px;
   padding: 5px 14px 5px 10px;
-  border: 1px solid rgba(194, 112, 61, 0.3);
-  background: rgba(194, 112, 61, 0.1);
+  border: 1px solid rgb(var(--glow, 194 112 61) / 0.3);
+  background: rgb(var(--glow, 194 112 61) / 0.1);
   border-radius: 100px;
   font-size: 12px;
   font-weight: 600;
@@ -105,10 +99,65 @@
   letter-spacing: -0.04em;
   line-height: 1.04;
   margin: 0 0 20px;
-  background: linear-gradient(135deg, #f1f5f9 0%, #e0a87e 60%, #c2703d 100%);
+  background: linear-gradient(
+    135deg,
+    var(--title-a, #f1f5f9) 0%,
+    var(--primary-light, #e0a87e) 60%,
+    var(--primary, #c2703d) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* The project's icon beside its name, as on the README landing's hero
+   (app/projects/[slug]/page.module.css .recordTitleRow): sized in em of the
+   title, so it scales with it. */
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+  font-size: clamp(40px, 7vw, 84px);
+  margin: 0 0 20px;
+}
+
+.titleRow .title {
+  font-size: inherit;
+  margin: 0;
+  /* Extend the gradient-clip box so descenders are not clipped. */
+  padding-bottom: 0.12em;
+}
+
+.titleIcon {
+  display: block;
+  flex: none;
+  width: 1em;
+  height: 1em;
+  /* Sit on the title's glyphs, not on its descender padding. */
+  margin-bottom: 0.12em;
+  border-radius: 27%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 22px -14px rgb(0 0 0 / 0.5);
+}
+
+.titleIcon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* A glyph on a transparent ground: no frame or shade, rounded corners kept. */
+.titleGlyph {
+  border: 0;
+  border-radius: 22%;
+  box-shadow: none;
+}
+
+.titleGlyph img {
+  object-fit: contain;
 }
 
 .tagline {
@@ -256,9 +305,7 @@
   border: 1px solid var(--border);
   border-radius: 14px;
   overflow: hidden;
-  box-shadow:
-    0 0 0 1px rgba(194, 112, 61, 0.08),
-    0 28px 60px -28px rgba(0, 0, 0, 0.85);
+  box-shadow: 0 28px 60px -32px rgb(var(--dk-shade, 0 0 0) / 0.5);
 }
 
 .terminalBar {
@@ -274,7 +321,7 @@
   width: 11px;
   height: 11px;
   border-radius: 50%;
-  background: #2a2a45;
+  background: var(--border);
 }
 
 .terminalLabel {
@@ -319,7 +366,7 @@
   font-family: var(--mono);
   font-size: 13.5px;
   line-height: 1.85;
-  color: #c7d2fe;
+  color: var(--text);
   white-space: pre;
   background: transparent;
 }
@@ -419,7 +466,7 @@
 }
 
 .exampleCommand code {
-  color: #c7d2fe;
+  color: var(--primary-light);
 }
 
 .exampleOutput code {

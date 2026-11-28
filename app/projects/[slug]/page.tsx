@@ -36,7 +36,7 @@ import demos from "@/content/projects/demos.json"
 import { getIcons, isTiledIcon } from "@/lib/icons"
 import { postsAboutProject } from "@/lib/post-project-links"
 import { ProjectPosts } from "@/components/project-posts"
-import { landingComponents } from "@/components/landing-kit"
+import { landingComponentsFor } from "@/components/landing-kit"
 import { getMDXComponents } from "@/components/mdx"
 import { getRelease, releaseAge, type Release } from "@/lib/release"
 import { ThemePicker } from "@/components/theme-picker"
@@ -727,7 +727,7 @@ const ProjectLanding = async ({
       ) : authored ? (
         <MDXRemote
           source={authored}
-          components={landingComponents}
+          components={landingComponentsFor({ icon })}
           options={{ parseFrontmatter: true }}
         />
       ) : (
