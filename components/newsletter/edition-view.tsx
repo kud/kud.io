@@ -19,6 +19,10 @@ import {
   type Lang,
 } from "@/lib/newsletter/language"
 import { headline } from "@/lib/newsletter/prompt"
+import { markdownHref } from "@/lib/newsletter/markdown"
+import { spokenHeading } from "@/lib/newsletter/speech"
+import { AskAi } from "@/components/newsletter/ask-ai"
+import { Listen } from "@/components/newsletter/listen"
 import { EditionBar } from "@/components/newsletter/edition-bar"
 import { LangSwitch } from "@/components/newsletter/lang-switch"
 import { Prose } from "@/components/newsletter/prose"
@@ -36,6 +40,11 @@ import { isEmailAdvertised } from "@/lib/newsletter/notify/config"
 import styles from "@/app/newsletter/newsletter.module.css"
 
 export const EDITION_ROOT_ID = "newsletter-edition"
+
+// The edition's text alone, for the device's own readers (Safari Reader and
+// Listen to Page, Spoken Content, Android's Listen to this page) and for the
+// page's Listen control: the bars, tools and footer sit outside it.
+export const EDITION_ARTICLE_ID = "newsletter-edition-text"
 
 const SITE = "https://kud.io"
 
@@ -89,7 +98,7 @@ export const EditionView = ({
       lang={lang}
       styles={styles}
     >
-      <article
+      <div
         id={EDITION_ROOT_ID}
         className={styles.edition}
         data-edition={edition.date}
@@ -97,198 +106,236 @@ export const EditionView = ({
         suppressHydrationWarning
       >
         <script dangerouslySetInnerHTML={{ __html: READER_SCRIPT }} />
-        <header className={styles.masthead}>
-          <EditionBar
-            date={edition.date}
-            dates={dates}
+        <EditionBar
+          date={edition.date}
+          dates={dates}
+          lang={lang}
+          styles={styles}
+        >
+          <Listen
             lang={lang}
+            articleId={EDITION_ARTICLE_ID}
+            className={styles.tool}
+          />
+          <AskAi date={edition.date} lang={lang} styles={styles} />
+          <ReaderPreferences
+            lang={lang}
+            rootId={EDITION_ROOT_ID}
             styles={styles}
-          >
-            <ReaderPreferences
-              lang={lang}
-              rootId={EDITION_ROOT_ID}
-              styles={styles}
-            />
-            <LangSwitch
-              to={otherLang(lang)}
-              page={page}
-              label={copy.switchTo}
-              short={copy.switchShort}
-              className={styles.langSwitch}
-            />
-          </EditionBar>
-          <p className={styles.kicker}>
-            {copy.name}
-            {latest && (
-              <span className={styles.kickerNote}> · {copy.latest}</span>
-            )}
-          </p>
-          <h1 className={styles.title}>
-            {capitalise(formatEditionDate(edition.date, lang))}
-          </h1>
-          {/* The pipeline's lede is the intro itself, which opens the body
-              below; repeat it here only if an edition ever has its own. */}
-          {edition.lede[lang] &&
-            edition.lede[lang] !== edition.narrative.overview[lang] && (
-              <p className={styles.lede}>{edition.lede[lang]}</p>
-            )}
-          <p className={styles.meta}>
-            {minutes ? <strong>{minutes} min</strong> : null}
-            {words ? (
-              <span>
-                {numberFormat.format(words)} {lang === "fr" ? "mots" : "words"}
-              </span>
-            ) : null}
-            <span>{copy.items(edition.items.length)}</span>
-            {at && <span>{at}</span>}
-          </p>
-          <nav
-            className={styles.contents}
-            aria-label={lang === "fr" ? "Sommaire" : "Contents"}
-          >
-            {sections.map((section) => (
-              <a key={section.key} href={`#section-${section.key}`}>
-                {section.title[lang]}
-              </a>
-            ))}
-          </nav>
-        </header>
+          />
+          <LangSwitch
+            to={otherLang(lang)}
+            page={page}
+            label={copy.switchTo}
+            short={copy.switchShort}
+            className={styles.langSwitch}
+          />
+        </EditionBar>
+        <p className={styles.researchHint}>{copy.researchHint}</p>
 
-        {sections.map((section) => (
-          <section
-            key={section.key}
-            id={`section-${section.key}`}
-            className={styles.section}
-            data-kind={section.kind}
-            aria-labelledby={`section-${section.key}-title`}
-          >
-            <h2
-              id={`section-${section.key}-title`}
-              className={
-                section.key === "closing" || section.key === "overview"
-                  ? styles.visuallyHidden
-                  : styles.sectionTitle
+        <article
+          id={EDITION_ARTICLE_ID}
+          className={styles.editionText}
+          lang={htmlLang[lang]}
+          aria-labelledby={`${EDITION_ARTICLE_ID}-title`}
+        >
+          <header className={styles.masthead}>
+            <p className={styles.kicker} data-listen="skip">
+              {copy.name}
+              {latest && (
+                <span className={styles.kickerNote}> · {copy.latest}</span>
+              )}
+            </p>
+            <h1
+              id={`${EDITION_ARTICLE_ID}-title`}
+              className={styles.title}
+              data-listen-text={
+                lang === "fr"
+                  ? `Newsletter du ${formatEditionDate(edition.date, lang)}`
+                  : `Newsletter, ${formatEditionDate(edition.date, lang)}`
               }
             >
-              {section.title[lang]}
-            </h2>
+              {capitalise(formatEditionDate(edition.date, lang))}
+            </h1>
+            {/* The pipeline's lede is the intro itself, which opens the body
+              below; repeat it here only if an edition ever has its own. */}
+            {edition.lede[lang] &&
+              edition.lede[lang] !== edition.narrative.overview[lang] && (
+                <p className={styles.lede}>{edition.lede[lang]}</p>
+              )}
+            <p className={styles.meta} data-listen="skip">
+              {minutes ? <strong>{minutes} min</strong> : null}
+              {words ? (
+                <span>
+                  {numberFormat.format(words)}{" "}
+                  {lang === "fr" ? "mots" : "words"}
+                </span>
+              ) : null}
+              <span>{copy.items(edition.items.length)}</span>
+              {at && <span>{at}</span>}
+            </p>
+            <nav
+              data-listen="skip"
+              className={styles.contents}
+              aria-label={lang === "fr" ? "Sommaire" : "Contents"}
+            >
+              {sections.map((section) => (
+                <a key={section.key} href={`#section-${section.key}`}>
+                  {section.title[lang]}
+                </a>
+              ))}
+            </nav>
+          </header>
 
-            {section.kind === "narrative" && (
-              <Prose
-                markdown={
-                  edition.narrative[
-                    section.key as "overview" | "analysis" | "closing"
-                  ]?.[lang] ?? ""
+          {sections.map((section) => (
+            <section
+              key={section.key}
+              id={`section-${section.key}`}
+              className={styles.section}
+              data-kind={section.kind}
+              aria-labelledby={`section-${section.key}-title`}
+            >
+              <h2
+                id={`section-${section.key}-title`}
+                className={
+                  section.key === "closing" || section.key === "overview"
+                    ? styles.visuallyHidden
+                    : styles.sectionTitle
                 }
-                citations
-                className={`${styles.prose} ${styles.narrative}`}
-                citationClassName={styles.citation}
-              />
-            )}
+                data-listen={
+                  section.key === "closing" || section.key === "overview"
+                    ? "skip"
+                    : undefined
+                }
+              >
+                {section.title[lang]}
+              </h2>
 
-            {section.key === "overview" && (
-              <p className={styles.researchHint}>{copy.researchHint}</p>
-            )}
+              {section.kind === "narrative" && (
+                <Prose
+                  markdown={
+                    edition.narrative[
+                      section.key as "overview" | "analysis" | "closing"
+                    ]?.[lang] ?? ""
+                  }
+                  citations
+                  className={`${styles.prose} ${styles.narrative}`}
+                  citationClassName={styles.citation}
+                />
+              )}
 
-            {section.key === "timeline" && (
-              <ol className={styles.timeline}>
-                {edition.timeline.map((entry) => (
-                  <li key={`${entry.date}-${entry.text.en}`}>
-                    <time dateTime={entry.date}>
-                      {formatEditionDate(entry.date, lang, "short")}{" "}
-                      {entry.date.slice(0, 4)}
-                    </time>
-                    <Prose markdown={entry.text[lang]} inline />
-                  </li>
-                ))}
-              </ol>
-            )}
+              {section.key === "timeline" && (
+                <ol className={styles.timeline}>
+                  {edition.timeline.map((entry) => (
+                    <li key={`${entry.date}-${entry.text.en}`}>
+                      <time dateTime={entry.date}>
+                        {formatEditionDate(entry.date, lang, "short")}{" "}
+                        {entry.date.slice(0, 4)}
+                      </time>
+                      <Prose markdown={entry.text[lang]} inline />
+                    </li>
+                  ))}
+                </ol>
+              )}
 
-            {section.key === "inbrief" && (
-              <ul className={styles.facts}>
-                {edition.inBrief.map((fact) => (
-                  <li key={fact.text.en}>
-                    <Prose markdown={fact.text[lang]} inline />
-                  </li>
-                ))}
-              </ul>
-            )}
+              {section.key === "inbrief" && (
+                <ul className={styles.facts}>
+                  {edition.inBrief.map((fact) => (
+                    <li key={fact.text.en}>
+                      <Prose markdown={fact.text[lang]} inline />
+                    </li>
+                  ))}
+                </ul>
+              )}
 
-            {section.kind === "items" && (
-              <div className={styles.items}>
-                {section.entries.map((item) => (
-                  <article
-                    key={item.id}
-                    id={itemAnchor(item.id)}
-                    data-item={item.id}
-                    className={styles.item}
-                    aria-labelledby={`${itemAnchor(item.id)}-title`}
-                  >
-                    <h3
-                      id={`${itemAnchor(item.id)}-title`}
-                      className={styles.itemTitle}
+              {section.kind === "items" && (
+                <div className={styles.items}>
+                  {section.entries.map((item) => (
+                    <section
+                      key={item.id}
+                      id={itemAnchor(item.id)}
+                      data-item={item.id}
+                      className={styles.item}
+                      aria-labelledby={`${itemAnchor(item.id)}-title`}
                     >
-                      <span className={styles.num}>{item.id}</span>
-                      <span className={styles.visuallyHidden}> · </span>
-                      {item.kicker?.[lang] && (
-                        <span className={styles.kickerLabel}>
-                          {item.kicker[lang]}
-                          <span className={styles.visuallyHidden}> · </span>
-                        </span>
-                      )}
-                      {item.kicker?.[lang] !== item.title[lang] && (
-                        <span className={styles.itemTitleText}>
-                          {item.title[lang]}
-                        </span>
-                      )}
-                    </h3>
-                    <div className={styles.itemTools}>
-                      <ShareItem
-                        href={newsletterHref({ date: edition.date }, lang, {
-                          hash: itemAnchor(item.id),
-                        })}
-                        lang={lang}
-                        title={headline(item, lang)}
-                        className={styles.share}
-                        hiddenClassName={styles.visuallyHidden}
-                      />
-                      <ItemSelect
-                        id={item.id}
-                        title={headline(item, lang)}
-                        lang={lang}
-                        className={styles.select}
-                        hiddenClassName={styles.visuallyHidden}
-                      />
-                    </div>
-                    <Prose
-                      markdown={
-                        edition.bodies[lang][item.id] || item.summary[lang]
-                      }
-                      className={styles.prose}
-                    />
-                    {item.sources.length > 0 && (
-                      <div className={styles.sources}>
-                        <p className={styles.sourcesLabel}>{copy.sources}</p>
-                        <ul>
-                          {item.sources.map((source) => (
-                            <li key={source.url}>
-                              <a href={source.url} target="_blank" rel="noreferrer">
-                                {source.label[lang]}
-                              </a>
-                              <span className={styles.host}>
-                                {hostOf(source.url)}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
+                      <h3
+                        id={`${itemAnchor(item.id)}-title`}
+                        className={styles.itemTitle}
+                        data-listen-text={spokenHeading(
+                          {
+                            id: item.id,
+                            kicker: item.kicker?.[lang],
+                            title: item.title[lang],
+                          },
+                          lang,
+                        )}
+                      >
+                        <span className={styles.num}>{item.id}</span>
+                        <span className={styles.visuallyHidden}> · </span>
+                        {item.kicker?.[lang] && (
+                          <span className={styles.kickerLabel}>
+                            {item.kicker[lang]}
+                            <span className={styles.visuallyHidden}> · </span>
+                          </span>
+                        )}
+                        {item.kicker?.[lang] !== item.title[lang] && (
+                          <span className={styles.itemTitleText}>
+                            {item.title[lang]}
+                          </span>
+                        )}
+                      </h3>
+                      <div className={styles.itemTools} data-listen="skip">
+                        <ShareItem
+                          href={newsletterHref({ date: edition.date }, lang, {
+                            hash: itemAnchor(item.id),
+                          })}
+                          lang={lang}
+                          title={headline(item, lang)}
+                          className={styles.share}
+                          hiddenClassName={styles.visuallyHidden}
+                        />
+                        <ItemSelect
+                          id={item.id}
+                          title={headline(item, lang)}
+                          lang={lang}
+                          className={styles.select}
+                          hiddenClassName={styles.visuallyHidden}
+                        />
                       </div>
-                    )}
-                  </article>
-                ))}
-              </div>
-            )}
-          </section>
-        ))}
+                      <Prose
+                        markdown={
+                          edition.bodies[lang][item.id] || item.summary[lang]
+                        }
+                        className={styles.prose}
+                      />
+                      {item.sources.length > 0 && (
+                        <div className={styles.sources} data-listen="skip">
+                          <p className={styles.sourcesLabel}>{copy.sources}</p>
+                          <ul>
+                            {item.sources.map((source) => (
+                              <li key={source.url}>
+                                <a
+                                  href={source.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  {source.label[lang]}
+                                </a>
+                                <span className={styles.host}>
+                                  {hostOf(source.url)}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </section>
+                  ))}
+                </div>
+              )}
+            </section>
+          ))}
+        </article>
 
         <footer className={styles.editionFooter}>
           <nav
@@ -321,7 +368,7 @@ export const EditionView = ({
           </p>
           {emailConfigured() && <Signup lang={lang} styles={styles} />}
         </footer>
-      </article>
+      </div>
     </SelectionProvider>
   )
 }
@@ -512,7 +559,20 @@ export const newsletterMetadata = ({
         "en-GB": href("en"),
         "x-default": newsletterPath(page),
       },
-      types: feeds(lang),
+      types: {
+        ...feeds(lang),
+        // The edition as Markdown, for language models (lib/newsletter/markdown.ts).
+        ...(page.date
+          ? {
+              "text/markdown": [
+                {
+                  url: markdownHref(page.date, lang),
+                  title: `${title} (Markdown)`,
+                },
+              ],
+            }
+          : {}),
+      },
     },
     openGraph: {
       type: edition ? "article" : "website",

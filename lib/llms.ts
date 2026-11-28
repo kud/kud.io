@@ -3,6 +3,9 @@ import { getProjects, type Project } from "@/lib/projects"
 import { getApp, appDisplayName, productUrl } from "@/lib/app"
 import { groupByCategory, isAppCategory } from "@/lib/categories"
 import { source } from "@/lib/source"
+import { getEditions } from "@/lib/newsletter/content"
+import { formatEditionDate, LANGS } from "@/lib/newsletter/language"
+import { markdownUrl } from "@/lib/newsletter/markdown"
 
 // The llms.txt proposal (https://llmstxt.org): an H1, a blockquote summary, a
 // little prose, then H2 sections of `- [name](url): notes` link lists, with
@@ -98,8 +101,28 @@ const docsLinks = (): LlmsLink[] =>
     }))
     .sort((a, b) => a.url.localeCompare(b.url))
 
+// The opening sentence of a lede: enough to tell one edition from another.
+const firstSentence = (text: string | null) =>
+  text?.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? text ?? null
+
+// Every edition, newest first, once per language, each pointing at its
+// Markdown (lib/newsletter/markdown.ts), which opens with reading notes for
+// a model.
+const newsletterLinks = async (): Promise<LlmsLink[]> =>
+  (await getEditions()).flatMap((edition) =>
+    LANGS.map((lang) => ({
+      name: `${formatEditionDate(edition.date, lang)} (${lang === "fr" ? "français" : "English"})`,
+      url: markdownUrl(edition.date, lang),
+      notes: firstSentence(edition.lede[lang]),
+    })),
+  )
+
 export const buildLlmsDocument = async (): Promise<LlmsDocument> => {
-  const [projects, posts] = await Promise.all([getProjects(), getAllPosts()])
+  const [projects, posts, editions] = await Promise.all([
+    getProjects(),
+    getAllPosts(),
+    newsletterLinks(),
+  ])
   const groups = groupByCategory(projects)
 
   const apps = groups
@@ -134,6 +157,7 @@ export const buildLlmsDocument = async (): Promise<LlmsDocument> => {
     details: [
       `[beansontoast.app](${APPS_HOME}) is the umbrella for Erwann's web apps; some still run on older addresses, so the Apps section links each one to wherever it runs today. Every other project links to its page on kud.io, which renders the repository's README and, where the project has them, multi-page docs under \`/projects/<slug>/docs\`. Source code lives on GitHub under [kud](https://github.com/kud).`,
       "Project pages and docs are synced from each repository, so the repository is the source of truth when the two disagree.",
+      "Each newsletter edition is also plain Markdown at its address plus `.md`, in French (`?lang=fr`) or English (`?lang=en`); the file opens with a short note on how to read it.",
     ],
     sections: [
       ...apps,
@@ -169,6 +193,7 @@ export const buildLlmsDocument = async (): Promise<LlmsDocument> => {
         ],
       },
       writing,
+      { title: "Newsletter editions", links: editions },
       ...catalogue,
     ],
     optional: [

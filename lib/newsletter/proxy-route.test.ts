@@ -40,16 +40,47 @@ describe("newsletter proxy", () => {
   })
 
   it("serves French from the plain route", () => {
-    assert.deepEqual(proxyRoute("/newsletter/2026/11/18", "fr"), { next: true })
+    assert.deepEqual(proxyRoute("/newsletter/2026/11/18", "fr"), {
+      next: true,
+    })
   })
 
   it("sends a direct visit to the English twin to the public address", () => {
     for (const lang of ["fr", "en"] as const)
       assert.deepEqual(proxyRoute("/newsletter/en/2026/11/18", lang), {
         redirect: "/newsletter/2026/11/18",
+        lang: "en",
       })
     assert.deepEqual(proxyRoute("/newsletter/en", "fr"), {
       redirect: "/newsletter",
+      lang: "en",
+    })
+  })
+
+  it("runs on an edition's .md address and the internal Markdown tree", () => {
+    assert.ok(proxied("/newsletter/2026/11/18.md"))
+    assert.ok(proxied("/newsletter/md/fr/2026-11-18"))
+    assert.ok(!proxied("/newsletter/2026/11/18.txt"))
+    assert.ok(!proxied("/newsletter/2026/11/1.md"))
+  })
+
+  it("rewrites an edition's .md onto its Markdown in the reader's language", () => {
+    assert.deepEqual(proxyRoute("/newsletter/2026/11/18.md", "fr"), {
+      rewrite: "/newsletter/md/fr/2026-11-18",
+    })
+    assert.deepEqual(proxyRoute("/newsletter/2026/11/18.md", "en"), {
+      rewrite: "/newsletter/md/en/2026-11-18",
+    })
+  })
+
+  it("sends a direct visit to the Markdown tree to the public .md address", () => {
+    assert.deepEqual(proxyRoute("/newsletter/md/fr/2026-11-18", "en"), {
+      redirect: "/newsletter/2026/11/18.md",
+      lang: "fr",
+    })
+    assert.deepEqual(proxyRoute("/newsletter/md/xx", "fr"), {
+      redirect: "/newsletter/editions",
+      lang: "fr",
     })
   })
 })
