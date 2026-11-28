@@ -61,11 +61,36 @@ jobs:
           }
           comms_list() { sed 's/^• /- /' <<<"$1"; }
           comms run_url "$run_url"
-          comms title "${GITHUB_REPOSITORY} · ${GITHUB_WORKFLOW}"
-          comms alert_closing "$(printf '✓ **%s** · %s recovered\n[View run](%s)' \
-            "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$run_url")"
-          comms warning_closing "$(printf '✓ **%s** · %s warnings cleared\n[View run](%s)' \
-            "$GITHUB_REPOSITORY" "$GITHUB_WORKFLOW" "$run_url")"
+          comms title "${GITHUB_REPOSITORY#*/} · ${GITHUB_WORKFLOW}"
+          comms warning_closing "$(printf '✓ Warnings cleared in run %s' "${GITHUB_RUN_NUMBER}")"
+          comms alert_superseded "$(printf '✗ Still failing in run %s' "${GITHUB_RUN_NUMBER}")"
+          comms warning_superseded "$(printf '⚠ Still warning in run %s' "${GITHUB_RUN_NUMBER}")"
+
+          # How long the branch stayed broken: from the oldest run of the
+          # failing streak just before this one, to now. Empty when unknown.
+          broken_for() {
+            local workflow_id since secs
+            workflow_id=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" --jq '.workflow_id')
+            since=$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/${workflow_id}/runs?status=completed&branch=${GITHUB_REF_NAME}&per_page=30" \
+              --jq '[.workflow_runs[] | select(.id != '"${GITHUB_RUN_ID}"')] | reduce .[] as $r ({done: false, at: ""};
+                if .done then . elif $r.conclusion == "failure" then .at = $r.created_at else .done = true end) | .at')
+            [[ -z "$since" ]] && return 0
+            secs=$(( $(date -u +%s) - $(date -u -d "$since" +%s) ))
+            if (( secs >= 86400 )); then printf '%dd %dh' $(( secs / 86400 )) $(( secs % 86400 / 3600 ))
+            elif (( secs >= 3600 )); then printf '%dh %dmin' $(( secs / 3600 )) $(( secs % 3600 / 60 ))
+            else printf '%dmin' $(( (secs + 59) / 60 ))
+            fi
+          }
+          alert_closing() {
+            local took
+            took=$(broken_for || true)
+            if [[ -n "$took" ]]
+            then
+              printf '✓ Recovered in run %s, %s after it broke' "$GITHUB_RUN_NUMBER" "$took"
+            else
+              printf '✓ Recovered in run %s' "$GITHUB_RUN_NUMBER"
+            fi
+          }
 
           # What a run's jobs left behind, one line each, notices left out.
           # Runs cancelled by the concurrency group (a newer deploy took over) leave
@@ -81,6 +106,52 @@ jobs:
               out+=$'\n'
             done
             awk 'NF && !seen[$0]++' <<<"$out" | head -n 10
+          }
+
+          # The alert thread: the first real error quoted, one line per failed
+          # job (its failing step, branch, event and run number), and a single
+          # link to the first failing job. Reads $jobs, set below.
+          alert_body() {
+            local first_id first_url quote lines
+            first_id=$(jq -rs 'map(select(.conclusion == "failure" or .conclusion == "timed_out")) | .[0].id // ""' <<<"$jobs")
+            first_url=$(jq -rs 'map(select(.conclusion == "failure" or .conclusion == "timed_out")) | .[0].html_url // ""' <<<"$jobs")
+            quote=""
+            if [[ -n "$first_id" ]]
+            then
+              quote=$(gh api "repos/${GITHUB_REPOSITORY}/check-runs/${first_id}/annotations" \
+                --jq '[.[] | select(.annotation_level == "failure") | .message | split("\n")[0] | select(test("^Process completed with exit code [0-9]+\\.$|^Canceling since a higher priority waiting request|^The operation was canceled") | not)][0] // "" | .[0:300]')
+            fi
+            lines=$(jq -r --arg ref "$GITHUB_REF_NAME" --arg event "$GITHUB_EVENT_NAME" --arg run "$GITHUB_RUN_NUMBER" \
+              'select(.conclusion == "failure" or .conclusion == "timed_out")
+               | "✗ **\(.name)** › `\([.steps[]? | select(.conclusion == "failure") | .name][0] // .conclusion)` · `\($ref)` · \($event) · run \($run)"' <<<"$jobs")
+            if [[ -n "$quote" ]]
+            then
+              printf '> %s\n\n' "$quote"
+            fi
+            printf '%s\n' "$lines"
+            if [[ -n "$first_url" ]]
+            then
+              printf '[Open the failing step](%s)\n' "$first_url"
+            fi
+          }
+
+          # The warnings thread: one "⚠ **what**" block per warning, its fix
+          # (the rest of the message) underneath, and one run link at the end.
+          warning_body() {
+            local id out=""
+            for id in $(jq -r '.id' <<<"$jobs")
+            do
+              out+=$(gh api "repos/${GITHUB_REPOSITORY}/check-runs/${id}/annotations" \
+                --jq '.[] | select(.annotation_level == "warning")
+                  | (.message | split("\n") | map(select(length > 0))) as $lines
+                  | if (.title // "") != "" then "⚠ **\(.title)**\n\($lines[0] // "" | .[0:300])"
+                    else "⚠ **\($lines[0] // "" | .[0:200])**\n\($lines[1] // "" | .[0:300])" end
+                  | sub("\n$"; "")')
+              out+=$'\n'
+            done
+            # Blocks are separated by a blank line; duplicates dropped, at most ten.
+            awk 'BEGIN { RS = ""; ORS = "\n\n" } !seen[$0]++ && n++ < 10' <<<"$(sed 's/^⚠/\n⚠/' <<<"$out")"
+            printf '[View run](%s)\n' "$run_url"
           }
 
           jobs=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/jobs" --paginate \
@@ -108,6 +179,7 @@ jobs:
             if [[ -z "$failed" ]]
             then
               comms alert close
+              comms alert_closing "$(alert_closing)"
             fi
             if [[ -z "$warnings" ]]
             then
@@ -118,8 +190,7 @@ jobs:
             if [[ -n "$failed" && "$previous" != "failure" ]]
             then
               comms alert open
-              comms alert_body "$(printf '%s\n\n[View run](%s)' \
-                "$(printf '%s\n%s' "$(comms_list "$failed")" "$(comms_list "$notes")" | awk 'NF')" "$run_url")"
+              comms alert_body "$(alert_body)"
             elif [[ -n "$failed" ]]
             then
               echo "Still failing; no repeated notification."
@@ -127,7 +198,7 @@ jobs:
             if [[ -n "$warnings" && -z "$previous_warnings" ]]
             then
               comms warning open
-              comms warning_body "$(printf '%s\n\n[View run](%s)' "$(comms_list "$warnings")" "$run_url")"
+              comms warning_body "$(warning_body)"
             fi
             exit 0
           fi
@@ -135,6 +206,7 @@ jobs:
           if [[ -z "$failed" ]]
           then
             comms alert close
+            comms alert_closing "$(alert_closing)"
           fi
           if [[ -z "$failed" && -z "$notes" ]]
           then
@@ -143,14 +215,13 @@ jobs:
             exit 0
           fi
 
-          comms_body=$(printf '%s\n%s' "$(comms_list "$failed")" "$(comms_list "$notes")" | awk 'NF')
           if [[ -n "$failed" ]]
           then
             comms alert open
-            comms alert_body "$(printf '%s\n\n[View run](%s)' "$comms_body" "$run_url")"
+            comms alert_body "$(alert_body)"
           else
             comms warning open
-            comms warning_body "$(printf '%s\n\n[View run](%s)' "$comms_body" "$run_url")"
+            comms warning_body "$(warning_body)"
           fi
 
       # workflow, read from the newest of its last ten completed runs whose
@@ -204,7 +275,7 @@ jobs:
           token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
           mode: close
           thread-id: ${{ steps.comms_prev.outputs.alert }}
-          content: "${{ steps.report.outputs.alert == 'open' && format('Superseded by a newer failure: {0}', steps.alert_open.outputs.url || steps.report.outputs.run_url) || steps.report.outputs.alert_closing }}"
+          content: "${{ steps.report.outputs.alert == 'open' && steps.report.outputs.alert_superseded || steps.report.outputs.alert_closing }}"
 
       - name: Open a Comms thread in ops-warnings
         id: warning_open
@@ -226,7 +297,7 @@ jobs:
           token: ${{ secrets.TODOIST_MOCHI_BOT_TOKEN }}
           mode: close
           thread-id: ${{ steps.comms_prev.outputs.warning }}
-          content: "${{ steps.report.outputs.warning == 'open' && format('Superseded by newer warnings: {0}', steps.warning_open.outputs.url || steps.report.outputs.run_url) || steps.report.outputs.warning_closing }}"
+          content: "${{ steps.report.outputs.warning == 'open' && steps.report.outputs.warning_superseded || steps.report.outputs.warning_closing }}"
 
       # The threads still open after this run, for the next run to find. A
       # thread whose close failed stays listed, so the next clean run retries.
