@@ -1,0 +1,392 @@
+{
+  "schema": 1,
+  "date": "2026-11-28",
+  "generatedAt": "2026-11-28T18:40:00.000+00:00",
+  "publishedAt": "2026-11-28T18:42:03Z",
+  "languages": [
+    "fr",
+    "en"
+  ],
+  "lede": {
+    "fr": "Ce soir, on s'arrête sur la décision rendue aujourd'hui à Hambourg : le Tribunal international du droit de la mer refuse de bloquer le projet pétrolier Sea Lion au large des Malouines, et ses raisons en disent long sur ce qu'un juge de la mer peut trancher, et ce qu'il ne peut pas. Ensuite, deux philosophes rappellent que la pensée a un coût en énergie, et un village du Charolais se chauffe au bois du coin. Côté technique, un ciment cuit en quelques secondes et une famille d'outils en ligne de commande pour le courrier qui passe en version stable. Et trois trouvailles : un interpréteur JavaScript très « normal », un jeu où les couleurs ont un poids et un film philippin sur un club de golf.",
+    "en": "Tonight we stop at today's decision in Hamburg: the International Tribunal for the Law of the Sea has refused to halt the Sea Lion oil project off the Falklands, and its reasons say a lot about what a law-of-the-sea court can and cannot decide. Then two philosophers remind us that thinking costs energy, and a Burgundy village heats itself with local wood. On the technical side, a cement fired in seconds and a family of command-line tools for mail that has reached its stable release. And three finds: a very \"normal\" JavaScript interpreter, a game where colours have weight, and a Filipino film set on a golf course."
+  },
+  "readingMinutes": {
+    "fr": 11,
+    "en": 10
+  },
+  "wordCount": {
+    "fr": 2160,
+    "en": 1970
+  },
+  "narrative": {
+    "overview": {
+      "fr": "Ce soir, on s'arrête sur la décision rendue aujourd'hui à Hambourg : le Tribunal international du droit de la mer refuse de bloquer le projet pétrolier Sea Lion au large des Malouines, et ses raisons en disent long sur ce qu'un juge de la mer peut trancher, et ce qu'il ne peut pas. Ensuite, deux philosophes rappellent que la pensée a un coût en énergie, et un village du Charolais se chauffe au bois du coin. Côté technique, un ciment cuit en quelques secondes et une famille d'outils en ligne de commande pour le courrier qui passe en version stable. Et trois trouvailles : un interpréteur JavaScript très « normal », un jeu où les couleurs ont un poids et un film philippin sur un club de golf.",
+      "en": "Tonight we stop at today's decision in Hamburg: the International Tribunal for the Law of the Sea has refused to halt the Sea Lion oil project off the Falklands, and its reasons say a lot about what a law-of-the-sea court can and cannot decide. Then two philosophers remind us that thinking costs energy, and a Burgundy village heats itself with local wood. On the technical side, a cement fired in seconds and a family of command-line tools for mail that has reached its stable release. And three finds: a very \"normal\" JavaScript interpreter, a game where colours have weight, and a Filipino film set on a golf course."
+    },
+    "analysis": null,
+    "closing": {
+      "fr": "Bonne soirée, et à demain.",
+      "en": "Have a good evening, and see you tomorrow."
+    }
+  },
+  "sections": [
+    {
+      "key": "overview",
+      "kind": "narrative",
+      "title": {
+        "fr": "Ce soir",
+        "en": "Tonight"
+      },
+      "items": []
+    },
+    {
+      "key": "depth",
+      "kind": "items",
+      "title": {
+        "fr": "Le sujet du jour",
+        "en": "Today’s focus"
+      },
+      "items": [
+        "01"
+      ]
+    },
+    {
+      "key": "brief",
+      "kind": "items",
+      "title": {
+        "fr": "L’essentiel",
+        "en": "The essentials"
+      },
+      "items": [
+        "02",
+        "03"
+      ]
+    },
+    {
+      "key": "techsci",
+      "kind": "items",
+      "title": {
+        "fr": "Technologie & science",
+        "en": "Technology & science"
+      },
+      "items": [
+        "04",
+        "05"
+      ]
+    },
+    {
+      "key": "inbrief",
+      "kind": "bullets",
+      "title": {
+        "fr": "En bref",
+        "en": "In brief"
+      },
+      "items": []
+    },
+    {
+      "key": "finds",
+      "kind": "items",
+      "title": {
+        "fr": "Ça vaut un clic",
+        "en": "Worth a click"
+      },
+      "items": [
+        "06",
+        "07",
+        "08"
+      ]
+    },
+    {
+      "key": "watch",
+      "kind": "items",
+      "title": {
+        "fr": "À surveiller",
+        "en": "Watch next"
+      },
+      "items": [
+        "09"
+      ]
+    },
+    {
+      "key": "closing",
+      "kind": "narrative",
+      "title": {
+        "fr": "Pour finir",
+        "en": "To close"
+      },
+      "items": []
+    }
+  ],
+  "items": [
+    {
+      "id": "01",
+      "section": "depth",
+      "kicker": {
+        "fr": "DROIT DE LA MER",
+        "en": "LAW OF THE SEA"
+      },
+      "title": {
+        "fr": "Malouines : le tribunal de la mer refuse de stopper Sea Lion, faute de pouvoir dire à qui sont les îles",
+        "en": "Falklands: the sea tribunal won't stop Sea Lion, because it cannot say whose islands they are"
+      },
+      "summary": {
+        "fr": "Le Tribunal international du droit de la mer (TIDM), la juridiction de Hambourg créée par la Convention des Nations unies sur le droit de la mer (CNUDM), a rejeté samedi 28 novembre, par 18 voix contre 3, la demande de l'Argentine d'ordonner au Royaume-Uni de geler le projet pétrolier Sea Lion. Le gisement se trouve à moins de 200 milles marins au nord des îles que l'Argentine appelle Malvinas et le Royaume-Uni Falklands — les Malouines en français. Le tribunal ne dit pas que Londres a raison sur le fond : il dit qu'il n'est pas compétent pour le juger.",
+        "en": "The International Tribunal for the Law of the Sea (ITLOS), the Hamburg court set up under the United Nations Convention on the Law of the Sea (UNCLOS), on Saturday 28 November rejected, by 18 votes to 3, Argentina's request to order the United Kingdom to freeze the Sea Lion oil project. The field lies within 200 nautical miles north of the islands Argentina calls the Malvinas and the UK the Falklands. The tribunal does not say London is right on the merits: it says it has no jurisdiction to judge them."
+      },
+      "sources": [
+        {
+          "url": "https://www.itlos.org/fileadmin/itlos/documents/press_releases_english/PR_406_en.pdf",
+          "label": {
+            "fr": "TIDM · communiqué de presse n° 406",
+            "en": "ITLOS · press release no. 406"
+          }
+        },
+        {
+          "url": "https://www.gov.uk/government/news/joint-statement-on-the-falkland-islands-from-the-foreign-secretary-and-attorney-general",
+          "label": {
+            "fr": "Gouvernement britannique · déclaration conjointe",
+            "en": "UK government · joint statement"
+          }
+        },
+        {
+          "url": "https://en.mercopress.com/2026/10/13/argentina-asks-the-law-of-the-sea-tribunal-to-halt-sea-lion-and-bar-new-oil-permits",
+          "label": {
+            "fr": "MercoPress",
+            "en": "MercoPress"
+          }
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "section": "brief",
+      "kicker": {
+        "fr": "PHILOSOPHIE",
+        "en": "PHILOSOPHY"
+      },
+      "title": {
+        "fr": "Penser coûte de l'énergie, et nos modèles de l'esprit l'oublient",
+        "en": "Thinking costs energy, and our models of the mind forget it"
+      },
+      "summary": {
+        "fr": "Dans un essai publié le 27 novembre par Aeon, le philosophe des sciences David Colaço (Centre de philosophie mathématique de Munich) et Philipp Haueis (université de Bielefeld) adressent un reproche commun aux modèles de l'esprit, qu'ils soient symboliques, computationnels ou neuronaux : ils ignorent le métabolisme, la façon dont le cerveau se procure son énergie, s'entretient et évacue ses déchets. Les ordres de grandeur qu'ils rappellent sont parlants : environ 2 % de la masse du corps, 20 % de ses calories, une vingtaine de watts, et près de 40 % de ce budget consacré à entretenir et réparer les neurones plutôt qu'à transmettre des signaux. Leur thèse : « un modèle de la mémoire n'est pas viable s'il exige d'un système plus que son métabolisme ne peut fournir ». Ils l'appliquent à deux débats. Un modèle de mémoire synaptique qui se stabilise en équilibre décrit, selon eux, un neurone mort ; un modèle hors d'équilibre, alimenté en continu, explique mieux qu'on garde de vieux souvenirs en en formant de nouveaux. Et la théorie de « l'épuisement de l'ego », selon laquelle l'effort puiserait dans une réserve de glucose, se heurte à la fois à des échecs de réplication et au fait que la consommation de glucose du cerveau varie à peine pendant une tâche exigeante. Le passage le plus actuel concerne l'IA : si l'énergie contraint les calculs que fait un cerveau, savoir si une puce et un cerveau font « le même » calcul est une question à tester, pas un postulat. Les auteurs reconnaissent eux-mêmes la limite : le métabolisme réduit les options, il ne tranche pas entre les grandes théories de l'esprit.",
+        "en": "In an essay published by Aeon on 27 November, the philosopher of science David Colaço (Munich Center for Mathematical Philosophy) and Philipp Haueis (Bielefeld University) make one charge against models of the mind, whether symbolic, computational or neural: they ignore metabolism, how the brain gets its energy, maintains itself and clears its waste. The figures they recall are telling: about 2% of body mass, 20% of its calories, roughly 20 watts, and close to 40% of that budget spent maintaining and repairing neurons rather than sending signals. Their thesis: \"a model of memory is not viable if it requires a system to do more than its metabolism can support\". They apply it to two debates. A synaptic memory model that settles into equilibrium describes, they argue, a dead neuron; a non-equilibrium model, powered continuously, better explains how old memories survive new learning. And the theory of \"ego depletion\", in which effort draws on a store of glucose, runs into both failed replications and the fact that the brain's glucose use barely changes during a demanding task. The most topical passage concerns AI: if energy constrains the computations a brain performs, whether a chip and a brain run \"the same\" computation is something to test, not assume. The authors concede the limit themselves: metabolism narrows the options, but it does not settle the big theories of mind."
+      },
+      "sources": [
+        {
+          "url": "https://aeon.co/essays/all-our-models-of-how-the-mind-functions-are-missing-something",
+          "label": {
+            "fr": "Aeon · The energy of thought",
+            "en": "Aeon · The energy of thought"
+          }
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "section": "brief",
+      "kicker": {
+        "fr": "ÉNERGIE LOCALE",
+        "en": "LOCAL ENERGY"
+      },
+      "title": {
+        "fr": "Dans le Charolais, un village remplace le fioul par le bois de la région",
+        "en": "In rural Burgundy, a village swaps heating oil for local wood"
+      },
+      "summary": {
+        "fr": "À Mont-Saint-Vincent, en Saône-et-Loire, un réseau de chaleur au bois fonctionne depuis l'été 2025, raconte un reportage de franceinfo publié le 28 novembre. Le principe : une chaufferie communale, équipée de trois chaudières de 200 kilowatts, produit de l'eau chaude envoyée par des canalisations vers les bâtiments raccordés — l'Ehpad, maison de retraite médicalisée de 55 résidents, l'école, la gendarmerie et une vingtaine de maisons. Le bois vient en grande majorité d'un rayon de 50 kilomètres. L'installation a coûté 1,87 million d'euros, financés par le fonds européen Feder, la région Bourgogne-Franche-Comté et l'Ademe, l'agence de la transition écologique ; la commune a payé 20 000 euros d'études, et l'exploitation est confiée à l'entreprise Forestener en délégation de service public. Les résultats annoncés sont ceux de l'exploitant et des usagers, pas d'une évaluation indépendante : 224 tonnes de CO₂ évitées par an et un chauffage 20 % moins cher que le fioul selon Forestener, 185 000 euros d'économies attendues sur dix ans pour l'Ehpad, 500 à 600 euros par an pour un couple interrogé. Les limites sont dites aussi : l'abonnement d'environ 139 euros par mois pèse sur les résidences secondaires, et une ingénieure de l'Ademe rappelle que « le bois reste une énergie avec un stock à gérer » : couper plus que la forêt ne produit ferait perdre l'intérêt climatique. Le cas est intéressant parce qu'il est petit : sans subventions ni mutualisation, un village n'aurait pas pu porter l'investissement.",
+        "en": "In Mont-Saint-Vincent, in France's Saône-et-Loire, a wood-fired heat network has been running since summer 2025, according to a franceinfo report published on 28 November. The principle: a municipal boiler house with three 200-kilowatt boilers heats water that is piped to the connected buildings — the care home and its 55 residents, the school, the gendarmerie and about twenty houses. Most of the wood comes from within 50 kilometres. The installation cost €1.87m, funded by the EU's regional development fund (FEDER), the Bourgogne-Franche-Comté region and Ademe, France's ecological transition agency; the commune paid €20,000 towards studies, and the operator Forestener runs it under a public service concession. The results reported come from the operator and users, not an independent evaluation: 224 tonnes of CO₂ avoided a year and heating 20% cheaper than oil, according to Forestener; €185,000 of expected savings over ten years for the care home; €500 to €600 a year for one couple interviewed. The limits are stated too: the subscription of about €139 a month weighs on second-home owners, and an Ademe engineer points out that wood \"remains an energy with a stock to manage\": cutting more than the forest grows would lose the climate benefit. The case is interesting because it is small: without grants and pooled demand, a village could not have carried the investment."
+      },
+      "sources": [
+        {
+          "url": "https://www.franceinfo.fr/environnement/actions-ecologiques/en-toute-sobriete-face-a-la-crise-climatique/reportage-je-prefere-acheter-du-bois-du-coin-que-du-petrole-de-russie-dans-ce-village-du-charolais-un-reseau-de-chaleur-remplace-les-chaudieres-au-fioul_8295641.html",
+          "label": {
+            "fr": "franceinfo",
+            "en": "franceinfo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "section": "techsci",
+      "kicker": {
+        "fr": "MATÉRIAUX",
+        "en": "MATERIALS"
+      },
+      "title": {
+        "fr": "Un ciment cuit en quelques secondes, au plasma",
+        "en": "Cement fired in seconds, with plasma"
+      },
+      "summary": {
+        "fr": "Le ciment Portland ordinaire se fabrique en cuisant calcaire et argile pendant des heures dans de grands fours pour obtenir le clinker, la matière qui durcit au contact de l'eau. Une équipe de Berkeley, Stanford et du laboratoire national Lawrence Berkeley décrit dans Nature, le 25 novembre, une autre voie : un plasma de carbone chauffé par micro-ondes atteint localement 2 400 °C, assez pour liquéfier les matières premières, et ramène la réaction de plusieurs heures à quelques secondes. En phase liquide, les éléments se mélangent mieux et forment des phases de clinker réactives ; des images de microscopie électronique prises en direct montrent que leur surface désordonnée accélère la prise. Les auteurs ont aussi transformé de la pâte de ciment issue de béton de démolition en clinker conforme aux spécifications du ciment Portland ordinaire. Deux réserves. L'affirmation d'une production « à bas coût et à grande échelle » repose sur l'analyse technico-économique des auteurs eux-mêmes, pas sur une usine pilote. Et le résumé ne chiffre pas les émissions évitées : chauffer à l'électricité supprime la combustion, mais l'intérêt climatique dépendra de l'électricité utilisée et de la part de matériaux recyclés.",
+        "en": "Ordinary Portland cement is made by firing limestone and clay for hours in large kilns to produce clinker, the material that hardens when it meets water. A team from Berkeley, Stanford and Lawrence Berkeley National Laboratory describes another route in Nature on 25 November: a microwave-heated carbon plasma reaches local temperatures of up to 2,400°C, enough to liquefy the raw materials, cutting the reaction from hours to seconds. In the liquid phase the elements mix better and form reactive clinker phases; electron microscopy filmed in real time shows that their disordered surface speeds up setting. The authors also turned hydrated cement paste from demolition concrete into clinker that meets ordinary Portland cement specifications. Two caveats. The claim of \"low-cost cement production at scale\" rests on the authors' own techno-economic analysis, not a pilot plant. And the abstract does not quantify the emissions avoided: electric heating removes combustion, but the climate benefit will depend on the electricity used and the share of recycled material."
+      },
+      "sources": [
+        {
+          "url": "https://www.nature.com/articles/s41586-026-11313-w",
+          "label": {
+            "fr": "Nature · Zheng et al., Sustainable cement production via a liquid-phase pathway",
+            "en": "Nature · Zheng et al., Sustainable cement production via a liquid-phase pathway"
+          }
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "section": "techsci",
+      "kicker": {
+        "fr": "LOGICIEL LIBRE",
+        "en": "OPEN SOURCE"
+      },
+      "title": {
+        "fr": "Pimalaya : le courrier, les contacts et l'agenda en ligne de commande, version stable",
+        "en": "Pimalaya: mail, contacts and calendars on the command line, now stable"
+      },
+      "summary": {
+        "fr": "Le projet Pimalaya a publié le 26 novembre les versions stables de sa famille d'outils en ligne de commande écrits en Rust pour gérer ses données personnelles : Himalaya 3.0 pour le courrier, Cardamum 1.0 pour les contacts, Calendula 1.0 pour les agendas, Neverest 1.0 pour la synchronisation, Carillon 1.0 pour surveiller boîtes et calendriers et déclencher des actions, Ortie 3.0, sorti quelques jours plus tôt, pour les jetons OAuth, le protocole d'autorisation des services en ligne. L'intérêt tient à la cohérence : tous partagent la même configuration, le même format de sortie, les mêmes codes d'erreur et chacun expose un serveur MCP, le protocole qui permet à un agent d'IA d'appeler des outils. Les garde-fous sont prudents : le serveur d'Himalaya refuse toute écriture sans l'option --allow-write et tout envoi sans --allow-send, et Ortie ne transmet jamais le jeton à l'agent. Les mêmes commandes fonctionnent avec IMAP, JMAP, l'API Gmail, Microsoft Graph, CalDAV ou CardDAV, et un format de stockage local, pimdir, arrive en 1.0. Le projet est financé par la fondation NLnet et le programme NGI de la Commission européenne. Limites annoncées : pas encore de synchronisation depuis JMAP, une recherche sans racinisation ni expressions régulières, et aucun guide de migration depuis les versions 0.x.",
+        "en": "On 26 November the Pimalaya project released stable versions of its family of command-line tools written in Rust for managing personal data: Himalaya 3.0 for mail, Cardamum 1.0 for contacts, Calendula 1.0 for calendars, Neverest 1.0 for synchronisation, Carillon 1.0 to watch mailboxes and calendars and trigger actions, and Ortie 3.0, out a few days earlier, for OAuth tokens, the authorisation protocol behind online services. The appeal is consistency: they share one configuration, one output format and one set of error codes, and each exposes an MCP server, the protocol that lets an AI agent call tools. The safeguards are cautious: Himalaya's server refuses any write without the --allow-write flag and any sending without --allow-send, and Ortie never hands the token to the agent. The same commands work over IMAP, JMAP, the Gmail API, Microsoft Graph, CalDAV or CardDAV, and a local storage format, pimdir, reaches 1.0. The project is funded by the NLnet foundation and the European Commission's NGI programme. Stated limits: no syncing from JMAP yet, search without stemming or regular expressions, and no migration guide from the 0.x versions."
+      },
+      "sources": [
+        {
+          "url": "https://blog.pimalaya.org/pimalaya-goes-stable/",
+          "label": {
+            "fr": "Pimalaya · Pimalaya goes stable",
+            "en": "Pimalaya · Pimalaya goes stable"
+          }
+        },
+        {
+          "url": "https://github.com/pimalaya/himalaya",
+          "label": {
+            "fr": "GitHub · Himalaya",
+            "en": "GitHub · Himalaya"
+          }
+        }
+      ]
+    },
+    {
+      "id": "06",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Un langage parfaitement normal",
+        "en": "A perfectly normal language"
+      },
+      "summary": {
+        "fr": "PsychoScript est une petite machine virtuelle pour un sous-ensemble de JavaScript, à intégrer dans une application Node ou Bun pour exécuter du code qu'on ne veut pas laisser sortir : celui d'un modèle d'IA, d'un utilisateur ou d'un greffon. Rien n'est accessible par défaut, ni réseau, ni fichiers, ni minuteries, ni eval : le script n'appelle que les fonctions que l'hôte lui passe. Sa particularité est rare : une exécution peut être suspendue en plein vol, sérialisée en octets puis reprise plus tard, dans un autre processus. La page joue la parodie d'entreprise au premier degré — « un langage de script parfaitement normal », formulaire de « visionnage normal » à l'appui — mais la documentation est sérieuse et honnête sur les limites : pas de plafond de mémoire, une expression régulière impossible à interrompre, et une conformité aux tests de référence JavaScript pas encore vérifiée en intégration continue. Code sous licence MIT.",
+        "en": "PsychoScript is a small virtual machine for a subset of JavaScript, to embed in a Node or Bun app and run code you don't want to let loose: a model's, a user's or a plugin's. Nothing is reachable by default — no network, no files, no timers, no eval — and the script can only call the functions the host hands it. Its rare trick: a run can be suspended mid-flight, serialised to bytes and resumed later, in another process. The page plays corporate parody with a straight face — \"a perfectly normal scripting language\", complete with a \"normal viewing\" declaration form — but the documentation is serious and candid about limits: no memory cap, a regular-expression match that cannot be interrupted, and conformance with the reference JavaScript test suite not yet checked in continuous integration. MIT-licensed code."
+      },
+      "sources": [
+        {
+          "url": "https://psychoscript.com/",
+          "label": {
+            "fr": "PsychoScript",
+            "en": "PsychoScript"
+          }
+        },
+        {
+          "url": "https://github.com/anomalyco/psychoscript",
+          "label": {
+            "fr": "GitHub · anomalyco/psychoscript",
+            "en": "GitHub · anomalyco/psychoscript"
+          }
+        }
+      ]
+    },
+    {
+      "id": "07",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Des couleurs qui pèsent",
+        "en": "Colours with weight"
+      },
+      "summary": {
+        "fr": "Dans Colorbound, Anku, un jeune garçon aymara, part retrouver les musiciens de l'orchestre de son grand-père disparu pour un dernier hommage. Le jeu de plateforme et de réflexion repose sur une idée simple et jolie : Anku collecte des couleurs sur sa palette et peint le décor, et chaque couleur change la physique des objets — certaines, plus légères, les font flotter, d'autres, plus lourdes, les font tomber. Créé par le petit studio chilien Panpipe, lauréat avec ce projet de la game jam du Latin American Game Showcase en 2025, il puise dans la musique et l'art andins. Il est sorti le 12 octobre sur Windows, avec interface et sous-titres en français ; l'éditeur annonce aussi des versions consoles, dont nous n'avons pas pu vérifier les dates. Un jeu court et doux plutôt qu'un défi.",
+        "en": "In Colorbound, Anku, a young Aymara boy, sets out to find the members of his late grandfather's band for one last tribute. The puzzle-platformer rests on a simple, lovely idea: Anku collects colours on his palette and paints the world, and each colour changes the physics of objects — lighter ones make them float away, heavier ones make them drop. Made by the small Chilean studio Panpipe, it won the Latin American Game Showcase game jam in 2025 and draws on Andean music and art. It came out on 12 October on Windows, with French interface and subtitles among its languages; the publisher also lists console versions whose dates we could not verify. A short, gentle game rather than a challenge."
+      },
+      "sources": [
+        {
+          "url": "https://store.steampowered.com/app/3778610/Colorbound/",
+          "label": {
+            "fr": "Steam · Colorbound",
+            "en": "Steam · Colorbound"
+          }
+        },
+        {
+          "url": "https://whitethorngames.com/colorbound",
+          "label": {
+            "fr": "Whitethorn Games · Colorbound",
+            "en": "Whitethorn Games · Colorbound"
+          }
+        }
+      ]
+    },
+    {
+      "id": "08",
+      "section": "finds",
+      "kicker": null,
+      "title": {
+        "fr": "Ce que cache le club de golf",
+        "en": "What the golf club hides"
+      },
+      "summary": {
+        "fr": "Isabel, 17 ans, quitte la campagne philippine pour devenir « tee-girl » dans un club de golf huppé près de Manille. En cherchant le propriétaire d'un club égaré, elle découvre la violence que ce décor feutré dissimule, et son propre passé. Filipiñana, premier long métrage de Rafael Manuel, prolonge un court métrage récompensé d'un Ours d'argent à Berlin en 2020 et a reçu à Sundance, cette année, un prix spécial du jury pour sa vision créative. Il est en salles au Royaume-Uni et en Irlande depuis le 20 novembre ; nous n'avons pas trouvé de date de sortie en France.",
+        "en": "Isabel, 17, leaves the rural Philippines to work as a \"tee-girl\" at an exclusive golf club near Manila. Searching for the owner of a lost golf club, she uncovers the violence this hushed world hides, and her own past. Filipiñana, Rafael Manuel's first feature, grows out of a short that won a Silver Bear in Berlin in 2020, and took a Special Jury Award for Creative Vision at Sundance this year. It has been in UK and Irish cinemas since 20 November; we found no French release date."
+      },
+      "sources": [
+        {
+          "url": "https://www.bfi.org.uk/news/filipinana-bfi-distribution",
+          "label": {
+            "fr": "BFI · Filipiñana",
+            "en": "BFI · Filipiñana"
+          }
+        }
+      ]
+    },
+    {
+      "id": "09",
+      "section": "watch",
+      "kicker": null,
+      "title": {
+        "fr": "Malouines : la suite se joue devant un tribunal encore à constituer",
+        "en": "Falklands: the next round goes to a tribunal yet to be formed"
+      },
+      "summary": {
+        "fr": "Le fond du litige revient au tribunal arbitral de l'annexe VII, que les deux pays sont invités à former rapidement. D'ici là, la date à retenir est celle de l'engagement britannique : pas de forage sur Sea Lion avant le 21 mars 2027.",
+        "en": "The merits now go to the Annex VII arbitral tribunal, which both countries are urged to set up quickly. Until then, the date to remember is the UK's commitment: no drilling on Sea Lion before 21 March 2027."
+      },
+      "sources": [
+        {
+          "url": "https://www.itlos.org/fileadmin/itlos/documents/press_releases_english/PR_406_en.pdf",
+          "label": {
+            "fr": "TIDM · communiqué de presse n° 406",
+            "en": "ITLOS · press release no. 406"
+          }
+        }
+      ]
+    }
+  ],
+  "timeline": [],
+  "inBrief": [
+    {
+      "text": {
+        "fr": "Le nombre de cas de dengue déclarés dans le monde est passé de 430 000 en 1990 à 14,7 millions en 2024, soit 34 fois plus, selon une analyse présentée le 22 novembre au congrès de la Société américaine de médecine tropicale ([Nature](https://www.nature.com/articles/d41586-026-03813-6)).",
+        "en": "Reported dengue cases worldwide rose from 430,000 in 1990 to 14.7 million in 2024, a 34-fold increase, according to an analysis presented on 22 November at the annual meeting of the American Society of Tropical Medicine and Hygiene ([Nature](https://www.nature.com/articles/d41586-026-03813-6))."
+      },
+      "urls": [
+        "https://www.nature.com/articles/d41586-026-03813-6"
+      ]
+    },
+    {
+      "text": {
+        "fr": "Claude Code, l'agent de programmation d'Anthropic, peut depuis sa version 2.1.332 du 25 novembre charger des « skills » fournies par des serveurs MCP, en bêta, et un nouveau crochet permet de refuser les commandes shell qu'une skill veut lancer au chargement ([GitHub · Claude Code 2.1.332](https://github.com/anthropics/claude-code/releases/tag/v2.1.332)).",
+        "en": "Since version 2.1.332 on 25 November, Claude Code, Anthropic's coding agent, can load skills supplied by MCP servers, in beta, and a new hook can refuse the shell commands a skill tries to run as it loads ([GitHub · Claude Code 2.1.332](https://github.com/anthropics/claude-code/releases/tag/v2.1.332))."
+      },
+      "urls": [
+        "https://github.com/anthropics/claude-code/releases/tag/v2.1.332"
+      ]
+    }
+  ]
+}
